@@ -10,23 +10,21 @@ import SwiftData
 
 @main
 struct CookleApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
+    private let sharedModelContainer: ModelContainer = {
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            return try .init(for: Item.self, configurations: .init())
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
+
+    private let tagContext = TagContext()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
         .modelContainer(sharedModelContainer)
+        .environment(tagContext)
     }
 }

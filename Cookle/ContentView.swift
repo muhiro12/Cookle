@@ -10,39 +10,72 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(TagContext.self) private var tagContext
     @Query private var items: [Item]
 
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+        TabView {
+            NavigationSplitView {
+                List {
+                    ForEach(items) { item in
+                        NavigationLink {
+                            Text("Item at \(item.name), \(item.tag)")
+                            Text("Container at \(String(describing: item.modelContext?.container.configurations.map { $0.url.pathComponents.last }))")
+                        } label: {
+                            Text(item.name)
+                        }
+                    }
+                    .onDelete(perform: deleteItems)
+                }
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        EditButton()
+                    }
+                    ToolbarItem {
+                        Button(action: addItem) {
+                            Label("Add Item", systemImage: "plus")
+                        }
                     }
                 }
-                .onDelete(perform: deleteItems)
+            } detail: {
+                Text("Select an item")
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+            .tabItem {
+                Label("Items", systemImage: "list.bullet")
+            }
+            NavigationSplitView {
+                List {
+                    ForEach(tagContext.tags) { tag in
+                        NavigationLink {
+                            Text("Tag at \(tag.name)")
+                        } label: {
+                            Text(tag.name)
+                        }
                     }
                 }
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        EditButton()
+                    }
+                }
+            } detail: {
+                Text("Select an tag")
             }
-        } detail: {
-            Text("Select an item")
+            .tabItem {
+                Label("Tags", systemImage: "tag")
+            }
+        }
+        .onAppear {
+            tagContext.modify(items)
         }
     }
 
     private func addItem() {
         withAnimation {
-            let newItem = Item(timestamp: Date())
+            let newItem = Item(name: Date.now.description, tag: Bool.random().description)
+            let newTag = Tag(name: newItem.tag)
             modelContext.insert(newItem)
+            tagContext.insert(newTag)
         }
     }
 
