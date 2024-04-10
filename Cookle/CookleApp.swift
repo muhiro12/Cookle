@@ -12,19 +12,19 @@ import SwiftData
 struct CookleApp: App {
     private let sharedModelContainer: ModelContainer = {
         do {
-            return try .init(for: Item.self, configurations: .init())
+            return try .init(for: Recipe.self, configurations: .init())
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
 
-    private let tagContext = TagContext()
+    private let tagStore = TagStore()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
         .modelContainer(sharedModelContainer)
-        .environment(tagContext)
+        .environment(tagStore)
     }
 }
