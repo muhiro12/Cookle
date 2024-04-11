@@ -17,6 +17,7 @@ struct DiaryView: View {
     @State private var content: Tag.ID?
     @State private var detail: Recipe?
     @State private var isExpanded = true
+    @State private var isPresented = false
 
     var body: some View {
         NavigationSplitView {
@@ -45,6 +46,11 @@ struct DiaryView: View {
                         }
                     }
                 }
+                ToolbarItem {
+                    Button("Add Recipe", systemImage: "plus") {
+                        isPresented = true
+                    }
+                }
             }
         } content: {
             if let content {
@@ -57,6 +63,9 @@ struct DiaryView: View {
                 RecipeView()
                     .environment(detail)
             }
+        }
+        .sheet(isPresented: $isPresented) {
+            RecipeCreateView()
         }
     }
 }
