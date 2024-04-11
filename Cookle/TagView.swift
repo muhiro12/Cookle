@@ -21,15 +21,18 @@ struct TagView: View {
             List(tagStore.tags.filter { $0.type == .custom }, id: \.self, selection: $content) {
                 Text($0.value)
             }
+            .navigationTitle("Tag")
         } content: {
             if let content {
                 List(recipes.filter { $0.tagList.contains(content.value) }, id: \.self, selection: $detail) { recipe in
                     Text(recipe.name)
                 }
+                .navigationTitle(content.value)
             }
         } detail: {
             if let detail {
                 RecipeView()
+                    .navigationTitle(detail.name)
                     .environment(detail)
             }
         }

@@ -12,45 +12,51 @@ struct RecipeView: View {
     @Environment(Recipe.self) var recipe
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                VStack {
-                    Text("image")
-                        .font(.headline)
-                    Text(recipe.imageList.description)
-                }
-                VStack {
-                    Text("name")
-                        .font(.headline)
-                    Text(recipe.name)
-                }
-                VStack {
-                    Text("ingredients")
-                        .font(.headline)
-                    Text(recipe.ingredientList.description)
-                }
-                VStack {
-                    Text("instructions")
-                        .font(.headline)
-                    Text(recipe.instructionList.description)
-                }
-                VStack {
-                    Text("tags")
-                        .font(.headline)
-                    Text(recipe.tagList.description)
-                }
-                VStack {
-                    Text("updateDate")
-                        .font(.headline)
-                    Text(recipe.updateDate.description)
-                }
-                VStack {
-                    Text("creationDate")
-                        .font(.headline)
-                    Text(recipe.creationDate.description)
+        List {
+            VStack(alignment: .leading) {
+                Text("image")
+                    .font(.headline)
+                ForEach(recipe.imageList, id: \.self) {
+                    if let image = UIImage(data: $0) {
+                        Image(uiImage: image)
+                    }
                 }
             }
-            .padding()
+            VStack(alignment: .leading) {
+                Text("ingredients")
+                    .font(.headline)
+                ForEach(recipe.ingredientList, id: \.self) {
+                    Text($0)
+                }
+            }
+            VStack(alignment: .leading) {
+                Text("instructions")
+                    .font(.headline)
+                ForEach(Array(recipe.instructionList.enumerated()), id: \.offset) { values in
+                    HStack(alignment: .top) {
+                        Text(values.offset.description + ".")
+                            .frame(width: 24)
+                        Text(values.element)
+                    }
+                }
+            }
+            VStack(alignment: .leading) {
+                Text("tags")
+                    .font(.headline)
+                ForEach(recipe.tagList, id: \.self) {
+                    Text($0)
+                }
+            }
+            VStack(alignment: .leading) {
+                Text("updateDate")
+                    .font(.headline)
+                Text(recipe.updateDate.description)
+            }
+            VStack(alignment: .leading) {
+                Text("creationDate")
+                    .font(.headline)
+                Text(recipe.creationDate.description)
+            }
         }
     }
 }
