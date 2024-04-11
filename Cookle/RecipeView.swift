@@ -63,5 +63,5 @@ struct RecipeView: View {
 
 #Preview {
     RecipeView()
-        .environment(Recipe())
+        .environment(PreviewData.randomRecipe())
 }

@@ -30,13 +30,20 @@ struct DiaryView: View {
             .listStyle(.sidebar)
             .toolbar {
                 ToolbarItem {
-                    Button(action: deleteAllRecipes) {
-                        Label("Delete All", systemImage: "trash")
-                    }
+                    Button("Delete All", systemImage: "trash") {}
+                        .onLongPressGesture {
+                            withAnimation {
+                                recipes.forEach(modelContext.delete)
+                            }
+                        }
                 }
                 ToolbarItem {
-                    Button(action: addRecipe) {
-                        Label("Add Item", systemImage: "plus")
+                    Button("Add Random Recipe", systemImage: "dice") {
+                        withAnimation {
+                            let recipe = PreviewData.randomRecipe()
+                            modelContext.insert(recipe)
+                            tagStore.insert(with: recipe)
+                        }
                     }
                 }
             }
@@ -51,20 +58,6 @@ struct DiaryView: View {
                 RecipeView()
                     .environment(detail)
             }
-        }
-    }
-
-    private func deleteAllRecipes() {
-        withAnimation {
-            recipes.forEach(modelContext.delete)
-        }
-    }
-
-    private func addRecipe() {
-        withAnimation {
-            let recipe = Recipe()
-            modelContext.insert(recipe)
-            tagStore.insert(with: recipe)
         }
     }
 }
