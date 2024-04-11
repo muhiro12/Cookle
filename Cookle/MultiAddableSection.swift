@@ -15,9 +15,7 @@ struct MultiAddableSection: View {
     let shouldShowNumber: Bool
 
     var body: some View {
-        Section {
-            Text(title)
-                .font(.headline)
+        Section(title) {
             ForEach(data.indices, id: \.self) { index in
                 HStack(alignment: .top) {
                     if shouldShowNumber {

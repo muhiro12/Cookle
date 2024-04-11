@@ -23,18 +23,14 @@ struct RecipeCreateView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section {
-                    HStack {
-                        Text("Name")
-                            .font(.headline)
+                Section("Name") {
+                    ZStack(alignment: .trailing) {
+                        TextField("Name", text: $name)
                         Text("*")
                             .foregroundStyle(.red)
                     }
-                    TextField("name", text: $name)
                 }
-                Section {
-                    Text("Images")
-                        .font(.headline)
+                Section("Images") {
                     ForEach(imageList, id: \.self) {
                         if let image = UIImage(data: $0) {
                             Image(uiImage: image)
@@ -74,6 +70,7 @@ struct RecipeCreateView: View {
                                 tagList: tagList.filter { !$0.isEmpty }
                             )
                         )
+                        dismiss()
                     }
                     .disabled(name.isEmpty)
                 }

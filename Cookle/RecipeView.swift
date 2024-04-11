@@ -13,25 +13,19 @@ struct RecipeView: View {
 
     var body: some View {
         List {
-            VStack(alignment: .leading) {
-                Text("image")
-                    .font(.headline)
+            Section("Image") {
                 ForEach(recipe.imageList, id: \.self) {
                     if let image = UIImage(data: $0) {
                         Image(uiImage: image)
                     }
                 }
             }
-            VStack(alignment: .leading) {
-                Text("ingredients")
-                    .font(.headline)
+            Section("Ingredients") {
                 ForEach(recipe.ingredientList, id: \.self) {
                     Text($0)
                 }
             }
-            VStack(alignment: .leading) {
-                Text("instructions")
-                    .font(.headline)
+            Section("Instructions") {
                 ForEach(Array(recipe.instructionList.enumerated()), id: \.offset) { values in
                     HStack(alignment: .top) {
                         Text(values.offset.description + ".")
@@ -40,21 +34,15 @@ struct RecipeView: View {
                     }
                 }
             }
-            VStack(alignment: .leading) {
-                Text("tags")
-                    .font(.headline)
+            Section("Tags") {
                 ForEach(recipe.tagList, id: \.self) {
                     Text($0)
                 }
             }
-            VStack(alignment: .leading) {
-                Text("updateDate")
-                    .font(.headline)
+            Section("Update Date") {
                 Text(recipe.updateDate.description)
             }
-            VStack(alignment: .leading) {
-                Text("creationDate")
-                    .font(.headline)
+            Section("Creation Date") {
                 Text(recipe.creationDate.description)
             }
         }
