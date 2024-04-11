@@ -11,6 +11,7 @@ struct MultiAddableSection: View {
     @Binding var data: [String]
 
     let title: String
+    let tagList: [Tag]
     let shouldShowNumber: Bool
 
     var body: some View {
@@ -18,7 +19,7 @@ struct MultiAddableSection: View {
             Text(title)
                 .font(.headline)
             ForEach(data.indices, id: \.self) { index in
-                HStack {
+                HStack(alignment: .top) {
                     if shouldShowNumber {
                         Text((index + 1).description + ".")
                     }
@@ -42,8 +43,20 @@ struct MultiAddableSection: View {
                                 }
                                 data.append("")
                             }
-                        )
+                        ),
+                        axis: .vertical
                     )
+                    if tagList.contains(where: { $0.value.lowercased().contains(data[index].lowercased()) }) {
+                        Menu {
+                            ForEach(tagList.filter { $0.value.lowercased().contains(data[index].lowercased()) }) { tag in
+                                Button(tag.value) {
+                                    data[index] = tag.value
+                                }
+                            }
+                        } label: {
+                            Image(systemName: "questionmark.circle")
+                        }
+                    }
                 }
             }
             .onMove {
@@ -65,6 +78,7 @@ struct MultiAddableSection: View {
         MultiAddableSection(
             data: .constant(Array(PreviewData.instructionsList.prefix(5)) + [""]),
             title: "Instructions",
+            tagList: PreviewData.tagStore.tags.filter { $0.type == .instruction },
             shouldShowNumber: true
         )
     }

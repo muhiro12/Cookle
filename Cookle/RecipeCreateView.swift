@@ -12,6 +12,8 @@ struct RecipeCreateView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
+    @Environment(TagStore.self) private var tagStore
+
     @State private var name = ""
     @State private var imageList = [Data]()
     @State private var ingredientList = [""]
@@ -35,9 +37,18 @@ struct RecipeCreateView: View {
                         }
                     }
                 }
-                MultiAddableSection(data: $ingredientList, title: "Ingredients", shouldShowNumber: false)
-                MultiAddableSection(data: $instructionList, title: "Instructions", shouldShowNumber: true)
-                MultiAddableSection(data: $tagList, title: "Tags", shouldShowNumber: false)
+                MultiAddableSection(data: $ingredientList,
+                                    title: "Ingredients",
+                                    tagList: tagStore.tags.filter { $0.type == .ingredient },
+                                    shouldShowNumber: false)
+                MultiAddableSection(data: $instructionList,
+                                    title: "Instructions",
+                                    tagList: tagStore.tags.filter { $0.type == .instruction },
+                                    shouldShowNumber: true)
+                MultiAddableSection(data: $tagList,
+                                    title: "Tags",
+                                    tagList: tagStore.tags.filter { $0.type == .custom },
+                                    shouldShowNumber: false)
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -68,4 +79,5 @@ struct RecipeCreateView: View {
 
 #Preview {
     RecipeCreateView()
+        .environment(PreviewData.tagStore)
 }
