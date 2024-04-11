@@ -110,14 +110,10 @@
 			children = (
 				AD0B6B752BC417AC007F66D2 /* CookleApp.swift */,
 				AD0B6B772BC417AC007F66D2 /* ContentView.swift */,
-				AD0B6BDD2BC549C5007F66D2 /* RecipeView.swift */,
-				AD0B6BDF2BC549CF007F66D2 /* TagView.swift */,
-				AD0B6B792BC417AC007F66D2 /* Recipe.swift */,
-				AD0B6BD92BC5492F007F66D2 /* TagStore.swift */,
-				AD0B6BDB2BC54943007F66D2 /* Tag.swift */,
-				ADDBB4312BC560CD003B444F /* DiaryView.swift */,
-				AD0B6B7B2BC417AD007F66D2 /* Assets.xcassets */,
+				ADDBB4362BC7ACF0003B444F /* Model */,
+				ADDBB4352BC7ACC5003B444F /* View */,
 				AD0B6B7D2BC417AD007F66D2 /* Preview Content */,
+				AD0B6B7B2BC417AD007F66D2 /* Assets.xcassets */,
 			);
 			path = Cookle;
 			sourceTree = "<group>";
@@ -146,6 +142,26 @@
 				AD0B6B942BC417AD007F66D2 /* CookleUITestsLaunchTests.swift */,
 			);
 			path = CookleUITests;
+			sourceTree = "<group>";
+		};
+		ADDBB4352BC7ACC5003B444F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				ADDBB4312BC560CD003B444F /* DiaryView.swift */,
+				AD0B6BDD2BC549C5007F66D2 /* RecipeView.swift */,
+				AD0B6BDF2BC549CF007F66D2 /* TagView.swift */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		ADDBB4362BC7ACF0003B444F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				AD0B6B792BC417AC007F66D2 /* Recipe.swift */,
+				AD0B6BDB2BC54943007F66D2 /* Tag.swift */,
+				AD0B6BD92BC5492F007F66D2 /* TagStore.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
