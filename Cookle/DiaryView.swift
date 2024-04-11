@@ -16,20 +16,18 @@ struct DiaryView: View {
 
     @State private var content: Tag.ID?
     @State private var detail: Recipe?
-    @State private var isExpanded = true
     @State private var isPresented = false
 
     var body: some View {
         NavigationSplitView {
             List(tagStore.tags.filter { $0.type == .year }, selection: $content) { yearTag in
-                Section(yearTag.value, isExpanded: $isExpanded) {
+                Section(yearTag.value) {
                     ForEach(tagStore.tags.filter { $0.type == .yearMonth && $0.value.contains(yearTag.value) }) { yearMonthTag in
                         Text(yearMonthTag.value)
                     }
                 }
             }
             .navigationTitle("Diary")
-            .listStyle(.sidebar)
             .toolbar {
                 ToolbarItem {
                     Button("Delete All", systemImage: "trash") {

@@ -32,7 +32,7 @@ struct PreviewData {
             instructionList: (0...Int.random(in: 0..<20)).map { _ in PreviewData.randomWords(from: PreviewData.instructionsList) },
             tagList: (0...Int.random(in: 0..<5)).map { _ in PreviewData.randomWords(from: PreviewData.tagList) }
         )
-        recipe.setUpdateDate(recipe.creationDate.addingTimeInterval(.random(in: 1...100) * 24 * 60 * 60))
+        recipe.setUpdateDate(recipe.creationDate.addingTimeInterval(.random(in: 1...365) * 24 * 60 * 60 * 3))
         return recipe
     }
 

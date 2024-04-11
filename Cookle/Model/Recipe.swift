@@ -49,9 +49,9 @@ final class Recipe {
         updateDate = date
 
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyyMM"
+        formatter.dateFormat = "yyyy"
         year = formatter.string(from: date)
-        formatter.dateFormat = "yyyyMMdd"
+        formatter.dateFormat = "yyyyMM"
         yearMonth = formatter.string(from: date)
     }
 }
