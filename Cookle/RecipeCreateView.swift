@@ -24,8 +24,12 @@ struct RecipeCreateView: View {
         NavigationView {
             Form {
                 Section {
-                    Text("Name")
-                        .font(.headline)
+                    HStack {
+                        Text("Name")
+                            .font(.headline)
+                        Text("*")
+                            .foregroundStyle(.red)
+                    }
                     TextField("name", text: $name)
                 }
                 Section {
@@ -65,12 +69,13 @@ struct RecipeCreateView: View {
                             Recipe(
                                 name: name,
                                 imageList: imageList,
-                                ingredientList: ingredientList,
-                                instructionList: instructionList,
-                                tagList: tagList
+                                ingredientList: ingredientList.filter { !$0.isEmpty },
+                                instructionList: instructionList.filter { !$0.isEmpty },
+                                tagList: tagList.filter { !$0.isEmpty }
                             )
                         )
                     }
+                    .disabled(name.isEmpty)
                 }
             }
         }
