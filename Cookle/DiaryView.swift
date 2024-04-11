@@ -65,10 +65,17 @@ struct DiaryView: View {
                 RecipeView()
                     .navigationTitle(detail.name)
                     .environment(detail)
+                    .toolbar {
+                        ToolbarItem {
+                            Button("Edit Recipe", systemImage: "pencil") {
+                                isPresented = true
+                            }
+                        }
+                    }
             }
         }
         .sheet(isPresented: $isPresented) {
-            RecipeCreateView()
+            RecipeFormView(detail)
         }
     }
 }

@@ -35,6 +35,16 @@ final class Recipe {
         self.setUpdateDate(updateDate)
     }
 
+    func set(name: String, imageList: [Data], ingredientList: [String], instructionList: [String], tagList: [String]) {
+        self.name = name
+        self.imageList = imageList
+        self.ingredientList = ingredientList
+        self.instructionList = instructionList
+        self.tagList = tagList
+
+        self.setUpdateDate(.now)
+    }
+
     func setUpdateDate(_ date: Date) {
         updateDate = date
 

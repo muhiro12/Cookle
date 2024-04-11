@@ -21,7 +21,7 @@
 		AD0B6BE02BC549CF007F66D2 /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0B6BDF2BC549CF007F66D2 /* TagView.swift */; };
 		ADDBB4322BC560CD003B444F /* DiaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBB4312BC560CD003B444F /* DiaryView.swift */; };
 		ADDBB4342BC79464003B444F /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBB4332BC79464003B444F /* PreviewData.swift */; };
-		ADDBB4382BC7C232003B444F /* RecipeCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBB4372BC7C232003B444F /* RecipeCreateView.swift */; };
+		ADDBB4382BC7C232003B444F /* RecipeFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBB4372BC7C232003B444F /* RecipeFormView.swift */; };
 		ADDBB43B2BC81E50003B444F /* MultiAddableSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBB43A2BC81E50003B444F /* MultiAddableSection.swift */; };
 /* End PBXBuildFile section */
 
@@ -61,7 +61,7 @@
 		AD1338A62BC84E2D00A8BAD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		ADDBB4312BC560CD003B444F /* DiaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryView.swift; sourceTree = "<group>"; };
 		ADDBB4332BC79464003B444F /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
-		ADDBB4372BC7C232003B444F /* RecipeCreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeCreateView.swift; sourceTree = "<group>"; };
+		ADDBB4372BC7C232003B444F /* RecipeFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeFormView.swift; sourceTree = "<group>"; };
 		ADDBB43A2BC81E50003B444F /* MultiAddableSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiAddableSection.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -155,7 +155,7 @@
 			isa = PBXGroup;
 			children = (
 				ADDBB4312BC560CD003B444F /* DiaryView.swift */,
-				ADDBB4372BC7C232003B444F /* RecipeCreateView.swift */,
+				ADDBB4372BC7C232003B444F /* RecipeFormView.swift */,
 				AD0B6BDD2BC549C5007F66D2 /* RecipeView.swift */,
 				AD0B6BDF2BC549CF007F66D2 /* TagView.swift */,
 			);
@@ -313,7 +313,7 @@
 				AD0B6B782BC417AC007F66D2 /* ContentView.swift in Sources */,
 				ADDBB43B2BC81E50003B444F /* MultiAddableSection.swift in Sources */,
 				AD0B6BDE2BC549C5007F66D2 /* RecipeView.swift in Sources */,
-				ADDBB4382BC7C232003B444F /* RecipeCreateView.swift in Sources */,
+				ADDBB4382BC7C232003B444F /* RecipeFormView.swift in Sources */,
 				AD0B6B7A2BC417AC007F66D2 /* Recipe.swift in Sources */,
 				AD0B6BDC2BC54943007F66D2 /* Tag.swift in Sources */,
 				AD0B6BE02BC549CF007F66D2 /* TagView.swift in Sources */,

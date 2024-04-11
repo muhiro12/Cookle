@@ -1,5 +1,5 @@
 //
-//  RecipeCreateView.swift
+//  RecipeFormView.swift
 //  Cookle
 //
 //  Created by Hiromu Nakano on 2024/04/11.
@@ -8,17 +8,29 @@
 import SwiftUI
 import SwiftData
 
-struct RecipeCreateView: View {
+struct RecipeFormView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
     @Environment(TagStore.self) private var tagStore
 
-    @State private var name = ""
-    @State private var imageList = [Data]()
-    @State private var ingredientList = [""]
-    @State private var instructionList = [""]
-    @State private var tagList = [""]
+    @State private var name: String
+    @State private var imageList: [Data]
+    @State private var ingredientList: [String]
+    @State private var instructionList: [String]
+    @State private var tagList: [String]
+
+    private let recipe: Recipe?
+
+    init(_ recipe: Recipe?) {
+        _name = .init(initialValue: recipe?.name ?? "")
+        _imageList = .init(initialValue: recipe?.imageList ?? [])
+        _ingredientList = .init(initialValue: (recipe?.ingredientList ?? []) + [""])
+        _instructionList = .init(initialValue: (recipe?.instructionList ?? []) + [""])
+        _tagList = .init(initialValue: (recipe?.tagList ?? []) + [""])
+
+        self.recipe = recipe
+    }
 
     var body: some View {
         NavigationView {
@@ -60,26 +72,43 @@ struct RecipeCreateView: View {
                     EditButton()
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Add") {
-                        modelContext.insert(
-                            Recipe(
+                    Button(recipe != nil ? "Update" : "Add") {
+                        if let recipe {
+                            recipe.set(
                                 name: name,
                                 imageList: imageList,
                                 ingredientList: ingredientList.filter { !$0.isEmpty },
                                 instructionList: instructionList.filter { !$0.isEmpty },
                                 tagList: tagList.filter { !$0.isEmpty }
                             )
-                        )
+                            tagStore.insert(with: recipe)
+                        } else {
+                            let recipe = Recipe(
+                                name: name,
+                                imageList: imageList,
+                                ingredientList: ingredientList.filter { !$0.isEmpty },
+                                instructionList: instructionList.filter { !$0.isEmpty },
+                                tagList: tagList.filter { !$0.isEmpty }
+                            )
+                            modelContext.insert(recipe)
+                            tagStore.insert(with: recipe)
+                        }
                         dismiss()
                     }
                     .disabled(name.isEmpty)
                 }
             }
         }
+        .interactiveDismissDisabled()
     }
 }
 
 #Preview {
-    RecipeCreateView()
+    RecipeFormView(PreviewData.randomRecipe())
+        .environment(PreviewData.tagStore)
+}
+
+#Preview {
+    RecipeFormView(nil)
         .environment(PreviewData.tagStore)
 }
