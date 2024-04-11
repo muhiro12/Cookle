@@ -10,14 +10,16 @@ import Foundation
 struct Tag {
     enum TagType {
         case name
-        case category
         case year
         case yearMonth
+        case ingredient
+        case instruction
+        case custom
     }
 
     let id = UUID()
     let type: TagType
-    let name: String
+    let value: String
 }
 
 extension Tag: Identifiable {}

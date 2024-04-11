@@ -20,6 +20,15 @@ struct CookleApp: App {
 
     private let tagStore = TagStore()
 
+    init() {
+        let recipes = try? sharedModelContainer.mainContext.fetch(
+            FetchDescriptor<Recipe>(
+                predicate: #Predicate { _ in true }
+            )
+        )
+        tagStore.modify(recipes ?? [])
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()

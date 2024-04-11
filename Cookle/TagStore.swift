@@ -12,18 +12,28 @@ final class TagStore {
     private(set) var tags: [Tag] = []
 
     func insert(_ tag: Tag) {
-        guard !tags.contains(where: { $0.name == tag.name }) else {
+        guard !tags.contains(where: { $0.value == tag.value }) else {
             return
         }
         tags.append(tag)
     }
 
-    func modify(_ recipes: [Recipe]) {
-        recipes.forEach { recipe in
-            insert(.init(type: .name, name: recipe.name))
-            insert(.init(type: .category, name: recipe.tag))
-            insert(.init(type: .year, name: recipe.year))
-            insert(.init(type: .yearMonth, name: recipe.yearMonth))
+    func insert(with recipe: Recipe) {
+        insert(.init(type: .name, value: recipe.name))
+        insert(.init(type: .year, value: recipe.year))
+        insert(.init(type: .yearMonth, value: recipe.yearMonth))
+        recipe.ingredientList.forEach {
+            insert(.init(type: .ingredient, value: $0))
         }
+        recipe.instructionList.forEach {
+            insert(.init(type: .instruction, value: $0))
+        }
+        recipe.tagList.forEach { tag in
+            insert(.init(type: .custom, value: tag))
+        }
+    }
+
+    func modify(_ recipes: [Recipe]) {
+        recipes.forEach(insert)
     }
 }

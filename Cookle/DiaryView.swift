@@ -14,14 +14,20 @@ struct DiaryView: View {
 
     @Query private var recipes: [Recipe]
 
-    @State private var content: Tag?
+    @State private var content: Tag.ID?
     @State private var detail: Recipe?
+    @State private var isExpanded = true
 
     var body: some View {
         NavigationSplitView {
-            List(tagStore.tags.filter { $0.type == .yearMonth }, id: \.self, selection: $content) {
-                Text($0.name)
+            List(tagStore.tags.filter { $0.type == .year }, selection: $content) { yearTag in
+                Section(yearTag.value, isExpanded: $isExpanded) {
+                    ForEach(tagStore.tags.filter { $0.type == .yearMonth && $0.value.contains(yearTag.value) }) { yearMonthTag in
+                        Text(yearMonthTag.value)
+                    }
+                }
             }
+            .listStyle(.sidebar)
             .toolbar {
                 ToolbarItem {
                     Button(action: deleteAllRecipes) {
@@ -36,7 +42,7 @@ struct DiaryView: View {
             }
         } content: {
             if let content {
-                List(recipes.filter { $0.yearMonth == content.name }, id: \.self, selection: $detail) { recipe in
+                List(recipes.filter { $0.yearMonth == tagStore.tags.first { $0.id == content }?.value }, id: \.self, selection: $detail) { recipe in
                     Text(recipe.name)
                 }
             }
@@ -45,9 +51,6 @@ struct DiaryView: View {
                 RecipeView()
                     .environment(detail)
             }
-        }
-        .onAppear {
-            tagStore.modify(recipes)
         }
     }
 
@@ -61,16 +64,13 @@ struct DiaryView: View {
         withAnimation {
             let recipe = Recipe()
             modelContext.insert(recipe)
-            tagStore.insert(.init(type: .name, name: recipe.name))
-            tagStore.insert(.init(type: .category, name: recipe.tag))
-            tagStore.insert(.init(type: .year, name: recipe.year))
-            tagStore.insert(.init(type: .yearMonth, name: recipe.yearMonth))
+            tagStore.insert(with: recipe)
         }
     }
 }
 
 #Preview {
     DiaryView()
-        .modelContainer(for: Recipe.self, inMemory: true)
-        .environment(TagStore())
+        .modelContainer(PreviewData.modelContainer)
+        .environment(PreviewData.tagStore)
 }

@@ -18,12 +18,12 @@ struct TagView: View {
 
     var body: some View {
         NavigationSplitView {
-            List(tagStore.tags.filter { $0.type == .category }, id: \.self, selection: $content) {
-                Text($0.name)
+            List(tagStore.tags.filter { $0.type == .custom }, id: \.self, selection: $content) {
+                Text($0.value)
             }
         } content: {
             if let content {
-                List(recipes.filter { $0.tag == content.name }, id: \.self, selection: $detail) { recipe in
+                List(recipes.filter { $0.tagList.contains(content.value) }, id: \.self, selection: $detail) { recipe in
                     Text(recipe.name)
                 }
             }
@@ -38,10 +38,6 @@ struct TagView: View {
 
 #Preview {
     TagView()
-        .environment({
-            let tagStore = TagStore()
-            tagStore.insert(.init(type: .name, name: "tagA"))
-            tagStore.insert(.init(type: .name, name: "tagB"))
-            return tagStore
-        }())
+        .modelContainer(PreviewData.modelContainer)
+        .environment(PreviewData.tagStore)
 }

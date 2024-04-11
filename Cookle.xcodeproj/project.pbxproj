@@ -20,6 +20,7 @@
 		AD0B6BDE2BC549C5007F66D2 /* RecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0B6BDD2BC549C5007F66D2 /* RecipeView.swift */; };
 		AD0B6BE02BC549CF007F66D2 /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0B6BDF2BC549CF007F66D2 /* TagView.swift */; };
 		ADDBB4322BC560CD003B444F /* DiaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBB4312BC560CD003B444F /* DiaryView.swift */; };
+		ADDBB4342BC79464003B444F /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBB4332BC79464003B444F /* PreviewData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 		AD0B6BDD2BC549C5007F66D2 /* RecipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeView.swift; sourceTree = "<group>"; };
 		AD0B6BDF2BC549CF007F66D2 /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
 		ADDBB4312BC560CD003B444F /* DiaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryView.swift; sourceTree = "<group>"; };
+		ADDBB4332BC79464003B444F /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				AD0B6B7E2BC417AD007F66D2 /* Preview Assets.xcassets */,
+				ADDBB4332BC79464003B444F /* PreviewData.swift */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -280,6 +283,7 @@
 				AD0B6B7A2BC417AC007F66D2 /* Recipe.swift in Sources */,
 				AD0B6BDC2BC54943007F66D2 /* Tag.swift in Sources */,
 				AD0B6BE02BC549CF007F66D2 /* TagView.swift in Sources */,
+				ADDBB4342BC79464003B444F /* PreviewData.swift in Sources */,
 				AD0B6BDA2BC5492F007F66D2 /* TagStore.swift in Sources */,
 				ADDBB4322BC560CD003B444F /* DiaryView.swift in Sources */,
 				AD0B6B762BC417AC007F66D2 /* CookleApp.swift in Sources */,
