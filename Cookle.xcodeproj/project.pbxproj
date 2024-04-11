@@ -129,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				AD0B6B7E2BC417AD007F66D2 /* Preview Assets.xcassets */,
+				ADDBB4332BC79464003B444F /* PreviewData.swift */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -164,7 +165,6 @@
 		ADDBB4362BC7ACF0003B444F /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				ADDBB4332BC79464003B444F /* PreviewData.swift */,
 				AD0B6B792BC417AC007F66D2 /* Recipe.swift */,
 				AD0B6BDB2BC54943007F66D2 /* Tag.swift */,
 				AD0B6BD92BC5492F007F66D2 /* TagStore.swift */,
