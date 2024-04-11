@@ -29,15 +29,19 @@ final class Recipe {
 
         self.updateDate = .now
         self.creationDate = .now
-
         self.year = ""
         self.yearMonth = ""
 
-        self.year = updateDate.formatted(date: .abbreviated, time: .shortened)
-        self.yearMonth = updateDate.formatted(date: .abbreviated, time: .standard)
+        self.setUpdateDate(updateDate)
     }
 
     func setUpdateDate(_ date: Date) {
         updateDate = date
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMM"
+        year = formatter.string(from: date)
+        formatter.dateFormat = "yyyyMMdd"
+        yearMonth = formatter.string(from: date)
     }
 }

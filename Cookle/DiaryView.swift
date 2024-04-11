@@ -30,12 +30,11 @@ struct DiaryView: View {
             .listStyle(.sidebar)
             .toolbar {
                 ToolbarItem {
-                    Button("Delete All", systemImage: "trash") {}
-                        .onLongPressGesture {
-                            withAnimation {
-                                recipes.forEach(modelContext.delete)
-                            }
+                    Button("Delete All", systemImage: "trash") {
+                        withAnimation {
+                            recipes.forEach(modelContext.delete)
                         }
+                    }
                 }
                 ToolbarItem {
                     Button("Add Random Recipe", systemImage: "dice") {
