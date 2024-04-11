@@ -28,6 +28,7 @@ struct DiaryView: View {
                     }
                 }
             }
+            .navigationTitle("Diary")
             .listStyle(.sidebar)
             .toolbar {
                 ToolbarItem {
@@ -57,10 +58,12 @@ struct DiaryView: View {
                 List(recipes.filter { $0.yearMonth == tagStore.tags.first { $0.id == content }?.value }, id: \.self, selection: $detail) { recipe in
                     Text(recipe.name)
                 }
+                .navigationTitle(tagStore.tags.first { $0.id == content }?.value ?? "")
             }
         } detail: {
             if let detail {
                 RecipeView()
+                    .navigationTitle(detail.name)
                     .environment(detail)
             }
         }
