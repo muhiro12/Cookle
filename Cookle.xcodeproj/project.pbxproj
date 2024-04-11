@@ -128,8 +128,8 @@
 		AD0B6B7D2BC417AD007F66D2 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
-				AD0B6B7E2BC417AD007F66D2 /* Preview Assets.xcassets */,
 				ADDBB4332BC79464003B444F /* PreviewData.swift */,
+				AD0B6B7E2BC417AD007F66D2 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -483,7 +483,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Cookle/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Cookle/Preview Content/Preview Assets.xcassets\"";
 				DEVELOPMENT_TEAM = 66PKF55HK5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -513,7 +513,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Cookle/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Cookle/Preview Content/Preview Assets.xcassets\"";
 				DEVELOPMENT_TEAM = 66PKF55HK5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
