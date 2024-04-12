@@ -16,6 +16,7 @@ struct DiaryView: View {
 
     @State private var content: Tag.ID?
     @State private var detail: Recipe?
+    @State private var isListStyle = false
     @State private var isPresented = false
 
     var body: some View {
@@ -53,10 +54,26 @@ struct DiaryView: View {
             }
         } content: {
             if let content {
-                List(recipes.filter { $0.yearMonth == tagStore.tags.first { $0.id == content }?.value }, id: \.self, selection: $detail) { recipe in
-                    Text(recipe.name)
+                VStack {
+                    if isListStyle {
+                        List(recipes.filter { $0.yearMonth == tagStore.tags.first { $0.id == content }?.value }, id: \.self, selection: $detail) { recipe in
+                            Text(recipe.name)
+                        }
+                    } else {
+                        RecipeGridView(recipes.filter { $0.yearMonth == tagStore.tags.first { $0.id == content }?.value },
+                                       selection: $detail)
+                    }
+                    List(selection: $detail) {}
+                        .frame(height: .zero)
                 }
                 .navigationTitle(tagStore.tags.first { $0.id == content }?.value ?? "")
+                .toolbar {
+                    ToolbarItem {
+                        Button("Toggle Style", systemImage: "list.bullet.rectangle") {
+                            isListStyle.toggle()
+                        }
+                    }
+                }
             }
         } detail: {
             if let detail {

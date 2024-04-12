@@ -42,34 +42,8 @@ struct TagView: View {
                             Text(recipe.name)
                         }
                     } else {
-                        VStack {
-                            ScrollView(.horizontal) {
-                                LazyHGrid(rows: (0..<3).map { _ in .init() }) {
-                                    ForEach(recipes.filter { $0.tagList.contains(content.value) }) { recipe in
-                                        ZStack {
-                                            RoundedRectangle(cornerRadius: 8)
-                                                .foregroundColor(.white)
-                                                .shadow(radius: 1)
-                                            VStack {
-                                                Text(recipe.name)
-                                                    .font(.title)
-                                                    .bold()
-                                                Divider()
-                                                Text(recipe.ingredientList.joined(separator: ", "))
-                                                Spacer()
-                                            }
-                                            .padding()
-                                        }
-                                        .frame(width: 300)
-                                        .onTapGesture {
-                                            detail = recipe
-                                        }
-                                    }
-                                }
-                                .padding()
-                            }
-                            Spacer()
-                        }
+                        RecipeGridView(recipes.filter { $0.tagList.contains(content.value) },
+                                       selection: $detail)
                     }
                     List(selection: $detail) {}
                         .frame(height: .zero)
