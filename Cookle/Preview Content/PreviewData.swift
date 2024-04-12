@@ -16,7 +16,6 @@ struct PreviewData {
                 let recipe = randomRecipe()
                 container.mainContext.insert(recipe)
                 tagStore.insert(with: recipe)
-                try? await Task.sleep(for: .seconds(0.2))
             }
         }
         return container
