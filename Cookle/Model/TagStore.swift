@@ -9,13 +9,35 @@ import Foundation
 
 @Observable
 final class TagStore {
-    private(set) var tags: [Tag] = []
+    private(set) var tagList: [Tag] = []
 
-    func insert(_ tag: Tag) {
-        guard !tags.contains(where: { $0.value == tag.value }) else {
-            return
-        }
-        tags.append(tag)
+    var nameTagList: [Tag] {
+        tagList.filter { $0.type == .name }
+    }
+
+    var yearTagList: [Tag] {
+        tagList.filter { $0.type == .year }
+    }
+
+    var yearMonthTagList: [Tag] {
+        tagList.filter { $0.type == .yearMonth }
+    }
+
+    var ingredientTagList: [Tag] {
+        tagList.filter { $0.type == .ingredient }
+    }
+
+    var instructionTagList: [Tag] {
+        tagList.filter { $0.type == .instruction }
+    }
+
+    var customTagList: [Tag] {
+        tagList.filter { $0.type == .custom }
+    }
+
+    func modify(_ recipes: [Recipe]) {
+        tagList.removeAll()
+        recipes.forEach(insert)
     }
 
     func insert(with recipe: Recipe) {
@@ -31,9 +53,15 @@ final class TagStore {
         recipe.tagList.forEach { tag in
             insert(.init(type: .custom, value: tag))
         }
+        tagList.sort()
     }
 
-    func modify(_ recipes: [Recipe]) {
-        recipes.forEach(insert)
+    private func insert(_ tag: Tag) {
+        guard !tagList.contains(where: {
+            $0.type == tag.type && $0.value == tag.value
+        }) else {
+            return
+        }
+        tagList.append(tag)
     }
 }

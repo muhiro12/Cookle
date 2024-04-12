@@ -22,7 +22,7 @@ struct TagView: View {
             VStack {
                 ScrollView {
                     LazyVGrid(columns: (0..<3).map { _ in .init() }) {
-                        ForEach(tagStore.tags.filter { $0.type == .custom }) { tag in
+                        ForEach(tagStore.tagList.filter { $0.type == .custom }) { tag in
                             Button(tag.value) {
                                 content = tag
                             }
