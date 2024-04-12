@@ -42,31 +42,34 @@ struct TagView: View {
                             Text(recipe.name)
                         }
                     } else {
-                        TabView {
-                            ForEach(recipes.filter { $0.tagList.contains(content.value) }) { recipe in
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .foregroundStyle(.orange)
-                                    List {
-                                        Text(recipe.name)
-                                            .font(.title)
-                                            .bold()
-                                        Section("Ingredients") {
-                                            ForEach(recipe.ingredientList, id: \.self) {
-                                                Text($0)
+                        VStack {
+                            ScrollView(.horizontal) {
+                                LazyHGrid(rows: (0..<3).map { _ in .init() }) {
+                                    ForEach(recipes.filter { $0.tagList.contains(content.value) }) { recipe in
+                                        ZStack {
+                                            RoundedRectangle(cornerRadius: 8)
+                                                .foregroundColor(.white)
+                                                .shadow(radius: 1)
+                                            VStack {
+                                                Text(recipe.name)
+                                                    .font(.title)
+                                                    .bold()
+                                                Divider()
+                                                Text(recipe.ingredientList.joined(separator: ", "))
+                                                Spacer()
                                             }
+                                            .padding()
+                                        }
+                                        .frame(width: 300)
+                                        .onTapGesture {
+                                            detail = recipe
                                         }
                                     }
-                                    .listStyle(.inset)
-                                    .padding()
-                                }
-                                .onTapGesture {
-                                    detail = recipe
                                 }
                                 .padding()
                             }
+                            Spacer()
                         }
-                        .tabViewStyle(.page)
                     }
                     List(selection: $detail) {}
                         .frame(height: .zero)
