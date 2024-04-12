@@ -15,27 +15,70 @@ struct TagView: View {
 
     @State private var content: Tag?
     @State private var detail: Recipe?
+    @State private var isListStyle = false
 
     var body: some View {
         NavigationSplitView {
-            ScrollView {
-                LazyVGrid(columns: (0..<3).map { _ in .init() }) {
-                    ForEach(tagStore.tags.filter { $0.type == .custom }, id: \.self) { tag in
-                        Button(tag.value) {
-                            content = tag
+            VStack {
+                ScrollView {
+                    LazyVGrid(columns: (0..<3).map { _ in .init() }) {
+                        ForEach(tagStore.tags.filter { $0.type == .custom }) { tag in
+                            Button(tag.value) {
+                                content = tag
+                            }
                         }
+                        .padding()
                     }
-                    .padding()
                 }
                 List(selection: $content) {}
+                    .frame(height: .zero)
             }
             .navigationTitle("Tag")
         } content: {
             if let content {
-                List(recipes.filter { $0.tagList.contains(content.value) }, id: \.self, selection: $detail) { recipe in
-                    Text(recipe.name)
+                VStack {
+                    if isListStyle {
+                        List(recipes.filter { $0.tagList.contains(content.value) }, id: \.self, selection: $detail) { recipe in
+                            Text(recipe.name)
+                        }
+                    } else {
+                        TabView {
+                            ForEach(recipes.filter { $0.tagList.contains(content.value) }) { recipe in
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .foregroundStyle(.orange)
+                                    List {
+                                        Text(recipe.name)
+                                            .font(.title)
+                                            .bold()
+                                        Section("Ingredients") {
+                                            ForEach(recipe.ingredientList, id: \.self) {
+                                                Text($0)
+                                            }
+                                        }
+                                    }
+                                    .listStyle(.inset)
+                                    .padding()
+                                }
+                                .onTapGesture {
+                                    detail = recipe
+                                }
+                                .padding()
+                            }
+                        }
+                        .tabViewStyle(.page)
+                    }
+                    List(selection: $detail) {}
+                        .frame(height: .zero)
                 }
                 .navigationTitle(content.value)
+                .toolbar {
+                    ToolbarItem {
+                        Button("Toggle Style", systemImage: "list.bullet.rectangle") {
+                            isListStyle.toggle()
+                        }
+                    }
+                }
             }
         } detail: {
             if let detail {
