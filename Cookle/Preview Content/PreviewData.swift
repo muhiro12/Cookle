@@ -26,7 +26,6 @@ struct PreviewData {
     static func randomRecipe() -> Recipe {
         let recipe = Recipe(
             name: PreviewData.randomWords(from: PreviewData.nameList),
-            imageList: [],
             ingredientList: (0...Int.random(in: 0..<20)).map { _ in PreviewData.randomWords(from: PreviewData.ingredientList) },
             instructionList: (0...Int.random(in: 0..<20)).map { _ in PreviewData.randomWords(from: PreviewData.instructionsList) },
             tagList: (0...Int.random(in: 0..<5)).map { _ in PreviewData.randomWords(from: PreviewData.tagList) }

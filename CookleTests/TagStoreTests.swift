@@ -13,7 +13,6 @@ final class TagStoreTests: XCTestCase {
 
     let recipes: [Recipe] = (0..<10).map {
         .init(name: $0.description,
-              imageList: [],
               ingredientList: [$0.description],
               instructionList: [$0.description],
               tagList: [$0.description])

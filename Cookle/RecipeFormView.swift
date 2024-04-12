@@ -15,7 +15,6 @@ struct RecipeFormView: View {
     @Environment(TagStore.self) private var tagStore
 
     @State private var name: String
-    @State private var imageList: [Data]
     @State private var ingredientList: [String]
     @State private var instructionList: [String]
     @State private var tagList: [String]
@@ -24,7 +23,6 @@ struct RecipeFormView: View {
 
     init(_ recipe: Recipe?) {
         _name = .init(initialValue: recipe?.name ?? "")
-        _imageList = .init(initialValue: recipe?.imageList ?? [])
         _ingredientList = .init(initialValue: (recipe?.ingredientList ?? []) + [""])
         _instructionList = .init(initialValue: (recipe?.instructionList ?? []) + [""])
         _tagList = .init(initialValue: (recipe?.tagList ?? []) + [""])
@@ -40,13 +38,6 @@ struct RecipeFormView: View {
                         TextField("Name", text: $name)
                         Text("*")
                             .foregroundStyle(.red)
-                    }
-                }
-                Section("Images") {
-                    ForEach(imageList, id: \.self) {
-                        if let image = UIImage(data: $0) {
-                            Image(uiImage: image)
-                        }
                     }
                 }
                 MultiAddableSection(data: $ingredientList,
@@ -76,7 +67,6 @@ struct RecipeFormView: View {
                         if let recipe {
                             recipe.set(
                                 name: name,
-                                imageList: imageList,
                                 ingredientList: ingredientList.filter { !$0.isEmpty },
                                 instructionList: instructionList.filter { !$0.isEmpty },
                                 tagList: tagList.filter { !$0.isEmpty }
@@ -85,7 +75,6 @@ struct RecipeFormView: View {
                         } else {
                             let recipe = Recipe(
                                 name: name,
-                                imageList: imageList,
                                 ingredientList: ingredientList.filter { !$0.isEmpty },
                                 instructionList: instructionList.filter { !$0.isEmpty },
                                 tagList: tagList.filter { !$0.isEmpty }

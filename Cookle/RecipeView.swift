@@ -13,13 +13,6 @@ struct RecipeView: View {
 
     var body: some View {
         List {
-            Section("Image") {
-                ForEach(recipe.imageList, id: \.self) {
-                    if let image = UIImage(data: $0) {
-                        Image(uiImage: image)
-                    }
-                }
-            }
             Section("Ingredients") {
                 ForEach(recipe.ingredientList, id: \.self) {
                     Text($0)
