@@ -18,8 +18,16 @@ struct TagView: View {
 
     var body: some View {
         NavigationSplitView {
-            List(tagStore.tags.filter { $0.type == .custom }, id: \.self, selection: $content) {
-                Text($0.value)
+            ScrollView {
+                LazyVGrid(columns: (0..<3).map { _ in .init() }) {
+                    ForEach(tagStore.tags.filter { $0.type == .custom }, id: \.self) { tag in
+                        Button(tag.value) {
+                            content = tag
+                        }
+                    }
+                    .padding()
+                }
+                List(selection: $content) {}
             }
             .navigationTitle("Tag")
         } content: {
