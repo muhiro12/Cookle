@@ -56,9 +56,8 @@ struct DiaryView: View {
             if let content {
                 VStack {
                     if isListStyle {
-                        List(recipes.filter { $0.yearMonthDay == tagStore.yearMonthDayTagList.first { $0.id == content }?.value }, id: \.self, selection: $detail) { recipe in
-                            Text(recipe.name)
-                        }
+                        RecipeListView(recipes.filter { $0.yearMonthDay == tagStore.yearMonthDayTagList.first { $0.id == content }?.value },
+                                       selection: $detail)
                     } else {
                         RecipeGridView(recipes.filter { $0.yearMonthDay == tagStore.yearMonthDayTagList.first { $0.id == content }?.value },
                                        selection: $detail)

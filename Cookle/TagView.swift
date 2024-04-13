@@ -38,9 +38,8 @@ struct TagView: View {
             if let content {
                 VStack {
                     if isListStyle {
-                        List(recipes.filter { $0.tagList.contains(content.value) }, id: \.self, selection: $detail) { recipe in
-                            Text(recipe.name)
-                        }
+                        RecipeListView(recipes.filter { $0.tagList.contains(content.value) },
+                                       selection: $detail)
                     } else {
                         RecipeGridView(recipes.filter { $0.tagList.contains(content.value) },
                                        selection: $detail)
