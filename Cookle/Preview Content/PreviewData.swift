@@ -15,20 +15,20 @@ struct PreviewData {
             for _ in 0...20 {
                 let recipe = randomRecipe()
                 container.mainContext.insert(recipe)
-                tagStore.insert(with: recipe)
+                inMemoryContext.insert(with: recipe)
             }
         }
         return container
     }()
 
-    static let tagStore = TagStore()
+    static let inMemoryContext = InMemoryContext()
 
     static func randomRecipe() -> Recipe {
         let recipe = Recipe(
             name: PreviewData.randomWords(from: PreviewData.nameList),
             ingredientList: (0...Int.random(in: 0..<20)).map { _ in PreviewData.randomWords(from: PreviewData.ingredientList) },
             instructionList: (0...Int.random(in: 0..<20)).map { _ in PreviewData.randomWords(from: PreviewData.instructionsList) },
-            tagList: (0...Int.random(in: 0..<5)).map { _ in PreviewData.randomWords(from: PreviewData.tagList) }
+            categoryList: (0...Int.random(in: 0..<5)).map { _ in PreviewData.randomWords(from: PreviewData.categoryList) }
         )
         recipe.setUpdateDate(recipe.creationDate.addingTimeInterval(.random(in: 1...365) * 24 * 60 * 60 * 3))
         return recipe
@@ -131,7 +131,7 @@ struct PreviewData {
         "Dry brine the chicken for juicier results.", "Tenderize the meat with a marinade."
     ]
 
-    static let tagList = [
+    static let categoryList = [
         "Japanese", "Western", "French", "Italian", "Chinese",
         "Spanish", "Mediterranean", "Mexican", "Thai", "Indian",
         "Vietnamese", "Korean", "Main-Dish", "Side-Dish", "Soup",

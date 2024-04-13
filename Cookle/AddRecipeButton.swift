@@ -22,5 +22,5 @@ struct AddRecipeButton: View {
 
 #Preview {
     AddRecipeButton()
-        .environment(PreviewData.tagStore)
+        .environment(\.inMemoryContext, PreviewData.inMemoryContext)
 }

@@ -28,7 +28,7 @@ struct RecipeView: View {
                 }
             }
             Section("Tags") {
-                ForEach(recipe.tagList, id: \.self) {
+                ForEach(recipe.categoryList, id: \.self) {
                     Text($0)
                 }
             }

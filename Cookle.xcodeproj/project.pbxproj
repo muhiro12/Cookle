@@ -15,16 +15,24 @@
 		AD0B6B892BC417AD007F66D2 /* CookleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0B6B882BC417AD007F66D2 /* CookleTests.swift */; };
 		AD0B6B932BC417AD007F66D2 /* CookleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0B6B922BC417AD007F66D2 /* CookleUITests.swift */; };
 		AD0B6B952BC417AD007F66D2 /* CookleUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0B6B942BC417AD007F66D2 /* CookleUITestsLaunchTests.swift */; };
-		AD0B6BDA2BC5492F007F66D2 /* TagStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0B6BD92BC5492F007F66D2 /* TagStore.swift */; };
-		AD0B6BDC2BC54943007F66D2 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0B6BDB2BC54943007F66D2 /* Tag.swift */; };
+		AD0B6BDA2BC5492F007F66D2 /* InMemoryContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0B6BD92BC5492F007F66D2 /* InMemoryContext.swift */; };
 		AD0B6BDE2BC549C5007F66D2 /* RecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0B6BDD2BC549C5007F66D2 /* RecipeView.swift */; };
 		AD0B6BE02BC549CF007F66D2 /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0B6BDF2BC549CF007F66D2 /* TagView.swift */; };
 		AD1338AA2BC8EAE600A8BAD2 /* RecipeGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338A92BC8EAE600A8BAD2 /* RecipeGridView.swift */; };
-		AD1338AC2BC8F54B00A8BAD2 /* TagStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338AB2BC8F54B00A8BAD2 /* TagStoreTests.swift */; };
+		AD1338AC2BC8F54B00A8BAD2 /* InMemoryContextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338AB2BC8F54B00A8BAD2 /* InMemoryContextTests.swift */; };
 		AD1338AE2BCAC57000A8BAD2 /* RecipeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338AD2BCAC57000A8BAD2 /* RecipeListView.swift */; };
 		AD1338B02BCAC80F00A8BAD2 /* AddRecipeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338AF2BCAC80F00A8BAD2 /* AddRecipeButton.swift */; };
 		AD1338B22BCACC3D00A8BAD2 /* EditRecipeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338B12BCACC3D00A8BAD2 /* EditRecipeButton.swift */; };
 		AD1338B42BCACEC600A8BAD2 /* ToggleListStyleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338B32BCACEC600A8BAD2 /* ToggleListStyleButton.swift */; };
+		AD1338B62BCAF9FD00A8BAD2 /* Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338B52BCAF9FD00A8BAD2 /* Name.swift */; };
+		AD1338B82BCAFA1200A8BAD2 /* YearMonth.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338B72BCAFA1200A8BAD2 /* YearMonth.swift */; };
+		AD1338BA2BCAFA2D00A8BAD2 /* YearMonthDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338B92BCAFA2D00A8BAD2 /* YearMonthDay.swift */; };
+		AD1338BC2BCAFA4100A8BAD2 /* Ingredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338BB2BCAFA4100A8BAD2 /* Ingredient.swift */; };
+		AD1338BE2BCAFA5400A8BAD2 /* Instruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338BD2BCAFA5400A8BAD2 /* Instruction.swift */; };
+		AD1338C02BCAFA6600A8BAD2 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338BF2BCAFA6600A8BAD2 /* Category.swift */; };
+		AD1338C22BCAFA8B00A8BAD2 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338C12BCAFA8B00A8BAD2 /* Tag.swift */; };
+		AD1338C62BCAFF9600A8BAD2 /* InMemoryContextEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338C52BCAFF9600A8BAD2 /* InMemoryContextEnvironmentKey.swift */; };
+		AD1338C82BCAFFB200A8BAD2 /* EnvironmentValuesExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338C72BCAFFB200A8BAD2 /* EnvironmentValuesExtension.swift */; };
 		ADDBB4322BC560CD003B444F /* DiaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBB4312BC560CD003B444F /* DiaryView.swift */; };
 		ADDBB4342BC79464003B444F /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBB4332BC79464003B444F /* PreviewData.swift */; };
 		ADDBB4382BC7C232003B444F /* RecipeFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBB4372BC7C232003B444F /* RecipeFormView.swift */; };
@@ -60,17 +68,25 @@
 		AD0B6B8E2BC417AD007F66D2 /* CookleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CookleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD0B6B922BC417AD007F66D2 /* CookleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookleUITests.swift; sourceTree = "<group>"; };
 		AD0B6B942BC417AD007F66D2 /* CookleUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookleUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		AD0B6BD92BC5492F007F66D2 /* TagStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagStore.swift; sourceTree = "<group>"; };
-		AD0B6BDB2BC54943007F66D2 /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
+		AD0B6BD92BC5492F007F66D2 /* InMemoryContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryContext.swift; sourceTree = "<group>"; };
 		AD0B6BDD2BC549C5007F66D2 /* RecipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeView.swift; sourceTree = "<group>"; };
 		AD0B6BDF2BC549CF007F66D2 /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
 		AD1338A62BC84E2D00A8BAD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		AD1338A92BC8EAE600A8BAD2 /* RecipeGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeGridView.swift; sourceTree = "<group>"; };
-		AD1338AB2BC8F54B00A8BAD2 /* TagStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagStoreTests.swift; sourceTree = "<group>"; };
+		AD1338AB2BC8F54B00A8BAD2 /* InMemoryContextTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryContextTests.swift; sourceTree = "<group>"; };
 		AD1338AD2BCAC57000A8BAD2 /* RecipeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListView.swift; sourceTree = "<group>"; };
 		AD1338AF2BCAC80F00A8BAD2 /* AddRecipeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecipeButton.swift; sourceTree = "<group>"; };
 		AD1338B12BCACC3D00A8BAD2 /* EditRecipeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRecipeButton.swift; sourceTree = "<group>"; };
 		AD1338B32BCACEC600A8BAD2 /* ToggleListStyleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleListStyleButton.swift; sourceTree = "<group>"; };
+		AD1338B52BCAF9FD00A8BAD2 /* Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Name.swift; sourceTree = "<group>"; };
+		AD1338B72BCAFA1200A8BAD2 /* YearMonth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearMonth.swift; sourceTree = "<group>"; };
+		AD1338B92BCAFA2D00A8BAD2 /* YearMonthDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearMonthDay.swift; sourceTree = "<group>"; };
+		AD1338BB2BCAFA4100A8BAD2 /* Ingredient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ingredient.swift; sourceTree = "<group>"; };
+		AD1338BD2BCAFA5400A8BAD2 /* Instruction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Instruction.swift; sourceTree = "<group>"; };
+		AD1338BF2BCAFA6600A8BAD2 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		AD1338C12BCAFA8B00A8BAD2 /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
+		AD1338C52BCAFF9600A8BAD2 /* InMemoryContextEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryContextEnvironmentKey.swift; sourceTree = "<group>"; };
+		AD1338C72BCAFFB200A8BAD2 /* EnvironmentValuesExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentValuesExtension.swift; sourceTree = "<group>"; };
 		ADDBB4312BC560CD003B444F /* DiaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryView.swift; sourceTree = "<group>"; };
 		ADDBB4332BC79464003B444F /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
 		ADDBB4372BC7C232003B444F /* RecipeFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeFormView.swift; sourceTree = "<group>"; };
@@ -150,7 +166,7 @@
 			isa = PBXGroup;
 			children = (
 				AD0B6B882BC417AD007F66D2 /* CookleTests.swift */,
-				AD1338AB2BC8F54B00A8BAD2 /* TagStoreTests.swift */,
+				AD1338AB2BC8F54B00A8BAD2 /* InMemoryContextTests.swift */,
 			);
 			path = CookleTests;
 			sourceTree = "<group>";
@@ -180,9 +196,17 @@
 		ADDBB4362BC7ACF0003B444F /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				AD1338BF2BCAFA6600A8BAD2 /* Category.swift */,
+				AD1338C72BCAFFB200A8BAD2 /* EnvironmentValuesExtension.swift */,
+				AD1338BB2BCAFA4100A8BAD2 /* Ingredient.swift */,
+				AD0B6BD92BC5492F007F66D2 /* InMemoryContext.swift */,
+				AD1338C52BCAFF9600A8BAD2 /* InMemoryContextEnvironmentKey.swift */,
+				AD1338BD2BCAFA5400A8BAD2 /* Instruction.swift */,
+				AD1338B52BCAF9FD00A8BAD2 /* Name.swift */,
 				AD0B6B792BC417AC007F66D2 /* Recipe.swift */,
-				AD0B6BDB2BC54943007F66D2 /* Tag.swift */,
-				AD0B6BD92BC5492F007F66D2 /* TagStore.swift */,
+				AD1338C12BCAFA8B00A8BAD2 /* Tag.swift */,
+				AD1338B72BCAFA1200A8BAD2 /* YearMonth.swift */,
+				AD1338B92BCAFA2D00A8BAD2 /* YearMonthDay.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -330,19 +354,27 @@
 			files = (
 				AD0B6B782BC417AC007F66D2 /* ContentView.swift in Sources */,
 				AD1338B42BCACEC600A8BAD2 /* ToggleListStyleButton.swift in Sources */,
+				AD1338B82BCAFA1200A8BAD2 /* YearMonth.swift in Sources */,
 				ADDBB43B2BC81E50003B444F /* MultiAddableSection.swift in Sources */,
+				AD1338BA2BCAFA2D00A8BAD2 /* YearMonthDay.swift in Sources */,
 				AD0B6BDE2BC549C5007F66D2 /* RecipeView.swift in Sources */,
+				AD1338C22BCAFA8B00A8BAD2 /* Tag.swift in Sources */,
+				AD1338C82BCAFFB200A8BAD2 /* EnvironmentValuesExtension.swift in Sources */,
 				ADDBB4382BC7C232003B444F /* RecipeFormView.swift in Sources */,
 				AD0B6B7A2BC417AC007F66D2 /* Recipe.swift in Sources */,
-				AD0B6BDC2BC54943007F66D2 /* Tag.swift in Sources */,
+				AD1338B62BCAF9FD00A8BAD2 /* Name.swift in Sources */,
+				AD1338BC2BCAFA4100A8BAD2 /* Ingredient.swift in Sources */,
 				AD1338B22BCACC3D00A8BAD2 /* EditRecipeButton.swift in Sources */,
 				AD1338AA2BC8EAE600A8BAD2 /* RecipeGridView.swift in Sources */,
 				AD0B6BE02BC549CF007F66D2 /* TagView.swift in Sources */,
 				ADDBB4342BC79464003B444F /* PreviewData.swift in Sources */,
+				AD1338C02BCAFA6600A8BAD2 /* Category.swift in Sources */,
 				AD1338B02BCAC80F00A8BAD2 /* AddRecipeButton.swift in Sources */,
-				AD0B6BDA2BC5492F007F66D2 /* TagStore.swift in Sources */,
+				AD1338C62BCAFF9600A8BAD2 /* InMemoryContextEnvironmentKey.swift in Sources */,
+				AD0B6BDA2BC5492F007F66D2 /* InMemoryContext.swift in Sources */,
 				ADDBB4322BC560CD003B444F /* DiaryView.swift in Sources */,
 				AD1338AE2BCAC57000A8BAD2 /* RecipeListView.swift in Sources */,
+				AD1338BE2BCAFA5400A8BAD2 /* Instruction.swift in Sources */,
 				AD0B6B762BC417AC007F66D2 /* CookleApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -351,7 +383,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AD1338AC2BC8F54B00A8BAD2 /* TagStoreTests.swift in Sources */,
+				AD1338AC2BC8F54B00A8BAD2 /* InMemoryContextTests.swift in Sources */,
 				AD0B6B892BC417AD007F66D2 /* CookleTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

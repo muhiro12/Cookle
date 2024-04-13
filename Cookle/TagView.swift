@@ -8,21 +8,44 @@
 import SwiftUI
 import SwiftData
 
-struct TagView: View {
-    @Environment(TagStore.self) private var tagStore
+struct TagView<T: Tag>: View {
+    @Environment(\.inMemoryContext) private var inMemoryContext
 
     @Query private var recipes: [Recipe]
 
-    @State private var content: Tag?
+    @State private var content: T?
     @State private var detail: Recipe?
     @State private var isGrid = true
+
+    private var filteredRecipes: [Recipe] {
+        recipes.filter { recipe in
+            {
+                switch T.self {
+                case is Name.Type:
+                    return [recipe.name]
+                case is YearMonth.Type:
+                    return [recipe.yearMonth]
+                case is YearMonthDay.Type:
+                    return [recipe.yearMonthDay]
+                case is Ingredient.Type:
+                    return recipe.ingredientList
+                case is Instruction.Type:
+                    return recipe.instructionList
+                case is Category.Type:
+                    return recipe.categoryList
+                default:
+                    return []
+                }
+            }().contains(content?.value ?? "")
+        }
+    }
 
     var body: some View {
         NavigationSplitView {
             VStack {
                 ScrollView {
                     LazyVGrid(columns: (0..<3).map { _ in .init() }) {
-                        ForEach(tagStore.customTagList) { tag in
+                        ForEach(inMemoryContext.tagList()) { (tag: T) in
                             Button(tag.value) {
                                 content = tag
                             }
@@ -38,16 +61,14 @@ struct TagView: View {
                     AddRecipeButton()
                 }
             }
-            .navigationTitle("Tag")
+            .navigationTitle(String(describing: T.self))
         } content: {
             if let content {
                 VStack {
                     if isGrid {
-                        RecipeGridView(recipes.filter { $0.tagList.contains(content.value) },
-                                       selection: $detail)
+                        RecipeGridView(filteredRecipes, selection: $detail)
                     } else {
-                        RecipeListView(recipes.filter { $0.tagList.contains(content.value) },
-                                       selection: $detail)
+                        RecipeListView(filteredRecipes, selection: $detail)
                     }
                     List(selection: $detail) {}
                         .frame(height: .zero)
@@ -78,7 +99,7 @@ struct TagView: View {
 }
 
 #Preview {
-    TagView()
+    TagView<Category>()
         .modelContainer(PreviewData.modelContainer)
-        .environment(PreviewData.tagStore)
+        .environment(\.inMemoryContext, PreviewData.inMemoryContext)
 }

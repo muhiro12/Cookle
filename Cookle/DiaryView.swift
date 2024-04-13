@@ -8,21 +8,21 @@
 import SwiftUI
 import SwiftData
 
-struct DiaryView: View {
+struct DiaryView<Content: Tag>: View {
     @Environment(\.modelContext) private var modelContext
-    @Environment(TagStore.self) private var tagStore
+    @Environment(\.inMemoryContext) private var inMemoryContext
 
     @Query private var recipes: [Recipe]
 
-    @State private var content: Tag.ID?
+    @State private var content: Content.ID?
     @State private var detail: Recipe?
     @State private var isGrid = true
 
     var body: some View {
         NavigationSplitView {
-            List(tagStore.yearMonthTagList, selection: $content) { yearMonthTag in
+            List(inMemoryContext.yearMonthList, selection: $content) { yearMonthTag in
                 Section(yearMonthTag.value) {
-                    ForEach(tagStore.yearMonthDayTagList.filter { $0.value.contains(yearMonthTag.value) }) { yearMonthDayTag in
+                    ForEach(inMemoryContext.yearMonthDayList.filter { $0.value.contains(yearMonthTag.value) }) { yearMonthDayTag in
                         Text(yearMonthDayTag.value)
                     }
                 }
@@ -40,7 +40,7 @@ struct DiaryView: View {
                         withAnimation {
                             let recipe = PreviewData.randomRecipe()
                             modelContext.insert(recipe)
-                            tagStore.insert(with: recipe)
+                            inMemoryContext.insert(with: recipe)
                         }
                     }
                 }
@@ -53,10 +53,10 @@ struct DiaryView: View {
             if let content {
                 VStack {
                     if isGrid{
-                        RecipeGridView(recipes.filter { $0.yearMonthDay == tagStore.yearMonthDayTagList.first { $0.id == content }?.value },
+                        RecipeGridView(recipes.filter { $0.yearMonthDay == inMemoryContext.yearMonthDayList.first { $0.id as? Content.ID == content }?.value },
                                        selection: $detail)
                     } else {
-                        RecipeListView(recipes.filter { $0.yearMonthDay == tagStore.yearMonthDayTagList.first { $0.id == content }?.value },
+                        RecipeListView(recipes.filter { $0.yearMonthDay == inMemoryContext.yearMonthDayList.first { $0.id as? Content.ID == content }?.value },
                                        selection: $detail)
                     }
                     List(selection: $detail) {}
@@ -70,7 +70,7 @@ struct DiaryView: View {
                         AddRecipeButton()
                     }
                 }
-                .navigationTitle(tagStore.yearMonthDayTagList.first { $0.id == content }?.value ?? "")
+                .navigationTitle(inMemoryContext.yearMonthDayList.first { $0.id as? Content.ID == content }?.value ?? "")
             }
         } detail: {
             if let detail {
@@ -88,7 +88,7 @@ struct DiaryView: View {
 }
 
 #Preview {
-    DiaryView()
+    DiaryView<YearMonthDay>()
         .modelContainer(PreviewData.modelContainer)
-        .environment(PreviewData.tagStore)
+        .environment(\.inMemoryContext, PreviewData.inMemoryContext)
 }

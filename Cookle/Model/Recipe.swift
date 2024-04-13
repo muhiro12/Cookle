@@ -13,17 +13,17 @@ final class Recipe {
     private(set) var name: String
     private(set) var ingredientList: [String]
     private(set) var instructionList: [String]
-    private(set) var tagList: [String]
+    private(set) var categoryList: [String]
     private(set) var updateDate: Date
     private(set) var creationDate: Date
     private(set) var yearMonth: String
     private(set) var yearMonthDay: String
 
-    init(name: String, ingredientList: [String], instructionList: [String], tagList: [String]) {
+    init(name: String, ingredientList: [String], instructionList: [String], categoryList: [String]) {
         self.name = name
         self.ingredientList = ingredientList
         self.instructionList = instructionList
-        self.tagList = tagList
+        self.categoryList = categoryList
 
         self.updateDate = .now
         self.creationDate = .now
@@ -33,11 +33,11 @@ final class Recipe {
         self.setUpdateDate(updateDate)
     }
 
-    func set(name: String, ingredientList: [String], instructionList: [String], tagList: [String]) {
+    func set(name: String, ingredientList: [String], instructionList: [String], categoryList: [String]) {
         self.name = name
         self.ingredientList = ingredientList
         self.instructionList = instructionList
-        self.tagList = tagList
+        self.categoryList = categoryList
 
         self.setUpdateDate(.now)
     }

@@ -10,9 +10,8 @@ import SwiftData
 
 struct RecipeFormView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.inMemoryContext) private var inMemoryContext
     @Environment(\.dismiss) private var dismiss
-
-    @Environment(TagStore.self) private var tagStore
 
     @State private var name = ""
     @State private var ingredientList = [String]()
@@ -33,15 +32,15 @@ struct RecipeFormView: View {
                 }
                 MultiAddableSection(data: $ingredientList,
                                     title: "Ingredients",
-                                    tagList: tagStore.ingredientTagList,
+                                    tagList: inMemoryContext.ingredientList,
                                     shouldShowNumber: false)
                 MultiAddableSection(data: $instructionList,
                                     title: "Instructions",
-                                    tagList: tagStore.instructionTagList,
+                                    tagList: inMemoryContext.instructionList,
                                     shouldShowNumber: true)
                 MultiAddableSection(data: $tagList,
                                     title: "Tags",
-                                    tagList: tagStore.customTagList,
+                                    tagList: inMemoryContext.categoryList,
                                     shouldShowNumber: false)
             }
             .toolbar {
@@ -60,18 +59,18 @@ struct RecipeFormView: View {
                                 name: name,
                                 ingredientList: ingredientList.filter { !$0.isEmpty },
                                 instructionList: instructionList.filter { !$0.isEmpty },
-                                tagList: tagList.filter { !$0.isEmpty }
+                                categoryList: tagList.filter { !$0.isEmpty }
                             )
-                            tagStore.insert(with: recipe)
+                            inMemoryContext.insert(with: recipe)
                         } else {
                             let recipe = Recipe(
                                 name: name,
                                 ingredientList: ingredientList.filter { !$0.isEmpty },
                                 instructionList: instructionList.filter { !$0.isEmpty },
-                                tagList: tagList.filter { !$0.isEmpty }
+                                categoryList: tagList.filter { !$0.isEmpty }
                             )
                             modelContext.insert(recipe)
-                            tagStore.insert(with: recipe)
+                            inMemoryContext.insert(with: recipe)
                         }
                         dismiss()
                     }
@@ -83,7 +82,7 @@ struct RecipeFormView: View {
             name = recipe?.name ?? ""
             ingredientList = (recipe?.ingredientList ?? []) + [""]
             instructionList = (recipe?.instructionList ?? []) + [""]
-            tagList = (recipe?.tagList ?? []) + [""]
+            tagList = (recipe?.categoryList ?? []) + [""]
         }
         .interactiveDismissDisabled()
     }
@@ -91,12 +90,12 @@ struct RecipeFormView: View {
 
 #Preview {
     RecipeFormView()
-        .environment(PreviewData.tagStore)
+        .environment(\.inMemoryContext, PreviewData.inMemoryContext)
 }
 
 
 #Preview {
     RecipeFormView()
         .environment(PreviewData.randomRecipe())
-        .environment(PreviewData.tagStore)
+        .environment(\.inMemoryContext, PreviewData.inMemoryContext)
 }

@@ -18,7 +18,7 @@ struct CookleApp: App {
         }
     }()
 
-    private let tagStore = TagStore()
+    private let sharedInMemoryContext = InMemoryContext()
 
     init() {
         let recipes = try? sharedModelContainer.mainContext.fetch(
@@ -26,7 +26,7 @@ struct CookleApp: App {
                 predicate: #Predicate { _ in true }
             )
         )
-        tagStore.modify(recipes ?? [])
+        sharedInMemoryContext.modify(recipes ?? [])
     }
 
     var body: some Scene {
@@ -34,6 +34,6 @@ struct CookleApp: App {
             ContentView()
         }
         .modelContainer(sharedModelContainer)
-        .environment(tagStore)
+        .environment(\.inMemoryContext, sharedInMemoryContext)
     }
 }

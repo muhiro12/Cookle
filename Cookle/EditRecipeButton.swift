@@ -25,5 +25,5 @@ struct EditRecipeButton: View {
 #Preview {
     EditRecipeButton()
         .environment(PreviewData.randomRecipe())
-        .environment(PreviewData.tagStore)
+        .environment(\.inMemoryContext, PreviewData.inMemoryContext)
 }

@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct MultiAddableSection: View {
+struct MultiAddableSection<T: Tag>: View {
     @Binding var data: [String]
 
     let title: String
-    let tagList: [Tag]
+    let tagList: [T]
     let shouldShowNumber: Bool
 
     var body: some View {
@@ -76,7 +76,7 @@ struct MultiAddableSection: View {
         MultiAddableSection(
             data: .constant(Array(PreviewData.instructionsList.prefix(5)) + [""]),
             title: "Instructions",
-            tagList: PreviewData.tagStore.instructionTagList,
+            tagList: PreviewData.inMemoryContext.instructionList,
             shouldShowNumber: true
         )
     }
