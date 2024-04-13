@@ -26,8 +26,8 @@ struct TagView: View {
                             Button(tag.value) {
                                 content = tag
                             }
+                            .buttonStyle(.bordered)
                         }
-                        .padding()
                     }
                 }
                 List(selection: $content) {}
