@@ -15,7 +15,7 @@ struct TagView: View {
 
     @State private var content: Tag?
     @State private var detail: Recipe?
-    @State private var isListStyle = false
+    @State private var isGrid = true
 
     var body: some View {
         NavigationSplitView {
@@ -42,11 +42,11 @@ struct TagView: View {
         } content: {
             if let content {
                 VStack {
-                    if isListStyle {
-                        RecipeListView(recipes.filter { $0.tagList.contains(content.value) },
+                    if isGrid {
+                        RecipeGridView(recipes.filter { $0.tagList.contains(content.value) },
                                        selection: $detail)
                     } else {
-                        RecipeGridView(recipes.filter { $0.tagList.contains(content.value) },
+                        RecipeListView(recipes.filter { $0.tagList.contains(content.value) },
                                        selection: $detail)
                     }
                     List(selection: $detail) {}
@@ -54,9 +54,7 @@ struct TagView: View {
                 }
                 .toolbar {
                     ToolbarItem {
-                        Button("Toggle Style", systemImage: "list.bullet.rectangle") {
-                            isListStyle.toggle()
-                        }
+                        ToggleListStyleButton(isGrid: $isGrid)
                     }
                     ToolbarItem {
                         AddRecipeButton()

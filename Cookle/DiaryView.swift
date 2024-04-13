@@ -16,7 +16,7 @@ struct DiaryView: View {
 
     @State private var content: Tag.ID?
     @State private var detail: Recipe?
-    @State private var isListStyle = false
+    @State private var isGrid = true
 
     var body: some View {
         NavigationSplitView {
@@ -52,11 +52,11 @@ struct DiaryView: View {
         } content: {
             if let content {
                 VStack {
-                    if isListStyle {
-                        RecipeListView(recipes.filter { $0.yearMonthDay == tagStore.yearMonthDayTagList.first { $0.id == content }?.value },
+                    if isGrid{
+                        RecipeGridView(recipes.filter { $0.yearMonthDay == tagStore.yearMonthDayTagList.first { $0.id == content }?.value },
                                        selection: $detail)
                     } else {
-                        RecipeGridView(recipes.filter { $0.yearMonthDay == tagStore.yearMonthDayTagList.first { $0.id == content }?.value },
+                        RecipeListView(recipes.filter { $0.yearMonthDay == tagStore.yearMonthDayTagList.first { $0.id == content }?.value },
                                        selection: $detail)
                     }
                     List(selection: $detail) {}
@@ -64,9 +64,7 @@ struct DiaryView: View {
                 }
                 .toolbar {
                     ToolbarItem {
-                        Button("Toggle Style", systemImage: "list.bullet.rectangle") {
-                            isListStyle.toggle()
-                        }
+                        ToggleListStyleButton(isGrid: $isGrid)
                     }
                     ToolbarItem {
                         AddRecipeButton()

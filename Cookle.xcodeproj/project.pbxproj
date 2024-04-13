@@ -24,6 +24,7 @@
 		AD1338AE2BCAC57000A8BAD2 /* RecipeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338AD2BCAC57000A8BAD2 /* RecipeListView.swift */; };
 		AD1338B02BCAC80F00A8BAD2 /* AddRecipeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338AF2BCAC80F00A8BAD2 /* AddRecipeButton.swift */; };
 		AD1338B22BCACC3D00A8BAD2 /* EditRecipeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338B12BCACC3D00A8BAD2 /* EditRecipeButton.swift */; };
+		AD1338B42BCACEC600A8BAD2 /* ToggleListStyleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338B32BCACEC600A8BAD2 /* ToggleListStyleButton.swift */; };
 		ADDBB4322BC560CD003B444F /* DiaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBB4312BC560CD003B444F /* DiaryView.swift */; };
 		ADDBB4342BC79464003B444F /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBB4332BC79464003B444F /* PreviewData.swift */; };
 		ADDBB4382BC7C232003B444F /* RecipeFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBB4372BC7C232003B444F /* RecipeFormView.swift */; };
@@ -69,6 +70,7 @@
 		AD1338AD2BCAC57000A8BAD2 /* RecipeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListView.swift; sourceTree = "<group>"; };
 		AD1338AF2BCAC80F00A8BAD2 /* AddRecipeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecipeButton.swift; sourceTree = "<group>"; };
 		AD1338B12BCACC3D00A8BAD2 /* EditRecipeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRecipeButton.swift; sourceTree = "<group>"; };
+		AD1338B32BCACEC600A8BAD2 /* ToggleListStyleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleListStyleButton.swift; sourceTree = "<group>"; };
 		ADDBB4312BC560CD003B444F /* DiaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryView.swift; sourceTree = "<group>"; };
 		ADDBB4332BC79464003B444F /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
 		ADDBB4372BC7C232003B444F /* RecipeFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeFormView.swift; sourceTree = "<group>"; };
@@ -191,6 +193,7 @@
 				AD1338AF2BCAC80F00A8BAD2 /* AddRecipeButton.swift */,
 				AD1338B12BCACC3D00A8BAD2 /* EditRecipeButton.swift */,
 				ADDBB43A2BC81E50003B444F /* MultiAddableSection.swift */,
+				AD1338B32BCACEC600A8BAD2 /* ToggleListStyleButton.swift */,
 			);
 			name = Component;
 			sourceTree = "<group>";
@@ -326,6 +329,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD0B6B782BC417AC007F66D2 /* ContentView.swift in Sources */,
+				AD1338B42BCACEC600A8BAD2 /* ToggleListStyleButton.swift in Sources */,
 				ADDBB43B2BC81E50003B444F /* MultiAddableSection.swift in Sources */,
 				AD0B6BDE2BC549C5007F66D2 /* RecipeView.swift in Sources */,
 				ADDBB4382BC7C232003B444F /* RecipeFormView.swift in Sources */,
