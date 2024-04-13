@@ -16,8 +16,8 @@ final class Recipe {
     private(set) var tagList: [String]
     private(set) var updateDate: Date
     private(set) var creationDate: Date
-    private(set) var year: String
     private(set) var yearMonth: String
+    private(set) var yearMonthDay: String
 
     init(name: String, ingredientList: [String], instructionList: [String], tagList: [String]) {
         self.name = name
@@ -27,8 +27,8 @@ final class Recipe {
 
         self.updateDate = .now
         self.creationDate = .now
-        self.year = ""
         self.yearMonth = ""
+        self.yearMonthDay = ""
 
         self.setUpdateDate(updateDate)
     }
@@ -44,11 +44,7 @@ final class Recipe {
 
     func setUpdateDate(_ date: Date) {
         updateDate = date
-
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy"
-        year = formatter.string(from: date)
-        formatter.dateFormat = "yyyyMM"
-        yearMonth = formatter.string(from: date)
+        yearMonth = date.formatted(.iso8601.year().month())
+        yearMonthDay = date.formatted(.iso8601.year().month().day())
     }
 }

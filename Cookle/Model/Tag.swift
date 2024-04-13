@@ -10,8 +10,8 @@ import Foundation
 struct Tag {
     enum TagType: Int {
         case name = 3
-        case year = 1
-        case yearMonth = 0
+        case yearMonth = 1
+        case yearMonthDay = 0
         case ingredient = 4
         case instruction = 2
         case custom = 5

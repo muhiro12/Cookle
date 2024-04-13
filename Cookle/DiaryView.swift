@@ -21,10 +21,10 @@ struct DiaryView: View {
 
     var body: some View {
         NavigationSplitView {
-            List(tagStore.yearTagList, selection: $content) { yearTag in
-                Section(yearTag.value) {
-                    ForEach(tagStore.yearMonthTagList.filter { $0.value.contains(yearTag.value) }) { yearMonthTag in
-                        Text(yearMonthTag.value)
+            List(tagStore.yearMonthTagList, selection: $content) { yearMonthTag in
+                Section(yearMonthTag.value) {
+                    ForEach(tagStore.yearMonthDayTagList.filter { $0.value.contains(yearMonthTag.value) }) { yearMonthDayTag in
+                        Text(yearMonthDayTag.value)
                     }
                 }
             }
@@ -56,17 +56,17 @@ struct DiaryView: View {
             if let content {
                 VStack {
                     if isListStyle {
-                        List(recipes.filter { $0.yearMonth == tagStore.yearMonthTagList.first { $0.id == content }?.value }, id: \.self, selection: $detail) { recipe in
+                        List(recipes.filter { $0.yearMonthDay == tagStore.yearMonthDayTagList.first { $0.id == content }?.value }, id: \.self, selection: $detail) { recipe in
                             Text(recipe.name)
                         }
                     } else {
-                        RecipeGridView(recipes.filter { $0.yearMonth == tagStore.yearMonthTagList.first { $0.id == content }?.value },
+                        RecipeGridView(recipes.filter { $0.yearMonthDay == tagStore.yearMonthDayTagList.first { $0.id == content }?.value },
                                        selection: $detail)
                     }
                     List(selection: $detail) {}
                         .frame(height: .zero)
                 }
-                .navigationTitle(tagStore.yearMonthTagList.first { $0.id == content }?.value ?? "")
+                .navigationTitle(tagStore.yearMonthDayTagList.first { $0.id == content }?.value ?? "")
                 .toolbar {
                     ToolbarItem {
                         Button("Toggle Style", systemImage: "list.bullet.rectangle") {

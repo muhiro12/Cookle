@@ -15,12 +15,12 @@ final class TagStore {
         tagList.filter { $0.type == .name }.sorted()
     }
 
-    var yearTagList: [Tag] {
-        tagList.filter { $0.type == .year }.sorted { $0 > $1 }
-    }
-
     var yearMonthTagList: [Tag] {
         tagList.filter { $0.type == .yearMonth }.sorted { $0 > $1 }
+    }
+
+    var yearMonthDayTagList: [Tag] {
+        tagList.filter { $0.type == .yearMonthDay }.sorted { $0 > $1 }
     }
 
     var ingredientTagList: [Tag] {
@@ -42,8 +42,8 @@ final class TagStore {
 
     func insert(with recipe: Recipe) {
         insert(.init(type: .name, value: recipe.name))
-        insert(.init(type: .year, value: recipe.year))
         insert(.init(type: .yearMonth, value: recipe.yearMonth))
+        insert(.init(type: .yearMonthDay, value: recipe.yearMonthDay))
         recipe.ingredientList.forEach {
             insert(.init(type: .ingredient, value: $0))
         }
