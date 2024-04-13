@@ -17,7 +17,6 @@ struct DiaryView: View {
     @State private var content: Tag.ID?
     @State private var detail: Recipe?
     @State private var isListStyle = false
-    @State private var isPresented = false
 
     var body: some View {
         NavigationSplitView {
@@ -28,7 +27,6 @@ struct DiaryView: View {
                     }
                 }
             }
-            .navigationTitle("Diary")
             .toolbar {
                 ToolbarItem {
                     Button("Delete All", systemImage: "trash") {
@@ -47,11 +45,10 @@ struct DiaryView: View {
                     }
                 }
                 ToolbarItem {
-                    Button("Add Recipe", systemImage: "plus") {
-                        isPresented = true
-                    }
+                    AddRecipeButton()
                 }
             }
+            .navigationTitle("Diary")
         } content: {
             if let content {
                 VStack {
@@ -65,31 +62,29 @@ struct DiaryView: View {
                     List(selection: $detail) {}
                         .frame(height: .zero)
                 }
-                .navigationTitle(tagStore.yearMonthDayTagList.first { $0.id == content }?.value ?? "")
                 .toolbar {
                     ToolbarItem {
                         Button("Toggle Style", systemImage: "list.bullet.rectangle") {
                             isListStyle.toggle()
                         }
                     }
+                    ToolbarItem {
+                        AddRecipeButton()
+                    }
                 }
+                .navigationTitle(tagStore.yearMonthDayTagList.first { $0.id == content }?.value ?? "")
             }
         } detail: {
             if let detail {
                 RecipeView()
-                    .navigationTitle(detail.name)
-                    .environment(detail)
                     .toolbar {
                         ToolbarItem {
-                            Button("Edit Recipe", systemImage: "pencil") {
-                                isPresented = true
-                            }
+                            EditRecipeButton()
                         }
                     }
+                    .navigationTitle(detail.name)
+                    .environment(detail)
             }
-        }
-        .sheet(isPresented: $isPresented) {
-            RecipeFormView(detail)
         }
     }
 }

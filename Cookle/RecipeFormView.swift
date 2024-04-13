@@ -14,21 +14,12 @@ struct RecipeFormView: View {
 
     @Environment(TagStore.self) private var tagStore
 
-    @State private var name: String
-    @State private var ingredientList: [String]
-    @State private var instructionList: [String]
-    @State private var tagList: [String]
+    @State private var name = ""
+    @State private var ingredientList = [String]()
+    @State private var instructionList = [String]()
+    @State private var tagList = [String]()
 
-    private let recipe: Recipe?
-
-    init(_ recipe: Recipe?) {
-        _name = .init(initialValue: recipe?.name ?? "")
-        _ingredientList = .init(initialValue: (recipe?.ingredientList ?? []) + [""])
-        _instructionList = .init(initialValue: (recipe?.instructionList ?? []) + [""])
-        _tagList = .init(initialValue: (recipe?.tagList ?? []) + [""])
-
-        self.recipe = recipe
-    }
+    @Environment(Recipe.self) private var recipe: Recipe?
 
     var body: some View {
         NavigationView {
@@ -88,16 +79,24 @@ struct RecipeFormView: View {
                 }
             }
         }
+        .task {
+            name = recipe?.name ?? ""
+            ingredientList = (recipe?.ingredientList ?? []) + [""]
+            instructionList = (recipe?.instructionList ?? []) + [""]
+            tagList = (recipe?.tagList ?? []) + [""]
+        }
         .interactiveDismissDisabled()
     }
 }
 
 #Preview {
-    RecipeFormView(PreviewData.randomRecipe())
+    RecipeFormView()
         .environment(PreviewData.tagStore)
 }
 
+
 #Preview {
-    RecipeFormView(nil)
+    RecipeFormView()
+        .environment(PreviewData.randomRecipe())
         .environment(PreviewData.tagStore)
 }

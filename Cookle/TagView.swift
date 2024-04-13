@@ -33,6 +33,11 @@ struct TagView: View {
                 List(selection: $content) {}
                     .frame(height: .zero)
             }
+            .toolbar {
+                ToolbarItem {
+                    AddRecipeButton()
+                }
+            }
             .navigationTitle("Tag")
         } content: {
             if let content {
@@ -47,18 +52,26 @@ struct TagView: View {
                     List(selection: $detail) {}
                         .frame(height: .zero)
                 }
-                .navigationTitle(content.value)
                 .toolbar {
                     ToolbarItem {
                         Button("Toggle Style", systemImage: "list.bullet.rectangle") {
                             isListStyle.toggle()
                         }
                     }
+                    ToolbarItem {
+                        AddRecipeButton()
+                    }
                 }
+                .navigationTitle(content.value)
             }
         } detail: {
             if let detail {
                 RecipeView()
+                    .toolbar {
+                        ToolbarItem {
+                            EditRecipeButton()
+                        }
+                    }
                     .navigationTitle(detail.name)
                     .environment(detail)
             }
