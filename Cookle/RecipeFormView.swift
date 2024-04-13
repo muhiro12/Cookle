@@ -42,15 +42,15 @@ struct RecipeFormView: View {
                 }
                 MultiAddableSection(data: $ingredientList,
                                     title: "Ingredients",
-                                    tagList: tagStore.tagList.filter { $0.type == .ingredient },
+                                    tagList: tagStore.ingredientTagList,
                                     shouldShowNumber: false)
                 MultiAddableSection(data: $instructionList,
                                     title: "Instructions",
-                                    tagList: tagStore.tagList.filter { $0.type == .instruction },
+                                    tagList: tagStore.instructionTagList,
                                     shouldShowNumber: true)
                 MultiAddableSection(data: $tagList,
                                     title: "Tags",
-                                    tagList: tagStore.tagList.filter { $0.type == .custom },
+                                    tagList: tagStore.customTagList,
                                     shouldShowNumber: false)
             }
             .toolbar {

@@ -21,9 +21,9 @@ struct DiaryView: View {
 
     var body: some View {
         NavigationSplitView {
-            List(tagStore.tagList.filter { $0.type == .year }, selection: $content) { yearTag in
+            List(tagStore.yearTagList, selection: $content) { yearTag in
                 Section(yearTag.value) {
-                    ForEach(tagStore.tagList.filter { $0.type == .yearMonth && $0.value.contains(yearTag.value) }) { yearMonthTag in
+                    ForEach(tagStore.yearMonthTagList.filter { $0.value.contains(yearTag.value) }) { yearMonthTag in
                         Text(yearMonthTag.value)
                     }
                 }
@@ -56,17 +56,17 @@ struct DiaryView: View {
             if let content {
                 VStack {
                     if isListStyle {
-                        List(recipes.filter { $0.yearMonth == tagStore.tagList.first { $0.id == content }?.value }, id: \.self, selection: $detail) { recipe in
+                        List(recipes.filter { $0.yearMonth == tagStore.yearMonthTagList.first { $0.id == content }?.value }, id: \.self, selection: $detail) { recipe in
                             Text(recipe.name)
                         }
                     } else {
-                        RecipeGridView(recipes.filter { $0.yearMonth == tagStore.tagList.first { $0.id == content }?.value },
+                        RecipeGridView(recipes.filter { $0.yearMonth == tagStore.yearMonthTagList.first { $0.id == content }?.value },
                                        selection: $detail)
                     }
                     List(selection: $detail) {}
                         .frame(height: .zero)
                 }
-                .navigationTitle(tagStore.tagList.first { $0.id == content }?.value ?? "")
+                .navigationTitle(tagStore.yearMonthTagList.first { $0.id == content }?.value ?? "")
                 .toolbar {
                     ToolbarItem {
                         Button("Toggle Style", systemImage: "list.bullet.rectangle") {

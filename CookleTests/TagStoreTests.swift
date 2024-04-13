@@ -24,7 +24,6 @@ final class TagStoreTests: XCTestCase {
 
     func testModify() {
         tagStore.modify(recipes)
-        XCTAssertEqual(tagStore.tagList.count, 42)
         XCTAssertEqual(tagStore.nameTagList.count, 10)
         XCTAssertEqual(tagStore.yearTagList.count, 1)
         XCTAssertEqual(tagStore.yearMonthTagList.count, 1)
@@ -33,7 +32,6 @@ final class TagStoreTests: XCTestCase {
         XCTAssertEqual(tagStore.customTagList.count, 10)
 
         tagStore.modify(recipes)
-        XCTAssertEqual(tagStore.tagList.count, 42)
         XCTAssertEqual(tagStore.nameTagList.count, 10)
         XCTAssertEqual(tagStore.yearTagList.count, 1)
         XCTAssertEqual(tagStore.yearMonthTagList.count, 1)
@@ -42,7 +40,6 @@ final class TagStoreTests: XCTestCase {
         XCTAssertEqual(tagStore.customTagList.count, 10)
 
         tagStore.modify(recipes.dropLast())
-        XCTAssertEqual(tagStore.tagList.count, 38)
         XCTAssertEqual(tagStore.nameTagList.count, 9)
         XCTAssertEqual(tagStore.yearTagList.count, 1)
         XCTAssertEqual(tagStore.yearMonthTagList.count, 1)

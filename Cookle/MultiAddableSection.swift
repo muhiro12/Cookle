@@ -76,7 +76,7 @@ struct MultiAddableSection: View {
         MultiAddableSection(
             data: .constant(Array(PreviewData.instructionsList.prefix(5)) + [""]),
             title: "Instructions",
-            tagList: PreviewData.tagStore.tagList.filter { $0.type == .instruction },
+            tagList: PreviewData.tagStore.instructionTagList,
             shouldShowNumber: true
         )
     }

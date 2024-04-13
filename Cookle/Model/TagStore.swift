@@ -9,30 +9,30 @@ import Foundation
 
 @Observable
 final class TagStore {
-    private(set) var tagList: [Tag] = []
+    private var tagList: [Tag] = []
 
     var nameTagList: [Tag] {
-        tagList.filter { $0.type == .name }
+        tagList.filter { $0.type == .name }.sorted()
     }
 
     var yearTagList: [Tag] {
-        tagList.filter { $0.type == .year }
+        tagList.filter { $0.type == .year }.sorted { $0 > $1 }
     }
 
     var yearMonthTagList: [Tag] {
-        tagList.filter { $0.type == .yearMonth }
+        tagList.filter { $0.type == .yearMonth }.sorted { $0 > $1 }
     }
 
     var ingredientTagList: [Tag] {
-        tagList.filter { $0.type == .ingredient }
+        tagList.filter { $0.type == .ingredient }.sorted()
     }
 
     var instructionTagList: [Tag] {
-        tagList.filter { $0.type == .instruction }
+        tagList.filter { $0.type == .instruction }.sorted()
     }
 
     var customTagList: [Tag] {
-        tagList.filter { $0.type == .custom }
+        tagList.filter { $0.type == .custom }.sorted()
     }
 
     func modify(_ recipes: [Recipe]) {
@@ -53,7 +53,6 @@ final class TagStore {
         recipe.tagList.forEach { tag in
             insert(.init(type: .custom, value: tag))
         }
-        tagList.sort()
     }
 
     private func insert(_ tag: Tag) {
