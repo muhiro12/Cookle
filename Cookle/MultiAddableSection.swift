@@ -6,12 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
-struct MultiAddableSection<T: Tag>: View {
+struct MultiAddableSection<T>: View {
     @Binding var data: [String]
 
     let title: String
-    let tagList: [T]
     let shouldShowNumber: Bool
 
     var body: some View {
@@ -44,16 +44,13 @@ struct MultiAddableSection<T: Tag>: View {
                         ),
                         axis: .vertical
                     )
-                    if tagList.contains(where: { $0.value.lowercased().contains(data[index].lowercased()) }) {
-                        Menu {
-                            ForEach(tagList.filter { $0.value.lowercased().contains(data[index].lowercased()) }) { tag in
-                                Button(tag.value) {
-                                    data[index] = tag.value
-                                }
-                            }
-                        } label: {
-                            Image(systemName: "questionmark.circle")
-                        }
+                    switch T.self {
+                    case is Ingredient.Type:
+                        SuggestionMenu<Ingredient>(input: $data[index])
+                    case is Category.Type:
+                        SuggestionMenu<Category>(input: $data[index])
+                    default:
+                        EmptyView()
                     }
                 }
             }
@@ -73,10 +70,9 @@ struct MultiAddableSection<T: Tag>: View {
 
 #Preview {
     Form {
-        MultiAddableSection(
-            data: .constant(Array(PreviewData.instructionsList.prefix(5)) + [""]),
-            title: "Instructions",
-            tagList: PreviewData.inMemoryContext.instructionList,
+        MultiAddableSection<Ingredient>(
+            data: .constant(Array(PreviewData.ingredients.prefix(5)) + [""]),
+            title: "Ingredient",
             shouldShowNumber: true
         )
     }

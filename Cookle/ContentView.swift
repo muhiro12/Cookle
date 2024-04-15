@@ -11,17 +11,21 @@ import SwiftData
 struct ContentView: View {
     var body: some View {
         TabView {
-            DiaryView<YearMonthDay>()
+            DiaryRootView()
                 .tabItem {
                     Label("Diary", systemImage: "book")
                 }
-            TagView<Ingredient>()
+            TagRootView<Ingredient>()
                 .tabItem {
                     Label("Ingredient", systemImage: "refrigerator")
                 }
-            TagView<Category>()
+            TagRootView<Category>()
                 .tabItem {
                     Label("Category", systemImage: "frying.pan")
+                }
+            DebugRootView()
+                .tabItem {
+                    Label("Debug", systemImage: "flask")
                 }
         }
     }
@@ -30,5 +34,4 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .modelContainer(PreviewData.modelContainer)
-        .environment(\.inMemoryContext, PreviewData.inMemoryContext)
 }

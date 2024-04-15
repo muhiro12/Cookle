@@ -14,12 +14,12 @@ struct RecipeView: View {
     var body: some View {
         List {
             Section("Ingredients") {
-                ForEach(recipe.ingredientList, id: \.self) {
-                    Text($0)
+                ForEach(recipe.ingredients ?? [], id: \.self) {
+                    Text($0.value)
                 }
             }
             Section("Instructions") {
-                ForEach(Array(recipe.instructionList.enumerated()), id: \.offset) { values in
+                ForEach(Array(recipe.instructions.enumerated()), id: \.offset) { values in
                     HStack(alignment: .top) {
                         Text(values.offset.description + ".")
                             .frame(width: 24)
@@ -28,8 +28,8 @@ struct RecipeView: View {
                 }
             }
             Section("Tags") {
-                ForEach(recipe.categoryList, id: \.self) {
-                    Text($0)
+                ForEach(recipe.categories ?? [], id: \.self) {
+                    Text($0.value)
                 }
             }
             Section("Update Date") {

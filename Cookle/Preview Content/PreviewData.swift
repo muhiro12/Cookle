@@ -13,9 +13,7 @@ struct PreviewData {
         let container = try! ModelContainer(for: Recipe.self, configurations: .init(isStoredInMemoryOnly: true))
         Task { @MainActor in
             for _ in 0...20 {
-                let recipe = randomRecipe()
-                container.mainContext.insert(recipe)
-                inMemoryContext.insert(with: recipe)
+                container.mainContext.insert(randomRecipe())
             }
         }
         return container
@@ -23,15 +21,24 @@ struct PreviewData {
 
     static let inMemoryContext = InMemoryContext()
 
+    static func randomDiary() -> Diary {
+        let diary = Diary(date: .now.addingTimeInterval(.random(in: 0...(60 * 60 * 24 * 365 * 2))),
+                          breakfasts: [randomRecipe()],
+                          lunches: [randomRecipe(),
+                                    randomRecipe()],
+                          dinners: [randomRecipe(),
+                                    randomRecipe(),
+                                    randomRecipe()])
+        return diary
+    }
+
     static func randomRecipe() -> Recipe {
-        let recipe = Recipe(
-            name: PreviewData.randomWords(from: PreviewData.nameList),
-            ingredientList: (0...Int.random(in: 0..<20)).map { _ in PreviewData.randomWords(from: PreviewData.ingredientList) },
-            instructionList: (0...Int.random(in: 0..<20)).map { _ in PreviewData.randomWords(from: PreviewData.instructionsList) },
-            categoryList: (0...Int.random(in: 0..<5)).map { _ in PreviewData.randomWords(from: PreviewData.categoryList) }
+        Recipe.factory(
+            name: PreviewData.randomWords(from: PreviewData.names),
+            ingredients: (0...Int.random(in: 0..<20)).map { _ in PreviewData.randomWords(from: PreviewData.ingredients) },
+            instructions: (0...Int.random(in: 0..<20)).map { _ in PreviewData.randomWords(from: PreviewData.instructions) },
+            categories: (0...Int.random(in: 0..<5)).map { _ in PreviewData.randomWords(from: PreviewData.categories) }
         )
-        recipe.setUpdateDate(recipe.creationDate.addingTimeInterval(.random(in: 1...365) * 24 * 60 * 60 * 3))
-        return recipe
     }
 
     static func randomWords(from list: [String], length: Int = 1) -> String {
@@ -42,7 +49,7 @@ struct PreviewData {
         return words.dropFirst().description
     }
 
-    static let nameList = [
+    static let names = [
         "Grilled Salmon", "Chicken Parmesan", "Vegetable Stir Fry", "Beef Stroganoff", "Spaghetti Carbonara",
         "Lamb Curry", "Shrimp Paella", "Pork Schnitzel", "Ratatouille", "Duck Confit",
         "Mushroom Risotto", "Quiche Lorraine", "Fish and Chips", "Sushi Rolls", "Tom Yum Soup",
@@ -65,7 +72,7 @@ struct PreviewData {
         "Huevos Rancheros", "Baked Cod", "Risotto Milanese", "Chicken Quesadilla", "Vegetable Paella"
     ]
 
-    static let ingredientList = [
+    static let ingredients = [
         "Chicken Breast", "Salmon Fillet", "Ground Beef", "Pork Loin", "Tofu",
         "Shrimp", "Scallops", "Mussels", "Eggplant", "Zucchini",
         "Bell Pepper", "Spinach", "Kale", "Arugula", "Butternut Squash",
@@ -88,7 +95,7 @@ struct PreviewData {
         "Corn", "Mushrooms", "Potatoes", "Cabbage", "Brussels Sprouts"
     ]
 
-    static let instructionsList = [
+    static let instructions = [
         "Preheat the oven to 350°F (175°C).", "Rinse the rice under cold water until the water runs clear.",
         "Chop the onions finely.", "Mince the garlic cloves.", "Grate the ginger.",
         "Dice the tomatoes.", "Slice the chicken breast into strips.", "Season the meat with salt and pepper.",
@@ -131,7 +138,7 @@ struct PreviewData {
         "Dry brine the chicken for juicier results.", "Tenderize the meat with a marinade."
     ]
 
-    static let categoryList = [
+    static let categories = [
         "Japanese", "Western", "French", "Italian", "Chinese",
         "Spanish", "Mediterranean", "Mexican", "Thai", "Indian",
         "Vietnamese", "Korean", "Main-Dish", "Side-Dish", "Soup",

@@ -15,12 +15,11 @@ struct AddRecipeButton: View {
             isPresented = true
         }
         .sheet(isPresented: $isPresented) {
-            RecipeFormView()
+            RecipeFormRootView()
         }
     }
 }
 
 #Preview {
     AddRecipeButton()
-        .environment(\.inMemoryContext, PreviewData.inMemoryContext)
 }

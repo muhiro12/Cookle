@@ -17,7 +17,7 @@ struct EditRecipeButton: View {
             isPresented = true
         }
         .sheet(isPresented: $isPresented) {
-            RecipeFormView()
+            RecipeFormRootView()
         }
     }
 }
@@ -25,5 +25,4 @@ struct EditRecipeButton: View {
 #Preview {
     EditRecipeButton()
         .environment(PreviewData.randomRecipe())
-        .environment(\.inMemoryContext, PreviewData.inMemoryContext)
 }

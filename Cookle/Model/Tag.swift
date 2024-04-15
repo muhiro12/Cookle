@@ -5,10 +5,12 @@
 //  Created by Hiromu Nakano on 2024/04/14.
 //
 
-import Foundation
+import SwiftData
 
-protocol Tag: Identifiable, Hashable, Comparable {
+protocol Tag: PersistentModel, Comparable {
     var value: String { get }
+    var recipes: [Recipe] { get }
+    init(_ value: String)
 }
 
 extension Tag {

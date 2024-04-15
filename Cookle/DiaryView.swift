@@ -2,93 +2,38 @@
 //  DiaryView.swift
 //  Cookle
 //
-//  Created by Hiromu Nakano on 2024/04/09.
+//  Created by Hiromu Nakano on 2024/04/15.
 //
 
 import SwiftUI
-import SwiftData
 
-struct DiaryView<Content: Tag>: View {
-    @Environment(\.modelContext) private var modelContext
-    @Environment(\.inMemoryContext) private var inMemoryContext
-
-    @Query private var recipes: [Recipe]
-
-    @State private var content: Content.ID?
-    @State private var detail: Recipe?
-    @State private var isGrid = true
+struct DiaryView: View {
+    @Environment(Diary.self) private var diary
 
     var body: some View {
-        NavigationSplitView {
-            List(inMemoryContext.yearMonthList, selection: $content) { yearMonthTag in
-                Section(yearMonthTag.value) {
-                    ForEach(inMemoryContext.yearMonthDayList.filter { $0.value.contains(yearMonthTag.value) }) { yearMonthDayTag in
-                        Text(yearMonthDayTag.value)
-                    }
+        List {
+            Section("Date") {
+                Text(diary.date.description)
+            }
+            Section("Breakfasts") {
+                ForEach(diary.breakfasts) {
+                    Text($0.name)
                 }
             }
-            .toolbar {
-                ToolbarItem {
-                    Button("Delete All", systemImage: "trash") {
-                        withAnimation {
-                            recipes.forEach(modelContext.delete)
-                        }
-                    }
-                }
-                ToolbarItem {
-                    Button("Add Random Recipe", systemImage: "dice") {
-                        withAnimation {
-                            let recipe = PreviewData.randomRecipe()
-                            modelContext.insert(recipe)
-                            inMemoryContext.insert(with: recipe)
-                        }
-                    }
-                }
-                ToolbarItem {
-                    AddRecipeButton()
+            Section("Lunches") {
+                ForEach(diary.lunches) {
+                    Text($0.name)
                 }
             }
-            .navigationTitle("Diary")
-        } content: {
-            if let content {
-                VStack {
-                    if isGrid{
-                        RecipeGridView(recipes.filter { $0.yearMonthDay == inMemoryContext.yearMonthDayList.first { $0.id as? Content.ID == content }?.value },
-                                       selection: $detail)
-                    } else {
-                        RecipeListView(recipes.filter { $0.yearMonthDay == inMemoryContext.yearMonthDayList.first { $0.id as? Content.ID == content }?.value },
-                                       selection: $detail)
-                    }
-                    List(selection: $detail) {}
-                        .frame(height: .zero)
+            Section("Dinners") {
+                ForEach(diary.dinners) {
+                    Text($0.name)
                 }
-                .toolbar {
-                    ToolbarItem {
-                        ToggleListStyleButton(isGrid: $isGrid)
-                    }
-                    ToolbarItem {
-                        AddRecipeButton()
-                    }
-                }
-                .navigationTitle(inMemoryContext.yearMonthDayList.first { $0.id as? Content.ID == content }?.value ?? "")
-            }
-        } detail: {
-            if let detail {
-                RecipeView()
-                    .toolbar {
-                        ToolbarItem {
-                            EditRecipeButton()
-                        }
-                    }
-                    .navigationTitle(detail.name)
-                    .environment(detail)
             }
         }
     }
 }
 
 #Preview {
-    DiaryView<YearMonthDay>()
-        .modelContainer(PreviewData.modelContainer)
-        .environment(\.inMemoryContext, PreviewData.inMemoryContext)
+    DiaryView()
 }

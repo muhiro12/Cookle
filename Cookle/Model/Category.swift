@@ -5,9 +5,15 @@
 //  Created by Hiromu Nakano on 2024/04/14.
 //
 
-import Foundation
+import SwiftData
 
-struct Category: Tag {
-    let id = UUID()
-    let value: String
+@Model
+final class Category: Tag {
+    private(set) var value: String
+    private(set) var recipes: [Recipe]
+
+    init(_ value: String) {
+        self.value = value
+        self.recipes = []
+    }
 }

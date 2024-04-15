@@ -12,22 +12,13 @@ import SwiftData
 struct CookleApp: App {
     private let sharedModelContainer: ModelContainer = {
         do {
-            return try .init(for: Recipe.self, configurations: .init())
+            return try .init(for: Recipe.self, configurations: .init(isStoredInMemoryOnly: true))
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
 
     private let sharedInMemoryContext = InMemoryContext()
-
-    init() {
-        let recipes = try? sharedModelContainer.mainContext.fetch(
-            FetchDescriptor<Recipe>(
-                predicate: #Predicate { _ in true }
-            )
-        )
-        sharedInMemoryContext.modify(recipes ?? [])
-    }
 
     var body: some Scene {
         WindowGroup {

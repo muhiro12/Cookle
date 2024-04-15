@@ -31,7 +31,7 @@ struct RecipeGridView: View {
                                     .font(.title)
                                     .bold()
                                 Divider()
-                                Text(recipe.ingredientList.joined(separator: ", "))
+                                Text(recipe.ingredients?.map { $0.value }.joined(separator: ", ") ?? "")
                                 Spacer()
                             }
                             .padding()

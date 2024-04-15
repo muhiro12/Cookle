@@ -11,40 +11,37 @@ import SwiftData
 @Model
 final class Recipe {
     private(set) var name: String
-    private(set) var ingredientList: [String]
-    private(set) var instructionList: [String]
-    private(set) var categoryList: [String]
+    private(set) var ingredients: [Ingredient]?
+    private(set) var instructions: [String]
+    private(set) var categories: [Category]?
     private(set) var updateDate: Date
     private(set) var creationDate: Date
-    private(set) var yearMonth: String
-    private(set) var yearMonthDay: String
+    private(set) var diaries: [Diary]
 
-    init(name: String, ingredientList: [String], instructionList: [String], categoryList: [String]) {
-        self.name = name
-        self.ingredientList = ingredientList
-        self.instructionList = instructionList
-        self.categoryList = categoryList
-
+    private init() {
+        self.name = ""
+        self.ingredients = []
+        self.instructions = []
+        self.categories = []
         self.updateDate = .now
         self.creationDate = .now
-        self.yearMonth = ""
-        self.yearMonthDay = ""
-
-        self.setUpdateDate(updateDate)
+        self.diaries = []
     }
 
-    func set(name: String, ingredientList: [String], instructionList: [String], categoryList: [String]) {
-        self.name = name
-        self.ingredientList = ingredientList
-        self.instructionList = instructionList
-        self.categoryList = categoryList
-
-        self.setUpdateDate(.now)
+    static func factory(name: String, ingredients: [String], instructions: [String], categories: [String]) -> Recipe {
+        let recipe = Recipe()
+        recipe.name = name
+        recipe.ingredients = ingredients.map { .init($0) }
+        recipe.instructions = instructions
+        recipe.categories = categories.map { .init($0) }
+        recipe.diaries = []
+        return recipe
     }
 
-    func setUpdateDate(_ date: Date) {
-        updateDate = date
-        yearMonth = date.formatted(.iso8601.year().month())
-        yearMonthDay = date.formatted(.iso8601.year().month().day())
+    func set(name: String, ingredients: [String], instructions: [String], categories: [String]) {
+        self.name = .init(name)
+        self.ingredients = ingredients.map { .init($0) }
+        self.instructions = instructions.map { .init($0) }
+        self.categories = categories.map { .init($0) }
     }
 }
