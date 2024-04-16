@@ -24,7 +24,7 @@ struct RecipeGridView: View {
                     ForEach(recipes) { recipe in
                         ZStack {
                             RoundedRectangle(cornerRadius: 8)
-                                .foregroundColor(.white)
+                                .foregroundColor(.init(uiColor: .systemBackground))
                                 .shadow(radius: 1)
                             VStack {
                                 Text(recipe.name)
