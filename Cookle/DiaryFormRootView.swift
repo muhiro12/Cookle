@@ -111,6 +111,7 @@ struct DiaryFormRootView: View {
                 }
             }
         }
+        .interactiveDismissDisabled()
     }
 }
 
