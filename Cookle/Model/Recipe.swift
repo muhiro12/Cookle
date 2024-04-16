@@ -11,12 +11,14 @@ import SwiftData
 @Model
 final class Recipe {
     private(set) var name: String
-    private(set) var ingredients: [Ingredient]?
+    @Relationship(inverse: \Ingredient.recipes)
+    private(set) var ingredients: [Ingredient]
     private(set) var instructions: [String]
-    private(set) var categories: [Category]?
+    @Relationship(inverse: \Category.recipes)
+    private(set) var categories: [Category]
+    private(set) var diaries: [Diary]
     private(set) var updateDate: Date
     private(set) var creationDate: Date
-    private(set) var diaries: [Diary]
 
     private init() {
         self.name = ""
@@ -34,7 +36,6 @@ final class Recipe {
         recipe.ingredients = ingredients.map { .init($0) }
         recipe.instructions = instructions
         recipe.categories = categories.map { .init($0) }
-        recipe.diaries = []
         return recipe
     }
 

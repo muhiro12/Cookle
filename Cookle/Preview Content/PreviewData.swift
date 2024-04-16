@@ -22,14 +22,15 @@ struct PreviewData {
     static let inMemoryContext = InMemoryContext()
 
     static func randomDiary() -> Diary {
-        let diary = Diary(date: .now.addingTimeInterval(.random(in: 0...(60 * 60 * 24 * 365 * 2))),
-                          breakfasts: [randomRecipe()],
-                          lunches: [randomRecipe(),
-                                    randomRecipe()],
-                          dinners: [randomRecipe(),
-                                    randomRecipe(),
-                                    randomRecipe()])
-        return diary
+        Diary.factory(
+            date: .now.addingTimeInterval(.random(in: 0...(60 * 60 * 24 * 365 * 2))),
+            breakfasts: [randomRecipe()],
+            lunches: [randomRecipe(),
+                      randomRecipe()],
+            dinners: [randomRecipe(),
+                      randomRecipe(),
+                      randomRecipe()]
+        )
     }
 
     static func randomRecipe() -> Recipe {

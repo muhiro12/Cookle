@@ -79,9 +79,9 @@ struct RecipeFormRootView: View {
         }
         .task {
             name = recipe?.name ?? ""
-            ingredients = (recipe?.ingredients?.map { $0.value } ?? []) + [""]
+            ingredients = (recipe?.ingredients.map { $0.value } ?? []) + [""]
             instructions = recipe?.instructions ?? [""]
-            categories = (recipe?.categories?.map { $0.value }  ?? []) + [""]
+            categories = (recipe?.categories.map { $0.value }  ?? []) + [""]
         }
         .interactiveDismissDisabled()
     }

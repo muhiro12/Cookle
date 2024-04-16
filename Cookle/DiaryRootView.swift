@@ -46,6 +46,20 @@ struct DiaryRootView: View {
                     }
                 }
                 ToolbarItem {
+                    Button("Add Book", systemImage: "book") {
+                        withAnimation {
+                            modelContext.insert(
+                                Diary.factory(
+                                    date: .now.addingTimeInterval(.random(in: 0...(60 * 60 * 24 * 365 * 2))),
+                                    breakfasts: diaries.first?.breakfasts ?? [],
+                                    lunches: [],
+                                    dinners: []
+                                )
+                            )
+                        }
+                    }
+                }
+                ToolbarItem {
                     Button("Add Random Recipe", systemImage: "dice") {
                         withAnimation {
                             modelContext.insert(PreviewData.randomDiary())

@@ -14,7 +14,7 @@ struct RecipeView: View {
     var body: some View {
         List {
             Section("Ingredients") {
-                ForEach(recipe.ingredients ?? [], id: \.self) {
+                ForEach(recipe.ingredients, id: \.self) {
                     Text($0.value)
                 }
             }
@@ -28,8 +28,13 @@ struct RecipeView: View {
                 }
             }
             Section("Tags") {
-                ForEach(recipe.categories ?? [], id: \.self) {
+                ForEach(recipe.categories, id: \.self) {
                     Text($0.value)
+                }
+            }
+            Section("Diaries") {
+                ForEach(recipe.diaries) {
+                    Text($0.date.formatted(.dateTime.year().month().day()))
                 }
             }
             Section("Update Date") {

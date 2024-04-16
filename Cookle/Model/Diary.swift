@@ -10,15 +10,28 @@ import SwiftData
 
 @Model
 final class Diary: Identifiable {
-    let date: Date
-    let breakfasts: [Recipe]
-    let lunches: [Recipe]
-    let dinners: [Recipe]
+    private(set) var date: Date
+    private(set) var breakfasts: [Recipe]
+    private(set) var lunches: [Recipe]
+    private(set) var dinners: [Recipe]
+    @Relationship(inverse: \Recipe.diaries)
+    private(set) var recipes: [Recipe]
 
-    init(date: Date, breakfasts: [Recipe], lunches: [Recipe], dinners: [Recipe]) {
-        self.date = date
-        self.breakfasts = breakfasts
-        self.lunches = lunches
-        self.dinners = dinners
+    private init() {
+        self.date = .now
+        self.breakfasts = []
+        self.lunches = []
+        self.dinners = []
+        self.recipes = []
+    }
+
+    static func factory(date: Date, breakfasts: [Recipe], lunches: [Recipe], dinners: [Recipe]) -> Diary {
+        let diary = Diary()
+        diary.date = date
+        diary.breakfasts = breakfasts
+        diary.lunches = lunches
+        diary.dinners = dinners
+        diary.recipes = breakfasts + lunches + dinners
+        return diary
     }
 }
