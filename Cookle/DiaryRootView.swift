@@ -16,6 +16,7 @@ struct DiaryRootView: View {
     @State private var content: Diary.ID?
     @State private var detail: Recipe?
     @State private var isGrid = true
+    @State private var isPresented = false
 
     var body: some View {
         NavigationSplitView {
@@ -46,24 +47,15 @@ struct DiaryRootView: View {
                     }
                 }
                 ToolbarItem {
-                    Button("Add Book", systemImage: "book") {
-                        withAnimation {
-                            modelContext.insert(
-                                Diary.factory(
-                                    date: .now.addingTimeInterval(.random(in: 0...(60 * 60 * 24 * 365 * 2))),
-                                    breakfasts: diaries.first?.breakfasts ?? [],
-                                    lunches: [],
-                                    dinners: []
-                                )
-                            )
-                        }
-                    }
-                }
-                ToolbarItem {
                     Button("Add Random Recipe", systemImage: "dice") {
                         withAnimation {
                             modelContext.insert(PreviewData.randomDiary())
                         }
+                    }
+                }
+                ToolbarItem {
+                    Button("Add Diary", systemImage: "book") {
+                        isPresented = true
                     }
                 }
                 ToolbarItem {
@@ -104,6 +96,9 @@ struct DiaryRootView: View {
                     .navigationTitle(detail.name)
                     .environment(detail)
             }
+        }
+        .sheet(isPresented: $isPresented) {
+            DiaryFormRootView()
         }
     }
 }

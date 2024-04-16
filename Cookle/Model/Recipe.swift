@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class Recipe {
+final class Recipe: Identifiable {
     private(set) var name: String
     @Relationship(inverse: \Ingredient.recipes)
     private(set) var ingredients: [Ingredient]

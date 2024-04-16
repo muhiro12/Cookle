@@ -33,6 +33,7 @@
 		AD1338CC2BCD054900A8BAD2 /* DiaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338CB2BCD054900A8BAD2 /* DiaryView.swift */; };
 		AD1338CE2BCD063800A8BAD2 /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338CD2BCD063800A8BAD2 /* TagView.swift */; };
 		AD1338D52BCEAEB100A8BAD2 /* SuggestionMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338D42BCEAEB100A8BAD2 /* SuggestionMenu.swift */; };
+		AD1338D72BCECAC000A8BAD2 /* DiaryFormRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338D62BCECAC000A8BAD2 /* DiaryFormRootView.swift */; };
 		ADDBB4322BC560CD003B444F /* DiaryRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBB4312BC560CD003B444F /* DiaryRootView.swift */; };
 		ADDBB4342BC79464003B444F /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBB4332BC79464003B444F /* PreviewData.swift */; };
 		ADDBB4382BC7C232003B444F /* RecipeFormRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBB4372BC7C232003B444F /* RecipeFormRootView.swift */; };
@@ -87,6 +88,7 @@
 		AD1338CB2BCD054900A8BAD2 /* DiaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryView.swift; sourceTree = "<group>"; };
 		AD1338CD2BCD063800A8BAD2 /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
 		AD1338D42BCEAEB100A8BAD2 /* SuggestionMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionMenu.swift; sourceTree = "<group>"; };
+		AD1338D62BCECAC000A8BAD2 /* DiaryFormRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryFormRootView.swift; sourceTree = "<group>"; };
 		ADDBB4312BC560CD003B444F /* DiaryRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryRootView.swift; sourceTree = "<group>"; };
 		ADDBB4332BC79464003B444F /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
 		ADDBB4372BC7C232003B444F /* RecipeFormRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeFormRootView.swift; sourceTree = "<group>"; };
@@ -183,6 +185,7 @@
 			isa = PBXGroup;
 			children = (
 				AD1338C92BCCC90900A8BAD2 /* DebugRootView.swift */,
+				AD1338D62BCECAC000A8BAD2 /* DiaryFormRootView.swift */,
 				ADDBB4312BC560CD003B444F /* DiaryRootView.swift */,
 				AD1338CB2BCD054900A8BAD2 /* DiaryView.swift */,
 				ADDBB4372BC7C232003B444F /* RecipeFormRootView.swift */,
@@ -368,6 +371,7 @@
 				AD0B6BE02BC549CF007F66D2 /* TagRootView.swift in Sources */,
 				ADDBB4342BC79464003B444F /* PreviewData.swift in Sources */,
 				AD1338CE2BCD063800A8BAD2 /* TagView.swift in Sources */,
+				AD1338D72BCECAC000A8BAD2 /* DiaryFormRootView.swift in Sources */,
 				AD1338C02BCAFA6600A8BAD2 /* Category.swift in Sources */,
 				AD1338D52BCEAEB100A8BAD2 /* SuggestionMenu.swift in Sources */,
 				AD1338B02BCAC80F00A8BAD2 /* AddRecipeButton.swift in Sources */,

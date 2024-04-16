@@ -20,7 +20,7 @@ struct RecipeFormRootView: View {
     @Environment(Recipe.self) private var recipe: Recipe?
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
                 Section("Name") {
                     ZStack(alignment: .trailing) {
