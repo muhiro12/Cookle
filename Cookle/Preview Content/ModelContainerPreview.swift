@@ -30,11 +30,13 @@ struct ModelContainerPreview<Content: View>: View {
                     (0..<20).forEach { _ in
                         modelContext.insert(randomDiary())
                     }
-                    try! await Task.sleep(for: .seconds(0.5))
-                    diaries = try! modelContext.fetch(.init())
-                    recipes = try! modelContext.fetch(.init())
-                    categories = try! modelContext.fetch(.init())
-                    ingredients = try! modelContext.fetch(.init())
+                    repeat {
+                        try! await Task.sleep(for: .seconds(0.2))
+                        diaries = try! modelContext.fetch(.init())
+                        recipes = try! modelContext.fetch(.init())
+                        categories = try! modelContext.fetch(.init())
+                        ingredients = try! modelContext.fetch(.init())
+                    } while diaries.isEmpty || recipes.isEmpty || categories.isEmpty || ingredients.isEmpty
                     isReady = true
                 }
         }
