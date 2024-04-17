@@ -35,5 +35,8 @@ struct DiaryView: View {
 }
 
 #Preview {
-    DiaryView()
+    ModelContainerPreview { preview in
+        DiaryView()
+            .environment(preview.diaries[0])
+    }
 }

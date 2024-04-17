@@ -54,6 +54,8 @@ struct RecipeView: View {
 }
 
 #Preview {
-    RecipeView()
-        .environment(PreviewData.randomRecipe())
+    ModelContainerPreview { preview in
+        RecipeView()
+            .environment(preview.recipes[0])
+    }
 }

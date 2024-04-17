@@ -25,5 +25,8 @@ struct TagView<T: Tag>: View {
 }
 
 #Preview {
-    TagView<Ingredient>()
+    ModelContainerPreview { preview in
+        TagView<Ingredient>()
+            .environment(preview.ingredients[0])
+    }
 }

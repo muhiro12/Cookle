@@ -103,6 +103,8 @@ struct RecipeFormRootView: View {
 
 
 #Preview {
-    RecipeFormRootView()
-        .environment(PreviewData.randomRecipe())
+    ModelContainerPreview { preview in
+        RecipeFormRootView()
+            .environment(preview.recipes[0])
+    }
 }

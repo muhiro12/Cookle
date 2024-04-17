@@ -71,7 +71,7 @@ struct MultiAddableSection<T>: View {
 #Preview {
     Form {
         MultiAddableSection<Ingredient>(
-            data: .constant(Array(PreviewData.ingredients.prefix(5)) + [""]),
+            data: .constant(["Bacon", "Lettuce", "Tomato", ""]),
             title: "Ingredient",
             shouldShowNumber: true
         )

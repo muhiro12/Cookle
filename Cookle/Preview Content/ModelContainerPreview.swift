@@ -1,27 +1,46 @@
 //
-//  PreviewData.swift
+//  ModelContainerPreview.swift
 //  Cookle
 //
 //  Created by Hiromu Nakano on 2024/04/11.
 //
 
-import Foundation
+import SwiftUI
 import SwiftData
 
-struct PreviewData {
-    static let modelContainer = {
-        let container = try! ModelContainer(for: Recipe.self, configurations: .init(isStoredInMemoryOnly: true))
-        Task { @MainActor in
-            for _ in 0...20 {
-                container.mainContext.insert(randomRecipe())
-            }
+struct ModelContainerPreview<Content: View>: View {
+    let content: (Self) -> Content
+
+    @State private(set) var diaries = [Diary]()
+    @State private(set) var recipes = [Recipe]()
+    @State private(set) var categories = [Category]()
+    @State private(set) var ingredients = [Ingredient]()
+    @State private var isReady = false
+
+    private let modelContainer = try! ModelContainer(for: Recipe.self, configurations: .init(isStoredInMemoryOnly: true))
+
+    var body: some View {
+        if isReady {
+            content(self)
+                .modelContainer(modelContainer)
+        } else {
+            ProgressView()
+                .task {
+                    let modelContext = modelContainer.mainContext
+                    (0..<20).forEach { _ in
+                        modelContext.insert(randomDiary())
+                    }
+                    try! await Task.sleep(for: .seconds(0.5))
+                    diaries = try! modelContext.fetch(.init())
+                    recipes = try! modelContext.fetch(.init())
+                    categories = try! modelContext.fetch(.init())
+                    ingredients = try! modelContext.fetch(.init())
+                    isReady = true
+                }
         }
-        return container
-    }()
+    }
 
-    static let inMemoryContext = InMemoryContext()
-
-    static func randomDiary() -> Diary {
+    func randomDiary() -> Diary {
         Diary.create(
             date: .now.addingTimeInterval(.random(in: 0...(60 * 60 * 24 * 365 * 2))),
             breakfasts: [randomRecipe()],
@@ -33,18 +52,18 @@ struct PreviewData {
         )
     }
 
-    static func randomRecipe() -> Recipe {
+    private func randomRecipe() -> Recipe {
         Recipe.create(
-            name: PreviewData.randomWords(from: PreviewData.names),
-            categories: (0...Int.random(in: 0..<5)).map { _ in PreviewData.randomWords(from: PreviewData.categories) },
+            name: randomWords(from: nameStrings),
+            categories: (0...Int.random(in: 0..<5)).map { _ in randomWords(from: categoryStrings) },
             servingSize: Int.random(in: 1...6),
             cookingTime: Int.random(in: 5...60),
-            ingredients: (0...Int.random(in: 0..<20)).map { _ in PreviewData.randomWords(from: PreviewData.ingredients) },
-            steps: (0...Int.random(in: 0..<20)).map { _ in PreviewData.randomWords(from: PreviewData.steps) }
+            ingredients: (0...Int.random(in: 0..<20)).map { _ in randomWords(from: ingredientStrings) },
+            steps: (0...Int.random(in: 0..<20)).map { _ in randomWords(from: stepStrings) }
         )
     }
 
-    static func randomWords(from list: [String], length: Int = 1) -> String {
+    private func randomWords(from list: [String], length: Int = 1) -> String {
         var words = ""
         for _ in 0..<length {
             words += " " + list[Int.random(in: 0..<list.endIndex)]
@@ -52,7 +71,7 @@ struct PreviewData {
         return words.dropFirst().description
     }
 
-    static let names = [
+    private let nameStrings = [
         "Grilled Salmon", "Chicken Parmesan", "Vegetable Stir Fry", "Beef Stroganoff", "Spaghetti Carbonara",
         "Lamb Curry", "Shrimp Paella", "Pork Schnitzel", "Ratatouille", "Duck Confit",
         "Mushroom Risotto", "Quiche Lorraine", "Fish and Chips", "Sushi Rolls", "Tom Yum Soup",
@@ -75,7 +94,7 @@ struct PreviewData {
         "Huevos Rancheros", "Baked Cod", "Risotto Milanese", "Chicken Quesadilla", "Vegetable Paella"
     ]
 
-    static let categories = [
+    private let categoryStrings = [
         "Japanese", "Western", "French", "Italian", "Chinese",
         "Spanish", "Mediterranean", "Mexican", "Thai", "Indian",
         "Vietnamese", "Korean", "Main-Dish", "Side-Dish", "Soup",
@@ -97,7 +116,7 @@ struct PreviewData {
         "Street-Food", "Pub-Food", "Comfort-Food", "Soul-Food", "Fast-Food"
     ]
 
-    static let ingredients = [
+    private let ingredientStrings = [
         "Chicken Breast", "Salmon Fillet", "Ground Beef", "Pork Loin", "Tofu",
         "Shrimp", "Scallops", "Mussels", "Eggplant", "Zucchini",
         "Bell Pepper", "Spinach", "Kale", "Arugula", "Butternut Squash",
@@ -120,7 +139,7 @@ struct PreviewData {
         "Corn", "Mushrooms", "Potatoes", "Cabbage", "Brussels Sprouts"
     ]
 
-    static let steps = [
+    private let stepStrings = [
         "Preheat the oven to 350°F (175°C).", "Rinse the rice under cold water until the water runs clear.",
         "Chop the onions finely.", "Mince the garlic cloves.", "Grate the ginger.",
         "Dice the tomatoes.", "Slice the chicken breast into strips.", "Season the meat with salt and pepper.",

@@ -92,5 +92,7 @@ struct DebugRootView: View {
 }
 
 #Preview {
-    DebugRootView()
+    ModelContainerPreview { _ in
+        DebugRootView()
+    }
 }

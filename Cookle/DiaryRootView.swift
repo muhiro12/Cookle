@@ -47,9 +47,11 @@ struct DiaryRootView: View {
                     }
                 }
                 ToolbarItem {
-                    Button("Add Random Recipe", systemImage: "dice") {
-                        withAnimation {
-                            modelContext.insert(PreviewData.randomDiary())
+                    ModelContainerPreview { preview in
+                        Button("Add Random Diary", systemImage: "dice") {
+                            withAnimation {
+                                modelContext.insert(preview.randomDiary())
+                            }
                         }
                     }
                 }
@@ -104,6 +106,7 @@ struct DiaryRootView: View {
 }
 
 #Preview {
-    DiaryRootView()
-        .modelContainer(PreviewData.modelContainer)
+    ModelContainerPreview { _ in
+        DiaryRootView()
+    }
 }

@@ -25,6 +25,7 @@ struct RecipeListView: View {
 }
 
 #Preview {
-    RecipeListView((0..<10).map { _ in PreviewData.randomRecipe()},
-                   selection: .constant(nil))
+    ModelContainerPreview { preview in
+        RecipeListView(preview.recipes, selection: .constant(nil))
+    }
 }

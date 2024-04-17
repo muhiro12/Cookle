@@ -29,6 +29,7 @@ struct SuggestionMenu<T: Tag>: View {
 }
 
 #Preview {
-    SuggestionMenu<Category>(input: .constant("A"))
-        .modelContainer(PreviewData.modelContainer)
+    ModelContainerPreview { _ in
+        SuggestionMenu<Category>(input: .constant("A"))
+    }
 }

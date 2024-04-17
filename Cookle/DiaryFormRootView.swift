@@ -116,6 +116,7 @@ struct DiaryFormRootView: View {
 }
 
 #Preview {
-    DiaryFormRootView()
-        .modelContainer(PreviewData.modelContainer)
+    ModelContainerPreview { _ in
+        DiaryFormRootView()
+    }
 }

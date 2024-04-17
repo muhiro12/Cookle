@@ -74,6 +74,7 @@ struct TagRootView<T: Tag>: View {
 }
 
 #Preview {
-    TagRootView<Category>()
-        .modelContainer(PreviewData.modelContainer)
+    ModelContainerPreview { _ in
+        TagRootView<Category>()
+    }
 }

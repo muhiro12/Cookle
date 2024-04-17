@@ -50,6 +50,7 @@ struct RecipeGridView: View {
 }
 
 #Preview {
-    RecipeGridView((0..<10).map { _ in PreviewData.randomRecipe()},
-                   selection: .constant(nil))
+    ModelContainerPreview { preview in
+        RecipeGridView(preview.recipes, selection: .constant(nil))
+    }
 }

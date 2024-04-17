@@ -23,6 +23,8 @@ struct EditRecipeButton: View {
 }
 
 #Preview {
-    EditRecipeButton()
-        .environment(PreviewData.randomRecipe())
+    ModelContainerPreview { preview in
+        EditRecipeButton()
+            .environment(preview.recipes[0])
+    }
 }
