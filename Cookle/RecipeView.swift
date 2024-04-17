@@ -13,13 +13,24 @@ struct RecipeView: View {
 
     var body: some View {
         List {
+            Section("Categories") {
+                ForEach(recipe.categories, id: \.self) {
+                    Text($0.value)
+                }
+            }
+            Section("Serving Size") {
+                Text(recipe.servingSize.description + " servings")
+            }
+            Section("Cooking Time") {
+                Text(recipe.cookingTime.description + " minutes")
+            }
             Section("Ingredients") {
                 ForEach(recipe.ingredients, id: \.self) {
                     Text($0.value)
                 }
             }
-            Section("Instructions") {
-                ForEach(Array(recipe.instructions.enumerated()), id: \.offset) { values in
+            Section("Steps") {
+                ForEach(Array(recipe.steps.enumerated()), id: \.offset) { values in
                     HStack(alignment: .top) {
                         Text(values.offset.description + ".")
                             .frame(width: 24)
@@ -27,21 +38,16 @@ struct RecipeView: View {
                     }
                 }
             }
-            Section("Tags") {
-                ForEach(recipe.categories, id: \.self) {
-                    Text($0.value)
-                }
+            Section("Updated At") {
+                Text(recipe.updatedAt.description)
+            }
+            Section("Created At") {
+                Text(recipe.createdAt.description)
             }
             Section("Diaries") {
                 ForEach(recipe.diaries) {
                     Text($0.date.formatted(.dateTime.year().month().day()))
                 }
-            }
-            Section("Update Date") {
-                Text(recipe.updateDate.description)
-            }
-            Section("Creation Date") {
-                Text(recipe.creationDate.description)
             }
         }
     }

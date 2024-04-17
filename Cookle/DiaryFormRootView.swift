@@ -98,7 +98,7 @@ struct DiaryFormRootView: View {
                 ToolbarItem {
                     Button("Add") {
                         modelContext.insert(
-                            Diary.factory(
+                            Diary.create(
                                 date: date,
                                 breakfasts: recipes.filter { breakfasts.contains($0.id) },
                                 lunches: recipes.filter { lunches.contains($0.id) },

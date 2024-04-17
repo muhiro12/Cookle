@@ -14,7 +14,6 @@ final class Diary: Identifiable {
     private(set) var breakfasts: [Recipe]
     private(set) var lunches: [Recipe]
     private(set) var dinners: [Recipe]
-    @Relationship(inverse: \Recipe.diaries)
     private(set) var recipes: [Recipe]
 
     private init() {
@@ -25,7 +24,7 @@ final class Diary: Identifiable {
         self.recipes = []
     }
 
-    static func factory(date: Date, breakfasts: [Recipe], lunches: [Recipe], dinners: [Recipe]) -> Diary {
+    static func create(date: Date, breakfasts: [Recipe], lunches: [Recipe], dinners: [Recipe]) -> Diary {
         let diary = Diary()
         diary.date = date
         diary.breakfasts = breakfasts

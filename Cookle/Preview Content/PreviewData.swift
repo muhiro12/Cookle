@@ -22,7 +22,7 @@ struct PreviewData {
     static let inMemoryContext = InMemoryContext()
 
     static func randomDiary() -> Diary {
-        Diary.factory(
+        Diary.create(
             date: .now.addingTimeInterval(.random(in: 0...(60 * 60 * 24 * 365 * 2))),
             breakfasts: [randomRecipe()],
             lunches: [randomRecipe(),
@@ -34,11 +34,13 @@ struct PreviewData {
     }
 
     static func randomRecipe() -> Recipe {
-        Recipe.factory(
+        Recipe.create(
             name: PreviewData.randomWords(from: PreviewData.names),
+            categories: (0...Int.random(in: 0..<5)).map { _ in PreviewData.randomWords(from: PreviewData.categories) },
+            servingSize: Int.random(in: 1...6),
+            cookingTime: Int.random(in: 5...60),
             ingredients: (0...Int.random(in: 0..<20)).map { _ in PreviewData.randomWords(from: PreviewData.ingredients) },
-            instructions: (0...Int.random(in: 0..<20)).map { _ in PreviewData.randomWords(from: PreviewData.instructions) },
-            categories: (0...Int.random(in: 0..<5)).map { _ in PreviewData.randomWords(from: PreviewData.categories) }
+            steps: (0...Int.random(in: 0..<20)).map { _ in PreviewData.randomWords(from: PreviewData.steps) }
         )
     }
 
@@ -73,6 +75,28 @@ struct PreviewData {
         "Huevos Rancheros", "Baked Cod", "Risotto Milanese", "Chicken Quesadilla", "Vegetable Paella"
     ]
 
+    static let categories = [
+        "Japanese", "Western", "French", "Italian", "Chinese",
+        "Spanish", "Mediterranean", "Mexican", "Thai", "Indian",
+        "Vietnamese", "Korean", "Main-Dish", "Side-Dish", "Soup",
+        "Salad", "Appetizer", "Dessert", "Snack", "Drink",
+        "Breakfast", "Brunch", "Lunch", "Dinner", "Tea-Time",
+        "Healthy", "Quick", "Easy", "Comfort", "Gourmet",
+        "Vegan", "Vegetarian", "Gluten-Free", "Low-Carb", "High-Protein",
+        "Low-Fat", "Organic", "Seasonal", "Local", "Detox",
+        "Festive", "Holiday", "Family-Friendly", "Kid-Friendly", "Party",
+        "One-Pot", "Slow-Cooked", "Grilled", "Baked", "Fried",
+        "Steamed", "Raw", "Spicy", "Sweet", "Sour",
+        "Umami", "Savory", "Creamy", "Crunchy", "Smooth",
+        "Light", "Hearty", "Rich", "Refreshing", "Exotic",
+        "Traditional", "Modern", "Fusion", "Homemade", "Quick-Prep",
+        "Make-Ahead", "Freezable", "Low-Calorie", "High-Fiber", "Sugar-Free",
+        "Dairy-Free", "Nut-Free", "Egg-Free", "Low-Sodium", "High-Vitamin",
+        "High-Mineral", "Energy-Boosting", "Immunity-Boosting", "Anti-Inflammatory", "Antioxidant-Rich",
+        "Meal-Prep", "Budget-Friendly", "Luxurious", "Casual", "Fine-Dining",
+        "Street-Food", "Pub-Food", "Comfort-Food", "Soul-Food", "Fast-Food"
+    ]
+
     static let ingredients = [
         "Chicken Breast", "Salmon Fillet", "Ground Beef", "Pork Loin", "Tofu",
         "Shrimp", "Scallops", "Mussels", "Eggplant", "Zucchini",
@@ -96,7 +120,7 @@ struct PreviewData {
         "Corn", "Mushrooms", "Potatoes", "Cabbage", "Brussels Sprouts"
     ]
 
-    static let instructions = [
+    static let steps = [
         "Preheat the oven to 350°F (175°C).", "Rinse the rice under cold water until the water runs clear.",
         "Chop the onions finely.", "Mince the garlic cloves.", "Grate the ginger.",
         "Dice the tomatoes.", "Slice the chicken breast into strips.", "Season the meat with salt and pepper.",
@@ -137,27 +161,5 @@ struct PreviewData {
         "Temper the eggs by slowly adding hot liquid.", "Quick pickle the vegetables in vinegar and sugar.",
         "Squeeze out excess moisture from the zucchini.", "Rest the batter to prevent tough pancakes.",
         "Dry brine the chicken for juicier results.", "Tenderize the meat with a marinade."
-    ]
-
-    static let categories = [
-        "Japanese", "Western", "French", "Italian", "Chinese",
-        "Spanish", "Mediterranean", "Mexican", "Thai", "Indian",
-        "Vietnamese", "Korean", "Main-Dish", "Side-Dish", "Soup",
-        "Salad", "Appetizer", "Dessert", "Snack", "Drink",
-        "Breakfast", "Brunch", "Lunch", "Dinner", "Tea-Time",
-        "Healthy", "Quick", "Easy", "Comfort", "Gourmet",
-        "Vegan", "Vegetarian", "Gluten-Free", "Low-Carb", "High-Protein",
-        "Low-Fat", "Organic", "Seasonal", "Local", "Detox",
-        "Festive", "Holiday", "Family-Friendly", "Kid-Friendly", "Party",
-        "One-Pot", "Slow-Cooked", "Grilled", "Baked", "Fried",
-        "Steamed", "Raw", "Spicy", "Sweet", "Sour",
-        "Umami", "Savory", "Creamy", "Crunchy", "Smooth",
-        "Light", "Hearty", "Rich", "Refreshing", "Exotic",
-        "Traditional", "Modern", "Fusion", "Homemade", "Quick-Prep",
-        "Make-Ahead", "Freezable", "Low-Calorie", "High-Fiber", "Sugar-Free",
-        "Dairy-Free", "Nut-Free", "Egg-Free", "Low-Sodium", "High-Vitamin",
-        "High-Mineral", "Energy-Boosting", "Immunity-Boosting", "Anti-Inflammatory", "Antioxidant-Rich",
-        "Meal-Prep", "Budget-Friendly", "Luxurious", "Casual", "Fine-Dining",
-        "Street-Food", "Pub-Food", "Comfort-Food", "Soul-Food", "Fast-Food"
     ]
 }

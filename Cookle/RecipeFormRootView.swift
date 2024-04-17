@@ -14,7 +14,7 @@ struct RecipeFormRootView: View {
 
     @State private var name = ""
     @State private var ingredients = [String]()
-    @State private var instructions = [String]()
+    @State private var steps = [String]()
     @State private var categories = [String]()
 
     @Environment(Recipe.self) private var recipe: Recipe?
@@ -29,20 +29,26 @@ struct RecipeFormRootView: View {
                             .foregroundStyle(.red)
                     }
                 }
+                MultiAddableSection<Category>(
+                    data: $categories,
+                    title: "Categories",
+                    shouldShowNumber: false
+                )
+                Section("Serving Size") {
+                    Text("TODO:" + " servings") // TODO: Build servingSize TextField
+                }
+                Section("Cooking Time") {
+                    Text("TODO:" + " minutes") // TODO: Build cookingTime TextField
+                }
                 MultiAddableSection<Ingredient>(
                     data: $ingredients,
                     title: "Ingredients",
                     shouldShowNumber: false
                 )
                 MultiAddableSection<String>(
-                    data: $instructions,
-                    title: "Instructions",
+                    data: $steps,
+                    title: "Steps",
                     shouldShowNumber: true
-                )
-                MultiAddableSection<Category>(
-                    data: $categories,
-                    title: "Tags",
-                    shouldShowNumber: false
                 )
             }
             .toolbar {
@@ -57,18 +63,22 @@ struct RecipeFormRootView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(recipe != nil ? "Update" : "Add") {
                         if let recipe {
-                            recipe.set(
+                            recipe.update(
                                 name: name,
+                                categories: categories.filter { !$0.isEmpty },
+                                servingSize: 0, // TODO: Set servingSize
+                                cookingTime: 0, // TODO: Set cookingTime
                                 ingredients: ingredients.filter { !$0.isEmpty },
-                                instructions: instructions.filter { !$0.isEmpty },
-                                categories: categories.filter { !$0.isEmpty }
+                                steps: steps.filter { !$0.isEmpty }
                             )
                         } else {
-                            modelContext.insert(Recipe.factory(
+                            modelContext.insert(Recipe.create(
                                 name: name,
+                                categories: categories.filter { !$0.isEmpty },
+                                servingSize: 0, // TODO: Set servingSize
+                                cookingTime: 0, // TODO: Set cookingTime
                                 ingredients: ingredients.filter { !$0.isEmpty },
-                                instructions: instructions.filter { !$0.isEmpty },
-                                categories: categories.filter { !$0.isEmpty }
+                                steps: steps.filter { !$0.isEmpty }
                             ))
                         }
                         dismiss()
@@ -80,7 +90,7 @@ struct RecipeFormRootView: View {
         .task {
             name = recipe?.name ?? ""
             ingredients = (recipe?.ingredients.map { $0.value } ?? []) + [""]
-            instructions = recipe?.instructions ?? [""]
+            steps = recipe?.steps ?? [""]
             categories = (recipe?.categories.map { $0.value }  ?? []) + [""]
         }
         .interactiveDismissDisabled()
