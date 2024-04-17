@@ -28,7 +28,7 @@ struct ModelContainerPreview<Content: View>: View {
                 .task {
                     let modelContext = modelContainer.mainContext
                     (0..<20).forEach { _ in
-                        modelContext.insert(randomDiary())
+                        modelContext.insert(randomDiary(modelContext))
                     }
                     repeat {
                         try! await Task.sleep(for: .seconds(0.2))
@@ -42,20 +42,21 @@ struct ModelContainerPreview<Content: View>: View {
         }
     }
 
-    func randomDiary() -> Diary {
+    func randomDiary(_ context: ModelContext) -> Diary {
         Diary.create(
             date: .now.addingTimeInterval(.random(in: 0...(60 * 60 * 24 * 365 * 2))),
-            breakfasts: [randomRecipe()],
-            lunches: [randomRecipe(),
-                      randomRecipe()],
-            dinners: [randomRecipe(),
-                      randomRecipe(),
-                      randomRecipe()]
+            breakfasts: [randomRecipe(context)],
+            lunches: [randomRecipe(context),
+                      randomRecipe(context)],
+            dinners: [randomRecipe(context),
+                      randomRecipe(context),
+                      randomRecipe(context)]
         )
     }
 
-    private func randomRecipe() -> Recipe {
+    private func randomRecipe(_ context: ModelContext) -> Recipe {
         Recipe.create(
+            context: context,
             name: randomWords(from: nameStrings),
             categories: (0...Int.random(in: 0..<5)).map { _ in randomWords(from: categoryStrings) },
             servingSize: Int.random(in: 1...6),

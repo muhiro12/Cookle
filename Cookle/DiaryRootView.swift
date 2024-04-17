@@ -50,7 +50,7 @@ struct DiaryRootView: View {
                     ModelContainerPreview { preview in
                         Button("Add Random Diary", systemImage: "dice") {
                             withAnimation {
-                                modelContext.insert(preview.randomDiary())
+                                modelContext.insert(preview.randomDiary(modelContext))
                             }
                         }
                     }

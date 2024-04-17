@@ -10,7 +10,8 @@ import SwiftData
 protocol Tag: PersistentModel, Comparable {
     var value: String { get }
     var recipes: [Recipe] { get }
-    init(_ value: String)
+    static func create(context: ModelContext, value: String) -> Self
+    func update(value: String)
 }
 
 extension Tag {

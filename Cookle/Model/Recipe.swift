@@ -35,7 +35,8 @@ final class Recipe: Identifiable {
         self.diaries = []
     }
 
-    static func create(name: String,
+    static func create(context: ModelContext,
+                       name: String,
                        categories: [String],
                        servingSize: Int,
                        cookingTime: Int,
@@ -43,25 +44,26 @@ final class Recipe: Identifiable {
                        steps: [String]) -> Recipe {
         let recipe = Recipe()
         recipe.name = name
-        recipe.categories = categories.map { .init($0) }
+        recipe.categories = Set(categories).map { .create(context: context, value: $0) }
         recipe.servingSize = servingSize
         recipe.cookingTime = cookingTime
-        recipe.ingredients = ingredients.map { .init($0) }
+        recipe.ingredients = Set(ingredients).map { .create(context: context, value: $0) }
         recipe.steps = steps
         return recipe
     }
 
-    func update(name: String,
+    func update(context: ModelContext,
+                name: String,
                 categories: [String],
                 servingSize: Int,
                 cookingTime: Int,
                 ingredients: [String],
                 steps: [String]) {
         self.name = name
-        self.categories = categories.map { .init($0) }
+        self.categories = Set(categories).map { .create(context: context, value: $0) }
         self.servingSize = servingSize
         self.cookingTime = cookingTime
-        self.ingredients = ingredients.map { .init($0) }
+        self.ingredients = Set(ingredients).map { .create(context: context, value: $0) }
         self.steps = steps
         self.updatedAt = .now
     }

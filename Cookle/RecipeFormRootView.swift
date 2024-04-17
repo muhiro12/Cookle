@@ -64,6 +64,7 @@ struct RecipeFormRootView: View {
                     Button(recipe != nil ? "Update" : "Add") {
                         if let recipe {
                             recipe.update(
+                                context: modelContext,
                                 name: name,
                                 categories: categories.filter { !$0.isEmpty },
                                 servingSize: 0, // TODO: Set servingSize
@@ -73,6 +74,7 @@ struct RecipeFormRootView: View {
                             )
                         } else {
                             modelContext.insert(Recipe.create(
+                                context: modelContext,
                                 name: name,
                                 categories: categories.filter { !$0.isEmpty },
                                 servingSize: 0, // TODO: Set servingSize
