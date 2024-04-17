@@ -69,11 +69,13 @@ struct MultiAddableSection<T>: View {
 }
 
 #Preview {
-    Form {
-        MultiAddableSection<Ingredient>(
-            data: .constant(["Bacon", "Lettuce", "Tomato", ""]),
-            title: "Ingredient",
-            shouldShowNumber: true
-        )
+    ModelContainerPreview { preview in
+        Form { () -> MultiAddableSection<Ingredient> in
+            MultiAddableSection<Ingredient>(
+                data: .constant(preview.ingredients.prefix(5).map { $0.value } + [""]),
+                title: "Ingredient",
+                shouldShowNumber: true
+            )
+        }
     }
 }
