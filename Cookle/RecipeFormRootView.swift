@@ -30,9 +30,9 @@ struct RecipeFormRootView: View {
                     }
                 }
                 MultiAddableSection<Category>(
+                    "Categories",
                     data: $categories,
-                    title: "Categories",
-                    shouldShowNumber: false
+                    isMoveDisabled: true
                 )
                 Section("Serving Size") {
                     Text("TODO:" + " servings") // TODO: Build servingSize TextField
@@ -41,13 +41,13 @@ struct RecipeFormRootView: View {
                     Text("TODO:" + " minutes") // TODO: Build cookingTime TextField
                 }
                 MultiAddableSection<Ingredient>(
+                    "Ingredients",
                     data: $ingredients,
-                    title: "Ingredients",
-                    shouldShowNumber: false
+                    isMoveDisabled: true
                 )
                 MultiAddableSection<String>(
+                    "Steps",
                     data: $steps,
-                    title: "Steps",
                     shouldShowNumber: true
                 )
             }

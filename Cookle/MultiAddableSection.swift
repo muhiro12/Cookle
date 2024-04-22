@@ -9,10 +9,18 @@ import SwiftUI
 import SwiftData
 
 struct MultiAddableSection<T>: View {
-    @Binding var data: [String]
+    @Binding private var data: [String]
 
-    let title: String
-    let shouldShowNumber: Bool
+    private let title: String
+    private let isMoveDisabled: Bool
+    private let shouldShowNumber: Bool
+
+    init(_ title: String, data: Binding<[String]>, isMoveDisabled: Bool = false, shouldShowNumber: Bool = false) {
+        self.title = title
+        self._data = data
+        self.isMoveDisabled = isMoveDisabled
+        self.shouldShowNumber = shouldShowNumber
+    }
 
     var body: some View {
         Section(title) {
@@ -64,6 +72,7 @@ struct MultiAddableSection<T>: View {
                 }
                 data.append("")
             }
+            .moveDisabled(isMoveDisabled)
         }
     }
 }
@@ -72,8 +81,8 @@ struct MultiAddableSection<T>: View {
     ModelContainerPreview { preview in
         Form { () -> MultiAddableSection<Ingredient> in
             MultiAddableSection<Ingredient>(
+                "Ingredient",
                 data: .constant(preview.ingredients.prefix(5).map { $0.value } + [""]),
-                title: "Ingredient",
                 shouldShowNumber: true
             )
         }
