@@ -9,6 +9,8 @@ import SwiftUI
 import SwiftData
 
 struct DebugRootView: View {
+    @Environment(\.modelContext) private var modelContext
+
     @Query private var diaries: [Diary]
     @Query private var recipes: [Recipe]
     @Query private var ingredients: [Ingredient]
@@ -17,70 +19,98 @@ struct DebugRootView: View {
     @State private var content: Int?
     @State private var detail: Int?
 
-    private var list: [any PersistentModel] {
-        switch content {
-        case 0:
-            diaries
-        case 1:
-            recipes
-        case 2:
-            ingredients
-        case 3:
-            categories
-        default:
-            []
-        }
-    }
+    private let diary = 0
+    private let recipe = 1
+    private let ingredient = 2
+    private let category = 3
 
     var body: some View {
         NavigationSplitView {
-            List(0..<4, selection: $content) { content in
-                switch content {
-                case 0:
-                    Text("Diaries")
-                case 1:
-                    Text("Recipes")
-                case 2:
-                    Text("Ingredients")
-                case 3:
-                    Text("Categories")
-                default:
-                    Text("")
+            List(selection: $content) {
+                ForEach(0..<4) { content in
+                    switch content {
+                    case diary:
+                        Text("Diaries")
+                    case recipe:
+                        Text("Recipes")
+                    case ingredient:
+                        Text("Ingredients")
+                    case category:
+                        Text("Categories")
+                    default:
+                        EmptyView()
+                    }
                 }
             }
             .navigationTitle("Debug")
         } content: {
-            List(Array(list.enumerated()), id: \.0, selection: $detail) {
-                switch $0.1 {
-                case let value as Diary:
-                    Text(value.date.formatted())
-                case let value as Recipe:
-                    Text(value.name)
-                case let value as Ingredient:
-                    Text(value.value)
-                case let value as Category:
-                    Text(value.value)
-                default:
-                    Text("")
+            List(selection: $detail) {
+                ForEach(
+                    0..<{
+                        switch content {
+                        case diary:
+                            diaries.endIndex
+                        case recipe:
+                            recipes.endIndex
+                        case ingredient:
+                            ingredients.endIndex
+                        case category:
+                            categories.endIndex
+                        default:
+                                .zero
+                        }
+                    }(),
+                    id: \.self
+                ) {
+                    switch content {
+                    case diary:
+                        Text(diaries[$0].date.formatted())
+                    case recipe:
+                        Text(recipes[$0].name)
+                    case ingredient:
+                        Text(ingredients[$0].value)
+                    case category:
+                        Text(categories[$0].value)
+                    default:
+                        EmptyView()
+                    }
+                }
+                .onDelete { indexSet in
+                    withAnimation {
+                        indexSet.forEach { index in
+                            switch content {
+                            case diary:
+                                modelContext.delete(diaries[index])
+                            case recipe:
+                                modelContext.delete(recipes[index])
+                            case ingredient:
+                                modelContext.delete(ingredients[index])
+                            case category:
+                                modelContext.delete(categories[index])
+                            default:
+                                break
+                            }
+                        }
+                    }
                 }
             }
             .navigationTitle("Content")
         } detail: {
             if let detail {
                 Group {
-                    switch list[detail] {
-                    case let value as Diary:
+                    switch content {
+                    case diary:
                         DiaryView()
-                            .environment(value)
-                    case let value as Recipe:
+                            .environment(diaries[detail])
+                    case recipe:
                         RecipeView()
-                            .environment(value)
-                    case let value as Ingredient:
+                            .environment(recipes[detail])
+                    case ingredient:
                         TagView<Ingredient>()
-                            .environment(value)
-                    case let value as Category:
+                            .environment(ingredients[detail])
+                    case category:
                         TagView<Category>()
-                            .environment(value)
+                            .environment(categories[detail])
                     default:
                         EmptyView()
                     }
