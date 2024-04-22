@@ -43,14 +43,20 @@ struct ModelContainerPreview<Content: View>: View {
     }
 
     func randomDiary(_ context: ModelContext) -> Diary {
-        Diary.create(
+        var recipes = [Recipe]()
+        (0..<6).forEach { _ in
+            let recipe = randomRecipe(context)
+            context.insert(recipe)
+            recipes.append(recipe)
+        }
+        return Diary.create(
             date: .now.addingTimeInterval(.random(in: 0...(60 * 60 * 24 * 365 * 2))),
-            breakfasts: [randomRecipe(context)],
-            lunches: [randomRecipe(context),
-                      randomRecipe(context)],
-            dinners: [randomRecipe(context),
-                      randomRecipe(context),
-                      randomRecipe(context)]
+            breakfasts: [recipes[0]],
+            lunches: [recipes[1],
+                      recipes[2]],
+            dinners: [recipes[3],
+                      recipes[4],
+                      recipes[5]]
         )
     }
 
