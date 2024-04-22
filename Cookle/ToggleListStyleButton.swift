@@ -8,7 +8,11 @@
 import SwiftUI
 
 struct ToggleListStyleButton: View {
-    @Binding var isGrid: Bool
+    @Binding private var isGrid: Bool
+
+    init(isGrid: Binding<Bool>) {
+        _isGrid = isGrid
+    }
 
     var body: some View {
         Button("Toggle Style", systemImage: isGrid ? "list.bullet" : "square.grid.3x3") {

@@ -9,9 +9,13 @@ import SwiftUI
 import SwiftData
 
 struct SuggestionMenu<T: Tag>: View {
-    @Binding var input: String
+    @Binding private var input: String
 
     @Query private var tags: [T]
+
+    init(input: Binding<String>) {
+        self._input = input
+    }
 
     var body: some View {
         if tags.contains(where: { $0.value.lowercased().contains(input.lowercased()) }) {
