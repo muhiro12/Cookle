@@ -13,8 +13,8 @@ struct ModelContainerPreview<Content: View>: View {
 
     @State private(set) var diaries = [Diary]()
     @State private(set) var recipes = [Recipe]()
-    @State private(set) var categories = [Category]()
     @State private(set) var ingredients = [Ingredient]()
+    @State private(set) var categories = [Category]()
     @State private var isReady = false
 
     private let modelContainer = try! ModelContainer(for: Recipe.self, configurations: .init(isStoredInMemoryOnly: true))
@@ -34,9 +34,9 @@ struct ModelContainerPreview<Content: View>: View {
                         try! await Task.sleep(for: .seconds(0.2))
                         diaries = try! modelContext.fetch(.init())
                         recipes = try! modelContext.fetch(.init())
-                        categories = try! modelContext.fetch(.init())
                         ingredients = try! modelContext.fetch(.init())
-                    } while diaries.isEmpty || recipes.isEmpty || categories.isEmpty || ingredients.isEmpty
+                        categories = try! modelContext.fetch(.init())
+                    } while diaries.isEmpty || recipes.isEmpty || ingredients.isEmpty || categories.isEmpty
                     isReady = true
                 }
         }
@@ -58,11 +58,11 @@ struct ModelContainerPreview<Content: View>: View {
         Recipe.create(
             context: context,
             name: randomWords(from: nameStrings),
-            categories: (0...Int.random(in: 0..<5)).map { _ in randomWords(from: categoryStrings) },
             servingSize: Int.random(in: 1...6),
             cookingTime: Int.random(in: 5...60),
             ingredients: (0...Int.random(in: 0..<20)).map { _ in randomWords(from: ingredientStrings) },
-            steps: (0...Int.random(in: 0..<20)).map { _ in randomWords(from: stepStrings) }
+            steps: (0...Int.random(in: 0..<20)).map { _ in randomWords(from: stepStrings) },
+            categories: (0...Int.random(in: 0..<5)).map { _ in randomWords(from: categoryStrings) }
         )
     }
 
@@ -95,28 +95,6 @@ struct ModelContainerPreview<Content: View>: View {
         "Nachos Supreme", "Egg Benedicts", "Vegetable Samosas", "Spicy Tuna Roll", "Margarita Flatbread",
         "Tomato Bruschetta", "Ceviche", "Fried Chicken", "Gnocchi", "Escargot",
         "Huevos Rancheros", "Baked Cod", "Risotto Milanese", "Chicken Quesadilla", "Vegetable Paella"
-    ]
-
-    private let categoryStrings = [
-        "Japanese", "Western", "French", "Italian", "Chinese",
-        "Spanish", "Mediterranean", "Mexican", "Thai", "Indian",
-        "Vietnamese", "Korean", "Main-Dish", "Side-Dish", "Soup",
-        "Salad", "Appetizer", "Dessert", "Snack", "Drink",
-        "Breakfast", "Brunch", "Lunch", "Dinner", "Tea-Time",
-        "Healthy", "Quick", "Easy", "Comfort", "Gourmet",
-        "Vegan", "Vegetarian", "Gluten-Free", "Low-Carb", "High-Protein",
-        "Low-Fat", "Organic", "Seasonal", "Local", "Detox",
-        "Festive", "Holiday", "Family-Friendly", "Kid-Friendly", "Party",
-        "One-Pot", "Slow-Cooked", "Grilled", "Baked", "Fried",
-        "Steamed", "Raw", "Spicy", "Sweet", "Sour",
-        "Umami", "Savory", "Creamy", "Crunchy", "Smooth",
-        "Light", "Hearty", "Rich", "Refreshing", "Exotic",
-        "Traditional", "Modern", "Fusion", "Homemade", "Quick-Prep",
-        "Make-Ahead", "Freezable", "Low-Calorie", "High-Fiber", "Sugar-Free",
-        "Dairy-Free", "Nut-Free", "Egg-Free", "Low-Sodium", "High-Vitamin",
-        "High-Mineral", "Energy-Boosting", "Immunity-Boosting", "Anti-Inflammatory", "Antioxidant-Rich",
-        "Meal-Prep", "Budget-Friendly", "Luxurious", "Casual", "Fine-Dining",
-        "Street-Food", "Pub-Food", "Comfort-Food", "Soul-Food", "Fast-Food"
     ]
 
     private let ingredientStrings = [
@@ -183,5 +161,27 @@ struct ModelContainerPreview<Content: View>: View {
         "Temper the eggs by slowly adding hot liquid.", "Quick pickle the vegetables in vinegar and sugar.",
         "Squeeze out excess moisture from the zucchini.", "Rest the batter to prevent tough pancakes.",
         "Dry brine the chicken for juicier results.", "Tenderize the meat with a marinade."
+    ]
+
+    private let categoryStrings = [
+        "Japanese", "Western", "French", "Italian", "Chinese",
+        "Spanish", "Mediterranean", "Mexican", "Thai", "Indian",
+        "Vietnamese", "Korean", "Main-Dish", "Side-Dish", "Soup",
+        "Salad", "Appetizer", "Dessert", "Snack", "Drink",
+        "Breakfast", "Brunch", "Lunch", "Dinner", "Tea-Time",
+        "Healthy", "Quick", "Easy", "Comfort", "Gourmet",
+        "Vegan", "Vegetarian", "Gluten-Free", "Low-Carb", "High-Protein",
+        "Low-Fat", "Organic", "Seasonal", "Local", "Detox",
+        "Festive", "Holiday", "Family-Friendly", "Kid-Friendly", "Party",
+        "One-Pot", "Slow-Cooked", "Grilled", "Baked", "Fried",
+        "Steamed", "Raw", "Spicy", "Sweet", "Sour",
+        "Umami", "Savory", "Creamy", "Crunchy", "Smooth",
+        "Light", "Hearty", "Rich", "Refreshing", "Exotic",
+        "Traditional", "Modern", "Fusion", "Homemade", "Quick-Prep",
+        "Make-Ahead", "Freezable", "Low-Calorie", "High-Fiber", "Sugar-Free",
+        "Dairy-Free", "Nut-Free", "Egg-Free", "Low-Sodium", "High-Vitamin",
+        "High-Mineral", "Energy-Boosting", "Immunity-Boosting", "Anti-Inflammatory", "Antioxidant-Rich",
+        "Meal-Prep", "Budget-Friendly", "Luxurious", "Casual", "Fine-Dining",
+        "Street-Food", "Pub-Food", "Comfort-Food", "Soul-Food", "Fast-Food"
     ]
 }

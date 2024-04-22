@@ -29,11 +29,6 @@ struct RecipeFormRootView: View {
                             .foregroundStyle(.red)
                     }
                 }
-                MultiAddableSection<Category>(
-                    "Categories",
-                    data: $categories,
-                    isMoveDisabled: true
-                )
                 Section("Serving Size") {
                     Text("TODO:" + " servings") // TODO: Build servingSize TextField
                 }
@@ -49,6 +44,11 @@ struct RecipeFormRootView: View {
                     "Steps",
                     data: $steps,
                     shouldShowNumber: true
+                )
+                MultiAddableSection<Category>(
+                    "Categories",
+                    data: $categories,
+                    isMoveDisabled: true
                 )
             }
             .toolbar {
@@ -66,21 +66,21 @@ struct RecipeFormRootView: View {
                             recipe.update(
                                 context: modelContext,
                                 name: name,
-                                categories: categories.filter { !$0.isEmpty },
                                 servingSize: 0, // TODO: Set servingSize
                                 cookingTime: 0, // TODO: Set cookingTime
                                 ingredients: ingredients.filter { !$0.isEmpty },
-                                steps: steps.filter { !$0.isEmpty }
+                                steps: steps.filter { !$0.isEmpty },
+                                categories: categories.filter { !$0.isEmpty }
                             )
                         } else {
                             modelContext.insert(Recipe.create(
                                 context: modelContext,
                                 name: name,
-                                categories: categories.filter { !$0.isEmpty },
                                 servingSize: 0, // TODO: Set servingSize
                                 cookingTime: 0, // TODO: Set cookingTime
                                 ingredients: ingredients.filter { !$0.isEmpty },
-                                steps: steps.filter { !$0.isEmpty }
+                                steps: steps.filter { !$0.isEmpty },
+                                categories: categories.filter { !$0.isEmpty }
                             ))
                         }
                         dismiss()

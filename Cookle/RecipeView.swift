@@ -13,11 +13,6 @@ struct RecipeView: View {
 
     var body: some View {
         List {
-            Section("Categories") {
-                ForEach(recipe.categories, id: \.self) {
-                    Text($0.value)
-                }
-            }
             Section("Serving Size") {
                 Text(recipe.servingSize.description + " servings")
             }
@@ -38,16 +33,21 @@ struct RecipeView: View {
                     }
                 }
             }
-            Section("Updated At") {
-                Text(recipe.updatedAt.description)
-            }
-            Section("Created At") {
-                Text(recipe.createdAt.description)
+            Section("Categories") {
+                ForEach(recipe.categories, id: \.self) {
+                    Text($0.value)
+                }
             }
             Section("Diaries") {
                 ForEach(recipe.diaries) {
                     Text($0.date.formatted(.dateTime.year().month().day()))
                 }
+            }
+            Section("Updated At") {
+                Text(recipe.updatedAt.description)
+            }
+            Section("Created At") {
+                Text(recipe.createdAt.description)
             }
         }
     }
