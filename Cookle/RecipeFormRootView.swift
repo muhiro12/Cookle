@@ -73,7 +73,7 @@ struct RecipeFormRootView: View {
                                 categories: categories.filter { !$0.isEmpty }
                             )
                         } else {
-                            modelContext.insert(Recipe.create(
+                            _ = Recipe.create(
                                 context: modelContext,
                                 name: name,
                                 servingSize: 0, // TODO: Set servingSize
@@ -81,7 +81,7 @@ struct RecipeFormRootView: View {
                                 ingredients: ingredients.filter { !$0.isEmpty },
                                 steps: steps.filter { !$0.isEmpty },
                                 categories: categories.filter { !$0.isEmpty }
-                            ))
+                            )
                         }
                         dismiss()
                     }

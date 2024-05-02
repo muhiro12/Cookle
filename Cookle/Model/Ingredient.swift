@@ -20,6 +20,7 @@ final class Ingredient: Tag {
 
     static func create(context: ModelContext, value: String) -> Self {
         let ingredient: Ingredient = (try? context.fetch(.init(predicate: #Predicate { $0.value == value })).first) ?? .init()
+        context.insert(ingredient)
         ingredient.value = value
         return ingredient as! Self
     }

@@ -24,8 +24,9 @@ final class Diary: Identifiable {
         self.recipes = []
     }
 
-    static func create(date: Date, breakfasts: [Recipe], lunches: [Recipe], dinners: [Recipe]) -> Diary {
+    static func create(context: ModelContext, date: Date, breakfasts: [Recipe], lunches: [Recipe], dinners: [Recipe]) -> Diary {
         let diary = Diary()
+        context.insert(diary)
         diary.date = date
         diary.breakfasts = breakfasts
         diary.lunches = lunches

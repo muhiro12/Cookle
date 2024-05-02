@@ -43,6 +43,7 @@ final class Recipe: Identifiable {
                        steps: [String],
                        categories: [String]) -> Recipe {
         let recipe = Recipe()
+        context.insert(recipe)
         recipe.name = name
         recipe.servingSize = servingSize
         recipe.cookingTime = cookingTime
