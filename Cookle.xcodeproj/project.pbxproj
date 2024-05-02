@@ -34,10 +34,12 @@
 		AD1338CE2BCD063800A8BAD2 /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338CD2BCD063800A8BAD2 /* TagView.swift */; };
 		AD1338D52BCEAEB100A8BAD2 /* SuggestionMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338D42BCEAEB100A8BAD2 /* SuggestionMenu.swift */; };
 		AD1338D72BCECAC000A8BAD2 /* DiaryFormRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338D62BCECAC000A8BAD2 /* DiaryFormRootView.swift */; };
+		AD710ECF2BE4659B0095B561 /* MultiAddableStepSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD710ECE2BE4659B0095B561 /* MultiAddableStepSection.swift */; };
+		AD710ED12BE465A80095B561 /* MultiAddableIngredientSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD710ED02BE465A80095B561 /* MultiAddableIngredientSection.swift */; };
 		ADDBB4322BC560CD003B444F /* DiaryRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBB4312BC560CD003B444F /* DiaryRootView.swift */; };
 		ADDBB4342BC79464003B444F /* ModelContainerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBB4332BC79464003B444F /* ModelContainerPreview.swift */; };
 		ADDBB4382BC7C232003B444F /* RecipeFormRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBB4372BC7C232003B444F /* RecipeFormRootView.swift */; };
-		ADDBB43B2BC81E50003B444F /* MultiAddableSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBB43A2BC81E50003B444F /* MultiAddableSection.swift */; };
+		ADDBB43B2BC81E50003B444F /* MultiAddableCategorySection.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBB43A2BC81E50003B444F /* MultiAddableCategorySection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,10 +91,12 @@
 		AD1338CD2BCD063800A8BAD2 /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
 		AD1338D42BCEAEB100A8BAD2 /* SuggestionMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionMenu.swift; sourceTree = "<group>"; };
 		AD1338D62BCECAC000A8BAD2 /* DiaryFormRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryFormRootView.swift; sourceTree = "<group>"; };
+		AD710ECE2BE4659B0095B561 /* MultiAddableStepSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiAddableStepSection.swift; sourceTree = "<group>"; };
+		AD710ED02BE465A80095B561 /* MultiAddableIngredientSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiAddableIngredientSection.swift; sourceTree = "<group>"; };
 		ADDBB4312BC560CD003B444F /* DiaryRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryRootView.swift; sourceTree = "<group>"; };
 		ADDBB4332BC79464003B444F /* ModelContainerPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerPreview.swift; sourceTree = "<group>"; };
 		ADDBB4372BC7C232003B444F /* RecipeFormRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeFormRootView.swift; sourceTree = "<group>"; };
-		ADDBB43A2BC81E50003B444F /* MultiAddableSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiAddableSection.swift; sourceTree = "<group>"; };
+		ADDBB43A2BC81E50003B444F /* MultiAddableCategorySection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiAddableCategorySection.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -218,7 +222,9 @@
 			children = (
 				AD1338AF2BCAC80F00A8BAD2 /* AddRecipeButton.swift */,
 				AD1338B12BCACC3D00A8BAD2 /* EditRecipeButton.swift */,
-				ADDBB43A2BC81E50003B444F /* MultiAddableSection.swift */,
+				ADDBB43A2BC81E50003B444F /* MultiAddableCategorySection.swift */,
+				AD710ED02BE465A80095B561 /* MultiAddableIngredientSection.swift */,
+				AD710ECE2BE4659B0095B561 /* MultiAddableStepSection.swift */,
 				AD1338D42BCEAEB100A8BAD2 /* SuggestionMenu.swift */,
 				AD1338B32BCACEC600A8BAD2 /* ToggleListStyleButton.swift */,
 			);
@@ -358,11 +364,12 @@
 				AD0B6B782BC417AC007F66D2 /* ContentView.swift in Sources */,
 				AD1338CA2BCCC90900A8BAD2 /* DebugRootView.swift in Sources */,
 				AD1338B42BCACEC600A8BAD2 /* ToggleListStyleButton.swift in Sources */,
-				ADDBB43B2BC81E50003B444F /* MultiAddableSection.swift in Sources */,
+				ADDBB43B2BC81E50003B444F /* MultiAddableCategorySection.swift in Sources */,
 				AD1338BA2BCAFA2D00A8BAD2 /* Diary.swift in Sources */,
 				AD0B6BDE2BC549C5007F66D2 /* RecipeView.swift in Sources */,
 				AD1338C22BCAFA8B00A8BAD2 /* Tag.swift in Sources */,
 				AD1338C82BCAFFB200A8BAD2 /* EnvironmentValuesExtension.swift in Sources */,
+				AD710ED12BE465A80095B561 /* MultiAddableIngredientSection.swift in Sources */,
 				ADDBB4382BC7C232003B444F /* RecipeFormRootView.swift in Sources */,
 				AD0B6B7A2BC417AC007F66D2 /* Recipe.swift in Sources */,
 				AD1338BC2BCAFA4100A8BAD2 /* Ingredient.swift in Sources */,
@@ -372,6 +379,7 @@
 				ADDBB4342BC79464003B444F /* ModelContainerPreview.swift in Sources */,
 				AD1338CE2BCD063800A8BAD2 /* TagView.swift in Sources */,
 				AD1338D72BCECAC000A8BAD2 /* DiaryFormRootView.swift in Sources */,
+				AD710ECF2BE4659B0095B561 /* MultiAddableStepSection.swift in Sources */,
 				AD1338C02BCAFA6600A8BAD2 /* Category.swift in Sources */,
 				AD1338D52BCEAEB100A8BAD2 /* SuggestionMenu.swift in Sources */,
 				AD1338B02BCAC80F00A8BAD2 /* AddRecipeButton.swift in Sources */,

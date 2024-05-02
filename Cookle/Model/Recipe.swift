@@ -15,6 +15,7 @@ final class Recipe: Identifiable {
     private(set) var cookingTime: Int
     @Relationship(inverse: \Ingredient.recipes)
     private(set) var ingredients: [Ingredient]
+    private(set) var ingredientObjects: [IngredientObject]
     private(set) var steps: [String]
     @Relationship(inverse: \Category.recipes)
     private(set) var categories: [Category]
@@ -28,6 +29,7 @@ final class Recipe: Identifiable {
         self.servingSize = 0
         self.cookingTime = 0
         self.ingredients = []
+        self.ingredientObjects = []
         self.steps = []
         self.categories = []
         self.diaries = []
@@ -39,17 +41,18 @@ final class Recipe: Identifiable {
                        name: String,
                        servingSize: Int,
                        cookingTime: Int,
-                       ingredients: [String],
+                       ingredients: [IngredientObject],
                        steps: [String],
-                       categories: [String]) -> Recipe {
+                       categories: [Category]) -> Recipe {
         let recipe = Recipe()
         context.insert(recipe)
         recipe.name = name
         recipe.servingSize = servingSize
         recipe.cookingTime = cookingTime
-        recipe.ingredients = ingredients.map { .create(context: context, value: $0) }
+        recipe.ingredients = ingredients.map { $0.ingredient }
+        recipe.ingredientObjects = ingredients
         recipe.steps = steps
-        recipe.categories = categories.map { .create(context: context, value: $0) }
+        recipe.categories = categories
         return recipe
     }
 
@@ -57,15 +60,16 @@ final class Recipe: Identifiable {
                 name: String,
                 servingSize: Int,
                 cookingTime: Int,
-                ingredients: [String],
+                ingredients: [IngredientObject],
                 steps: [String],
-                categories: [String]) {
+                categories: [Category]) {
         self.name = name
         self.servingSize = servingSize
         self.cookingTime = cookingTime
-        self.ingredients = ingredients.map { .create(context: context, value: $0) }
+        self.ingredients = ingredients.map { $0.ingredient }
+        self.ingredientObjects = ingredients
         self.steps = steps
-        self.categories = categories.map { .create(context: context, value: $0) }
+        self.categories = categories
         self.updatedAt = .now
     }
 }

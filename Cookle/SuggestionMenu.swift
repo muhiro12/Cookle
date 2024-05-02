@@ -18,15 +18,17 @@ struct SuggestionMenu<T: Tag>: View {
     }
 
     var body: some View {
-        if tags.contains(where: { $0.value.lowercased().contains(input.lowercased()) }) {
-            Menu {
-                ForEach(tags.filter { $0.value.lowercased().contains(input.lowercased()) }) { tag in
-                    Button(tag.value) {
-                        input = tag.value
+        HStack {
+            if tags.contains(where: { $0.value.lowercased().contains(input.lowercased()) }) {
+                Menu {
+                    ForEach(tags.filter { $0.value.lowercased().contains(input.lowercased()) }) { tag in
+                        Button(tag.value) {
+                            input = tag.value
+                        }
                     }
+                } label: {
+                    Image(systemName: "questionmark.circle")
                 }
-            } label: {
-                Image(systemName: "questionmark.circle")
             }
         }
     }

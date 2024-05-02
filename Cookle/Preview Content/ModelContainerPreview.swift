@@ -66,9 +66,15 @@ struct ModelContainerPreview<Content: View>: View {
             name: randomWords(from: nameStrings),
             servingSize: Int.random(in: 1...6),
             cookingTime: Int.random(in: 5...60),
-            ingredients: (0...Int.random(in: 0..<20)).map { _ in randomWords(from: ingredientStrings) },
-            steps: (0...Int.random(in: 0..<20)).map { _ in randomWords(from: stepStrings) },
-            categories: (0...Int.random(in: 0..<5)).map { _ in randomWords(from: categoryStrings) }
+            ingredients: (0...Int.random(in: 0..<20)).map { _ in
+                    .create(context: context, ingredient: randomWords(from: ingredientStrings), amount: "1 cup")  // TODO: Random amount
+            },
+            steps: (0...Int.random(in: 0..<20)).map { _ in
+                randomWords(from: stepStrings)
+            },
+            categories: (0...Int.random(in: 0..<5)).map { _ in
+                    .create(context: context, value: randomWords(from: categoryStrings))
+            }
         )
     }
 

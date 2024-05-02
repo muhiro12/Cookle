@@ -1,36 +1,27 @@
 //
-//  MultiAddableSection.swift
+//  MultiAddableStepSection.swift
 //  Cookle
 //
-//  Created by Hiromu Nakano on 2024/04/11.
+//  Created by Hiromu Nakano on 2024/05/03.
 //
 
 import SwiftUI
-import SwiftData
 
-struct MultiAddableSection<T>: View {
+struct MultiAddableStepSection: View {
     @Binding private var data: [String]
 
-    private let title: String
-    private let isMoveDisabled: Bool
-    private let shouldShowNumber: Bool
-
-    init(_ title: String, data: Binding<[String]>, isMoveDisabled: Bool = false, shouldShowNumber: Bool = false) {
-        self.title = title
+    init(data: Binding<[String]>) {
         self._data = data
-        self.isMoveDisabled = isMoveDisabled
-        self.shouldShowNumber = shouldShowNumber
     }
 
     var body: some View {
-        Section(title) {
+        Section("Steps") {
             ForEach(data.indices, id: \.self) { index in
                 HStack(alignment: .top) {
-                    if shouldShowNumber {
-                        Text((index + 1).description + ".")
-                    }
+                    Text((index + 1).description + ".")
+                        .frame(width: 24)
                     TextField(
-                        title,
+                        "Step",
                         text: .init(
                             get: {
                                 guard index < data.endIndex else {
@@ -52,14 +43,6 @@ struct MultiAddableSection<T>: View {
                         ),
                         axis: .vertical
                     )
-                    switch T.self {
-                    case is Ingredient.Type:
-                        SuggestionMenu<Ingredient>(input: $data[index])
-                    case is Category.Type:
-                        SuggestionMenu<Category>(input: $data[index])
-                    default:
-                        EmptyView()
-                    }
                 }
             }
             .onMove {
@@ -72,18 +55,15 @@ struct MultiAddableSection<T>: View {
                 }
                 data.append("")
             }
-            .moveDisabled(isMoveDisabled)
         }
     }
 }
 
 #Preview {
     ModelContainerPreview { preview in
-        Form { () -> MultiAddableSection<Ingredient> in
-            MultiAddableSection<Ingredient>(
-                "Ingredient",
-                data: .constant(preview.ingredients.prefix(5).map { $0.value } + [""]),
-                shouldShowNumber: true
+        Form { () -> MultiAddableStepSection in
+            MultiAddableStepSection(
+                data: .constant(preview.recipes[0].steps + [""])
             )
         }
     }

@@ -13,7 +13,7 @@ struct RecipeFormRootView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var name = ""
-    @State private var ingredients = [String]()
+    @State private var ingredients = [IngredientTuple]()
     @State private var steps = [String]()
     @State private var categories = [String]()
 
@@ -35,21 +35,9 @@ struct RecipeFormRootView: View {
                 Section("Cooking Time") {
                     Text("TODO:" + " minutes") // TODO: Build cookingTime TextField
                 }
-                MultiAddableSection<Ingredient>(
-                    "Ingredients",
-                    data: $ingredients,
-                    isMoveDisabled: true
-                )
-                MultiAddableSection<String>(
-                    "Steps",
-                    data: $steps,
-                    shouldShowNumber: true
-                )
-                MultiAddableSection<Category>(
-                    "Categories",
-                    data: $categories,
-                    isMoveDisabled: true
-                )
+                MultiAddableIngredientSection(data: $ingredients)
+                MultiAddableStepSection(data: $steps)
+                MultiAddableCategorySection(data: $categories)
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -68,9 +56,19 @@ struct RecipeFormRootView: View {
                                 name: name,
                                 servingSize: 0, // TODO: Set servingSize
                                 cookingTime: 0, // TODO: Set cookingTime
-                                ingredients: ingredients.filter { !$0.isEmpty },
+                                ingredients: ingredients.compactMap {
+                                    guard !$0.ingredient.isEmpty else {
+                                        return nil
+                                    }
+                                    return .create(context: modelContext, ingredient: $0.ingredient, amount: $0.amount)
+                                },
                                 steps: steps.filter { !$0.isEmpty },
-                                categories: categories.filter { !$0.isEmpty }
+                                categories: categories.compactMap {
+                                    guard !$0.isEmpty else {
+                                        return nil
+                                    }
+                                    return .create(context: modelContext, value: $0)
+                                }
                             )
                         } else {
                             _ = Recipe.create(
@@ -78,9 +76,19 @@ struct RecipeFormRootView: View {
                                 name: name,
                                 servingSize: 0, // TODO: Set servingSize
                                 cookingTime: 0, // TODO: Set cookingTime
-                                ingredients: ingredients.filter { !$0.isEmpty },
+                                ingredients: ingredients.compactMap {
+                                    guard !$0.ingredient.isEmpty else {
+                                        return nil
+                                    }
+                                    return .create(context: modelContext, ingredient: $0.ingredient, amount: $0.amount)
+                                },
                                 steps: steps.filter { !$0.isEmpty },
-                                categories: categories.filter { !$0.isEmpty }
+                                categories: categories.compactMap {
+                                    guard !$0.isEmpty else {
+                                        return nil
+                                    }
+                                    return .create(context: modelContext, value: $0)
+                                }
                             )
                         }
                         dismiss()
@@ -91,7 +99,7 @@ struct RecipeFormRootView: View {
         }
         .task {
             name = recipe?.name ?? ""
-            ingredients = (recipe?.ingredients.map { $0.value } ?? []) + [""]
+            ingredients = (recipe?.ingredientObjects.map { ($0.ingredient.value, $0.amount) } ?? []) + [("", "")]
             steps = recipe?.steps ?? [""]
             categories = (recipe?.categories.map { $0.value }  ?? []) + [""]
         }
