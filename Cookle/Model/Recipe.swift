@@ -47,9 +47,9 @@ final class Recipe: Identifiable {
         recipe.name = name
         recipe.servingSize = servingSize
         recipe.cookingTime = cookingTime
-        recipe.ingredients = Set(ingredients).map { .create(context: context, value: $0) }
+        recipe.ingredients = ingredients.map { .create(context: context, value: $0) }
         recipe.steps = steps
-        recipe.categories = Set(categories).map { .create(context: context, value: $0) }
+        recipe.categories = categories.map { .create(context: context, value: $0) }
         return recipe
     }
 
@@ -63,9 +63,9 @@ final class Recipe: Identifiable {
         self.name = name
         self.servingSize = servingSize
         self.cookingTime = cookingTime
-        self.ingredients = Set(ingredients).map { .create(context: context, value: $0) }
+        self.ingredients = ingredients.map { .create(context: context, value: $0) }
         self.steps = steps
-        self.categories = Set(categories).map { .create(context: context, value: $0) }
+        self.categories = categories.map { .create(context: context, value: $0) }
         self.updatedAt = .now
     }
 }
