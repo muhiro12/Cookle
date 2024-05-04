@@ -12,7 +12,7 @@ import SwiftData
 struct CookleApp: App {
     private let sharedModelContainer: ModelContainer = {
         do {
-            return try .init(for: Recipe.self, configurations: .init(isStoredInMemoryOnly: true))
+            return try .init(for: Recipe.self)
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }

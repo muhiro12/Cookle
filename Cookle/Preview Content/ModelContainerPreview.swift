@@ -17,16 +17,16 @@ struct ModelContainerPreview<Content: View>: View {
     @State private(set) var categories = [Category]()
     @State private var isReady = false
 
-    private let modelContainer = try! ModelContainer(for: Recipe.self, configurations: .init(isStoredInMemoryOnly: true))
+    private let previewModelContainer = try! ModelContainer(for: Recipe.self, configurations: .init(isStoredInMemoryOnly: true))
 
     var body: some View {
         if isReady {
             content(self)
-                .modelContainer(modelContainer)
+                .modelContainer(previewModelContainer)
         } else {
             ProgressView()
                 .task {
-                    let context = modelContainer.mainContext
+                    let context = previewModelContainer.mainContext
                     (0..<20).forEach { _ in
                         _ = randomDiary(context)
                     }
