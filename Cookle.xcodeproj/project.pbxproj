@@ -15,7 +15,6 @@
 		AD0B6B892BC417AD007F66D2 /* CookleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0B6B882BC417AD007F66D2 /* CookleTests.swift */; };
 		AD0B6B932BC417AD007F66D2 /* CookleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0B6B922BC417AD007F66D2 /* CookleUITests.swift */; };
 		AD0B6B952BC417AD007F66D2 /* CookleUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0B6B942BC417AD007F66D2 /* CookleUITestsLaunchTests.swift */; };
-		AD0B6BDA2BC5492F007F66D2 /* InMemoryContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0B6BD92BC5492F007F66D2 /* InMemoryContext.swift */; };
 		AD0B6BDE2BC549C5007F66D2 /* RecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0B6BDD2BC549C5007F66D2 /* RecipeView.swift */; };
 		AD0B6BE02BC549CF007F66D2 /* TagRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0B6BDF2BC549CF007F66D2 /* TagRootView.swift */; };
 		AD1338AA2BC8EAE600A8BAD2 /* RecipeGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338A92BC8EAE600A8BAD2 /* RecipeGridView.swift */; };
@@ -27,8 +26,6 @@
 		AD1338BC2BCAFA4100A8BAD2 /* Ingredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338BB2BCAFA4100A8BAD2 /* Ingredient.swift */; };
 		AD1338C02BCAFA6600A8BAD2 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338BF2BCAFA6600A8BAD2 /* Category.swift */; };
 		AD1338C22BCAFA8B00A8BAD2 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338C12BCAFA8B00A8BAD2 /* Tag.swift */; };
-		AD1338C62BCAFF9600A8BAD2 /* InMemoryContextEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338C52BCAFF9600A8BAD2 /* InMemoryContextEnvironmentKey.swift */; };
-		AD1338C82BCAFFB200A8BAD2 /* EnvironmentValuesExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338C72BCAFFB200A8BAD2 /* EnvironmentValuesExtension.swift */; };
 		AD1338CA2BCCC90900A8BAD2 /* DebugRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338C92BCCC90900A8BAD2 /* DebugRootView.swift */; };
 		AD1338CC2BCD054900A8BAD2 /* DiaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338CB2BCD054900A8BAD2 /* DiaryView.swift */; };
 		AD1338CE2BCD063800A8BAD2 /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1338CD2BCD063800A8BAD2 /* TagView.swift */; };
@@ -71,7 +68,6 @@
 		AD0B6B8E2BC417AD007F66D2 /* CookleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CookleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD0B6B922BC417AD007F66D2 /* CookleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookleUITests.swift; sourceTree = "<group>"; };
 		AD0B6B942BC417AD007F66D2 /* CookleUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookleUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		AD0B6BD92BC5492F007F66D2 /* InMemoryContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryContext.swift; sourceTree = "<group>"; };
 		AD0B6BDD2BC549C5007F66D2 /* RecipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeView.swift; sourceTree = "<group>"; };
 		AD0B6BDF2BC549CF007F66D2 /* TagRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagRootView.swift; sourceTree = "<group>"; };
 		AD1338A62BC84E2D00A8BAD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -84,8 +80,6 @@
 		AD1338BB2BCAFA4100A8BAD2 /* Ingredient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ingredient.swift; sourceTree = "<group>"; };
 		AD1338BF2BCAFA6600A8BAD2 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		AD1338C12BCAFA8B00A8BAD2 /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
-		AD1338C52BCAFF9600A8BAD2 /* InMemoryContextEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryContextEnvironmentKey.swift; sourceTree = "<group>"; };
-		AD1338C72BCAFFB200A8BAD2 /* EnvironmentValuesExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentValuesExtension.swift; sourceTree = "<group>"; };
 		AD1338C92BCCC90900A8BAD2 /* DebugRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugRootView.swift; sourceTree = "<group>"; };
 		AD1338CB2BCD054900A8BAD2 /* DiaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryView.swift; sourceTree = "<group>"; };
 		AD1338CD2BCD063800A8BAD2 /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
@@ -207,10 +201,7 @@
 			children = (
 				AD1338BF2BCAFA6600A8BAD2 /* Category.swift */,
 				AD1338B92BCAFA2D00A8BAD2 /* Diary.swift */,
-				AD1338C72BCAFFB200A8BAD2 /* EnvironmentValuesExtension.swift */,
 				AD1338BB2BCAFA4100A8BAD2 /* Ingredient.swift */,
-				AD0B6BD92BC5492F007F66D2 /* InMemoryContext.swift */,
-				AD1338C52BCAFF9600A8BAD2 /* InMemoryContextEnvironmentKey.swift */,
 				AD0B6B792BC417AC007F66D2 /* Recipe.swift */,
 				AD1338C12BCAFA8B00A8BAD2 /* Tag.swift */,
 			);
@@ -368,7 +359,6 @@
 				AD1338BA2BCAFA2D00A8BAD2 /* Diary.swift in Sources */,
 				AD0B6BDE2BC549C5007F66D2 /* RecipeView.swift in Sources */,
 				AD1338C22BCAFA8B00A8BAD2 /* Tag.swift in Sources */,
-				AD1338C82BCAFFB200A8BAD2 /* EnvironmentValuesExtension.swift in Sources */,
 				AD710ED12BE465A80095B561 /* MultiAddableIngredientSection.swift in Sources */,
 				ADDBB4382BC7C232003B444F /* RecipeFormRootView.swift in Sources */,
 				AD0B6B7A2BC417AC007F66D2 /* Recipe.swift in Sources */,
@@ -383,8 +373,6 @@
 				AD1338C02BCAFA6600A8BAD2 /* Category.swift in Sources */,
 				AD1338D52BCEAEB100A8BAD2 /* SuggestionMenu.swift in Sources */,
 				AD1338B02BCAC80F00A8BAD2 /* AddRecipeButton.swift in Sources */,
-				AD1338C62BCAFF9600A8BAD2 /* InMemoryContextEnvironmentKey.swift in Sources */,
-				AD0B6BDA2BC5492F007F66D2 /* InMemoryContext.swift in Sources */,
 				ADDBB4322BC560CD003B444F /* DiaryRootView.swift in Sources */,
 				AD1338AE2BCAC57000A8BAD2 /* RecipeListView.swift in Sources */,
 				AD1338CC2BCD054900A8BAD2 /* DiaryView.swift in Sources */,

@@ -18,13 +18,10 @@ struct CookleApp: App {
         }
     }()
 
-    private let sharedInMemoryContext = InMemoryContext()
-
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
         .modelContainer(sharedModelContainer)
-        .environment(\.inMemoryContext, sharedInMemoryContext)
     }
 }
