@@ -15,7 +15,7 @@ struct DiaryFormRootView: View {
         case dinner
     }
 
-    @Environment(\.modelContext) private var modelContext
+    @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
 
     @Query private var recipes: [Recipe]
@@ -98,7 +98,7 @@ struct DiaryFormRootView: View {
                 ToolbarItem {
                     Button("Add") {
                         _ = Diary.create(
-                            context: modelContext,
+                            context: context,
                             date: date,
                             breakfasts: recipes.filter { breakfasts.contains($0.id) },
                             lunches: recipes.filter { lunches.contains($0.id) },

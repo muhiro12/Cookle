@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct DebugRootView: View {
-    @Environment(\.modelContext) private var modelContext
+    @Environment(\.modelContext) private var context
 
     @Query private var diaries: [Diary]
     @Query private var recipes: [Recipe]
@@ -80,13 +80,13 @@ struct DebugRootView: View {
                         indexSet.forEach { index in
                             switch content {
                             case diary:
-                                modelContext.delete(diaries[index])
+                                context.delete(diaries[index])
                             case recipe:
-                                modelContext.delete(recipes[index])
+                                context.delete(recipes[index])
                             case ingredient:
-                                modelContext.delete(ingredients[index])
+                                context.delete(ingredients[index])
                             case category:
-                                modelContext.delete(categories[index])
+                                context.delete(categories[index])
                             default:
                                 break
                             }

@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct DiaryRootView: View {
-    @Environment(\.modelContext) private var modelContext
+    @Environment(\.modelContext) private var context
 
     @Query private var diaries: [Diary]
 
@@ -49,7 +49,7 @@ struct DiaryRootView: View {
                 ToolbarItem {
                     Button("Add Random Diary", systemImage: "dice") {
                         withAnimation {
-                            _ = ModelContainerPreview { _ in EmptyView() }.randomDiary(modelContext)
+                            _ = ModelContainerPreview { _ in EmptyView() }.randomDiary(context)
                         }
                     }
                 }

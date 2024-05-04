@@ -26,16 +26,16 @@ struct ModelContainerPreview<Content: View>: View {
         } else {
             ProgressView()
                 .task {
-                    let modelContext = modelContainer.mainContext
+                    let context = modelContainer.mainContext
                     (0..<20).forEach { _ in
-                        _ = randomDiary(modelContext)
+                        _ = randomDiary(context)
                     }
                     repeat {
                         try! await Task.sleep(for: .seconds(0.2))
-                        diaries = try! modelContext.fetch(.init())
-                        recipes = try! modelContext.fetch(.init())
-                        ingredients = try! modelContext.fetch(.init())
-                        categories = try! modelContext.fetch(.init())
+                        diaries = try! context.fetch(.init())
+                        recipes = try! context.fetch(.init())
+                        ingredients = try! context.fetch(.init())
+                        categories = try! context.fetch(.init())
                     } while diaries.isEmpty || recipes.isEmpty || ingredients.isEmpty || categories.isEmpty
                     isReady = true
                 }
