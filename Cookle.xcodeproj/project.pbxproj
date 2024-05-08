@@ -147,8 +147,8 @@
 				AD0B6B752BC417AC007F66D2 /* CookleApp.swift */,
 				AD0B6B772BC417AC007F66D2 /* ContentView.swift */,
 				ADDBB4362BC7ACF0003B444F /* Model */,
-				ADDBB4352BC7ACC5003B444F /* View */,
-				ADDBB4392BC81E37003B444F /* Component */,
+				AD1FB6902BEBAC9B00D3795C /* View */,
+				AD1FB6912BEBACC300D3795C /* Component */,
 				AD0B6B7D2BC417AD007F66D2 /* Preview Content */,
 				AD0B6B7B2BC417AD007F66D2 /* Assets.xcassets */,
 			);
@@ -181,7 +181,7 @@
 			path = CookleUITests;
 			sourceTree = "<group>";
 		};
-		ADDBB4352BC7ACC5003B444F /* View */ = {
+		AD1FB6902BEBAC9B00D3795C /* View */ = {
 			isa = PBXGroup;
 			children = (
 				AD1338C92BCCC90900A8BAD2 /* DebugRootView.swift */,
@@ -195,7 +195,21 @@
 				AD0B6BDF2BC549CF007F66D2 /* TagRootView.swift */,
 				AD1338CD2BCD063800A8BAD2 /* TagView.swift */,
 			);
-			name = View;
+			path = View;
+			sourceTree = "<group>";
+		};
+		AD1FB6912BEBACC300D3795C /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				AD1338AF2BCAC80F00A8BAD2 /* AddRecipeButton.swift */,
+				AD1338B12BCACC3D00A8BAD2 /* EditRecipeButton.swift */,
+				ADDBB43A2BC81E50003B444F /* MultiAddableCategorySection.swift */,
+				AD710ED02BE465A80095B561 /* MultiAddableIngredientSection.swift */,
+				AD710ECE2BE4659B0095B561 /* MultiAddableStepSection.swift */,
+				AD1338D42BCEAEB100A8BAD2 /* SuggestionMenu.swift */,
+				AD1338B32BCACEC600A8BAD2 /* ToggleListStyleButton.swift */,
+			);
+			path = Component;
 			sourceTree = "<group>";
 		};
 		ADDBB4362BC7ACF0003B444F /* Model */ = {
@@ -209,20 +223,6 @@
 				AD1338C12BCAFA8B00A8BAD2 /* Tag.swift */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		ADDBB4392BC81E37003B444F /* Component */ = {
-			isa = PBXGroup;
-			children = (
-				AD1338AF2BCAC80F00A8BAD2 /* AddRecipeButton.swift */,
-				AD1338B12BCACC3D00A8BAD2 /* EditRecipeButton.swift */,
-				ADDBB43A2BC81E50003B444F /* MultiAddableCategorySection.swift */,
-				AD710ED02BE465A80095B561 /* MultiAddableIngredientSection.swift */,
-				AD710ECE2BE4659B0095B561 /* MultiAddableStepSection.swift */,
-				AD1338D42BCEAEB100A8BAD2 /* SuggestionMenu.swift */,
-				AD1338B32BCACEC600A8BAD2 /* ToggleListStyleButton.swift */,
-			);
-			name = Component;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
