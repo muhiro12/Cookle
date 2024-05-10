@@ -39,20 +39,6 @@ struct DiaryRootView: View {
             }
             .toolbar {
                 ToolbarItem {
-                    Button("Delete All", systemImage: "trash") {
-                        withAnimation {
-                            // TODO: Delete items
-                        }
-                    }
-                }
-                ToolbarItem {
-                    Button("Add Random Diary", systemImage: "dice") {
-                        withAnimation {
-                            _ = ModelContainerPreview { _ in EmptyView() }.randomDiary(context)
-                        }
-                    }
-                }
-                ToolbarItem {
                     Button("Add Diary", systemImage: "book") {
                         isPresented = true
                     }
