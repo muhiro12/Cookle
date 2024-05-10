@@ -27,7 +27,7 @@ struct RecipeView: View {
             Section("Steps") {
                 ForEach(Array(recipe.steps.enumerated()), id: \.offset) { values in
                     HStack(alignment: .top) {
-                        Text(values.offset.description + ".")
+                        Text((values.offset + 1).description + ".")
                             .frame(width: 24)
                         Text(values.element)
                     }
