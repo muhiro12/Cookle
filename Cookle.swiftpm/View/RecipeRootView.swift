@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct RecipeRootView: View {
-    @Query private var recipes: [Recipe]
+    @Query(Recipe.descriptor) private var recipes: [Recipe]
 
     @State private var detail: Recipe?
 

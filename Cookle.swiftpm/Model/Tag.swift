@@ -7,7 +7,7 @@
 
 import SwiftData
 
-protocol Tag: PersistentModel, Comparable {
+protocol Tag: PersistentModel {
     var value: String { get }
     var recipes: [Recipe] { get }
     static func create(context: ModelContext, value: String) -> Self
@@ -15,7 +15,11 @@ protocol Tag: PersistentModel, Comparable {
 }
 
 extension Tag {
-    static func < (lhs: Self, rhs: Self) -> Bool {
-        lhs.value < rhs.value
+    static var descriptor: FetchDescriptor<Self> {
+        .init(
+            sortBy: [
+                .init(\.value)
+            ]
+        )
     }
 }

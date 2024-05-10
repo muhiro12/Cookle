@@ -11,11 +11,11 @@ import SwiftData
 struct DebugRootView: View {
     @Environment(\.modelContext) private var context
 
-    @Query private var diaries: [Diary]
-    @Query private var recipes: [Recipe]
-    @Query private var ingredients: [Ingredient]
-    @Query private var recipeIngredients: [RecipeIngredient]
-    @Query private var categories: [Category]
+    @Query(Diary.descriptor) private var diaries: [Diary]
+    @Query(Recipe.descriptor) private var recipes: [Recipe]
+    @Query(Ingredient.descriptor) private var ingredients: [Ingredient]
+    @Query(RecipeIngredient.descriptor) private var recipeIngredients: [RecipeIngredient]
+    @Query(Category.descriptor) private var categories: [Category]
 
     @State private var content: Int?
     @State private var detail: Int?
@@ -38,7 +38,7 @@ struct DebugRootView: View {
                     case ingredient:
                         Text("Ingredients")
                     case recipeIngredient:
-                        Text("recipeIngredients")
+                        Text("RecipeIngredients")
                     case category:
                         Text("Categories")
                     default:

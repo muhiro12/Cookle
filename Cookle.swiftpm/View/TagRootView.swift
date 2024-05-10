@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct TagRootView<T: Tag>: View {
-    @Query private var tags: [T]
+    @Query(T.descriptor) private var tags: [T]
 
     @State private var content: T?
     @State private var detail: Recipe?

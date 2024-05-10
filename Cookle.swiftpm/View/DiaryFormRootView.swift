@@ -18,7 +18,7 @@ struct DiaryFormRootView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
 
-    @Query private var recipes: [Recipe]
+    @Query(Recipe.descriptor) private var recipes: [Recipe]
 
     @State private var date = Date.now
     @State private var breakfasts = Set<Recipe.ID>()

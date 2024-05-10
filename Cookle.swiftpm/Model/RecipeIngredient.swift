@@ -26,3 +26,13 @@ final class RecipeIngredient {
         return recipeIngredient
     }
 }
+
+extension RecipeIngredient {
+    static var descriptor: FetchDescriptor<RecipeIngredient> {
+        .init(
+            sortBy: [
+                .init(\.ingredient.value)
+            ]
+        )
+    }
+}

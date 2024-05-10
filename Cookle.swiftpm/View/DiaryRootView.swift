@@ -11,7 +11,7 @@ import SwiftData
 struct DiaryRootView: View {
     @Environment(\.modelContext) private var context
 
-    @Query private var diaries: [Diary]
+    @Query(Diary.descriptor) private var diaries: [Diary]
 
     @State private var content: Diary.ID?
     @State private var detail: Recipe?

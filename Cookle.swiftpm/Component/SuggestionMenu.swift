@@ -11,7 +11,7 @@ import SwiftData
 struct SuggestionMenu<T: Tag>: View {
     @Binding private var input: String
 
-    @Query private var tags: [T]
+    @Query(T.descriptor) private var tags: [T]
 
     init(input: Binding<String>) {
         self._input = input

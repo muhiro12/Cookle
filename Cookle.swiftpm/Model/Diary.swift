@@ -35,3 +35,13 @@ final class Diary: Identifiable {
         return diary
     }
 }
+
+extension Diary {
+    static var descriptor: FetchDescriptor<Diary> {
+        .init(
+            sortBy: [
+                .init(\.date, order: .reverse)
+            ]
+        )
+    }
+}

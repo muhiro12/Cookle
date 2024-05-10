@@ -73,3 +73,13 @@ final class Recipe: Identifiable {
         self.updatedAt = .now
     }
 }
+
+extension Recipe {
+    static var descriptor: FetchDescriptor<Recipe> {
+        .init(
+            sortBy: [
+                .init(\.name)
+            ]
+        )
+    }
+}
