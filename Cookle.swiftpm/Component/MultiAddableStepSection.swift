@@ -15,7 +15,7 @@ struct MultiAddableStepSection: View {
     }
 
     var body: some View {
-        Section("Steps") {
+        Section {
             ForEach(data.indices, id: \.self) { index in
                 HStack(alignment: .top) {
                     Text((index + 1).description + ".")
@@ -54,6 +54,13 @@ struct MultiAddableStepSection: View {
                     return
                 }
                 data.append("")
+            }
+        } header: {
+            HStack {
+                Text("Steps")
+                Spacer()
+                AddMultipleStepsButton(steps: $data)
+                    .font(.caption)
             }
         }
     }

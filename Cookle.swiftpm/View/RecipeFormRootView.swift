@@ -44,32 +44,6 @@ struct RecipeFormRootView: View {
                 }
                 MultiAddableIngredientSection(data: $ingredients)
                 MultiAddableStepSection(data: $steps)
-                // TODO: Modify for production
-                Button("Button") {
-                    isPresented = true
-                }
-                .sheet(isPresented: $isPresented) {
-                    NavigationStack {
-                        TextEditor(text: $text)
-                            .toolbar {
-                                ToolbarItem(placement: .cancellationAction) {
-                                    Button("Cancel") {
-                                        text = ""
-                                        isPresented = false
-                                    }
-                                }
-                                ToolbarItem(placement: .confirmationAction) {
-                                    Button("Done") {
-                                        steps = text.split(separator: "\n").map { String($0) }
-                                        text = ""
-                                        isPresented = false
-                                    }
-                                }
-                            }
-                            .border(.separator)
-                            .padding()
-                    }
-                }
                 MultiAddableCategorySection(data: $categories)
             }
             .toolbar {
