@@ -14,6 +14,7 @@ struct DebugRootView: View {
     @Query private var diaries: [Diary]
     @Query private var recipes: [Recipe]
     @Query private var ingredients: [Ingredient]
+    @Query private var ingredientObjects: [IngredientObject]
     @Query private var categories: [Category]
 
     @State private var content: Int?
@@ -22,12 +23,13 @@ struct DebugRootView: View {
     private let diary = 0
     private let recipe = 1
     private let ingredient = 2
-    private let category = 3
+    private let ingredientObject = 3
+    private let category = 4
 
     var body: some View {
         NavigationSplitView {
             List(selection: $content) {
-                ForEach(0..<4) { content in
+                ForEach(0..<5) { content in
                     switch content {
                     case diary:
                         Text("Diaries")
@@ -35,6 +37,8 @@ struct DebugRootView: View {
                         Text("Recipes")
                     case ingredient:
                         Text("Ingredients")
+                    case ingredientObject:
+                        Text("IngredientObjects")
                     case category:
                         Text("Categories")
                     default:
@@ -46,7 +50,11 @@ struct DebugRootView: View {
                 ToolbarItem {
                     Button("Delete All", systemImage: "trash") {
                         withAnimation {
-                            // TODO: Delete items
+                            diaries.forEach { context.delete($0) }
+                            recipes.forEach { context.delete($0) }
+                            ingredients.forEach { context.delete($0) }
+                            ingredientObjects.forEach { context.delete($0) }
+                            categories.forEach { context.delete($0) }
                         }
                     }
                 }
@@ -70,6 +78,8 @@ struct DebugRootView: View {
                             recipes.endIndex
                         case ingredient:
                             ingredients.endIndex
+                        case ingredientObject:
+                            ingredientObjects.endIndex
                         case category:
                             categories.endIndex
                         default:
@@ -85,6 +95,8 @@ struct DebugRootView: View {
                         Text(recipes[$0].name)
                     case ingredient:
                         Text(ingredients[$0].value)
+                    case ingredientObject:
+                        Text(ingredientObjects[$0].ingredient.value + " " + ingredientObjects[$0].amount)
                     case category:
                         Text(categories[$0].value)
                     default:
@@ -101,6 +113,8 @@ struct DebugRootView: View {
                                 context.delete(recipes[index])
                             case ingredient:
                                 context.delete(ingredients[index])
+                            case ingredientObject:
+                                context.delete(ingredientObjects[index])
                             case category:
                                 context.delete(categories[index])
                             default:
@@ -124,6 +138,9 @@ struct DebugRootView: View {
                     case ingredient:
                         TagView<Ingredient>()
                             .environment(ingredients[detail])
+                    case ingredientObject:
+                        // TODO: Make IngredientObjectView
+                        EmptyView()
                     case category:
                         TagView<Category>()
                             .environment(categories[detail])
