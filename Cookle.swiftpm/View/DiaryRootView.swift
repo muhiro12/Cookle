@@ -30,7 +30,8 @@ struct DiaryRootView: View {
                     }
                 ),
                 id: \.key,
-                 selection: $content) { section in
+                selection: $content
+            ) { section in
                 Section(section.key) {
                     ForEach(section.value) { diary in
                         Text(diary.date.formatted(.dateTime.month().day()))
@@ -51,17 +52,14 @@ struct DiaryRootView: View {
         } content: {
             if let content,
                let diary = diaries.first(where: { $0.id == content }) {
-                VStack {
-                    RecipeListView(diary.breakfasts + diary.lunches + diary.dinners, selection: $detail)
-                    List(selection: $detail) {}
-                        .frame(height: .zero)
-                }
-                .toolbar {
-                    ToolbarItem {
-                        AddRecipeButton()
+                DiaryView(selection: $detail)
+                    .toolbar {
+                        ToolbarItem {
+                            AddRecipeButton()
+                        }
                     }
-                }
-                .navigationTitle(diary.date.formatted(.dateTime.year().month().day()))
+                    .navigationTitle(diary.date.formatted(.dateTime.year().month().day()))
+                    .environment(diary)
             }
         } detail: {
             if let detail {

@@ -17,7 +17,7 @@ struct ContentView: View {
                 }
             RecipeRootView()
                 .tabItem {
-                    Label("Recipe", systemImage: "book")
+                    Label("Recipe", systemImage: "book.pages")
                 }
             TagRootView<Ingredient>()
                 .tabItem {

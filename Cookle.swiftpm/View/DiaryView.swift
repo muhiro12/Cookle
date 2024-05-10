@@ -10,23 +10,29 @@ import SwiftUI
 struct DiaryView: View {
     @Environment(Diary.self) private var diary
 
+    @Binding private var selection: Recipe?
+
+    init(selection: Binding<Recipe?>) {
+        self._selection = selection
+    }
+
     var body: some View {
-        List {
+        List(selection: $selection) {
             Section("Date") {
                 Text(diary.date.description)
             }
             Section("Breakfasts") {
-                ForEach(diary.breakfasts) {
+                ForEach(diary.breakfasts, id: \.self) {
                     Text($0.name)
                 }
             }
             Section("Lunches") {
-                ForEach(diary.lunches) {
+                ForEach(diary.lunches, id: \.self) {
                     Text($0.name)
                 }
             }
             Section("Dinners") {
-                ForEach(diary.dinners) {
+                ForEach(diary.dinners, id: \.self) {
                     Text($0.name)
                 }
             }
@@ -36,7 +42,7 @@ struct DiaryView: View {
 
 #Preview {
     ModelContainerPreview { preview in
-        DiaryView()
+        DiaryView(selection: .constant(nil))
             .environment(preview.diaries[0])
     }
 }

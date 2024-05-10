@@ -130,7 +130,7 @@ struct DebugRootView: View {
                 Group {
                     switch content {
                     case diary:
-                        DiaryView()
+                        DiaryView(selection: .constant(nil))
                             .environment(diaries[detail])
                     case recipe:
                         RecipeView()
