@@ -15,6 +15,10 @@ struct ContentView: View {
                 .tabItem {
                     Label("Diary", systemImage: "book")
                 }
+            RecipeRootView()
+                .tabItem {
+                    Label("Recipe", systemImage: "book")
+                }
             TagRootView<Ingredient>()
                 .tabItem {
                     Label("Ingredient", systemImage: "refrigerator")
