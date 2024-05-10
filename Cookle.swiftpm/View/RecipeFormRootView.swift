@@ -13,6 +13,8 @@ struct RecipeFormRootView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var name = ""
+    @State private var servingSize = ""
+    @State private var cookingTime = ""
     @State private var ingredients = [IngredientTuple]()
     @State private var steps = [String]()
     @State private var categories = [String]()
@@ -30,10 +32,12 @@ struct RecipeFormRootView: View {
                     }
                 }
                 Section("Serving Size") {
-                    Text("TODO:" + " servings") // TODO: Build servingSize TextField
+                    TextField("Serving Size", text: $servingSize)
+                        .keyboardType(.numberPad)
                 }
                 Section("Cooking Time") {
-                    Text("TODO:" + " minutes") // TODO: Build cookingTime TextField
+                    TextField("Cooking Time", text: $cookingTime)
+                        .keyboardType(.numberPad)
                 }
                 MultiAddableIngredientSection(data: $ingredients)
                 MultiAddableStepSection(data: $steps)
@@ -54,8 +58,8 @@ struct RecipeFormRootView: View {
                             recipe.update(
                                 context: context,
                                 name: name,
-                                servingSize: 0, // TODO: Set servingSize
-                                cookingTime: 0, // TODO: Set cookingTime
+                                servingSize: Int(servingSize) ?? .zero,
+                                cookingTime: Int(cookingTime) ?? .zero,
                                 ingredients: ingredients.compactMap {
                                     guard !$0.ingredient.isEmpty else {
                                         return nil
@@ -74,8 +78,8 @@ struct RecipeFormRootView: View {
                             _ = Recipe.create(
                                 context: context,
                                 name: name,
-                                servingSize: 0, // TODO: Set servingSize
-                                cookingTime: 0, // TODO: Set cookingTime
+                                servingSize: Int(servingSize) ?? .zero,
+                                cookingTime: Int(cookingTime) ?? .zero,
                                 ingredients: ingredients.compactMap {
                                     guard !$0.ingredient.isEmpty else {
                                         return nil
@@ -93,12 +97,14 @@ struct RecipeFormRootView: View {
                         }
                         dismiss()
                     }
-                    .disabled(name.isEmpty)
+                    .disabled(name.isEmpty || Int(servingSize) == nil || Int(cookingTime) == nil)
                 }
             }
         }
         .task {
             name = recipe?.name ?? ""
+            servingSize = recipe?.servingSize.description ?? ""
+            cookingTime = recipe?.cookingTime.description ?? ""
             ingredients = (recipe?.ingredientObjects.map { ($0.ingredient.value, $0.amount) } ?? []) + [("", "")]
             steps = recipe?.steps ?? [""]
             categories = (recipe?.categories.map { $0.value }  ?? []) + [""]
