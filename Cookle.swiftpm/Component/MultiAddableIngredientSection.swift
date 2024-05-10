@@ -64,7 +64,7 @@ struct MultiAddableIngredientSection: View {
     ModelContainerPreview { preview in
         Form { () -> MultiAddableIngredientSection in
             MultiAddableIngredientSection(
-                data: .constant(preview.recipes[0].ingredientObjects.map {
+                data: .constant(preview.recipes[0].recipeIngredients.map {
                     ($0.ingredient.value, $0.amount)
                 } + [("", "")])
             )
