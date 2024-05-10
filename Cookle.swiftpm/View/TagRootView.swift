@@ -13,50 +13,25 @@ struct TagRootView<T: Tag>: View {
 
     @State private var content: T?
     @State private var detail: Recipe?
-    @State private var isGrid = true
 
     var body: some View {
         NavigationSplitView {
-            VStack {
-                ScrollView {
-                    LazyVGrid(columns: (0..<3).map { _ in .init() }) {
-                        ForEach(tags) { tag in
-                            Button(tag.value) {
-                                content = tag
-                            }
-                            .buttonStyle(.bordered)
-                        }
-                    }
-                }
-                List(selection: $content) {}
-                    .frame(height: .zero)
-            }
-            .toolbar {
-                ToolbarItem {
-                    AddRecipeButton()
-                }
-            }
-            .navigationTitle(String(describing: T.self))
-        } content: {
-            if let content {
-                VStack {
-                    if isGrid {
-                        RecipeGridView(content.recipes, selection: $detail)
-                    } else {
-                        RecipeListView(content.recipes, selection: $detail)
-                    }
-                    List(selection: $detail) {}
-                        .frame(height: .zero)
-                }
+            TagListView(tags, selection: $content)
                 .toolbar {
-                    ToolbarItem {
-                        ToggleListStyleButton(isGrid: $isGrid)
-                    }
                     ToolbarItem {
                         AddRecipeButton()
                     }
                 }
-                .navigationTitle(content.value)
+                .navigationTitle(String(describing: T.self))
+        } content: {
+            if let content {
+                RecipeListView(content.recipes, selection: $detail)
+                    .toolbar {
+                        ToolbarItem {
+                            AddRecipeButton()
+                        }
+                    }
+                    .navigationTitle(content.value)
             }
         } detail: {
             if let detail {

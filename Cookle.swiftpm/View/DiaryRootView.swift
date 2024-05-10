@@ -15,7 +15,6 @@ struct DiaryRootView: View {
 
     @State private var content: Diary.ID?
     @State private var detail: Recipe?
-    @State private var isGrid = true
     @State private var isPresented = false
 
     var body: some View {
@@ -67,18 +66,11 @@ struct DiaryRootView: View {
             if let content,
                let diary = diaries.first(where: { $0.id == content }) {
                 VStack {
-                    if isGrid{
-                        RecipeGridView(diary.breakfasts + diary.lunches + diary.dinners, selection: $detail)
-                    } else {
-                        RecipeListView(diary.breakfasts + diary.lunches + diary.dinners, selection: $detail)
-                    }
+                    RecipeListView(diary.breakfasts + diary.lunches + diary.dinners, selection: $detail)
                     List(selection: $detail) {}
                         .frame(height: .zero)
                 }
                 .toolbar {
-                    ToolbarItem {
-                        ToggleListStyleButton(isGrid: $isGrid)
-                    }
                     ToolbarItem {
                         AddRecipeButton()
                     }
