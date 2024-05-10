@@ -1,5 +1,5 @@
 //
-//  RecipeIngredient.swift
+//  IngredientObject.swift
 //  Cookle
 //
 //  Created by Hiromu Nakano on 2024/05/08.
@@ -8,7 +8,7 @@
 import SwiftData
 
 @Model
-final class RecipeIngredient {
+final class IngredientObject {
     private(set) var ingredient: Ingredient
     private(set) var amount: String
 
@@ -17,18 +17,18 @@ final class RecipeIngredient {
         self.amount = amount
     }
 
-    static func create(context: ModelContext, ingredient: String, amount: String) -> RecipeIngredient {
-        let recipeIngredient = RecipeIngredient(
+    static func create(context: ModelContext, ingredient: String, amount: String) -> IngredientObject {
+        let ingredientObject = IngredientObject(
             ingredient: .create(context: context, value: ingredient),
             amount: amount
         )
-        context.insert(recipeIngredient)
-        return recipeIngredient
+        context.insert(ingredientObject)
+        return ingredientObject
     }
 }
 
-extension RecipeIngredient {
-    static var descriptor: FetchDescriptor<RecipeIngredient> {
+extension IngredientObject {
+    static var descriptor: FetchDescriptor<IngredientObject> {
         .init(
             sortBy: [
                 .init(\.ingredient.value)

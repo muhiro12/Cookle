@@ -108,7 +108,7 @@ struct RecipeFormRootView: View {
             name = recipe?.name ?? ""
             servingSize = recipe?.servingSize.description ?? ""
             cookingTime = recipe?.cookingTime.description ?? ""
-            ingredients = (recipe?.recipeIngredients.map { ($0.ingredient.value, $0.amount) } ?? []) + [("", "")]
+            ingredients = (recipe?.ingredientObjects.map { ($0.ingredient.value, $0.amount) } ?? []) + [("", "")]
             steps = (recipe?.steps ?? []) + [""]
             categories = (recipe?.categories.map { $0.value }  ?? []) + [""]
         }

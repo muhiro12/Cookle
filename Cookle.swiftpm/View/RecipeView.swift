@@ -20,11 +20,11 @@ struct RecipeView: View {
                 Text(recipe.cookingTime.description + " minutes")
             }
             Section("Ingredients") {
-                ForEach(recipe.recipeIngredients, id: \.self) { recipeIngredient in
+                ForEach(recipe.ingredientObjects, id: \.self) { ingredientObject in
                     HStack {
-                        Text(recipeIngredient.ingredient.value)
+                        Text(ingredientObject.ingredient.value)
                         Spacer()
-                        Text(recipeIngredient.amount)
+                        Text(ingredientObject.amount)
                     }
                 }
             }

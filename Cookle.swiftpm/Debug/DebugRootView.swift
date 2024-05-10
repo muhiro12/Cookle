@@ -14,7 +14,7 @@ struct DebugRootView: View {
     @Query(Diary.descriptor) private var diaries: [Diary]
     @Query(Recipe.descriptor) private var recipes: [Recipe]
     @Query(Ingredient.descriptor) private var ingredients: [Ingredient]
-    @Query(RecipeIngredient.descriptor) private var recipeIngredients: [RecipeIngredient]
+    @Query(IngredientObject.descriptor) private var ingredientObjects: [IngredientObject]
     @Query(Category.descriptor) private var categories: [Category]
 
     @State private var content: Int?
@@ -23,7 +23,7 @@ struct DebugRootView: View {
     private let diary = 0
     private let recipe = 1
     private let ingredient = 2
-    private let recipeIngredient = 3
+    private let ingredientObject = 3
     private let category = 4
 
     var body: some View {
@@ -37,8 +37,8 @@ struct DebugRootView: View {
                         Text("Recipes")
                     case ingredient:
                         Text("Ingredients")
-                    case recipeIngredient:
-                        Text("RecipeIngredients")
+                    case ingredientObject:
+                        Text("IngredientObjects")
                     case category:
                         Text("Categories")
                     default:
@@ -53,7 +53,7 @@ struct DebugRootView: View {
                             diaries.forEach { context.delete($0) }
                             recipes.forEach { context.delete($0) }
                             ingredients.forEach { context.delete($0) }
-                            recipeIngredients.forEach { context.delete($0) }
+                            ingredientObjects.forEach { context.delete($0) }
                             categories.forEach { context.delete($0) }
                         }
                     }
@@ -78,8 +78,8 @@ struct DebugRootView: View {
                             recipes.endIndex
                         case ingredient:
                             ingredients.endIndex
-                        case recipeIngredient:
-                            recipeIngredients.endIndex
+                        case ingredientObject:
+                            ingredientObjects.endIndex
                         case category:
                             categories.endIndex
                         default:
@@ -95,8 +95,8 @@ struct DebugRootView: View {
                         Text(recipes[$0].name)
                     case ingredient:
                         Text(ingredients[$0].value)
-                    case recipeIngredient:
-                        Text(recipeIngredients[$0].ingredient.value + " " + recipeIngredients[$0].amount)
+                    case ingredientObject:
+                        Text(ingredientObjects[$0].ingredient.value + " " + ingredientObjects[$0].amount)
                     case category:
                         Text(categories[$0].value)
                     default:
@@ -113,8 +113,8 @@ struct DebugRootView: View {
                                 context.delete(recipes[index])
                             case ingredient:
                                 context.delete(ingredients[index])
-                            case recipeIngredient:
-                                context.delete(recipeIngredients[index])
+                            case ingredientObject:
+                                context.delete(ingredientObjects[index])
                             case category:
                                 context.delete(categories[index])
                             default:
@@ -138,8 +138,8 @@ struct DebugRootView: View {
                     case ingredient:
                         TagView<Ingredient>()
                             .environment(ingredients[detail])
-                    case recipeIngredient:
-                        // TODO: Make recipeIngredientView
+                    case ingredientObject:
+                        // TODO: Make ingredientObjectView
                         EmptyView()
                     case category:
                         TagView<Category>()
