@@ -67,13 +67,16 @@ struct ModelContainerPreview<Content: View>: View {
             servingSize: Int.random(in: 1...6),
             cookingTime: Int.random(in: 5...60),
             ingredients: (0...Int.random(in: 0..<20)).map { _ in
-                    .create(context: context, ingredient: randomWords(from: ingredientStrings), amount: "1 cup")  // TODO: Random amount
+                    .create(context: context,
+                            ingredient: randomWords(from: ingredientStrings),
+                            amount: randomWords(from: amountStrings))
             },
             steps: (0...Int.random(in: 0..<20)).map { _ in
                 randomWords(from: stepStrings)
             },
             categories: (0...Int.random(in: 0..<5)).map { _ in
-                    .create(context: context, value: randomWords(from: categoryStrings))
+                    .create(context: context,
+                            value: randomWords(from: categoryStrings))
             }
         )
     }
@@ -131,6 +134,31 @@ struct ModelContainerPreview<Content: View>: View {
         "Broccoli", "Cauliflower", "Asparagus", "Green Beans", "Peas",
         "Corn", "Mushrooms", "Potatoes", "Cabbage", "Brussels Sprouts"
     ]
+
+    private let amountStrings = [
+        "1 cup", "2 cups", "1/2 cup", "1/4 cup", "3/4 cup",
+        "1 tablespoon", "2 tablespoons", "1 teaspoon", "2 teaspoons", "1/2 teaspoon",
+        "1/4 teaspoon", "3 tablespoons", "4 tablespoons", "1 pint", "1 quart",
+        "1 gallon", "1 liter", "500 ml", "200 ml", "100 ml",
+        "50 grams", "100 grams", "200 grams", "500 grams", "1 kilogram",
+        "1 pound", "1/2 pound", "1/4 pound", "2 pounds", "3 pounds",
+        "1 ounce", "2 ounces", "3 ounces", "4 ounces", "5 ounces",
+        "1 pinch", "2 pinches", "a dash", "a smidge", "a slice",
+        "2 slices", "3 slices", "4 slices", "a handful", "a small handful",
+        "a large handful", "a bunch", "a small bunch", "a large bunch", "a piece",
+        "2 pieces", "3 pieces", "1 packet", "1 sachet", "1 can",
+        "2 cans", "1 jar", "2 jars", "1 box", "2 boxes",
+        "1 bag", "2 bags", "a few", "several", "a dozen",
+        "a couple", "a knob", "a dollop", "a splash", "a sprinkle",
+        "a sprig", "2 sprigs", "a stalk", "2 stalks", "a clove",
+        "2 cloves", "3 cloves", "a bulb", "a leaf", "2 leaves",
+        "a slab", "a slice", "a wedge", "a cube", "1 sheet",
+        "2 sheets", "1 roll", "2 rolls", "1 stick", "2 sticks",
+        "a drizzle", "a glug", "a drop", "a heap", "a scoop",
+        "a dusting", "a topping", "a coating", "a layer", "a shaving",
+        "a trim", "a zest", "a twist", "a segment", "a fraction"
+    ]
+
 
     private let stepStrings = [
         "Preheat the oven to 350°F (175°C).", "Rinse the rice under cold water until the water runs clear.",
