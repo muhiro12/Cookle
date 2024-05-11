@@ -11,23 +11,23 @@ import SwiftData
 struct ContentView: View {
     var body: some View {
         TabView {
-            DiaryRootView()
+            DiaryNavigationView()
                 .tabItem {
                     Label("Diary", systemImage: "book")
                 }
-            RecipeRootView()
+            RecipeNavigationView()
                 .tabItem {
                     Label("Recipe", systemImage: "book.pages")
                 }
-            TagRootView<Ingredient>()
+            TagNavigationView<Ingredient>()
                 .tabItem {
                     Label("Ingredient", systemImage: "refrigerator")
                 }
-            TagRootView<Category>()
+            TagNavigationView<Category>()
                 .tabItem {
                     Label("Category", systemImage: "frying.pan")
                 }
-            DebugRootView()
+            DebugNavigationView()
                 .tabItem {
                     Label("Debug", systemImage: "flask")
                 }

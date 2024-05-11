@@ -1,5 +1,5 @@
 //
-//  DiaryRootView.swift
+//  DiaryNavigationView.swift
 //  Cookle
 //
 //  Created by Hiromu Nakano on 2024/04/09.
@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct DiaryRootView: View {
+struct DiaryNavigationView: View {
     @Environment(\.modelContext) private var context
 
     @Query(Diary.descriptor) private var diaries: [Diary]
@@ -74,13 +74,13 @@ struct DiaryRootView: View {
             }
         }
         .sheet(isPresented: $isPresented) {
-            DiaryFormRootView()
+            DiaryFormNavigationView()
         }
     }
 }
 
 #Preview {
     ModelContainerPreview { _ in
-        DiaryRootView()
+        DiaryNavigationView()
     }
 }

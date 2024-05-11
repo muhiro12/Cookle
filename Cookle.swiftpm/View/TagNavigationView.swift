@@ -1,5 +1,5 @@
 //
-//  TagRootView.swift
+//  TagNavigationView.swift
 //  Cookle
 //
 //  Created by Hiromu Nakano on 2024/04/09.
@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct TagRootView<T: Tag>: View {
+struct TagNavigationView<T: Tag>: View {
     @Query(T.descriptor) private var tags: [T]
 
     @State private var content: T?
@@ -50,6 +50,6 @@ struct TagRootView<T: Tag>: View {
 
 #Preview {
     ModelContainerPreview { _ in
-        TagRootView<Category>()
+        TagNavigationView<Category>()
     }
 }

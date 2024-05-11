@@ -1,5 +1,5 @@
 //
-//  RecipeFormRootView.swift
+//  RecipeFormNavigationView.swift
 //  Cookle
 //
 //  Created by Hiromu Nakano on 2024/04/11.
@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct RecipeFormRootView: View {
+struct RecipeFormNavigationView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
 
@@ -117,13 +117,13 @@ struct RecipeFormRootView: View {
 }
 
 #Preview {
-    RecipeFormRootView()
+    RecipeFormNavigationView()
 }
 
 
 #Preview {
     ModelContainerPreview { preview in
-        RecipeFormRootView()
+        RecipeFormNavigationView()
             .environment(preview.recipes[0])
     }
 }

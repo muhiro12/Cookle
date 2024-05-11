@@ -1,5 +1,5 @@
 //
-//  RecipeRootView.swift
+//  RecipeNavigationView.swift
 //
 //
 //  Created by Hiromu Nakano on 2024/05/10.
@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct RecipeRootView: View {
+struct RecipeNavigationView: View {
     @Query(Recipe.descriptor) private var recipes: [Recipe]
 
     @State private var detail: Recipe?
@@ -39,6 +39,6 @@ struct RecipeRootView: View {
 
 #Preview {
     ModelContainerPreview { _ in
-        RecipeRootView()
+        RecipeNavigationView()
     }
 }

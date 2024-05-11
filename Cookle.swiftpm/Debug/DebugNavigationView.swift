@@ -1,5 +1,5 @@
 //
-//  DebugRootView.swift
+//  DebugNavigationView.swift
 //  Cookle
 //
 //  Created by Hiromu Nakano on 2024/04/15.
@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct DebugRootView: View {
+struct DebugNavigationView: View {
     @Environment(\.modelContext) private var context
 
     @Query(Diary.descriptor) private var diaries: [Diary]
@@ -156,6 +156,6 @@ struct DebugRootView: View {
 
 #Preview {
     ModelContainerPreview { _ in
-        DebugRootView()
+        DebugNavigationView()
     }
 }

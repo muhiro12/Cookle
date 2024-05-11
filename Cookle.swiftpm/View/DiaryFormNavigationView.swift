@@ -1,5 +1,5 @@
 //
-//  DiaryFormRootView.swift
+//  DiaryFormNavigationView.swift
 //  Cookle
 //
 //  Created by Hiromu Nakano on 2024/04/17.
@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct DiaryFormRootView: View {
+struct DiaryFormNavigationView: View {
     enum DiaryType {
         case breakfast
         case lunch
@@ -116,6 +116,6 @@ struct DiaryFormRootView: View {
 
 #Preview {
     ModelContainerPreview { _ in
-        DiaryFormRootView()
+        DiaryFormNavigationView()
     }
 }

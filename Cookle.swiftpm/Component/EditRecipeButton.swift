@@ -17,7 +17,7 @@ struct EditRecipeButton: View {
             isPresented = true
         }
         .sheet(isPresented: $isPresented) {
-            RecipeFormRootView()
+            RecipeFormNavigationView()
         }
     }
 }
