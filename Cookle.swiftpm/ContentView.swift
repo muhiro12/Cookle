@@ -27,10 +27,12 @@ struct ContentView: View {
                 .tabItem {
                     Label("Category", systemImage: "frying.pan")
                 }
+            #if DEBUG
             DebugNavigationView()
                 .tabItem {
                     Label("Debug", systemImage: "flask")
                 }
+            #endif
         }
     }
 }
