@@ -139,8 +139,14 @@ struct DebugNavigationView: View {
                         TagView<Ingredient>()
                             .environment(ingredients[detail])
                     case ingredientObject:
-                        // TODO: Make ingredientObjectView
-                        EmptyView()
+                        {
+                            let object = ingredientObjects[detail]
+                            return List {
+                                Text(object.ingredient.value)
+                                Text(object.amount)
+                                Text(object.recipe?.name ?? "")
+                            }
+                        }()
                     case category:
                         TagView<Category>()
                             .environment(categories[detail])

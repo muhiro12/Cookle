@@ -11,10 +11,12 @@ import SwiftData
 final class IngredientObject {
     private(set) var ingredient: Ingredient
     private(set) var amount: String
+    private(set) var recipe: Recipe?
 
     private init(ingredient: Ingredient, amount: String) {
         self.ingredient = ingredient
         self.amount = amount
+        self.recipe = nil
     }
 
     static func create(context: ModelContext, ingredient: String, amount: String) -> IngredientObject {

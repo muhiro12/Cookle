@@ -15,6 +15,7 @@ final class Recipe: Identifiable {
     private(set) var cookingTime: Int
     @Relationship(inverse: \Ingredient.recipes)
     private(set) var ingredients: [Ingredient]
+    @Relationship(inverse: \IngredientObject.recipe)
     private(set) var ingredientObjects: [IngredientObject]
     private(set) var steps: [String]
     @Relationship(inverse: \Category.recipes)
