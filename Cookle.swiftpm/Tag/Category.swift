@@ -29,3 +29,13 @@ final class Category: Tag {
         self.value = value
     }
 }
+
+extension Category {
+    static var descriptor: FetchDescriptor<Category> {
+        .init(
+            sortBy: [
+                .init(\.value)
+            ]
+        )
+    }
+}

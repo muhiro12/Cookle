@@ -29,3 +29,13 @@ final class Ingredient: Tag {
         self.value = value
     }
 }
+
+extension Ingredient {
+    static var descriptor: FetchDescriptor<Ingredient> {
+        .init(
+            sortBy: [
+                .init(\.value)
+            ]
+        )
+    }
+}
