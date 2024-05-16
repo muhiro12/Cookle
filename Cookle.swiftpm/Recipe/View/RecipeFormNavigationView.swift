@@ -59,7 +59,6 @@ struct RecipeFormNavigationView: View {
                     Button(recipe != nil ? "Update" : "Add") {
                         if let recipe {
                             recipe.update(
-                                context: context,
                                 name: name,
                                 servingSize: Int(servingSize) ?? .zero,
                                 cookingTime: Int(cookingTime) ?? .zero,

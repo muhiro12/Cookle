@@ -56,8 +56,7 @@ final class Recipe: Identifiable {
         return recipe
     }
 
-    func update(context: ModelContext,
-                name: String,
+    func update(name: String,
                 servingSize: Int,
                 cookingTime: Int,
                 ingredients: [IngredientObject],
