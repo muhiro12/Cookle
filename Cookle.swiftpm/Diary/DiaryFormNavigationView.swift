@@ -18,12 +18,14 @@ struct DiaryFormNavigationView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
 
+    @Environment(Diary.self) private var diary: Diary?
+
     @Query(Recipe.descriptor) private var recipes: [Recipe]
 
     @State private var date = Date.now
-    @State private var breakfasts = Set<Recipe.ID>()
-    @State private var lunches = Set<Recipe.ID>()
-    @State private var dinners = Set<Recipe.ID>()
+    @State private var breakfasts = Set<Recipe>()
+    @State private var lunches = Set<Recipe>()
+    @State private var dinners = Set<Recipe>()
     @State private var searchText = ""
 
     var body: some View {
@@ -37,7 +39,7 @@ struct DiaryFormNavigationView: View {
                     NavigationLink("Breakfast", value: DiaryType.breakfast)
                 } footer: {
                     Text(recipes.compactMap {
-                        guard breakfasts.contains($0.id) else {
+                        guard breakfasts.contains($0) else {
                             return nil
                         }
                         return $0.name
@@ -47,7 +49,7 @@ struct DiaryFormNavigationView: View {
                     NavigationLink("Lunch", value: DiaryType.lunch)
                 } footer: {
                     Text(recipes.compactMap {
-                        guard lunches.contains($0.id) else {
+                        guard lunches.contains($0) else {
                             return nil
                         }
                         return $0.name
@@ -57,7 +59,7 @@ struct DiaryFormNavigationView: View {
                     NavigationLink("Dinner", value: DiaryType.dinner)
                 } footer: {
                     Text(recipes.compactMap {
-                        guard dinners.contains($0.id) else {
+                        guard dinners.contains($0) else {
                             return nil
                         }
                         return $0.name
@@ -72,15 +74,15 @@ struct DiaryFormNavigationView: View {
                         }
                         return $0.name.lowercased().contains(searchText.lowercased())
                     },
-                    id: \.id,
+                    id: \.self,
                     selection: {
                         switch type {
                         case .breakfast:
-                            return $breakfasts
+                            $breakfasts
                         case .lunch:
-                            return $lunches
+                            $lunches
                         case .dinner:
-                            return $dinners
+                            $dinners
                         }
                     }()
                 ) { recipe in
@@ -96,19 +98,34 @@ struct DiaryFormNavigationView: View {
                     }
                 }
                 ToolbarItem {
-                    Button("Add") {
-                        _ = Diary.create(
-                            context: context,
-                            date: date,
-                            breakfasts: recipes.filter { breakfasts.contains($0.id) },
-                            lunches: recipes.filter { lunches.contains($0.id) },
-                            dinners: recipes.filter { dinners.contains($0.id) }
-                        )
+                    Button(diary != nil ? "Update" : "Add") {
+                        if let diary {
+                            diary.update(
+                                date: date,
+                                breakfasts: .init(breakfasts),
+                                lunches: .init(lunches),
+                                dinners: .init(dinners)
+                            )
+                        } else {
+                            _ = Diary.create(
+                                context: context,
+                                date: date,
+                                breakfasts: .init(breakfasts),
+                                lunches: .init(lunches),
+                                dinners: .init(dinners)
+                            )
+                        }
                         dismiss()
                     }
                     .disabled(breakfasts.isEmpty && lunches.isEmpty && dinners.isEmpty)
                 }
             }
+        }
+        .task {
+            date = diary?.date ?? .now
+            breakfasts = .init(diary?.breakfasts ?? [])
+            lunches = .init(diary?.lunches ?? [])
+            dinners = .init(diary?.dinners ?? [])
         }
         .interactiveDismissDisabled()
     }

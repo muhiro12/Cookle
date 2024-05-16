@@ -37,7 +37,7 @@ struct DiaryNavigationView: View {
                 DiaryView(selection: $detail)
                     .toolbar {
                         ToolbarItem {
-                            AddRecipeButton()
+                            EditDiaryButton()
                         }
                     }
                     .navigationTitle(diary.date.formatted(.dateTime.year().month().day()))

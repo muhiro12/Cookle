@@ -34,6 +34,14 @@ final class Diary: Identifiable {
         diary.recipes = breakfasts + lunches + dinners
         return diary
     }
+    
+    func update(date: Date, breakfasts: [Recipe], lunches: [Recipe], dinners: [Recipe]) {
+        self.date = date
+        self.breakfasts = breakfasts
+        self.lunches = lunches
+        self.dinners = dinners
+        self.recipes = breakfasts + lunches + dinners
+    }
 }
 
 extension Diary {

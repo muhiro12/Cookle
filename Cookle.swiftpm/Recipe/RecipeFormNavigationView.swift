@@ -12,6 +12,8 @@ struct RecipeFormNavigationView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
 
+    @Environment(Recipe.self) private var recipe: Recipe?
+
     @State private var name = ""
     @State private var servingSize = ""
     @State private var cookingTime = ""
@@ -21,8 +23,6 @@ struct RecipeFormNavigationView: View {
 
     @State private var isPresented = false
     @State private var text = ""
-
-    @Environment(Recipe.self) private var recipe: Recipe?
 
     var body: some View {
         NavigationStack {
