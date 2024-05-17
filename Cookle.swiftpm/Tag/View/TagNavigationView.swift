@@ -28,10 +28,11 @@ struct TagNavigationView<T: Tag>: View {
                 RecipeListView(content.recipes, selection: $detail)
                     .toolbar {
                         ToolbarItem {
-                            AddRecipeButton()
+                            EditTagButton<T>()
                         }
                     }
                     .navigationTitle(content.value)
+                    .environment(content)
             }
         } detail: {
             if let detail {

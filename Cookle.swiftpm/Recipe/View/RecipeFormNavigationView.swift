@@ -119,7 +119,6 @@ struct RecipeFormNavigationView: View {
     RecipeFormNavigationView()
 }
 
-
 #Preview {
     ModelContainerPreview { preview in
         RecipeFormNavigationView()
