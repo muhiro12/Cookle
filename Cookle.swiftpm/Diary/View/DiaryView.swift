@@ -19,7 +19,7 @@ struct DiaryView: View {
     var body: some View {
         List(selection: $selection) {
             Section("Date") {
-                Text(diary.date.description)
+                Text(diary.date.formatted(.dateTime.year().month().day()))
             }
             Section("Breakfasts") {
                 ForEach(diary.breakfasts, id: \.self) {
