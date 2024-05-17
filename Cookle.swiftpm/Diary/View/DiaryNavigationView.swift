@@ -15,16 +15,13 @@ struct DiaryNavigationView: View {
 
     @State private var content: Diary.ID?
     @State private var detail: Recipe?
-    @State private var isPresented = false
 
     var body: some View {
         NavigationSplitView {
             DiaryListView(diaries, selection: $content)
                 .toolbar {
                     ToolbarItem {
-                        Button("Add Diary", systemImage: "book") {
-                            isPresented = true
-                        }
+                        AddDiaryButton()
                     }
                     ToolbarItem {
                         AddRecipeButton()
@@ -54,9 +51,6 @@ struct DiaryNavigationView: View {
                     .navigationTitle(detail.name)
                     .environment(detail)
             }
-        }
-        .sheet(isPresented: $isPresented) {
-            DiaryFormNavigationView()
         }
     }
 }

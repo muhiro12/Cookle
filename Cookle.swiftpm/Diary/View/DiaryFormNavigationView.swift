@@ -97,7 +97,7 @@ struct DiaryFormNavigationView: View {
                         dismiss()
                     }
                 }
-                ToolbarItem {
+                ToolbarItem(placement: .confirmationAction) {
                     Button(diary != nil ? "Update" : "Add") {
                         if let diary {
                             diary.update(
