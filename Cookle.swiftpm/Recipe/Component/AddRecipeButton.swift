@@ -11,7 +11,7 @@ struct AddRecipeButton: View {
     @State private var isPresented = false
 
     var body: some View {
-        Button("Add Recipe", systemImage: "plus") {
+        Button("Add Recipe", systemImage: "book.pages") {
             isPresented = true
         }
         .sheet(isPresented: $isPresented) {
