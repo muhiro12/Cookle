@@ -13,10 +13,10 @@ final class Recipe: Identifiable {
     private(set) var name: String
     private(set) var servingSize: Int
     private(set) var cookingTime: Int
-    @Relationship(inverse: \Ingredient.recipes)
-    private(set) var ingredients: [Ingredient]
     @Relationship(inverse: \IngredientObject.recipe)
     private(set) var ingredientObjects: [IngredientObject]
+    @Relationship(inverse: \Ingredient.recipes)
+    private(set) var ingredients: [Ingredient]
     private(set) var steps: [String]
     @Relationship(inverse: \Category.recipes)
     private(set) var categories: [Category]
@@ -29,8 +29,8 @@ final class Recipe: Identifiable {
         self.name = ""
         self.servingSize = 0
         self.cookingTime = 0
-        self.ingredients = []
         self.ingredientObjects = []
+        self.ingredients = []
         self.steps = []
         self.categories = []
         self.diaries = []
@@ -50,8 +50,8 @@ final class Recipe: Identifiable {
         recipe.name = name
         recipe.servingSize = servingSize
         recipe.cookingTime = cookingTime
-        recipe.ingredients = ingredients.map { $0.ingredient }
         recipe.ingredientObjects = ingredients
+        recipe.ingredients = ingredients.map { $0.ingredient }
         recipe.steps = steps
         recipe.categories = categories
         return recipe
@@ -66,8 +66,8 @@ final class Recipe: Identifiable {
         self.name = name
         self.servingSize = servingSize
         self.cookingTime = cookingTime
-        self.ingredients = ingredients.map { $0.ingredient }
         self.ingredientObjects = ingredients
+        self.ingredients = ingredients.map { $0.ingredient }
         self.steps = steps
         self.categories = categories
         self.updatedAt = .now

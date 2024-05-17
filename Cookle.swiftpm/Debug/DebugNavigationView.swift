@@ -13,8 +13,8 @@ struct DebugNavigationView: View {
 
     @Query(Diary.descriptor) private var diaries: [Diary]
     @Query(Recipe.descriptor) private var recipes: [Recipe]
-    @Query(Ingredient.descriptor) private var ingredients: [Ingredient]
     @Query(IngredientObject.descriptor) private var ingredientObjects: [IngredientObject]
+    @Query(Ingredient.descriptor) private var ingredients: [Ingredient]
     @Query(Category.descriptor) private var categories: [Category]
 
     @State private var content: Int?
@@ -22,8 +22,8 @@ struct DebugNavigationView: View {
 
     private let diary = 0
     private let recipe = 1
-    private let ingredient = 2
-    private let ingredientObject = 3
+    private let ingredientObject = 2
+    private let ingredient = 3
     private let category = 4
 
     var body: some View {
@@ -35,10 +35,10 @@ struct DebugNavigationView: View {
                         Text("Diaries")
                     case recipe:
                         Text("Recipes")
-                    case ingredient:
-                        Text("Ingredients")
                     case ingredientObject:
                         Text("IngredientObjects")
+                    case ingredient:
+                        Text("Ingredients")
                     case category:
                         Text("Categories")
                     default:
@@ -52,8 +52,8 @@ struct DebugNavigationView: View {
                         withAnimation {
                             diaries.forEach { context.delete($0) }
                             recipes.forEach { context.delete($0) }
-                            ingredients.forEach { context.delete($0) }
                             ingredientObjects.forEach { context.delete($0) }
+                            ingredients.forEach { context.delete($0) }
                             categories.forEach { context.delete($0) }
                         }
                     }
@@ -76,10 +76,10 @@ struct DebugNavigationView: View {
                             diaries.endIndex
                         case recipe:
                             recipes.endIndex
-                        case ingredient:
-                            ingredients.endIndex
                         case ingredientObject:
                             ingredientObjects.endIndex
+                        case ingredient:
+                            ingredients.endIndex
                         case category:
                             categories.endIndex
                         default:
@@ -93,10 +93,10 @@ struct DebugNavigationView: View {
                         Text(diaries[$0].date.formatted())
                     case recipe:
                         Text(recipes[$0].name)
-                    case ingredient:
-                        Text(ingredients[$0].value)
                     case ingredientObject:
                         Text(ingredientObjects[$0].ingredient.value + " " + ingredientObjects[$0].amount)
+                    case ingredient:
+                        Text(ingredients[$0].value)
                     case category:
                         Text(categories[$0].value)
                     default:
@@ -111,10 +111,10 @@ struct DebugNavigationView: View {
                                 context.delete(diaries[index])
                             case recipe:
                                 context.delete(recipes[index])
-                            case ingredient:
-                                context.delete(ingredients[index])
                             case ingredientObject:
                                 context.delete(ingredientObjects[index])
+                            case ingredient:
+                                context.delete(ingredients[index])
                             case category:
                                 context.delete(categories[index])
                             default:
@@ -135,18 +135,12 @@ struct DebugNavigationView: View {
                     case recipe:
                         RecipeView()
                             .environment(recipes[detail])
+                    case ingredientObject:
+                        IngredientObjectView()
+                            .environment(ingredientObjects[detail])
                     case ingredient:
                         TagView<Ingredient>()
                             .environment(ingredients[detail])
-                    case ingredientObject:
-                        {
-                            let object = ingredientObjects[detail]
-                            return List {
-                                Text(object.ingredient.value)
-                                Text(object.amount)
-                                Text(object.recipe?.name ?? "")
-                            }
-                        }()
                     case category:
                         TagView<Category>()
                             .environment(categories[detail])
