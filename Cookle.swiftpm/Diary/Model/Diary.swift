@@ -42,6 +42,10 @@ final class Diary: Identifiable {
         self.dinners = dinners
         self.recipes = breakfasts + lunches + dinners
     }
+    
+    func delete() {
+        modelContext?.delete(self)
+    }
 }
 
 extension Diary {

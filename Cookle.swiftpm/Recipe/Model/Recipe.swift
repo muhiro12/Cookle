@@ -13,7 +13,7 @@ final class Recipe: Identifiable {
     private(set) var name: String
     private(set) var servingSize: Int
     private(set) var cookingTime: Int
-    @Relationship(inverse: \IngredientObject.recipe)
+    @Relationship(deleteRule: .cascade, inverse: \IngredientObject.recipe)
     private(set) var ingredientObjects: [IngredientObject]
     @Relationship(inverse: \Ingredient.recipes)
     private(set) var ingredients: [Ingredient]
@@ -71,6 +71,10 @@ final class Recipe: Identifiable {
         self.steps = steps
         self.categories = categories
         self.updatedAt = .now
+    }
+    
+    func delete() {
+        modelContext?.delete(self)
     }
 }
 

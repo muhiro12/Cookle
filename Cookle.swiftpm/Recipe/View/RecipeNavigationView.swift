@@ -26,7 +26,10 @@ struct RecipeNavigationView: View {
             if let detail {
                 RecipeView()
                     .toolbar {
-                        ToolbarItem {
+                        ToolbarItem(placement: .destructiveAction) {
+                            DeleteRecipeButton()
+                        }
+                        ToolbarItem(placement: .confirmationAction) {
                             EditRecipeButton()
                         }
                     }

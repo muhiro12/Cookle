@@ -33,7 +33,10 @@ struct DiaryNavigationView: View {
                let diary = diaries.first(where: { $0.id == content }) {
                 DiaryView(selection: $detail)
                     .toolbar {
-                        ToolbarItem {
+                        ToolbarItem(placement: .destructiveAction) {
+                            DeleteDiaryButton()
+                        }
+                        ToolbarItem(placement: .confirmationAction) {
                             EditDiaryButton()
                         }
                     }
@@ -44,7 +47,10 @@ struct DiaryNavigationView: View {
             if let detail {
                 RecipeView()
                     .toolbar {
-                        ToolbarItem {
+                        ToolbarItem(placement: .destructiveAction) {
+                            DeleteRecipeButton()
+                        }
+                        ToolbarItem(placement: .confirmationAction) {
                             EditRecipeButton()
                         }
                     }
