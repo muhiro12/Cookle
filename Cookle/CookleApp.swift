@@ -2,11 +2,12 @@
 //  CookleApp.swift
 //  Cookle
 //
-//  Created by Hiromu Nakano on 2024/04/08.
+//  Created by Hiromu Nakano on 2024/05/20.
 //
 
 import SwiftUI
 import SwiftData
+import Library
 
 @main
 struct CookleApp: App {

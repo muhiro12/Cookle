@@ -8,8 +8,18 @@
 import SwiftUI
 import SwiftData
 
-struct ContentView: View {
-    var body: some View {
+public struct ContentView: View {
+    private let sharedModelContainer: ModelContainer = {
+        do {
+            return try .init(for: Recipe.self)
+        } catch {
+            fatalError("Could not create ModelContainer: \(error)")
+        }
+    }()
+
+    public init() {}
+
+    public var body: some View {
         TabView {
             DiaryNavigationView()
                 .tabItem {
@@ -32,6 +42,7 @@ struct ContentView: View {
                     Label("Debug", systemImage: "flask")
                 }
         }
+        .modelContainer(sharedModelContainer)
     }
 }
 
