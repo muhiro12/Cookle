@@ -10,9 +10,18 @@ import SwiftData
 
 @main
 struct CookleApp: App {
+    private let sharedModelContainer: ModelContainer = {
+        do {
+            return try .init(for: Recipe.self)
+        } catch {
+            fatalError("Could not create ModelContainer: \(error)")
+        }
+    }()
+
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(sharedModelContainer)
     }
 }
