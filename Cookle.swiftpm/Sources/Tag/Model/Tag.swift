@@ -8,8 +8,8 @@
 import SwiftData
 
 protocol Tag: PersistentModel {
-    var value: String { get }
-    var recipes: [Recipe] { get }
+    var value: String! { get }
+    var recipes: [Recipe]! { get }
     static var descriptor: FetchDescriptor<Self> { get }
     static func create(context: ModelContext, value: String) -> Self
     func update(value: String)

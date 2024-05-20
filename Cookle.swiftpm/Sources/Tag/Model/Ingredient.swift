@@ -10,12 +10,14 @@ import SwiftData
 
 @Model
 final class Ingredient: Tag {
-    private(set) var value: String
-    private(set) var recipes: [Recipe]
+    private(set) var value: String!
+    private(set) var recipes: [Recipe]!
+    private(set) var objects: [IngredientObject]!
 
     private init() {
         self.value = ""
         self.recipes = []
+        self.objects = []
     }
 
     static func create(context: ModelContext, value: String) -> Self {

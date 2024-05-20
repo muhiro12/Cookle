@@ -43,7 +43,7 @@ struct RecipeView: View {
                 }
             }
             Section("Diaries") {
-                ForEach(recipe.diaries) {
+                ForEach(recipe.breakfasts + recipe.lunches + recipe.dinners) {
                     Text($0.date.formatted(.dateTime.year().month().day()))
                 }
             }

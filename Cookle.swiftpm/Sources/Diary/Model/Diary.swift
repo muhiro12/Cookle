@@ -10,18 +10,16 @@ import SwiftData
 
 @Model
 final class Diary: Identifiable {
-    private(set) var date: Date
-    private(set) var breakfasts: [Recipe]
-    private(set) var lunches: [Recipe]
-    private(set) var dinners: [Recipe]
-    private(set) var recipes: [Recipe]
+    private(set) var date: Date!
+    private(set) var breakfasts: [Recipe]!
+    private(set) var lunches: [Recipe]!
+    private(set) var dinners: [Recipe]!
 
     private init() {
         self.date = .now
         self.breakfasts = []
         self.lunches = []
         self.dinners = []
-        self.recipes = []
     }
 
     static func create(context: ModelContext, date: Date, breakfasts: [Recipe], lunches: [Recipe], dinners: [Recipe]) -> Diary {
@@ -31,7 +29,6 @@ final class Diary: Identifiable {
         diary.breakfasts = breakfasts
         diary.lunches = lunches
         diary.dinners = dinners
-        diary.recipes = breakfasts + lunches + dinners
         return diary
     }
     
@@ -40,7 +37,6 @@ final class Diary: Identifiable {
         self.breakfasts = breakfasts
         self.lunches = lunches
         self.dinners = dinners
-        self.recipes = breakfasts + lunches + dinners
     }
     
     func delete() {

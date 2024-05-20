@@ -10,8 +10,8 @@ import SwiftData
 
 @Model
 final class Category: Tag {
-    private(set) var value: String
-    private(set) var recipes: [Recipe]
+    private(set) var value: String!
+    private(set) var recipes: [Recipe]!
 
     private init() {
         self.value = ""

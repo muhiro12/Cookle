@@ -10,20 +10,24 @@ import SwiftData
 
 @Model
 final class Recipe: Identifiable {
-    private(set) var name: String
-    private(set) var servingSize: Int
-    private(set) var cookingTime: Int
+    private(set) var name: String!
+    private(set) var servingSize: Int!
+    private(set) var cookingTime: Int!
     @Relationship(deleteRule: .cascade, inverse: \IngredientObject.recipe)
-    private(set) var ingredientObjects: [IngredientObject]
+    private(set) var ingredientObjects: [IngredientObject]!
     @Relationship(inverse: \Ingredient.recipes)
-    private(set) var ingredients: [Ingredient]
-    private(set) var steps: [String]
+    private(set) var ingredients: [Ingredient]!
+    private(set) var steps: [String]!
     @Relationship(inverse: \Category.recipes)
-    private(set) var categories: [Category]
-    @Relationship(inverse: \Diary.recipes)
-    private(set) var diaries: [Diary]
-    private(set) var updatedAt: Date
-    private(set) var createdAt: Date
+    private(set) var categories: [Category]!
+    @Relationship(inverse: \Diary.breakfasts)
+    private(set) var breakfasts: [Diary]!
+    @Relationship(inverse: \Diary.lunches)
+    private(set) var lunches: [Diary]!
+    @Relationship(inverse: \Diary.dinners)
+    private(set) var dinners: [Diary]!
+    private(set) var updatedAt: Date!
+    private(set) var createdAt: Date!
 
     private init() {
         self.name = ""
@@ -33,7 +37,9 @@ final class Recipe: Identifiable {
         self.ingredients = []
         self.steps = []
         self.categories = []
-        self.diaries = []
+        self.breakfasts = []
+        self.lunches = []
+        self.dinners = []
         self.updatedAt = .now
         self.createdAt = .now
     }
