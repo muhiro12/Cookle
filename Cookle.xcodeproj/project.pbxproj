@@ -17,7 +17,6 @@
 		AD8C8E682BFABEE200872BF2 /* Cookle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cookle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD8C8E6B2BFABEE200872BF2 /* CookleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookleApp.swift; sourceTree = "<group>"; };
 		AD8C8E712BFABEE300872BF2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		AD8C8E732BFABEE300872BF2 /* Cookle.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Cookle.entitlements; sourceTree = "<group>"; };
 		AD8C8E752BFABEE300872BF2 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		AD8C8E852BFAC9C000872BF2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -57,7 +56,6 @@
 				AD8C8E852BFAC9C000872BF2 /* Info.plist */,
 				AD8C8E6B2BFABEE200872BF2 /* CookleApp.swift */,
 				AD8C8E712BFABEE300872BF2 /* Assets.xcassets */,
-				AD8C8E732BFABEE300872BF2 /* Cookle.entitlements */,
 				AD8C8E742BFABEE300872BF2 /* Preview Content */,
 			);
 			path = Cookle;
@@ -277,7 +275,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Cookle/Cookle.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Cookle/Preview Content\"";
@@ -320,7 +317,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Cookle/Cookle.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Cookle/Preview Content\"";
