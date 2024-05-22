@@ -21,13 +21,6 @@ struct DebugNavigationView: View {
     @State private var content: DebugContent?
     @State private var detail: Int?
 
-    private let diary = 0
-    private let diaryObject = 1
-    private let recipe = 2
-    private let ingredient = 3
-    private let ingredientObject = 4
-    private let category = 5
-
     var body: some View {
         NavigationSplitView {
             DebugRootView(selection: $content)
@@ -56,74 +49,71 @@ struct DebugNavigationView: View {
                 }
                 .navigationTitle("Debug")
         } content: {
-            List(selection: $detail) {
-                ForEach(
-                    0..<{
-                        switch content?.rawValue {
-                        case diary:
-                            diaries.endIndex
-                        case diaryObject:
-                            diaryObjects.endIndex
-                        case recipe:
-                            recipes.endIndex
-                        case ingredient:
-                            ingredients.endIndex
-                        case ingredientObject:
-                            ingredientObjects.endIndex
-                        case category:
-                            categories.endIndex
-                        default:
-                            .zero
+            if let content {
+                List(selection: $detail) {
+                    ForEach(
+                        0..<{
+                            switch content {
+                            case .diary:
+                                diaries.endIndex
+                            case .diaryObject:
+                                diaryObjects.endIndex
+                            case .recipe:
+                                recipes.endIndex
+                            case .ingredient:
+                                ingredients.endIndex
+                            case .ingredientObject:
+                                ingredientObjects.endIndex
+                            case .category:
+                                categories.endIndex
+                            }
+                        }(),
+                        id: \.self
+                    ) {
+                        switch content {
+                        case .diary:
+                            Text(diaries[$0].date.formatted())
+                        case .diaryObject:
+                            Text(diaryObjects[$0].type.debugDescription)
+                        case .recipe:
+                            Text(recipes[$0].name)
+                        case .ingredient:
+                            Text(ingredients[$0].value)
+                        case .ingredientObject:
+                            Text(ingredientObjects[$0].ingredient.value + " " + ingredientObjects[$0].amount)
+                        case .category:
+                            Text(categories[$0].value)
                         }
-                    }(),
-                    id: \.self
-                ) {
-                    switch content?.rawValue {
-                    case diary:
-                        Text(diaries[$0].date.formatted())
-                    case diaryObject:
-                        Text(diaryObjects[$0].type.debugDescription)
-                    case recipe:
-                        Text(recipes[$0].name)
-                    case ingredient:
-                        Text(ingredients[$0].value)
-                    case ingredientObject:
-                        Text(ingredientObjects[$0].ingredient.value + " " + ingredientObjects[$0].amount)
-                    case category:
-                        Text(categories[$0].value)
-                    default:
-                        EmptyView()
                     }
-                }
-                .onDelete { indexSet in
-                    withAnimation {
-                        indexSet.forEach { index in
-                            switch content?.rawValue {
-                            case diary:
-                                context.delete(diaries[index])
-                            case diaryObject:
-                                context.delete(diaryObjects[index])
-                            case recipe:
-                                context.delete(recipes[index])
-                            case ingredient:
-                                context.delete(ingredients[index])
-                            case ingredientObject:
-                                context.delete(ingredientObjects[index])
-                            case category:
-                                context.delete(categories[index])
-                            default:
-                                break
+                    .onDelete { indexSet in
+                        withAnimation {
+                            indexSet.forEach { index in
+                                switch content {
+                                case .diary:
+                                    context.delete(diaries[index])
+                                case .diaryObject:
+                                    context.delete(diaryObjects[index])
+                                case .recipe:
+                                    context.delete(recipes[index])
+                                case .ingredient:
+                                    context.delete(ingredients[index])
+                                case .ingredientObject:
+                                    context.delete(ingredientObjects[index])
+                                case .category:
+                                    context.delete(categories[index])
+                                }
                             }
                         }
                     }
                 }
+                .navigationTitle("Content")
             }
-            .navigationTitle("Content")
         } detail: {
-            if let detail {
+            if let content,
+               let detail {
                 Group {
-                    switch content?.rawValue {
-                    case diary:
+                    switch content {
+                    case .diary:
                         DiaryView(selection: .constant(nil))
                             .toolbar {
                                 ToolbarItem {
@@ -135,13 +125,13 @@ struct DebugNavigationView: View {
                                 }
                             }
                             .environment(diaries[detail])
-                    case diaryObject:
+                    case .diaryObject:
                         DiaryObjectView()
                             .environment(diaryObjects[detail])
-                    case recipe:
+                    case .recipe:
                         RecipeView()
                             .environment(recipes[detail])
-                    case ingredient:
+                    case .ingredient:
                         TagView<Ingredient>()
                             .toolbar {
                                 ToolbarItem {
@@ -153,14 +143,12 @@ struct DebugNavigationView: View {
                                 }
                             }
                             .environment(ingredients[detail])
-                    case ingredientObject:
+                    case .ingredientObject:
                         IngredientObjectView()
                             .environment(ingredientObjects[detail])
-                    case category:
+                    case .category:
                         TagView<Category>()
                             .environment(categories[detail])
-                    default:
-                        EmptyView()
                     }
                 }
                 .navigationTitle("Detail")
