@@ -11,9 +11,6 @@ import SwiftData
 struct DebugNavigationView: View {
     @Environment(\.modelContext) private var context
 
-    @AppStorage(.isICloudOn) private var isICloudOn
-    @AppStorage(.isDebugOn) private var isDebugOn
-
     @Query(Diary.descriptor) private var diaries: [Diary]
     @Query(DiaryObject.descriptor) private var diaryObjects: [DiaryObject]
     @Query(Recipe.descriptor) private var recipes: [Recipe]
@@ -21,7 +18,7 @@ struct DebugNavigationView: View {
     @Query(Ingredient.descriptor) private var ingredients: [Ingredient]
     @Query(Category.descriptor) private var categories: [Category]
 
-    @State private var content: Int?
+    @State private var content: DebugContent?
     @State private var detail: Int?
 
     private let diary = 0
@@ -33,61 +30,36 @@ struct DebugNavigationView: View {
 
     var body: some View {
         NavigationSplitView {
-            List(selection: $content) {
-                Section {
-                    ForEach(diary..<category + 1, id: \.self) { content in
-                        switch content {
-                        case diary:
-                            Text("Diaries")
-                        case diaryObject:
-                            Text("DiaryObjects")
-                        case recipe:
-                            Text("Recipes")
-                        case ingredient:
-                            Text("Ingredients")
-                        case ingredientObject:
-                            Text("IngredientObjects")
-                        case category:
-                            Text("Categories")
-                        default:
-                            EmptyView()
+            DebugRootView(selection: $content)
+                .toolbar {
+                    ToolbarItem {
+                        Button("Delete All", systemImage: "trash") {
+                            withAnimation {
+                                diaries.forEach { context.delete($0) }
+                                diaryObjects.forEach { context.delete($0) }
+                                recipes.forEach { context.delete($0) }
+                                ingredients.forEach { context.delete($0) }
+                                ingredientObjects.forEach { context.delete($0) }
+                                categories.forEach { context.delete($0) }
+                            }
+                        }
+                    }
+                    ToolbarItem {
+                        Button("Add Random Diary", systemImage: "dice") {
+                            withAnimation {
+                                _ = ModelContainerPreview { _ in
+                                    EmptyView()
+                                }.randomDiary(context)
+                            }
                         }
                     }
                 }
-                Section {
-                    Toggle("iCloud On", isOn: $isICloudOn)
-                    Toggle("Debug On", isOn: $isDebugOn)
-                }
-            }
-            .toolbar {
-                ToolbarItem {
-                    Button("Delete All", systemImage: "trash") {
-                        withAnimation {
-                            diaries.forEach { context.delete($0) }
-                            diaryObjects.forEach { context.delete($0) }
-                            recipes.forEach { context.delete($0) }
-                            ingredients.forEach { context.delete($0) }
-                            ingredientObjects.forEach { context.delete($0) }
-                            categories.forEach { context.delete($0) }
-                        }
-                    }
-                }
-                ToolbarItem {
-                    Button("Add Random Diary", systemImage: "dice") {
-                        withAnimation {
-                            _ = ModelContainerPreview { _ in
-                                EmptyView()
-                            }.randomDiary(context)
-                        }
-                    }
-                }
-            }
-            .navigationTitle("Debug")
+                .navigationTitle("Debug")
         } content: {
             List(selection: $detail) {
                 ForEach(
                     0..<{
-                        switch content {
+                        switch content?.rawValue {
                         case diary:
                             diaries.endIndex
                         case diaryObject:
@@ -106,7 +78,7 @@ struct DebugNavigationView: View {
                     }(),
                     id: \.self
                 ) {
-                    switch content {
+                    switch content?.rawValue {
                     case diary:
                         Text(diaries[$0].date.formatted())
                     case diaryObject:
@@ -126,7 +98,7 @@ struct DebugNavigationView: View {
                 .onDelete { indexSet in
                     withAnimation {
                         indexSet.forEach { index in
-                            switch content {
+                            switch content?.rawValue {
                             case diary:
                                 context.delete(diaries[index])
                             case diaryObject:
@@ -150,7 +122,7 @@ struct DebugNavigationView: View {
         } detail: {
             if let detail {
                 Group {
-                    switch content {
+                    switch content?.rawValue {
                     case diary:
                         DiaryView(selection: .constant(nil))
                             .toolbar {
