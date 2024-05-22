@@ -11,32 +11,26 @@ import SwiftData
 @Model
 final class Diary: Identifiable {
     private(set) var date: Date!
-    private(set) var breakfasts: [Recipe]!
-    private(set) var lunches: [Recipe]!
-    private(set) var dinners: [Recipe]!
+    private(set) var objects: [DiaryObject]!
+    private(set) var recipes: [Recipe]!
 
     private init() {
         self.date = .now
-        self.breakfasts = []
-        self.lunches = []
-        self.dinners = []
+        self.objects = []
+        self.recipes = []
     }
 
-    static func create(context: ModelContext, date: Date, breakfasts: [Recipe], lunches: [Recipe], dinners: [Recipe]) -> Diary {
+    static func create(context: ModelContext, date: Date, objects: [DiaryObject]) -> Diary {
         let diary = Diary()
         context.insert(diary)
         diary.date = date
-        diary.breakfasts = breakfasts
-        diary.lunches = lunches
-        diary.dinners = dinners
+        diary.objects = objects
         return diary
     }
     
-    func update(date: Date, breakfasts: [Recipe], lunches: [Recipe], dinners: [Recipe]) {
+    func update(date: Date, objects: [DiaryObject]) {
         self.date = date
-        self.breakfasts = breakfasts
-        self.lunches = lunches
-        self.dinners = dinners
+        self.objects = objects
     }
     
     func delete() {

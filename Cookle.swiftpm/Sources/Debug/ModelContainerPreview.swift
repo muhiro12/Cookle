@@ -53,12 +53,11 @@ struct ModelContainerPreview<Content: View>: View {
         return .create(
             context: context,
             date: .now.addingTimeInterval(.random(in: 0...(60 * 60 * 24 * 365 * 2))),
-            breakfasts: [recipes[0]],
-            lunches: [recipes[1],
-                      recipes[2]],
-            dinners: [recipes[3],
-                      recipes[4],
-                      recipes[5]]
+            objects: [
+                .create(context: context, type: .breakfast, recipes: [recipes[0]]),
+                .create(context: context, type: .lunch, recipes: [recipes[1], recipes[2]]),
+                .create(context: context, type: .dinner, recipes: [recipes[3], recipes[4], recipes[5]])
+            ]
         )
     }
 

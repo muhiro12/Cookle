@@ -102,17 +102,21 @@ struct DiaryFormNavigationView: View {
                         if let diary {
                             diary.update(
                                 date: date,
-                                breakfasts: .init(breakfasts),
-                                lunches: .init(lunches),
-                                dinners: .init(dinners)
+                                objects: [
+                                    .create(context: context, type: .breakfast, recipes: .init(breakfasts)),
+                                    .create(context: context, type: .lunch, recipes: .init(lunches)),
+                                    .create(context: context, type: .dinner, recipes: .init(dinners))
+                                ]
                             )
                         } else {
                             _ = Diary.create(
                                 context: context,
                                 date: date,
-                                breakfasts: .init(breakfasts),
-                                lunches: .init(lunches),
-                                dinners: .init(dinners)
+                                objects: [
+                                    .create(context: context, type: .breakfast, recipes: .init(breakfasts)),
+                                    .create(context: context, type: .lunch, recipes: .init(lunches)),
+                                    .create(context: context, type: .dinner, recipes: .init(dinners))
+                                ]
                             )
                         }
                         dismiss()
@@ -123,9 +127,9 @@ struct DiaryFormNavigationView: View {
         }
         .task {
             date = diary?.date ?? .now
-            breakfasts = .init(diary?.breakfasts ?? [])
-            lunches = .init(diary?.lunches ?? [])
-            dinners = .init(diary?.dinners ?? [])
+            breakfasts = .init(diary?.objects.filter { $0.type == .breakfast }.flatMap { $0.recipes } ?? [])
+            lunches = .init(diary?.objects.filter { $0.type == .lunch }.flatMap { $0.recipes } ?? [])
+            dinners = .init(diary?.objects.filter { $0.type == .dinner }.flatMap { $0.recipes } ?? [])
         }
         .interactiveDismissDisabled()
     }

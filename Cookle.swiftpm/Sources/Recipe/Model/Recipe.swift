@@ -20,12 +20,10 @@ final class Recipe: Identifiable {
     private(set) var steps: [String]!
     @Relationship(inverse: \Category.recipes)
     private(set) var categories: [Category]!
-    @Relationship(inverse: \Diary.breakfasts)
-    private(set) var breakfasts: [Diary]!
-    @Relationship(inverse: \Diary.lunches)
-    private(set) var lunches: [Diary]!
-    @Relationship(inverse: \Diary.dinners)
-    private(set) var dinners: [Diary]!
+    @Relationship(inverse: \DiaryObject.recipes)
+    private(set) var diaryObject: [DiaryObject]!
+    @Relationship(inverse: \Diary.recipes)
+    private(set) var diaries: [Diary]!
     private(set) var updatedAt: Date!
     private(set) var createdAt: Date!
 
@@ -37,9 +35,7 @@ final class Recipe: Identifiable {
         self.ingredients = []
         self.steps = []
         self.categories = []
-        self.breakfasts = []
-        self.lunches = []
-        self.dinners = []
+        self.diaries = []
         self.updatedAt = .now
         self.createdAt = .now
     }
