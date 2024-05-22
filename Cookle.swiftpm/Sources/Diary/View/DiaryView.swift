@@ -21,20 +21,15 @@ struct DiaryView: View {
             Section("Date") {
                 Text(diary.date.formatted(.dateTime.year().month().day()))
             }
-            Section("Breakfasts") {
-                ForEach(diary.objects.filter { $0.type == .breakfast }.flatMap { $0.recipes }, id: \.self) {
-                    Text($0.name)
+            Section("Objects") {
+                ForEach(diary.objects) {
+                    Text($0.type.debugDescription)
                 }
             }
-            Section("Lunches") {
-                ForEach(diary.objects.filter { $0.type == .lunch }.flatMap { $0.recipes }, id: \.self) {
+            Section("Recipes") {
+                ForEach(diary.recipes) {
                     Text($0.name)
-                }
-            }
-            Section("Dinners") {
-                ForEach(diary.objects.filter { $0.type == .dinner }.flatMap { $0.recipes }, id: \.self) {
-                    Text($0.name)
-                }
+                }                
             }
         }
     }

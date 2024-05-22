@@ -12,9 +12,10 @@ struct ModelContainerPreview<Content: View>: View {
     let content: (Self) -> Content
 
     @State private(set) var diaries = [Diary]()
+    @State private(set) var diaryObjects = [DiaryObject]()
     @State private(set) var recipes = [Recipe]()
-    @State private(set) var ingredientObjects = [IngredientObject]()
     @State private(set) var ingredients = [Ingredient]()
+    @State private(set) var ingredientObjects = [IngredientObject]()
     @State private(set) var categories = [Category]()
     @State private var isReady = false
 
@@ -34,11 +35,19 @@ struct ModelContainerPreview<Content: View>: View {
                     repeat {
                         try! await Task.sleep(for: .seconds(0.2))
                         diaries = try! context.fetch(.init())
+                        diaryObjects = try! context.fetch(.init())
                         recipes = try! context.fetch(.init())
-                        ingredientObjects = try! context.fetch(.init())
                         ingredients = try! context.fetch(.init())
+                        ingredientObjects = try! context.fetch(.init())
                         categories = try! context.fetch(.init())
-                    } while diaries.isEmpty || recipes.isEmpty || ingredientObjects.isEmpty || ingredients.isEmpty || categories.isEmpty
+                    }
+                    while
+                        diaries.isEmpty
+                            || diaryObjects.isEmpty
+                            || recipes.isEmpty
+                            || ingredients.isEmpty
+                            || ingredientObjects.isEmpty
+                            || categories.isEmpty
                     isReady = true
                 }
         }

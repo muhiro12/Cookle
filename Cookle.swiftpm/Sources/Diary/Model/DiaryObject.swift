@@ -19,11 +19,12 @@ final class DiaryObject {
     @Relationship(inverse: \Recipe.diaryObjects)
     private(set) var recipes: [Recipe]!
     @Relationship(inverse: \Diary.objects)
-    private(set) var diary: Diary!
+    private(set) var diary: Diary?
 
     private init(type: DiaryType, recipes: [Recipe]) {
         self.type = type
         self.recipes = recipes
+        self.diary = nil
     }
 
     static func create(context: ModelContext, type: DiaryType, recipes: [Recipe]) -> DiaryObject {
