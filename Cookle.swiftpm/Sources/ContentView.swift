@@ -9,15 +9,27 @@ import SwiftUI
 import SwiftData
 
 public struct ContentView: View {
-    private let sharedModelContainer: ModelContainer = {
+    @AppStorage(.isICloudOn) private var isICloudOn
+    @AppStorage(.isDebugOn) private var isDebugOn
+    
+    private let sharedModelContainer: ModelContainer    
+
+    public init() {
         do {
-            return try .init(for: Recipe.self)
+            sharedModelContainer = try .init(
+                for: Recipe.self
+            ) 
+            sharedModelContainer.configurations = [
+                .init(cloudKitDatabase: isICloudOn ? .automatic : .none)
+            ]
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
-    }()
 
-    public init() {}
+        #if DEBUG
+        isDebugOn = true
+        #endif
+    }
 
     public var body: some View {
         TabView {
@@ -37,10 +49,12 @@ public struct ContentView: View {
                 .tabItem {
                     Label("Category", systemImage: "frying.pan")
                 }
-            DebugNavigationView()
-                .tabItem {
-                    Label("Debug", systemImage: "flask")
-                }
+            if isDebugOn {
+                DebugNavigationView()
+                    .tabItem {
+                        Label("Debug", systemImage: "flask")
+                    }
+            }
         }
         .modelContainer(sharedModelContainer)
     }

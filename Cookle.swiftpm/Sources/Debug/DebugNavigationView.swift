@@ -10,6 +10,9 @@ import SwiftData
 
 struct DebugNavigationView: View {
     @Environment(\.modelContext) private var context
+    
+    @AppStorage(.isICloudOn) private var isICloudOn
+    @AppStorage(.isDebugOn) private var isDebugOn
 
     @Query(Diary.descriptor) private var diaries: [Diary]
     @Query(DiaryObject.descriptor) private var diaryObjects: [DiaryObject]
@@ -31,23 +34,29 @@ struct DebugNavigationView: View {
     var body: some View {
         NavigationSplitView {
             List(selection: $content) {
-                ForEach(diary..<category + 1, id: \.self) { content in
-                    switch content {
-                    case diary:
-                        Text("Diaries")
-                    case diaryObject:
-                        Text("DiaryObjects")
-                    case recipe:
-                        Text("Recipes")
-                    case ingredient:
-                        Text("Ingredients")
-                    case ingredientObject:
-                        Text("IngredientObjects")
-                    case category:
-                        Text("Categories")
-                    default:
-                        EmptyView()
+                Section {
+                    ForEach(diary..<category + 1, id: \.self) { content in
+                        switch content {
+                        case diary:
+                            Text("Diaries")
+                        case diaryObject:
+                            Text("DiaryObjects")
+                        case recipe:
+                            Text("Recipes")
+                        case ingredient:
+                            Text("Ingredients")
+                        case ingredientObject:
+                            Text("IngredientObjects")
+                        case category:
+                            Text("Categories")
+                        default:
+                            EmptyView()
+                        }
                     }
+                }
+                Section {
+                    Toggle("iCloud On", isOn: $isICloudOn)
+                    Toggle("Debug On", isOn: $isDebugOn)
                 }
             }
             .toolbar {
