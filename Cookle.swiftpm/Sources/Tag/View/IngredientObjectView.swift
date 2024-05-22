@@ -2,8 +2,8 @@ import SwiftUI
 
 struct IngredientObjectView: View {
     @Environment(IngredientObject.self) private var object
-    
-    var body: some View {    
+
+    var body: some View {
         List {
             Section("Ingredient") {
                 Text(object.ingredient.value)

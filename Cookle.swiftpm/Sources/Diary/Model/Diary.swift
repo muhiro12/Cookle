@@ -28,12 +28,12 @@ final class Diary: Identifiable {
         diary.objects = objects
         return diary
     }
-    
+
     func update(date: Date, objects: [DiaryObject]) {
         self.date = date
         self.objects = objects
     }
-    
+
     func delete() {
         modelContext?.delete(self)
     }

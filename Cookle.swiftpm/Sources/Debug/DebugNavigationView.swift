@@ -10,7 +10,7 @@ import SwiftData
 
 struct DebugNavigationView: View {
     @Environment(\.modelContext) private var context
-    
+
     @AppStorage(.isICloudOn) private var isICloudOn
     @AppStorage(.isDebugOn) private var isDebugOn
 
@@ -101,7 +101,7 @@ struct DebugNavigationView: View {
                         case category:
                             categories.endIndex
                         default:
-                                .zero
+                            .zero
                         }
                     }(),
                     id: \.self

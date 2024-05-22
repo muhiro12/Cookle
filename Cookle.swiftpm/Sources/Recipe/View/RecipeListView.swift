@@ -16,7 +16,7 @@ struct RecipeListView: View {
         self.recipes = recipes
         self._selection = selection
     }
-    
+
     var body: some View {
         List(recipes, id: \.self, selection: $selection) { recipe in
             Text(recipe.name)

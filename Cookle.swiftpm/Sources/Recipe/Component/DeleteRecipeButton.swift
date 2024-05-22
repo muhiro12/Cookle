@@ -2,9 +2,9 @@ import SwiftUI
 
 struct DeleteRecipeButton: View {
     @Environment(Recipe.self) private var recipe
-    
+
     @State private var isPresented = false
-    
+
     var body: some View {
         Button("Delete \(recipe.name)", systemImage: "trash") {
             isPresented = true

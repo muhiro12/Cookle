@@ -38,7 +38,7 @@ extension DiaryObject {
     static var descriptor: FetchDescriptor<DiaryObject> {
         .init(
             sortBy: [
-                .init(\.diary?.date, order: .reverse),
+                .init(\.diary?.date, order: .reverse)
             ]
         )
     }

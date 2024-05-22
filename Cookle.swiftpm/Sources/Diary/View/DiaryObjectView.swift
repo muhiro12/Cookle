@@ -2,7 +2,7 @@ import SwiftUI
 
 struct DiaryObjectView: View {
     @Environment(DiaryObject.self) private var object
-    
+
     var body: some View {
         List {
             Section("Type") {

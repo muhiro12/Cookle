@@ -15,7 +15,7 @@ struct MultiAddableIngredientSection: View {
     init(data: Binding<[IngredientTuple]>) {
         self._data = data
     }
-    
+
     var body: some View {
         Section("Ingredients") {
             ForEach(data.indices, id: \.self) { index in

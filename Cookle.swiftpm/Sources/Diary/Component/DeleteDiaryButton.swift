@@ -2,9 +2,9 @@ import SwiftUI
 
 struct DeleteDiaryButton: View {
     @Environment(Diary.self) private var diary
-    
+
     @State private var isPresented = false
-    
+
     var body: some View {
         Button("Delete \(diary.date.formatted(.dateTime.year().month().day()))", systemImage: "trash") {
             isPresented = true

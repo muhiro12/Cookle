@@ -1,8 +1,8 @@
 import SwiftUI
 
-struct AddDiaryButton: View {    
+struct AddDiaryButton: View {
     @State private var isPresented = false
-    
+
     var body: some View {
         Button("Add Diary", systemImage: "book") {
             isPresented = true
@@ -14,7 +14,7 @@ struct AddDiaryButton: View {
 }
 
 #Preview {
-    ModelContainerPreview { preview in
+    ModelContainerPreview { _ in
         AddDiaryButton()
     }
 }

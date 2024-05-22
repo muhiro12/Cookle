@@ -70,7 +70,7 @@ final class Recipe: Identifiable {
         self.categories = categories
         self.updatedAt = .now
     }
-    
+
     func delete() {
         modelContext?.delete(self)
     }

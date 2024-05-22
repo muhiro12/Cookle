@@ -43,11 +43,11 @@ struct ModelContainerPreview<Content: View>: View {
                     }
                     while
                         diaries.isEmpty
-                            || diaryObjects.isEmpty
-                            || recipes.isEmpty
-                            || ingredients.isEmpty
-                            || ingredientObjects.isEmpty
-                            || categories.isEmpty
+                        || diaryObjects.isEmpty
+                        || recipes.isEmpty
+                        || ingredients.isEmpty
+                        || ingredientObjects.isEmpty
+                        || categories.isEmpty
                     isReady = true
                 }
         }
@@ -77,16 +77,16 @@ struct ModelContainerPreview<Content: View>: View {
             servingSize: Int.random(in: 1...6),
             cookingTime: Int.random(in: 5...60),
             ingredients: (0...Int.random(in: 0..<20)).map { _ in
-                    .create(context: context,
-                            ingredient: randomWords(from: ingredientStrings),
-                            amount: randomWords(from: amountStrings))
+                .create(context: context,
+                        ingredient: randomWords(from: ingredientStrings),
+                        amount: randomWords(from: amountStrings))
             },
             steps: (0...Int.random(in: 0..<20)).map { _ in
                 randomWords(from: stepStrings)
             },
             categories: (0...Int.random(in: 0..<5)).map { _ in
-                    .create(context: context,
-                            value: randomWords(from: categoryStrings))
+                .create(context: context,
+                        value: randomWords(from: categoryStrings))
             }
         )
     }
@@ -168,7 +168,6 @@ struct ModelContainerPreview<Content: View>: View {
         "a dusting", "a topping", "a coating", "a layer", "a shaving",
         "a trim", "a zest", "a twist", "a segment", "a fraction"
     ]
-
 
     private let stepStrings = [
         "Preheat the oven to 350°F (175°C).", "Rinse the rice under cold water until the water runs clear.",

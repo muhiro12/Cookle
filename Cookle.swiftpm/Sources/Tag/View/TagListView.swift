@@ -1,6 +1,6 @@
 //
 //  TagListView.swift
-//  
+//
 //
 //  Created by Hiromu Nakano on 2024/05/10.
 //
@@ -16,7 +16,7 @@ struct TagListView<T: Tag>: View {
         self.tags = tags
         self._selection = selection
     }
-    
+
     var body: some View {
         List(tags, id: \.self, selection: $selection) { tag in
             Text(tag.value)

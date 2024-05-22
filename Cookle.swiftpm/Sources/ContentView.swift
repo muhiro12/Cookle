@@ -11,14 +11,14 @@ import SwiftData
 public struct ContentView: View {
     @AppStorage(.isICloudOn) private var isICloudOn
     @AppStorage(.isDebugOn) private var isDebugOn
-    
-    private let sharedModelContainer: ModelContainer    
+
+    private let sharedModelContainer: ModelContainer
 
     public init() {
         do {
             sharedModelContainer = try .init(
                 for: Recipe.self
-            ) 
+            )
             sharedModelContainer.configurations = [
                 .init(cloudKitDatabase: isICloudOn ? .automatic : .none)
             ]
