@@ -39,7 +39,5 @@ struct DebugRootView: View {
 }
 
 #Preview {
-    NavigationStack {
-        DebugRootView(selection: .constant(nil))
-    }
+    DebugRootView(selection: .constant(nil))
 }
