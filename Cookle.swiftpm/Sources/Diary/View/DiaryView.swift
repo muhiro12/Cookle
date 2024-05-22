@@ -21,15 +21,12 @@ struct DiaryView: View {
             Section("Date") {
                 Text(diary.date.formatted(.dateTime.year().month().day()))
             }
-            Section("Objects") {
-                ForEach(diary.objects) {
-                    Text($0.type.debugDescription)
+            ForEach(diary.objects) { object in
+                Section(object.type.debugDescription) {
+                    ForEach(object.recipes, id: \.self) { recipe in
+                        Text(recipe.name)
+                    }
                 }
-            }
-            Section("Recipes") {
-                ForEach(diary.recipes) {
-                    Text($0.name)
-                }                
             }
         }
     }

@@ -144,6 +144,15 @@ struct DebugNavigationView: View {
                     switch content {
                     case diary:
                         DiaryView(selection: .constant(nil))
+                            .toolbar {
+                                ToolbarItem {
+                                    Menu("Recipes") {
+                                        ForEach(diaries[detail].recipes) {
+                                            Text($0.name)
+                                        }
+                                    }
+                                }
+                            }
                             .environment(diaries[detail])
                     case diaryObject:
                         DiaryObjectView()
@@ -153,6 +162,15 @@ struct DebugNavigationView: View {
                             .environment(recipes[detail])
                     case ingredient:
                         TagView<Ingredient>()
+                            .toolbar {
+                                ToolbarItem {
+                                    Menu("Objects") {
+                                        ForEach(ingredients[detail].objects) {
+                                            Text($0.amount)
+                                        }
+                                    }
+                                }
+                            }
                             .environment(ingredients[detail])
                     case ingredientObject:
                         IngredientObjectView()
