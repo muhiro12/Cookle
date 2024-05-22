@@ -12,7 +12,7 @@ struct DebugNavigationView: View {
     @Environment(\.modelContext) private var context
 
     @Query(Diary.descriptor) private var diaries: [Diary]
-    @Query private var diaryObjects: [DiaryObject]
+    @Query(DiaryObject.descriptor) private var diaryObjects: [DiaryObject]
     @Query(Recipe.descriptor) private var recipes: [Recipe]
     @Query(IngredientObject.descriptor) private var ingredientObjects: [IngredientObject]
     @Query(Ingredient.descriptor) private var ingredients: [Ingredient]
@@ -31,7 +31,7 @@ struct DebugNavigationView: View {
     var body: some View {
         NavigationSplitView {
             List(selection: $content) {
-                ForEach(diary...category) { content in
+                ForEach(diary..<category + 1, id: \.self) { content in
                     switch content {
                     case diary:
                         Text("Diaries")
@@ -82,7 +82,7 @@ struct DebugNavigationView: View {
                         case diary:
                             diaries.endIndex
                         case diaryObject:
-                            diaryObject.endIndex
+                            diaryObjects.endIndex
                         case recipe:
                             recipes.endIndex
                         case ingredient:
@@ -121,7 +121,7 @@ struct DebugNavigationView: View {
                             case diary:
                                 context.delete(diaries[index])
                             case diaryObject:
-                                context.delete(diaryObject[index])
+                                context.delete(diaryObjects[index])
                             case recipe:
                                 context.delete(recipes[index])
                             case ingredient:
@@ -146,7 +146,7 @@ struct DebugNavigationView: View {
                         DiaryView(selection: .constant(nil))
                             .environment(diaries[detail])
                     case diaryObject:
-                        DiaryObject()
+                        DiaryObjectView()
                             .environment(diaryObjects[detail])
                     case recipe:
                         RecipeView()
