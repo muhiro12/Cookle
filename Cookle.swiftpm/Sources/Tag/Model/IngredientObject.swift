@@ -12,6 +12,7 @@ final class IngredientObject {
     @Relationship(inverse: \Ingredient.objects)
     private(set) var ingredient: Ingredient!
     private(set) var amount: String!
+    @Relationship(deleteRule: .cascade, inverse: \Recipe.ingredientObjects)
     private(set) var recipe: Recipe?
 
     private init(ingredient: Ingredient, amount: String) {

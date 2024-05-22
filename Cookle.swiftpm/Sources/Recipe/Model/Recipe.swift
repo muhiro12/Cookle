@@ -13,17 +13,12 @@ final class Recipe: Identifiable {
     private(set) var name: String!
     private(set) var servingSize: Int!
     private(set) var cookingTime: Int!
-    @Relationship(deleteRule: .cascade, inverse: \IngredientObject.recipe)
-    private(set) var ingredientObjects: [IngredientObject]!
-    @Relationship(inverse: \Ingredient.recipes)
     private(set) var ingredients: [Ingredient]!
+    private(set) var ingredientObjects: [IngredientObject]!
     private(set) var steps: [String]!
-    @Relationship(inverse: \Category.recipes)
     private(set) var categories: [Category]!
-    @Relationship(inverse: \DiaryObject.recipes)
-    private(set) var diaryObject: [DiaryObject]!
-    @Relationship(inverse: \Diary.recipes)
     private(set) var diaries: [Diary]!
+    private(set) var diaryObjects: [DiaryObject]!
     private(set) var updatedAt: Date!
     private(set) var createdAt: Date!
 
@@ -31,11 +26,12 @@ final class Recipe: Identifiable {
         self.name = ""
         self.servingSize = 0
         self.cookingTime = 0
-        self.ingredientObjects = []
         self.ingredients = []
+        self.ingredientObjects = []
         self.steps = []
         self.categories = []
         self.diaries = []
+        self.diaryObjects = []
         self.updatedAt = .now
         self.createdAt = .now
     }
@@ -52,8 +48,8 @@ final class Recipe: Identifiable {
         recipe.name = name
         recipe.servingSize = servingSize
         recipe.cookingTime = cookingTime
-        recipe.ingredientObjects = ingredients
         recipe.ingredients = ingredients.map { $0.ingredient }
+        recipe.ingredientObjects = ingredients
         recipe.steps = steps
         recipe.categories = categories
         return recipe
@@ -68,8 +64,8 @@ final class Recipe: Identifiable {
         self.name = name
         self.servingSize = servingSize
         self.cookingTime = cookingTime
-        self.ingredientObjects = ingredients
         self.ingredients = ingredients.map { $0.ingredient }
+        self.ingredientObjects = ingredients
         self.steps = steps
         self.categories = categories
         self.updatedAt = .now

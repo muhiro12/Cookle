@@ -16,9 +16,10 @@ final class DiaryObject {
     }
 
     private(set) var type: DiaryType!
+    @Relationship(inverse: \Recipe.diaryObjects)
     private(set) var recipes: [Recipe]!
     @Relationship(inverse: \Diary.objects)
-    private(set) var diary: Diary?
+    private(set) var diary: Diary!
 
     private init(type: DiaryType, recipes: [Recipe]) {
         self.type = type

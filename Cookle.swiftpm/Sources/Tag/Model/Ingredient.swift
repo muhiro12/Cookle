@@ -11,8 +11,9 @@ import SwiftData
 @Model
 final class Ingredient: Tag {
     private(set) var value: String!
-    private(set) var recipes: [Recipe]!
     private(set) var objects: [IngredientObject]!
+    @Relationship(inverse: \Recipe.ingredients)
+    private(set) var recipes: [Recipe]!
 
     private init() {
         self.value = ""

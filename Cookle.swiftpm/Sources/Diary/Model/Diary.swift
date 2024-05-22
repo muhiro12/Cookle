@@ -12,6 +12,7 @@ import SwiftData
 final class Diary: Identifiable {
     private(set) var date: Date!
     private(set) var objects: [DiaryObject]!
+    @Relationship(inverse: \Recipe.diaries)
     private(set) var recipes: [Recipe]!
 
     private init() {

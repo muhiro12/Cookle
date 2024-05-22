@@ -11,6 +11,7 @@ import SwiftData
 @Model
 final class Category: Tag {
     private(set) var value: String!
+    @Relationship(inverse: \Recipe.categories)
     private(set) var recipes: [Recipe]!
 
     private init() {
