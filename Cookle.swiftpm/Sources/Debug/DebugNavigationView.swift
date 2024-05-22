@@ -54,49 +54,10 @@ struct DebugNavigationView: View {
                     .navigationTitle("Content")
             }
         } detail: {
-            if let content,
-               let detail {
-                Group {
-                    switch content {
-                    case .diary:
-                        DiaryView(selection: .constant(nil))
-                            .toolbar {
-                                ToolbarItem {
-                                    Menu("Recipes") {
-                                        ForEach(diaries[detail].recipes) {
-                                            Text($0.name)
-                                        }
-                                    }
-                                }
-                            }
-                            .environment(diaries[detail])
-                    case .diaryObject:
-                        DiaryObjectView()
-                            .environment(diaryObjects[detail])
-                    case .recipe:
-                        RecipeView()
-                            .environment(recipes[detail])
-                    case .ingredient:
-                        TagView<Ingredient>()
-                            .toolbar {
-                                ToolbarItem {
-                                    Menu("Objects") {
-                                        ForEach(ingredients[detail].objects) {
-                                            Text($0.amount)
-                                        }
-                                    }
-                                }
-                            }
-                            .environment(ingredients[detail])
-                    case .ingredientObject:
-                        IngredientObjectView()
-                            .environment(ingredientObjects[detail])
-                    case .category:
-                        TagView<Category>()
-                            .environment(categories[detail])
-                    }
-                }
-                .navigationTitle("Detail")
+            if let detail,
+               let content {
+                DebugDetailView(detail, content: content)
+                    .navigationTitle("Detail")
             }
         }
     }
