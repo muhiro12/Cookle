@@ -15,7 +15,7 @@ struct TagNavigationView<T: Tag>: View {
     @State private var detail: Recipe?
 
     var body: some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: .constant(.all)) {
             TagListView(tags, selection: $content)
                 .toolbar {
                     ToolbarItem {

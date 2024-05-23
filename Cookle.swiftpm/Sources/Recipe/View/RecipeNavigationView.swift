@@ -14,7 +14,7 @@ struct RecipeNavigationView: View {
     @State private var detail: Recipe?
 
     var body: some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: .constant(.all)) {
             RecipeListView(recipes, selection: $detail)
                 .toolbar {
                     ToolbarItem {
