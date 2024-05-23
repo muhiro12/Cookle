@@ -7,13 +7,6 @@ struct DebugRootView: View {
     @AppStorage(.isICloudOn) private var isICloudOn
     @AppStorage(.isDebugOn) private var isDebugOn
 
-    @Query(Diary.descriptor) private var diaries: [Diary]
-    @Query(DiaryObject.descriptor) private var diaryObjects: [DiaryObject]
-    @Query(Recipe.descriptor) private var recipes: [Recipe]
-    @Query(IngredientObject.descriptor) private var ingredientObjects: [IngredientObject]
-    @Query(Ingredient.descriptor) private var ingredients: [Ingredient]
-    @Query(Category.descriptor) private var categories: [Category]
-
     @Binding private var selection: DebugContent?
     
     init(selection: Binding<DebugContent?>) {
@@ -49,12 +42,12 @@ struct DebugRootView: View {
             ToolbarItem {
                 Button("Delete All", systemImage: "trash") {
                     withAnimation {
-                        diaries.forEach { context.delete($0) }
-                        diaryObjects.forEach { context.delete($0) }
-                        recipes.forEach { context.delete($0) }
-                        ingredients.forEach { context.delete($0) }
-                        ingredientObjects.forEach { context.delete($0) }
-                        categories.forEach { context.delete($0) }
+                        try! context.delete(model: Diary.self)
+                        try! context.delete(model: DiaryObject.self)
+                        try! context.delete(model: Recipe.self)
+                        try! context.delete(model: Ingredient.self)
+                        try! context.delete(model: IngredientObject.self)
+                        try! context.delete(model: Category.self)
                     }
                 }
             }
