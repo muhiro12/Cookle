@@ -9,12 +9,6 @@ import SwiftUI
 import SwiftData
 
 struct DiaryFormNavigationView: View {
-    enum DiaryType {
-        case breakfast
-        case lunch
-        case dinner
-    }
-
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
 
@@ -36,7 +30,8 @@ struct DiaryFormNavigationView: View {
                         .datePickerStyle(.graphical)
                 }
                 Section {
-                    NavigationLink("Breakfast", value: DiaryType.breakfast)
+                    NavigationLink(DiaryObjectType.breakfast.title,
+                                   value: DiaryObjectType.breakfast)
                 } footer: {
                     Text(recipes.compactMap {
                         guard breakfasts.contains($0) else {
@@ -46,7 +41,8 @@ struct DiaryFormNavigationView: View {
                     }.joined(separator: ", "))
                 }
                 Section {
-                    NavigationLink("Lunch", value: DiaryType.lunch)
+                    NavigationLink(DiaryObjectType.lunch.title,
+                                   value: DiaryObjectType.lunch)
                 } footer: {
                     Text(recipes.compactMap {
                         guard lunches.contains($0) else {
@@ -56,7 +52,8 @@ struct DiaryFormNavigationView: View {
                     }.joined(separator: ", "))
                 }
                 Section {
-                    NavigationLink("Dinner", value: DiaryType.dinner)
+                    NavigationLink(DiaryObjectType.dinner.title,
+                                   value: DiaryObjectType.dinner)
                 } footer: {
                     Text(recipes.compactMap {
                         guard dinners.contains($0) else {
@@ -66,7 +63,7 @@ struct DiaryFormNavigationView: View {
                     }.joined(separator: ", "))
                 }
             }
-            .navigationDestination(for: DiaryType.self) { type in
+            .navigationDestination(for: DiaryObjectType.self) { type in
                 List(
                     recipes.filter {
                         guard !searchText.isEmpty else {

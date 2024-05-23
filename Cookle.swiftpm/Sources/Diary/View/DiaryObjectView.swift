@@ -6,7 +6,7 @@ struct DiaryObjectView: View {
     var body: some View {
         List {
             Section("Type") {
-                Text(object.type.debugDescription)
+                Text(object.type.title)
             }
             Section("Recipes") {
                 ForEach(object.recipes) {

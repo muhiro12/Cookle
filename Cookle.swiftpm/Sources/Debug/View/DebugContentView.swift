@@ -45,7 +45,7 @@ struct DebugContentView: View {
                 case .diary:
                     Text(diaries[$0].date.formatted())
                 case .diaryObject:
-                    Text(diaryObjects[$0].type.debugDescription)
+                    Text(diaryObjects[$0].type.title)
                 case .recipe:
                     Text(recipes[$0].name)
                 case .ingredient:

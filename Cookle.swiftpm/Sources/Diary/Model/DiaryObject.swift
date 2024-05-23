@@ -9,24 +9,18 @@ import SwiftData
 
 @Model
 final class DiaryObject {
-    enum DiaryType: Codable {
-        case breakfast
-        case lunch
-        case dinner
-    }
-
-    private(set) var type: DiaryType!
+    private(set) var type: DiaryObjectType!
     @Relationship(inverse: \Recipe.diaryObjects)
     private(set) var recipes: [Recipe]!
     private(set) var diary: Diary?
 
-    private init(type: DiaryType) {
+    private init(type: DiaryObjectType) {
         self.type = type
         self.recipes = []
         self.diary = nil
     }
 
-    static func create(context: ModelContext, type: DiaryType, recipes: [Recipe]) -> DiaryObject {
+    static func create(context: ModelContext, type: DiaryObjectType, recipes: [Recipe]) -> DiaryObject {
         let object = DiaryObject(type: type)
         context.insert(object)
         object.recipes = recipes
