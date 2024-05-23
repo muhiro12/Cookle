@@ -11,7 +11,7 @@ import SwiftData
 @Model
 final class Diary: Identifiable {
     private(set) var date: Date!
-    @Relationship(inverse: \DiaryObject.diary)
+    @Relationship(deleteRule: .cascade, inverse: \DiaryObject.diary)
     private(set) var objects: [DiaryObject]!
     @Relationship(inverse: \Recipe.diaries)
     private(set) var recipes: [Recipe]!
