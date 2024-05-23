@@ -8,13 +8,13 @@ import PackageDescription
 import AppleProductTypes
 
 let package = Package(
-    name: "Cookle",
+    name: "Cookle Playgrounds",
     platforms: [
         .iOS("17.0")
     ],
     products: [
         .iOSApplication(
-            name: "Cookle",
+            name: "Cookle Playgrounds",
             targets: ["AppModule"],
             bundleIdentifier: "com.muhiro12.Cookle.playgrounds",
             teamIdentifier: "66PKF55HK5",
