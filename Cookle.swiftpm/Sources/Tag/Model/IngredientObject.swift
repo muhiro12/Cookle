@@ -12,22 +12,19 @@ final class IngredientObject {
     @Relationship(inverse: \Ingredient.objects)
     private(set) var ingredient: Ingredient!
     private(set) var amount: String!
-    @Relationship(deleteRule: .cascade, inverse: \Recipe.ingredientObjects)
     private(set) var recipe: Recipe?
 
-    private init(ingredient: Ingredient, amount: String) {
-        self.ingredient = ingredient
-        self.amount = amount
-        self.recipe = nil
-    }
+    private init() {}
 
     static func create(context: ModelContext, ingredient: String, amount: String) -> IngredientObject {
-        let ingredientObject = IngredientObject(
-            ingredient: .create(context: context, value: ingredient),
-            amount: amount
-        )
-        context.insert(ingredientObject)
-        return ingredientObject
+        let object = IngredientObject()
+        context.insert(object)
+
+        object.ingredient = .create(context: context, value: ingredient)
+        object.amount = amount
+        object.recipe = nil
+
+        return object
     }
 }
 

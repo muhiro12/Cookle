@@ -13,28 +13,19 @@ final class Recipe: Identifiable {
     private(set) var name: String!
     private(set) var servingSize: Int!
     private(set) var cookingTime: Int!
+    @Relationship(inverse: \Ingredient.recipes)
     private(set) var ingredients: [Ingredient]!
+    @Relationship(deleteRule: .cascade, inverse: \IngredientObject.recipe)
     private(set) var ingredientObjects: [IngredientObject]!
     private(set) var steps: [String]!
+    @Relationship(inverse: \Category.recipes)
     private(set) var categories: [Category]!
     private(set) var diaries: [Diary]!
     private(set) var diaryObjects: [DiaryObject]!
     private(set) var updatedAt: Date!
     private(set) var createdAt: Date!
 
-    private init() {
-        self.name = ""
-        self.servingSize = 0
-        self.cookingTime = 0
-        self.ingredients = []
-        self.ingredientObjects = []
-        self.steps = []
-        self.categories = []
-        self.diaries = []
-        self.diaryObjects = []
-        self.updatedAt = .now
-        self.createdAt = .now
-    }
+    private init() {}
 
     static func create(context: ModelContext,
                        name: String,
@@ -45,6 +36,7 @@ final class Recipe: Identifiable {
                        categories: [Category]) -> Recipe {
         let recipe = Recipe()
         context.insert(recipe)
+
         recipe.name = name
         recipe.servingSize = servingSize
         recipe.cookingTime = cookingTime
@@ -52,6 +44,11 @@ final class Recipe: Identifiable {
         recipe.ingredientObjects = ingredients
         recipe.steps = steps
         recipe.categories = categories
+        recipe.diaries = []
+        recipe.diaryObjects = []
+        recipe.updatedAt = .now
+        recipe.createdAt = .now
+
         return recipe
     }
 

@@ -12,19 +12,18 @@ import SwiftData
 final class Ingredient: Tag {
     private(set) var value: String!
     private(set) var objects: [IngredientObject]!
-    @Relationship(inverse: \Recipe.ingredients)
     private(set) var recipes: [Recipe]!
 
-    private init() {
-        self.value = ""
-        self.recipes = []
-        self.objects = []
-    }
+    private init() {}
 
     static func create(context: ModelContext, value: String) -> Self {
         let ingredient: Ingredient = (try? context.fetch(.init(predicate: #Predicate { $0.value == value })).first) ?? .init()
         context.insert(ingredient)
+
         ingredient.value = value
+        ingredient.recipes = []
+        ingredient.objects = []
+
         return ingredient as! Self
     }
 

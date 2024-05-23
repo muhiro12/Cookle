@@ -11,18 +11,17 @@ import SwiftData
 @Model
 final class Category: Tag {
     private(set) var value: String!
-    @Relationship(inverse: \Recipe.categories)
     private(set) var recipes: [Recipe]!
 
-    private init() {
-        self.value = ""
-        self.recipes = []
-    }
+    private init() {}
 
     static func create(context: ModelContext, value: String) -> Self {
         let category: Category = (try? context.fetch(.init(predicate: #Predicate { $0.value == value })).first) ?? .init()
         context.insert(category)
+
         category.value = value
+        category.recipes = []
+
         return category as! Self
     }
 
