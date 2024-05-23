@@ -16,16 +16,18 @@ final class Diary: Identifiable {
     @Relationship(inverse: \Recipe.diaries)
     private(set) var recipes: [Recipe]!
 
-    private init() {}
+    private init() {
+        self.date = .now
+        self.objects = []
+        self.recipes = []
+    }
 
     static func create(context: ModelContext, date: Date, objects: [DiaryObject]) -> Diary {
         let diary = Diary()
         context.insert(diary)
-
         diary.date = date
         diary.objects = objects
         diary.recipes = objects.flatMap { $0.recipes }
-
         return diary
     }
 

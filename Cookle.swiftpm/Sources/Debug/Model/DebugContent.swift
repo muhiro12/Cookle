@@ -1,6 +1,6 @@
 import SwiftUI
 
-enum DebugContent: Int, CaseIterable {    
+enum DebugContent: Int, CaseIterable {
     case diary
     case diaryObject
     case recipe

@@ -11,7 +11,7 @@ struct DebugDetailView: View {
 
     private let detail: Int
     private let content: DebugContent
-    
+
     init(_ detail: Int, content: DebugContent) {
         self.detail = detail
         self.content = content

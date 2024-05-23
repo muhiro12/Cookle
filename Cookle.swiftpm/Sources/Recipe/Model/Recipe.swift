@@ -25,7 +25,19 @@ final class Recipe: Identifiable {
     private(set) var updatedAt: Date!
     private(set) var createdAt: Date!
 
-    private init() {}
+    private init() {
+        self.name = ""
+        self.servingSize = 0
+        self.cookingTime = 0
+        self.ingredients = []
+        self.ingredientObjects = []
+        self.steps = []
+        self.categories = []
+        self.diaries = []
+        self.diaryObjects = []
+        self.updatedAt = .now
+        self.createdAt = .now
+    }
 
     static func create(context: ModelContext,
                        name: String,
@@ -36,7 +48,6 @@ final class Recipe: Identifiable {
                        categories: [Category]) -> Recipe {
         let recipe = Recipe()
         context.insert(recipe)
-
         recipe.name = name
         recipe.servingSize = servingSize
         recipe.cookingTime = cookingTime
@@ -44,11 +55,6 @@ final class Recipe: Identifiable {
         recipe.ingredientObjects = ingredients
         recipe.steps = steps
         recipe.categories = categories
-        recipe.diaries = []
-        recipe.diaryObjects = []
-        recipe.updatedAt = .now
-        recipe.createdAt = .now
-
         return recipe
     }
 

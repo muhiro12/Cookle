@@ -5,7 +5,7 @@ struct DebugContentView: View {
     @Environment(\.modelContext) private var context
 
     @Binding private var selection: Int?
-    
+
     @Query(Diary.descriptor) private var diaries: [Diary]
     @Query(DiaryObject.descriptor) private var diaryObjects: [DiaryObject]
     @Query(Recipe.descriptor) private var recipes: [Recipe]
@@ -14,13 +14,13 @@ struct DebugContentView: View {
     @Query(Category.descriptor) private var categories: [Category]
 
     private let content: DebugContent
-    
+
     init(_ content: DebugContent, selection: Binding<Int?>) {
         self.content = content
         self._selection = selection
     }
-    
-    var body: some View {        
+
+    var body: some View {
         List(selection: $selection) {
             ForEach(
                 0..<{

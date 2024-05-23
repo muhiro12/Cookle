@@ -8,12 +8,12 @@ struct DebugRootView: View {
     @AppStorage(.isDebugOn) private var isDebugOn
 
     @Binding private var selection: DebugContent?
-    
+
     init(selection: Binding<DebugContent?>) {
         self._selection = selection
     }
-    
-    var body: some View {        
+
+    var body: some View {
         List(selection: $selection) {
             Section {
                 ForEach(DebugContent.allCases, id: \.self) { content in

@@ -13,15 +13,15 @@ final class Category: Tag {
     private(set) var value: String!
     private(set) var recipes: [Recipe]!
 
-    private init() {}
+    private init() {
+        self.value = ""
+        self.recipes = []
+    }
 
     static func create(context: ModelContext, value: String) -> Self {
         let category: Category = (try? context.fetch(.init(predicate: #Predicate { $0.value == value })).first) ?? .init()
         context.insert(category)
-
         category.value = value
-        category.recipes = []
-
         return category as! Self
     }
 

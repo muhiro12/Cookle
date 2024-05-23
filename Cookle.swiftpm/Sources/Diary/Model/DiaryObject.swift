@@ -20,16 +20,16 @@ final class DiaryObject {
     private(set) var recipes: [Recipe]!
     private(set) var diary: Diary?
 
-    private init() {}
+    private init(type: DiaryType) {
+        self.type = type
+        self.recipes = []
+        self.diary = nil
+    }
 
     static func create(context: ModelContext, type: DiaryType, recipes: [Recipe]) -> DiaryObject {
-        let object = DiaryObject()
+        let object = DiaryObject(type: type)
         context.insert(object)
-
-        object.type = type
         object.recipes = recipes
-        object.diary = nil
-
         return object
     }
 }

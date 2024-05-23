@@ -14,16 +14,18 @@ final class IngredientObject {
     private(set) var amount: String!
     private(set) var recipe: Recipe?
 
-    private init() {}
+    private init(ingredient: Ingredient) {
+        self.ingredient = ingredient
+        self.amount = ""
+        self.recipe = nil
+    }
 
     static func create(context: ModelContext, ingredient: String, amount: String) -> IngredientObject {
-        let object = IngredientObject()
+        let object = IngredientObject(
+            ingredient: .create(context: context, value: ingredient)
+        )
         context.insert(object)
-
-        object.ingredient = .create(context: context, value: ingredient)
         object.amount = amount
-        object.recipe = nil
-
         return object
     }
 }
