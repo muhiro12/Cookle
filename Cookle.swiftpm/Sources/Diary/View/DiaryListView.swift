@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct DiaryListView: View {
-    @Binding private var selection: Diary.ID?
+    @Binding private var selection: Diary?
 
     private let diaries: [Diary]
 
-    init(_ diaries: [Diary], selection: Binding<Diary.ID?>) {
+    init(_ diaries: [Diary], selection: Binding<Diary?>) {
         self.diaries = diaries
         self._selection = selection
     }
@@ -32,7 +32,7 @@ struct DiaryListView: View {
             selection: $selection
         ) { section in
             Section(section.key) {
-                ForEach(section.value) { diary in
+                ForEach(section.value, id: \.self) { diary in
                     Text(diary.date.formatted(.dateTime.month().day()))
                 }
             }

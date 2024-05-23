@@ -13,7 +13,7 @@ struct DiaryNavigationView: View {
 
     @Query(Diary.descriptor) private var diaries: [Diary]
 
-    @State private var content: Diary.ID?
+    @State private var content: Diary?
     @State private var detail: Recipe?
 
     var body: some View {
@@ -29,8 +29,7 @@ struct DiaryNavigationView: View {
                 }
                 .navigationTitle("Diary")
         } content: {
-            if let content,
-               let diary = diaries.first(where: { $0.id == content }) {
+            if let content {
                 DiaryView(selection: $detail)
                     .toolbar {
                         ToolbarItem(placement: .destructiveAction) {
@@ -40,8 +39,8 @@ struct DiaryNavigationView: View {
                             EditDiaryButton()
                         }
                     }
-                    .navigationTitle(diary.date.formatted(.dateTime.year().month().day()))
-                    .environment(diary)
+                    .navigationTitle(content.date.formatted(.dateTime.year().month().day()))
+                    .environment(content)
             }
         } detail: {
             if let detail {
