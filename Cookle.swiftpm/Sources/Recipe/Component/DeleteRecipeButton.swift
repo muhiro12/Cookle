@@ -17,6 +17,7 @@ struct DeleteRecipeButton: View {
         } message: {
             Text("Are you sure you want to delete this item? This action cannot be undone.")
         }
+        .hidden() // TODO: Show
     }
 }
 
