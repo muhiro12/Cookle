@@ -9,9 +9,14 @@ import SwiftUI
 
 @main
 struct CookleApp: App {
+    @AppStorage(.isDebugOn) private var isDebugOn
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .task {
+                    isDebugOn = true
+                }
         }
     }
 }
