@@ -16,7 +16,7 @@ let package = Package(
         .iOSApplication(
             name: "Cookle",
             targets: ["AppModule"],
-            bundleIdentifier: "com.muhiro12.Cookle",
+            bundleIdentifier: "com.muhiro12.Cookle.playgrounds",
             teamIdentifier: "66PKF55HK5",
             displayVersion: "1.0",
             bundleVersion: "1",
