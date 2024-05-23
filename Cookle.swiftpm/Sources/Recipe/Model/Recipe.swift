@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class Recipe: Identifiable {
+final class Recipe {
     private(set) var name: String!
     private(set) var servingSize: Int!
     private(set) var cookingTime: Int!
