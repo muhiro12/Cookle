@@ -53,6 +53,14 @@ struct DebugNavigationView: View {
                     .navigationTitle("Detail")
             }
         }
+        .onTabSelected {
+            guard $0 == .debug,
+                  $1 == .debug else {
+                return
+            }
+            content = nil
+            detail = nil
+        }
     }
 }
 

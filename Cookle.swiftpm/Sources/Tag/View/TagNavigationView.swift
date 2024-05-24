@@ -49,6 +49,24 @@ struct TagNavigationView<T: Tag>: View {
                     .environment(detail)
             }
         }
+        .onTabSelected {
+            let tab: Tab? = {
+                switch T.self {
+                case is Ingredient.Type:
+                        .ingredient                   
+                case is Category.Type:
+                        .category
+                default:
+                    nil
+                }
+            }()
+            guard $0 == tab,
+                  $1 == tab else {
+                return
+            }
+            content = nil
+            detail = nil
+        }
     }
 }
 

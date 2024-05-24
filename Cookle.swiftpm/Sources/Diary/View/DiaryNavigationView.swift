@@ -57,6 +57,14 @@ struct DiaryNavigationView: View {
                     .environment(detail)
             }
         }
+        .onTabSelected {
+            guard $0 == .diary,
+                  $1 == .diary else {
+                return
+            }
+            content = nil
+            detail = nil
+        }
     }
 }
 

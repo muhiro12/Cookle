@@ -37,6 +37,13 @@ struct RecipeNavigationView: View {
                     .environment(detail)
             }
         }
+        .onTabSelected {
+            guard $0 == .recipe,
+                  $1 == .recipe else {
+                return
+            }
+            detail = nil
+        }
     }
 }
 
