@@ -12,17 +12,19 @@ public struct ContentView: View {
     @AppStorage(.isICloudOn) private var isICloudOn
     @AppStorage(.isDebugOn) private var isDebugOn
 
-    private let sharedTabController: TabController
-    private let sharedModelContainer: ModelContainer
+    private var sharedModelContainer: ModelContainer!
+    private var sharedTabController: TabController!
 
     public init() {
+        sharedModelContainer = try! .init(
+            for: Recipe.self,
+            configurations: .init(
+                cloudKitDatabase: isICloudOn ? .automatic : .none
+            )
+        )
+
         sharedTabController = .init(initialTab: .diary)
 
-        sharedModelContainer = try! .init(for: Recipe.self)
-        sharedModelContainer.configurations = [
-            .init(cloudKitDatabase: isICloudOn ? .automatic : .none)
-        ]
-        
         #if DEBUG
         isDebugOn = true
         #endif
@@ -58,8 +60,8 @@ public struct ContentView: View {
                     .tag(Tab.debug)
             }
         }
-        .environment(sharedTabController)
         .modelContainer(sharedModelContainer)
+        .environment(sharedTabController)
     }
 }
 
