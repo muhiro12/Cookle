@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct DebugRootView: View {
+struct DebugSidebarView: View {
     @AppStorage(.isICloudOn) private var isICloudOn
     @AppStorage(.isDebugOn) private var isDebugOn
 
@@ -39,5 +39,5 @@ struct DebugRootView: View {
 }
 
 #Preview {
-    DebugRootView(selection: .constant(nil))
+    DebugSidebarView(selection: .constant(nil))
 }

@@ -16,7 +16,7 @@ struct DebugNavigationView: View {
 
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {
-            DebugRootView(selection: $content)
+            DebugSidebarView(selection: $content)
                 .toolbar {
                     ToolbarItem {
                         Button("Delete All", systemImage: "trash") {
