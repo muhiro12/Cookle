@@ -53,9 +53,9 @@ struct TagNavigationView<T: Tag>: View {
             let tab: Tab? = {
                 switch T.self {
                 case is Ingredient.Type:
-                        .ingredient                   
+                    .ingredient
                 case is Category.Type:
-                        .category
+                    .category
                 default:
                     nil
                 }
