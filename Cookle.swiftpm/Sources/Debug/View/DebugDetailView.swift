@@ -38,7 +38,7 @@ struct DebugDetailView: View {
             RecipeView()
                 .environment(recipes[detail])
         case .ingredient:
-            TagView<Ingredient>()
+            TagView<Ingredient>(selection: .constant(nil))
                 .toolbar {
                     ToolbarItem {
                         Menu("Objects") {
@@ -53,7 +53,7 @@ struct DebugDetailView: View {
             IngredientObjectView()
                 .environment(ingredientObjects[detail])
         case .category:
-            TagView<Category>()
+            TagView<Category>(selection: .constant(nil))
                 .environment(categories[detail])
         }
     }

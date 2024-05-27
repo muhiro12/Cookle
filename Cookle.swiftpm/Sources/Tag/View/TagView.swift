@@ -10,13 +10,19 @@ import SwiftUI
 struct TagView<T: Tag>: View {
     @Environment(T.self) private var tag
 
+    @Binding private var selection: Recipe?
+
+    init(selection: Binding<Recipe?>) {
+        self._selection = selection
+    }
+
     var body: some View {
-        List {
+        List(selection: $selection) {
             Section("Value") {
                 Text(tag.value)
             }
             Section("Recipes") {
-                ForEach(tag.recipes) {
+                ForEach(tag.recipes, id: \.self) {
                     Text($0.name)
                 }
             }
@@ -26,7 +32,7 @@ struct TagView<T: Tag>: View {
 
 #Preview {
     ModelContainerPreview { preview in
-        TagView<Ingredient>()
+        TagView<Ingredient>(selection: .constant(nil))
             .environment(preview.ingredients[0])
     }
 }

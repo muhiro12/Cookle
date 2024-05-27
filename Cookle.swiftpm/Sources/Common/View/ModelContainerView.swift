@@ -23,7 +23,7 @@ struct ModelContainerView: View {
     }
 
     var body: some View {
-        MainTabView()
+        MainNavigationView()
             .modelContainer(sharedModelContainer)
     }
 }
