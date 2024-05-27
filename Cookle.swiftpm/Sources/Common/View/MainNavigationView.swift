@@ -8,8 +8,12 @@
 import SwiftUI
 
 struct MainNavigationView: View {
+    @AppStorage(.isDebugOn) private var isDebugOn
+
     @State private var content: Tab?
     @State private var detail: (any Hashable)?
+
+    @State private var isDebugPresented = false
 
     var body: some View {
         NavigationSplitView {
@@ -22,6 +26,15 @@ struct MainNavigationView: View {
                     .tag(Tab.ingredient)
                 Label("Category", systemImage: "frying.pan")
                     .tag(Tab.category)
+            }
+            .toolbar {
+                if isDebugOn {
+                    ToolbarItem {
+                        Button("Debug", systemImage: "flask") {
+                            isDebugPresented = true
+                        }
+                    }
+                }
             }
             .navigationTitle("Cookle")
         } content: {
@@ -141,6 +154,10 @@ struct MainNavigationView: View {
             default:
                 EmptyView()
             }
+        }
+        .sheet(isPresented: $isDebugPresented) {
+            DebugNavigationView()
+                .environment(TabController(initialTab: .debug))
         }
     }
 }
