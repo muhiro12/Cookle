@@ -13,15 +13,15 @@ final class Recipe {
     private(set) var name: String!
     private(set) var servingSize: Int!
     private(set) var cookingTime: Int!
-    @Relationship(deleteRule: .nullify, inverse: \Ingredient.recipes)
+    @Relationship(inverse: \Ingredient.recipes)
     private(set) var ingredients: [Ingredient]!
     @Relationship(deleteRule: .cascade, inverse: \IngredientObject.recipe)
     private(set) var ingredientObjects: [IngredientObject]!
     private(set) var steps: [String]!
-    @Relationship(deleteRule: .nullify, inverse: \Category.recipes)
+    @Relationship(inverse: \Category.recipes)
     private(set) var categories: [Category]!
     private(set) var note: String!
-    @Relationship(deleteRule: .deny)
+    @Relationship
     private(set) var diaries: [Diary]!
     @Relationship(deleteRule: .cascade)
     private(set) var diaryObjects: [DiaryObject]!
