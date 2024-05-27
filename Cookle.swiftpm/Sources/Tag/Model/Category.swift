@@ -11,7 +11,7 @@ import SwiftData
 @Model
 final class Category: Tag {
     private(set) var value: String!
-    @Relationship(deleteRule: .nullify)
+    @Relationship(deleteRule: .deny)
     private(set) var recipes: [Recipe]!
 
     private init() {
