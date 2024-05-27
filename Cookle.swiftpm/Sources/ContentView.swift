@@ -24,6 +24,9 @@ public struct ContentView: View {
         )
 
         sharedTabController = .init(initialTab: .diary)
+
+        // TODO: Remove
+        isDebugOn = true
     }
 
     public var body: some View {
