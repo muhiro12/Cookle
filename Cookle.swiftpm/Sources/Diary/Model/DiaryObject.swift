@@ -10,8 +10,9 @@ import SwiftData
 @Model
 final class DiaryObject {
     private(set) var type: DiaryObjectType!
-    @Relationship(inverse: \Recipe.diaryObjects)
+    @Relationship(deleteRule: .nullify, inverse: \Recipe.diaryObjects)
     private(set) var recipes: [Recipe]!
+    @Relationship(deleteRule: .nullify)
     private(set) var diary: Diary?
 
     private init(type: DiaryObjectType) {

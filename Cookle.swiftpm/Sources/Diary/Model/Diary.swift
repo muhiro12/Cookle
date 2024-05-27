@@ -13,7 +13,7 @@ final class Diary {
     private(set) var date: Date!
     @Relationship(deleteRule: .cascade, inverse: \DiaryObject.diary)
     private(set) var objects: [DiaryObject]!
-    @Relationship(inverse: \Recipe.diaries)
+    @Relationship(deleteRule: .nullify, inverse: \Recipe.diaries)
     private(set) var recipes: [Recipe]!
 
     private init() {

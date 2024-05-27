@@ -9,9 +9,10 @@ import SwiftData
 
 @Model
 final class IngredientObject {
-    @Relationship(inverse: \Ingredient.objects)
+    @Relationship(deleteRule: .nullify, inverse: \Ingredient.objects)
     private(set) var ingredient: Ingredient!
     private(set) var amount: String!
+    @Relationship(deleteRule: .nullify)
     private(set) var recipe: Recipe?
 
     private init(ingredient: Ingredient) {

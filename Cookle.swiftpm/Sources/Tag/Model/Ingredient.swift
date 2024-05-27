@@ -11,7 +11,9 @@ import SwiftData
 @Model
 final class Ingredient: Tag {
     private(set) var value: String!
+    @Relationship(deleteRule: .cascade)
     private(set) var objects: [IngredientObject]!
+    @Relationship(deleteRule: .deny)
     private(set) var recipes: [Recipe]!
 
     private init() {
