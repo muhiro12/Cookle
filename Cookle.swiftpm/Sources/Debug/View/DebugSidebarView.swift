@@ -12,7 +12,7 @@ struct DebugSidebarView: View {
 
     var body: some View {
         List(selection: $selection) {
-            Section {
+            Section("Models") {
                 ForEach(DebugContent.allCases, id: \.self) { content in
                     switch content {
                     case .diary:
@@ -30,7 +30,7 @@ struct DebugSidebarView: View {
                     }
                 }
             }
-            Section {
+            Section("Settings") {
                 Toggle("iCloud On", isOn: $isICloudOn)
                 Toggle("Debug On", isOn: $isDebugOn)
             }
