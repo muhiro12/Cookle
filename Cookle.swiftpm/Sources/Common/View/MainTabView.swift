@@ -43,10 +43,6 @@ struct MainTabView: View {
             }
         }
         .environment(sharedTabController)
-        .task {
-            // TODO: Remove
-            isDebugOn = true
-        }
     }
 }
 
