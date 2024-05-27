@@ -36,12 +36,18 @@ struct RecipeFormNavigationView: View {
                     }
                 }
                 Section("Serving Size") {
-                    TextField("Serving Size", text: $servingSize)
-                        .keyboardType(.numberPad)
+                    HStack {
+                        TextField("Serving Size", text: $servingSize)
+                            .keyboardType(.numberPad)
+                        Text("servings")
+                    }
                 }
                 Section("Cooking Time") {
-                    TextField("Cooking Time", text: $cookingTime)
-                        .keyboardType(.numberPad)
+                    HStack {
+                        TextField("Cooking Time", text: $cookingTime)
+                            .keyboardType(.numberPad)
+                        Text("minutes")
+                    }
                 }
                 MultiAddableIngredientSection(data: $ingredients)
                 MultiAddableStepSection(data: $steps)
@@ -85,8 +91,8 @@ struct RecipeFormNavigationView: View {
                             _ = Recipe.create(
                                 context: context,
                                 name: name,
-                                servingSize: Int(servingSize) ?? .zero,
-                                cookingTime: Int(cookingTime) ?? .zero,
+                                servingSize: .init(servingSize) ?? .zero,
+                                cookingTime: .init(cookingTime) ?? .zero,
                                 ingredients: ingredients.compactMap {
                                     guard !$0.ingredient.isEmpty else {
                                         return nil
@@ -105,7 +111,11 @@ struct RecipeFormNavigationView: View {
                         }
                         dismiss()
                     }
-                    .disabled(name.isEmpty || Int(servingSize) == nil || Int(cookingTime) == nil)
+                    .disabled(
+                        name.isEmpty
+                        || (!servingSize.isEmpty && Int(servingSize) == nil)
+                        || (!cookingTime.isEmpty && Int(cookingTime) == nil)
+                    )
                 }
             }
         }
