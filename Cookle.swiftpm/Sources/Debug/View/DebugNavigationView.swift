@@ -67,5 +67,6 @@ struct DebugNavigationView: View {
 #Preview {
     ModelContainerPreview { _ in
         DebugNavigationView()
+            .environment(TabController(initialTab: .debug))
     }
 }

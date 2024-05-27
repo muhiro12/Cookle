@@ -6,14 +6,14 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct DiaryListView: View {
+    @Query(Diary.descriptor) private var diaries: [Diary]
+
     @Binding private var selection: Diary?
 
-    private let diaries: [Diary]
-
-    init(_ diaries: [Diary], selection: Binding<Diary?>) {
-        self.diaries = diaries
+    init(selection: Binding<Diary?>) {
         self._selection = selection
     }
 
@@ -42,6 +42,6 @@ struct DiaryListView: View {
 
 #Preview {
     ModelContainerPreview { preview in
-        DiaryListView(preview.diaries, selection: .constant(nil))
+        DiaryListView(selection: .constant(nil))
     }
 }

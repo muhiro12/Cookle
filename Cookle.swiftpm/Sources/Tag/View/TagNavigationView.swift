@@ -6,17 +6,14 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct TagNavigationView<T: Tag>: View {
-    @Query(T.descriptor) private var tags: [T]
-
     @State private var content: T?
     @State private var detail: Recipe?
 
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {
-            TagListView(tags, selection: $content)
+            TagListView(selection: $content)
                 .toolbar {
                     ToolbarItem {
                         AddRecipeButton()
@@ -25,7 +22,7 @@ struct TagNavigationView<T: Tag>: View {
                 .navigationTitle(String(describing: T.self))
         } content: {
             if let content {
-                RecipeListView(content.recipes, selection: $detail)
+                RecipeListView(selection: $detail)
                     .toolbar {
                         ToolbarItem {
                             EditTagButton<T>()
@@ -73,5 +70,6 @@ struct TagNavigationView<T: Tag>: View {
 #Preview {
     ModelContainerPreview { _ in
         TagNavigationView<Category>()
+            .environment(TabController(initialTab: .category))
     }
 }

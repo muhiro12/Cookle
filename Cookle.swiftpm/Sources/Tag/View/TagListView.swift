@@ -6,14 +6,14 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct TagListView<T: Tag>: View {
+    @Query(T.descriptor) private var tags: [T]
+
     @Binding private var selection: T?
 
-    private let tags: [T]
-
-    init(_ tags: [T], selection: Binding<T?>) {
-        self.tags = tags
+    init(selection: Binding<T?>) {
         self._selection = selection
     }
 
@@ -25,7 +25,7 @@ struct TagListView<T: Tag>: View {
 }
 
 #Preview {
-    ModelContainerPreview { preview in
-        TagListView(preview.categories, selection: .constant(nil))
+    ModelContainerPreview { _ in
+        TagListView<Category>(selection: .constant(nil))
     }
 }

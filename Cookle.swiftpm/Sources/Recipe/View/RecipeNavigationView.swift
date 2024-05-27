@@ -6,16 +6,13 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct RecipeNavigationView: View {
-    @Query(Recipe.descriptor) private var recipes: [Recipe]
-
     @State private var detail: Recipe?
 
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {
-            RecipeListView(recipes, selection: $detail)
+            RecipeListView(selection: $detail)
                 .toolbar {
                     ToolbarItem {
                         AddRecipeButton()
@@ -50,5 +47,6 @@ struct RecipeNavigationView: View {
 #Preview {
     ModelContainerPreview { _ in
         RecipeNavigationView()
+            .environment(TabController(initialTab: .recipe))
     }
 }

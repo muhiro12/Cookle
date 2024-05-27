@@ -6,19 +6,14 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct DiaryNavigationView: View {
-    @Environment(\.modelContext) private var context
-
-    @Query(Diary.descriptor) private var diaries: [Diary]
-
     @State private var content: Diary?
     @State private var detail: Recipe?
 
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {
-            DiaryListView(diaries, selection: $content)
+            DiaryListView(selection: $content)
                 .toolbar {
                     ToolbarItem {
                         AddDiaryButton()
@@ -71,5 +66,6 @@ struct DiaryNavigationView: View {
 #Preview {
     ModelContainerPreview { _ in
         DiaryNavigationView()
+            .environment(TabController(initialTab: .diary))
     }
 }

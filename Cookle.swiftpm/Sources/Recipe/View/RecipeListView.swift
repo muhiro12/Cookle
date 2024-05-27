@@ -6,14 +6,14 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct RecipeListView: View {
+    @Query(Recipe.descriptor) private var recipes: [Recipe]
+
     @Binding private var selection: Recipe?
 
-    private let recipes: [Recipe]
-
-    init(_ recipes: [Recipe], selection: Binding<Recipe?>) {
-        self.recipes = recipes
+    init(selection: Binding<Recipe?>) {
         self._selection = selection
     }
 
@@ -26,6 +26,6 @@ struct RecipeListView: View {
 
 #Preview {
     ModelContainerPreview { preview in
-        RecipeListView(preview.recipes, selection: .constant(nil))
+        RecipeListView(selection: .constant(nil))
     }
 }
