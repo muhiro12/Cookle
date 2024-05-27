@@ -20,13 +20,14 @@ struct DiaryFormNavigationView: View {
     @State private var breakfasts = Set<Recipe>()
     @State private var lunches = Set<Recipe>()
     @State private var dinners = Set<Recipe>()
+    @State private var note = ""
     @State private var searchText = ""
 
     var body: some View {
         NavigationStack {
             Form {
                 Section {
-                    DatePicker("", selection: $date, displayedComponents: .date)
+                    DatePicker("Date", selection: $date, displayedComponents: .date)
                         .datePickerStyle(.graphical)
                 }
                 Section {
@@ -61,6 +62,9 @@ struct DiaryFormNavigationView: View {
                         }
                         return $0.name
                     }.joined(separator: ", "))
+                }
+                Section("Note") {
+                    TextField("Note", text: $note, axis: .vertical)
                 }
             }
             .navigationDestination(for: DiaryObjectType.self) { type in
@@ -103,7 +107,8 @@ struct DiaryFormNavigationView: View {
                                     .create(context: context, type: .breakfast, recipes: .init(breakfasts)),
                                     .create(context: context, type: .lunch, recipes: .init(lunches)),
                                     .create(context: context, type: .dinner, recipes: .init(dinners))
-                                ]
+                                ],
+                                note: note
                             )
                         } else {
                             _ = Diary.create(
@@ -113,7 +118,8 @@ struct DiaryFormNavigationView: View {
                                     .create(context: context, type: .breakfast, recipes: .init(breakfasts)),
                                     .create(context: context, type: .lunch, recipes: .init(lunches)),
                                     .create(context: context, type: .dinner, recipes: .init(dinners))
-                                ]
+                                ],
+                                note: note
                             )
                         }
                         dismiss()
@@ -127,6 +133,7 @@ struct DiaryFormNavigationView: View {
             breakfasts = .init(diary?.objects.filter { $0.type == .breakfast }.flatMap { $0.recipes } ?? [])
             lunches = .init(diary?.objects.filter { $0.type == .lunch }.flatMap { $0.recipes } ?? [])
             dinners = .init(diary?.objects.filter { $0.type == .dinner }.flatMap { $0.recipes } ?? [])
+            note = diary?.note ?? ""
         }
         .interactiveDismissDisabled()
     }

@@ -20,6 +20,7 @@ struct RecipeFormNavigationView: View {
     @State private var ingredients = [IngredientTuple]()
     @State private var steps = [String]()
     @State private var categories = [String]()
+    @State private var note = ""
 
     @State private var isPresented = false
     @State private var text = ""
@@ -45,6 +46,9 @@ struct RecipeFormNavigationView: View {
                 MultiAddableIngredientSection(data: $ingredients)
                 MultiAddableStepSection(data: $steps)
                 MultiAddableCategorySection(data: $categories)
+                Section("Note") {
+                    TextField("Note", text: $note, axis: .vertical)
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -74,7 +78,8 @@ struct RecipeFormNavigationView: View {
                                         return nil
                                     }
                                     return .create(context: context, value: $0)
-                                }
+                                },
+                                note: note
                             )
                         } else {
                             _ = Recipe.create(
@@ -94,7 +99,8 @@ struct RecipeFormNavigationView: View {
                                         return nil
                                     }
                                     return .create(context: context, value: $0)
-                                }
+                                },
+                                note: note
                             )
                         }
                         dismiss()
@@ -110,6 +116,7 @@ struct RecipeFormNavigationView: View {
             ingredients = (recipe?.ingredientObjects.map { ($0.ingredient.value, $0.amount) } ?? []) + [("", "")]
             steps = (recipe?.steps ?? []) + [""]
             categories = (recipe?.categories.map { $0.value }  ?? []) + [""]
+            note = recipe?.note ?? ""
         }
         .interactiveDismissDisabled()
     }

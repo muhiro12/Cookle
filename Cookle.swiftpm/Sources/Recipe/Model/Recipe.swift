@@ -20,6 +20,7 @@ final class Recipe {
     private(set) var steps: [String]!
     @Relationship(deleteRule: .nullify, inverse: \Category.recipes)
     private(set) var categories: [Category]!
+    private(set) var note: String!
     @Relationship(deleteRule: .deny)
     private(set) var diaries: [Diary]!
     @Relationship(deleteRule: .cascade)
@@ -35,6 +36,7 @@ final class Recipe {
         self.ingredientObjects = []
         self.steps = []
         self.categories = []
+        self.note = ""
         self.diaries = []
         self.diaryObjects = []
         self.updatedAt = .now
@@ -47,7 +49,8 @@ final class Recipe {
                        cookingTime: Int,
                        ingredients: [IngredientObject],
                        steps: [String],
-                       categories: [Category]) -> Recipe {
+                       categories: [Category],
+                       note: String) -> Recipe {
         let recipe = Recipe()
         context.insert(recipe)
         recipe.name = name
@@ -57,6 +60,7 @@ final class Recipe {
         recipe.ingredientObjects = ingredients
         recipe.steps = steps
         recipe.categories = categories
+        recipe.note = note
         return recipe
     }
 
@@ -65,7 +69,8 @@ final class Recipe {
                 cookingTime: Int,
                 ingredients: [IngredientObject],
                 steps: [String],
-                categories: [Category]) {
+                categories: [Category],
+                note: String) {
         self.name = name
         self.servingSize = servingSize
         self.cookingTime = cookingTime
@@ -73,6 +78,7 @@ final class Recipe {
         self.ingredientObjects = ingredients
         self.steps = steps
         self.categories = categories
+        self.note = note
         self.updatedAt = .now
     }
 }

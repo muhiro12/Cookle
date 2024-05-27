@@ -66,7 +66,8 @@ struct ModelContainerPreview<Content: View>: View {
                 .create(context: context, type: .breakfast, recipes: [recipes[0]]),
                 .create(context: context, type: .lunch, recipes: [recipes[1], recipes[2]]),
                 .create(context: context, type: .dinner, recipes: [recipes[3], recipes[4], recipes[5]])
-            ]
+            ],
+            note: "This is a note."
         )
     }
 
@@ -87,7 +88,8 @@ struct ModelContainerPreview<Content: View>: View {
             categories: (0...Int.random(in: 0..<5)).map { _ in
                 .create(context: context,
                         value: randomWords(from: categoryStrings))
-            }
+            },
+            note: "This is a note."
         )
     }
 

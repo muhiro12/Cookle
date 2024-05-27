@@ -15,26 +15,35 @@ final class Diary {
     private(set) var objects: [DiaryObject]!
     @Relationship(deleteRule: .nullify, inverse: \Recipe.diaries)
     private(set) var recipes: [Recipe]!
+    private(set) var note: String!
 
     private init() {
         self.date = .now
         self.objects = []
         self.recipes = []
+        self.note = ""
     }
 
-    static func create(context: ModelContext, date: Date, objects: [DiaryObject]) -> Diary {
+    static func create(context: ModelContext,
+                       date: Date,
+                       objects: [DiaryObject],
+                       note: String) -> Diary {
         let diary = Diary()
         context.insert(diary)
         diary.date = date
         diary.objects = objects
         diary.recipes = objects.flatMap { $0.recipes }
+        diary.note = note
         return diary
     }
 
-    func update(date: Date, objects: [DiaryObject]) {
+    func update(date: Date,
+                objects: [DiaryObject],
+                note: String) {
         self.date = date
         self.objects = objects
         self.recipes = objects.flatMap { $0.recipes }
+        self.note = note
     }
 }
 

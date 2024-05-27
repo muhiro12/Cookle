@@ -28,6 +28,9 @@ struct DiaryView: View {
                     }
                 }
             }
+            Section("Note") {
+                Text(diary.note)
+            }
         }
     }
 }
