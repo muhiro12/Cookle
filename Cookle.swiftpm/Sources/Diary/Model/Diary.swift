@@ -36,10 +36,6 @@ final class Diary {
         self.objects = objects
         self.recipes = objects.flatMap { $0.recipes }
     }
-
-    func delete() {
-        modelContext?.delete(self)
-    }
 }
 
 extension Diary {

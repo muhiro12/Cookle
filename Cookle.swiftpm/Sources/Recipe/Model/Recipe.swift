@@ -75,10 +75,6 @@ final class Recipe {
         self.categories = categories
         self.updatedAt = .now
     }
-
-    func delete() {
-        modelContext?.delete(self)
-    }
 }
 
 extension Recipe {

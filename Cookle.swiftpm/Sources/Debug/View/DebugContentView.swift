@@ -61,17 +61,17 @@ struct DebugContentView: View {
                     indexSet.forEach { index in
                         switch content {
                         case .diary:
-                            context.delete(diaries[index])
+                            diaries[index].delete()
                         case .diaryObject:
-                            context.delete(diaryObjects[index])
+                            diaryObjects[index].delete()
                         case .recipe:
-                            context.delete(recipes[index])
+                            recipes[index].delete()
                         case .ingredient:
-                            context.delete(ingredients[index])
+                            ingredients[index].delete()
                         case .ingredientObject:
-                            context.delete(ingredientObjects[index])
+                            ingredientObjects[index].delete()
                         case .category:
-                            context.delete(categories[index])
+                            categories[index].delete()
                         }
                     }
                 }
