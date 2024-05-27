@@ -28,9 +28,11 @@ struct RecipeFormNavigationView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Name") {
-                    ZStack(alignment: .trailing) {
-                        TextField("Name", text: $name)
+                Section {
+                    TextField("Name", text: $name)
+                } header: {
+                    HStack {
+                        Text("Name")
                         Text("*")
                             .foregroundStyle(.red)
                     }
