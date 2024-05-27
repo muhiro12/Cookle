@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Library
+import CooklePlaygrounds
 
 @main
 struct CookleApp: App {

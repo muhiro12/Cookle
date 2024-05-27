@@ -9,12 +9,12 @@ let package = Package(
     products: [
         .library(
             name: "Cookle",
-            targets: ["Library"]
+            targets: ["CooklePlaygrounds"]
         )
     ],
     targets: [
         .target(
-            name: "Library",
+            name: "CooklePlaygrounds",
             path: "Cookle.swiftpm/Sources"
         )
     ]

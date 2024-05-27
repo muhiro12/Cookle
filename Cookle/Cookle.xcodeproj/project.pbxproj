@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AD31441A2C045AB200397568 /* Cookle in Frameworks */ = {isa = PBXBuildFile; productRef = AD3144192C045AB200397568 /* Cookle */; };
 		AD8C8E6C2BFABEE200872BF2 /* CookleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8C8E6B2BFABEE200872BF2 /* CookleApp.swift */; };
 		AD8C8E722BFABEE300872BF2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD8C8E712BFABEE300872BF2 /* Assets.xcassets */; };
 		AD8C8E762BFABEE300872BF2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD8C8E752BFABEE300872BF2 /* Preview Assets.xcassets */; };
-		AD8C8E842BFAC2CB00872BF2 /* Cookle in Frameworks */ = {isa = PBXBuildFile; productRef = AD8C8E832BFAC2CB00872BF2 /* Cookle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AD8C8E842BFAC2CB00872BF2 /* Cookle in Frameworks */,
+				AD31441A2C045AB200397568 /* Cookle in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,7 +95,7 @@
 			);
 			name = Cookle;
 			packageProductDependencies = (
-				AD8C8E832BFAC2CB00872BF2 /* Cookle */,
+				AD3144192C045AB200397568 /* Cookle */,
 			);
 			productName = Cookle;
 			productReference = AD8C8E682BFABEE200872BF2 /* Cookle.app */;
@@ -382,7 +382,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		AD8C8E832BFAC2CB00872BF2 /* Cookle */ = {
+		AD3144192C045AB200397568 /* Cookle */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Cookle;
 		};
