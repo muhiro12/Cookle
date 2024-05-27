@@ -17,7 +17,7 @@ struct MultiAddableIngredientSection: View {
     }
 
     var body: some View {
-        Section("Ingredients") {
+        Section {
             ForEach(data.indices, id: \.self) { index in
                 HStack(alignment: .top) {
                     TextField(
@@ -55,6 +55,13 @@ struct MultiAddableIngredientSection: View {
                     return
                 }
                 data.append(("", ""))
+            }
+        } header: {
+            HStack {
+                Text("Ingredients")
+                Spacer()
+                AddMultipleIngredientsButton(ingredients: $data)
+                    .font(.caption)
             }
         }
     }
