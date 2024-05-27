@@ -1,5 +1,5 @@
 //
-//  DIaryListView.swift
+//  DiaryListView.swift
 //
 //
 //  Created by Hiromu Nakano on 2024/05/12.
