@@ -2,14 +2,14 @@ import SwiftUI
 
 struct AddMultipleIngredientsButton: View {
     @Binding private var data: [IngredientTuple]
-    
+
     @State private var isPresented = false
     @State private var text = ""
-    
+
     init(ingredients: Binding<[IngredientTuple]>) {
         self._data = ingredients
     }
-    
+
     var body: some View {
         Button("Add Multiple Ingredients at Once") {
             isPresented = true
@@ -32,7 +32,7 @@ struct AddMultipleIngredientsButton: View {
                                 let contents = stride(from: 0, to: lines.count, by: 2).map {
                                     IngredientTuple(
                                         ingredient: lines[$0],
-                                        amount:  lines.endIndex > $0 + 1 ? lines[$0 + 1] : ""
+                                        amount: lines.endIndex > $0 + 1 ? lines[$0 + 1] : ""
                                     )
                                 }
                                 data.insert(
