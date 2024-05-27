@@ -115,8 +115,8 @@ struct RecipeFormNavigationView: View {
                     }
                     .disabled(
                         name.isEmpty
-                        || (!servingSize.isEmpty && Int(servingSize) == nil)
-                        || (!cookingTime.isEmpty && Int(cookingTime) == nil)
+                            || (!servingSize.isEmpty && Int(servingSize) == nil)
+                            || (!cookingTime.isEmpty && Int(cookingTime) == nil)
                     )
                 }
             }
