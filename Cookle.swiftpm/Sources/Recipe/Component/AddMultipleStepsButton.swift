@@ -44,12 +44,9 @@ struct AddMultipleStepsButton: View {
                             }
                         }
                     }
+                    .clipShape(.rect(cornerRadius: 4))
                     .padding()
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 4)
-                            .stroke(.separator)
-                    }
-                    .padding()
+                    .background(Color(uiColor: .systemGroupedBackground))
             }
             .interactiveDismissDisabled()
         }
