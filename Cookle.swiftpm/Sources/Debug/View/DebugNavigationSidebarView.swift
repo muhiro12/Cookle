@@ -51,11 +51,11 @@ struct DebugNavigationSidebarView: View {
                 }
             }
             ToolbarItem {
-                Button("Add Random Diary", systemImage: "dice") {
+                Button("Create Preview Diary", systemImage: "flask") {
                     withAnimation {
                         _ = ModelContainerPreview { _ in
                             EmptyView()
-                        }.randomDiary(context)
+                        }.createPreviewDiary(context)
                     }
                 }
             }

@@ -30,7 +30,7 @@ struct ModelContainerPreview<Content: View>: View {
                 .task {
                     let context = previewModelContainer.mainContext
                     (0..<20).forEach { _ in
-                        _ = randomDiary(context)
+                        _ = createPreviewDiary(context)
                     }
                     repeat {
                         try! await Task.sleep(for: .seconds(0.2))
@@ -53,7 +53,7 @@ struct ModelContainerPreview<Content: View>: View {
         }
     }
 
-    func randomDiary(_ context: ModelContext) -> Diary {
+    func createPreviewDiary(_ context: ModelContext) -> Diary {
         .create(
             context: context,
             date: .now,

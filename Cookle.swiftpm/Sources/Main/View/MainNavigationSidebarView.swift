@@ -12,7 +12,7 @@ struct MainNavigationSidebarView: View {
 
     @Binding private var selection: MainNavigationSidebar?
 
-    @State private var isDebugPresented = false
+    @State private var isSettingsPresented = false
 
     init(selection: Binding<MainNavigationSidebar?>) {
         self._selection = selection
@@ -32,13 +32,13 @@ struct MainNavigationSidebarView: View {
         .toolbar {
             if isDebugOn {
                 ToolbarItem {
-                    Button("Debug", systemImage: "flask") {
-                        isDebugPresented = true
+                    Button("Settings", systemImage: "gear") {
+                        isSettingsPresented = true
                     }
                 }
             }
         }
-        .sheet(isPresented: $isDebugPresented) {
+        .sheet(isPresented: $isSettingsPresented) {
             DebugNavigationView()
         }
         .navigationTitle("Cookle")
