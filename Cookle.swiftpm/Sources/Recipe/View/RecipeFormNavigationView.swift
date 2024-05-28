@@ -14,6 +14,8 @@ struct RecipeFormNavigationView: View {
 
     @Environment(Recipe.self) private var recipe: Recipe?
 
+    @AppStorage(.isDebugOn) private var isDebugOn
+
     @State private var name = ""
     @State private var servingSize = ""
     @State private var cookingTime = ""
@@ -69,6 +71,11 @@ struct RecipeFormNavigationView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(recipe != nil ? "Update" : "Add") {
+                        if name == "Enable Debug" {
+                            isDebugOn = true
+                            dismiss()
+                            return
+                        }
                         if let recipe {
                             recipe.update(
                                 name: name,
