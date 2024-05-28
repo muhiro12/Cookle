@@ -12,7 +12,7 @@ struct DebugNavigationView: View {
     @State private var detail: Int?
 
     var body: some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: .constant(.all)) {
             DebugNavigationSidebarView(selection: $content)
         } content: {
             if let content {
