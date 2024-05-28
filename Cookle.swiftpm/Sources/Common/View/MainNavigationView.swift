@@ -10,7 +10,7 @@ import SwiftUI
 struct MainNavigationView: View {
     @AppStorage(.isDebugOn) private var isDebugOn
 
-    @State private var content: Tab?
+    @State private var content: MainNavigationSidebar?
     @State private var item: AnyHashable?
     @State private var detail: Recipe?
 
@@ -20,13 +20,13 @@ struct MainNavigationView: View {
         NavigationSplitView() {
             List(selection: $content) {
                 Label("Diary", systemImage: "book")
-                    .tag(Tab.diary)
+                    .tag(MainNavigationSidebar.diary)
                 Label("Recipe", systemImage: "book.pages")
-                    .tag(Tab.recipe)
+                    .tag(MainNavigationSidebar.recipe)
                 Label("Ingredient", systemImage: "refrigerator")
-                    .tag(Tab.ingredient)
+                    .tag(MainNavigationSidebar.ingredient)
                 Label("Category", systemImage: "frying.pan")
-                    .tag(Tab.category)
+                    .tag(MainNavigationSidebar.category)
             }
             .toolbar {
                 if isDebugOn {
@@ -144,7 +144,6 @@ struct MainNavigationView: View {
         }
         .sheet(isPresented: $isDebugPresented) {
             DebugNavigationView()
-                .environment(TabController(initialTab: .debug))
         }
     }
 }

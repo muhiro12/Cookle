@@ -1,9 +1,8 @@
 import Foundation
 
-enum Tab {
+enum MainNavigationSidebar {
     case diary
     case recipe
     case ingredient
     case category
-    case debug
 }
