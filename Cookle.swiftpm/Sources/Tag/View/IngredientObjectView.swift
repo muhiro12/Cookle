@@ -11,6 +11,9 @@ struct IngredientObjectView: View {
             Section("Amount") {
                 Text(object.amount)
             }
+            Section("Order") {
+                Text(object.order.description)
+            }
             Section("Recipe") {
                 Text(object.recipe?.name ?? "")
             }

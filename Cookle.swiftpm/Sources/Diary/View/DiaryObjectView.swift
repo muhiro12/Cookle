@@ -11,6 +11,9 @@ struct DiaryObjectView: View {
             Section("Type") {
                 Text(object.type.title)
             }
+            Section("Order") {
+                Text(object.order.description)
+            }
             Section("Diary") {
                 Text(object.diary?.date.formatted(.dateTime.year().month().day()) ?? "")
             }
