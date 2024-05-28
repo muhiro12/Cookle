@@ -15,9 +15,13 @@ struct MainNavigationView: View {
         NavigationSplitView {
             MainNavigationSidebarView(selection: $content)
         } content: {
-            MainNavigationContentView(content, selection: $detail)
+            if let content {
+                MainNavigationContentView(content, selection: $detail)
+            }
         } detail: {
-            MainNavigationDetailView(detail)
+            if let detail {
+                MainNavigationDetailView(detail)
+            }
         }
     }
 }

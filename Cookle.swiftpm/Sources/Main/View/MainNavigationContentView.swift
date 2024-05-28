@@ -1,6 +1,6 @@
 //
 //  MainNavigationContentView.swift
-//  
+//
 //
 //  Created by Hiromu Nakano on 2024/05/28.
 //
@@ -12,9 +12,9 @@ struct MainNavigationContentView: View {
 
     @State private var item: AnyHashable?
 
-    private var sidebar: MainNavigationSidebar?
+    private var sidebar: MainNavigationSidebar
 
-    init(_ content: MainNavigationSidebar?, selection: Binding<Recipe?>) {
+    init(_ content: MainNavigationSidebar, selection: Binding<Recipe?>) {
         self.sidebar = content
         self._selection = selection
     }
@@ -67,8 +67,6 @@ struct MainNavigationContentView: View {
                         }
                     }
                     .navigationTitle("Category")
-                default:
-                    EmptyView()
                 }
             }
             .navigationDestination(item: $item) { item in

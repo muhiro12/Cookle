@@ -25,7 +25,7 @@ struct RecipeListView: View {
 }
 
 #Preview {
-    ModelContainerPreview { preview in
+    ModelContainerPreview { _ in
         RecipeListView(selection: .constant(nil))
     }
 }

@@ -41,7 +41,7 @@ struct DiaryListView: View {
 }
 
 #Preview {
-    ModelContainerPreview { preview in
+    ModelContainerPreview { _ in
         DiaryListView(selection: .constant(nil))
     }
 }
