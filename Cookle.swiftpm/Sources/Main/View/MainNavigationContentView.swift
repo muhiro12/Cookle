@@ -10,7 +10,7 @@ import SwiftUI
 struct MainNavigationContentView: View {
     @Binding private var selection: Recipe?
 
-    @State private var item: AnyHashable?
+    @State private var path = NavigationPath()
 
     private var sidebar: MainNavigationSidebar
 
@@ -20,23 +20,20 @@ struct MainNavigationContentView: View {
     }
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             Group {
                 switch sidebar {
                 case .diary:
-                    DiaryListView(selection: .init(
-                        get: { item as? Diary },
-                        set: { item = $0 }
-                    ))
-                    .toolbar {
-                        ToolbarItem {
-                            AddDiaryButton()
+                    DiaryListView(selection: pathSelection())
+                        .toolbar {
+                            ToolbarItem {
+                                AddDiaryButton()
+                            }
+                            ToolbarItem {
+                                AddRecipeButton()
+                            }
                         }
-                        ToolbarItem {
-                            AddRecipeButton()
-                        }
-                    }
-                    .navigationTitle("Diary")
+                        .navigationTitle("Diary")
                 case .recipe:
                     RecipeListView(selection: $selection)
                         .toolbar {
@@ -46,66 +43,69 @@ struct MainNavigationContentView: View {
                         }
                         .navigationTitle("Recipe")
                 case .ingredient:
-                    TagListView(selection: .init(
-                        get: { item as? Ingredient },
-                        set: { item = $0 }
-                    ))
-                    .toolbar {
-                        ToolbarItem {
-                            AddRecipeButton()
+                    TagListView<Ingredient>(selection: pathSelection())
+                        .toolbar {
+                            ToolbarItem {
+                                AddRecipeButton()
+                            }
                         }
-                    }
-                    .navigationTitle("Ingredient")
+                        .navigationTitle("Ingredient")
                 case .category:
-                    TagListView(selection: .init(
-                        get: { item as? Category },
-                        set: { item = $0 }
-                    ))
-                    .toolbar {
-                        ToolbarItem {
-                            AddRecipeButton()
+                    TagListView<Category>(selection: pathSelection())
+                        .toolbar {
+                            ToolbarItem {
+                                AddRecipeButton()
+                            }
                         }
-                    }
-                    .navigationTitle("Category")
+                        .navigationTitle("Category")
                 }
             }
-            .navigationDestination(item: $item) { item in
-                switch item {
-                case let diary as Diary:
-                    DiaryView(selection: $selection)
-                        .toolbar {
-                            ToolbarItem(placement: .destructiveAction) {
-                                DeleteDiaryButton()
-                            }
-                            ToolbarItem(placement: .confirmationAction) {
-                                EditDiaryButton()
-                            }
+            .navigationDestination(for: Diary.self) { diary in
+                DiaryView(selection: $selection)
+                    .toolbar {
+                        ToolbarItem(placement: .destructiveAction) {
+                            DeleteDiaryButton()
                         }
-                        .navigationTitle(diary.date.formatted(.dateTime.year().month().day()))
-                        .environment(diary)
-                case let ingredient as Ingredient:
-                    TagView<Ingredient>(selection: $selection)
-                        .toolbar {
-                            ToolbarItem {
-                                EditTagButton<Ingredient>()
-                            }
+                        ToolbarItem(placement: .confirmationAction) {
+                            EditDiaryButton()
                         }
-                        .navigationTitle(ingredient.value)
-                        .environment(ingredient)
-                case let category as Category:
-                    TagView<Category>(selection: $selection)
-                        .toolbar {
-                            ToolbarItem {
-                                EditTagButton<Category>()
-                            }
+                    }
+                    .navigationTitle(diary.date.formatted(.dateTime.year().month().day()))
+                    .environment(diary)
+            }
+            .navigationDestination(for: Ingredient.self) { ingredient in
+                TagView<Ingredient>(selection: $selection)
+                    .toolbar {
+                        ToolbarItem {
+                            EditTagButton<Ingredient>()
                         }
-                        .navigationTitle(category.value)
-                        .environment(category)
-                default:
-                    EmptyView()
-                }
+                    }
+                    .navigationTitle(ingredient.value)
+                    .environment(ingredient)
+            }
+            .navigationDestination(for: Category.self) { category in
+                TagView<Category>(selection: $selection)
+                    .toolbar {
+                        ToolbarItem {
+                            EditTagButton<Category>()
+                        }
+                    }
+                    .navigationTitle(category.value)
+                    .environment(category)
             }
         }
+    }
+
+    private func pathSelection<Value: Hashable>() -> Binding<Value?> {
+        .init(
+            get: { nil },
+            set: { value in
+                guard let value else {
+                    return
+                }
+                path.append(value)
+            }
+        )
     }
 }
 

@@ -18,21 +18,7 @@ struct TagListView<T: Tag>: View {
     }
 
     var body: some View {
-        List(
-            tags,
-            id: \.self,
-            selection: .init(
-                get: {
-                    selection
-                },
-                set: { value in
-                    guard let value else {
-                        return
-                    }
-                    selection = value
-                }
-            )
-        ) { tag in
+        List(tags, id: \.self, selection: $selection) { tag in
             Text(tag.value)
         }
     }

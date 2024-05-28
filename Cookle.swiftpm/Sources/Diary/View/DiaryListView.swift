@@ -29,17 +29,7 @@ struct DiaryListView: View {
                 }
             ),
             id: \.key,
-            selection: .init(
-                get: {
-                    selection
-                },
-                set: { value in
-                    guard let value else {
-                        return
-                    }
-                    selection = value
-                }
-            )
+            selection: $selection
         ) { section in
             Section(section.key) {
                 ForEach(section.value, id: \.self) { diary in
