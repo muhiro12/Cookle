@@ -103,22 +103,26 @@ struct DiaryFormNavigationView: View {
                         if let diary {
                             diary.update(
                                 date: date,
-                                objects: [
-                                    .create(context: context, type: .breakfast, recipes: .init(breakfasts)),
-                                    .create(context: context, type: .lunch, recipes: .init(lunches)),
-                                    .create(context: context, type: .dinner, recipes: .init(dinners))
-                                ],
+                                objects: breakfasts.map {
+                                    .create(context: context, recipe: $0, type: .breakfast)
+                                } + lunches.map {
+                                    .create(context: context, recipe: $0, type: .lunch)
+                                } + dinners.map {
+                                    .create(context: context, recipe: $0, type: .dinner)
+                                },
                                 note: note
                             )
                         } else {
                             _ = Diary.create(
                                 context: context,
                                 date: date,
-                                objects: [
-                                    .create(context: context, type: .breakfast, recipes: .init(breakfasts)),
-                                    .create(context: context, type: .lunch, recipes: .init(lunches)),
-                                    .create(context: context, type: .dinner, recipes: .init(dinners))
-                                ],
+                                objects: breakfasts.map {
+                                    .create(context: context, recipe: $0, type: .breakfast)
+                                } + lunches.map {
+                                    .create(context: context, recipe: $0, type: .lunch)
+                                } + dinners.map {
+                                    .create(context: context, recipe: $0, type: .dinner)
+                                },
                                 note: note
                             )
                         }
@@ -130,9 +134,9 @@ struct DiaryFormNavigationView: View {
         }
         .task {
             date = diary?.date ?? .now
-            breakfasts = .init(diary?.objects.filter { $0.type == .breakfast }.flatMap { $0.recipes } ?? [])
-            lunches = .init(diary?.objects.filter { $0.type == .lunch }.flatMap { $0.recipes } ?? [])
-            dinners = .init(diary?.objects.filter { $0.type == .dinner }.flatMap { $0.recipes } ?? [])
+            breakfasts = .init(diary?.objects.filter { $0.type == .breakfast }.map { $0.recipe } ?? [])
+            lunches = .init(diary?.objects.filter { $0.type == .lunch }.map { $0.recipe } ?? [])
+            dinners = .init(diary?.objects.filter { $0.type == .dinner }.map { $0.recipe } ?? [])
             note = diary?.note ?? ""
         }
         .interactiveDismissDisabled()

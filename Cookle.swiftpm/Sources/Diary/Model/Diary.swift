@@ -32,7 +32,7 @@ final class Diary {
         context.insert(diary)
         diary.date = date
         diary.objects = objects
-        diary.recipes = objects.flatMap { $0.recipes }
+        diary.recipes = objects.map { $0.recipe }
         diary.note = note
         return diary
     }
@@ -42,7 +42,7 @@ final class Diary {
                 note: String) {
         self.date = date
         self.objects = objects
-        self.recipes = objects.flatMap { $0.recipes }
+        self.recipes = objects.map { $0.recipe }
         self.note = note
     }
 }

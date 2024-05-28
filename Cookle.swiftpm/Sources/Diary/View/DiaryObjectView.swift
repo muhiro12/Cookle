@@ -5,13 +5,11 @@ struct DiaryObjectView: View {
 
     var body: some View {
         List {
+            Section("Recipe") {
+                Text(object.recipe.name)
+            }
             Section("Type") {
                 Text(object.type.title)
-            }
-            Section("Recipes") {
-                ForEach(object.recipes) {
-                    Text($0.name)
-                }
             }
             Section("Diary") {
                 Text(object.diary?.date.formatted(.dateTime.year().month().day()) ?? "")

@@ -60,26 +60,28 @@ struct ModelContainerPreview<Content: View>: View {
             objects: [
                 .create(
                     context: context,
-                    type: .breakfast,
-                    recipes: [
-                        cookPancakes(context)
-                    ]
+                    recipe: cookPancakes(context),
+                    type: .breakfast
                 ),
                 .create(
                     context: context,
-                    type: .lunch,
-                    recipes: [
-                        cookChickenStirFry(context),
-                        cookVegetableSoup(context)
-                    ]
+                    recipe: cookChickenStirFry(context),
+                    type: .lunch
                 ),
                 .create(
                     context: context,
-                    type: .dinner,
-                    recipes: [
-                        cookSpaghettiCarbonara(context),
-                        cookBeefStew(context)
-                    ]
+                    recipe: cookVegetableSoup(context),
+                    type: .lunch
+                ),
+                .create(
+                    context: context,
+                    recipe: cookSpaghettiCarbonara(context),
+                    type: .dinner
+                ),
+                .create(
+                    context: context,
+                    recipe: cookBeefStew(context),
+                    type: .dinner
                 )
             ],
             note: """

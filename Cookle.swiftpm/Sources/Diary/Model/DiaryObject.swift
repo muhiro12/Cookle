@@ -9,22 +9,21 @@ import SwiftData
 
 @Model
 final class DiaryObject {
-    private(set) var type: DiaryObjectType!
     @Relationship(inverse: \Recipe.diaryObjects)
-    private(set) var recipes: [Recipe]!
+    private(set) var recipe: Recipe!
+    private(set) var type: DiaryObjectType!
     @Relationship
     private(set) var diary: Diary?
 
-    private init(type: DiaryObjectType) {
+    private init(recipe: Recipe, type: DiaryObjectType) {
+        self.recipe = recipe
         self.type = type
-        self.recipes = []
         self.diary = nil
     }
 
-    static func create(context: ModelContext, type: DiaryObjectType, recipes: [Recipe]) -> DiaryObject {
-        let object = DiaryObject(type: type)
+    static func create(context: ModelContext, recipe: Recipe, type: DiaryObjectType) -> DiaryObject {
+        let object = DiaryObject(recipe: recipe, type: type)
         context.insert(object)
-        object.recipes = recipes
         return object
     }
 }
