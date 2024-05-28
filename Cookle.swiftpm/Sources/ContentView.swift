@@ -9,8 +9,13 @@ import SwiftUI
 
 public struct ContentView: View {
     @AppStorage(.isICloudOn) private var isICloudOn
+    @AppStorage(.isDebugOn) private var isDebugOn
 
-    public init() {}
+    public init() {
+        #if DEBUG
+        isDebugOn = true
+        #endif
+    }
 
     public var body: some View {
         ModelContainerView()
