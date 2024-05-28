@@ -1,6 +1,8 @@
 import SwiftUI
 
-struct DebugSidebarView: View {
+struct DebugNavigationSidebarView: View {
+    @Environment(\.modelContext) private var context
+
     @AppStorage(.isICloudOn) private var isICloudOn
     @AppStorage(.isDebugOn) private var isDebugOn
 
@@ -35,9 +37,33 @@ struct DebugSidebarView: View {
                 Toggle("Debug On", isOn: $isDebugOn)
             }
         }
+        .toolbar {
+            ToolbarItem {
+                Button("Delete All", systemImage: "trash") {
+                    withAnimation {
+                        try! context.delete(model: Diary.self)
+                        try! context.delete(model: DiaryObject.self)
+                        try! context.delete(model: Recipe.self)
+                        try! context.delete(model: Ingredient.self)
+                        try! context.delete(model: IngredientObject.self)
+                        try! context.delete(model: Category.self)
+                    }
+                }
+            }
+            ToolbarItem {
+                Button("Add Random Diary", systemImage: "dice") {
+                    withAnimation {
+                        _ = ModelContainerPreview { _ in
+                            EmptyView()
+                        }.randomDiary(context)
+                    }
+                }
+            }
+        }
+        .navigationTitle("Debug")
     }
 }
 
 #Preview {
-    DebugSidebarView(selection: .constant(nil))
+    DebugNavigationSidebarView(selection: .constant(nil))
 }

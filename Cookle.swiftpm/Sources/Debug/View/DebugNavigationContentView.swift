@@ -1,7 +1,7 @@
 import SwiftUI
 import SwiftData
 
-struct DebugContentView: View {
+struct DebugNavigationContentView: View {
     @Environment(\.modelContext) private var context
 
     @Binding private var selection: Int?
@@ -77,11 +77,12 @@ struct DebugContentView: View {
                 }
             }
         }
+        .navigationTitle("Content")
     }
 }
 
 #Preview {
     ModelContainerPreview { _ in
-        DebugContentView(.recipe, selection: .constant(nil))
+        DebugNavigationContentView(.recipe, selection: .constant(nil))
     }
 }

@@ -6,51 +6,22 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct DebugNavigationView: View {
-    @Environment(\.modelContext) private var context
-
     @State private var content: DebugContent?
     @State private var detail: Int?
 
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {
-            DebugSidebarView(selection: $content)
-                .toolbar {
-                    ToolbarItem {
-                        Button("Delete All", systemImage: "trash") {
-                            withAnimation {
-                                try! context.delete(model: Diary.self)
-                                try! context.delete(model: DiaryObject.self)
-                                try! context.delete(model: Recipe.self)
-                                try! context.delete(model: Ingredient.self)
-                                try! context.delete(model: IngredientObject.self)
-                                try! context.delete(model: Category.self)
-                            }
-                        }
-                    }
-                    ToolbarItem {
-                        Button("Add Random Diary", systemImage: "dice") {
-                            withAnimation {
-                                _ = ModelContainerPreview { _ in
-                                    EmptyView()
-                                }.randomDiary(context)
-                            }
-                        }
-                    }
-                }
-                .navigationTitle("Debug")
+            DebugNavigationSidebarView(selection: $content)
         } content: {
             if let content {
-                DebugContentView(content, selection: $detail)
-                    .navigationTitle("Content")
+                DebugNavigationContentView(content, selection: $detail)
             }
         } detail: {
             if let detail,
                let content {
-                DebugDetailView(detail, content: content)
-                    .navigationTitle("Detail")
+                DebugNavigationDetailView(detail, content: content)
             }
         }
     }
