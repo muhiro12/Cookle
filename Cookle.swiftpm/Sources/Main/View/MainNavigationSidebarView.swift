@@ -20,14 +20,20 @@ struct MainNavigationSidebarView: View {
 
     var body: some View {
         List(selection: $selection) {
-            Label("Diary", systemImage: "book")
-                .tag(MainNavigationSidebar.diary)
-            Label("Recipe", systemImage: "book.pages")
-                .tag(MainNavigationSidebar.recipe)
-            Label("Ingredient", systemImage: "refrigerator")
-                .tag(MainNavigationSidebar.ingredient)
-            Label("Category", systemImage: "frying.pan")
-                .tag(MainNavigationSidebar.category)
+            Section {
+                Label("Diary", systemImage: "book")
+                    .tag(MainNavigationSidebar.diary)
+            }
+            Section {
+                Label("Recipe", systemImage: "book.pages")
+                    .tag(MainNavigationSidebar.recipe)
+            }
+            Section {
+                Label("Ingredient", systemImage: "refrigerator")
+                    .tag(MainNavigationSidebar.ingredient)
+                Label("Category", systemImage: "frying.pan")
+                    .tag(MainNavigationSidebar.category)
+            }
         }
         .toolbar {
             if isDebugOn {
