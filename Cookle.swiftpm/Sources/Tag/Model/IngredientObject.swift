@@ -12,7 +12,7 @@ final class IngredientObject {
     @Relationship(inverse: \Ingredient.objects)
     private(set) var ingredient: Ingredient!
     private(set) var amount: String!
-    private(set) var order: Int
+    private(set) var order: Int!
     @Relationship
     private(set) var recipe: Recipe?
 
