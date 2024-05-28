@@ -103,12 +103,12 @@ struct DiaryFormNavigationView: View {
                         if let diary {
                             diary.update(
                                 date: date,
-                                objects: breakfasts.map {
-                                    .create(context: context, recipe: $0, type: .breakfast)
-                                } + lunches.map {
-                                    .create(context: context, recipe: $0, type: .lunch)
-                                } + dinners.map {
-                                    .create(context: context, recipe: $0, type: .dinner)
+                                objects: zip(Array(breakfasts).indices, breakfasts).map { index, element in
+                                    .create(context: context, recipe: element, type: .breakfast, order: index + 1)
+                                } + zip(Array(lunches).indices, lunches).map { index, element in
+                                    .create(context: context, recipe: element, type: .lunch, order: index + 1)
+                                } + zip(Array(dinners).indices, dinners).map { index, element in
+                                    .create(context: context, recipe: element, type: .dinner, order: index + 1)
                                 },
                                 note: note
                             )
@@ -116,12 +116,12 @@ struct DiaryFormNavigationView: View {
                             _ = Diary.create(
                                 context: context,
                                 date: date,
-                                objects: breakfasts.map {
-                                    .create(context: context, recipe: $0, type: .breakfast)
-                                } + lunches.map {
-                                    .create(context: context, recipe: $0, type: .lunch)
-                                } + dinners.map {
-                                    .create(context: context, recipe: $0, type: .dinner)
+                                objects: zip(Array(breakfasts).indices, breakfasts).map { index, element in
+                                    .create(context: context, recipe: element, type: .breakfast, order: index + 1)
+                                } + zip(Array(lunches).indices, lunches).map { index, element in
+                                    .create(context: context, recipe: element, type: .lunch, order: index + 1)
+                                } + zip(Array(dinners).indices, dinners).map { index, element in
+                                    .create(context: context, recipe: element, type: .dinner, order: index + 1)
                                 },
                                 note: note
                             )
@@ -134,9 +134,9 @@ struct DiaryFormNavigationView: View {
         }
         .task {
             date = diary?.date ?? .now
-            breakfasts = .init(diary?.objects.filter { $0.type == .breakfast }.map { $0.recipe } ?? [])
-            lunches = .init(diary?.objects.filter { $0.type == .lunch }.map { $0.recipe } ?? [])
-            dinners = .init(diary?.objects.filter { $0.type == .dinner }.map { $0.recipe } ?? [])
+            breakfasts = .init(diary?.objects.filter { $0.type == .breakfast }.sorted { $0.order < $1.order }.map { $0.recipe } ?? [])
+            lunches = .init(diary?.objects.filter { $0.type == .lunch }.sorted { $0.order < $1.order }.map { $0.recipe } ?? [])
+            dinners = .init(diary?.objects.filter { $0.type == .dinner }.sorted { $0.order < $1.order }.map { $0.recipe } ?? [])
             note = diary?.note ?? ""
         }
         .interactiveDismissDisabled()

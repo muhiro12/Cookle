@@ -22,17 +22,17 @@ struct DiaryView: View {
                 Text(diary.date.formatted(.dateTime.year().month().day()))
             }
             Section("Breakfast") {
-                ForEach(diary.objects.filter { $0.type == .breakfast }.map { $0.recipe }, id: \.self) { recipe in
+                ForEach(diary.objects.filter { $0.type == .breakfast }.sorted { $0.order < $1.order }.map { $0.recipe }, id: \.self) { recipe in
                     Text(recipe.name)
                 }
             }
             Section("Lunch") {
-                ForEach(diary.objects.filter { $0.type == .lunch }.map { $0.recipe }, id: \.self) { recipe in
+                ForEach(diary.objects.filter { $0.type == .lunch }.sorted { $0.order < $1.order }.map { $0.recipe }, id: \.self) { recipe in
                     Text(recipe.name)
                 }
             }
             Section("Dinner") {
-                ForEach(diary.objects.filter { $0.type == .dinner }.map { $0.recipe }, id: \.self) { recipe in
+                ForEach(diary.objects.filter { $0.type == .dinner }.sorted { $0.order < $1.order }.map { $0.recipe }, id: \.self) { recipe in
                     Text(recipe.name)
                 }
             }
