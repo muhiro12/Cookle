@@ -54,185 +54,209 @@ struct ModelContainerPreview<Content: View>: View {
     }
 
     func randomDiary(_ context: ModelContext) -> Diary {
-        var recipes = [Recipe]()
-        (0..<6).forEach { _ in
-            let recipe = randomRecipe(context)
-            recipes.append(recipe)
-        }
-        return .create(
-            context: context,
-            date: .now.addingTimeInterval(.random(in: 0...(60 * 60 * 24 * 365 * 2))),
-            objects: [
-                .create(context: context, type: .breakfast, recipes: [recipes[0]]),
-                .create(context: context, type: .lunch, recipes: [recipes[1], recipes[2]]),
-                .create(context: context, type: .dinner, recipes: [recipes[3], recipes[4], recipes[5]])
-            ],
-            note: "This is a note."
-        )
-    }
-
-    private func randomRecipe(_ context: ModelContext) -> Recipe {
         .create(
             context: context,
-            name: randomWords(from: nameStrings),
-            servingSize: Int.random(in: 1...6),
-            cookingTime: Int.random(in: 5...60),
-            ingredients: (0...Int.random(in: 0..<20)).map { _ in
-                .create(context: context,
-                        ingredient: randomWords(from: ingredientStrings),
-                        amount: randomWords(from: amountStrings))
-            },
-            steps: (0...Int.random(in: 0..<20)).map { _ in
-                randomWords(from: stepStrings)
-            },
-            categories: (0...Int.random(in: 0..<5)).map { _ in
-                .create(context: context,
-                        value: randomWords(from: categoryStrings))
-            },
-            note: "This is a note."
+            date: .now,
+            objects: [
+                .create(
+                    context: context,
+                    type: .breakfast,
+                    recipes: [
+                        cookPancakes(context)
+                    ]
+                ),
+                .create(
+                    context: context,
+                    type: .lunch,
+                    recipes: [
+                        cookChickenStirFry(context),
+                        cookVegetableSoup(context)
+                    ]
+                ),
+                .create(
+                    context: context,
+                    type: .dinner,
+                    recipes: [
+                        cookSpaghettiCarbonara(context),
+                        cookBeefStew(context)
+                    ]
+                )
+            ],
+            note: """
+                  Today's menu:
+                  - Breakfast: Delicious pancakes served with syrup, butter, and fresh fruits.
+                  - Lunch: Chicken stir fry with bell peppers and broccoli, accompanied by a hearty vegetable soup.
+                  - Dinner: Classic spaghetti carbonara and warm beef stew for a comforting end to the day.
+
+                  Tips:
+                  - Try adding blueberries or bananas to the pancakes for extra flavor.
+                  - The vegetable soup can be stored for up to 3 days, making it perfect for leftovers.
+                  - The beef stew tastes even better the next day, so make extra for an easy meal tomorrow.
+                  """
         )
     }
 
-    private func randomWords(from list: [String], length: Int = 1) -> String {
-        var words = ""
-        for _ in 0..<length {
-            words += " " + list[Int.random(in: 0..<list.endIndex)]
-        }
-        return words.dropFirst().description
+    private func cookSpaghettiCarbonara(_ context: ModelContext) -> Recipe {
+        .create(
+            context: context,
+            name: "Spaghetti Carbonara",
+            servingSize: 2,
+            cookingTime: 30,
+            ingredients: [
+                .create(context: context, ingredient: "Spaghetti", amount: "200g"),
+                .create(context: context, ingredient: "Eggs", amount: "2"),
+                .create(context: context, ingredient: "Parmesan cheese", amount: "50g"),
+                .create(context: context, ingredient: "Pancetta", amount: "100g"),
+                .create(context: context, ingredient: "Black pepper", amount: "to taste"),
+                .create(context: context, ingredient: "Salt", amount: "to taste")
+            ],
+            steps: [
+                "Boil water in a large pot and add salt.",
+                "Cook the spaghetti until al dente.",
+                "In a separate pan, cook the pancetta until crispy.",
+                "Beat the eggs in a bowl and mix with grated Parmesan cheese.",
+                "Drain the spaghetti and mix with pancetta and the egg mixture.",
+                "Season with black pepper and serve immediately."
+            ],
+            categories: [
+                .create(context: context, value: "Italian")
+            ],
+            note: "Use freshly grated Parmesan for the best flavor."
+        )
     }
 
-    private let nameStrings = [
-        "Grilled Salmon", "Chicken Parmesan", "Vegetable Stir Fry", "Beef Stroganoff", "Spaghetti Carbonara",
-        "Lamb Curry", "Shrimp Paella", "Pork Schnitzel", "Ratatouille", "Duck Confit",
-        "Mushroom Risotto", "Quiche Lorraine", "Fish and Chips", "Sushi Rolls", "Tom Yum Soup",
-        "BBQ Ribs", "Falafel Wrap", "Beef Tacos", "Margherita Pizza", "Caesar Salad",
-        "Pad Thai", "Chicken Tikka Masala", "Beef Bourguignon", "Ramen Noodles", "Spinach Lasagna",
-        "Cobb Salad", "Peking Duck", "Pho", "Fettuccine Alfredo", "Jambalaya",
-        "Coq au Vin", "Carnitas", "Moussaka", "Gazpacho", "Bibimbap",
-        "Tandoori Chicken", "French Onion Soup", "Seafood Gumbo", "Pastrami Sandwich", "Clam Chowder",
-        "Roast Beef", "Pasta Primavera", "Veal Piccata", "Greek Salad", "Pan-Seared Tuna",
-        "Eggplant Parmigiana", "Croque Monsieur", "Chicken Caesar Wrap", "Lobster Bisque", "Shepherd's Pie",
-        "Corned Beef Hash", "Chicken Alfredo", "Beef Enchiladas", "Chili Con Carne", "Caprese Salad",
-        "Mapo Tofu", "Bangers and Mash", "Turkey Club Sandwich", "Butternut Squash Soup", "Chicken Marsala",
-        "Pot Roast", "Vegetable Curry", "Salmon Tartare", "Pulled Pork Sandwich", "Beef Wellington",
-        "Minestrone Soup", "Baked Ziti", "Chicken Fajitas", "Vegetable Quiche", "Pasta Bolognese",
-        "Tuna Nicoise Salad", "Pork Belly Bao", "French Toast", "Vegetarian Chili", "Beef Barbacoa",
-        "Shakshuka", "Avocado Toast", "Kimchi Stew", "Szechuan Beef", "Roasted Brussels Sprouts",
-        "Margherita Flatbread", "Lentil Soup", "Buffalo Wings", "Chicken and Waffles", "Miso Soup",
-        "Nachos Supreme", "Egg Benedicts", "Vegetable Samosas", "Spicy Tuna Roll", "Margarita Flatbread",
-        "Tomato Bruschetta", "Ceviche", "Fried Chicken", "Gnocchi", "Escargot",
-        "Huevos Rancheros", "Baked Cod", "Risotto Milanese", "Chicken Quesadilla", "Vegetable Paella"
-    ]
+    private func cookBeefStew(_ context: ModelContext) -> Recipe {
+        .create(
+            context: context,
+            name: "Beef Stew",
+            servingSize: 6,
+            cookingTime: 120,
+            ingredients: [
+                .create(context: context, ingredient: "Beef chuck", amount: "1 kg"),
+                .create(context: context, ingredient: "Carrots", amount: "3"),
+                .create(context: context, ingredient: "Potatoes", amount: "4"),
+                .create(context: context, ingredient: "Onions", amount: "2"),
+                .create(context: context, ingredient: "Beef broth", amount: "4 cups"),
+                .create(context: context, ingredient: "Tomato paste", amount: "2 tbsp"),
+                .create(context: context, ingredient: "Flour", amount: "1/4 cup"),
+                .create(context: context, ingredient: "Salt", amount: "to taste"),
+                .create(context: context, ingredient: "Black pepper", amount: "to taste"),
+                .create(context: context, ingredient: "Olive oil", amount: "2 tbsp")
+            ],
+            steps: [
+                "Cut the beef into large chunks and season with salt and pepper.",
+                "Heat the oil in a large pot over medium-high heat.",
+                "Brown the beef on all sides, then remove from the pot.",
+                "Add the chopped onions, carrots, and potatoes to the pot and cook for 5 minutes.",
+                "Stir in the flour and tomato paste, and cook for another minute.",
+                "Return the beef to the pot and add the beef broth.",
+                "Bring to a boil, then reduce the heat and simmer for 2 hours, until the beef is tender.",
+                "Season with salt and pepper to taste, and serve hot."
+            ],
+            categories: [
+                .create(context: context, value: "Comfort Food")
+            ],
+            note: "This stew is even better the next day."
+        )
+    }
 
-    private let ingredientStrings = [
-        "Chicken Breast", "Salmon Fillet", "Ground Beef", "Pork Loin", "Tofu",
-        "Shrimp", "Scallops", "Mussels", "Eggplant", "Zucchini",
-        "Bell Pepper", "Spinach", "Kale", "Arugula", "Butternut Squash",
-        "Sweet Potato", "Carrots", "Beets", "Onions", "Garlic",
-        "Ginger", "Tomatoes", "Cucumbers", "Avocado", "Apples",
-        "Bananas", "Blueberries", "Strawberries", "Oranges", "Lemons",
-        "Limes", "Pineapple", "Mango", "Peaches", "Plums",
-        "Almonds", "Walnuts", "Pecans", "Cashews", "Peanuts",
-        "Quinoa", "Rice", "Pasta", "Bread", "Flour",
-        "Sugar", "Honey", "Maple Syrup", "Olive Oil", "Coconut Oil",
-        "Butter", "Milk", "Cream", "Yogurt", "Cheese",
-        "Eggs", "Basil", "Parsley", "Cilantro", "Dill",
-        "Rosemary", "Thyme", "Oregano", "Cumin", "Paprika",
-        "Chili Powder", "Curry Powder", "Soy Sauce", "Fish Sauce", "Vinegar",
-        "Mustard", "Ketchup", "Mayonnaise", "Salsa", "Tomato Paste",
-        "Chicken Stock", "Beef Broth", "Vegetable Stock", "Coconut Milk", "Almond Milk",
-        "Rice Vinegar", "Sesame Oil", "Sunflower Seeds", "Pumpkin Seeds", "Chia Seeds",
-        "Lentils", "Chickpeas", "Black Beans", "Kidney Beans", "Navy Beans",
-        "Broccoli", "Cauliflower", "Asparagus", "Green Beans", "Peas",
-        "Corn", "Mushrooms", "Potatoes", "Cabbage", "Brussels Sprouts"
-    ]
+    private func cookChickenStirFry(_ context: ModelContext) -> Recipe {
+        .create(
+            context: context,
+            name: "Chicken Stir Fry",
+            servingSize: 4,
+            cookingTime: 20,
+            ingredients: [
+                .create(context: context, ingredient: "Chicken breast", amount: "500g"),
+                .create(context: context, ingredient: "Bell peppers", amount: "2"),
+                .create(context: context, ingredient: "Broccoli", amount: "1 head"),
+                .create(context: context, ingredient: "Soy sauce", amount: "3 tbsp"),
+                .create(context: context, ingredient: "Garlic", amount: "2 cloves"),
+                .create(context: context, ingredient: "Ginger", amount: "1 inch"),
+                .create(context: context, ingredient: "Vegetable oil", amount: "2 tbsp"),
+                .create(context: context, ingredient: "Cornstarch", amount: "1 tbsp"),
+                .create(context: context, ingredient: "Water", amount: "1/2 cup")
+            ],
+            steps: [
+                "Cut the chicken into bite-sized pieces.",
+                "Chop the bell peppers and broccoli into small pieces.",
+                "Heat the oil in a large skillet over medium-high heat.",
+                "Add the chicken and cook until browned.",
+                "Add the garlic and ginger, and cook for another minute.",
+                "Add the bell peppers and broccoli, and cook until tender.",
+                "Mix the soy sauce, cornstarch, and water in a small bowl.",
+                "Pour the sauce over the chicken and vegetables, and cook until thickened.",
+                "Serve hot with rice."
+            ],
+            categories: [
+                .create(context: context, value: "Asian")
+            ],
+            note: "You can use any vegetables you like for this stir fry."
+        )
+    }
 
-    private let amountStrings = [
-        "1 cup", "2 cups", "1/2 cup", "1/4 cup", "3/4 cup",
-        "1 tablespoon", "2 tablespoons", "1 teaspoon", "2 teaspoons", "1/2 teaspoon",
-        "1/4 teaspoon", "3 tablespoons", "4 tablespoons", "1 pint", "1 quart",
-        "1 gallon", "1 liter", "500 ml", "200 ml", "100 ml",
-        "50 grams", "100 grams", "200 grams", "500 grams", "1 kilogram",
-        "1 pound", "1/2 pound", "1/4 pound", "2 pounds", "3 pounds",
-        "1 ounce", "2 ounces", "3 ounces", "4 ounces", "5 ounces",
-        "1 pinch", "2 pinches", "a dash", "a smidge", "a slice",
-        "2 slices", "3 slices", "4 slices", "a handful", "a small handful",
-        "a large handful", "a bunch", "a small bunch", "a large bunch", "a piece",
-        "2 pieces", "3 pieces", "1 packet", "1 sachet", "1 can",
-        "2 cans", "1 jar", "2 jars", "1 box", "2 boxes",
-        "1 bag", "2 bags", "a few", "several", "a dozen",
-        "a couple", "a knob", "a dollop", "a splash", "a sprinkle",
-        "a sprig", "2 sprigs", "a stalk", "2 stalks", "a clove",
-        "2 cloves", "3 cloves", "a bulb", "a leaf", "2 leaves",
-        "a slab", "a slice", "a wedge", "a cube", "1 sheet",
-        "2 sheets", "1 roll", "2 rolls", "1 stick", "2 sticks",
-        "a drizzle", "a glug", "a drop", "a heap", "a scoop",
-        "a dusting", "a topping", "a coating", "a layer", "a shaving",
-        "a trim", "a zest", "a twist", "a segment", "a fraction"
-    ]
+    private func cookVegetableSoup(_ context: ModelContext) -> Recipe {
+        .create(
+            context: context,
+            name: "Vegetable Soup",
+            servingSize: 4,
+            cookingTime: 40,
+            ingredients: [
+                .create(context: context, ingredient: "Carrots", amount: "3"),
+                .create(context: context, ingredient: "Potatoes", amount: "2"),
+                .create(context: context, ingredient: "Celery", amount: "2 stalks"),
+                .create(context: context, ingredient: "Onion", amount: "1"),
+                .create(context: context, ingredient: "Garlic", amount: "2 cloves"),
+                .create(context: context, ingredient: "Vegetable broth", amount: "6 cups"),
+                .create(context: context, ingredient: "Tomatoes", amount: "2"),
+                .create(context: context, ingredient: "Salt", amount: "to taste"),
+                .create(context: context, ingredient: "Black pepper", amount: "to taste"),
+                .create(context: context, ingredient: "Olive oil", amount: "2 tbsp")
+            ],
+            steps: [
+                "Chop the carrots, potatoes, celery, onion, and tomatoes.",
+                "Heat the oil in a large pot over medium heat.",
+                "Add the chopped onions and garlic, and sauté until golden brown.",
+                "Add the carrots, potatoes, and celery, and cook for another 5 minutes.",
+                "Pour in the vegetable broth and bring to a boil.",
+                "Reduce the heat and simmer for 20 minutes, until the vegetables are tender.",
+                "Season with salt and pepper to taste.",
+                "Serve hot with a sprinkle of fresh herbs."
+            ],
+            categories: [
+                .create(context: context, value: "Healthy")
+            ],
+            note: "You can add any vegetables you have on hand."
+        )
+    }
 
-    private let stepStrings = [
-        "Preheat the oven to 350°F (175°C).", "Rinse the rice under cold water until the water runs clear.",
-        "Chop the onions finely.", "Mince the garlic cloves.", "Grate the ginger.",
-        "Dice the tomatoes.", "Slice the chicken breast into strips.", "Season the meat with salt and pepper.",
-        "Marinate the fish in lemon juice and olive oil for 30 minutes.", "Bring a pot of salted water to a boil.",
-        "Simmer the sauce on low heat for 20 minutes.", "Sauté the vegetables in a hot pan with a little oil.",
-        "Bake for 25 minutes or until golden brown.", "Grill the steak to your preferred doneness.",
-        "Steam the broccoli until tender but still crisp.", "Fry the eggs in a non-stick skillet.",
-        "Whisk the eggs and milk together until well combined.", "Knead the dough until smooth and elastic.",
-        "Let the dough rise in a warm place until doubled in size.", "Punch down the dough, then shape into loaves.",
-        "Brown the meat on all sides in a heavy skillet.", "Deglaze the pan with a splash of wine.",
-        "Reduce the sauce until it thickens.", "Cool the cake on a wire rack before icing.",
-        "Blend the soup until smooth using an immersion blender.", "Mix the dry ingredients separately from the wet ingredients.",
-        "Fold the beaten egg whites into the batter gently.", "Roll out the dough on a floured surface.",
-        "Cut the butter into the flour until crumbly.", "Chill the dough for at least an hour before rolling.",
-        "Toast the nuts in a dry pan until fragrant.", "Peel and devein the shrimp.", "Soak the beans overnight in cold water.",
-        "Drain the pasta and toss with the sauce.", "Layer the lasagna and cover with cheese.",
-        "Roast the vegetables with herbs and olive oil.", "Whip the cream until stiff peaks form.",
-        "Caramelize the onions over low heat.", "Stuff the turkey, then truss it securely.",
-        "Glaze the ham during the last 30 minutes of baking.", "Skim the fat off the top of the broth.",
-        "Zest and juice the lemons.", "Beat the butter and sugar until creamy.", "Infuse the milk with vanilla and cinnamon.",
-        "Thread the skewers alternating meat and vegetables.", "Chill the dessert until set.",
-        "Garnish with fresh herbs before serving.", "Season to taste with salt and pepper.",
-        "Serve the soup hot with a dollop of sour cream.", "Arrange the salad greens on a platter.",
-        "Toss the salad with the dressing just before serving.", "Warm the tortillas in the oven wrapped in foil.",
-        "Fill the tacos with meat, cheese, and salsa.", "Sprinkle grated chocolate over the dessert.",
-        "Melt the chocolate in a double boiler.", "Crush the garlic with the side of a knife.",
-        "Use a meat thermometer to check for doneness.", "Let the meat rest before slicing.",
-        "Thinly slice the beef against the grain.", "Refrigerate the dough to firm up if too sticky.",
-        "Seal the edges of the pie crust with egg wash.", "Brush the pastry with egg wash for a golden finish.",
-        "Dry the meat with paper towels for better browning.", "Fluff the cooked rice with a fork.",
-        "Layer the ingredients in the slow cooker.", "Cook on low for 8 hours or on high for 4 hours.",
-        "Puree the sauce in a blender until smooth.", "Strain the soup to achieve a silky texture.",
-        "Macerate the strawberries in sugar.", "Soften the gelatin in cold water before use.",
-        "Brew the tea for 3-5 minutes.", "Discard the bay leaves before serving.",
-        "Refresh the greens in ice water for crispness.", "Score the duck skin to help the fat render.",
-        "Render the bacon slowly to release the fat.", "Degrease the pan by discarding excess fat.",
-        "Mount the sauce with butter off the heat.", "Bloom the spices in oil to release their flavors.",
-        "Temper the eggs by slowly adding hot liquid.", "Quick pickle the vegetables in vinegar and sugar.",
-        "Squeeze out excess moisture from the zucchini.", "Rest the batter to prevent tough pancakes.",
-        "Dry brine the chicken for juicier results.", "Tenderize the meat with a marinade."
-    ]
-
-    private let categoryStrings = [
-        "Japanese", "Western", "French", "Italian", "Chinese",
-        "Spanish", "Mediterranean", "Mexican", "Thai", "Indian",
-        "Vietnamese", "Korean", "Main-Dish", "Side-Dish", "Soup",
-        "Salad", "Appetizer", "Dessert", "Snack", "Drink",
-        "Breakfast", "Brunch", "Lunch", "Dinner", "Tea-Time",
-        "Healthy", "Quick", "Easy", "Comfort", "Gourmet",
-        "Vegan", "Vegetarian", "Gluten-Free", "Low-Carb", "High-Protein",
-        "Low-Fat", "Organic", "Seasonal", "Local", "Detox",
-        "Festive", "Holiday", "Family-Friendly", "Kid-Friendly", "Party",
-        "One-Pot", "Slow-Cooked", "Grilled", "Baked", "Fried",
-        "Steamed", "Raw", "Spicy", "Sweet", "Sour",
-        "Umami", "Savory", "Creamy", "Crunchy", "Smooth",
-        "Light", "Hearty", "Rich", "Refreshing", "Exotic",
-        "Traditional", "Modern", "Fusion", "Homemade", "Quick-Prep",
-        "Make-Ahead", "Freezable", "Low-Calorie", "High-Fiber", "Sugar-Free",
-        "Dairy-Free", "Nut-Free", "Egg-Free", "Low-Sodium", "High-Vitamin",
-        "High-Mineral", "Energy-Boosting", "Immunity-Boosting", "Anti-Inflammatory", "Antioxidant-Rich",
-        "Meal-Prep", "Budget-Friendly", "Luxurious", "Casual", "Fine-Dining",
-        "Street-Food", "Pub-Food", "Comfort-Food", "Soul-Food", "Fast-Food"
-    ]
+    private func cookPancakes(_ context: ModelContext) -> Recipe {
+        .create(
+            context: context,
+            name: "Pancakes",
+            servingSize: 4,
+            cookingTime: 20,
+            ingredients: [
+                .create(context: context, ingredient: "All-purpose flour", amount: "1 cup"),
+                .create(context: context, ingredient: "Milk", amount: "1 cup"),
+                .create(context: context, ingredient: "Egg", amount: "1"),
+                .create(context: context, ingredient: "Baking powder", amount: "2 tsp"),
+                .create(context: context, ingredient: "Salt", amount: "1/4 tsp"),
+                .create(context: context, ingredient: "Sugar", amount: "1 tbsp"),
+                .create(context: context, ingredient: "Butter", amount: "2 tbsp")
+            ],
+            steps: [
+                "In a large bowl, mix together the flour, baking powder, salt, and sugar.",
+                "Make a well in the center and pour in the milk, egg, and melted butter.",
+                "Mix until smooth.",
+                "Heat a lightly oiled griddle or frying pan over medium-high heat.",
+                "Pour or scoop the batter onto the griddle, using approximately 1/4 cup for each pancake.",
+                "Brown on both sides and serve hot."
+            ],
+            categories: [
+                .create(context: context, value: "Breakfast")
+            ],
+            note: "Serve with syrup, butter, and fresh fruits."
+        )
+    }
 }
