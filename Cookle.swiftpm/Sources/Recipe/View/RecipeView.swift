@@ -20,7 +20,7 @@ struct RecipeView: View {
                 Text(recipe.cookingTime.description + " minutes")
             }
             Section("Ingredients") {
-                ForEach(recipe.ingredientObjects, id: \.self) { ingredientObject in
+                ForEach(recipe.ingredientObjects.sorted { $0.order < $1.order }, id: \.self) { ingredientObject in
                     HStack {
                         Text(ingredientObject.ingredient.value)
                         Spacer()

@@ -103,12 +103,12 @@ struct ModelContainerPreview<Content: View>: View {
             servingSize: 2,
             cookingTime: 30,
             ingredients: [
-                .create(context: context, ingredient: "Spaghetti", amount: "200g"),
-                .create(context: context, ingredient: "Eggs", amount: "2"),
-                .create(context: context, ingredient: "Parmesan cheese", amount: "50g"),
-                .create(context: context, ingredient: "Pancetta", amount: "100g"),
-                .create(context: context, ingredient: "Black pepper", amount: "to taste"),
-                .create(context: context, ingredient: "Salt", amount: "to taste")
+                .create(context: context, ingredient: "Spaghetti", amount: "200g", order: 1),
+                .create(context: context, ingredient: "Eggs", amount: "2", order: 2),
+                .create(context: context, ingredient: "Parmesan cheese", amount: "50g", order: 3),
+                .create(context: context, ingredient: "Pancetta", amount: "100g", order: 4),
+                .create(context: context, ingredient: "Black pepper", amount: "to taste", order: 5),
+                .create(context: context, ingredient: "Salt", amount: "to taste", order: 6)
             ],
             steps: [
                 "Boil water in a large pot and add salt.",
@@ -132,16 +132,16 @@ struct ModelContainerPreview<Content: View>: View {
             servingSize: 6,
             cookingTime: 120,
             ingredients: [
-                .create(context: context, ingredient: "Beef chuck", amount: "1 kg"),
-                .create(context: context, ingredient: "Carrots", amount: "3"),
-                .create(context: context, ingredient: "Potatoes", amount: "4"),
-                .create(context: context, ingredient: "Onions", amount: "2"),
-                .create(context: context, ingredient: "Beef broth", amount: "4 cups"),
-                .create(context: context, ingredient: "Tomato paste", amount: "2 tbsp"),
-                .create(context: context, ingredient: "Flour", amount: "1/4 cup"),
-                .create(context: context, ingredient: "Salt", amount: "to taste"),
-                .create(context: context, ingredient: "Black pepper", amount: "to taste"),
-                .create(context: context, ingredient: "Olive oil", amount: "2 tbsp")
+                .create(context: context, ingredient: "Beef chuck", amount: "1 kg", order: 1),
+                .create(context: context, ingredient: "Carrots", amount: "3", order: 2),
+                .create(context: context, ingredient: "Potatoes", amount: "4", order: 3),
+                .create(context: context, ingredient: "Onions", amount: "2", order: 4),
+                .create(context: context, ingredient: "Beef broth", amount: "4 cups", order: 5),
+                .create(context: context, ingredient: "Tomato paste", amount: "2 tbsp", order: 6),
+                .create(context: context, ingredient: "Flour", amount: "1/4 cup", order: 7),
+                .create(context: context, ingredient: "Salt", amount: "to taste", order: 8),
+                .create(context: context, ingredient: "Black pepper", amount: "to taste", order: 9),
+                .create(context: context, ingredient: "Olive oil", amount: "2 tbsp", order: 10)
             ],
             steps: [
                 "Cut the beef into large chunks and season with salt and pepper.",
@@ -167,15 +167,15 @@ struct ModelContainerPreview<Content: View>: View {
             servingSize: 4,
             cookingTime: 20,
             ingredients: [
-                .create(context: context, ingredient: "Chicken breast", amount: "500g"),
-                .create(context: context, ingredient: "Bell peppers", amount: "2"),
-                .create(context: context, ingredient: "Broccoli", amount: "1 head"),
-                .create(context: context, ingredient: "Soy sauce", amount: "3 tbsp"),
-                .create(context: context, ingredient: "Garlic", amount: "2 cloves"),
-                .create(context: context, ingredient: "Ginger", amount: "1 inch"),
-                .create(context: context, ingredient: "Vegetable oil", amount: "2 tbsp"),
-                .create(context: context, ingredient: "Cornstarch", amount: "1 tbsp"),
-                .create(context: context, ingredient: "Water", amount: "1/2 cup")
+                .create(context: context, ingredient: "Chicken breast", amount: "500g", order: 1),
+                .create(context: context, ingredient: "Bell peppers", amount: "2", order: 2),
+                .create(context: context, ingredient: "Broccoli", amount: "1 head", order: 3),
+                .create(context: context, ingredient: "Soy sauce", amount: "3 tbsp", order: 4),
+                .create(context: context, ingredient: "Garlic", amount: "2 cloves", order: 5),
+                .create(context: context, ingredient: "Ginger", amount: "1 inch", order: 6),
+                .create(context: context, ingredient: "Vegetable oil", amount: "2 tbsp", order: 7),
+                .create(context: context, ingredient: "Cornstarch", amount: "1 tbsp", order: 8),
+                .create(context: context, ingredient: "Water", amount: "1/2 cup", order: 9)
             ],
             steps: [
                 "Cut the chicken into bite-sized pieces.",
@@ -202,16 +202,16 @@ struct ModelContainerPreview<Content: View>: View {
             servingSize: 4,
             cookingTime: 40,
             ingredients: [
-                .create(context: context, ingredient: "Carrots", amount: "3"),
-                .create(context: context, ingredient: "Potatoes", amount: "2"),
-                .create(context: context, ingredient: "Celery", amount: "2 stalks"),
-                .create(context: context, ingredient: "Onion", amount: "1"),
-                .create(context: context, ingredient: "Garlic", amount: "2 cloves"),
-                .create(context: context, ingredient: "Vegetable broth", amount: "6 cups"),
-                .create(context: context, ingredient: "Tomatoes", amount: "2"),
-                .create(context: context, ingredient: "Salt", amount: "to taste"),
-                .create(context: context, ingredient: "Black pepper", amount: "to taste"),
-                .create(context: context, ingredient: "Olive oil", amount: "2 tbsp")
+                .create(context: context, ingredient: "Carrots", amount: "3", order: 1),
+                .create(context: context, ingredient: "Potatoes", amount: "2", order: 2),
+                .create(context: context, ingredient: "Celery", amount: "2 stalks", order: 3),
+                .create(context: context, ingredient: "Onion", amount: "1", order: 4),
+                .create(context: context, ingredient: "Garlic", amount: "2 cloves", order: 5),
+                .create(context: context, ingredient: "Vegetable broth", amount: "6 cups", order: 6),
+                .create(context: context, ingredient: "Tomatoes", amount: "2", order: 7),
+                .create(context: context, ingredient: "Salt", amount: "to taste", order: 8),
+                .create(context: context, ingredient: "Black pepper", amount: "to taste", order: 9),
+                .create(context: context, ingredient: "Olive oil", amount: "2 tbsp", order: 10)
             ],
             steps: [
                 "Chop the carrots, potatoes, celery, onion, and tomatoes.",
@@ -237,13 +237,13 @@ struct ModelContainerPreview<Content: View>: View {
             servingSize: 4,
             cookingTime: 20,
             ingredients: [
-                .create(context: context, ingredient: "All-purpose flour", amount: "1 cup"),
-                .create(context: context, ingredient: "Milk", amount: "1 cup"),
-                .create(context: context, ingredient: "Egg", amount: "1"),
-                .create(context: context, ingredient: "Baking powder", amount: "2 tsp"),
-                .create(context: context, ingredient: "Salt", amount: "1/4 tsp"),
-                .create(context: context, ingredient: "Sugar", amount: "1 tbsp"),
-                .create(context: context, ingredient: "Butter", amount: "2 tbsp")
+                .create(context: context, ingredient: "All-purpose flour", amount: "1 cup", order: 1),
+                .create(context: context, ingredient: "Milk", amount: "1 cup", order: 2),
+                .create(context: context, ingredient: "Egg", amount: "1", order: 3),
+                .create(context: context, ingredient: "Baking powder", amount: "2 tsp", order: 4),
+                .create(context: context, ingredient: "Salt", amount: "1/4 tsp", order: 5),
+                .create(context: context, ingredient: "Sugar", amount: "1 tbsp", order: 6),
+                .create(context: context, ingredient: "Butter", amount: "2 tbsp", order: 7)
             ],
             steps: [
                 "In a large bowl, mix together the flour, baking powder, salt, and sugar.",

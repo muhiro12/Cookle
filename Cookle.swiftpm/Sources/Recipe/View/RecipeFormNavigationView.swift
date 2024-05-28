@@ -74,11 +74,11 @@ struct RecipeFormNavigationView: View {
                                 name: name,
                                 servingSize: Int(servingSize) ?? .zero,
                                 cookingTime: Int(cookingTime) ?? .zero,
-                                ingredients: ingredients.compactMap {
-                                    guard !$0.ingredient.isEmpty else {
+                                ingredients: zip(ingredients.indices, ingredients).compactMap { index, element in
+                                    guard !element.ingredient.isEmpty else {
                                         return nil
                                     }
-                                    return .create(context: context, ingredient: $0.ingredient, amount: $0.amount)
+                                    return .create(context: context, ingredient: element.ingredient, amount: element.amount, order: index + 1)
                                 },
                                 steps: steps.filter { !$0.isEmpty },
                                 categories: categories.compactMap {
@@ -95,11 +95,11 @@ struct RecipeFormNavigationView: View {
                                 name: name,
                                 servingSize: .init(servingSize) ?? .zero,
                                 cookingTime: .init(cookingTime) ?? .zero,
-                                ingredients: ingredients.compactMap {
-                                    guard !$0.ingredient.isEmpty else {
+                                ingredients: zip(ingredients.indices, ingredients).compactMap { index, element in
+                                    guard !element.ingredient.isEmpty else {
                                         return nil
                                     }
-                                    return .create(context: context, ingredient: $0.ingredient, amount: $0.amount)
+                                    return .create(context: context, ingredient: element.ingredient, amount: element.amount, order: index + 1)
                                 },
                                 steps: steps.filter { !$0.isEmpty },
                                 categories: categories.compactMap {
@@ -125,7 +125,7 @@ struct RecipeFormNavigationView: View {
             name = recipe?.name ?? ""
             servingSize = recipe?.servingSize.description ?? ""
             cookingTime = recipe?.cookingTime.description ?? ""
-            ingredients = (recipe?.ingredientObjects.map { ($0.ingredient.value, $0.amount) } ?? []) + [("", "")]
+            ingredients = (recipe?.ingredientObjects.sorted { $0.order < $1.order }.map { ($0.ingredient.value, $0.amount) } ?? []) + [("", "")]
             steps = (recipe?.steps ?? []) + [""]
             categories = (recipe?.categories.map { $0.value }  ?? []) + [""]
             note = recipe?.note ?? ""
