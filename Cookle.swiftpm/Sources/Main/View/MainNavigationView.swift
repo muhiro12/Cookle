@@ -12,7 +12,7 @@ struct MainNavigationView: View {
     @State private var detail: Recipe?
 
     var body: some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: .constant(.all)) {
             MainNavigationSidebarView(selection: $content)
         } content: {
             if let content {
