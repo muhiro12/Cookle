@@ -29,9 +29,6 @@ struct MainNavigationContentView: View {
                             ToolbarItem {
                                 AddDiaryButton()
                             }
-                            ToolbarItem {
-                                AddRecipeButton()
-                            }
                         }
                         .navigationTitle("Diary")
                 case .recipe:
