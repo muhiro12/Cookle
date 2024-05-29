@@ -63,6 +63,9 @@ struct RecipeFormNavigationView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
+                        if name == "Enable Debug" {
+                            isDebugOn = true
+                        }
                         dismiss()
                     }
                 }
@@ -71,11 +74,6 @@ struct RecipeFormNavigationView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(recipe != nil ? "Update" : "Add") {
-                        if name == "Enable Debug" {
-                            isDebugOn = true
-                            dismiss()
-                            return
-                        }
                         if let recipe {
                             recipe.update(
                                 name: name,
