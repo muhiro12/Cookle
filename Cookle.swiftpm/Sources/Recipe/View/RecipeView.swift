@@ -50,11 +50,11 @@ struct RecipeView: View {
                     Text($0.date.formatted(.dateTime.year().month().day()))
                 }
             }
-            Section("Updated At") {
-                Text(recipe.updatedAt.description)
-            }
             Section("Created At") {
-                Text(recipe.createdAt.description)
+                Text(recipe.createdTimestamp.description)
+            }
+            Section("Updated At") {
+                Text(recipe.modifiedTimestamp.description)
             }
         }
     }

@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2024/05/08.
 //
 
+import Foundation
 import SwiftData
 
 @Model
@@ -15,12 +16,16 @@ final class IngredientObject {
     private(set) var order: Int!
     @Relationship
     private(set) var recipe: Recipe?
+    private(set) var createdTimestamp: Date!
+    private(set) var modifiedTimestamp: Date!
 
     private init(ingredient: Ingredient) {
         self.ingredient = ingredient
         self.amount = ""
         self.order = .zero
         self.recipe = nil
+        self.createdTimestamp = .now
+        self.modifiedTimestamp = .now
     }
 
     static func create(context: ModelContext, ingredient: String, amount: String, order: Int) -> IngredientObject {

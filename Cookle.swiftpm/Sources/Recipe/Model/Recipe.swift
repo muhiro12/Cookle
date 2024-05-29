@@ -25,8 +25,8 @@ final class Recipe {
     private(set) var diaries: [Diary]!
     @Relationship(deleteRule: .cascade)
     private(set) var diaryObjects: [DiaryObject]!
-    private(set) var updatedAt: Date!
-    private(set) var createdAt: Date!
+    private(set) var createdTimestamp: Date!
+    private(set) var modifiedTimestamp: Date!
 
     private init() {
         self.name = ""
@@ -39,8 +39,8 @@ final class Recipe {
         self.note = ""
         self.diaries = []
         self.diaryObjects = []
-        self.updatedAt = .now
-        self.createdAt = .now
+        self.createdTimestamp = .now
+        self.modifiedTimestamp = .now
     }
 
     static func create(context: ModelContext,
@@ -79,7 +79,7 @@ final class Recipe {
         self.steps = steps
         self.categories = categories
         self.note = note
-        self.updatedAt = .now
+        self.modifiedTimestamp = .now
     }
 }
 

@@ -5,7 +5,7 @@
 //  Created by Hiromu Nakano on 2024/04/14.
 //
 
-import SwiftUI
+import Foundation
 import SwiftData
 
 @Model
@@ -15,11 +15,15 @@ final class Ingredient: Tag {
     private(set) var objects: [IngredientObject]!
     @Relationship
     private(set) var recipes: [Recipe]!
+    private(set) var createdTimestamp: Date!
+    private(set) var modifiedTimestamp: Date!
 
     private init() {
         self.value = ""
         self.recipes = []
         self.objects = []
+        self.createdTimestamp = .now
+        self.modifiedTimestamp = .now
     }
 
     static func create(context: ModelContext, value: String) -> Self {
@@ -31,6 +35,7 @@ final class Ingredient: Tag {
 
     func update(value: String) {
         self.value = value
+        self.modifiedTimestamp = .now
     }
 }
 

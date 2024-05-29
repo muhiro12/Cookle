@@ -16,12 +16,16 @@ final class Diary {
     @Relationship(inverse: \Recipe.diaries)
     private(set) var recipes: [Recipe]!
     private(set) var note: String!
+    private(set) var createdTimestamp: Date!
+    private(set) var modifiedTimestamp: Date!
 
     private init() {
         self.date = .now
         self.objects = []
         self.recipes = []
         self.note = ""
+        self.createdTimestamp = .now
+        self.modifiedTimestamp = .now
     }
 
     static func create(context: ModelContext,
@@ -44,6 +48,7 @@ final class Diary {
         self.objects = objects
         self.recipes = objects.map { $0.recipe }
         self.note = note
+        self.modifiedTimestamp = .now
     }
 }
 
