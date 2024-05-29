@@ -26,6 +26,12 @@ struct TagView<T: Tag>: View {
                     Text($0.name)
                 }
             }
+            Section("Created At") {
+                Text(tag.createdTimestamp.formatted(.dateTime.year().month().day()))
+            }
+            Section("Updated At") {
+                Text(tag.modifiedTimestamp.formatted(.dateTime.year().month().day()))
+            }
         }
     }
 }

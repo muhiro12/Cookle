@@ -17,6 +17,12 @@ struct IngredientObjectView: View {
             Section("Recipe") {
                 Text(object.recipe?.name ?? "")
             }
+            Section("Created At") {
+                Text(object.createdTimestamp.formatted(.dateTime.year().month().day()))
+            }
+            Section("Updated At") {
+                Text(object.modifiedTimestamp.formatted(.dateTime.year().month().day()))
+            }
         }
     }
 }

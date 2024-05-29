@@ -39,6 +39,12 @@ struct DiaryView: View {
             Section("Note") {
                 Text(diary.note)
             }
+            Section("Created At") {
+                Text(diary.createdTimestamp.formatted(.dateTime.year().month().day()))
+            }
+            Section("Updated At") {
+                Text(diary.modifiedTimestamp.formatted(.dateTime.year().month().day()))
+            }
         }
     }
 }
