@@ -43,7 +43,7 @@ extension IngredientObject {
     static var descriptor: FetchDescriptor<IngredientObject> {
         .init(
             sortBy: [
-                .init(\.ingredient.value)
+                .init(\.modifiedTimestamp, order: .reverse)
             ]
         )
     }
