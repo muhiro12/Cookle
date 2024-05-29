@@ -43,7 +43,7 @@ struct DebugNavigationContentView: View {
             ) {
                 switch content {
                 case .diary:
-                    Text(diaries[$0].date.formatted())
+                    Text(diaries[$0].date.formatted(.dateTime.year().month().day()))
                 case .diaryObject:
                     Text(diaryObjects[$0].type.title)
                 case .recipe:

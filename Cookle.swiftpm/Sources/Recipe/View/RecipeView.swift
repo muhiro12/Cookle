@@ -51,10 +51,10 @@ struct RecipeView: View {
                 }
             }
             Section("Created At") {
-                Text(recipe.createdTimestamp.description)
+                Text(recipe.createdTimestamp.formatted(.dateTime.year().month().day()))
             }
             Section("Updated At") {
-                Text(recipe.modifiedTimestamp.description)
+                Text(recipe.modifiedTimestamp.formatted(.dateTime.year().month().day()))
             }
         }
     }
