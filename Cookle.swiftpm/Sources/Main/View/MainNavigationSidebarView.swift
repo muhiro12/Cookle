@@ -34,6 +34,9 @@ struct MainNavigationSidebarView: View {
                 Label("Category", systemImage: "frying.pan")
                     .tag(MainNavigationSidebar.category)
             }
+            Section {
+                Advertisement(type: .native(.small))
+            }
         }
         .toolbar {
             if isDebugOn {

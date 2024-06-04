@@ -17,6 +17,9 @@ struct CookleApp: App {
                 .task {
                     isDebugOn = true
                 }
+                .googleMobileAds {
+                    Text("GoogleMobileAds \($0)")
+                }
         }
     }
 }

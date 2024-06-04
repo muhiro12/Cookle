@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct RecipeView: View {
-    @Environment(Recipe.self) var recipe
+    @Environment(Recipe.self) private var recipe
 
     var body: some View {
         List {
@@ -36,6 +36,9 @@ struct RecipeView: View {
                         Text(values.element)
                     }
                 }
+            }
+            Section {
+                Advertisement(type: .native(.medium))
             }
             Section("Categories") {
                 ForEach(recipe.categories, id: \.self) {

@@ -7,12 +7,30 @@
 
 import SwiftUI
 import CooklePlaygrounds
+import CooklePackages
 
 @main
 struct CookleApp: App {
+    private let sharedGoogleMobileAdsController: GoogleMobileAdsController
+
+    init() {
+        sharedGoogleMobileAdsController = .init(
+            adUnitID: {
+                #if DEBUG
+                Secret.adUnitIDDev.rawValue
+                #else
+                Secret.adUnitID.rawValue
+                #endif
+            }()
+        )
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .googleMobileAds {
+                    sharedGoogleMobileAdsController.buildView($0)
+                }
         }
     }
 }
