@@ -67,7 +67,7 @@ struct MultiAddableStepSection: View {
 }
 
 #Preview {
-    ModelContainerPreview { preview in
+    CooklePreview { preview in
         Form { () -> MultiAddableStepSection in
             MultiAddableStepSection(
                 data: .constant(preview.recipes[0].steps + [""])

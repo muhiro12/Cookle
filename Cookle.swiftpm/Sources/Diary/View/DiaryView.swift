@@ -50,7 +50,7 @@ struct DiaryView: View {
 }
 
 #Preview {
-    ModelContainerPreview { preview in
+    CooklePreview { preview in
         DiaryView(selection: .constant(nil))
             .environment(preview.diaries[0])
     }

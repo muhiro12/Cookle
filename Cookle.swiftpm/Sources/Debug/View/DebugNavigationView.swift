@@ -28,7 +28,7 @@ struct DebugNavigationView: View {
 }
 
 #Preview {
-    ModelContainerPreview { _ in
+    CooklePreview { _ in
         DebugNavigationView()
     }
 }

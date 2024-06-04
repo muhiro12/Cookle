@@ -144,7 +144,7 @@ struct DiaryFormNavigationView: View {
 }
 
 #Preview {
-    ModelContainerPreview { _ in
+    CooklePreview { _ in
         DiaryFormNavigationView()
     }
 }

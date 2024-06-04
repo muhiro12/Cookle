@@ -30,7 +30,7 @@ struct MainNavigationDetailView: View {
 }
 
 #Preview {
-    ModelContainerPreview { preview in
+    CooklePreview { preview in
         MainNavigationDetailView(preview.recipes[0])
     }
 }

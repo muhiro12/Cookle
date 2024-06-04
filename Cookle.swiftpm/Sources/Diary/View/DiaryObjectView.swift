@@ -28,7 +28,7 @@ struct DiaryObjectView: View {
 }
 
 #Preview {
-    ModelContainerPreview { preview in
+    CooklePreview { preview in
         DiaryObjectView()
             .environment(preview.diaryObjects[0])
     }

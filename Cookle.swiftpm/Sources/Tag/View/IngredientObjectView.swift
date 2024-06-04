@@ -28,7 +28,7 @@ struct IngredientObjectView: View {
 }
 
 #Preview {
-    ModelContainerPreview { preview in
+    CooklePreview { preview in
         IngredientObjectView()
             .environment(preview.ingredientObjects[0])
     }

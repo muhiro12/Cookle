@@ -35,7 +35,7 @@ struct SuggestionMenu<T: Tag>: View {
 }
 
 #Preview {
-    ModelContainerPreview { _ in
+    CooklePreview { _ in
         SuggestionMenu<Category>(input: .constant("A"))
     }
 }

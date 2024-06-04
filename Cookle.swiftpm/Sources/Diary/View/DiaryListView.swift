@@ -41,7 +41,7 @@ struct DiaryListView: View {
 }
 
 #Preview {
-    ModelContainerPreview { _ in
+    CooklePreview { _ in
         DiaryListView(selection: .constant(nil))
     }
 }

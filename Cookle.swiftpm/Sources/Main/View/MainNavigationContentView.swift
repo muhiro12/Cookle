@@ -107,7 +107,7 @@ struct MainNavigationContentView: View {
 }
 
 #Preview {
-    ModelContainerPreview { _ in
+    CooklePreview { _ in
         MainNavigationContentView(.diary, selection: .constant(nil))
     }
 }

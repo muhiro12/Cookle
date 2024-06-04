@@ -25,7 +25,7 @@ struct TagListView<T: Tag>: View {
 }
 
 #Preview {
-    ModelContainerPreview { _ in
+    CooklePreview { _ in
         TagListView<Category>(selection: .constant(nil))
     }
 }

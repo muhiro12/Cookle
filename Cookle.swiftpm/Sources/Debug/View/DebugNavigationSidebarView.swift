@@ -53,9 +53,7 @@ struct DebugNavigationSidebarView: View {
             ToolbarItem {
                 Button("Create Preview Diary", systemImage: "flask") {
                     withAnimation {
-                        _ = ModelContainerPreview { _ in
-                            EmptyView()
-                        }.createPreviewDiary(context)
+                        _ = CooklePreviewStore().createPreviewDiary(context)
                     }
                 }
             }

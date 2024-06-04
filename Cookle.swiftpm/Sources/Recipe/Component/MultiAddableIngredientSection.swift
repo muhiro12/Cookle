@@ -68,7 +68,7 @@ struct MultiAddableIngredientSection: View {
 }
 
 #Preview {
-    ModelContainerPreview { preview in
+    CooklePreview { preview in
         Form { () -> MultiAddableIngredientSection in
             MultiAddableIngredientSection(
                 data: .constant(preview.recipes[0].ingredientObjects.map {

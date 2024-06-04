@@ -23,7 +23,7 @@ struct EditRecipeButton: View {
 }
 
 #Preview {
-    ModelContainerPreview { preview in
+    CooklePreview { preview in
         EditRecipeButton()
             .environment(preview.recipes[0])
     }

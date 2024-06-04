@@ -21,7 +21,7 @@ struct DeleteRecipeButton: View {
 }
 
 #Preview {
-    ModelContainerPreview { preview in
+    CooklePreview { preview in
         DeleteRecipeButton()
             .environment(preview.recipes[0])
     }

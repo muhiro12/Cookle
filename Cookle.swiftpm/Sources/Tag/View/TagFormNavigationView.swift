@@ -43,7 +43,7 @@ struct TagFormNavigationView<T: Tag>: View {
 }
 
 #Preview {
-    ModelContainerPreview { preview in
+    CooklePreview { preview in
         TagFormNavigationView<Category>()
             .environment(preview.categories[0])
     }

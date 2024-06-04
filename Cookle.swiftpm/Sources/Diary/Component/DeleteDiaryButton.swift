@@ -21,7 +21,7 @@ struct DeleteDiaryButton: View {
 }
 
 #Preview {
-    ModelContainerPreview { preview in
+    CooklePreview { preview in
         DeleteDiaryButton()
             .environment(preview.diaries[0])
     }

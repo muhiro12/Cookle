@@ -82,7 +82,7 @@ struct DebugNavigationContentView: View {
 }
 
 #Preview {
-    ModelContainerPreview { _ in
+    CooklePreview { _ in
         DebugNavigationContentView(.recipe, selection: .constant(nil))
     }
 }

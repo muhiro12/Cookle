@@ -64,7 +64,7 @@ struct RecipeView: View {
 }
 
 #Preview {
-    ModelContainerPreview { preview in
+    CooklePreview { preview in
         RecipeView()
             .environment(preview.recipes[0])
     }

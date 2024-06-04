@@ -37,7 +37,7 @@ struct TagView<T: Tag>: View {
 }
 
 #Preview {
-    ModelContainerPreview { preview in
+    CooklePreview { preview in
         TagView<Ingredient>(selection: .constant(nil))
             .environment(preview.ingredients[0])
     }

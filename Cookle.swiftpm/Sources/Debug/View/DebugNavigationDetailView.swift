@@ -63,7 +63,7 @@ struct DebugNavigationDetailView: View {
 }
 
 #Preview {
-    ModelContainerPreview { _ in
+    CooklePreview { _ in
         DebugNavigationDetailView(.zero, content: .recipe)
     }
 }

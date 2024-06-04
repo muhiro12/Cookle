@@ -144,7 +144,7 @@ struct RecipeFormNavigationView: View {
 }
 
 #Preview {
-    ModelContainerPreview { preview in
+    CooklePreview { preview in
         RecipeFormNavigationView()
             .environment(preview.recipes[0])
     }

@@ -16,7 +16,7 @@ struct EditDiaryButton: View {
 }
 
 #Preview {
-    ModelContainerPreview { preview in
+    CooklePreview { preview in
         EditDiaryButton()
             .environment(preview.diaries[0])
     }

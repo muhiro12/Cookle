@@ -1,16 +1,19 @@
 import SwiftUI
 
 struct CooklePreview<Content: View>: View {
-    private let content: (ModelContainerPreview<Content>) -> Content
-    
-    init(_ content: @escaping (ModelContainerPreview<Content>) -> Content) {
+    private let content: (CooklePreviewStore) -> Content
+
+    private let store = CooklePreviewStore()
+
+    init(_ content: @escaping (CooklePreviewStore) -> Content) {
         self.content = content
     }
-    
+
     var body: some View {
         ModelContainerPreview {
             content($0)
         }
+        .environment(store)
         .googleMobileAds {
             Text("GoogleMobileAds \($0)")
         }
@@ -21,7 +24,9 @@ struct CooklePreview<Content: View>: View {
 }
 
 #Preview {
-    CooklePreview { _ in
-        Text("Cookle")
+    CooklePreview { preview in
+        List(preview.ingredients) { ingredient in
+            Text(ingredient.value)
+        }
     }
 }

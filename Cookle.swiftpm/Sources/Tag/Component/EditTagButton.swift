@@ -16,7 +16,7 @@ struct EditTagButton<T: Tag>: View {
 }
 
 #Preview {
-    ModelContainerPreview { preview in
+    CooklePreview { preview in
         EditTagButton<Ingredient>()
             .environment(preview.ingredients[0])
     }
