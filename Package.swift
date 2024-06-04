@@ -23,7 +23,14 @@ let package = Package(
     targets: [
         .target(
             name: "CooklePlaygrounds",
-            path: "Cookle.swiftpm/Sources"
+            path: "Cookle.swiftpm",
+            exclude: [
+                "CookleApp.swift",
+                "Package.swift"
+            ],
+            resources: [
+                .process("Resources")
+            ]
         ),
         .target(
             name: "CooklePackages",
