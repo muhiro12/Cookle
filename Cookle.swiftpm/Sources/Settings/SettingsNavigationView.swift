@@ -2,7 +2,7 @@ import SwiftUI
 
 struct SettingsNavigationView: View {
     @Environment(\.dismiss) private var dismiss
-    
+
     @AppStorage(.isDebugOn) private var isDebugOn
 
     var body: some View {
