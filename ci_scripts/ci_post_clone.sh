@@ -7,3 +7,4 @@
 #  Copyright © 2024 Hiromu Nakano. All rights reserved.
 
 echo $SECRET_BASE64 | base64 -d -o ../Cookle/Cookle/Secret.swift
+defaults write com.apple.dt.Xcode IDESkipPackagePluginFingerprintValidatation -bool YES
