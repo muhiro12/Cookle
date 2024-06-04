@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct LicenseView: View {
-    @Environment(CookleLicenseList.self) private var licenseList
+    @Environment(LicenseListPackage.self) private var licenseList
 
     var body: some View {
         licenseList()

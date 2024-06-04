@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct NativeAdvertisement {
-    @Environment(CookleGoogleMobileAds.self) private var googleMobileAds
+    @Environment(GoogleMobileAdsPackage.self) private var googleMobileAds
 
     enum Size: String {
         case small = "Small"

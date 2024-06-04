@@ -1,5 +1,5 @@
 //
-//  CookleGoogleMobileAds.swift
+//  GoogleMobileAdsPackage.swift
 //
 //
 //  Created by Hiromu Nakano on 2024/06/04.
@@ -8,7 +8,7 @@
 import SwiftUI
 
 @Observable
-final class CookleGoogleMobileAds {
+final class GoogleMobileAdsPackage {
     private let builder: (String) -> AnyView
 
     init(builder: @escaping (String) -> some View) {
@@ -24,6 +24,6 @@ final class CookleGoogleMobileAds {
 
 public extension View {
     func googleMobileAds(_ builder: @escaping (String) -> some View) -> some View {
-        environment(CookleGoogleMobileAds(builder: builder))
+        environment(GoogleMobileAdsPackage(builder: builder))
     }
 }

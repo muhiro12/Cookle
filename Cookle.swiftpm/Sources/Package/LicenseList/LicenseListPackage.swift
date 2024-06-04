@@ -1,5 +1,5 @@
 //
-//  CookleLicenseList.swift
+//  LicenseListPackage.swift
 //  
 //
 //  Created by Hiromu Nakano on 2024/06/05.
@@ -8,7 +8,7 @@
 import SwiftUI
 
 @Observable
-final class CookleLicenseList {
+final class LicenseListPackage {
     private let builder: () -> AnyView
 
     init(builder: @escaping () -> some View) {
@@ -24,6 +24,6 @@ final class CookleLicenseList {
 
 public extension View {
     func licenseList(_ builder: @escaping () -> some View) -> some View {
-        environment(CookleLicenseList(builder: builder))
+        environment(LicenseListPackage(builder: builder))
     }
 }
