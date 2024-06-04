@@ -51,5 +51,7 @@ struct MainNavigationSidebarView: View {
 }
 
 #Preview {
-    MainNavigationSidebarView(selection: .constant(nil))
+    CooklePreview { _ in
+        MainNavigationSidebarView(selection: .constant(nil))
+    }
 }

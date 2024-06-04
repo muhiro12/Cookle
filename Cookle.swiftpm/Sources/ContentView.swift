@@ -19,5 +19,7 @@ public struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    CooklePreview { _ in
+        ContentView()
+    }
 }

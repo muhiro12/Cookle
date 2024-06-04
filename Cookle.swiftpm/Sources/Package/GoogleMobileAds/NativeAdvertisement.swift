@@ -48,5 +48,7 @@ extension NativeAdvertisement: View {
 }
 
 #Preview {
-    NativeAdvertisement(size: .medium)
+    CooklePreview { _ in
+        NativeAdvertisement(size: .medium)
+    }
 }

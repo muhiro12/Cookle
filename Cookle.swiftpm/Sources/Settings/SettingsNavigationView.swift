@@ -34,8 +34,7 @@ struct SettingsNavigationView: View {
 }
 
 #Preview {
-    SettingsNavigationView()
-        .licenseList {
-            Text("LicenseList")
-        }
+    CooklePreview { _ in
+        SettingsNavigationView()
+    }
 }

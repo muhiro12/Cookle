@@ -9,5 +9,7 @@ struct LicenseView: View {
 }
 
 #Preview {
-    LicenseView()
+    CooklePreview { _ in
+        LicenseView()
+    }
 }

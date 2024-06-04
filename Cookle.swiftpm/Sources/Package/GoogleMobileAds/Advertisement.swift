@@ -33,7 +33,9 @@ extension Advertisement: View {
 }
 
 #Preview {
-    List {
-        Advertisement(type: .native(.medium))
+    CooklePreview { _ in
+        List {
+            Advertisement(type: .native(.medium))
+        }
     }
 }

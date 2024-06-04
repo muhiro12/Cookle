@@ -29,5 +29,7 @@ struct ModelContainerView: View {
 }
 
 #Preview {
-    ModelContainerView()
+    CooklePreview { _ in
+        ModelContainerView()
+    }
 }
