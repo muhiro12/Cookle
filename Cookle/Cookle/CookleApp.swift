@@ -31,6 +31,9 @@ struct CookleApp: App {
                 .googleMobileAds {
                     sharedGoogleMobileAdsController.buildView($0)
                 }
+                .licenseList {
+                    LicenseListView()
+                }
         }
     }
 }

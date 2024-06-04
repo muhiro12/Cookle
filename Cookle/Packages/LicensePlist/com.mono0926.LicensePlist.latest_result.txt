@@ -1,7 +1,0 @@
-name: swift-package-manager-google-mobile-ads, nameSpecified: GoogleMobileAds, owner: googleads, version: 11.5.0, source: https://github.com/googleads/swift-package-manager-google-mobile-ads
-
-name: swift-package-manager-google-user-messaging-platform, nameSpecified: GoogleUserMessagingPlatform, owner: googleads, version: 2.4.0, source: https://github.com/googleads/swift-package-manager-google-user-messaging-platform
-
-add-version-numbers: false
-
-LicensePlist Version: 3.25.1

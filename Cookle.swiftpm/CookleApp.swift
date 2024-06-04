@@ -20,6 +20,9 @@ struct CookleApp: App {
                 .googleMobileAds {
                     Text("GoogleMobileAds \($0)")
                 }
+                .licenseList {
+                    Text("LicenseList")
+                }
         }
     }
 }
