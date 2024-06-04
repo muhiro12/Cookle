@@ -28,9 +28,6 @@ let package = Package(
             exclude: [
                 "CookleApp.swift",
                 "Package.swift"
-            ],
-            resources: [
-                .process("Resources")
             ]
         ),
         .target(
