@@ -9,9 +9,9 @@ struct SettingsNavigationView: View {
         NavigationStack {
             List {
                 Section {
-                    NavigationLink("Acknowledgements") {
+                    NavigationLink("License") {
                         LicenseView()
-                            .navigationTitle("Acknowledgements")
+                            .navigationTitle("License")
                     }
                 }
                 if isDebugOn {
@@ -35,4 +35,7 @@ struct SettingsNavigationView: View {
 
 #Preview {
     SettingsNavigationView()
+        .licenseList {
+            Text("LicenseList")
+        }
 }
