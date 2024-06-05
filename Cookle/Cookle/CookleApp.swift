@@ -17,9 +17,9 @@ struct CookleApp: App {
         sharedGoogleMobileAdsController = .init(
             adUnitID: {
                 #if DEBUG
-                Secret.adUnitIDDev.rawValue
+                secrets["adUnitIDDev"]!
                 #else
-                Secret.adUnitID.rawValue
+                secrets["adUnitID"]!
                 #endif
             }()
         )
@@ -28,6 +28,7 @@ struct CookleApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .secret(secrets)
                 .googleMobileAds {
                     sharedGoogleMobileAdsController.buildView($0)
                 }

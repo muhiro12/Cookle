@@ -11,7 +11,7 @@ import SwiftData
 struct ModelContainerPreview<Content: View>: View {
     let content: (CooklePreviewStore) -> Content
 
-    @Environment(CooklePreviewStore.self) private var store
+    @Environment(CooklePreviewStore.self) private var preview
 
     @State private var isReady = false
 
@@ -19,13 +19,13 @@ struct ModelContainerPreview<Content: View>: View {
 
     var body: some View {
         if isReady {
-            content(store)
+            content(preview)
                 .modelContainer(previewModelContainer)
         } else {
             ProgressView()
                 .task {
                     let context = previewModelContainer.mainContext
-                    await store.prepare(context)
+                    await preview.prepare(context)
                     isReady = true
                 }
         }

@@ -17,6 +17,7 @@ struct CookleApp: App {
                 .task {
                     isDebugOn = true
                 }
+                .secret(["groupID": "", "productID": ""])
                 .googleMobileAds {
                     Text("GoogleMobileAds \($0)")
                 }

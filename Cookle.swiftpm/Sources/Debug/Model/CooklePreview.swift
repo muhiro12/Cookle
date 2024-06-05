@@ -3,7 +3,8 @@ import SwiftUI
 struct CooklePreview<Content: View>: View {
     private let content: (CooklePreviewStore) -> Content
 
-    private let store = CooklePreviewStore()
+    private let preview = CooklePreviewStore()
+    private let store = Store()
 
     init(_ content: @escaping (CooklePreviewStore) -> Content) {
         self.content = content
@@ -13,7 +14,9 @@ struct CooklePreview<Content: View>: View {
         ModelContainerPreview {
             content($0)
         }
+        .environment(preview)
         .environment(store)
+        .secret(["groupID": "", "productID": ""])
         .googleMobileAds {
             Text("GoogleMobileAds \($0)")
         }

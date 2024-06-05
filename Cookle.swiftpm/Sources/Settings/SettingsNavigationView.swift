@@ -8,6 +8,7 @@ struct SettingsNavigationView: View {
     var body: some View {
         NavigationStack {
             List {
+                StoreSection()
                 Section {
                     NavigationLink("License") {
                         LicenseView()
