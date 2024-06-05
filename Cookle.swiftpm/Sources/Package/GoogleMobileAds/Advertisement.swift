@@ -13,21 +13,25 @@ struct Advertisement {
         case native(NativeAdvertisement.Size)
     }
 
+    @AppStorage(.isSubscribeOn) private var isSubscribeOn
+
     let type: AdType
 }
 
 extension Advertisement: View {
     var body: some View {
-        switch type {
-        case .native(let size):
-            HStack {
-                Spacer()
-                NativeAdvertisement(size: size)
-                    .border(Color(UIColor.separator))
-                Spacer()
+        if !isSubscribeOn {
+            switch type {
+            case .native(let size):
+                HStack {
+                    Spacer()
+                    NativeAdvertisement(size: size)
+                        .border(Color(UIColor.separator))
+                    Spacer()
+                }
+                .listRowBackground(Color.clear)
+                .listSectionSeparator(.hidden)
             }
-            .listRowBackground(Color.clear)
-            .listSectionSeparator(.hidden)
         }
     }
 }

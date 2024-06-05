@@ -3,12 +3,20 @@ import SwiftUI
 struct SettingsNavigationView: View {
     @Environment(\.dismiss) private var dismiss
 
+    @AppStorage(.isSubscribeOn) private var isSubscribeOn
+    @AppStorage(.isICloudOn) private var isICloudOn
     @AppStorage(.isDebugOn) private var isDebugOn
 
     var body: some View {
         NavigationStack {
             List {
-                StoreSection()
+                if isSubscribeOn {
+                    Section("Settings") {
+                        Toggle("iCloud On", isOn: $isICloudOn)
+                    }
+                } else {
+                    StoreSection()
+                }
                 Section {
                     NavigationLink("License") {
                         LicenseView()
@@ -16,8 +24,9 @@ struct SettingsNavigationView: View {
                     }
                 }
                 if isDebugOn {
-                    Section {
-                        NavigationLink("Debug") {
+                    Section("Debug") {
+                        Toggle("Debug On", isOn: $isDebugOn)
+                        NavigationLink("DebugNavigationView") {
                             DebugNavigationView()
                         }
                     }

@@ -3,9 +3,6 @@ import SwiftUI
 struct DebugNavigationSidebarView: View {
     @Environment(\.modelContext) private var context
 
-    @AppStorage(.isICloudOn) private var isICloudOn
-    @AppStorage(.isDebugOn) private var isDebugOn
-
     @Binding private var selection: DebugContent?
 
     init(selection: Binding<DebugContent?>) {
@@ -31,10 +28,6 @@ struct DebugNavigationSidebarView: View {
                         Text("Categories")
                     }
                 }
-            }
-            Section("Settings") {
-                Toggle("iCloud On", isOn: $isICloudOn)
-                Toggle("Debug On", isOn: $isDebugOn)
             }
         }
         .toolbar {

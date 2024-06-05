@@ -23,10 +23,19 @@ final class Store {
 
     private var purchasedSubscriptions: [Product] {
         didSet {
+            let isSubscribeOn = purchasedSubscriptions.contains {
+                productIDs.contains($0.id)
+            }
             UserDefaults.standard.set(
-                purchasedSubscriptions.contains { productIDs.contains($0.id) },
+                isSubscribeOn,
                 forKey: AppStorageKey.isSubscribeOn.rawValue
             )
+            if !isSubscribeOn {
+                UserDefaults.standard.set(
+                    false,
+                    forKey: AppStorageKey.isICloudOn.rawValue
+                )
+            }
         }
     }
 
