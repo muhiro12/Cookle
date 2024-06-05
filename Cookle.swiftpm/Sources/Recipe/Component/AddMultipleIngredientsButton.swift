@@ -46,9 +46,11 @@ struct AddMultipleIngredientsButton: View {
                             }
                         }
                     }
-                    .clipShape(.rect(cornerRadius: 4))
+                    .scrollContentBackground(.hidden)
+                    .background(Color(.secondarySystemGroupedBackground))
+                    .clipShape(.rect(cornerRadius: 8))
                     .padding()
-                    .background(Color(uiColor: .systemGroupedBackground))
+                    .background(Color(.systemGroupedBackground))
             }
             .interactiveDismissDisabled()
         }
