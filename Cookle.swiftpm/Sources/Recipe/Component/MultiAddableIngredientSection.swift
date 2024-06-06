@@ -62,6 +62,7 @@ struct MultiAddableIngredientSection: View {
                 Spacer()
                 AddMultipleIngredientsButton(ingredients: $data)
                     .font(.caption)
+                    .textCase(nil)
             }
         }
     }

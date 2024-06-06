@@ -61,6 +61,7 @@ struct MultiAddableStepSection: View {
                 Spacer()
                 AddMultipleStepsButton(steps: $data)
                     .font(.caption)
+                    .textCase(nil)
             }
         }
     }

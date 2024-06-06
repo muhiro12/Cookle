@@ -32,7 +32,22 @@ struct AddMultipleIngredientsButton: View {
                             )
                         }
                     }
-                )
+                ),
+                placeholder:
+                            """
+                            Spaghetti
+                            200g
+                            Eggs
+                            2
+                            Parmesan cheese
+                            50g
+                            Pancetta
+                            100g
+                            Black pepper
+                            to taste
+                            Salt
+                            to taste
+                            """
             )
             .interactiveDismissDisabled()
         }
