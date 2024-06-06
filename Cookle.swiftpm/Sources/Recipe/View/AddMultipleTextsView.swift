@@ -5,10 +5,11 @@ struct AddMultipleTextsView: View {
     
     @Binding private var texts: [String]
     
-    @State private var text = ""
+    @State private var text: String
     
     init(texts: Binding<[String]>) {
         self._texts = texts
+        self.text = texts.wrappedValue.joined(separator: "\n")
     }    
     
     var body: some View {
@@ -23,12 +24,9 @@ struct AddMultipleTextsView: View {
                     }
                     ToolbarItem(placement: .confirmationAction) {
                         Button("Done") {
-                            texts.insert(
-                                contentsOf: text.split(separator: "\n").map {
-                                    String($0)
-                                },
-                                at: texts.lastIndex(of: "") ?? .zero
-                            )
+                            texts = text.split(separator: "\n", omittingEmptySubsequences: false).map {
+                                String($0)
+                            }
                             text = ""
                             dismiss()
                         }

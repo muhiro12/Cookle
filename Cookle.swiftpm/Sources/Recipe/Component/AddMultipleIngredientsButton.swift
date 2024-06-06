@@ -17,21 +17,20 @@ struct AddMultipleIngredientsButton: View {
             AddMultipleTextsView(
                 texts: .init(
                     get: {
-                        data.flatMap { [$0.ingredient, $0.amount] }
+                        if data.count == 1,
+                           data[0].ingredient == "",
+                           data[0].amount == "" {
+                            return []
+                        }
+                        return data.flatMap { [$0.ingredient, $0.amount] }
                     },
                     set: { texts in
-                        let contents = stride(from: 0, to: texts.count, by: 2).map {
+                        data = stride(from: 0, to: texts.count, by: 2).map {
                             IngredientTuple(
                                 ingredient: texts[$0],
                                 amount: texts.endIndex > $0 + 1 ? texts[$0 + 1] : ""
                             )
                         }
-                        data.insert(
-                            contentsOf: contents,
-                            at: data.lastIndex {
-                                $0.ingredient == "" && $0.amount == ""
-                            } ?? .zero
-                        )
                     }
                 )
             )
