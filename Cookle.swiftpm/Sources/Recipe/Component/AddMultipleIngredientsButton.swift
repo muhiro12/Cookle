@@ -4,7 +4,6 @@ struct AddMultipleIngredientsButton: View {
     @Binding private var data: [IngredientTuple]
 
     @State private var isPresented = false
-    @State private var text = ""
 
     init(ingredients: Binding<[IngredientTuple]>) {
         self._data = ingredients
@@ -15,43 +14,27 @@ struct AddMultipleIngredientsButton: View {
             isPresented = true
         }
         .sheet(isPresented: $isPresented) {
-            NavigationStack {
-                TextEditor(text: $text)
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button("Cancel") {
-                                text = ""
-                                isPresented = false
-                            }
+            AddMultipleTextsView(
+                texts: .init(
+                    get: {
+                        data.flatMap { [$0.ingredient, $0.amount] }
+                    },
+                    set: { texts in
+                        let contents = stride(from: 0, to: texts.count, by: 2).map {
+                            IngredientTuple(
+                                ingredient: texts[$0],
+                                amount: texts.endIndex > $0 + 1 ? texts[$0 + 1] : ""
+                            )
                         }
-                        ToolbarItem(placement: .confirmationAction) {
-                            Button("Done") {
-                                let lines = text.split(separator: "\n").map {
-                                    String($0)
-                                }
-                                let contents = stride(from: 0, to: lines.count, by: 2).map {
-                                    IngredientTuple(
-                                        ingredient: lines[$0],
-                                        amount: lines.endIndex > $0 + 1 ? lines[$0 + 1] : ""
-                                    )
-                                }
-                                data.insert(
-                                    contentsOf: contents,
-                                    at: data.lastIndex {
-                                        $0.ingredient == "" && $0.amount == ""
-                                    } ?? .zero
-                                )
-                                text = ""
-                                isPresented = false
-                            }
-                        }
+                        data.insert(
+                            contentsOf: contents,
+                            at: data.lastIndex {
+                                $0.ingredient == "" && $0.amount == ""
+                            } ?? .zero
+                        )
                     }
-                    .scrollContentBackground(.hidden)
-                    .background(Color(.secondarySystemGroupedBackground))
-                    .clipShape(.rect(cornerRadius: 8))
-                    .padding()
-                    .background(Color(.systemGroupedBackground))
-            }
+                )
+            )
             .interactiveDismissDisabled()
         }
     }

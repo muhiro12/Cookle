@@ -11,7 +11,6 @@ struct AddMultipleStepsButton: View {
     @Binding private var steps: [String]
 
     @State private var isPresented = false
-    @State private var text = ""
 
     init(steps: Binding<[String]>) {
         self._steps = steps
@@ -22,35 +21,8 @@ struct AddMultipleStepsButton: View {
             isPresented = true
         }
         .sheet(isPresented: $isPresented) {
-            NavigationStack {
-                TextEditor(text: $text)
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button("Cancel") {
-                                text = ""
-                                isPresented = false
-                            }
-                        }
-                        ToolbarItem(placement: .confirmationAction) {
-                            Button("Done") {
-                                steps.insert(
-                                    contentsOf: text.split(separator: "\n").map {
-                                        String($0)
-                                    },
-                                    at: steps.lastIndex(of: "") ?? .zero
-                                )
-                                text = ""
-                                isPresented = false
-                            }
-                        }
-                    }
-                    .scrollContentBackground(.hidden)
-                    .background(Color(.secondarySystemGroupedBackground))
-                    .clipShape(.rect(cornerRadius: 8))
-                    .padding()
-                    .background(Color(.systemGroupedBackground))
-            }
-            .interactiveDismissDisabled()
+            AddMultipleTextsView(texts: $steps)
+                .interactiveDismissDisabled()
         }
     }
 }
