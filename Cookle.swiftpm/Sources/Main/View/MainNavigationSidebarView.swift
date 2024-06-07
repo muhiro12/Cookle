@@ -33,7 +33,7 @@ struct MainNavigationSidebarView: View {
                     .tag(MainNavigationSidebar.category)
             }
             Section {
-                Advertisement(type: .native(.small))
+                Advertisement(.small)
             }
         }
         .toolbar {

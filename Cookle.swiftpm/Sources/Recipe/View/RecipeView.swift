@@ -38,7 +38,7 @@ struct RecipeView: View {
                 }
             }
             Section {
-                Advertisement(type: .native(.medium))
+                Advertisement(.medium)
             }
             Section("Categories") {
                 ForEach(recipe.categories, id: \.self) {

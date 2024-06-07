@@ -9,29 +9,33 @@
 import SwiftUI
 
 struct Advertisement {
-    enum AdType {
-        case native(NativeAdvertisement.Size)
+    enum Size: String {
+        case small = "Small"
+        case medium = "Medium"
     }
+
+    @Environment(GoogleMobileAdsPackage.self) private var googleMobileAds
 
     @AppStorage(.isSubscribeOn) private var isSubscribeOn
 
-    let type: AdType
+    private let size: Size
+
+    init(_ size: Size) {
+        self.size = size
+    }
 }
 
 extension Advertisement: View {
     var body: some View {
         if !isSubscribeOn {
-            switch type {
-            case .native(let size):
-                HStack {
-                    Spacer()
-                    NativeAdvertisement(size: size)
-                        .border(Color(UIColor.separator))
-                    Spacer()
-                }
-                .listRowBackground(Color.clear)
-                .listSectionSeparator(.hidden)
+            HStack {
+                Spacer()
+                googleMobileAds(size.rawValue)
+                    .border(Color(UIColor.separator))
+                Spacer()
             }
+            .listRowBackground(Color.clear)
+            .listSectionSeparator(.hidden)
         }
     }
 }
@@ -39,7 +43,7 @@ extension Advertisement: View {
 #Preview {
     CooklePreview { _ in
         List {
-            Advertisement(type: .native(.medium))
+            Advertisement(.medium)
         }
     }
 }
