@@ -2,27 +2,20 @@
 //  GoogleMobileAdsController.swift
 //
 //
-//  Created by Hiromu Nakano on 2024/06/04.
+//  Created by Hiromu Nakano on 2024/06/07.
 //
 
 import SwiftUI
-import GoogleMobileAds
+import GoogleMobileAdsWrapper
 
 public struct GoogleMobileAdsController {
-    private let adUnitID: String
+    private let controller: GoogleMobileAdsWrapper.GoogleMobileAdsController
 
     public init(adUnitID: String) {
-        self.adUnitID = adUnitID
-
-        Task {
-            await GADMobileAds.sharedInstance().start()
-        }
+        controller = .init(adUnitID: adUnitID)
     }
 
     public func buildView(_ id: String) -> some View {
-        NativeAdmob(
-            adUnitID: adUnitID,
-            sizeID: id
-        )
+        controller.buildView(id)
     }
 }

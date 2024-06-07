@@ -1,6 +1,15 @@
 {
-  "originHash" : "e7ac697e9dda83a7a73a31dc902022a03895a4f3d8006e6053a7e3f2de895248",
+  "originHash" : "f53b66b1f4756c61dce6497233cdd499f587457cc3d47b05c7516e9b1e1d5fed",
   "pins" : [
+    {
+      "identity" : "googlemobileadswrapper",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/muhiro12/GoogleMobileAdsWrapper.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "61bc5b891cbf83f76e0d2391ceae25d2f287cb57"
+      }
+    },
     {
       "identity" : "licenselist",
       "kind" : "remoteSourceControl",
