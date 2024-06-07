@@ -1,5 +1,5 @@
 {
-  "originHash" : "f53b66b1f4756c61dce6497233cdd499f587457cc3d47b05c7516e9b1e1d5fed",
+  "originHash" : "d401dd6980aa5473c3ae563491d0e25e0f7971ffe4a63c2faa67069d03cfad80",
   "pins" : [
     {
       "identity" : "googlemobileadswrapper",
@@ -17,6 +17,15 @@
       "state" : {
         "revision" : "0828b88c1a6130d56ede2cc6c41ec50068a7ebd6",
         "version" : "0.7.0"
+      }
+    },
+    {
+      "identity" : "licenselistwrapper",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/muhiro12/LicenseListWrapper",
+      "state" : {
+        "branch" : "main",
+        "revision" : "25ca5783ab6807f76c0f277577adb6e3d8587b0d"
       }
     },
     {
