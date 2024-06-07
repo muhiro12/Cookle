@@ -29,8 +29,8 @@ struct CookleApp: App {
         WindowGroup {
             ContentView()
                 .cookleEnvironment(
-                    groupID: secrets["groupID"],
-                    productID: secrets["productID"],
+                    groupID: secrets["groupID"]!,
+                    productID: secrets["productID"]!,
                     googleMobileAds: {
                         sharedGoogleMobileAdsController.buildView($0)
                     },
