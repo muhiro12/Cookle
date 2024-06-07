@@ -32,12 +32,15 @@ struct CookleApp: App {
                     groupID: secrets["groupID"]!,
                     productID: secrets["productID"]!,
                     googleMobileAds: {
-                        sharedGoogleMobileAdsController.buildView($0)
+                        sharedGoogleMobileAdsController.buildNativeAd($0)
                     },
                     licenseList: {
                         LicenseListView()
                     }
                 )
+                .task {
+                    sharedGoogleMobileAdsController.start()
+                }
         }
     }
 }

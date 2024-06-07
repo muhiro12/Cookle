@@ -19,7 +19,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/muhiro12/GoogleMobileAdsWrapper.git", branch: "main"),
-        .package(url: "https://github.com/muhiro12/LicenseListWrapper", branch: "main")
+        .package(url: "https://github.com/muhiro12/LicenseListWrapper.git", branch: "main")
     ],
     targets: [
         .target(
