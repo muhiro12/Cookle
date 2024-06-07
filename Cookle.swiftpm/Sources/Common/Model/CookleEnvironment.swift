@@ -12,7 +12,7 @@ extension View {
             .environment(GoogleMobileAdsPackage(builder: googleMobileAds))
             .environment(LicenseListPackage(builder: licenseList))
     }
-    
+
     func cooklePlaygroundsEnvironment() -> some View {
         cookleEnvironment(
             groupID: "groupID",
@@ -20,7 +20,7 @@ extension View {
             googleMobileAds: {
                 Text("GoogleMobileAds \($0)")
             },
-            licenseList: {            
+            licenseList: {
                 Text("LicenseList")
             }
         )
