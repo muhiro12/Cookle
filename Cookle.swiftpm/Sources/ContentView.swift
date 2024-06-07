@@ -8,7 +8,8 @@
 import SwiftUI
 
 public struct ContentView: View {
-    @Environment(Secret.self) private var secret
+    @Environment(\.groupID) private var groupID
+    @Environment(\.productID) private var productID
 
     @AppStorage(.isICloudOn) private var isICloudOn
 
@@ -20,8 +21,8 @@ public struct ContentView: View {
         ModelContainerView()
             .task {
                 sharedStore.open(
-                    groupID: secret.groupID,
-                    productIDs: [secret.productID]
+                    groupID: groupID,
+                    productIDs: [productID]
                 )
             }
             .environment(sharedStore)

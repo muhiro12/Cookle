@@ -21,9 +21,3 @@ final class LicenseListPackage {
         builder()
     }
 }
-
-public extension View {
-    func licenseList(_ builder: @escaping () -> some View) -> some View {
-        environment(LicenseListPackage(builder: builder))
-    }
-}

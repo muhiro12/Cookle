@@ -21,9 +21,3 @@ final class GoogleMobileAdsPackage {
         builder(id)
     }
 }
-
-public extension View {
-    func googleMobileAds(_ builder: @escaping (String) -> some View) -> some View {
-        environment(GoogleMobileAdsPackage(builder: builder))
-    }
-}

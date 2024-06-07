@@ -28,13 +28,16 @@ struct CookleApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .secret(secrets)
-                .googleMobileAds {
-                    sharedGoogleMobileAdsController.buildView($0)
-                }
-                .licenseList {
-                    LicenseListView()
-                }
+                .cookleEnvironment(
+                    groupID: secrets["groupID"],
+                    productID: secrets["productID"],
+                    googleMobileAds: {
+                        sharedGoogleMobileAdsController.buildView($0)
+                    },
+                    licenseList: {            
+                        LicenseListView()
+                    }
+                )
         }
     }
 }

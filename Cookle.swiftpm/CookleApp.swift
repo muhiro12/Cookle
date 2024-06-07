@@ -14,15 +14,9 @@ struct CookleApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .cooklePlaygroundsEnvironment()
                 .task {
                     isDebugOn = true
-                }
-                .secret(["groupID": "", "productID": ""])
-                .googleMobileAds {
-                    Text("GoogleMobileAds \($0)")
-                }
-                .licenseList {
-                    Text("LicenseList")
                 }
         }
     }

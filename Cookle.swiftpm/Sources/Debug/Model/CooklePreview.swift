@@ -11,18 +11,16 @@ struct CooklePreview<Content: View>: View {
     }
 
     var body: some View {
-        ModelContainerPreview {
-            content($0)
+        Group {
+            Group {
+                ModelContainerPreview {
+                    content($0)
+                }
+                .environment(preview)
+            }
+            .environment(store)
         }
-        .environment(preview)
-        .environment(store)
-        .secret(["groupID": "", "productID": ""])
-        .googleMobileAds {
-            Text("GoogleMobileAds \($0)")
-        }
-        .licenseList {
-            Text("LicenseList")
-        }
+        .cooklePlaygroundsEnvironment()
     }
 }
 
