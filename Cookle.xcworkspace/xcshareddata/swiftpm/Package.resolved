@@ -1,5 +1,4 @@
 {
-  "originHash" : "e98389a8daa954aa008e62be7047a0c864a1484250547162c8a5bfe4303a27b1",
   "pins" : [
     {
       "identity" : "googlemobileadswrapper",
@@ -47,5 +46,5 @@
       }
     }
   ],
-  "version" : 3
+  "version" : 2
 }

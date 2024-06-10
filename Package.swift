@@ -26,7 +26,7 @@ let package = Package(
             name: "CooklePlaygrounds",
             path: "Cookle.swiftpm",
             exclude: [
-                "CookleApp.swift",
+                "CooklePlaygroundsApp.swift",
                 "Package.swift"
             ]
         ),

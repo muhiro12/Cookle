@@ -5,6 +5,9 @@
       location = "group:">
    </FileRef>
    <FileRef
-      location = "group:Cookle/Cookle.xcodeproj">
+      location = "group:Cookle.swiftpm">
+   </FileRef>
+   <FileRef
+      location = "group:Cookle/Xcode/Cookle.xcodeproj">
    </FileRef>
 </Workspace>

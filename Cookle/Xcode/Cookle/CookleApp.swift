@@ -17,9 +17,9 @@ struct CookleApp: App {
         sharedGoogleMobileAdsController = .init(
             adUnitID: {
                 #if DEBUG
-                secrets["adUnitIDDev"]!
+                Secret.adUnitIDDev
                 #else
-                secrets["adUnitID"]!
+                Secret.adUnitID
                 #endif
             }()
         )
@@ -29,8 +29,8 @@ struct CookleApp: App {
         WindowGroup {
             ContentView()
                 .cookleEnvironment(
-                    groupID: secrets["groupID"]!,
-                    productID: secrets["productID"]!,
+                    groupID: Secret.groupID,
+                    productID: Secret.productID,
                     googleMobileAds: {
                         sharedGoogleMobileAdsController.buildNativeAd($0)
                     },
