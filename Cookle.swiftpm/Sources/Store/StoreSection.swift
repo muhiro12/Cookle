@@ -22,10 +22,6 @@ struct StoreSection: View {
                     url: .init(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!,
                     for: .termsOfService
                 )
-                .subscriptionStorePolicyDestination(
-                    url: .init(string: "https://muhiro12.github.io/Cookle/privacy")!,
-                    for: .privacyPolicy
-                )
                 .fixedSize(horizontal: false, vertical: true)
         } footer: {
             Text(store.product?.description ?? "")
