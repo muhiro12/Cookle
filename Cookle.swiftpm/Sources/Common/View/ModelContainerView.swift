@@ -5,8 +5,8 @@
 //  Created by Hiromu Nakano on 2024/05/27.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct ModelContainerView: View {
     @AppStorage(.isICloudOn) private var isICloudOn

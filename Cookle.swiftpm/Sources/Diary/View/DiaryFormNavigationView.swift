@@ -5,8 +5,8 @@
 //  Created by Hiromu Nakano on 2024/04/17.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct DiaryFormNavigationView: View {
     @Environment(\.modelContext) private var context
@@ -80,8 +80,10 @@ struct DiaryFormNavigationView: View {
                         switch type {
                         case .breakfast:
                             $breakfasts
+
                         case .lunch:
                             $lunches
+
                         case .dinner:
                             $dinners
                         }

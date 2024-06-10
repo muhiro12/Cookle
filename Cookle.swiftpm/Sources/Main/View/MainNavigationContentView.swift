@@ -31,6 +31,7 @@ struct MainNavigationContentView: View {
                             }
                         }
                         .navigationTitle("Diary")
+
                 case .recipe:
                     RecipeListView(selection: $selection)
                         .toolbar {
@@ -39,6 +40,7 @@ struct MainNavigationContentView: View {
                             }
                         }
                         .navigationTitle("Recipe")
+
                 case .ingredient:
                     TagListView<Ingredient>(selection: pathSelection())
                         .toolbar {
@@ -47,6 +49,7 @@ struct MainNavigationContentView: View {
                             }
                         }
                         .navigationTitle("Ingredient")
+
                 case .category:
                     TagListView<Category>(selection: pathSelection())
                         .toolbar {

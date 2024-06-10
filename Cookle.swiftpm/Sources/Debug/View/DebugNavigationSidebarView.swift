@@ -16,14 +16,19 @@ struct DebugNavigationSidebarView: View {
                     switch content {
                     case .diary:
                         Text("Diaries")
+
                     case .diaryObject:
                         Text("DiaryObjects")
+
                     case .recipe:
                         Text("Recipes")
+
                     case .ingredient:
                         Text("Ingredients")
+
                     case .ingredientObject:
                         Text("IngredientObjects")
+
                     case .category:
                         Text("Categories")
                     }

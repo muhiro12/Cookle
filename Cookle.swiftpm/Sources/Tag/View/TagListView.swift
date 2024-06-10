@@ -5,8 +5,8 @@
 //  Created by Hiromu Nakano on 2024/05/10.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct TagListView<T: Tag>: View {
     @Query(T.descriptor) private var tags: [T]

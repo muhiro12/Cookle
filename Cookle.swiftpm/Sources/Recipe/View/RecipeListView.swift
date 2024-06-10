@@ -5,8 +5,8 @@
 //  Created by Hiromu Nakano on 2024/04/13.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct RecipeListView: View {
     @Query(Recipe.descriptor) private var recipes: [Recipe]

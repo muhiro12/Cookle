@@ -5,8 +5,8 @@
 //  Created by Hiromu Nakano on 2024/04/11.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct RecipeFormNavigationView: View {
     @Environment(\.modelContext) private var context
@@ -132,7 +132,7 @@ struct RecipeFormNavigationView: View {
             cookingTime = recipe?.cookingTime.description ?? ""
             ingredients = (recipe?.ingredientObjects.sorted { $0.order < $1.order }.map { ($0.ingredient.value, $0.amount) } ?? []) + [("", "")]
             steps = (recipe?.steps ?? []) + [""]
-            categories = (recipe?.categories.map { $0.value }  ?? []) + [""]
+            categories = (recipe?.categories.map { $0.value } ?? []) + [""]
             note = recipe?.note ?? ""
         }
         .interactiveDismissDisabled()

@@ -5,8 +5,8 @@
 //  Created by Hiromu Nakano on 2024/04/11.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct MultiAddableCategorySection: View {
     @Binding private var data: [String]

@@ -1,5 +1,5 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct DebugNavigationDetailView: View {
     @Query(Diary.descriptor) private var diaries: [Diary]
@@ -32,12 +32,15 @@ struct DebugNavigationDetailView: View {
                         }
                     }
                     .environment(diaries[detail])
+
             case .diaryObject:
                 DiaryObjectView()
                     .environment(diaryObjects[detail])
+
             case .recipe:
                 RecipeView()
                     .environment(recipes[detail])
+
             case .ingredient:
                 TagView<Ingredient>(selection: .constant(nil))
                     .toolbar {
@@ -50,9 +53,11 @@ struct DebugNavigationDetailView: View {
                         }
                     }
                     .environment(ingredients[detail])
+
             case .ingredientObject:
                 IngredientObjectView()
                     .environment(ingredientObjects[detail])
+
             case .category:
                 TagView<Category>(selection: .constant(nil))
                     .environment(categories[detail])

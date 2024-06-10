@@ -5,8 +5,8 @@
 //  Created by Hiromu Nakano on 2024/04/11.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct ModelContainerPreview<Content: View>: View {
     let content: (CooklePreviewStore) -> Content

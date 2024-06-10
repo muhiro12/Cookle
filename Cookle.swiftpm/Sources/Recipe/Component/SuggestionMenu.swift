@@ -5,8 +5,8 @@
 //  Created by Hiromu Nakano on 2024/04/16.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct SuggestionMenu<T: Tag>: View {
     @Binding private var input: String

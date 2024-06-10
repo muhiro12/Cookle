@@ -5,8 +5,8 @@
 //  Created by Hiromu Nakano on 2024/04/09.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct RecipeView: View {
     @Environment(Recipe.self) private var recipe

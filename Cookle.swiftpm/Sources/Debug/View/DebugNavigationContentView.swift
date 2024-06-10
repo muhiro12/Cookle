@@ -1,5 +1,5 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct DebugNavigationContentView: View {
     @Environment(\.modelContext) private var context
@@ -27,14 +27,19 @@ struct DebugNavigationContentView: View {
                     switch content {
                     case .diary:
                         diaries.endIndex
+
                     case .diaryObject:
                         diaryObjects.endIndex
+
                     case .recipe:
                         recipes.endIndex
+
                     case .ingredient:
                         ingredients.endIndex
+
                     case .ingredientObject:
                         ingredientObjects.endIndex
+
                     case .category:
                         categories.endIndex
                     }
@@ -44,14 +49,19 @@ struct DebugNavigationContentView: View {
                 switch content {
                 case .diary:
                     Text(diaries[$0].date.formatted(.dateTime.year().month().day()))
+
                 case .diaryObject:
                     Text(diaryObjects[$0].type.title)
+
                 case .recipe:
                     Text(recipes[$0].name)
+
                 case .ingredient:
                     Text(ingredients[$0].value)
+
                 case .ingredientObject:
                     Text(ingredientObjects[$0].ingredient.value + " " + ingredientObjects[$0].amount)
+
                 case .category:
                     Text(categories[$0].value)
                 }
@@ -62,14 +72,19 @@ struct DebugNavigationContentView: View {
                         switch content {
                         case .diary:
                             diaries[index].delete()
+
                         case .diaryObject:
                             diaryObjects[index].delete()
+
                         case .recipe:
                             recipes[index].delete()
+
                         case .ingredient:
                             ingredients[index].delete()
+
                         case .ingredientObject:
                             ingredientObjects[index].delete()
+
                         case .category:
                             categories[index].delete()
                         }

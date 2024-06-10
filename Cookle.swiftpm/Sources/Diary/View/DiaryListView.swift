@@ -5,8 +5,8 @@
 //  Created by Hiromu Nakano on 2024/05/12.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct DiaryListView: View {
     @Query(Diary.descriptor) private var diaries: [Diary]
@@ -21,9 +21,8 @@ struct DiaryListView: View {
         List(
             Array(
                 Dictionary(
-                    grouping: diaries,
-                    by: { $0.date.formatted(.dateTime.year().month()) }
-                )
+                    grouping: diaries
+                ) { $0.date.formatted(.dateTime.year().month()) }
                 .sorted {
                     $0.key > $1.key
                 }
