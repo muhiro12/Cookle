@@ -19,7 +19,8 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/muhiro12/GoogleMobileAdsWrapper.git", branch: "main"),
-        .package(url: "https://github.com/muhiro12/LicenseListWrapper.git", branch: "main")
+        .package(url: "https://github.com/muhiro12/LicenseListWrapper.git", branch: "main"),
+        .package(url: "https://github.com/muhiro12/StoreKitWrapper.git", branch: "main")
     ],
     targets: [
         .target(
@@ -34,7 +35,8 @@ let package = Package(
             name: "CooklePackages",
             dependencies: [
                 .product(name: "GoogleMobileAdsWrapper", package: "GoogleMobileAdsWrapper"),
-                .product(name: "LicenseListWrapper", package: "LicenseListWrapper")
+                .product(name: "LicenseListWrapper", package: "LicenseListWrapper"),
+                .product(name: "StoreKitWrapper", package: "StoreKitWrapper")
             ],
             path: "Cookle/Packages"
         )

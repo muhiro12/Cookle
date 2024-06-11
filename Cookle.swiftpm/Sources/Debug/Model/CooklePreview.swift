@@ -4,7 +4,6 @@ struct CooklePreview<Content: View>: View {
     private let content: (CooklePreviewStore) -> Content
 
     private let preview = CooklePreviewStore()
-    private let store = Store()
 
     init(_ content: @escaping (CooklePreviewStore) -> Content) {
         self.content = content
@@ -12,13 +11,10 @@ struct CooklePreview<Content: View>: View {
 
     var body: some View {
         Group {
-            Group {
-                ModelContainerPreview {
-                    content($0)
-                }
-                .environment(preview)
+            ModelContainerPreview {
+                content($0)
             }
-            .environment(store)
+            .environment(preview)
         }
         .cooklePlaygroundsEnvironment()
     }
