@@ -60,6 +60,14 @@ struct RecipeView: View {
                 Text(recipe.modifiedTimestamp.formatted(.dateTime.year().month().day()))
             }
         }
+        .task {
+            UIApplication.shared.isIdleTimerDisabled = true
+            try? await Task.sleep(for: .seconds(60 * 10))
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
+        .onDisappear {
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
     }
 }
 
