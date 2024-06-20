@@ -7,10 +7,12 @@
 
 import SwiftData
 import SwiftUI
+import StoreKit
 
 struct RecipeFormNavigationView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.requestReview) private var requestReview
 
     @Environment(Recipe.self) private var recipe: Recipe?
 
@@ -115,6 +117,13 @@ struct RecipeFormNavigationView: View {
                                 },
                                 note: note
                             )
+                            if let count = try? context.fetchCount(Recipe.descriptor),
+                               count.isMultiple(of: 5) {
+                                Task {
+                                    try await Task.sleep(for: .seconds(2))
+                                    requestReview()
+                                }
+                            }
                         }
                         dismiss()
                     }
