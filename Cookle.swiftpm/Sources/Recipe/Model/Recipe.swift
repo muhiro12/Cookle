@@ -31,6 +31,7 @@ final class Recipe {
 
     private init() {
         self.name = ""
+        self.photos = []
         self.servingSize = 0
         self.cookingTime = 0
         self.ingredients = []
@@ -42,7 +43,6 @@ final class Recipe {
         self.diaryObjects = []
         self.createdTimestamp = .now
         self.modifiedTimestamp = .now
-        self.photos = []
     }
 
     static func create(context: ModelContext,

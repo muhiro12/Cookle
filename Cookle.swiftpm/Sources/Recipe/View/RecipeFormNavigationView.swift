@@ -42,7 +42,7 @@ struct RecipeFormNavigationView: View {
                             .foregroundStyle(.red)
                     }
                 }
-                Section {
+                Section("Photos") {
                     ScrollView(.horizontal) {
                         LazyHStack {
                             ForEach(photos, id: \.self) { photo in
@@ -65,8 +65,6 @@ struct RecipeFormNavigationView: View {
                             }
                         }
                     }
-                } header: {
-                    Text("Photos")
                 }
                 Section("Serving Size") {
                     HStack {
