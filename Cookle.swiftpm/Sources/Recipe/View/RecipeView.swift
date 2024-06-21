@@ -21,7 +21,7 @@ struct RecipeView: View {
                                 Image(uiImage: image)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(height: 120)
+                                    .frame(height: 240)
                             }
                         }
                     }

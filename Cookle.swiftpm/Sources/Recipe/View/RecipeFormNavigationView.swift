@@ -58,10 +58,7 @@ struct RecipeFormNavigationView: View {
                                 selectionBehavior: .ordered,
                                 matching: .images
                             ) {
-                                Image(systemName: "pencil.circle.fill")
-                                    .symbolRenderingMode(.multicolor)
-                                    .font(.system(size: 30))
-                                    .foregroundColor(.accentColor)
+                                Image(systemName: "photo.badge.plus")
                             }
                         }
                     }
@@ -164,6 +161,7 @@ struct RecipeFormNavigationView: View {
         }
         .task {
             name = recipe?.name ?? ""
+            photos = recipe?.photos ?? []
             servingSize = recipe?.servingSize.description ?? ""
             cookingTime = recipe?.cookingTime.description ?? ""
             ingredients = (recipe?.ingredientObjects.sorted { $0.order < $1.order }.map { ($0.ingredient.value, $0.amount) } ?? []) + [("", "")]
