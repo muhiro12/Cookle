@@ -5,9 +5,10 @@
 //  Created by Hiromu Nakano on 2024/04/11.
 //
 
+import PhotosUI
+import StoreKit
 import SwiftData
 import SwiftUI
-import StoreKit
 
 struct RecipeFormNavigationView: View {
     @Environment(\.modelContext) private var context
@@ -19,6 +20,7 @@ struct RecipeFormNavigationView: View {
     @AppStorage(.isDebugOn) private var isDebugOn
 
     @State private var name = ""
+    @State private var photos = [Data]()
     @State private var servingSize = ""
     @State private var cookingTime = ""
     @State private var ingredients = [IngredientTuple]()
@@ -26,8 +28,7 @@ struct RecipeFormNavigationView: View {
     @State private var categories = [String]()
     @State private var note = ""
 
-    @State private var isPresented = false
-    @State private var text = ""
+    @State private var photosPickerItems = [PhotosPickerItem]()
 
     var body: some View {
         NavigationStack {
@@ -40,6 +41,32 @@ struct RecipeFormNavigationView: View {
                         Text("*")
                             .foregroundStyle(.red)
                     }
+                }
+                Section {
+                    ScrollView(.horizontal) {
+                        LazyHStack {
+                            ForEach(photos, id: \.self) { photo in
+                                if let image = UIImage(data: photo) {
+                                    Image(uiImage: image)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 120)
+                                }
+                            }
+                            PhotosPicker(
+                                selection: $photosPickerItems,
+                                selectionBehavior: .ordered,
+                                matching: .images
+                            ) {
+                                Image(systemName: "pencil.circle.fill")
+                                    .symbolRenderingMode(.multicolor)
+                                    .font(.system(size: 30))
+                                    .foregroundColor(.accentColor)
+                            }
+                        }
+                    }
+                } header: {
+                    Text("Photos")
                 }
                 Section("Serving Size") {
                     HStack {
@@ -79,6 +106,7 @@ struct RecipeFormNavigationView: View {
                         if let recipe {
                             recipe.update(
                                 name: name,
+                                photos: photos,
                                 servingSize: Int(servingSize) ?? .zero,
                                 cookingTime: Int(cookingTime) ?? .zero,
                                 ingredients: zip(ingredients.indices, ingredients).compactMap { index, element in
@@ -100,6 +128,7 @@ struct RecipeFormNavigationView: View {
                             _ = Recipe.create(
                                 context: context,
                                 name: name,
+                                photos: photos,
                                 servingSize: .init(servingSize) ?? .zero,
                                 cookingTime: .init(cookingTime) ?? .zero,
                                 ingredients: zip(ingredients.indices, ingredients).compactMap { index, element in
@@ -143,6 +172,17 @@ struct RecipeFormNavigationView: View {
             steps = (recipe?.steps ?? []) + [""]
             categories = (recipe?.categories.map { $0.value } ?? []) + [""]
             note = recipe?.note ?? ""
+        }
+        .onChange(of: photosPickerItems) {
+            photos.removeAll()
+            Task {
+                for item in photosPickerItems {
+                    guard let photo = try? await item.loadTransferable(type: Data.self) else {
+                        return
+                    }
+                    photos.append(photo)
+                }
+            }
         }
         .interactiveDismissDisabled()
     }

@@ -13,6 +13,20 @@ struct RecipeView: View {
 
     var body: some View {
         List {
+            Section("Photos") {
+                ScrollView(.horizontal) {
+                    LazyHStack {
+                        ForEach(recipe.photos, id: \.self) { photo in
+                            if let image = UIImage(data: photo) {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 120)
+                            }
+                        }
+                    }
+                }
+            }
             Section("Serving Size") {
                 Text(recipe.servingSize.description + " servings")
             }

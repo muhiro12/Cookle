@@ -95,6 +95,7 @@ final class CooklePreviewStore {
         .create(
             context: context,
             name: "Spaghetti Carbonara",
+            photos: [],
             servingSize: 2,
             cookingTime: 30,
             ingredients: [
@@ -124,6 +125,7 @@ final class CooklePreviewStore {
         .create(
             context: context,
             name: "Beef Stew",
+            photos: [],
             servingSize: 6,
             cookingTime: 120,
             ingredients: [
@@ -159,6 +161,7 @@ final class CooklePreviewStore {
         .create(
             context: context,
             name: "Chicken Stir Fry",
+            photos: [],
             servingSize: 4,
             cookingTime: 20,
             ingredients: [
@@ -194,6 +197,7 @@ final class CooklePreviewStore {
         .create(
             context: context,
             name: "Vegetable Soup",
+            photos: [],
             servingSize: 4,
             cookingTime: 40,
             ingredients: [
@@ -229,6 +233,7 @@ final class CooklePreviewStore {
         .create(
             context: context,
             name: "Pancakes",
+            photos: [],
             servingSize: 4,
             cookingTime: 20,
             ingredients: [
