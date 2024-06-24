@@ -10,18 +10,13 @@ import SwiftData
 
 @Model
 final class Category: Tag {
-    private(set) var value: String!
+    private(set) var value = String.empty
     @Relationship
-    private(set) var recipes: [Recipe]!
-    private(set) var createdTimestamp: Date!
-    private(set) var modifiedTimestamp: Date!
+    private(set) var recipes = [Recipe]?.some(.empty)
+    private(set) var createdTimestamp = Date.now
+    private(set) var modifiedTimestamp = Date.now
 
-    private init() {
-        self.value = ""
-        self.recipes = []
-        self.createdTimestamp = .now
-        self.modifiedTimestamp = .now
-    }
+    private init() {}
 
     static func create(context: ModelContext, value: String) -> Self {
         let category: Category = (try? context.fetch(.init(predicate: #Predicate { $0.value == value })).first) ?? .init()

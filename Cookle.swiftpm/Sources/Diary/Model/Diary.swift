@@ -10,23 +10,16 @@ import SwiftData
 
 @Model
 final class Diary {
-    private(set) var date: Date!
+    private(set) var date = Date.now
     @Relationship(deleteRule: .cascade, inverse: \DiaryObject.diary)
-    private(set) var objects: [DiaryObject]!
+    private(set) var objects = [DiaryObject]?.some(.empty)
     @Relationship(inverse: \Recipe.diaries)
-    private(set) var recipes: [Recipe]!
-    private(set) var note: String!
-    private(set) var createdTimestamp: Date!
-    private(set) var modifiedTimestamp: Date!
+    private(set) var recipes = [Recipe]?.some(.empty)
+    private(set) var note = String.empty
+    private(set) var createdTimestamp = Date.now
+    private(set) var modifiedTimestamp = Date.now
 
-    private init() {
-        self.date = .now
-        self.objects = []
-        self.recipes = []
-        self.note = ""
-        self.createdTimestamp = .now
-        self.modifiedTimestamp = .now
-    }
+    private init() {}
 
     static func create(context: ModelContext,
                        date: Date,
@@ -36,7 +29,7 @@ final class Diary {
         context.insert(diary)
         diary.date = date
         diary.objects = objects
-        diary.recipes = objects.map { $0.recipe }
+        diary.recipes = objects.compactMap { $0.recipe }
         diary.note = note
         return diary
     }
@@ -46,7 +39,7 @@ final class Diary {
                 note: String) {
         self.date = date
         self.objects = objects
-        self.recipes = objects.map { $0.recipe }
+        self.recipes = objects.compactMap { $0.recipe }
         self.note = note
         self.modifiedTimestamp = .now
     }

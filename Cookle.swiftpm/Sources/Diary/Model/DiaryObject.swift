@@ -11,21 +11,17 @@ import SwiftData
 @Model
 final class DiaryObject {
     @Relationship(inverse: \Recipe.diaryObjects)
-    private(set) var recipe: Recipe!
-    private(set) var type: DiaryObjectType!
-    private(set) var order: Int!
+    private(set) var recipe = Recipe?.none
+    private(set) var type = DiaryObjectType?.none
+    private(set) var order = Int.zero
     @Relationship
-    private(set) var diary: Diary?
-    private(set) var createdTimestamp: Date!
-    private(set) var modifiedTimestamp: Date!
+    private(set) var diary = Diary?.none
+    private(set) var createdTimestamp = Date.now
+    private(set) var modifiedTimestamp = Date.now
 
     private init(recipe: Recipe, type: DiaryObjectType) {
         self.recipe = recipe
         self.type = type
-        self.order = .zero
-        self.diary = nil
-        self.createdTimestamp = .now
-        self.modifiedTimestamp = .now
     }
 
     static func create(context: ModelContext, recipe: Recipe, type: DiaryObjectType, order: Int) -> DiaryObject {

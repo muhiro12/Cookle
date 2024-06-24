@@ -10,21 +10,15 @@ import SwiftData
 
 @Model
 final class Ingredient: Tag {
-    private(set) var value: String!
+    private(set) var value = String.empty
     @Relationship(deleteRule: .cascade)
-    private(set) var objects: [IngredientObject]!
+    private(set) var objects = [IngredientObject]?.some(.empty)
     @Relationship
-    private(set) var recipes: [Recipe]!
-    private(set) var createdTimestamp: Date!
-    private(set) var modifiedTimestamp: Date!
+    private(set) var recipes = [Recipe]?.some(.empty)
+    private(set) var createdTimestamp = Date.now
+    private(set) var modifiedTimestamp = Date.now
 
-    private init() {
-        self.value = ""
-        self.recipes = []
-        self.objects = []
-        self.createdTimestamp = .now
-        self.modifiedTimestamp = .now
-    }
+    private init() {}
 
     static func create(context: ModelContext, value: String) -> Self {
         let ingredient: Ingredient = (try? context.fetch(.init(predicate: #Predicate { $0.value == value })).first) ?? .init()

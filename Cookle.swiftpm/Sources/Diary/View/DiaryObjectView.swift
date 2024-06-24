@@ -6,10 +6,10 @@ struct DiaryObjectView: View {
     var body: some View {
         List {
             Section("Recipe") {
-                Text(object.recipe.name)
+                Text(object.recipe?.name ?? "")
             }
             Section("Type") {
-                Text(object.type.title)
+                Text(object.type?.title ?? "")
             }
             Section("Order") {
                 Text(object.order.description)

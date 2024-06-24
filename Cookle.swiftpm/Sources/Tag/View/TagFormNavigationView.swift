@@ -15,7 +15,7 @@ struct TagFormNavigationView<T: Tag>: View {
                     TextField("Value", text: $value)
                 }
                 Section("Recipes") {
-                    ForEach(tag.recipes) {
+                    ForEach(tag.recipes.orEmpty) {
                         Text($0.name)
                     }
                 }

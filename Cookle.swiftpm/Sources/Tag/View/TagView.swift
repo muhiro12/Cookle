@@ -22,7 +22,7 @@ struct TagView<T: Tag>: View {
                 Text(tag.value)
             }
             Section("Recipes") {
-                ForEach(tag.recipes, id: \.self) {
+                ForEach(tag.recipes.orEmpty, id: \.self) {
                     Text($0.name)
                 }
             }

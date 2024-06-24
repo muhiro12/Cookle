@@ -51,7 +51,7 @@ struct DebugNavigationContentView: View {
                     Text(diaries[$0].date.formatted(.dateTime.year().month().day()))
 
                 case .diaryObject:
-                    Text(diaryObjects[$0].type.title)
+                    Text(diaryObjects[$0].type?.title ?? "")
 
                 case .recipe:
                     Text(recipes[$0].name)
@@ -60,7 +60,7 @@ struct DebugNavigationContentView: View {
                     Text(ingredients[$0].value)
 
                 case .ingredientObject:
-                    Text(ingredientObjects[$0].ingredient.value + " " + ingredientObjects[$0].amount)
+                    Text((ingredientObjects[$0].ingredient?.value ?? "") + " " + ingredientObjects[$0].amount)
 
                 case .category:
                     Text(categories[$0].value)

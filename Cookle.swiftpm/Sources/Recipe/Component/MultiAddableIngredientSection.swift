@@ -72,8 +72,8 @@ struct MultiAddableIngredientSection: View {
     CooklePreview { preview in
         Form { () -> MultiAddableIngredientSection in
             MultiAddableIngredientSection(
-                data: .constant(preview.recipes[0].ingredientObjects.map {
-                    ($0.ingredient.value, $0.amount)
+                data: .constant(preview.recipes[0].ingredientObjects!.map {
+                    ($0.ingredient!.value, $0.amount)
                 } + [("", "")])
             )
         }

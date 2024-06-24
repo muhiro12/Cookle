@@ -10,40 +10,26 @@ import SwiftData
 
 @Model
 final class Recipe {
-    private(set) var name: String!
-    private(set) var photos: [Data]!
-    private(set) var servingSize: Int!
-    private(set) var cookingTime: Int!
+    private(set) var name = String.empty
+    private(set) var photos = [Data].empty
+    private(set) var servingSize = Int.zero
+    private(set) var cookingTime = Int.zero
     @Relationship(inverse: \Ingredient.recipes)
-    private(set) var ingredients: [Ingredient]!
+    private(set) var ingredients = [Ingredient]?.some(.empty)
     @Relationship(deleteRule: .cascade, inverse: \IngredientObject.recipe)
-    private(set) var ingredientObjects: [IngredientObject]!
-    private(set) var steps: [String]!
+    private(set) var ingredientObjects = [IngredientObject]?.some(.empty)
+    private(set) var steps = [String].empty
     @Relationship(inverse: \Category.recipes)
-    private(set) var categories: [Category]!
-    private(set) var note: String!
+    private(set) var categories = [Category]?.some(.empty)
+    private(set) var note = String.empty
     @Relationship
-    private(set) var diaries: [Diary]!
+    private(set) var diaries = [Diary]?.some(.empty)
     @Relationship(deleteRule: .cascade)
-    private(set) var diaryObjects: [DiaryObject]!
-    private(set) var createdTimestamp: Date!
-    private(set) var modifiedTimestamp: Date!
+    private(set) var diaryObjects = [DiaryObject]?.some(.empty)
+    private(set) var createdTimestamp = Date.now
+    private(set) var modifiedTimestamp = Date.now
 
-    private init() {
-        self.name = ""
-        self.photos = []
-        self.servingSize = 0
-        self.cookingTime = 0
-        self.ingredients = []
-        self.ingredientObjects = []
-        self.steps = []
-        self.categories = []
-        self.note = ""
-        self.diaries = []
-        self.diaryObjects = []
-        self.createdTimestamp = .now
-        self.modifiedTimestamp = .now
-    }
+    private init() {}
 
     static func create(context: ModelContext,
                        name: String,
@@ -60,7 +46,7 @@ final class Recipe {
         recipe.photos = photos
         recipe.servingSize = servingSize
         recipe.cookingTime = cookingTime
-        recipe.ingredients = ingredients.map { $0.ingredient }
+        recipe.ingredients = ingredients.compactMap { $0.ingredient }
         recipe.ingredientObjects = ingredients
         recipe.steps = steps
         recipe.categories = categories
@@ -80,7 +66,7 @@ final class Recipe {
         self.photos = photos
         self.servingSize = servingSize
         self.cookingTime = cookingTime
-        self.ingredients = ingredients.map { $0.ingredient }
+        self.ingredients = ingredients.compactMap { $0.ingredient }
         self.ingredientObjects = ingredients
         self.steps = steps
         self.categories = categories

@@ -136,9 +136,9 @@ struct DiaryFormNavigationView: View {
         }
         .task {
             date = diary?.date ?? .now
-            breakfasts = .init(diary?.objects.filter { $0.type == .breakfast }.sorted { $0.order < $1.order }.map { $0.recipe } ?? [])
-            lunches = .init(diary?.objects.filter { $0.type == .lunch }.sorted { $0.order < $1.order }.map { $0.recipe } ?? [])
-            dinners = .init(diary?.objects.filter { $0.type == .dinner }.sorted { $0.order < $1.order }.map { $0.recipe } ?? [])
+            breakfasts = .init(diary?.objects.orEmpty.filter { $0.type == .breakfast }.sorted { $0.order < $1.order }.compactMap { $0.recipe } ?? [])
+            lunches = .init(diary?.objects.orEmpty.filter { $0.type == .lunch }.sorted { $0.order < $1.order }.compactMap { $0.recipe } ?? [])
+            dinners = .init(diary?.objects.orEmpty.filter { $0.type == .dinner }.sorted { $0.order < $1.order }.compactMap { $0.recipe } ?? [])
             note = diary?.note ?? ""
         }
         .interactiveDismissDisabled()

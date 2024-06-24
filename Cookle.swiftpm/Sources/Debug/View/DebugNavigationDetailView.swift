@@ -25,7 +25,7 @@ struct DebugNavigationDetailView: View {
                     .toolbar {
                         ToolbarItem {
                             Menu("Recipes") {
-                                ForEach(diaries[detail].recipes) {
+                                ForEach(diaries[detail].recipes.orEmpty) {
                                     Text($0.name)
                                 }
                             }
@@ -46,7 +46,7 @@ struct DebugNavigationDetailView: View {
                     .toolbar {
                         ToolbarItem {
                             Menu("Objects") {
-                                ForEach(ingredients[detail].objects) {
+                                ForEach(ingredients[detail].objects.orEmpty) {
                                     Text($0.amount)
                                 }
                             }

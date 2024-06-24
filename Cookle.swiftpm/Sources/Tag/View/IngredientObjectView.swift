@@ -6,7 +6,7 @@ struct IngredientObjectView: View {
     var body: some View {
         List {
             Section("Ingredient") {
-                Text(object.ingredient.value)
+                Text(object.ingredient?.value ?? "")
             }
             Section("Amount") {
                 Text(object.amount)

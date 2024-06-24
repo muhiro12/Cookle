@@ -11,21 +11,16 @@ import SwiftData
 @Model
 final class IngredientObject {
     @Relationship(inverse: \Ingredient.objects)
-    private(set) var ingredient: Ingredient!
-    private(set) var amount: String!
-    private(set) var order: Int!
+    private(set) var ingredient = Ingredient?.none
+    private(set) var amount = String.empty
+    private(set) var order = Int.zero
     @Relationship
-    private(set) var recipe: Recipe?
-    private(set) var createdTimestamp: Date!
-    private(set) var modifiedTimestamp: Date!
+    private(set) var recipe = Recipe?.none
+    private(set) var createdTimestamp = Date.now
+    private(set) var modifiedTimestamp = Date.now
 
     private init(ingredient: Ingredient) {
         self.ingredient = ingredient
-        self.amount = ""
-        self.order = .zero
-        self.recipe = nil
-        self.createdTimestamp = .now
-        self.modifiedTimestamp = .now
     }
 
     static func create(context: ModelContext, ingredient: String, amount: String, order: Int) -> IngredientObject {

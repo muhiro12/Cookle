@@ -164,9 +164,14 @@ struct RecipeFormNavigationView: View {
             photos = recipe?.photos ?? []
             servingSize = recipe?.servingSize.description ?? ""
             cookingTime = recipe?.cookingTime.description ?? ""
-            ingredients = (recipe?.ingredientObjects.sorted { $0.order < $1.order }.map { ($0.ingredient.value, $0.amount) } ?? []) + [("", "")]
+            ingredients = (recipe?.ingredientObjects.orEmpty.sorted { $0.order < $1.order }.compactMap { object in
+                guard let ingredient = object.ingredient else {
+                    return nil
+                }
+                return (ingredient.value, object.amount)
+            } ?? []) + [("", "")]
             steps = (recipe?.steps ?? []) + [""]
-            categories = (recipe?.categories.map { $0.value } ?? []) + [""]
+            categories = (recipe?.categories.orEmpty.map { $0.value } ?? []) + [""]
             note = recipe?.note ?? ""
         }
         .onChange(of: photosPickerItems) {

@@ -61,7 +61,7 @@ struct MultiAddableCategorySection: View {
     CooklePreview { preview in
         Form { () -> MultiAddableCategorySection in
             MultiAddableCategorySection(
-                data: .constant(preview.recipes[0].categories.map { $0.value } + [""])
+                data: .constant(preview.recipes[0].categories!.map { $0.value } + [""])
             )
         }
     }

@@ -34,9 +34,9 @@ struct RecipeView: View {
                 Text(recipe.cookingTime.description + " minutes")
             }
             Section("Ingredients") {
-                ForEach(recipe.ingredientObjects.sorted { $0.order < $1.order }, id: \.self) { ingredientObject in
+                ForEach(recipe.ingredientObjects.orEmpty.sorted { $0.order < $1.order }, id: \.self) { ingredientObject in
                     HStack {
-                        Text(ingredientObject.ingredient.value)
+                        Text(ingredientObject.ingredient?.value ?? "")
                         Spacer()
                         Text(ingredientObject.amount)
                     }
@@ -55,7 +55,7 @@ struct RecipeView: View {
                 Advertisement(.medium)
             }
             Section("Categories") {
-                ForEach(recipe.categories, id: \.self) {
+                ForEach(recipe.categories.orEmpty, id: \.self) {
                     Text($0.value)
                 }
             }
@@ -63,7 +63,7 @@ struct RecipeView: View {
                 Text(recipe.note)
             }
             Section("Diaries") {
-                ForEach(recipe.diaries) {
+                ForEach(recipe.diaries.orEmpty) {
                     Text($0.date.formatted(.dateTime.year().month().day()))
                 }
             }
