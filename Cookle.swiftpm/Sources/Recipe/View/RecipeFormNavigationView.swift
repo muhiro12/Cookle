@@ -178,10 +178,22 @@ struct RecipeFormNavigationView: View {
             photos.removeAll()
             Task {
                 for item in photosPickerItems {
-                    guard let photo = try? await item.loadTransferable(type: Data.self) else {
-                        return
+                    guard let data = try? await item.loadTransferable(type: Data.self) else {
+                        continue
                     }
-                    photos.append(photo)
+
+                    var photo = data
+                    var compressionQuality = 1.0
+                    let maxSize = 300 * 1024
+
+                    while photo.count > maxSize && compressionQuality > 0 {
+                        if let data = UIImage(data: photo)?.jpegData(compressionQuality: compressionQuality) {
+                            photo = data
+                        }
+                        compressionQuality -= 0.1
+                    }
+
+                    photos.append(photo.count < data.count ? photo : data)
                 }
             }
         }
