@@ -21,23 +21,43 @@ struct DiaryView: View {
             Section("Date") {
                 Text(diary.date.formatted(.dateTime.year().month().day()))
             }
-            Section("Breakfast") {
-                ForEach(diary.objects.orEmpty.filter { $0.type == .breakfast }.sorted { $0.order < $1.order }.compactMap { $0.recipe }, id: \.self) { recipe in
-                    Text(recipe.name)
+            if let breakfasts = diary.objects?
+                .filter({ $0.type == .breakfast })
+                .sorted(by: { $0.order < $1.order })
+                .compactMap({ $0.recipe }),
+               breakfasts.isNotEmpty {
+                Section("Breakfast") {
+                    ForEach(breakfasts, id: \.self) { recipe in
+                        Text(recipe.name)
+                    }
                 }
             }
-            Section("Lunch") {
-                ForEach(diary.objects.orEmpty.filter { $0.type == .lunch }.sorted { $0.order < $1.order }.compactMap { $0.recipe }, id: \.self) { recipe in
-                    Text(recipe.name)
+            if let lunches = diary.objects?
+                .filter({ $0.type == .lunch })
+                .sorted(by: { $0.order < $1.order })
+                .compactMap({ $0.recipe }),
+               lunches.isNotEmpty {
+                Section("Lunch") {
+                    ForEach(lunches, id: \.self) { recipe in
+                        Text(recipe.name)
+                    }
                 }
             }
-            Section("Dinner") {
-                ForEach(diary.objects.orEmpty.filter { $0.type == .dinner }.sorted { $0.order < $1.order }.compactMap { $0.recipe }, id: \.self) { recipe in
-                    Text(recipe.name)
+            if let dinners = diary.objects?
+                .filter({ $0.type == .dinner })
+                .sorted(by: { $0.order < $1.order })
+                .compactMap({ $0.recipe }),
+               dinners.isNotEmpty {
+                Section("Dinner") {
+                    ForEach(dinners, id: \.self) { recipe in
+                        Text(recipe.name)
+                    }
                 }
             }
-            Section("Note") {
-                Text(diary.note)
+            if diary.note.isNotEmpty {
+                Section("Note") {
+                    Text(diary.note)
+                }
             }
             Section("Created At") {
                 Text(diary.createdTimestamp.formatted(.dateTime.year().month().day()))
