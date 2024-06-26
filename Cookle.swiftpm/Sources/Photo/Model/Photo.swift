@@ -23,3 +23,18 @@ final class Photo {
         return photo
     }
 }
+
+extension Photo {
+    var title: String {
+        recipes.orEmpty.map {
+            $0.name
+        }.joined(separator: ", ")
+    }
+}
+
+extension Photo {
+    static var descriptor: FetchDescriptor<Photo> {
+        .init()
+    }
+}
+

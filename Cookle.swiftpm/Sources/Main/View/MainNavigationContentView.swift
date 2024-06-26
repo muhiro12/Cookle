@@ -98,7 +98,7 @@ struct MainNavigationContentView: View {
             }
             .navigationDestination(for: Photo.self) { photo in
                 PhotoView(selection: $selection)
-                    .navigationTitle("Photo")
+                    .navigationTitle(photo.title)
                     .environment(photo)
             }
         }
