@@ -29,7 +29,6 @@ struct RecipeFormNavigationView: View {
     @State private var note = ""
 
     @State private var photosPickerItems = [PhotosPickerItem]()
-    @State private var isPhotoPresented = false
 
     var body: some View {
         NavigationStack {
@@ -52,9 +51,6 @@ struct RecipeFormNavigationView: View {
                                         .resizable()
                                         .scaledToFit()
                                         .frame(height: 120)
-                                        .onTapGesture {
-                                            isPhotoPresented = true
-                                        }
                                 }
                             }
                             PhotosPicker(
@@ -63,19 +59,6 @@ struct RecipeFormNavigationView: View {
                                 matching: .images
                             ) {
                                 Image(systemName: "photo.badge.plus")
-                            }
-                        }
-                    }
-                    .sheet(isPresented: $isPhotoPresented) {
-                        ScrollView(.horizontal) {
-                            LazyHStack {
-                                ForEach(photos, id: \.self) { photo in
-                                    if let image = UIImage(data: photo) {
-                                        Image(uiImage: image)
-                                            .resizable()
-                                            .scaledToFit()
-                                    }
-                                }
                             }
                         }
                     }

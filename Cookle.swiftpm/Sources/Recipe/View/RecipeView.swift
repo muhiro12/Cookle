@@ -10,6 +10,8 @@ import SwiftUI
 
 struct RecipeView: View {
     @Environment(Recipe.self) private var recipe
+    
+    @State private var isPhotoPresented = false
 
     var body: some View {
         List {
@@ -18,10 +20,14 @@ struct RecipeView: View {
                     LazyHStack {
                         ForEach(recipe.photos, id: \.self) { photo in
                             if let image = UIImage(data: photo) {
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 240)
+                                Button {
+                                    isPhotoPresented = true
+                                } label: {
+                                    Image(uiImage: image)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 240)
+                                }
                             }
                         }
                     }
@@ -72,6 +78,19 @@ struct RecipeView: View {
             }
             Section("Updated At") {
                 Text(recipe.modifiedTimestamp.formatted(.dateTime.year().month().day()))
+            }
+        }
+        .sheet(isPresented: $isPhotoPresented) {
+            ScrollView(.horizontal) {
+                LazyHStack {
+                    ForEach(recipe.photos, id: \.self) { photo in
+                        if let image = UIImage(data: photo) {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFit()
+                        }
+                    }
+                }
             }
         }
         .task {
