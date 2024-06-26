@@ -9,4 +9,8 @@ extension Collection where Self: RangeReplaceableCollection {
     static var empty: Self {
         .init()
     }
+    
+    var isNotEmpty: Bool {
+        !isEmpty
+    }
 }
