@@ -101,7 +101,7 @@ struct RecipeFormNavigationView: View {
                         if let recipe {
                             recipe.update(
                                 name: name,
-                                photos: photos,
+                                photos: photos.map { .create(context: context, data: $0) },
                                 servingSize: Int(servingSize) ?? .zero,
                                 cookingTime: Int(cookingTime) ?? .zero,
                                 ingredients: zip(ingredients.indices, ingredients).compactMap { index, element in
@@ -123,7 +123,7 @@ struct RecipeFormNavigationView: View {
                             _ = Recipe.create(
                                 context: context,
                                 name: name,
-                                photos: photos,
+                                photos: photos.map { .create(context: context, data: $0) },
                                 servingSize: .init(servingSize) ?? .zero,
                                 cookingTime: .init(cookingTime) ?? .zero,
                                 ingredients: zip(ingredients.indices, ingredients).compactMap { index, element in
@@ -161,7 +161,7 @@ struct RecipeFormNavigationView: View {
         }
         .task {
             name = recipe?.name ?? ""
-            photos = recipe?.photos ?? []
+            photos = recipe?.photos.orEmpty.map { $0.data } ?? []
             servingSize = recipe?.servingSize.description ?? ""
             cookingTime = recipe?.cookingTime.description ?? ""
             ingredients = (recipe?.ingredientObjects.orEmpty.sorted { $0.order < $1.order }.compactMap { object in
@@ -184,7 +184,7 @@ struct RecipeFormNavigationView: View {
 
                     var photo = data
                     var compressionQuality = 1.0
-                    let maxSize = 500 * 1024
+                    let maxSize = 500 * 1_024
 
                     while photo.count > maxSize && compressionQuality > 0 {
                         if let jpeg = UIImage(data: data)?.jpegData(compressionQuality: compressionQuality) {

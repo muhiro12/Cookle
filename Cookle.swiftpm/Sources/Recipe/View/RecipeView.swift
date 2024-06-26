@@ -10,7 +10,7 @@ import SwiftUI
 
 struct RecipeView: View {
     @Environment(Recipe.self) private var recipe
-    
+
     @State private var isPhotoPresented = false
 
     var body: some View {
@@ -18,8 +18,8 @@ struct RecipeView: View {
             Section("Photos") {
                 ScrollView(.horizontal) {
                     LazyHStack {
-                        ForEach(recipe.photos, id: \.self) { photo in
-                            if let image = UIImage(data: photo) {
+                        ForEach(recipe.photos.orEmpty, id: \.self) { photo in
+                            if let image = UIImage(data: photo.data) {
                                 Button {
                                     isPhotoPresented = true
                                 } label: {
@@ -83,8 +83,8 @@ struct RecipeView: View {
         .sheet(isPresented: $isPhotoPresented) {
             ScrollView(.horizontal) {
                 LazyHStack {
-                    ForEach(recipe.photos, id: \.self) { photo in
-                        if let image = UIImage(data: photo) {
+                    ForEach(recipe.photos.orEmpty, id: \.self) { photo in
+                        if let image = UIImage(data: photo.data) {
                             Image(uiImage: image)
                                 .resizable()
                                 .scaledToFit()

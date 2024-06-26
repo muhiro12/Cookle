@@ -11,7 +11,8 @@ import SwiftData
 @Model
 final class Recipe {
     private(set) var name = String.empty
-    private(set) var photos = [Data].empty
+    @Relationship(inverse: \Photo.recipes)
+    private(set) var photos = [Photo]?.some(.empty)
     private(set) var servingSize = Int.zero
     private(set) var cookingTime = Int.zero
     @Relationship(inverse: \Ingredient.recipes)
@@ -33,7 +34,7 @@ final class Recipe {
 
     static func create(context: ModelContext,
                        name: String,
-                       photos: [Data],
+                       photos: [Photo],
                        servingSize: Int,
                        cookingTime: Int,
                        ingredients: [IngredientObject],
@@ -55,7 +56,7 @@ final class Recipe {
     }
 
     func update(name: String,
-                photos: [Data],
+                photos: [Photo],
                 servingSize: Int,
                 cookingTime: Int,
                 ingredients: [IngredientObject],
