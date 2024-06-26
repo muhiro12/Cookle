@@ -11,6 +11,9 @@ import SwiftData
 @Model
 final class Photo {
     private(set) var data = Data.empty
+    private(set) var createdTimestamp = Date.now
+    private(set) var modifiedTimestamp = Date.now
+
     @Relationship(inverse: \Recipe.photos)
     private(set) var recipes = [Recipe]?.some(.empty)
 
@@ -20,6 +23,7 @@ final class Photo {
         let photo = Photo()
         context.insert(photo)
         photo.data = data
+        photo.createdTimestamp = .now
         return photo
     }
 }
@@ -37,4 +41,3 @@ extension Photo {
         .init()
     }
 }
-
