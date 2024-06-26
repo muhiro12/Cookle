@@ -21,7 +21,7 @@ final class Photo {
     private init() {}
 
     static func create(context: ModelContext, data: Data) -> Photo {
-        let photo = Photo()
+        let photo: Photo = (try? context.fetch(.init(predicate: #Predicate { $0.data == data })).first) ?? .init()
         context.insert(photo)
         photo.data = data
         return photo
