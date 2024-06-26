@@ -6,6 +6,7 @@
 //
 
 import SwiftData
+import SwiftUI
 
 @Observable
 final class CooklePreviewStore {
@@ -95,7 +96,9 @@ final class CooklePreviewStore {
         .create(
             context: context,
             name: "Spaghetti Carbonara",
-            photos: [],
+            photos: photoData().map {
+                .create(context: context, data: $0)
+            },
             servingSize: 2,
             cookingTime: 30,
             ingredients: [
@@ -125,7 +128,9 @@ final class CooklePreviewStore {
         .create(
             context: context,
             name: "Beef Stew",
-            photos: [],
+            photos: photoData().map {
+                .create(context: context, data: $0)
+            },
             servingSize: 6,
             cookingTime: 120,
             ingredients: [
@@ -161,7 +166,9 @@ final class CooklePreviewStore {
         .create(
             context: context,
             name: "Chicken Stir Fry",
-            photos: [],
+            photos: photoData().map {
+                .create(context: context, data: $0)
+            },
             servingSize: 4,
             cookingTime: 20,
             ingredients: [
@@ -197,7 +204,9 @@ final class CooklePreviewStore {
         .create(
             context: context,
             name: "Vegetable Soup",
-            photos: [],
+            photos: photoData().map {
+                .create(context: context, data: $0)
+            },
             servingSize: 4,
             cookingTime: 40,
             ingredients: [
@@ -233,7 +242,9 @@ final class CooklePreviewStore {
         .create(
             context: context,
             name: "Pancakes",
-            photos: [],
+            photos: photoData().map {
+                .create(context: context, data: $0)
+            },
             servingSize: 4,
             cookingTime: 20,
             ingredients: [
@@ -258,5 +269,14 @@ final class CooklePreviewStore {
             ],
             note: "Serve with syrup, butter, and fresh fruits."
         )
+    }
+
+    private func photoData() -> [Data] {
+        [
+            UIImage(systemName: "fork.knife")!.jpegData(compressionQuality: 1.0)!,
+            UIImage(systemName: "cup.and.saucer")!.jpegData(compressionQuality: 1.0)!,
+            UIImage(systemName: "takeoutbag.and.cup.and.straw")!.jpegData(compressionQuality: 1.0)!,
+            UIImage(systemName: "leaf")!.jpegData(compressionQuality: 1.0)!
+        ]
     }
 }
