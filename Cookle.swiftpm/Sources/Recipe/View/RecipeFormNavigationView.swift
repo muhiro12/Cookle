@@ -204,8 +204,8 @@ struct RecipeFormNavigationView: View {
                     let maxSize = 500 * 1024
 
                     while photo.count > maxSize && compressionQuality > 0 {
-                        if let data = UIImage(data: photo)?.jpegData(compressionQuality: compressionQuality) {
-                            photo = data
+                        if let jpeg = UIImage(data: data)?.jpegData(compressionQuality: compressionQuality) {
+                            photo = jpeg
                         }
                         compressionQuality -= 0.1
                     }
