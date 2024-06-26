@@ -16,6 +16,7 @@ final class CooklePreviewStore {
     private(set) var ingredients = [Ingredient]()
     private(set) var ingredientObjects = [IngredientObject]()
     private(set) var categories = [Category]()
+    private(set) var photos = [Photo]()
 
     private var isReady: Bool {
         !diaries.isEmpty
@@ -24,6 +25,7 @@ final class CooklePreviewStore {
             && !ingredients.isEmpty
             && !ingredientObjects.isEmpty
             && !categories.isEmpty
+            && !photos.isEmpty
     }
 
     @MainActor
@@ -39,6 +41,7 @@ final class CooklePreviewStore {
             ingredients = try! context.fetch(.init())
             ingredientObjects = try! context.fetch(.init())
             categories = try! context.fetch(.init())
+            photos = try! context.fetch(.init())
         }
     }
 

@@ -58,6 +58,9 @@ struct MainNavigationContentView: View {
                             }
                         }
                         .navigationTitle("Category")
+                case .photo:
+                    PhotoListView()
+                        .navigationTitle("Photo")
                 }
             }
             .navigationDestination(for: Diary.self) { diary in
@@ -92,6 +95,11 @@ struct MainNavigationContentView: View {
                     }
                     .navigationTitle(category.value)
                     .environment(category)
+            }
+            .navigationDestination(for: Photo.self) { photo in
+                PhotoView(selection: $selection)
+                    .navigationTitle("Photo")
+                    .environment(photo)
             }
         }
     }

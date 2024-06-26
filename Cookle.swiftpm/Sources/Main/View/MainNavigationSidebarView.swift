@@ -33,6 +33,10 @@ struct MainNavigationSidebarView: View {
                     .tag(MainNavigationSidebar.category)
             }
             Section {
+                Label("Photo", systemImage: "photo.stack")
+                    .tag(MainNavigationSidebar.photo)
+            }
+            Section {
                 Advertisement(.small)
             }
         }

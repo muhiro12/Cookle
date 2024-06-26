@@ -5,4 +5,5 @@ enum MainNavigationSidebar {
     case recipe
     case ingredient
     case category
+    case photo
 }
