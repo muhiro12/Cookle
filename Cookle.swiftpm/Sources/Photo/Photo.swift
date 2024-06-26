@@ -11,7 +11,7 @@ import SwiftData
 @Model
 final class Photo {
     private(set) var data = Data.empty
-    @Relationship
+    @Relationship(inverse: \Recipe.photos)
     private(set) var recipes = [Recipe]?.some(.empty)
 
     private init() {}

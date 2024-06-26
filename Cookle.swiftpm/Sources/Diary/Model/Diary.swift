@@ -11,9 +11,9 @@ import SwiftData
 @Model
 final class Diary {
     private(set) var date = Date.now
-    @Relationship(deleteRule: .cascade, inverse: \DiaryObject.diary)
+    @Relationship(deleteRule: .cascade)
     private(set) var objects = [DiaryObject]?.some(.empty)
-    @Relationship(inverse: \Recipe.diaries)
+    @Relationship
     private(set) var recipes = [Recipe]?.some(.empty)
     private(set) var note = String.empty
     private(set) var createdTimestamp = Date.now

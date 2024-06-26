@@ -10,11 +10,11 @@ import SwiftData
 
 @Model
 final class IngredientObject {
-    @Relationship(inverse: \Ingredient.objects)
+    @Relationship
     private(set) var ingredient = Ingredient?.none
     private(set) var amount = String.empty
     private(set) var order = Int.zero
-    @Relationship
+    @Relationship(inverse: \Recipe.ingredientObjects)
     private(set) var recipe = Recipe?.none
     private(set) var createdTimestamp = Date.now
     private(set) var modifiedTimestamp = Date.now

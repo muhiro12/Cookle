@@ -11,7 +11,7 @@ import SwiftData
 @Model
 final class Category: Tag {
     private(set) var value = String.empty
-    @Relationship
+    @Relationship(inverse: \Recipe.categories)
     private(set) var recipes = [Recipe]?.some(.empty)
     private(set) var createdTimestamp = Date.now
     private(set) var modifiedTimestamp = Date.now

@@ -10,11 +10,11 @@ import SwiftData
 
 @Model
 final class DiaryObject {
-    @Relationship(inverse: \Recipe.diaryObjects)
+    @Relationship
     private(set) var recipe = Recipe?.none
     private(set) var type = DiaryObjectType?.none
     private(set) var order = Int.zero
-    @Relationship
+    @Relationship(inverse: \Diary.objects)
     private(set) var diary = Diary?.none
     private(set) var createdTimestamp = Date.now
     private(set) var modifiedTimestamp = Date.now

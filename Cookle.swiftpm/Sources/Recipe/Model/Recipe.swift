@@ -11,21 +11,21 @@ import SwiftData
 @Model
 final class Recipe {
     private(set) var name = String.empty
-    @Relationship(inverse: \Photo.recipes)
+    @Relationship
     private(set) var photos = [Photo]?.some(.empty)
     private(set) var servingSize = Int.zero
     private(set) var cookingTime = Int.zero
-    @Relationship(inverse: \Ingredient.recipes)
+    @Relationship
     private(set) var ingredients = [Ingredient]?.some(.empty)
-    @Relationship(deleteRule: .cascade, inverse: \IngredientObject.recipe)
+    @Relationship(deleteRule: .cascade)
     private(set) var ingredientObjects = [IngredientObject]?.some(.empty)
     private(set) var steps = [String].empty
-    @Relationship(inverse: \Category.recipes)
+    @Relationship
     private(set) var categories = [Category]?.some(.empty)
     private(set) var note = String.empty
-    @Relationship
+    @Relationship(inverse: \Diary.recipes)
     private(set) var diaries = [Diary]?.some(.empty)
-    @Relationship(deleteRule: .cascade)
+    @Relationship(deleteRule: .cascade, inverse: \DiaryObject.recipe)
     private(set) var diaryObjects = [DiaryObject]?.some(.empty)
     private(set) var createdTimestamp = Date.now
     private(set) var modifiedTimestamp = Date.now

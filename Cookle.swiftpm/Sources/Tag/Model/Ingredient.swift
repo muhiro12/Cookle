@@ -11,9 +11,9 @@ import SwiftData
 @Model
 final class Ingredient: Tag {
     private(set) var value = String.empty
-    @Relationship(deleteRule: .cascade)
+    @Relationship(deleteRule: .cascade, inverse: \IngredientObject.ingredient)
     private(set) var objects = [IngredientObject]?.some(.empty)
-    @Relationship
+    @Relationship(inverse: \Recipe.ingredients)
     private(set) var recipes = [Recipe]?.some(.empty)
     private(set) var createdTimestamp = Date.now
     private(set) var modifiedTimestamp = Date.now
