@@ -14,8 +14,10 @@ final class DiaryObject {
     private(set) var recipe = Recipe?.none
     private(set) var type = DiaryObjectType?.none
     private(set) var order = Int.zero
+
     @Relationship(inverse: \Diary.objects)
     private(set) var diary = Diary?.none
+
     private(set) var createdTimestamp = Date.now
     private(set) var modifiedTimestamp = Date.now
 

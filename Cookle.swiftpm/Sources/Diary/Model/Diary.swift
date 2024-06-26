@@ -16,6 +16,7 @@ final class Diary {
     @Relationship
     private(set) var recipes = [Recipe]?.some(.empty)
     private(set) var note = String.empty
+
     private(set) var createdTimestamp = Date.now
     private(set) var modifiedTimestamp = Date.now
 

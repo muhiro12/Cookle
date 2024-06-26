@@ -23,10 +23,12 @@ final class Recipe {
     @Relationship
     private(set) var categories = [Category]?.some(.empty)
     private(set) var note = String.empty
+
     @Relationship(inverse: \Diary.recipes)
     private(set) var diaries = [Diary]?.some(.empty)
     @Relationship(deleteRule: .cascade, inverse: \DiaryObject.recipe)
     private(set) var diaryObjects = [DiaryObject]?.some(.empty)
+
     private(set) var createdTimestamp = Date.now
     private(set) var modifiedTimestamp = Date.now
 

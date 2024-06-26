@@ -14,8 +14,10 @@ final class IngredientObject {
     private(set) var ingredient = Ingredient?.none
     private(set) var amount = String.empty
     private(set) var order = Int.zero
+
     @Relationship(inverse: \Recipe.ingredientObjects)
     private(set) var recipe = Recipe?.none
+
     private(set) var createdTimestamp = Date.now
     private(set) var modifiedTimestamp = Date.now
 
