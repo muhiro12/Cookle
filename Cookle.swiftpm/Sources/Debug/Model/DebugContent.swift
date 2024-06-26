@@ -7,4 +7,5 @@ enum DebugContent: Int, CaseIterable {
     case ingredient
     case ingredientObject
     case category
+    case photo
 }

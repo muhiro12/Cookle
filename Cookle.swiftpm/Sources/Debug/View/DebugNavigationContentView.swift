@@ -12,6 +12,7 @@ struct DebugNavigationContentView: View {
     @Query(IngredientObject.descriptor) private var ingredientObjects: [IngredientObject]
     @Query(Ingredient.descriptor) private var ingredients: [Ingredient]
     @Query(Category.descriptor) private var categories: [Category]
+    @Query(Photo.descriptor) private var photos: [Photo]
 
     private let content: DebugContent
 
@@ -42,6 +43,9 @@ struct DebugNavigationContentView: View {
 
                     case .category:
                         categories.endIndex
+
+                    case .photo:
+                        photos.endIndex
                     }
                 }(),
                 id: \.self
@@ -64,6 +68,9 @@ struct DebugNavigationContentView: View {
 
                 case .category:
                     Text(categories[$0].value)
+
+                case .photo:
+                    Text(photos[$0].title)
                 }
             }
             .onDelete { indexSet in
@@ -87,6 +94,9 @@ struct DebugNavigationContentView: View {
 
                         case .category:
                             categories[index].delete()
+
+                        case .photo:
+                            photos[index].delete()
                         }
                     }
                 }
