@@ -15,62 +15,82 @@ struct RecipeView: View {
 
     var body: some View {
         List {
-            Section("Photos") {
-                ScrollView(.horizontal) {
-                    LazyHStack {
-                        ForEach(recipe.photos.orEmpty, id: \.self) { photo in
-                            if let image = UIImage(data: photo.data) {
-                                Button {
-                                    isPhotoPresented = true
-                                } label: {
-                                    Image(uiImage: image)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(height: 240)
+            if let photos = recipe.photos,
+               photos.isNotEmpty {
+                Section("Photos") {
+                    ScrollView(.horizontal) {
+                        LazyHStack {
+                            ForEach(photos, id: \.self) { photo in
+                                if let image = UIImage(data: photo.data) {
+                                    Button {
+                                        isPhotoPresented = true
+                                    } label: {
+                                        Image(uiImage: image)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(height: 240)
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-            Section("Serving Size") {
-                Text(recipe.servingSize.description + " servings")
+            if recipe.servingSize.isNotZero {
+                Section("Serving Size") {
+                    Text(recipe.servingSize.description + " servings")
+                }
             }
-            Section("Cooking Time") {
-                Text(recipe.cookingTime.description + " minutes")
+            if recipe.cookingTime.isNotZero {
+                Section("Cooking Time") {
+                    Text(recipe.cookingTime.description + " minutes")
+                }
             }
-            Section("Ingredients") {
-                ForEach(recipe.ingredientObjects.orEmpty.sorted { $0.order < $1.order }, id: \.self) { ingredientObject in
-                    HStack {
-                        Text(ingredientObject.ingredient?.value ?? "")
-                        Spacer()
-                        Text(ingredientObject.amount)
+            if let ingredientObjects = recipe.ingredientObjects,
+               ingredientObjects.isNotEmpty {
+                Section("Ingredients") {
+                    ForEach(ingredientObjects.sorted { $0.order < $1.order }, id: \.self) { ingredientObject in
+                        HStack {
+                            Text(ingredientObject.ingredient?.value ?? "")
+                            Spacer()
+                            Text(ingredientObject.amount)
+                        }
                     }
                 }
             }
-            Section("Steps") {
-                ForEach(Array(recipe.steps.enumerated()), id: \.offset) { values in
-                    HStack(alignment: .top) {
-                        Text((values.offset + 1).description + ".")
-                            .frame(width: 24)
-                        Text(values.element)
+            if recipe.steps.isNotEmpty {
+                Section("Steps") {
+                    ForEach(Array(recipe.steps.enumerated()), id: \.offset) { values in
+                        HStack(alignment: .top) {
+                            Text((values.offset + 1).description + ".")
+                                .frame(width: 24)
+                            Text(values.element)
+                        }
                     }
                 }
             }
             Section {
                 Advertisement(.medium)
             }
-            Section("Categories") {
-                ForEach(recipe.categories.orEmpty, id: \.self) {
-                    Text($0.value)
+            if let categories = recipe.categories,
+               categories.isNotEmpty {
+                Section("Categories") {
+                    ForEach(categories, id: \.self) {
+                        Text($0.value)
+                    }
                 }
             }
-            Section("Note") {
-                Text(recipe.note)
+            if recipe.note.isNotEmpty {
+                Section("Note") {
+                    Text(recipe.note)
+                }
             }
-            Section("Diaries") {
-                ForEach(recipe.diaries.orEmpty) {
-                    Text($0.date.formatted(.dateTime.year().month().day()))
+            if let diaries = recipe.diaries,
+               diaries.isNotEmpty {
+                Section("Diaries") {
+                    ForEach(diaries) {
+                        Text($0.date.formatted(.dateTime.year().month().day()))
+                    }
                 }
             }
             Section("Created At") {
