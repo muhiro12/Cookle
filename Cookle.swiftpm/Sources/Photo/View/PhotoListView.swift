@@ -9,7 +9,8 @@ import SwiftData
 import SwiftUI
 
 struct PhotoListView: View {
-    @Query(Photo.descriptor) private var photos: [Photo]
+    @Query(sort: \Photo.modifiedTimestamp, order: .reverse)
+    private var photos: [Photo]
 
     var body: some View {
         ScrollView {

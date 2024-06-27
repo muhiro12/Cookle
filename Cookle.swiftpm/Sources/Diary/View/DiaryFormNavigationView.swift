@@ -14,7 +14,8 @@ struct DiaryFormNavigationView: View {
 
     @Environment(Diary.self) private var diary: Diary?
 
-    @Query(Recipe.descriptor) private var recipes: [Recipe]
+    @Query(sort: \Recipe.name)
+    private var recipes: [Recipe]
 
     @State private var date = Date.now
     @State private var breakfasts = Set<Recipe>()

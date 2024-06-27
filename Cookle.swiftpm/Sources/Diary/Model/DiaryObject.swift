@@ -33,13 +33,3 @@ final class DiaryObject {
         return object
     }
 }
-
-extension DiaryObject {
-    static var descriptor: FetchDescriptor<DiaryObject> {
-        .init(
-            sortBy: [
-                .init(\.modifiedTimestamp, order: .reverse)
-            ]
-        )
-    }
-}

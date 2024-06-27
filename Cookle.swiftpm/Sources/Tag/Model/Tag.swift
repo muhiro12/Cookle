@@ -13,7 +13,6 @@ protocol Tag: PersistentModel {
     var recipes: [Recipe]? { get }
     var createdTimestamp: Date { get }
     var modifiedTimestamp: Date { get }
-    static var descriptor: FetchDescriptor<Self> { get }
     static func create(context: ModelContext, value: String) -> Self
     func update(value: String)
 }

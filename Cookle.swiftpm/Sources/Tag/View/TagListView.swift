@@ -9,7 +9,8 @@ import SwiftData
 import SwiftUI
 
 struct TagListView<T: Tag>: View {
-    @Query(T.descriptor) private var tags: [T]
+    @Query(sort: \T.value)
+    private var tags: [T]
 
     @Binding private var selection: T?
 

@@ -81,13 +81,3 @@ final class Recipe {
         self.modifiedTimestamp = .now
     }
 }
-
-extension Recipe {
-    static var descriptor: FetchDescriptor<Recipe> {
-        .init(
-            sortBy: [
-                .init(\.name)
-            ]
-        )
-    }
-}

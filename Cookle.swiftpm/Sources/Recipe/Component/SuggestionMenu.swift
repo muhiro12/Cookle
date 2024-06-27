@@ -11,7 +11,8 @@ import SwiftUI
 struct SuggestionMenu<T: Tag>: View {
     @Binding private var input: String
 
-    @Query(T.descriptor) private var tags: [T]
+    @Query(sort: \T.value)
+    private var tags: [T]
 
     init(input: Binding<String>) {
         self._input = input

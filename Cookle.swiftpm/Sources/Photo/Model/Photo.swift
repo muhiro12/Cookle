@@ -37,13 +37,3 @@ extension Photo {
         }.joined(separator: ", ")
     }
 }
-
-extension Photo {
-    static var descriptor: FetchDescriptor<Photo> {
-        .init(
-            sortBy: [
-                .init(\.modifiedTimestamp, order: .reverse)
-            ]
-        )
-    }
-}
