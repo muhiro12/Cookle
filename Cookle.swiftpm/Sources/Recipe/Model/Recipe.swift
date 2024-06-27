@@ -49,6 +49,7 @@ final class Recipe {
         context.insert(recipe)
         recipe.name = name
         recipe.photos = photos.compactMap { $0.photo }
+        recipe.photoObjects = photos
         recipe.servingSize = servingSize
         recipe.cookingTime = cookingTime
         recipe.ingredients = ingredients.compactMap { $0.ingredient }
@@ -69,6 +70,7 @@ final class Recipe {
                 note: String) {
         self.name = name
         self.photos = photos.compactMap { $0.photo }
+        self.photoObjects = photos
         self.servingSize = servingSize
         self.cookingTime = cookingTime
         self.ingredients = ingredients.compactMap { $0.ingredient }
