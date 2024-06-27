@@ -7,6 +7,8 @@ struct SettingsNavigationView: View {
     @AppStorage(.isICloudOn) private var isICloudOn
     @AppStorage(.isDebugOn) private var isDebugOn
 
+    @State private var isDebugPresented = false
+
     var body: some View {
         NavigationStack {
             List {
@@ -26,8 +28,10 @@ struct SettingsNavigationView: View {
                 if isDebugOn {
                     Section("Debug") {
                         Toggle("Debug On", isOn: $isDebugOn)
-                        NavigationLink("DebugNavigationView") {
-                            DebugNavigationView()
+                        Button {
+                            isDebugPresented = true
+                        } label: {
+                            Text("DebugNavigationView")
                         }
                     }
                 }
@@ -38,6 +42,9 @@ struct SettingsNavigationView: View {
                         dismiss()
                     }
                 }
+            }
+            .fullScreenCover(isPresented: $isDebugPresented) {
+                DebugNavigationView()
             }
         }
     }
