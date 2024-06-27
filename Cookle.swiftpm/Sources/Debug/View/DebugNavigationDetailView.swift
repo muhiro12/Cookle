@@ -2,22 +2,14 @@ import SwiftData
 import SwiftUI
 
 struct DebugNavigationDetailView: View {
-    @Query(sort: \Diary.date, order: .reverse)
-    private var diaries: [Diary]
-    @Query(sort: \DiaryObject.modifiedTimestamp, order: .reverse)
-    private var diaryObjects: [DiaryObject]
-    @Query(sort: \Recipe.name)
-    private var recipes: [Recipe]
-    @Query(sort: \IngredientObject.modifiedTimestamp, order: .reverse)
-    private var ingredientObjects: [IngredientObject]
-    @Query(sort: \Ingredient.value)
-    private var ingredients: [Ingredient]
-    @Query(sort: \Category.value)
-    private var categories: [Category]
-    @Query(sort: \Photo.modifiedTimestamp, order: .reverse)
-    private var photos: [Photo]
-    @Query(sort: \PhotoObject.modifiedTimestamp, order: .reverse)
-    private var photoObjects: [PhotoObject]
+    @Query(Diary.descriptor) private var diaries: [Diary]
+    @Query(DiaryObject.descriptor) private var diaryObjects: [DiaryObject]
+    @Query(Recipe.descriptor) private var recipes: [Recipe]
+    @Query(IngredientObject.descriptor) private var ingredientObjects: [IngredientObject]
+    @Query(Ingredient.descriptor) private var ingredients: [Ingredient]
+    @Query(Category.descriptor) private var categories: [Category]
+    @Query(Photo.descriptor) private var photos: [Photo]
+    @Query(PhotoObject.descriptor) private var photoObjects: [PhotoObject]
 
     private let detail: Int
     private let content: DebugContent

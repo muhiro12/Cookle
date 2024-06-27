@@ -32,3 +32,13 @@ final class Category: Tag {
         self.modifiedTimestamp = .now
     }
 }
+
+extension Category {
+    static var descriptor: FetchDescriptor<Category> {
+        .init(
+            sortBy: [
+                .init(\.value)
+            ]
+        )
+    }
+}

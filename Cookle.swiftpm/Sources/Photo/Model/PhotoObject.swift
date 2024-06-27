@@ -33,3 +33,13 @@ final class PhotoObject {
         return object
     }
 }
+
+extension PhotoObject {
+    static var descriptor: FetchDescriptor<PhotoObject> {
+        .init(
+            sortBy: [
+                .init(\.modifiedTimestamp, order: .reverse)
+            ]
+        )
+    }
+}

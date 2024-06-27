@@ -9,8 +9,7 @@ import SwiftData
 import SwiftUI
 
 struct DiaryListView: View {
-    @Query(sort: \Diary.date, order: .reverse)
-    private var diaries: [Diary]
+    @Query(Diary.descriptor) private var diaries: [Diary]
 
     @Binding private var selection: Diary?
 

@@ -35,3 +35,13 @@ final class IngredientObject {
         return object
     }
 }
+
+extension IngredientObject {
+    static var descriptor: FetchDescriptor<IngredientObject> {
+        .init(
+            sortBy: [
+                .init(\.modifiedTimestamp, order: .reverse)
+            ]
+        )
+    }
+}

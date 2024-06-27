@@ -45,3 +45,13 @@ final class Diary {
         self.modifiedTimestamp = .now
     }
 }
+
+extension Diary {
+    static var descriptor: FetchDescriptor<Diary> {
+        .init(
+            sortBy: [
+                .init(\.date, order: .reverse)
+            ]
+        )
+    }
+}

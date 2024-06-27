@@ -34,3 +34,13 @@ final class Ingredient: Tag {
         self.modifiedTimestamp = .now
     }
 }
+
+extension Ingredient {
+    static var descriptor: FetchDescriptor<Ingredient> {
+        .init(
+            sortBy: [
+                .init(\.value)
+            ]
+        )
+    }
+}
