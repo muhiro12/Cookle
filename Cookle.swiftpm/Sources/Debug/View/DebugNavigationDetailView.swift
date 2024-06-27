@@ -9,6 +9,7 @@ struct DebugNavigationDetailView: View {
     @Query(Ingredient.descriptor) private var ingredients: [Ingredient]
     @Query(Category.descriptor) private var categories: [Category]
     @Query(Photo.descriptor) private var photos: [Photo]
+    @Query(PhotoObject.descriptor) private var photoObjects: [PhotoObject]
 
     private let detail: Int
     private let content: DebugContent
@@ -66,6 +67,10 @@ struct DebugNavigationDetailView: View {
             case .photo:
                 PhotoView(selection: .constant(nil))
                     .environment(photos[detail])
+
+            case .photoObject:
+                PhotoObjectView()
+                    .environment(photoObjects[detail])
             }
         }
         .navigationTitle("Detail")

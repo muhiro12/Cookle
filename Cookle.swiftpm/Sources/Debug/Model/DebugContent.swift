@@ -8,4 +8,5 @@ enum DebugContent: Int, CaseIterable {
     case ingredientObject
     case category
     case photo
+    case photoObject
 }

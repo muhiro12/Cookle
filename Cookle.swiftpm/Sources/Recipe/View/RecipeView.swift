@@ -15,13 +15,14 @@ struct RecipeView: View {
 
     var body: some View {
         List {
-            if let photos = recipe.photos,
-               photos.isNotEmpty {
+            if let photoObjects = recipe.photoObjects,
+               photoObjects.isNotEmpty {
                 Section("Photos") {
                     ScrollView(.horizontal) {
                         LazyHStack {
-                            ForEach(photos, id: \.self) { photo in
-                                if let image = UIImage(data: photo.data) {
+                            ForEach(photoObjects.sorted { $0.order < $1.order }, id: \.self) { photoObject in
+                                if let photo = photoObject.photo,
+                                   let image = UIImage(data: photo.data) {
                                     Button {
                                         isPhotoPresented = true
                                     } label: {

@@ -34,6 +34,9 @@ struct DebugNavigationSidebarView: View {
 
                     case .photo:
                         Text("Photos")
+
+                    case .photoObject:
+                        Text("PhotoObjects")
                     }
                 }
             }
@@ -49,6 +52,7 @@ struct DebugNavigationSidebarView: View {
                         try! context.delete(model: IngredientObject.self)
                         try! context.delete(model: Category.self)
                         try! context.delete(model: Photo.self)
+                        try! context.delete(model: PhotoObject.self)
                     }
                 }
             }

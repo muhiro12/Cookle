@@ -12,6 +12,8 @@ import SwiftData
 final class Photo {
     private(set) var data = Data.empty
 
+    @Relationship(deleteRule: .cascade, inverse: \PhotoObject.photo)
+    private(set) var objects = [PhotoObject]?.some(.empty)
     @Relationship(inverse: \Recipe.photos)
     private(set) var recipes = [Recipe]?.some(.empty)
 

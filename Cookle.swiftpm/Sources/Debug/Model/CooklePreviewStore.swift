@@ -17,6 +17,7 @@ final class CooklePreviewStore {
     private(set) var ingredientObjects = [IngredientObject]()
     private(set) var categories = [Category]()
     private(set) var photos = [Photo]()
+    private(set) var photoObjects = [PhotoObject]()
 
     private var isReady: Bool {
         !diaries.isEmpty
@@ -26,6 +27,7 @@ final class CooklePreviewStore {
             && !ingredientObjects.isEmpty
             && !categories.isEmpty
             && !photos.isEmpty
+            && !photoObjects.isEmpty
     }
 
     @MainActor
@@ -42,6 +44,7 @@ final class CooklePreviewStore {
             ingredientObjects = try! context.fetch(.init())
             categories = try! context.fetch(.init())
             photos = try! context.fetch(.init())
+            photoObjects = try! context.fetch(.init())
         }
     }
 
@@ -99,9 +102,7 @@ final class CooklePreviewStore {
         .create(
             context: context,
             name: "Spaghetti Carbonara",
-            photos: photoData().map {
-                .create(context: context, data: $0)
-            },
+            photos: photoObjects(context: context),
             servingSize: 2,
             cookingTime: 30,
             ingredients: [
@@ -131,9 +132,7 @@ final class CooklePreviewStore {
         .create(
             context: context,
             name: "Beef Stew",
-            photos: photoData().map {
-                .create(context: context, data: $0)
-            },
+            photos: photoObjects(context: context),
             servingSize: 6,
             cookingTime: 120,
             ingredients: [
@@ -169,9 +168,7 @@ final class CooklePreviewStore {
         .create(
             context: context,
             name: "Chicken Stir Fry",
-            photos: photoData().map {
-                .create(context: context, data: $0)
-            },
+            photos: photoObjects(context: context),
             servingSize: 4,
             cookingTime: 20,
             ingredients: [
@@ -207,9 +204,7 @@ final class CooklePreviewStore {
         .create(
             context: context,
             name: "Vegetable Soup",
-            photos: photoData().map {
-                .create(context: context, data: $0)
-            },
+            photos: photoObjects(context: context),
             servingSize: 4,
             cookingTime: 40,
             ingredients: [
@@ -245,9 +240,7 @@ final class CooklePreviewStore {
         .create(
             context: context,
             name: "Pancakes",
-            photos: photoData().map {
-                .create(context: context, data: $0)
-            },
+            photos: photoObjects(context: context),
             servingSize: 4,
             cookingTime: 20,
             ingredients: [
@@ -274,12 +267,12 @@ final class CooklePreviewStore {
         )
     }
 
-    private func photoData() -> [Data] {
+    private func photoObjects(context: ModelContext) -> [PhotoObject] {
         [
-            UIImage(systemName: "fork.knife")!.jpegData(compressionQuality: 1.0)!,
-            UIImage(systemName: "cup.and.saucer")!.jpegData(compressionQuality: 1.0)!,
-            UIImage(systemName: "takeoutbag.and.cup.and.straw")!.jpegData(compressionQuality: 1.0)!,
-            UIImage(systemName: "leaf")!.jpegData(compressionQuality: 1.0)!
+            .create(context: context, photo: UIImage(systemName: "fork.knife")!.jpegData(compressionQuality: 1.0)!, order: 1),
+            .create(context: context, photo: UIImage(systemName: "cup.and.saucer")!.jpegData(compressionQuality: 1.0)!, order: 2),
+            .create(context: context, photo: UIImage(systemName: "takeoutbag.and.cup.and.straw")!.jpegData(compressionQuality: 1.0)!, order: 3),
+            .create(context: context, photo: UIImage(systemName: "leaf")!.jpegData(compressionQuality: 1.0)!, order: 4)
         ]
     }
 }

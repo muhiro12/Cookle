@@ -13,6 +13,8 @@ final class Recipe {
     private(set) var name = String.empty
     @Relationship
     private(set) var photos = [Photo]?.some(.empty)
+    @Relationship(deleteRule: .cascade)
+    private(set) var photoObjects = [PhotoObject]?.some(.empty)
     private(set) var servingSize = Int.zero
     private(set) var cookingTime = Int.zero
     @Relationship
@@ -36,7 +38,7 @@ final class Recipe {
 
     static func create(context: ModelContext,
                        name: String,
-                       photos: [Photo],
+                       photos: [PhotoObject],
                        servingSize: Int,
                        cookingTime: Int,
                        ingredients: [IngredientObject],
@@ -46,7 +48,7 @@ final class Recipe {
         let recipe = Recipe()
         context.insert(recipe)
         recipe.name = name
-        recipe.photos = photos
+        recipe.photos = photos.compactMap { $0.photo }
         recipe.servingSize = servingSize
         recipe.cookingTime = cookingTime
         recipe.ingredients = ingredients.compactMap { $0.ingredient }
@@ -58,7 +60,7 @@ final class Recipe {
     }
 
     func update(name: String,
-                photos: [Photo],
+                photos: [PhotoObject],
                 servingSize: Int,
                 cookingTime: Int,
                 ingredients: [IngredientObject],
@@ -66,7 +68,7 @@ final class Recipe {
                 categories: [Category],
                 note: String) {
         self.name = name
-        self.photos = photos
+        self.photos = photos.compactMap { $0.photo }
         self.servingSize = servingSize
         self.cookingTime = cookingTime
         self.ingredients = ingredients.compactMap { $0.ingredient }

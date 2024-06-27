@@ -101,7 +101,9 @@ struct RecipeFormNavigationView: View {
                         if let recipe {
                             recipe.update(
                                 name: name,
-                                photos: photos.map { .create(context: context, data: $0) },
+                                photos: zip(photos.indices, photos).map { index, element in
+                                    .create(context: context, photo: element, order: index + 1)
+                                },
                                 servingSize: Int(servingSize) ?? .zero,
                                 cookingTime: Int(cookingTime) ?? .zero,
                                 ingredients: zip(ingredients.indices, ingredients).compactMap { index, element in
@@ -123,7 +125,9 @@ struct RecipeFormNavigationView: View {
                             _ = Recipe.create(
                                 context: context,
                                 name: name,
-                                photos: photos.map { .create(context: context, data: $0) },
+                                photos: zip(photos.indices, photos).map { index, element in
+                                    .create(context: context, photo: element, order: index + 1)
+                                },
                                 servingSize: .init(servingSize) ?? .zero,
                                 cookingTime: .init(cookingTime) ?? .zero,
                                 ingredients: zip(ingredients.indices, ingredients).compactMap { index, element in
