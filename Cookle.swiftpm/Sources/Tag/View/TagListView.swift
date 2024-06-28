@@ -19,7 +19,9 @@ struct TagListView<T: Tag>: View {
 
     var body: some View {
         List(tags, id: \.self, selection: $selection) { tag in
-            Text(tag.value)
+            if tag.recipes.orEmpty.isNotEmpty {
+                Text(tag.value)
+            }
         }
         .navigationTitle(T.title)
         .toolbar {

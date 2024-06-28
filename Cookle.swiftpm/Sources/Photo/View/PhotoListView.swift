@@ -15,7 +15,8 @@ struct PhotoListView: View {
         ScrollView {
             LazyVGrid(columns: [.init(.adaptive(minimum: 120))]) {
                 ForEach(photos) { photo in
-                    if let image = UIImage(data: photo.data) {
+                    if photo.recipes.orEmpty.isNotEmpty,
+                       let image = UIImage(data: photo.data) {
                         NavigationLink(value: photo) {
                             Image(uiImage: image)
                                 .resizable()
@@ -31,6 +32,8 @@ struct PhotoListView: View {
 
 #Preview {
     CooklePreview { _ in
-        PhotoListView()
+        NavigationStack {
+            PhotoListView()
+        }
     }
 }
