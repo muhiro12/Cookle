@@ -15,11 +15,11 @@ enum DiaryObjectType: Codable {
     var title: LocalizedStringKey {
         switch self {
         case .breakfast:
-            "Breakfast"
+            "Breakfasts"
         case .lunch:
-            "Lunch"
+            "Lunches"
         case .dinner:
-            "Dinner"
+            "Dinners"
         }
     }
 }

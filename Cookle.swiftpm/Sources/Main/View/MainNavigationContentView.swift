@@ -32,7 +32,7 @@ struct MainNavigationContentView: View {
                 case .category:
                     TagListView<Category>(selection: pathSelection())
                 case .photo:
-                    PhotoListView()
+                    PhotoListView(selection: pathSelection())
                 }
             }
             .navigationDestination(for: Diary.self) { diary in

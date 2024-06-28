@@ -11,13 +11,21 @@ import SwiftUI
 struct PhotoListView: View {
     @Query(Photo.descriptor) private var photos: [Photo]
 
+    @Binding private var selection: Photo?
+
+    init(selection: Binding<Photo?>) {
+        self._selection = selection
+    }
+
     var body: some View {
         ScrollView {
             LazyVGrid(columns: [.init(.adaptive(minimum: 120))]) {
                 ForEach(photos) { photo in
                     if photo.recipes.orEmpty.isNotEmpty,
                        let image = UIImage(data: photo.data) {
-                        NavigationLink(value: photo) {
+                        Button {
+                            selection = photo
+                        } label: {
                             Image(uiImage: image)
                                 .resizable()
                                 .scaledToFit()
@@ -33,7 +41,7 @@ struct PhotoListView: View {
 #Preview {
     CooklePreview { _ in
         NavigationStack {
-            PhotoListView()
+            PhotoListView(selection: .constant(nil))
         }
     }
 }

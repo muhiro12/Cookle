@@ -37,7 +37,7 @@ final class Ingredient: Tag {
 
 extension Ingredient {
     static var title: LocalizedStringKey {
-        "Ingredient"
+        "Ingredients"
     }
 }
 

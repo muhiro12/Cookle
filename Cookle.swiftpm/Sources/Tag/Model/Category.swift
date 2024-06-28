@@ -35,7 +35,7 @@ final class Category: Tag {
 
 extension Category {
     static var title: LocalizedStringKey {
-        "Category"
+        "Categories"
     }
 }
 
