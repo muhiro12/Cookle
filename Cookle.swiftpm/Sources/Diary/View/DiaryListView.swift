@@ -32,7 +32,9 @@ struct DiaryListView: View {
         ) { section in
             Section(section.key) {
                 ForEach(section.value, id: \.self) { diary in
-                    Text(diary.date.formatted(.dateTime.month().day()))
+                    if diary.recipes.orEmpty.isNotEmpty {
+                        Text(diary.date.formatted(.dateTime.month().day()))
+                    }
                 }
             }
         }
