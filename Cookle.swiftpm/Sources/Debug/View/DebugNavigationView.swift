@@ -8,21 +8,12 @@
 import SwiftUI
 
 struct DebugNavigationView: View {
-    @Environment(\.dismiss) private var dismiss
-
     @State private var content: DebugContent?
     @State private var detail: Int?
 
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {
             DebugNavigationSidebarView(selection: $content)
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") {
-                            dismiss()
-                        }
-                    }
-                }
         } content: {
             if let content {
                 DebugNavigationContentView(content, selection: $detail)

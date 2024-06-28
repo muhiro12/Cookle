@@ -2,6 +2,7 @@ import SwiftUI
 
 struct DebugNavigationSidebarView: View {
     @Environment(\.modelContext) private var context
+    @Environment(\.dismiss) private var dismiss
 
     @Binding private var selection: DebugContent?
 
@@ -41,7 +42,13 @@ struct DebugNavigationSidebarView: View {
                 }
             }
         }
+        .navigationTitle("Debug")
         .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Cancel") {
+                    dismiss()
+                }
+            }
             ToolbarItem {
                 Button("Delete All", systemImage: "trash") {
                     withAnimation {
@@ -64,10 +71,11 @@ struct DebugNavigationSidebarView: View {
                 }
             }
         }
-        .navigationTitle("Debug")
     }
 }
 
 #Preview {
-    DebugNavigationSidebarView(selection: .constant(nil))
+    NavigationStack {
+        DebugNavigationSidebarView(selection: .constant(nil))
+    }
 }

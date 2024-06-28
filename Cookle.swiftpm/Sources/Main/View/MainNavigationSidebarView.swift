@@ -40,6 +40,7 @@ struct MainNavigationSidebarView: View {
                 Advertisement(.small)
             }
         }
+        .navigationTitle("Cookle")
         .toolbar {
             ToolbarItem {
                 Button("Settings", systemImage: "gear") {
@@ -50,12 +51,13 @@ struct MainNavigationSidebarView: View {
         .sheet(isPresented: $isSettingsPresented) {
             SettingsNavigationView()
         }
-        .navigationTitle("Cookle")
     }
 }
 
 #Preview {
     CooklePreview { _ in
-        MainNavigationSidebarView(selection: .constant(nil))
+        NavigationStack {
+            MainNavigationSidebarView(selection: .constant(nil))
+        }
     }
 }

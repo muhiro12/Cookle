@@ -5,8 +5,8 @@
 //  Created by Hiromu Nakano on 2024/04/14.
 //
 
-import Foundation
 import SwiftData
+import SwiftUI
 
 @Model
 final class Category: Tag {
@@ -30,6 +30,12 @@ final class Category: Tag {
     func update(value: String) {
         self.value = value
         self.modifiedTimestamp = .now
+    }
+}
+
+extension Category {
+    static var title: LocalizedStringKey {
+        "Category"
     }
 }
 

@@ -37,6 +37,7 @@ struct PhotoView: View {
                 Text(photo.modifiedTimestamp.formatted(.dateTime.year().month().day()))
             }
         }
+        .navigationTitle(photo.title)
     }
 }
 

@@ -28,6 +28,12 @@ struct AddMultipleTextsView: View {
                             .allowsHitTesting(false)
                     }
                 }
+                .padding()
+                .scrollContentBackground(.hidden)
+                .background(Color(.secondarySystemGroupedBackground))
+                .clipShape(.rect(cornerRadius: 8))
+                .padding()
+                .background(Color(.systemGroupedBackground))
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button("Cancel") {
@@ -45,12 +51,6 @@ struct AddMultipleTextsView: View {
                         }
                     }
                 }
-                .padding()
-                .scrollContentBackground(.hidden)
-                .background(Color(.secondarySystemGroupedBackground))
-                .clipShape(.rect(cornerRadius: 8))
-                .padding()
-                .background(Color(.systemGroupedBackground))
         }
         .font(nil)
     }

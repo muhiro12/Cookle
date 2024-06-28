@@ -20,9 +20,8 @@ struct SettingsNavigationView: View {
                     StoreSection()
                 }
                 Section {
-                    NavigationLink("License") {
+                    NavigationLink("Licenses") {
                         LicenseView()
-                            .navigationTitle("License")
                     }
                 }
                 if isDebugOn {
@@ -36,6 +35,7 @@ struct SettingsNavigationView: View {
                     }
                 }
             }
+            .navigationTitle("Settings")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {

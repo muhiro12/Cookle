@@ -36,11 +36,19 @@ struct DiaryListView: View {
                 }
             }
         }
+        .navigationTitle("Diaries")
+        .toolbar {
+            ToolbarItem {
+                AddDiaryButton()
+            }
+        }
     }
 }
 
 #Preview {
     CooklePreview { _ in
-        DiaryListView(selection: .constant(nil))
+        NavigationStack {
+            DiaryListView(selection: .constant(nil))
+        }
     }
 }

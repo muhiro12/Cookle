@@ -21,11 +21,19 @@ struct RecipeListView: View {
         List(recipes, id: \.self, selection: $selection) { recipe in
             Text(recipe.name)
         }
+        .navigationTitle("Recipes")
+        .toolbar {
+            ToolbarItem {
+                AddRecipeButton()
+            }
+        }
     }
 }
 
 #Preview {
     CooklePreview { _ in
-        RecipeListView(selection: .constant(nil))
+        NavigationStack {
+            RecipeListView(selection: .constant(nil))
+        }
     }
 }

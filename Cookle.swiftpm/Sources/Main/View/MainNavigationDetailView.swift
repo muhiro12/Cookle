@@ -16,6 +16,7 @@ struct MainNavigationDetailView: View {
 
     var body: some View {
         RecipeView()
+            .navigationTitle(detail.name)
             .toolbar {
                 ToolbarItem(placement: .destructiveAction) {
                     DeleteRecipeButton()
@@ -24,13 +25,14 @@ struct MainNavigationDetailView: View {
                     EditRecipeButton()
                 }
             }
-            .navigationTitle(detail.name)
             .environment(detail)
     }
 }
 
 #Preview {
     CooklePreview { preview in
-        MainNavigationDetailView(preview.recipes[0])
+        NavigationStack {
+            MainNavigationDetailView(preview.recipes[0])
+        }
     }
 }

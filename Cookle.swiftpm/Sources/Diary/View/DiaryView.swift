@@ -66,12 +66,23 @@ struct DiaryView: View {
                 Text(diary.modifiedTimestamp.formatted(.dateTime.year().month().day()))
             }
         }
+        .navigationTitle(diary.date.formatted(.dateTime.year().month().day()))
+        .toolbar {
+            ToolbarItem(placement: .destructiveAction) {
+                DeleteDiaryButton()
+            }
+            ToolbarItem(placement: .confirmationAction) {
+                EditDiaryButton()
+            }
+        }
     }
 }
 
 #Preview {
     CooklePreview { preview in
-        DiaryView(selection: .constant(nil))
-            .environment(preview.diaries[0])
+        NavigationStack {
+            DiaryView(selection: .constant(nil))
+                .environment(preview.diaries[0])
+        }
     }
 }

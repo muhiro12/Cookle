@@ -5,8 +5,8 @@
 //  Created by Hiromu Nakano on 2024/04/14.
 //
 
-import Foundation
 import SwiftData
+import SwiftUI
 
 @Model
 final class Ingredient: Tag {
@@ -32,6 +32,12 @@ final class Ingredient: Tag {
     func update(value: String) {
         self.value = value
         self.modifiedTimestamp = .now
+    }
+}
+
+extension Ingredient {
+    static var title: LocalizedStringKey {
+        "Ingredient"
     }
 }
 

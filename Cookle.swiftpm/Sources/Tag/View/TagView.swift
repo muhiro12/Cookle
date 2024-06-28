@@ -33,12 +33,20 @@ struct TagView<T: Tag>: View {
                 Text(tag.modifiedTimestamp.formatted(.dateTime.year().month().day()))
             }
         }
+        .navigationTitle(tag.value)
+        .toolbar {
+            ToolbarItem {
+                EditTagButton<T>()
+            }
+        }
     }
 }
 
 #Preview {
     CooklePreview { preview in
-        TagView<Ingredient>(selection: .constant(nil))
-            .environment(preview.ingredients[0])
+        NavigationStack {
+            TagView<Ingredient>(selection: .constant(nil))
+                .environment(preview.ingredients[0])
+        }
     }
 }

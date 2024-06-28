@@ -20,6 +20,7 @@ struct TagFormNavigationView<T: Tag>: View {
                     }
                 }
             }
+            .navigationTitle("Edit " + tag.value)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
@@ -35,10 +36,10 @@ struct TagFormNavigationView<T: Tag>: View {
                 }
             }
         }
+        .interactiveDismissDisabled()
         .task {
             value = tag.value
         }
-        .interactiveDismissDisabled()
     }
 }
 

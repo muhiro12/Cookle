@@ -84,6 +84,7 @@ struct RecipeFormNavigationView: View {
                     TextField("Note", text: $note, axis: .vertical)
                 }
             }
+            .navigationTitle("Recipe")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
@@ -163,6 +164,7 @@ struct RecipeFormNavigationView: View {
                 }
             }
         }
+        .interactiveDismissDisabled()
         .task {
             name = recipe?.name ?? ""
             photos = recipe?.photos.orEmpty.map { $0.data } ?? []
@@ -201,7 +203,6 @@ struct RecipeFormNavigationView: View {
                 }
             }
         }
-        .interactiveDismissDisabled()
     }
 }
 

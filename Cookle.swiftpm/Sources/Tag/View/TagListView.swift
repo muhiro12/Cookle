@@ -21,11 +21,19 @@ struct TagListView<T: Tag>: View {
         List(tags, id: \.self, selection: $selection) { tag in
             Text(tag.value)
         }
+        .navigationTitle(T.title)
+        .toolbar {
+            ToolbarItem {
+                AddRecipeButton()
+            }
+        }
     }
 }
 
 #Preview {
     CooklePreview { _ in
-        TagListView<Category>(selection: .constant(nil))
+        NavigationStack {
+            TagListView<Category>(selection: .constant(nil))
+        }
     }
 }
