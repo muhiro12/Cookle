@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftUtilities
 
 struct DebugNavigationSidebarView: View {
     @Environment(\.modelContext) private var context
@@ -44,11 +45,6 @@ struct DebugNavigationSidebarView: View {
         }
         .navigationTitle("Debug")
         .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel") {
-                    dismiss()
-                }
-            }
             ToolbarItem {
                 Button("Delete All", systemImage: "trash") {
                     withAnimation {
@@ -69,6 +65,9 @@ struct DebugNavigationSidebarView: View {
                         _ = CooklePreviewStore().createPreviewDiary(context)
                     }
                 }
+            }
+            ToolbarItem {
+                CloseButton()
             }
         }
     }

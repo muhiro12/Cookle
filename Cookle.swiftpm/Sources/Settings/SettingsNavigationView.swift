@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftUtilities
 
 struct SettingsNavigationView: View {
     @Environment(\.dismiss) private var dismiss
@@ -37,10 +38,8 @@ struct SettingsNavigationView: View {
             }
             .navigationTitle("Settings")
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
+                ToolbarItem {
+                    CloseButton()
                 }
             }
             .fullScreenCover(isPresented: $isDebugPresented) {
