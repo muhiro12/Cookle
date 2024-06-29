@@ -12,6 +12,8 @@ struct TagListView<T: Tag>: View {
     @Query(T.descriptor) private var tags: [T]
 
     @Binding private var selection: T?
+    
+    @State private var searchText = ""
 
     init(selection: Binding<T?>) {
         self._selection = selection
@@ -20,9 +22,13 @@ struct TagListView<T: Tag>: View {
     var body: some View {
         List(tags, id: \.self, selection: $selection) { tag in
             if tag.recipes.orEmpty.isNotEmpty {
-                Text(tag.value)
+                if tag.value.lowercased().contains(searchText.lowercased())
+                    || searchText.isEmpty {
+                    Text(tag.value)
+                }
             }
         }
+        .searchable(text: $searchText)
         .navigationTitle(T.title)
         .toolbar {
             ToolbarItem {
