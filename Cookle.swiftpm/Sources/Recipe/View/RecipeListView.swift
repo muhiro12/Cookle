@@ -12,6 +12,8 @@ struct RecipeListView: View {
     @Query(Recipe.descriptor) private var recipes: [Recipe]
 
     @Binding private var selection: Recipe?
+    
+    @State private var searchText = ""
 
     init(selection: Binding<Recipe?>) {
         self._selection = selection
@@ -19,8 +21,12 @@ struct RecipeListView: View {
 
     var body: some View {
         List(recipes, id: \.self, selection: $selection) { recipe in
-            Text(recipe.name)
+            if recipe.name.lowercased().contains(searchText.lowercased())
+                || searchText.isEmpty {
+                Text(recipe.name)
+            }
         }
+        .searchable(text: $searchText)
         .navigationTitle("Recipes")
         .toolbar {
             ToolbarItem {
