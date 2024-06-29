@@ -12,8 +12,7 @@ let package = Package(
         .library(
             name: "Cookle",
             targets: [
-                "CooklePlaygrounds",
-                "CooklePackages"
+                "CooklePlaygrounds"
             ]
         )
     ],
@@ -27,6 +26,9 @@ let package = Package(
         .target(
             name: "CooklePlaygrounds",
             dependencies: [
+                .product(name: "GoogleMobileAdsWrapper", package: "GoogleMobileAdsWrapper"),
+                .product(name: "LicenseListWrapper", package: "LicenseListWrapper"),
+                .product(name: "StoreKitWrapper", package: "StoreKitWrapper"),
                 .product(name: "SwiftUtilities", package: "SwiftUtilities")
             ],
             path: "Cookle.swiftpm",
@@ -34,15 +36,6 @@ let package = Package(
                 "CooklePlaygroundsApp.swift",
                 "Package.swift"
             ]
-        ),
-        .target(
-            name: "CooklePackages",
-            dependencies: [
-                .product(name: "GoogleMobileAdsWrapper", package: "GoogleMobileAdsWrapper"),
-                .product(name: "LicenseListWrapper", package: "LicenseListWrapper"),
-                .product(name: "StoreKitWrapper", package: "StoreKitWrapper")
-            ],
-            path: "Cookle/Packages"
         )
     ]
 )
