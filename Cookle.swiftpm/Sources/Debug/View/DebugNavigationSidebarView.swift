@@ -42,11 +42,13 @@ struct DebugNavigationSidebarView: View {
                     }
                 }
             }
-        }
-        .navigationTitle("Debug")
-        .toolbar {
-            ToolbarItem {
-                Button("Delete All", systemImage: "trash") {
+            Section("Manage") {
+                Button("Create Preview Diary", systemImage: "flask") {
+                    withAnimation {
+                        _ = CooklePreviewStore().createPreviewDiary(context)
+                    }
+                }
+                Button("Delete All", systemImage: "trash", role: .destructive) {
                     withAnimation {
                         try! context.delete(model: Diary.self)
                         try! context.delete(model: DiaryObject.self)
@@ -59,13 +61,9 @@ struct DebugNavigationSidebarView: View {
                     }
                 }
             }
-            ToolbarItem {
-                Button("Create Preview Diary", systemImage: "flask") {
-                    withAnimation {
-                        _ = CooklePreviewStore().createPreviewDiary(context)
-                    }
-                }
-            }
+        }
+        .navigationTitle("Debug")
+        .toolbar {
             ToolbarItem {
                 CloseButton()
             }
