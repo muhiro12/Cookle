@@ -24,7 +24,7 @@ struct DiaryListView: View {
                     grouping: diaries
                 ) { $0.date.formatted(.dateTime.year().month()) }
                 .sorted {
-                    $0.key > $1.key
+                    $0.value[0].date > $1.value[0].date
                 }
             ),
             id: \.key,
