@@ -20,7 +20,6 @@ struct MultiAddableCategorySection: View {
             ForEach(data.indices, id: \.self) { index in
                 HStack(alignment: .top) {
                     TextField(
-                        "Category",
                         text: .init(
                             get: {
                                 guard index < data.endIndex else {
@@ -41,7 +40,9 @@ struct MultiAddableCategorySection: View {
                             }
                         ),
                         axis: .vertical
-                    )
+                    ) {
+                        Text("Category")
+                    }
                     SuggestionMenu<Category>(input: $data[index])
                         .frame(width: 24)
                 }

@@ -34,7 +34,9 @@ struct RecipeFormNavigationView: View {
         NavigationStack {
             Form {
                 Section {
-                    TextField("Name", text: $name)
+                    TextField(text: $name) {
+                        Text("Name")
+                    }
                 } header: {
                     HStack {
                         Text("Name")
@@ -69,8 +71,10 @@ struct RecipeFormNavigationView: View {
                 }
                 Section {
                     HStack {
-                        TextField("Serving Size", text: $servingSize)
-                            .keyboardType(.numberPad)
+                        TextField(text: $servingSize) {
+                            Text("Serving Size")
+                        }
+                        .keyboardType(.numberPad)
                         Text("servings")
                     }
                 } header: {
@@ -78,8 +82,10 @@ struct RecipeFormNavigationView: View {
                 }
                 Section {
                     HStack {
-                        TextField("Cooking Time", text: $cookingTime)
-                            .keyboardType(.numberPad)
+                        TextField(text: $cookingTime) {
+                            Text("Cooking Time")
+                        }
+                        .keyboardType(.numberPad)
                         Text("minutes")
                     }
                 } header: {
@@ -89,7 +95,9 @@ struct RecipeFormNavigationView: View {
                 MultiAddableStepSection(data: $steps)
                 MultiAddableCategorySection(data: $categories)
                 Section {
-                    TextField("Note", text: $note, axis: .vertical)
+                    TextField(text: $note, axis: .vertical) {
+                        Text("Note")
+                    }
                 } header: {
                     Text("Note")
                 }

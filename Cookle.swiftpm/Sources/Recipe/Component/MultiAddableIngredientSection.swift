@@ -21,7 +21,6 @@ struct MultiAddableIngredientSection: View {
             ForEach(data.indices, id: \.self) { index in
                 HStack(alignment: .top) {
                     TextField(
-                        "Ingredient",
                         text: .init(
                             get: {
                                 guard index < data.endIndex else {
@@ -42,9 +41,13 @@ struct MultiAddableIngredientSection: View {
                             }
                         ),
                         axis: .vertical
-                    )
-                    TextField("Amount", text: $data[index].amount)
-                        .multilineTextAlignment(.trailing)
+                    ) {
+                        Text("Ingredient")
+                    }
+                    TextField(text: $data[index].amount) {
+                        Text("Amount")
+                    }
+                    .multilineTextAlignment(.trailing)
                     SuggestionMenu<Ingredient>(input: $data[index].ingredient)
                         .frame(width: 24)
                 }

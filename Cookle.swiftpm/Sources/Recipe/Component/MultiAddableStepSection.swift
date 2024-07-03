@@ -21,7 +21,6 @@ struct MultiAddableStepSection: View {
                     Text((index + 1).description + ".")
                         .frame(width: 24)
                     TextField(
-                        "Step",
                         text: .init(
                             get: {
                                 guard index < data.endIndex else {
@@ -42,7 +41,9 @@ struct MultiAddableStepSection: View {
                             }
                         ),
                         axis: .vertical
-                    )
+                    ) {
+                        Text("Step")
+                    }
                 }
             }
             .onMove {

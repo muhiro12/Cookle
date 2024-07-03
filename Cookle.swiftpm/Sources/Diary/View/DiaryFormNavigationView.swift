@@ -67,7 +67,9 @@ struct DiaryFormNavigationView: View {
                     }.joined(separator: ", "))
                 }
                 Section {
-                    TextField("Note", text: $note, axis: .vertical)
+                    TextField(text: $note, axis: .vertical) {
+                        Text("Note")
+                    }
                 } header: {
                     Text("Note")
                 }
