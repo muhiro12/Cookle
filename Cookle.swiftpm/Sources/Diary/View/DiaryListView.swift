@@ -38,7 +38,7 @@ struct DiaryListView: View {
                 }
             }
         }
-        .navigationTitle("Diaries")
+        .navigationTitle(Text("Diaries"))
         .toolbar {
             ToolbarItem {
                 AddDiaryButton()

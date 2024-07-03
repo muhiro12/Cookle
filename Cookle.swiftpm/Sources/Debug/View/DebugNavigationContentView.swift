@@ -112,7 +112,7 @@ struct DebugNavigationContentView: View {
                 }
             }
         }
-        .navigationTitle("Content")
+        .navigationTitle(Text("Content"))
     }
 }
 

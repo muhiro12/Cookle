@@ -94,7 +94,7 @@ struct DiaryFormNavigationView: View {
                 .searchable(text: $searchText)
                 .environment(\.editMode, .constant(.active))
             }
-            .navigationTitle("Diary")
+            .navigationTitle(Text("Diary"))
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {

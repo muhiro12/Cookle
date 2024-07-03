@@ -12,7 +12,7 @@ struct RecipeListView: View {
     @Query(Recipe.descriptor) private var recipes: [Recipe]
 
     @Binding private var selection: Recipe?
-    
+
     @State private var searchText = ""
 
     init(selection: Binding<Recipe?>) {
@@ -27,7 +27,7 @@ struct RecipeListView: View {
             }
         }
         .searchable(text: $searchText)
-        .navigationTitle("Recipes")
+        .navigationTitle(Text("Recipes"))
         .toolbar {
             ToolbarItem {
                 AddRecipeButton()

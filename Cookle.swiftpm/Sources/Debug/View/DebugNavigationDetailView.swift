@@ -73,7 +73,7 @@ struct DebugNavigationDetailView: View {
                     .environment(photoObjects[detail])
             }
         }
-        .navigationTitle("Detail")
+        .navigationTitle(Text("Detail"))
     }
 }
 

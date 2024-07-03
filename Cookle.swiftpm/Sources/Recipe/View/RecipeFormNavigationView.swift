@@ -86,7 +86,7 @@ struct RecipeFormNavigationView: View {
                     TextField("Note", text: $note, axis: .vertical)
                 }
             }
-            .navigationTitle("Recipe")
+            .navigationTitle(Text("Recipe"))
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {

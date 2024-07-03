@@ -36,7 +36,7 @@ struct SettingsNavigationView: View {
                     }
                 }
             }
-            .navigationTitle("Settings")
+            .navigationTitle(Text("Settings"))
             .toolbar {
                 ToolbarItem {
                     CloseButton()

@@ -5,7 +5,7 @@ struct LicenseView: View {
 
     var body: some View {
         licenseList()
-            .navigationTitle("Licenses")
+            .navigationTitle(Text("Licenses"))
     }
 }
 

@@ -34,7 +34,7 @@ struct PhotoListView: View {
                 }
             }
         }
-        .navigationTitle("Photos")
+        .navigationTitle(Text("Photos"))
     }
 }
 

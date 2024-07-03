@@ -62,7 +62,7 @@ struct DebugNavigationSidebarView: View {
                 }
             }
         }
-        .navigationTitle("Debug")
+        .navigationTitle(Text("Debug"))
         .toolbar {
             ToolbarItem {
                 CloseButton()

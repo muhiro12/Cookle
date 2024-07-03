@@ -40,7 +40,7 @@ struct MainNavigationSidebarView: View {
                 Advertisement(.small)
             }
         }
-        .navigationTitle("Cookle")
+        .navigationTitle(Text("Cookle"))
         .toolbar {
             ToolbarItem {
                 Button("Settings", systemImage: "gear") {
