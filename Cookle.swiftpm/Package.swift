@@ -44,7 +44,10 @@ let package = Package(
             dependencies: [
                 .product(name: "SwiftUtilities", package: "SwiftUtilities")
             ],
-            path: "."
+            path: ".",
+            resources: [
+                .process("Resources")
+            ]
         )
     ]
 )
