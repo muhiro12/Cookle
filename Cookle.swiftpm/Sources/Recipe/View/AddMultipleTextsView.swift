@@ -7,9 +7,9 @@ struct AddMultipleTextsView: View {
 
     @State private var text: String
 
-    private let placeholder: String
+    private let placeholder: LocalizedStringKey
 
-    init(texts: Binding<[String]>, placeholder: String) {
+    init(texts: Binding<[String]>, placeholder: LocalizedStringKey) {
         self._texts = texts
         self.text = texts.wrappedValue.joined(separator: "\n")
         self.placeholder = placeholder

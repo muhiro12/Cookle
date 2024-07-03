@@ -203,6 +203,9 @@
         }
       }
     },
+    "Boil water in a large pot and add salt.\nCook the spaghetti until al dente.\nIn a separate pan, cook the pancetta until crispy.\nBeat the eggs in a bowl and mix with grated Parmesan cheese.\nDrain the spaghetti and mix with pancetta and the egg mixture.\nSeason with black pepper and serve immediately." : {
+
+    },
     "Breakfast" : {
       "localizations" : {
         "es" : {
@@ -1574,6 +1577,9 @@
           }
         }
       }
+    },
+    "Spaghetti\n200g\nEggs\n2\nParmesan cheese\n50g\nPancetta\n100g\nBlack pepper\nto taste\nSalt\nto taste" : {
+
     },
     "Step" : {
       "localizations" : {
