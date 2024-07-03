@@ -19,22 +19,42 @@ struct MainNavigationSidebarView: View {
     var body: some View {
         List(selection: $selection) {
             Section {
-                Label("Diary", systemImage: "book")
-                    .tag(MainNavigationSidebar.diary)
+                Label {
+                    Text("Diary")
+                } icon: {
+                    Image(systemName: "book")
+                }
+                .tag(MainNavigationSidebar.diary)
             }
             Section {
-                Label("Recipe", systemImage: "book.pages")
-                    .tag(MainNavigationSidebar.recipe)
+                Label {
+                    Text("Recipe")
+                } icon: {
+                    Image(systemName: "book.pages")
+                }
+                .tag(MainNavigationSidebar.recipe)
             }
             Section {
-                Label("Ingredient", systemImage: "refrigerator")
-                    .tag(MainNavigationSidebar.ingredient)
-                Label("Category", systemImage: "frying.pan")
-                    .tag(MainNavigationSidebar.category)
+                Label {
+                    Text("Ingredient")
+                } icon: {
+                    Image(systemName: "refrigerator")
+                }
+                .tag(MainNavigationSidebar.ingredient)
+                Label {
+                    Text("Category")
+                } icon: {
+                    Image(systemName: "frying.pan")
+                }
+                .tag(MainNavigationSidebar.category)
             }
             Section {
-                Label("Photo", systemImage: "photo.stack")
-                    .tag(MainNavigationSidebar.photo)
+                Label {
+                    Text("Photo")
+                } icon: {
+                    Image(systemName: "photo.stack")
+                }
+                .tag(MainNavigationSidebar.photo)
             }
             Section {
                 Advertisement(.small)
