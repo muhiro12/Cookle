@@ -89,11 +89,13 @@ struct RecipeFormNavigationView: View {
             .navigationTitle(Text("Recipe"))
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button {
                         if name == "Enable Debug" {
                             isDebugOn = true
                         }
                         dismiss()
+                    } label: {
+                        Text("Cancel")
                     }
                 }
                 ToolbarItem {

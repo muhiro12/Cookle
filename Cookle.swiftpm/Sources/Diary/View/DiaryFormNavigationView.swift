@@ -97,8 +97,10 @@ struct DiaryFormNavigationView: View {
             .navigationTitle(Text("Diary"))
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button {
                         dismiss()
+                    } label: {
+                        Text("Cancel")
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {

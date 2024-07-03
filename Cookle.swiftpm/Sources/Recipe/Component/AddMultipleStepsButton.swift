@@ -17,8 +17,10 @@ struct AddMultipleStepsButton: View {
     }
 
     var body: some View {
-        Button("Add Multiple Steps at Once") {
+        Button {
             isPresented = true
+        } label: {
+            Text("Add Multiple Steps at Once")
         }
         .sheet(isPresented: $isPresented) {
             AddMultipleTextsView(

@@ -23,14 +23,18 @@ struct TagFormNavigationView<T: Tag>: View {
             .navigationTitle("Edit " + tag.value)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button {
                         dismiss()
+                    } label: {
+                        Text("Cancel")
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Update") {
+                    Button {
                         tag.update(value: value)
                         dismiss()
+                    } label: {
+                        Text("Update")
                     }
                     .disabled(value.isEmpty)
                 }

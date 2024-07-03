@@ -36,18 +36,22 @@ struct AddMultipleTextsView: View {
                 .background(Color(.systemGroupedBackground))
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") {
+                        Button {
                             text = ""
                             dismiss()
+                        } label: {
+                            Text("Cancel")
                         }
                     }
                     ToolbarItem(placement: .confirmationAction) {
-                        Button("Done") {
+                        Button {
                             texts = text.split(separator: "\n", omittingEmptySubsequences: false).map {
                                 String($0)
                             }
                             text = ""
                             dismiss()
+                        } label: {
+                            Text("Done")
                         }
                     }
                 }

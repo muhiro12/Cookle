@@ -10,8 +10,10 @@ struct AddMultipleIngredientsButton: View {
     }
 
     var body: some View {
-        Button("Add Multiple Ingredients at Once") {
+        Button {
             isPresented = true
+        } label: {
+            Text("Add Multiple Ingredients at Once")
         }
         .sheet(isPresented: $isPresented) {
             AddMultipleTextsView(
