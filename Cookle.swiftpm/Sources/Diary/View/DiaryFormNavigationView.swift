@@ -109,7 +109,7 @@ struct DiaryFormNavigationView: View {
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(diary != nil ? "Update" : "Add") {
+                    Button {
                         if let diary {
                             diary.update(
                                 date: date,
@@ -137,6 +137,8 @@ struct DiaryFormNavigationView: View {
                             )
                         }
                         dismiss()
+                    } label: {
+                        Text(diary != nil ? "Update" : "Add")
                     }
                     .disabled(breakfasts.isEmpty && lunches.isEmpty && dinners.isEmpty)
                 }

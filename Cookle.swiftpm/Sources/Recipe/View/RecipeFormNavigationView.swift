@@ -110,7 +110,7 @@ struct RecipeFormNavigationView: View {
                     EditButton()
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(recipe != nil ? "Update" : "Add") {
+                    Button {
                         if let recipe {
                             recipe.update(
                                 name: name,
@@ -167,6 +167,8 @@ struct RecipeFormNavigationView: View {
                             }
                         }
                         dismiss()
+                    } label: {
+                        Text(recipe != nil ? "Update" : "Add")
                     }
                     .disabled(
                         name.isEmpty
