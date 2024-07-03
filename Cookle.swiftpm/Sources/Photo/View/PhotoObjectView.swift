@@ -5,23 +5,33 @@ struct PhotoObjectView: View {
 
     var body: some View {
         List {
-            Section("Photo") {
+            Section {
                 if let photo = object.photo,
                    let image = UIImage(data: photo.data) {
                     Image(uiImage: image)
                 }
+            } header: {
+                Text("Photo")
             }
-            Section("Order") {
+            Section {
                 Text(object.order.description)
+            } header: {
+                Text("Order")
             }
-            Section("Recipe") {
+            Section {
                 Text(object.recipe?.name ?? "")
+            } header: {
+                Text("Recipe")
             }
-            Section("Created At") {
+            Section {
                 Text(object.createdTimestamp.formatted(.dateTime.year().month().day()))
+            } header: {
+                Text("Created At")
             }
-            Section("Updated At") {
+            Section {
                 Text(object.modifiedTimestamp.formatted(.dateTime.year().month().day()))
+            } header: {
+                Text("Updated At")
             }
         }
     }

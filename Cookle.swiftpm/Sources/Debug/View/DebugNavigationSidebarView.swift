@@ -13,36 +13,31 @@ struct DebugNavigationSidebarView: View {
 
     var body: some View {
         List(selection: $selection) {
-            Section("Models") {
+            Section {
                 ForEach(DebugContent.allCases, id: \.self) { content in
                     switch content {
                     case .diary:
                         Text("Diaries")
-
                     case .diaryObject:
                         Text("DiaryObjects")
-
                     case .recipe:
                         Text("Recipes")
-
                     case .ingredient:
                         Text("Ingredients")
-
                     case .ingredientObject:
                         Text("IngredientObjects")
-
                     case .category:
                         Text("Categories")
-
                     case .photo:
                         Text("Photos")
-
                     case .photoObject:
                         Text("PhotoObjects")
                     }
                 }
+            } header: {
+                Text("Models")
             }
-            Section("Manage") {
+            Section {
                 Button("Create Preview Diary", systemImage: "flask") {
                     withAnimation {
                         _ = CooklePreviewStore().createPreviewDiary(context)
@@ -60,6 +55,8 @@ struct DebugNavigationSidebarView: View {
                         try! context.delete(model: PhotoObject.self)
                     }
                 }
+            } header: {
+                Text("Manage")
             }
         }
         .navigationTitle(Text("Debug"))

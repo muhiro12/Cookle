@@ -31,16 +31,22 @@ struct PhotoView: View {
                     }
                 }
             }
-            Section("Recipe") {
+            Section {
                 ForEach(photo.recipes.orEmpty, id: \.self) { recipe in
                     Text(recipe.name)
                 }
+            } header: {
+                Text("Recipe")
             }
-            Section("Created At") {
+            Section {
                 Text(photo.createdTimestamp.formatted(.dateTime.year().month().day()))
+            } header: {
+                Text("Created At")
             }
-            Section("Updated At") {
+            Section {
                 Text(photo.modifiedTimestamp.formatted(.dateTime.year().month().day()))
+            } header: {
+                Text("Updated At")
             }
         }
         .navigationTitle(photo.title)

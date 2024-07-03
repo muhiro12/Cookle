@@ -12,7 +12,7 @@ struct TagListView<T: Tag>: View {
     @Query(T.descriptor) private var tags: [T]
 
     @Binding private var selection: T?
-    
+
     @State private var searchText = ""
 
     init(selection: Binding<T?>) {

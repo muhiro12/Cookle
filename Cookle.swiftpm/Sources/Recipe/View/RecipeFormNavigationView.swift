@@ -42,7 +42,7 @@ struct RecipeFormNavigationView: View {
                             .foregroundStyle(.red)
                     }
                 }
-                Section("Photos") {
+                Section {
                     ScrollView(.horizontal) {
                         LazyHStack {
                             ForEach(photos, id: \.self) { photo in
@@ -64,26 +64,34 @@ struct RecipeFormNavigationView: View {
                         .scrollTargetLayout()
                     }
                     .scrollTargetBehavior(.viewAligned)
+                } header: {
+                    Text("Photos")
                 }
-                Section("Serving Size") {
+                Section {
                     HStack {
                         TextField("Serving Size", text: $servingSize)
                             .keyboardType(.numberPad)
                         Text("servings")
                     }
+                } header: {
+                    Text("Serving Size")
                 }
-                Section("Cooking Time") {
+                Section {
                     HStack {
                         TextField("Cooking Time", text: $cookingTime)
                             .keyboardType(.numberPad)
                         Text("minutes")
                     }
+                } header: {
+                    Text("Cooking Time")
                 }
                 MultiAddableIngredientSection(data: $ingredients)
                 MultiAddableStepSection(data: $steps)
                 MultiAddableCategorySection(data: $categories)
-                Section("Note") {
+                Section {
                     TextField("Note", text: $note, axis: .vertical)
+                } header: {
+                    Text("Note")
                 }
             }
             .navigationTitle(Text("Recipe"))

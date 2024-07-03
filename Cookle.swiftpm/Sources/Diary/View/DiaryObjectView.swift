@@ -5,23 +5,35 @@ struct DiaryObjectView: View {
 
     var body: some View {
         List {
-            Section("Recipe") {
+            Section {
                 Text(object.recipe?.name ?? "")
+            } header: {
+                Text("Recipe")
             }
-            Section("Type") {
+            Section {
                 Text(object.type?.title ?? "")
+            } header: {
+                Text("Type")
             }
-            Section("Order") {
+            Section {
                 Text(object.order.description)
+            } header: {
+                Text("Order")
             }
-            Section("Diary") {
+            Section {
                 Text(object.diary?.date.formatted(.dateTime.year().month().day()) ?? "")
+            } header: {
+                Text("Diary")
             }
-            Section("Created At") {
+            Section {
                 Text(object.createdTimestamp.formatted(.dateTime.year().month().day()))
+            } header: {
+                Text("Created At")
             }
-            Section("Updated At") {
+            Section {
                 Text(object.modifiedTimestamp.formatted(.dateTime.year().month().day()))
+            } header: {
+                Text("Updated At")
             }
         }
     }

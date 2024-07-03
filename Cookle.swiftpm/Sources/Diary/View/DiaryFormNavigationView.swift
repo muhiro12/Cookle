@@ -63,8 +63,10 @@ struct DiaryFormNavigationView: View {
                         return $0.name
                     }.joined(separator: ", "))
                 }
-                Section("Note") {
+                Section {
                     TextField("Note", text: $note, axis: .vertical)
+                } header: {
+                    Text("Note")
                 }
             }
             .navigationDestination(for: DiaryObjectType.self) { type in

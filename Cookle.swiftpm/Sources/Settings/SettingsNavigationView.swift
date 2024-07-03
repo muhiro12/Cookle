@@ -14,8 +14,10 @@ struct SettingsNavigationView: View {
         NavigationStack {
             List {
                 if isSubscribeOn {
-                    Section("Settings") {
+                    Section {
                         Toggle("iCloud On", isOn: $isICloudOn)
+                    } header: {
+                        Text("Settings")
                     }
                 } else {
                     StoreSection()
@@ -26,13 +28,15 @@ struct SettingsNavigationView: View {
                     }
                 }
                 if isDebugOn {
-                    Section("Debug") {
+                    Section {
                         Toggle("Debug On", isOn: $isDebugOn)
                         Button {
                             isDebugPresented = true
                         } label: {
                             Text("DebugNavigationView")
                         }
+                    } header: {
+                        Text("Debug")
                     }
                 }
             }

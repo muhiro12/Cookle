@@ -18,19 +18,27 @@ struct TagView<T: Tag>: View {
 
     var body: some View {
         List(selection: $selection) {
-            Section("Value") {
+            Section {
                 Text(tag.value)
+            } header: {
+                Text("Value")
             }
-            Section("Recipes") {
+            Section {
                 ForEach(tag.recipes.orEmpty, id: \.self) {
                     Text($0.name)
                 }
+            } header: {
+                Text("Recipes")
             }
-            Section("Created At") {
+            Section {
                 Text(tag.createdTimestamp.formatted(.dateTime.year().month().day()))
+            } header: {
+                Text("Created At")
             }
-            Section("Updated At") {
+            Section {
                 Text(tag.modifiedTimestamp.formatted(.dateTime.year().month().day()))
+            } header: {
+                Text("Updated At")
             }
         }
         .navigationTitle(tag.value)

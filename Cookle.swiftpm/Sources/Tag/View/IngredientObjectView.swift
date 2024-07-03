@@ -5,23 +5,35 @@ struct IngredientObjectView: View {
 
     var body: some View {
         List {
-            Section("Ingredient") {
+            Section {
                 Text(object.ingredient?.value ?? "")
+            } header: {
+                Text("Ingredient")
             }
-            Section("Amount") {
+            Section {
                 Text(object.amount)
+            } header: {
+                Text("Amount")
             }
-            Section("Order") {
+            Section {
                 Text(object.order.description)
+            } header: {
+                Text("Order")
             }
-            Section("Recipe") {
+            Section {
                 Text(object.recipe?.name ?? "")
+            } header: {
+                Text("Recipe")
             }
-            Section("Created At") {
+            Section {
                 Text(object.createdTimestamp.formatted(.dateTime.year().month().day()))
+            } header: {
+                Text("Created At")
             }
-            Section("Updated At") {
+            Section {
                 Text(object.modifiedTimestamp.formatted(.dateTime.year().month().day()))
+            } header: {
+                Text("Updated At")
             }
         }
     }

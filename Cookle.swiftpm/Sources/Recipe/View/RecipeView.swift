@@ -17,7 +17,7 @@ struct RecipeView: View {
         List {
             if let photoObjects = recipe.photoObjects,
                photoObjects.isNotEmpty {
-                Section("Photos") {
+                Section {
                     ScrollView(.horizontal) {
                         LazyHStack {
                             ForEach(photoObjects.sorted { $0.order < $1.order }, id: \.self) { photoObject in
@@ -40,21 +40,27 @@ struct RecipeView: View {
                     .scrollTargetBehavior(.viewAligned)
                     .listRowInsets(.init(.zero))
                     .listRowBackground(Color.clear)
+                } header: {
+                    Text("Photos")
                 }
             }
             if recipe.servingSize.isNotZero {
-                Section("Serving Size") {
+                Section {
                     Text(recipe.servingSize.description + " servings")
+                } header: {
+                    Text("Serving Size")
                 }
             }
             if recipe.cookingTime.isNotZero {
-                Section("Cooking Time") {
+                Section {
                     Text(recipe.cookingTime.description + " minutes")
+                } header: {
+                    Text("Cooking Time")
                 }
             }
             if let ingredientObjects = recipe.ingredientObjects,
                ingredientObjects.isNotEmpty {
-                Section("Ingredients") {
+                Section {
                     ForEach(ingredientObjects.sorted { $0.order < $1.order }, id: \.self) { ingredientObject in
                         HStack {
                             Text(ingredientObject.ingredient?.value ?? "")
@@ -62,10 +68,12 @@ struct RecipeView: View {
                             Text(ingredientObject.amount)
                         }
                     }
+                } header: {
+                    Text("Ingredients")
                 }
             }
             if recipe.steps.isNotEmpty {
-                Section("Steps") {
+                Section {
                     ForEach(Array(recipe.steps.enumerated()), id: \.offset) { values in
                         HStack(alignment: .top) {
                             Text((values.offset + 1).description + ".")
@@ -73,6 +81,8 @@ struct RecipeView: View {
                             Text(values.element)
                         }
                     }
+                } header: {
+                    Text("Steps")
                 }
             }
             Section {
@@ -80,30 +90,40 @@ struct RecipeView: View {
             }
             if let categories = recipe.categories,
                categories.isNotEmpty {
-                Section("Categories") {
+                Section {
                     ForEach(categories, id: \.self) {
                         Text($0.value)
                     }
+                } header: {
+                    Text("Categories")
                 }
             }
             if recipe.note.isNotEmpty {
-                Section("Note") {
+                Section {
                     Text(recipe.note)
+                } header: {
+                    Text("Note")
                 }
             }
             if let diaries = recipe.diaries,
                diaries.isNotEmpty {
-                Section("Diaries") {
+                Section {
                     ForEach(diaries) {
                         Text($0.date.formatted(.dateTime.year().month().day()))
                     }
+                } header: {
+                    Text("Diaries")
                 }
             }
-            Section("Created At") {
+            Section {
                 Text(recipe.createdTimestamp.formatted(.dateTime.year().month().day()))
+            } header: {
+                Text("Created At")
             }
-            Section("Updated At") {
+            Section {
                 Text(recipe.modifiedTimestamp.formatted(.dateTime.year().month().day()))
+            } header: {
+                Text("Updated At")
             }
         }
         .fullScreenCover(isPresented: $isPhotoDetailPresented) {

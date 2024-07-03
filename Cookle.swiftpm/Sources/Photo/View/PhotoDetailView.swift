@@ -3,11 +3,11 @@ import SwiftUtilities
 
 struct PhotoDetailView: View {
     private let photos: [Photo]
-    
+
     init(photos: [Photo]) {
         self.photos = photos
     }
-    
+
     var body: some View {
         NavigationStack {
             GeometryReader { geometry in

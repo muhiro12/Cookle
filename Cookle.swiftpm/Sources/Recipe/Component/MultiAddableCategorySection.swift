@@ -16,7 +16,7 @@ struct MultiAddableCategorySection: View {
     }
 
     var body: some View {
-        Section("Categories") {
+        Section {
             ForEach(data.indices, id: \.self) { index in
                 HStack(alignment: .top) {
                     TextField(
@@ -53,6 +53,8 @@ struct MultiAddableCategorySection: View {
                 }
                 data.append("")
             }
+        } header: {
+            Text("Categories")
         }
     }
 }

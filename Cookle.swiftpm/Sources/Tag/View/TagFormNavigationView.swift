@@ -11,13 +11,17 @@ struct TagFormNavigationView<T: Tag>: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Value") {
+                Section {
                     TextField("Value", text: $value)
+                } header: {
+                    Text("Value")
                 }
-                Section("Recipes") {
+                Section {
                     ForEach(tag.recipes.orEmpty) {
                         Text($0.name)
                     }
+                } header: {
+                    Text("Recipes")
                 }
             }
             .navigationTitle("Edit " + tag.value)
