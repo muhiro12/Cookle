@@ -181,7 +181,7 @@ struct RecipeFormNavigationView: View {
             note = recipe?.note ?? ""
         }
         .onChange(of: photosPickerItems) {
-            photos.removeAll()
+            photos = (recipe?.photos).orEmpty.map { $0.data }
             Task {
                 for item in photosPickerItems {
                     guard let data = try? await item.loadTransferable(type: Data.self) else {
