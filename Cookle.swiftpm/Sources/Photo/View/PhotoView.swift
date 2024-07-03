@@ -12,6 +12,8 @@ struct PhotoView: View {
 
     @Binding private var selection: Recipe?
 
+    @State private var isPhotoDetailPresented = false
+
     init(selection: Binding<Recipe?>) {
         self._selection = selection
     }
@@ -20,9 +22,13 @@ struct PhotoView: View {
         List(selection: $selection) {
             Section {
                 if let image = UIImage(data: photo.data) {
-                    Image(uiImage: image)
-                        .resizable()
-                        .frame(height: 240)
+                    Button {
+                        isPhotoDetailPresented = true
+                    } label: {
+                        Image(uiImage: image)
+                            .resizable()
+                            .frame(height: 240)
+                    }
                 }
             }
             Section("Recipe") {
@@ -38,6 +44,9 @@ struct PhotoView: View {
             }
         }
         .navigationTitle(photo.title)
+        .fullScreenCover(isPresented: $isPhotoDetailPresented) {
+            PhotoDetailView(photos: [photo])
+        }
     }
 }
 
