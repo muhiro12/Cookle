@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		AD8C8E6C2BFABEE200872BF2 /* CookleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8C8E6B2BFABEE200872BF2 /* CookleApp.swift */; };
 		AD8C8E722BFABEE300872BF2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD8C8E712BFABEE300872BF2 /* Assets.xcassets */; };
+		AD9C7D142C36142400D87D6D /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = AD9C7D132C36142400D87D6D /* Localizable.xcstrings */; };
 		ADF465642C0ED2CE0056D2BF /* Cookle in Frameworks */ = {isa = PBXBuildFile; productRef = ADF465632C0ED2CE0056D2BF /* Cookle */; };
 		ADF465662C0F09A30056D2BF /* Secret.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF465652C0F09A30056D2BF /* Secret.swift */; };
 /* End PBXBuildFile section */
@@ -17,6 +18,7 @@
 		AD8C8E682BFABEE200872BF2 /* Cookle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cookle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD8C8E6B2BFABEE200872BF2 /* CookleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookleApp.swift; sourceTree = "<group>"; };
 		AD8C8E712BFABEE300872BF2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AD9C7D132C36142400D87D6D /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		ADF465652C0F09A30056D2BF /* Secret.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secret.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -52,9 +54,10 @@
 		AD8C8E6A2BFABEE200872BF2 /* Cookle */ = {
 			isa = PBXGroup;
 			children = (
-				AD8C8E712BFABEE300872BF2 /* Assets.xcassets */,
 				AD8C8E6B2BFABEE200872BF2 /* CookleApp.swift */,
 				ADF465652C0F09A30056D2BF /* Secret.swift */,
+				AD8C8E712BFABEE300872BF2 /* Assets.xcassets */,
+				AD9C7D132C36142400D87D6D /* Localizable.xcstrings */,
 			);
 			path = Cookle;
 			sourceTree = "<group>";
@@ -127,6 +130,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD9C7D142C36142400D87D6D /* Localizable.xcstrings in Resources */,
 				AD8C8E722BFABEE300872BF2 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -204,6 +208,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -259,6 +264,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
 			name = Release;
 		};
