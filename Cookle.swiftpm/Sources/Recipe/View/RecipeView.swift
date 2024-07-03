@@ -11,7 +11,7 @@ import SwiftUI
 struct RecipeView: View {
     @Environment(Recipe.self) private var recipe
 
-    @State private var isPhotoPresented = false
+    @State private var isPhotoDetailPresented = false
 
     var body: some View {
         List {
@@ -24,17 +24,22 @@ struct RecipeView: View {
                                 if let photo = photoObject.photo,
                                    let image = UIImage(data: photo.data) {
                                     Button {
-                                        isPhotoPresented = true
+                                        isPhotoDetailPresented = true
                                     } label: {
                                         Image(uiImage: image)
                                             .resizable()
                                             .scaledToFit()
                                             .frame(height: 240)
+                                            .clipShape(.rect(cornerRadius: 8))
                                     }
                                 }
                             }
                         }
+                        .scrollTargetLayout()
                     }
+                    .scrollTargetBehavior(.viewAligned)
+                    .listRowInsets(.init(.zero))
+                    .listRowBackground(Color.clear)
                 }
             }
             if recipe.servingSize.isNotZero {
@@ -101,18 +106,8 @@ struct RecipeView: View {
                 Text(recipe.modifiedTimestamp.formatted(.dateTime.year().month().day()))
             }
         }
-        .sheet(isPresented: $isPhotoPresented) {
-            ScrollView(.horizontal) {
-                LazyHStack {
-                    ForEach(recipe.photos.orEmpty, id: \.self) { photo in
-                        if let image = UIImage(data: photo.data) {
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFit()
-                        }
-                    }
-                }
-            }
+        .fullScreenCover(isPresented: $isPhotoDetailPresented) {
+            PhotoDetailView(photos: recipe.photos.orEmpty)
         }
         .task {
             UIApplication.shared.isIdleTimerDisabled = true
