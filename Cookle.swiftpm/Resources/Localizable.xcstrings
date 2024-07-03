@@ -204,7 +204,32 @@
       }
     },
     "Boil water in a large pot and add salt.\nCook the spaghetti until al dente.\nIn a separate pan, cook the pancetta until crispy.\nBeat the eggs in a bowl and mix with grated Parmesan cheese.\nDrain the spaghetti and mix with pancetta and the egg mixture.\nSeason with black pepper and serve immediately." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hierve agua en una olla grande y añade sal.\nCocina los espaguetis hasta que estén al dente.\nEn una sartén aparte, cocina la panceta hasta que esté crujiente.\nBate los huevos en un tazón y mezcla con queso parmesano rallado.\nEscurre los espaguetis y mezcla con la panceta y la mezcla de huevos.\nSazona con pimienta negra y sirve inmediatamente."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Faites bouillir de l'eau dans une grande casserole et ajoutez du sel.\nFaites cuire les spaghettis jusqu'à ce qu'ils soient al dente.\nDans une poêle séparée, faites cuire la pancetta jusqu'à ce qu'elle soit croustillante.\nBattez les œufs dans un bol et mélangez avec du parmesan râpé.\nÉgouttez les spaghettis et mélangez avec la pancetta et le mélange d'œufs.\nAssaisonnez avec du poivre noir et servez immédiatement."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "大きな鍋でお湯を沸かし、塩を加える。\nスパゲッティをアルデンテに茹でる。\n別のフライパンでパンチェッタをカリカリになるまで焼く。\nボウルで卵を溶き、すりおろしたパルメザンチーズと混ぜる。\nスパゲッティを水切りし、パンチェッタと卵の混合物と混ぜる。\n黒コショウで味付けし、すぐに提供する。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在一个大锅中煮沸水并加盐。\n将意大利面煮至坚韧适中。\n在另一个平底锅中煮脆培根。\n在碗中打鸡蛋并与磨碎的帕尔马干酪混合。\n沥干意大利面并与脆培根和鸡蛋混合物混合。\n用黑胡椒调味并立即食用。"
+          }
+        }
+      }
     },
     "Breakfast" : {
       "localizations" : {
@@ -1579,7 +1604,32 @@
       }
     },
     "Spaghetti\n200g\nEggs\n2\nParmesan cheese\n50g\nPancetta\n100g\nBlack pepper\nto taste\nSalt\nto taste" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espaguetis\n200g\nHuevos\n2\nQueso parmesano\n50g\nPanceta\n100g\nPimienta negra\nal gusto\nSal\nal gusto"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spaghettis\n200g\nŒufs\n2\nFromage parmesan\n50g\nPancetta\n100g\nPoivre noir\nà goûter\nSel\nà goûter"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スパゲッティ\n200g\n卵\n2個\nパルメザンチーズ\n50g\nパンチェッタ\n100g\n黒コショウ\nお好みで\n塩\nお好みで"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "意大利面\n200克\n鸡蛋\n2个\n帕尔马干酪\n50克\n脆培根\n100克\n黑胡椒\n适量\n盐\n适量"
+          }
+        }
+      }
     },
     "Step" : {
       "localizations" : {
