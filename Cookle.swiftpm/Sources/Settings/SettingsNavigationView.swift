@@ -23,8 +23,10 @@ struct SettingsNavigationView: View {
                     StoreSection()
                 }
                 Section {
-                    NavigationLink("Licenses") {
+                    NavigationLink {
                         LicenseView()
+                    } label: {
+                        Text(("Licenses"))
                     }
                 }
                 if isDebugOn {

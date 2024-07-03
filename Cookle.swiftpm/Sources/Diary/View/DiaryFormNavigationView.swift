@@ -31,8 +31,9 @@ struct DiaryFormNavigationView: View {
                         .datePickerStyle(.graphical)
                 }
                 Section {
-                    NavigationLink(DiaryObjectType.breakfast.title,
-                                   value: DiaryObjectType.breakfast)
+                    NavigationLink(value: DiaryObjectType.breakfast) {
+                        Text(DiaryObjectType.breakfast.title)
+                    }
                 } footer: {
                     Text(recipes.compactMap {
                         guard breakfasts.contains($0) else {
@@ -42,8 +43,9 @@ struct DiaryFormNavigationView: View {
                     }.joined(separator: ", "))
                 }
                 Section {
-                    NavigationLink(DiaryObjectType.lunch.title,
-                                   value: DiaryObjectType.lunch)
+                    NavigationLink(value: DiaryObjectType.lunch) {
+                        Text(DiaryObjectType.lunch.title)
+                    }
                 } footer: {
                     Text(recipes.compactMap {
                         guard lunches.contains($0) else {
@@ -53,8 +55,9 @@ struct DiaryFormNavigationView: View {
                     }.joined(separator: ", "))
                 }
                 Section {
-                    NavigationLink(DiaryObjectType.dinner.title,
-                                   value: DiaryObjectType.dinner)
+                    NavigationLink(value: DiaryObjectType.dinner) {
+                        Text(DiaryObjectType.dinner.title)
+                    }
                 } footer: {
                     Text(recipes.compactMap {
                         guard dinners.contains($0) else {
