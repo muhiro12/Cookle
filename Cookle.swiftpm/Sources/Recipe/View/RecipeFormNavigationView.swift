@@ -61,7 +61,9 @@ struct RecipeFormNavigationView: View {
                                 Image(systemName: "photo.badge.plus")
                             }
                         }
+                        .scrollTargetLayout()
                     }
+                    .scrollTargetBehavior(.viewAligned)
                 }
                 Section("Serving Size") {
                     HStack {
