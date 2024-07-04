@@ -5,7 +5,6 @@ import PackageDescription
 
 let package = Package(
     name: "Cookle",
-    defaultLocalization: "en",
     platforms: [
         .iOS(.v17)
     ],
