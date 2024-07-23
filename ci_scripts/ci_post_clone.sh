@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #  ci_post_clone.sh
-#  Incomes
+#  Cookle
 #
 #  Created by Hiromu Nakano on 2024/03/24.
 #  Copyright © 2024 Hiromu Nakano. All rights reserved.

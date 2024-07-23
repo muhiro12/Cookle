@@ -1,6 +1,6 @@
 //
 //  Advertisement.swift
-//  Incomes
+//  Cookle
 //
 //  Created by Hiromu Nakano on 2022/01/17.
 //  Copyright © 2022 Hiromu Nakano. All rights reserved.
