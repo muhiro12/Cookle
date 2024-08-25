@@ -58,6 +58,13 @@ struct DebugNavigationSidebarView: View {
             } header: {
                 Text("Manage")
             }
+            StoreSection()
+            Section {
+                Advertisement(.medium)
+            }
+            Section {
+                Advertisement(.small)
+            }
         }
         .navigationTitle(Text("Debug"))
         .toolbar {
