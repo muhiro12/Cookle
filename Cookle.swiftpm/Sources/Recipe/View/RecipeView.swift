@@ -11,6 +11,8 @@ import SwiftUI
 struct RecipeView: View {
     @Environment(Recipe.self) private var recipe
 
+    @AppStorage(.isSubscribeOn) private var isSubscribeOn
+
     @State private var isPhotoDetailPresented = false
 
     var body: some View {
@@ -85,8 +87,8 @@ struct RecipeView: View {
                     Text("Steps")
                 }
             }
-            Section {
-                Advertisement(.medium)
+            if !isSubscribeOn {
+                AdvertisementSection(.medium)
             }
             if let categories = recipe.categories,
                categories.isNotEmpty {

@@ -10,6 +10,8 @@ import SwiftUI
 struct MainNavigationSidebarView: View {
     @Binding private var selection: MainNavigationSidebar?
 
+    @AppStorage(.isSubscribeOn) private var isSubscribeOn
+
     @State private var isSettingsPresented = false
 
     init(selection: Binding<MainNavigationSidebar?>) {
@@ -56,8 +58,8 @@ struct MainNavigationSidebarView: View {
                 }
                 .tag(MainNavigationSidebar.photo)
             }
-            Section {
-                Advertisement(.small)
+            if !isSubscribeOn {
+                AdvertisementSection(.small)
             }
         }
         .navigationTitle(Text("Cookle"))
