@@ -31,6 +31,8 @@ struct CookleApp: App {
         )
 
         sharedStore = .init()
+
+        CookleShortcuts.updateAppShortcutParameters()
     }
 
     var body: some Scene {

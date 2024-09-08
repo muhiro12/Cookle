@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AD0759AA2C8D9DEC0068A8A1 /* CookleIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0759A92C8D9DE10068A8A1 /* CookleIntents.swift */; };
+		AD0759AC2C8D9EB40068A8A1 /* CookleShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0759AB2C8D9EB40068A8A1 /* CookleShortcuts.swift */; };
 		AD693DF32C36AE77005F81D0 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = AD693DF22C36AE77005F81D0 /* Localizable.xcstrings */; };
 		AD8C8E6C2BFABEE200872BF2 /* CookleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8C8E6B2BFABEE200872BF2 /* CookleApp.swift */; };
 		AD8C8E722BFABEE300872BF2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD8C8E712BFABEE300872BF2 /* Assets.xcassets */; };
@@ -15,6 +17,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AD0759A92C8D9DE10068A8A1 /* CookleIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookleIntents.swift; sourceTree = "<group>"; };
+		AD0759AB2C8D9EB40068A8A1 /* CookleShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookleShortcuts.swift; sourceTree = "<group>"; };
 		AD693DF22C36AE77005F81D0 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		AD8C8E682BFABEE200872BF2 /* Cookle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cookle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD8C8E6B2BFABEE200872BF2 /* CookleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookleApp.swift; sourceTree = "<group>"; };
@@ -54,10 +58,12 @@
 		AD8C8E6A2BFABEE200872BF2 /* Cookle */ = {
 			isa = PBXGroup;
 			children = (
-				AD8C8E6B2BFABEE200872BF2 /* CookleApp.swift */,
-				ADF465652C0F09A30056D2BF /* Secret.swift */,
 				AD8C8E712BFABEE300872BF2 /* Assets.xcassets */,
+				AD8C8E6B2BFABEE200872BF2 /* CookleApp.swift */,
+				AD0759A92C8D9DE10068A8A1 /* CookleIntents.swift */,
+				AD0759AB2C8D9EB40068A8A1 /* CookleShortcuts.swift */,
 				AD693DF22C36AE77005F81D0 /* Localizable.xcstrings */,
+				ADF465652C0F09A30056D2BF /* Secret.swift */,
 			);
 			path = Cookle;
 			sourceTree = "<group>";
@@ -146,7 +152,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD0759AC2C8D9EB40068A8A1 /* CookleShortcuts.swift in Sources */,
 				AD8C8E6C2BFABEE200872BF2 /* CookleApp.swift in Sources */,
+				AD0759AA2C8D9DEC0068A8A1 /* CookleIntents.swift in Sources */,
 				ADF465662C0F09A30056D2BF /* Secret.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
