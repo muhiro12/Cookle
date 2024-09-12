@@ -6,14 +6,14 @@ struct DebugNavigationContentView: View {
 
     @Binding private var selection: Int?
 
-    @Query(Diary.descriptor) private var diaries: [Diary]
-    @Query(DiaryObject.descriptor) private var diaryObjects: [DiaryObject]
-    @Query(Recipe.descriptor) private var recipes: [Recipe]
-    @Query(IngredientObject.descriptor) private var ingredientObjects: [IngredientObject]
-    @Query(Ingredient.descriptor) private var ingredients: [Ingredient]
-    @Query(Category.descriptor) private var categories: [Category]
-    @Query(Photo.descriptor) private var photos: [Photo]
-    @Query(PhotoObject.descriptor) private var photoObjects: [PhotoObject]
+    @Query(.diaries()) private var diaries: [Diary]
+    @Query(.diaryObjects()) private var diaryObjects: [DiaryObject]
+    @Query(.recipes()) private var recipes: [Recipe]
+    @Query(.ingredientObjects()) private var ingredientObjects: [IngredientObject]
+    @Query(.ingredients()) private var ingredients: [Ingredient]
+    @Query(.categories()) private var categories: [Category]
+    @Query(.photos()) private var photos: [Photo]
+    @Query(.photoObjects()) private var photoObjects: [PhotoObject]
 
     private let content: DebugContent
 

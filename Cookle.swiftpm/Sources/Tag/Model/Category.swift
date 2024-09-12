@@ -37,13 +37,17 @@ extension Category {
     static var title: LocalizedStringKey {
         "Categories"
     }
+
+    static var descriptor: FetchDescriptor<Category> {
+        .categories()
+    }
 }
 
-extension Category {
-    static var descriptor: FetchDescriptor<Category> {
+extension FetchDescriptor {
+    static func categories(order: SortOrder = .forward) -> FetchDescriptor<Category> {
         .init(
             sortBy: [
-                .init(\.value)
+                .init(\.value, order: order)
             ]
         )
     }

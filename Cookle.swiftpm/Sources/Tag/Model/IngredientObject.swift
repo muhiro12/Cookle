@@ -36,8 +36,8 @@ final class IngredientObject {
     }
 }
 
-extension IngredientObject {
-    static var descriptor: FetchDescriptor<IngredientObject> {
+extension FetchDescriptor {
+    static func ingredientObjects(order: SortOrder = .reverse) -> FetchDescriptor<IngredientObject> {
         .init(
             sortBy: [
                 .init(\.modifiedTimestamp, order: .reverse)

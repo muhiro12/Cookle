@@ -166,7 +166,7 @@ struct RecipeFormNavigationView: View {
                                 },
                                 note: note
                             )
-                            if let count = try? context.fetchCount(Recipe.descriptor),
+                            if let count = try? context.fetchCount(.recipes()),
                                count.isMultiple(of: 5) {
                                 Task {
                                     try await Task.sleep(for: .seconds(2))

@@ -9,7 +9,7 @@ import SwiftData
 import SwiftUI
 
 struct PhotoListView: View {
-    @Query(Photo.descriptor) private var photos: [Photo]
+    @Query(.photos()) private var photos: [Photo]
 
     @Binding private var selection: Photo?
 

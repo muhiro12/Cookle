@@ -9,7 +9,7 @@ import SwiftData
 import SwiftUI
 
 struct RecipeListView: View {
-    @Query(Recipe.descriptor) private var recipes: [Recipe]
+    @Query(.recipes()) private var recipes: [Recipe]
 
     @Binding private var selection: Recipe?
 

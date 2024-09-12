@@ -39,13 +39,17 @@ extension Ingredient {
     static var title: LocalizedStringKey {
         "Ingredients"
     }
+
+    static var descriptor: FetchDescriptor<Ingredient> {
+        .ingredients()
+    }
 }
 
-extension Ingredient {
-    static var descriptor: FetchDescriptor<Ingredient> {
+extension FetchDescriptor {
+    static func ingredients(order: SortOrder = .forward) -> FetchDescriptor<Ingredient> {
         .init(
             sortBy: [
-                .init(\.value)
+                .init(\.value, order: order)
             ]
         )
     }
