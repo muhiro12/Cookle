@@ -1,5 +1,5 @@
 //
-//  ModelContainerView.swift
+//  MainView.swift
 //
 //
 //  Created by Hiromu Nakano on 2024/05/27.
@@ -8,7 +8,7 @@
 import SwiftData
 import SwiftUI
 
-struct ModelContainerView: View {
+struct MainView: View {
     @AppStorage(.isICloudOn) private var isICloudOn
 
     private var sharedModelContainer: ModelContainer!
@@ -25,11 +25,12 @@ struct ModelContainerView: View {
     var body: some View {
         MainNavigationView()
             .modelContainer(sharedModelContainer)
+            .id(isICloudOn)
     }
 }
 
 #Preview {
     CooklePreview { _ in
-        ModelContainerView()
+        MainView()
     }
 }
