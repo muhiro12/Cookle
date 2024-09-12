@@ -166,15 +166,14 @@ struct RecipeFormNavigationView: View {
                                 },
                                 note: note
                             )
-                            if let count = try? context.fetchCount(.recipes()),
-                               count.isMultiple(of: 5) {
-                                Task {
-                                    try await Task.sleep(for: .seconds(2))
-                                    requestReview()
-                                }
-                            }
                         }
                         dismiss()
+                        if Int.random(in: 0..<5) == .zero {
+                            Task {
+                                try? await Task.sleep(for: .seconds(2))
+                                requestReview()
+                            }
+                        }
                     } label: {
                         Text(recipe != nil ? "Update" : "Add")
                     }

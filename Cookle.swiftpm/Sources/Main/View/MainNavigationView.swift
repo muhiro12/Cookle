@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct MainNavigationView: View {
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.requestReview) private var requestReview
+
     @State private var content: MainNavigationSidebar?
     @State private var detail: Recipe?
 
@@ -21,6 +24,17 @@ struct MainNavigationView: View {
         } detail: {
             if let detail {
                 MainNavigationDetailView(detail)
+            }
+        }
+        .onChange(of: scenePhase) {
+            guard scenePhase == .active else {
+                return
+            }
+            if Int.random(in: 0..<10) == .zero {
+                Task {
+                    try? await Task.sleep(for: .seconds(2))
+                    requestReview()
+                }
             }
         }
     }
