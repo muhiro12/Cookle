@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct MainNavigationSidebarView: View {
+    @AppStorage(.isSubscribeOn) private var isSubscribeOn
+    @AppStorage(.isDebugOn) private var isDebugOn
+
     @Binding private var selection: MainNavigationSidebar?
 
-    @AppStorage(.isSubscribeOn) private var isSubscribeOn
-
     @State private var isSettingsPresented = false
+    @State private var isDebugPresented = false
 
     init(selection: Binding<MainNavigationSidebar?>) {
         self._selection = selection
@@ -64,6 +66,13 @@ struct MainNavigationSidebarView: View {
         }
         .navigationTitle(Text("Cookle"))
         .toolbar {
+            if isDebugOn {
+                ToolbarItem {
+                    Button("Debug", systemImage: "flask") {
+                        isDebugPresented = true
+                    }
+                }
+            }
             ToolbarItem {
                 Button("Settings", systemImage: "gear") {
                     isSettingsPresented = true
@@ -72,6 +81,9 @@ struct MainNavigationSidebarView: View {
         }
         .sheet(isPresented: $isSettingsPresented) {
             SettingsNavigationView()
+        }
+        .fullScreenCover(isPresented: $isDebugPresented) {
+            DebugNavigationView()
         }
     }
 }

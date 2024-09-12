@@ -29,6 +29,7 @@ struct RecipeFormNavigationView: View {
     @State private var note = ""
 
     @State private var photosPickerItems = [PhotosPickerItem]()
+    @State private var isDebugAlertPresented = false
 
     var body: some View {
         NavigationStack {
@@ -107,7 +108,8 @@ struct RecipeFormNavigationView: View {
                 ToolbarItem(placement: .cancellationAction) {
                     Button {
                         if name == "Enable Debug" {
-                            isDebugOn = true
+                            name = .empty
+                            isDebugAlertPresented = true
                         }
                         dismiss()
                     } label: {
@@ -186,6 +188,20 @@ struct RecipeFormNavigationView: View {
             }
         }
         .interactiveDismissDisabled()
+        .alert("Debug", isPresented: $isDebugAlertPresented) {
+            Button(role: .cancel) {
+            } label: {
+                Text("Cancel")
+            }
+            Button {
+                isDebugOn = true
+                dismiss()
+            } label: {
+                Text("OK")
+            }
+        } message: {
+            Text("Are you really going to use DebugMode?")
+        }
         .task {
             name = recipe?.name ?? ""
             photos = recipe?.photos.orEmpty.map { $0.data } ?? []

@@ -5,7 +5,11 @@ struct DebugNavigationSidebarView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
 
+    @AppStorage(.isDebugOn) private var isDebugOn
+
     @Binding private var selection: DebugContent?
+
+    @State private var isAlertPresented = false
 
     init(selection: Binding<DebugContent?>) {
         self._selection = selection
@@ -13,6 +17,9 @@ struct DebugNavigationSidebarView: View {
 
     var body: some View {
         List(selection: $selection) {
+            Section {
+                Toggle("Debug On", isOn: $isDebugOn)
+            }
             Section {
                 ForEach(DebugContent.allCases, id: \.self) { content in
                     switch content {
@@ -39,21 +46,7 @@ struct DebugNavigationSidebarView: View {
             }
             Section {
                 Button("Create Preview Diary", systemImage: "flask") {
-                    withAnimation {
-                        _ = CooklePreviewStore().createPreviewDiary(context)
-                    }
-                }
-                Button("Delete All", systemImage: "trash", role: .destructive) {
-                    withAnimation {
-                        try! context.delete(model: Diary.self)
-                        try! context.delete(model: DiaryObject.self)
-                        try! context.delete(model: Recipe.self)
-                        try! context.delete(model: Ingredient.self)
-                        try! context.delete(model: IngredientObject.self)
-                        try! context.delete(model: Category.self)
-                        try! context.delete(model: Photo.self)
-                        try! context.delete(model: PhotoObject.self)
-                    }
+                    isAlertPresented = true
                 }
             } header: {
                 Text("Manage")
@@ -68,11 +61,28 @@ struct DebugNavigationSidebarView: View {
                 CloseButton()
             }
         }
+        .alert("Create Preview Diary", isPresented: $isAlertPresented) {
+            Button(role: .destructive) {
+                withAnimation {
+                    _ = CooklePreviewStore().createPreviewDiary(context)
+                }
+            } label: {
+                Text("Create")
+            }
+            Button(role: .cancel) {
+            } label: {
+                Text("Cancel")
+            }
+        } message: {
+            Text("Are you really going to create Preview Diary?")
+        }
     }
 }
 
 #Preview {
-    NavigationStack {
-        DebugNavigationSidebarView(selection: .constant(nil))
+    CooklePreview { _ in
+        NavigationStack {
+            DebugNavigationSidebarView(selection: .constant(nil))
+        }
     }
 }

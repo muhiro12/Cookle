@@ -2,13 +2,12 @@ import SwiftUI
 import SwiftUtilities
 
 struct SettingsNavigationView: View {
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var context
 
     @AppStorage(.isSubscribeOn) private var isSubscribeOn
     @AppStorage(.isICloudOn) private var isICloudOn
-    @AppStorage(.isDebugOn) private var isDebugOn
 
-    @State private var isDebugPresented = false
+    @State private var isAlertPresented = false
 
     var body: some View {
         NavigationStack {
@@ -29,17 +28,12 @@ struct SettingsNavigationView: View {
                         Text(("Licenses"))
                     }
                 }
-                if isDebugOn {
-                    Section {
-                        Toggle("Debug On", isOn: $isDebugOn)
-                        Button {
-                            isDebugPresented = true
-                        } label: {
-                            Text("DebugNavigationView")
-                        }
-                    } header: {
-                        Text("Debug")
+                Section {
+                    Button("Delete All", systemImage: "trash", role: .destructive) {
+                        isAlertPresented = true
                     }
+                } header: {
+                    Text("Manage")
                 }
             }
             .navigationTitle(Text("Settings"))
@@ -48,8 +42,30 @@ struct SettingsNavigationView: View {
                     CloseButton()
                 }
             }
-            .fullScreenCover(isPresented: $isDebugPresented) {
-                DebugNavigationView()
+            .alert(Text("Are you sure you want to delete all data?"),
+                   isPresented: $isAlertPresented) {
+                Button(role: .destructive) {
+                    withAnimation {
+                        do {
+                            try context.delete(model: Diary.self)
+                            try context.delete(model: DiaryObject.self)
+                            try context.delete(model: Recipe.self)
+                            try context.delete(model: Ingredient.self)
+                            try context.delete(model: IngredientObject.self)
+                            try context.delete(model: Category.self)
+                            try context.delete(model: Photo.self)
+                            try context.delete(model: PhotoObject.self)
+                        } catch {
+                            assertionFailure(error.localizedDescription)
+                        }
+                    }
+                } label: {
+                    Text("Delete")
+                }
+                Button(role: .cancel) {
+                } label: {
+                    Text("Cancel")
+                }
             }
         }
     }
