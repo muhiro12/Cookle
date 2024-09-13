@@ -8,7 +8,9 @@
 import AppIntents
 
 struct CookleShortcuts: AppShortcutsProvider {
-    static var appShortcuts = [
+    static let shortcutTileColor = ShortcutTileColor.yellow
+
+    static let appShortcuts = [
         AppShortcut(
             intent: OpenCookleIntent(),
             phrases: [
@@ -16,6 +18,14 @@ struct CookleShortcuts: AppShortcutsProvider {
             ],
             shortTitle: "Open Cookle",
             systemImageName: "bird"
+        ),
+        AppShortcut(
+            intent: ShowRandomRecipeIntent(),
+            phrases: [
+                "Show random recipe in \(.applicationName)"
+            ],
+            shortTitle: "Show Random Recipe",
+            systemImageName: "book.pages"
         )
     ]
 }
