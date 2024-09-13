@@ -10,12 +10,12 @@ import SwiftUI
 struct PhotoView: View {
     @Environment(Photo.self) private var photo
 
-    @Binding private var selection: Recipe?
+    @Binding private var selection: CookleSelectionValue?
 
     @State private var isPhotoDetailPresented = false
 
-    init(selection: Binding<Recipe?>) {
-        self._selection = selection
+    init(selection: Binding<CookleSelectionValue?> = .constant(nil)) {
+        _selection = selection
     }
 
     var body: some View {
@@ -33,7 +33,9 @@ struct PhotoView: View {
             }
             Section {
                 ForEach(photo.recipes.orEmpty, id: \.self) { recipe in
-                    Text(recipe.name)
+                    NavigationLink(selection: .recipe(recipe)) {
+                        Text(recipe.name)
+                    }
                 }
             } header: {
                 Text("Recipe")
@@ -58,7 +60,7 @@ struct PhotoView: View {
 
 #Preview {
     CooklePreview { preview in
-        PhotoView(selection: .constant(nil))
+        PhotoView()
             .environment(preview.photos[0])
     }
 }

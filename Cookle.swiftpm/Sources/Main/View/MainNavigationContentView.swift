@@ -8,67 +8,57 @@
 import SwiftUI
 
 struct MainNavigationContentView: View {
-    @Binding private var selection: Recipe?
+    @Binding private var detail: CookleSelectionValue?
 
-    @State private var path = NavigationPath()
+    @State private var selection: CookleSelectionValue?
 
-    private var sidebar: MainNavigationSidebar
+    private var content: MainNavigationSidebar
 
-    init(_ content: MainNavigationSidebar, selection: Binding<Recipe?>) {
-        self.sidebar = content
-        self._selection = selection
+    init(_ content: MainNavigationSidebar, detail: Binding<CookleSelectionValue?> = .constant(nil)) {
+        self.content = content
+        self._detail = detail
     }
 
     var body: some View {
-        NavigationStack(path: $path) {
+        NavigationStack {
             Group {
-                switch sidebar {
+                switch content {
                 case .diary:
-                    DiaryListView(selection: pathSelection())
+                    DiaryListView(selection: $selection)
                 case .recipe:
-                    RecipeListView(selection: $selection)
+                    RecipeListView(selection: $detail)
                 case .ingredient:
-                    TagListView<Ingredient>(selection: pathSelection())
+                    TagListView<Ingredient>(selection: $selection)
                 case .category:
-                    TagListView<Category>(selection: pathSelection())
+                    TagListView<Category>(selection: $selection)
                 case .photo:
-                    PhotoListView(selection: pathSelection())
+                    PhotoListView(selection: $selection)
                 }
             }
-            .navigationDestination(for: Diary.self) { diary in
-                DiaryView(selection: $selection)
-                    .environment(diary)
-            }
-            .navigationDestination(for: Ingredient.self) { ingredient in
-                TagView<Ingredient>(selection: $selection)
-                    .environment(ingredient)
-            }
-            .navigationDestination(for: Category.self) { category in
-                TagView<Category>(selection: $selection)
-                    .environment(category)
-            }
-            .navigationDestination(for: Photo.self) { photo in
-                PhotoView(selection: $selection)
-                    .environment(photo)
+            .navigationDestination(item: $selection) { selection in
+                switch selection {
+                case .diary(let diary):
+                    DiaryView(selection: $detail)
+                        .environment(diary)
+                case .ingredient(let ingredient):
+                    TagView<Ingredient>(selection: $detail)
+                        .environment(ingredient)
+                case .category(let category):
+                    TagView<Category>(selection: $detail)
+                        .environment(category)
+                case .photo(let photo):
+                    PhotoView(selection: $detail)
+                        .environment(photo)
+                default:
+                    EmptyView()
+                }
             }
         }
-    }
-
-    private func pathSelection<Value: Hashable>() -> Binding<Value?> {
-        .init(
-            get: { nil },
-            set: { value in
-                guard let value else {
-                    return
-                }
-                path.append(value)
-            }
-        )
     }
 }
 
 #Preview {
     CooklePreview { _ in
-        MainNavigationContentView(.diary, selection: .constant(nil))
+        MainNavigationContentView(.diary)
     }
 }

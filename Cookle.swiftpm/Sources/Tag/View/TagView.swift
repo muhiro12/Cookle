@@ -10,10 +10,10 @@ import SwiftUI
 struct TagView<T: Tag>: View {
     @Environment(T.self) private var tag
 
-    @Binding private var selection: Recipe?
+    @Binding private var selection: CookleSelectionValue?
 
-    init(selection: Binding<Recipe?>) {
-        self._selection = selection
+    init(selection: Binding<CookleSelectionValue?> = .constant(nil)) {
+        _selection = selection
     }
 
     var body: some View {
@@ -24,8 +24,10 @@ struct TagView<T: Tag>: View {
                 Text("Value")
             }
             Section {
-                ForEach(tag.recipes.orEmpty, id: \.self) {
-                    Text($0.name)
+                ForEach(tag.recipes.orEmpty, id: \.self) { recipe in
+                    NavigationLink(selection: .recipe(recipe)) {
+                        Text(recipe.name)
+                    }
                 }
             } header: {
                 Text("Recipes")
@@ -53,7 +55,7 @@ struct TagView<T: Tag>: View {
 #Preview {
     CooklePreview { preview in
         NavigationStack {
-            TagView<Ingredient>(selection: .constant(nil))
+            TagView<Ingredient>()
                 .environment(preview.ingredients[0])
         }
     }

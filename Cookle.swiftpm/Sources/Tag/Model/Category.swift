@@ -41,6 +41,10 @@ extension Category {
     static var descriptor: FetchDescriptor<Category> {
         .categories()
     }
+
+    var selectionValue: CookleSelectionValue {
+        .category(self)
+    }
 }
 
 extension FetchDescriptor {

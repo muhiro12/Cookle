@@ -11,19 +11,21 @@ import SwiftUI
 struct RecipeListView: View {
     @Query(.recipes()) private var recipes: [Recipe]
 
-    @Binding private var selection: Recipe?
+    @Binding private var selection: CookleSelectionValue?
 
     @State private var searchText = ""
 
-    init(selection: Binding<Recipe?>) {
-        self._selection = selection
+    init(selection: Binding<CookleSelectionValue?> = .constant(nil)) {
+        _selection = selection
     }
 
     var body: some View {
         List(recipes, id: \.self, selection: $selection) { recipe in
             if recipe.name.lowercased().contains(searchText.lowercased())
                 || searchText.isEmpty {
-                Text(recipe.name)
+                NavigationLink(selection: .recipe(recipe)) {
+                    Text(recipe.name)
+                }
             }
         }
         .searchable(text: $searchText)
@@ -39,7 +41,7 @@ struct RecipeListView: View {
 #Preview {
     CooklePreview { _ in
         NavigationStack {
-            RecipeListView(selection: .constant(nil))
+            RecipeListView()
         }
     }
 }

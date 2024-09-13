@@ -11,12 +11,12 @@ import SwiftUI
 struct TagListView<T: Tag>: View {
     @Query(T.descriptor) private var tags: [T]
 
-    @Binding private var selection: T?
+    @Binding private var selection: CookleSelectionValue?
 
     @State private var searchText = ""
 
-    init(selection: Binding<T?>) {
-        self._selection = selection
+    init(selection: Binding<CookleSelectionValue?> = .constant(nil)) {
+        _selection = selection
     }
 
     var body: some View {
@@ -24,7 +24,9 @@ struct TagListView<T: Tag>: View {
             if tag.recipes.orEmpty.isNotEmpty {
                 if tag.value.lowercased().contains(searchText.lowercased())
                     || searchText.isEmpty {
-                    Text(tag.value)
+                    NavigationLink(selection: tag.selectionValue) {
+                        Text(tag.value)
+                    }
                 }
             }
         }
@@ -41,7 +43,7 @@ struct TagListView<T: Tag>: View {
 #Preview {
     CooklePreview { _ in
         NavigationStack {
-            TagListView<Category>(selection: .constant(nil))
+            TagListView<Category>()
         }
     }
 }

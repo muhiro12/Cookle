@@ -11,10 +11,10 @@ import SwiftUI
 struct DiaryListView: View {
     @Query(.diaries()) private var diaries: [Diary]
 
-    @Binding private var selection: Diary?
+    @Binding private var selection: CookleSelectionValue?
 
-    init(selection: Binding<Diary?>) {
-        self._selection = selection
+    init(selection: Binding<CookleSelectionValue?> = .constant(nil)) {
+        _selection = selection
     }
 
     var body: some View {
@@ -33,7 +33,9 @@ struct DiaryListView: View {
             Section(section.key) {
                 ForEach(section.value, id: \.self) { diary in
                     if diary.recipes.orEmpty.isNotEmpty {
-                        Text(diary.date.formatted(.dateTime.month().day()))
+                        NavigationLink(selection: .diary(diary)) {
+                            Text(diary.date.formatted(.dateTime.month().day()))
+                        }
                     }
                 }
             }
@@ -50,7 +52,7 @@ struct DiaryListView: View {
 #Preview {
     CooklePreview { _ in
         NavigationStack {
-            DiaryListView(selection: .constant(nil))
+            DiaryListView()
         }
     }
 }

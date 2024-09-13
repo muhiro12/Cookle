@@ -43,6 +43,10 @@ extension Ingredient {
     static var descriptor: FetchDescriptor<Ingredient> {
         .ingredients()
     }
+
+    var selectionValue: CookleSelectionValue {
+        .ingredient(self)
+    }
 }
 
 extension FetchDescriptor {

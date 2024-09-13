@@ -11,54 +11,59 @@ struct MainNavigationSidebarView: View {
     @AppStorage(.isSubscribeOn) private var isSubscribeOn
     @AppStorage(.isDebugOn) private var isDebugOn
 
-    @Binding private var selection: MainNavigationSidebar?
+    @Binding private var content: CookleSelectionValue?
 
     @State private var isSettingsPresented = false
     @State private var isDebugPresented = false
 
-    init(selection: Binding<MainNavigationSidebar?>) {
-        self._selection = selection
+    init(content: Binding<CookleSelectionValue?> = .constant(nil)) {
+        _content = content
     }
 
     var body: some View {
-        List(selection: $selection) {
+        List(selection: $content) {
             Section {
-                Label {
-                    Text("Diary")
-                } icon: {
-                    Image(systemName: "book")
+                NavigationLink(selection: .mainNavigationSidebar(.diary)) {
+                    Label {
+                        Text("Diary")
+                    } icon: {
+                        Image(systemName: "book")
+                    }
                 }
-                .tag(MainNavigationSidebar.diary)
             }
             Section {
-                Label {
-                    Text("Recipe")
-                } icon: {
-                    Image(systemName: "book.pages")
+                NavigationLink(selection: .mainNavigationSidebar(.recipe)) {
+                    Label {
+                        Text("Recipe")
+                    } icon: {
+                        Image(systemName: "book.pages")
+                    }
                 }
-                .tag(MainNavigationSidebar.recipe)
             }
             Section {
-                Label {
-                    Text("Ingredient")
-                } icon: {
-                    Image(systemName: "refrigerator")
+                NavigationLink(selection: .mainNavigationSidebar(.ingredient)) {
+                    Label {
+                        Text("Ingredient")
+                    } icon: {
+                        Image(systemName: "refrigerator")
+                    }
                 }
-                .tag(MainNavigationSidebar.ingredient)
-                Label {
-                    Text("Category")
-                } icon: {
-                    Image(systemName: "frying.pan")
+                NavigationLink(selection: .mainNavigationSidebar(.category)) {
+                    Label {
+                        Text("Category")
+                    } icon: {
+                        Image(systemName: "frying.pan")
+                    }
                 }
-                .tag(MainNavigationSidebar.category)
             }
             Section {
-                Label {
-                    Text("Photo")
-                } icon: {
-                    Image(systemName: "photo.stack")
+                NavigationLink(selection: .mainNavigationSidebar(.photo)) {
+                    Label {
+                        Text("Photo")
+                    } icon: {
+                        Image(systemName: "photo.stack")
+                    }
                 }
-                .tag(MainNavigationSidebar.photo)
             }
             if !isSubscribeOn {
                 AdvertisementSection(.small)
@@ -91,7 +96,7 @@ struct MainNavigationSidebarView: View {
 #Preview {
     CooklePreview { _ in
         NavigationStack {
-            MainNavigationSidebarView(selection: .constant(nil))
+            MainNavigationSidebarView()
         }
     }
 }

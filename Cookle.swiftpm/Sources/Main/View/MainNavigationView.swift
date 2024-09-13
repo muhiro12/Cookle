@@ -11,19 +11,25 @@ struct MainNavigationView: View {
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.requestReview) private var requestReview
 
-    @State private var content: MainNavigationSidebar?
-    @State private var detail: Recipe?
+    @State private var content: CookleSelectionValue?
+    @State private var detail: CookleSelectionValue?
 
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {
-            MainNavigationSidebarView(selection: $content)
+            MainNavigationSidebarView(content: $content)
         } content: {
-            if let content {
-                MainNavigationContentView(content, selection: $detail)
+            switch content {
+            case .mainNavigationSidebar(let content):
+                MainNavigationContentView(content, detail: $detail)
+            default:
+                EmptyView()
             }
         } detail: {
-            if let detail {
+            switch detail {
+            case .recipe(let detail):
                 MainNavigationDetailView(detail)
+            default:
+                EmptyView()
             }
         }
         .onChange(of: scenePhase) {

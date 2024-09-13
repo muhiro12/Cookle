@@ -23,7 +23,7 @@ struct DebugNavigationDetailView: View {
         Group {
             switch content {
             case .diary:
-                DiaryView(selection: .constant(nil))
+                DiaryView()
                     .toolbar {
                         ToolbarItem {
                             Menu("Recipes") {
@@ -44,7 +44,7 @@ struct DebugNavigationDetailView: View {
                     .environment(recipes[detail])
 
             case .ingredient:
-                TagView<Ingredient>(selection: .constant(nil))
+                TagView<Ingredient>()
                     .toolbar {
                         ToolbarItem {
                             Menu("Objects") {
@@ -61,11 +61,11 @@ struct DebugNavigationDetailView: View {
                     .environment(ingredientObjects[detail])
 
             case .category:
-                TagView<Category>(selection: .constant(nil))
+                TagView<Category>()
                     .environment(categories[detail])
 
             case .photo:
-                PhotoView(selection: .constant(nil))
+                PhotoView()
                     .environment(photos[detail])
 
             case .photoObject:

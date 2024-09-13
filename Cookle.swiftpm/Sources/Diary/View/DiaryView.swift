@@ -10,10 +10,10 @@ import SwiftUI
 struct DiaryView: View {
     @Environment(Diary.self) private var diary
 
-    @Binding private var selection: Recipe?
+    @Binding private var selection: CookleSelectionValue?
 
-    init(selection: Binding<Recipe?>) {
-        self._selection = selection
+    init(selection: Binding<CookleSelectionValue?> = .constant(nil)) {
+        _selection = selection
     }
 
     var body: some View {
@@ -30,7 +30,9 @@ struct DiaryView: View {
                breakfasts.isNotEmpty {
                 Section {
                     ForEach(breakfasts, id: \.self) { recipe in
-                        Text(recipe.name)
+                        NavigationLink(selection: .recipe(recipe)) {
+                            Text(recipe.name)
+                        }
                     }
                 } header: {
                     Text("Breakfast")
@@ -43,7 +45,9 @@ struct DiaryView: View {
                lunches.isNotEmpty {
                 Section {
                     ForEach(lunches, id: \.self) { recipe in
-                        Text(recipe.name)
+                        NavigationLink(selection: .recipe(recipe)) {
+                            Text(recipe.name)
+                        }
                     }
                 } header: {
                     Text("Lunch")
@@ -56,7 +60,9 @@ struct DiaryView: View {
                dinners.isNotEmpty {
                 Section {
                     ForEach(dinners, id: \.self) { recipe in
-                        Text(recipe.name)
+                        NavigationLink(selection: .recipe(recipe)) {
+                            Text(recipe.name)
+                        }
                     }
                 } header: {
                     Text("Dinner")
@@ -95,7 +101,7 @@ struct DiaryView: View {
 #Preview {
     CooklePreview { preview in
         NavigationStack {
-            DiaryView(selection: .constant(nil))
+            DiaryView()
                 .environment(preview.diaries[0])
         }
     }

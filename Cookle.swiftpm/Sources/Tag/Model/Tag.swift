@@ -14,9 +14,10 @@ protocol Tag: PersistentModel {
     var createdTimestamp: Date { get }
     var modifiedTimestamp: Date { get }
 
-    static var title: LocalizedStringKey { get }
-    static var descriptor: FetchDescriptor<Self> { get }
-
     static func create(context: ModelContext, value: String) -> Self
     func update(value: String)
+
+    static var title: LocalizedStringKey { get }
+    static var descriptor: FetchDescriptor<Self> { get }
+    var selectionValue: CookleSelectionValue { get }
 }
