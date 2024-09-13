@@ -27,3 +27,9 @@ struct PhotoNavigationView: View {
         }
     }
 }
+
+#Preview {
+    CooklePreview { _ in
+        PhotoNavigationView()
+    }
+}

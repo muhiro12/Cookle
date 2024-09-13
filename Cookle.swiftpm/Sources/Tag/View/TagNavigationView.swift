@@ -27,3 +27,9 @@ struct TagNavigationView<T: Tag>: View {
         }
     }
 }
+
+#Preview {
+    CooklePreview { _ in
+        TagNavigationView<Ingredient>()
+    }
+}

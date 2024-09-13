@@ -27,3 +27,9 @@ struct DiaryNavigationView: View {
         }
     }
 }
+
+#Preview {
+    CooklePreview { _ in
+        DiaryNavigationView()
+    }
+}

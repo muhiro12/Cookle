@@ -21,3 +21,9 @@ struct RecipeNavigationView: View {
         }
     }
 }
+
+#Preview {
+    CooklePreview { _ in
+        RecipeNavigationView()
+    }
+}
