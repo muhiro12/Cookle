@@ -8,7 +8,6 @@
 import SwiftUI
 
 enum CookleSelectionValue: Hashable {
-    case mainNavigationSidebar(MainNavigationSidebar)
     case diary(Diary)
     case recipe(Recipe)
     case ingredient(Ingredient)

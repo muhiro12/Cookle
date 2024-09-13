@@ -11,16 +11,16 @@ import SwiftUI
 struct TagListView<T: Tag>: View {
     @Query(T.descriptor) private var tags: [T]
 
-    @Binding private var selection: CookleSelectionValue?
+    @Binding private var tag: T?
 
     @State private var searchText = ""
 
-    init(selection: Binding<CookleSelectionValue?> = .constant(nil)) {
-        _selection = selection
+    init(selection: Binding<T?> = .constant(nil)) {
+        _tag = selection
     }
 
     var body: some View {
-        List(tags, id: \.self, selection: $selection) { tag in
+        List(tags, id: \.self, selection: $tag) { tag in
             if tag.recipes.orEmpty.isNotEmpty {
                 if tag.value.lowercased().contains(searchText.lowercased())
                     || searchText.isEmpty {

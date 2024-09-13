@@ -11,10 +11,10 @@ import SwiftUI
 struct PhotoListView: View {
     @Query(.photos()) private var photos: [Photo]
 
-    @Binding private var selection: CookleSelectionValue?
+    @Binding private var photo: Photo?
 
-    init(selection: Binding<CookleSelectionValue?> = .constant(nil)) {
-        _selection = selection
+    init(selection: Binding<Photo?> = .constant(nil)) {
+        _photo = selection
     }
 
     var body: some View {
@@ -24,7 +24,7 @@ struct PhotoListView: View {
                     if photo.recipes.orEmpty.isNotEmpty,
                        let image = UIImage(data: photo.data) {
                         Button {
-                            selection = .photo(photo)
+                            self.photo = photo
                         } label: {
                             Image(uiImage: image)
                                 .resizable()
@@ -35,6 +35,11 @@ struct PhotoListView: View {
             }
         }
         .navigationTitle(Text("Photos"))
+        .toolbar {
+            ToolbarItem {
+                AddRecipeButton()
+            }
+        }
     }
 }
 

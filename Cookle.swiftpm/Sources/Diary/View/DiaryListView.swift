@@ -11,10 +11,10 @@ import SwiftUI
 struct DiaryListView: View {
     @Query(.diaries()) private var diaries: [Diary]
 
-    @Binding private var selection: CookleSelectionValue?
+    @Binding private var diary: Diary?
 
-    init(selection: Binding<CookleSelectionValue?> = .constant(nil)) {
-        _selection = selection
+    init(selection: Binding<Diary?> = .constant(nil)) {
+        _diary = selection
     }
 
     var body: some View {
@@ -28,7 +28,7 @@ struct DiaryListView: View {
                 }
             ),
             id: \.key,
-            selection: $selection
+            selection: $diary
         ) { section in
             Section(section.key) {
                 ForEach(section.value, id: \.self) { diary in

@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct CooklePreview<Content: View>: View {
+    @AppStorage(.isDebugOn) private var isDebugOn
+
     private let content: (CooklePreviewStore) -> Content
 
     private let preview = CooklePreviewStore()
@@ -10,12 +12,13 @@ struct CooklePreview<Content: View>: View {
     }
 
     var body: some View {
-        Group {
-            ModelContainerPreview {
-                content($0)
-            }
-            .environment(preview)
+        ModelContainerPreview {
+            content($0)
         }
+        .task {
+            isDebugOn = true
+        }
+        .environment(preview)
         .cooklePlaygroundsEnvironment()
     }
 }

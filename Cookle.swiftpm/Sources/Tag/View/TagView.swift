@@ -10,14 +10,14 @@ import SwiftUI
 struct TagView<T: Tag>: View {
     @Environment(T.self) private var tag
 
-    @Binding private var selection: CookleSelectionValue?
+    @Binding private var recipe: Recipe?
 
-    init(selection: Binding<CookleSelectionValue?> = .constant(nil)) {
-        _selection = selection
+    init(selection: Binding<Recipe?> = .constant(nil)) {
+        _recipe = selection
     }
 
     var body: some View {
-        List(selection: $selection) {
+        List(selection: $recipe) {
             Section {
                 Text(tag.value)
             } header: {

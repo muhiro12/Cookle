@@ -1,5 +1,4 @@
 import SwiftUI
-import SwiftUtilities
 
 struct SettingsNavigationView: View {
     @Environment(\.modelContext) private var context
@@ -37,11 +36,6 @@ struct SettingsNavigationView: View {
                 }
             }
             .navigationTitle(Text("Settings"))
-            .toolbar {
-                ToolbarItem {
-                    CloseButton()
-                }
-            }
             .alert(Text("Are you sure you want to delete all data?"),
                    isPresented: $isAlertPresented) {
                 Button(role: .destructive) {

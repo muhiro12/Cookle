@@ -128,6 +128,14 @@ struct RecipeView: View {
                 Text("Updated At")
             }
         }
+        .toolbar {
+            ToolbarItem(placement: .destructiveAction) {
+                DeleteRecipeButton()
+            }
+            ToolbarItem(placement: .confirmationAction) {
+                EditRecipeButton()
+            }
+        }
         .fullScreenCover(isPresented: $isPhotoDetailPresented) {
             PhotoDetailView(photos: recipe.photos.orEmpty)
         }

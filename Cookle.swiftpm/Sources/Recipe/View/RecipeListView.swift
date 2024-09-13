@@ -11,16 +11,16 @@ import SwiftUI
 struct RecipeListView: View {
     @Query(.recipes()) private var recipes: [Recipe]
 
-    @Binding private var selection: CookleSelectionValue?
+    @Binding private var recipe: Recipe?
 
     @State private var searchText = ""
 
-    init(selection: Binding<CookleSelectionValue?> = .constant(nil)) {
-        _selection = selection
+    init(selection: Binding<Recipe?> = .constant(nil)) {
+        _recipe = selection
     }
 
     var body: some View {
-        List(recipes, id: \.self, selection: $selection) { recipe in
+        List(recipes, id: \.self, selection: $recipe) { recipe in
             if recipe.name.lowercased().contains(searchText.lowercased())
                 || searchText.isEmpty {
                 NavigationLink(selection: .recipe(recipe)) {

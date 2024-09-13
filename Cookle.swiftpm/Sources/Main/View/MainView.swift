@@ -9,6 +9,9 @@ import SwiftData
 import SwiftUI
 
 struct MainView: View {
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.requestReview) private var requestReview
+
     @AppStorage(.isICloudOn) private var isICloudOn
 
     private var sharedModelContainer: ModelContainer!
@@ -23,7 +26,18 @@ struct MainView: View {
     }
 
     var body: some View {
-        MainNavigationView()
+        MainTabView()
+            .onChange(of: scenePhase) {
+                guard scenePhase == .active else {
+                    return
+                }
+                if Int.random(in: 0..<10) == .zero {
+                    Task {
+                        try? await Task.sleep(for: .seconds(2))
+                        requestReview()
+                    }
+                }
+            }
             .modelContainer(sharedModelContainer)
             .id(isICloudOn)
     }

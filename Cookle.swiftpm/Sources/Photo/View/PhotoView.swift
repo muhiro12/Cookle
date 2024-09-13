@@ -10,16 +10,16 @@ import SwiftUI
 struct PhotoView: View {
     @Environment(Photo.self) private var photo
 
-    @Binding private var selection: CookleSelectionValue?
+    @Binding private var recipe: Recipe?
 
     @State private var isPhotoDetailPresented = false
 
-    init(selection: Binding<CookleSelectionValue?> = .constant(nil)) {
-        _selection = selection
+    init(selection: Binding<Recipe?> = .constant(nil)) {
+        _recipe = selection
     }
 
     var body: some View {
-        List(selection: $selection) {
+        List(selection: $recipe) {
             Section {
                 if let image = UIImage(data: photo.data) {
                     Button {

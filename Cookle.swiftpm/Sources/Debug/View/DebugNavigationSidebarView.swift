@@ -1,9 +1,7 @@
 import SwiftUI
-import SwiftUtilities
 
 struct DebugNavigationSidebarView: View {
     @Environment(\.modelContext) private var context
-    @Environment(\.dismiss) private var dismiss
 
     @AppStorage(.isDebugOn) private var isDebugOn
 
@@ -56,11 +54,6 @@ struct DebugNavigationSidebarView: View {
             AdvertisementSection(.small)
         }
         .navigationTitle(Text("Debug"))
-        .toolbar {
-            ToolbarItem {
-                CloseButton()
-            }
-        }
         .alert("Create Preview Diary", isPresented: $isAlertPresented) {
             Button(role: .destructive) {
                 withAnimation {
