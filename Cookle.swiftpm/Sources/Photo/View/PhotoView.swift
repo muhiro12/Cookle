@@ -33,7 +33,7 @@ struct PhotoView: View {
             }
             Section {
                 ForEach(photo.recipes.orEmpty, id: \.self) { recipe in
-                    NavigationLink(selection: .recipe(recipe)) {
+                    NavigationLink(value: recipe) {
                         Text(recipe.name)
                     }
                 }

@@ -23,7 +23,7 @@ struct RecipeListView: View {
         List(recipes, id: \.self, selection: $recipe) { recipe in
             if recipe.name.lowercased().contains(searchText.lowercased())
                 || searchText.isEmpty {
-                NavigationLink(selection: .recipe(recipe)) {
+                NavigationLink(value: recipe) {
                     Text(recipe.name)
                 }
             }

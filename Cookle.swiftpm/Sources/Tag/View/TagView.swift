@@ -25,7 +25,7 @@ struct TagView<T: Tag>: View {
             }
             Section {
                 ForEach(tag.recipes.orEmpty, id: \.self) { recipe in
-                    NavigationLink(selection: .recipe(recipe)) {
+                    NavigationLink(value: recipe) {
                         Text(recipe.name)
                     }
                 }

@@ -30,7 +30,7 @@ struct DiaryView: View {
                breakfasts.isNotEmpty {
                 Section {
                     ForEach(breakfasts, id: \.self) { recipe in
-                        NavigationLink(selection: .recipe(recipe)) {
+                        NavigationLink(value: recipe) {
                             Text(recipe.name)
                         }
                     }
@@ -45,7 +45,7 @@ struct DiaryView: View {
                lunches.isNotEmpty {
                 Section {
                     ForEach(lunches, id: \.self) { recipe in
-                        NavigationLink(selection: .recipe(recipe)) {
+                        NavigationLink(value: recipe) {
                             Text(recipe.name)
                         }
                     }
@@ -60,7 +60,7 @@ struct DiaryView: View {
                dinners.isNotEmpty {
                 Section {
                     ForEach(dinners, id: \.self) { recipe in
-                        NavigationLink(selection: .recipe(recipe)) {
+                        NavigationLink(value: recipe) {
                             Text(recipe.name)
                         }
                     }

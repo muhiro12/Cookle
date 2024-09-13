@@ -24,7 +24,7 @@ struct TagListView<T: Tag>: View {
             if tag.recipes.orEmpty.isNotEmpty {
                 if tag.value.lowercased().contains(searchText.lowercased())
                     || searchText.isEmpty {
-                    NavigationLink(selection: tag.selectionValue) {
+                    NavigationLink(value: tag) {
                         Text(tag.value)
                     }
                 }

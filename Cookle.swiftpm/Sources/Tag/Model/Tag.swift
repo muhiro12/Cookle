@@ -19,5 +19,4 @@ protocol Tag: PersistentModel {
 
     static var title: LocalizedStringKey { get }
     static var descriptor: FetchDescriptor<Self> { get }
-    var selectionValue: CookleSelectionValue { get }
 }
