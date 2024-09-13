@@ -32,9 +32,7 @@ final class CooklePreviewStore {
 
     @MainActor
     func prepare(_ context: ModelContext) async {
-        (0..<20).forEach { _ in
-            _ = createPreviewDiary(context)
-        }
+        _ = createPreviewDiary(context)
         while !isReady {
             try! await Task.sleep(for: .seconds(0.2))
             diaries = try! context.fetch(.init())
