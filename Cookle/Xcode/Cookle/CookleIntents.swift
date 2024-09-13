@@ -16,3 +16,11 @@ struct OpenCookleIntent: AppIntent {
         try await CookleIntents.performOpenCookle()
     }
 }
+
+struct ShowRandomRecipeIntent: AppIntent {
+    static var title = LocalizedStringResource("Show Random Recipe")
+
+    func perform() async throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
+        try await CookleIntents.performShowRandomRecipe()
+    }
+}
