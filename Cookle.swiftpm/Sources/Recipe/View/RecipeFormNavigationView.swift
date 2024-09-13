@@ -110,6 +110,7 @@ struct RecipeFormNavigationView: View {
                         if name == "Enable Debug" {
                             name = .empty
                             isDebugAlertPresented = true
+                            return
                         }
                         dismiss()
                     } label: {
