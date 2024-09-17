@@ -18,7 +18,7 @@ public extension CookleIntents {
     }
 
     static func performShowRandomRecipe() async throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
-        var descriptor = FetchDescriptor<Recipe>.recipes(.all)
+        var descriptor = FetchDescriptor.recipes(.all)
 
         let count = try context.fetchCount(descriptor)
         let offset = Int.random(in: 0..<count)
@@ -29,6 +29,7 @@ public extension CookleIntents {
         guard let recipe = try context.fetch(descriptor).first else {
             return .result(dialog: "Not Found")
         }
+
         return .result(dialog: .init(stringLiteral: recipe.name)) {
             cookleView {
                 VStack(alignment: .leading) {
