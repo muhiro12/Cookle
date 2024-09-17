@@ -41,6 +41,8 @@ struct DebugNavigationView: View {
                 DebugNavigationContentView(selection: $ingredientObject)
             case .category:
                 DebugNavigationContentView(selection: $category)
+            case .preview:
+                DebugPreviewsView()
             case .none:
                 EmptyView()
             }

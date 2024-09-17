@@ -23,13 +23,39 @@ struct DebugNavigationSidebarView: View {
                 Text("AppStorage")
             }
             Section {
-                ForEach(DebugContent.allCases, id: \.self) { content in
-                    NavigationLink(value: content) {
-                        Text(content.rawValue.capitalized)
-                    }
+                NavigationLink(value: DebugContent.diary) {
+                    Text("Diaries")
+                }
+                NavigationLink(value: DebugContent.diaryObject) {
+                    Text("DiaryObjects")
+                }
+                NavigationLink(value: DebugContent.recipe) {
+                    Text("Recipes")
+                }
+                NavigationLink(value: DebugContent.photo) {
+                    Text("Photos")
+                }
+                NavigationLink(value: DebugContent.photoObject) {
+                    Text("PhotoObjects")
+                }
+                NavigationLink(value: DebugContent.ingredient) {
+                    Text("Ingredients")
+                }
+                NavigationLink(value: DebugContent.ingredientObject) {
+                    Text("IngredientObjects")
+                }
+                NavigationLink(value: DebugContent.category) {
+                    Text("Categories")
                 }
             } header: {
-                Text("Models")
+                Text("Model")
+            }
+            Section {
+                NavigationLink(value: DebugContent.preview) {
+                    Text("Previews")
+                }
+            } header: {
+                Text("Preview")
             }
             Section {
                 Button("Create Preview Diary", systemImage: "flask") {
@@ -38,9 +64,6 @@ struct DebugNavigationSidebarView: View {
             } header: {
                 Text("Manage")
             }
-            StoreSection()
-            AdvertisementSection(.medium)
-            AdvertisementSection(.small)
         }
         .navigationTitle(Text("Debug"))
         .toolbar {
