@@ -12,13 +12,18 @@ extension Recipe {
     enum Predicate {
         case all
         case none
+        case idIs(ID)
 
         var value: Foundation.Predicate<Recipe> {
             switch self {
             case .all:
-                .true
+                return .true
             case .none:
-                .false
+                return .false
+            case .idIs(let id):
+                return #Predicate {
+                    $0.persistentModelID == id
+                }
             }
         }
     }

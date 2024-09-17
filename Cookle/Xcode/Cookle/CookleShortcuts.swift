@@ -26,6 +26,14 @@ struct CookleShortcuts: AppShortcutsProvider {
             ],
             shortTitle: "Show Random Recipe",
             systemImageName: "book.pages"
+        ),
+        AppShortcut(
+            intent: ShowLastOpenedRecipeIntent(),
+            phrases: [
+                "Show last opened recipe in \(.applicationName)"
+            ],
+            shortTitle: "Show Last Opened Recipe",
+            systemImageName: "clock"
         )
     ]
 }

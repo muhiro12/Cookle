@@ -11,6 +11,7 @@ import SwiftUI
 struct RecipeView: View {
     @Environment(Recipe.self) private var recipe
 
+    @AppStorage(.lastOpenedRecipeID) private var lastOpenedRecipeID
     @AppStorage(.isSubscribeOn) private var isSubscribeOn
 
     var body: some View {
@@ -39,6 +40,7 @@ struct RecipeView: View {
             }
         }
         .task {
+            lastOpenedRecipeID = recipe.id
             UIApplication.shared.isIdleTimerDisabled = true
             try? await Task.sleep(for: .seconds(60 * 10))
             UIApplication.shared.isIdleTimerDisabled = false

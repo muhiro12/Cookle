@@ -41,6 +41,23 @@ public extension CookleIntents {
             }
         }
     }
+
+    static func performShowLastOpenedRecipe() async throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
+        guard let id = AppStorage(.lastOpenedRecipeID).wrappedValue,
+              let recipe = try context.fetch(.recipes(.idIs(id))).first else {
+            return .result(dialog: "Not Found")
+        }
+        return .result(dialog: .init(stringLiteral: recipe.name)) {
+            cookleView {
+                VStack(alignment: .leading) {
+                    RecipeIngredientsSection()
+                    Divider()
+                    RecipeStepsSection()
+                }
+                .environment(recipe)
+            }
+        }
+    }
 }
 
 // MARK: - Private
