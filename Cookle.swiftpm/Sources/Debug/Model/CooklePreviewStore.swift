@@ -13,21 +13,21 @@ final class CooklePreviewStore {
     private(set) var diaries = [Diary]()
     private(set) var diaryObjects = [DiaryObject]()
     private(set) var recipes = [Recipe]()
+    private(set) var photos = [Photo]()
+    private(set) var photoObjects = [PhotoObject]()
     private(set) var ingredients = [Ingredient]()
     private(set) var ingredientObjects = [IngredientObject]()
     private(set) var categories = [Category]()
-    private(set) var photos = [Photo]()
-    private(set) var photoObjects = [PhotoObject]()
 
     private var isReady: Bool {
         !diaries.isEmpty
             && !diaryObjects.isEmpty
             && !recipes.isEmpty
+            && !photos.isEmpty
+            && !photoObjects.isEmpty
             && !ingredients.isEmpty
             && !ingredientObjects.isEmpty
             && !categories.isEmpty
-            && !photos.isEmpty
-            && !photoObjects.isEmpty
     }
 
     @MainActor
@@ -35,14 +35,14 @@ final class CooklePreviewStore {
         _ = createPreviewDiary(context)
         while !isReady {
             try! await Task.sleep(for: .seconds(0.2))
-            diaries = try! context.fetch(.init())
-            diaryObjects = try! context.fetch(.init())
-            recipes = try! context.fetch(.init())
-            ingredients = try! context.fetch(.init())
-            ingredientObjects = try! context.fetch(.init())
-            categories = try! context.fetch(.init())
-            photos = try! context.fetch(.init())
-            photoObjects = try! context.fetch(.init())
+            diaries = try! context.fetch(.diaries())
+            diaryObjects = try! context.fetch(.diaryObjects())
+            recipes = try! context.fetch(.recipes())
+            photos = try! context.fetch(.photos())
+            photoObjects = try! context.fetch(.photoObjects())
+            ingredients = try! context.fetch(.ingredients())
+            ingredientObjects = try! context.fetch(.ingredientObjects())
+            categories = try! context.fetch(.categories())
         }
     }
 
