@@ -14,6 +14,10 @@ struct PhotoNavigationView: View {
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {
             PhotoListView(selection: $photo)
+                .navigationDestination(for: Photo.self) { photo in
+                    PhotoView(selection: $recipe)
+                        .environment(photo)
+                }
         } content: {
             if let photo {
                 PhotoView(selection: $recipe)

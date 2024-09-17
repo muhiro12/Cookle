@@ -23,9 +23,7 @@ struct PhotoListView: View {
                 ForEach(photos) { photo in
                     if photo.recipes.orEmpty.isNotEmpty,
                        let image = UIImage(data: photo.data) {
-                        Button {
-                            self.photo = photo
-                        } label: {
+                        NavigationLink(value: photo) {
                             Image(uiImage: image)
                                 .resizable()
                                 .scaledToFit()
