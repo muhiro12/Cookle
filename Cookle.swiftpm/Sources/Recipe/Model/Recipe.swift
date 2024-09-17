@@ -82,8 +82,8 @@ final class Recipe {
     }
 }
 
-extension FetchDescriptor {
-    static func recipes(order: SortOrder = .forward) -> FetchDescriptor<Recipe> {
+extension FetchDescriptor where T == Recipe {
+    static func recipes(order: SortOrder = .forward) -> FetchDescriptor {
         .init(
             sortBy: [
                 .init(\.name, order: order)

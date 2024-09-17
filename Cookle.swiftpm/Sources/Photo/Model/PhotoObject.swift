@@ -34,8 +34,8 @@ final class PhotoObject {
     }
 }
 
-extension FetchDescriptor {
-    static func photoObjects(order: SortOrder = .reverse) -> FetchDescriptor<PhotoObject> {
+extension FetchDescriptor where T == PhotoObject {
+    static func photoObjects(order: SortOrder = .reverse) -> FetchDescriptor {
         .init(
             sortBy: [
                 .init(\.modifiedTimestamp, order: order)

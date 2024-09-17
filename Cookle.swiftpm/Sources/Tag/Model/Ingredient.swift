@@ -45,8 +45,8 @@ extension Ingredient {
     }
 }
 
-extension FetchDescriptor {
-    static func ingredients(order: SortOrder = .forward) -> FetchDescriptor<Ingredient> {
+extension FetchDescriptor where T == Ingredient {
+    static func ingredients(order: SortOrder = .forward) -> FetchDescriptor {
         .init(
             sortBy: [
                 .init(\.value, order: order)

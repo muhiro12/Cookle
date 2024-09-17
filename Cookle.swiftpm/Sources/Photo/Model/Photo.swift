@@ -38,8 +38,8 @@ extension Photo {
     }
 }
 
-extension FetchDescriptor {
-    static func photos(order: SortOrder = .reverse) -> FetchDescriptor<Photo> {
+extension FetchDescriptor where T == Photo {
+    static func photos(order: SortOrder = .reverse) -> FetchDescriptor {
         .init(
             sortBy: [
                 .init(\.modifiedTimestamp, order: order)

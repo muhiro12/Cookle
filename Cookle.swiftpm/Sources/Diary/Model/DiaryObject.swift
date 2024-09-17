@@ -34,8 +34,8 @@ final class DiaryObject {
     }
 }
 
-extension FetchDescriptor {
-    static func diaryObjects(order: SortOrder = .reverse) -> FetchDescriptor<DiaryObject> {
+extension FetchDescriptor where T == DiaryObject {
+    static func diaryObjects(order: SortOrder = .reverse) -> FetchDescriptor {
         .init(
             sortBy: [
                 .init(\.modifiedTimestamp, order: order)

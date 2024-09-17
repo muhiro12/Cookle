@@ -46,8 +46,8 @@ final class Diary {
     }
 }
 
-extension FetchDescriptor {
-    static func diaries(order: SortOrder = .reverse) -> FetchDescriptor<Diary> {
+extension FetchDescriptor where T == Diary {
+    static func diaries(order: SortOrder = .reverse) -> FetchDescriptor {
         .init(
             sortBy: [
                 .init(\.date, order: order)
