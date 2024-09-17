@@ -39,16 +39,6 @@ extension Category {
     }
 
     static var descriptor: FetchDescriptor<Category> {
-        .categories()
-    }
-}
-
-extension FetchDescriptor where T == Category {
-    static func categories(order: SortOrder = .forward) -> FetchDescriptor {
-        .init(
-            sortBy: [
-                .init(\.value, order: order)
-            ]
-        )
+        .categories(.all)
     }
 }
