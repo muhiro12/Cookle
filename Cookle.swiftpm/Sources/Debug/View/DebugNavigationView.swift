@@ -9,20 +9,16 @@ import SwiftUI
 import SwiftUtilities
 
 struct DebugNavigationView: View {
+    @Environment(\.isPresented) private var isPresented
+
     @State private var content: DebugContent?
     @State private var detail: Int?
-
-    private let shouldShowCloseButton: Bool
-
-    init(shouldShowCloseButton: Bool = false) {
-        self.shouldShowCloseButton = shouldShowCloseButton
-    }
 
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {
             DebugNavigationSidebarView(selection: $content)
                 .toolbar {
-                    if shouldShowCloseButton {
+                    if isPresented {
                         CloseButton()
                     }
                 }

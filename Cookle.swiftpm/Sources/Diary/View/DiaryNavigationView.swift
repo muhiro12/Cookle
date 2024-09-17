@@ -62,10 +62,10 @@ struct DiaryNavigationView: View {
             }
         }
         .sheet(isPresented: $isSettingsPresented) {
-            SettingsNavigationView(shouldShowCloseButton: true)
+            SettingsNavigationView()
         }
         .sheet(isPresented: $isDebugPresented) {
-            DebugNavigationView(shouldShowCloseButton: true)
+            DebugNavigationView()
         }
     }
 }
