@@ -23,6 +23,20 @@ struct DebugNavigationSidebarView: View {
                 Text("AppStorage")
             }
             Section {
+                Button("Create Preview Diary", systemImage: "flask") {
+                    isAlertPresented = true
+                }
+            } header: {
+                Text("Manage")
+            }
+            Section {
+                NavigationLink(value: DebugContent.preview) {
+                    Text("Previews")
+                }
+            } header: {
+                Text("Preview")
+            }
+            Section {
                 NavigationLink(value: DebugContent.diary) {
                     Text("Diaries")
                 }
@@ -49,20 +63,6 @@ struct DebugNavigationSidebarView: View {
                 }
             } header: {
                 Text("Model")
-            }
-            Section {
-                NavigationLink(value: DebugContent.preview) {
-                    Text("Previews")
-                }
-            } header: {
-                Text("Preview")
-            }
-            Section {
-                Button("Create Preview Diary", systemImage: "flask") {
-                    isAlertPresented = true
-                }
-            } header: {
-                Text("Manage")
             }
         }
         .navigationTitle(Text("Debug"))
