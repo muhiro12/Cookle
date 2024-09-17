@@ -1,11 +1,11 @@
 import SwiftUI
 
 struct SettingsNavigationView: View {
-    @State private var selection: SettingsNavigationSidebar?
+    @State private var selection: SettingsContent?
 
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {
-            SettingsNavigationSidebarView(selection: $selection)
+            SettingsSidebarView(selection: $selection)
         } detail: {
             switch selection {
             case .license:

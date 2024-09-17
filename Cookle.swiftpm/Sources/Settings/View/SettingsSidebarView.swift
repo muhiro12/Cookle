@@ -1,5 +1,5 @@
 //
-//  SettingsNavigationSidebarView.swift
+//  SettingsSidebarView.swift
 //  Cookle Playgrounds
 //
 //  Created by Hiromu Nakano on 9/17/24.
@@ -8,23 +8,23 @@
 import SwiftUI
 import SwiftUtilities
 
-struct SettingsNavigationSidebarView: View {
+struct SettingsSidebarView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.isPresented) private var isPresented
 
     @AppStorage(.isSubscribeOn) private var isSubscribeOn
     @AppStorage(.isICloudOn) private var isICloudOn
 
-    @Binding private var sidebar: SettingsNavigationSidebar?
+    @Binding private var content: SettingsContent?
 
     @State private var isAlertPresented = false
 
-    init(selection: Binding<SettingsNavigationSidebar?> = .constant(nil)) {
-        self._sidebar = selection
+    init(selection: Binding<SettingsContent?> = .constant(nil)) {
+        self._content = selection
     }
 
     var body: some View {
-        List(selection: $sidebar) {
+        List(selection: $content) {
             if isSubscribeOn {
                 Section {
                     Toggle("iCloud On", isOn: $isICloudOn)
@@ -42,7 +42,7 @@ struct SettingsNavigationSidebarView: View {
                 Text("Manage")
             }
             Section {
-                NavigationLink(value: SettingsNavigationSidebar.license) {
+                NavigationLink(value: SettingsContent.license) {
                     Text("Licenses")
                 }
             }
@@ -83,6 +83,6 @@ struct SettingsNavigationSidebarView: View {
 
 #Preview {
     CooklePreview { _ in
-        SettingsNavigationSidebarView()
+        SettingsSidebarView()
     }
 }

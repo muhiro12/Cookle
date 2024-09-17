@@ -1,7 +1,7 @@
 import SwiftData
 import SwiftUI
 
-struct DebugNavigationDetailView<Model: PersistentModel>: View {
+struct DebugDetailView<Model: PersistentModel>: View {
     @Environment(Model.self) private var model: Model
 
     var body: some View {
@@ -52,7 +52,7 @@ struct DebugNavigationDetailView<Model: PersistentModel>: View {
 #Preview {
     CooklePreview { preview in
         NavigationStack {
-            DebugNavigationDetailView<Recipe>()
+            DebugDetailView<Recipe>()
                 .environment(preview.recipes[0])
         }
     }

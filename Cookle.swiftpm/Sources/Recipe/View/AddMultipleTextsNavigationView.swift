@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct AddMultipleTextsView: View {
+struct AddMultipleTextsNavigationView: View {
     @Environment(\.dismiss) private var dismiss
 
     @Binding private var texts: [String]
@@ -61,7 +61,7 @@ struct AddMultipleTextsView: View {
 }
 
 #Preview {
-    AddMultipleTextsView(
+    AddMultipleTextsNavigationView(
         texts: .constant([]),
         placeholder: """
                      Boil water in a large pot and add salt.

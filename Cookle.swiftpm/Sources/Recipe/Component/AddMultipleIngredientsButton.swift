@@ -16,7 +16,7 @@ struct AddMultipleIngredientsButton: View {
             Text("Add Multiple Ingredients at Once")
         }
         .sheet(isPresented: $isPresented) {
-            AddMultipleTextsView(
+            AddMultipleTextsNavigationView(
                 texts: .init(
                     get: {
                         if data.count == 1,

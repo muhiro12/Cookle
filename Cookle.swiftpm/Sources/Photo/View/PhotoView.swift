@@ -53,7 +53,7 @@ struct PhotoView: View {
         }
         .navigationTitle(photo.title)
         .fullScreenCover(isPresented: $isPhotoDetailPresented) {
-            PhotoDetailView(photos: [photo])
+            PhotoDetailNavigationView(photos: [photo])
         }
     }
 }

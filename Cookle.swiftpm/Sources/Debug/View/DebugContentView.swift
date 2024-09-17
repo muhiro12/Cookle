@@ -1,7 +1,7 @@
 import SwiftData
 import SwiftUI
 
-struct DebugNavigationContentView<Model: PersistentModel>: View {
+struct DebugContentView<Model: PersistentModel>: View {
     @Environment(\.modelContext) private var context
 
     @Query private var models: [Model]
@@ -52,6 +52,6 @@ struct DebugNavigationContentView<Model: PersistentModel>: View {
 
 #Preview {
     CooklePreview { _ in
-        DebugNavigationContentView<Recipe>()
+        DebugContentView<Recipe>()
     }
 }

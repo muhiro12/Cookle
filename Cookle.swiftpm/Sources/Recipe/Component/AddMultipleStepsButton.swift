@@ -23,7 +23,7 @@ struct AddMultipleStepsButton: View {
             Text("Add Multiple Steps at Once")
         }
         .sheet(isPresented: $isPresented) {
-            AddMultipleTextsView(
+            AddMultipleTextsNavigationView(
                 texts: $steps,
                 placeholder: """
                              Boil water in a large pot and add salt.

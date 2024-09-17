@@ -22,25 +22,25 @@ struct DebugNavigationView: View {
 
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {
-            DebugNavigationSidebarView(selection: $content)
+            DebugSidebarView(selection: $content)
         } content: {
             switch content {
             case .diary:
-                DebugNavigationContentView(selection: $diary)
+                DebugContentView(selection: $diary)
             case .diaryObject:
-                DebugNavigationContentView(selection: $diaryObject)
+                DebugContentView(selection: $diaryObject)
             case .recipe:
-                DebugNavigationContentView(selection: $recipe)
+                DebugContentView(selection: $recipe)
             case .photo:
-                DebugNavigationContentView(selection: $photo)
+                DebugContentView(selection: $photo)
             case .photoObject:
-                DebugNavigationContentView(selection: $photoObject)
+                DebugContentView(selection: $photoObject)
             case .ingredient:
-                DebugNavigationContentView(selection: $ingredient)
+                DebugContentView(selection: $ingredient)
             case .ingredientObject:
-                DebugNavigationContentView(selection: $ingredientObject)
+                DebugContentView(selection: $ingredientObject)
             case .category:
-                DebugNavigationContentView(selection: $category)
+                DebugContentView(selection: $category)
             case .preview:
                 DebugPreviewsView()
             case .none:
@@ -48,28 +48,28 @@ struct DebugNavigationView: View {
             }
         } detail: {
             if let diary {
-                DebugNavigationDetailView<Diary>()
+                DebugDetailView<Diary>()
                     .environment(diary)
             } else if let diaryObject {
-                DebugNavigationDetailView<DiaryObject>()
+                DebugDetailView<DiaryObject>()
                     .environment(diaryObject)
             } else if let recipe {
-                DebugNavigationDetailView<Recipe>()
+                DebugDetailView<Recipe>()
                     .environment(recipe)
             } else if let photo {
-                DebugNavigationDetailView<Photo>()
+                DebugDetailView<Photo>()
                     .environment(photo)
             } else if let photoObject {
-                DebugNavigationDetailView<PhotoObject>()
+                DebugDetailView<PhotoObject>()
                     .environment(photoObject)
             } else if let ingredient {
-                DebugNavigationDetailView<Ingredient>()
+                DebugDetailView<Ingredient>()
                     .environment(ingredient)
             } else if let ingredientObject {
-                DebugNavigationDetailView<IngredientObject>()
+                DebugDetailView<IngredientObject>()
                     .environment(ingredientObject)
             } else if let category {
-                DebugNavigationDetailView<Category>()
+                DebugDetailView<Category>()
                     .environment(category)
             }
         }

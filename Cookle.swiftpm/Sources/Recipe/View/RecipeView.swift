@@ -137,7 +137,7 @@ struct RecipeView: View {
             }
         }
         .fullScreenCover(isPresented: $isPhotoDetailPresented) {
-            PhotoDetailView(photos: recipe.photos.orEmpty)
+            PhotoDetailNavigationView(photos: recipe.photos.orEmpty)
         }
         .task {
             UIApplication.shared.isIdleTimerDisabled = true

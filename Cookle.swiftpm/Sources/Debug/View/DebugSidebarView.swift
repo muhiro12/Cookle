@@ -1,7 +1,7 @@
 import SwiftUI
 import SwiftUtilities
 
-struct DebugNavigationSidebarView: View {
+struct DebugSidebarView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.isPresented) private var isPresented
 
@@ -92,7 +92,7 @@ struct DebugNavigationSidebarView: View {
 #Preview {
     CooklePreview { _ in
         NavigationStack {
-            DebugNavigationSidebarView()
+            DebugSidebarView()
         }
     }
 }

@@ -1,7 +1,7 @@
 import SwiftUI
 import SwiftUtilities
 
-struct PhotoDetailView: View {
+struct PhotoDetailNavigationView: View {
     private let photos: [Photo]
 
     init(photos: [Photo]) {
@@ -41,6 +41,6 @@ struct PhotoDetailView: View {
 
 #Preview {
     CooklePreview { preview in
-        PhotoDetailView(photos: preview.photos)
+        PhotoDetailNavigationView(photos: preview.photos)
     }
 }
