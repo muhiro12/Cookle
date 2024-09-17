@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftUtilities
 
 struct SettingsNavigationView: View {
     @Environment(\.modelContext) private var context
@@ -7,6 +8,12 @@ struct SettingsNavigationView: View {
     @AppStorage(.isICloudOn) private var isICloudOn
 
     @State private var isAlertPresented = false
+
+    private let shouldShowCloseButton: Bool
+
+    init(shouldShowCloseButton: Bool = false) {
+        self.shouldShowCloseButton = shouldShowCloseButton
+    }
 
     var body: some View {
         NavigationStack {
@@ -36,6 +43,11 @@ struct SettingsNavigationView: View {
                 }
             }
             .navigationTitle(Text("Settings"))
+            .toolbar {
+                if shouldShowCloseButton {
+                    CloseButton()
+                }
+            }
             .alert(Text("Are you sure you want to delete all data?"),
                    isPresented: $isAlertPresented) {
                 Button(role: .destructive) {
