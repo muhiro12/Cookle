@@ -35,7 +35,7 @@ final class CooklePreviewStore {
         _ = createPreviewDiary(context)
         while !isReady {
             try! await Task.sleep(for: .seconds(0.2))
-            diaries = try! context.fetch(.diaries())
+            diaries = try! context.fetch(.diaries(.all))
             diaryObjects = try! context.fetch(.diaryObjects())
             recipes = try! context.fetch(.recipes(.all))
             photos = try! context.fetch(.photos())

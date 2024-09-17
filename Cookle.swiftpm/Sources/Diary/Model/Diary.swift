@@ -45,13 +45,3 @@ final class Diary {
         self.modifiedTimestamp = .now
     }
 }
-
-extension FetchDescriptor where T == Diary {
-    static func diaries(order: SortOrder = .reverse) -> FetchDescriptor {
-        .init(
-            sortBy: [
-                .init(\.date, order: order)
-            ]
-        )
-    }
-}
