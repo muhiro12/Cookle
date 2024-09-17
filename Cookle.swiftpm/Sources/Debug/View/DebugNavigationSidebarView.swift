@@ -1,42 +1,31 @@
 import SwiftUI
+import SwiftUtilities
 
 struct DebugNavigationSidebarView: View {
     @Environment(\.modelContext) private var context
+    @Environment(\.isPresented) private var isPresented
 
     @AppStorage(.isDebugOn) private var isDebugOn
 
-    @Binding private var selection: DebugContent?
+    @Binding private var content: DebugContent?
 
     @State private var isAlertPresented = false
 
-    init(selection: Binding<DebugContent?>) {
-        self._selection = selection
+    init(selection: Binding<DebugContent?> = .constant(nil)) {
+        _content = selection
     }
 
     var body: some View {
-        List(selection: $selection) {
+        List(selection: $content) {
             Section {
                 Toggle("Debug On", isOn: $isDebugOn)
+            } header: {
+                Text("AppStorage")
             }
             Section {
                 ForEach(DebugContent.allCases, id: \.self) { content in
-                    switch content {
-                    case .diary:
-                        Text("Diaries")
-                    case .diaryObject:
-                        Text("DiaryObjects")
-                    case .recipe:
-                        Text("Recipes")
-                    case .ingredient:
-                        Text("Ingredients")
-                    case .ingredientObject:
-                        Text("IngredientObjects")
-                    case .category:
-                        Text("Categories")
-                    case .photo:
-                        Text("Photos")
-                    case .photoObject:
-                        Text("PhotoObjects")
+                    NavigationLink(value: content) {
+                        Text(content.rawValue.capitalized)
                     }
                 }
             } header: {
@@ -54,6 +43,11 @@ struct DebugNavigationSidebarView: View {
             AdvertisementSection(.small)
         }
         .navigationTitle(Text("Debug"))
+        .toolbar {
+            if isPresented {
+                CloseButton()
+            }
+        }
         .alert("Create Preview Diary", isPresented: $isAlertPresented) {
             Button(role: .destructive) {
                 withAnimation {
@@ -75,7 +69,7 @@ struct DebugNavigationSidebarView: View {
 #Preview {
     CooklePreview { _ in
         NavigationStack {
-            DebugNavigationSidebarView(selection: .constant(nil))
+            DebugNavigationSidebarView()
         }
     }
 }

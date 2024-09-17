@@ -1,113 +1,47 @@
 import SwiftData
 import SwiftUI
 
-struct DebugNavigationContentView: View {
+struct DebugNavigationContentView<Model: PersistentModel>: View {
     @Environment(\.modelContext) private var context
 
-    @Binding private var selection: Int?
+    @Query private var models: [Model]
 
-    @Query(.diaries()) private var diaries: [Diary]
-    @Query(.diaryObjects()) private var diaryObjects: [DiaryObject]
-    @Query(.recipes()) private var recipes: [Recipe]
-    @Query(.ingredientObjects()) private var ingredientObjects: [IngredientObject]
-    @Query(.ingredients()) private var ingredients: [Ingredient]
-    @Query(.categories()) private var categories: [Category]
-    @Query(.photos()) private var photos: [Photo]
-    @Query(.photoObjects()) private var photoObjects: [PhotoObject]
+    @Binding private var detail: Model?
 
-    private let content: DebugContent
-
-    init(_ content: DebugContent, selection: Binding<Int?>) {
-        self.content = content
-        self._selection = selection
+    init(selection: Binding<Model?> = .constant(nil)) {
+        _detail = selection
     }
 
     var body: some View {
-        List(selection: $selection) {
-            ForEach(
-                0..<{
-                    switch content {
-                    case .diary:
-                        diaries.endIndex
-
-                    case .diaryObject:
-                        diaryObjects.endIndex
-
-                    case .recipe:
-                        recipes.endIndex
-
-                    case .ingredient:
-                        ingredients.endIndex
-
-                    case .ingredientObject:
-                        ingredientObjects.endIndex
-
-                    case .category:
-                        categories.endIndex
-
-                    case .photo:
-                        photos.endIndex
-
-                    case .photoObject:
-                        photoObjects.endIndex
+        List(selection: $detail) {
+            ForEach(models) { model in
+                NavigationLink(value: model) {
+                    switch model {
+                    case let diary as Diary:
+                        Text(diary.date.formatted(.dateTime.year().month().day()))
+                    case let diaryObject as DiaryObject:
+                        Text(diaryObject.type?.title ?? "")
+                    case let recipe as Recipe:
+                        Text(recipe.name)
+                    case let photo as Photo:
+                        Text(photo.title)
+                    case let photoObject as PhotoObject:
+                        Text(photoObject.photo?.title ?? "")
+                    case let ingredient as Ingredient:
+                        Text(ingredient.value)
+                    case let ingredientObject as IngredientObject:
+                        Text((ingredientObject.ingredient?.value ?? "") + " " + ingredientObject.amount)
+                    case let category as Category:
+                        Text(category.value)
+                    default:
+                        EmptyView()
                     }
-                }(),
-                id: \.self
-            ) {
-                switch content {
-                case .diary:
-                    Text(diaries[$0].date.formatted(.dateTime.year().month().day()))
-
-                case .diaryObject:
-                    Text(diaryObjects[$0].type?.title ?? "")
-
-                case .recipe:
-                    Text(recipes[$0].name)
-
-                case .ingredient:
-                    Text(ingredients[$0].value)
-
-                case .ingredientObject:
-                    Text((ingredientObjects[$0].ingredient?.value ?? "") + " " + ingredientObjects[$0].amount)
-
-                case .category:
-                    Text(categories[$0].value)
-
-                case .photo:
-                    Text(photos[$0].title)
-
-                case .photoObject:
-                    Text(photoObjects[$0].photo?.title ?? "")
                 }
             }
             .onDelete { indexSet in
                 withAnimation {
                     indexSet.forEach { index in
-                        switch content {
-                        case .diary:
-                            diaries[index].delete()
-
-                        case .diaryObject:
-                            diaryObjects[index].delete()
-
-                        case .recipe:
-                            recipes[index].delete()
-
-                        case .ingredient:
-                            ingredients[index].delete()
-
-                        case .ingredientObject:
-                            ingredientObjects[index].delete()
-
-                        case .category:
-                            categories[index].delete()
-
-                        case .photo:
-                            photos[index].delete()
-
-                        case .photoObject:
-                            photoObjects[index].delete()
-                        }
+                        models[index].delete()
                     }
                 }
             }
@@ -118,6 +52,6 @@ struct DebugNavigationContentView: View {
 
 #Preview {
     CooklePreview { _ in
-        DebugNavigationContentView(.recipe, selection: .constant(nil))
+        DebugNavigationContentView<Recipe>()
     }
 }

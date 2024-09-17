@@ -1,76 +1,48 @@
 import SwiftData
 import SwiftUI
 
-struct DebugNavigationDetailView: View {
-    @Query(.diaries()) private var diaries: [Diary]
-    @Query(.diaryObjects()) private var diaryObjects: [DiaryObject]
-    @Query(.recipes()) private var recipes: [Recipe]
-    @Query(.ingredientObjects()) private var ingredientObjects: [IngredientObject]
-    @Query(.ingredients()) private var ingredients: [Ingredient]
-    @Query(.categories()) private var categories: [Category]
-    @Query(.photos()) private var photos: [Photo]
-    @Query(.photoObjects()) private var photoObjects: [PhotoObject]
-
-    private let detail: Int
-    private let content: DebugContent
-
-    init(_ detail: Int, content: DebugContent) {
-        self.detail = detail
-        self.content = content
-    }
+struct DebugNavigationDetailView<Model: PersistentModel>: View {
+    @Environment(Model.self) private var model: Model
 
     var body: some View {
         Group {
-            switch content {
-            case .diary:
+            switch model {
+            case let diary as Diary:
                 DiaryView()
                     .toolbar {
                         ToolbarItem {
                             Menu("Recipes") {
-                                ForEach(diaries[detail].recipes.orEmpty) {
+                                ForEach(diary.recipes.orEmpty) {
                                     Text($0.name)
                                 }
                             }
                         }
                     }
-                    .environment(diaries[detail])
-
-            case .diaryObject:
+            case _ as DiaryObject:
                 DiaryObjectView()
-                    .environment(diaryObjects[detail])
-
-            case .recipe:
+            case _ as Recipe:
                 RecipeView()
-                    .environment(recipes[detail])
-
-            case .ingredient:
+            case let ingredient as Ingredient:
                 TagView<Ingredient>()
                     .toolbar {
                         ToolbarItem {
                             Menu("Objects") {
-                                ForEach(ingredients[detail].objects.orEmpty) {
+                                ForEach(ingredient.objects.orEmpty) {
                                     Text($0.amount)
                                 }
                             }
                         }
                     }
-                    .environment(ingredients[detail])
-
-            case .ingredientObject:
+            case _ as IngredientObject:
                 IngredientObjectView()
-                    .environment(ingredientObjects[detail])
-
-            case .category:
+            case _ as Category:
                 TagView<Category>()
-                    .environment(categories[detail])
-
-            case .photo:
+            case _ as Photo:
                 PhotoView()
-                    .environment(photos[detail])
-
-            case .photoObject:
+            case _ as PhotoObject:
                 PhotoObjectView()
-                    .environment(photoObjects[detail])
+            default:
+                EmptyView()
             }
         }
         .navigationTitle(Text("Detail"))
@@ -78,9 +50,10 @@ struct DebugNavigationDetailView: View {
 }
 
 #Preview {
-    CooklePreview { _ in
+    CooklePreview { preview in
         NavigationStack {
-            DebugNavigationDetailView(.zero, content: .recipe)
+            DebugNavigationDetailView<Recipe>()
+                .environment(preview.recipes[0])
         }
     }
 }
