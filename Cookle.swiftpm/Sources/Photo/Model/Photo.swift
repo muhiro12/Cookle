@@ -37,13 +37,3 @@ extension Photo {
         }.joined(separator: ", ")
     }
 }
-
-extension FetchDescriptor where T == Photo {
-    static func photos(order: SortOrder = .reverse) -> FetchDescriptor {
-        .init(
-            sortBy: [
-                .init(\.modifiedTimestamp, order: order)
-            ]
-        )
-    }
-}

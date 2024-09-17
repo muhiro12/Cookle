@@ -38,7 +38,7 @@ final class CooklePreviewStore {
             diaries = try! context.fetch(.diaries(.all))
             diaryObjects = try! context.fetch(.diaryObjects())
             recipes = try! context.fetch(.recipes(.all))
-            photos = try! context.fetch(.photos())
+            photos = try! context.fetch(.photos(.all))
             photoObjects = try! context.fetch(.photoObjects(.all))
             ingredients = try! context.fetch(.ingredients(.all))
             ingredientObjects = try! context.fetch(.ingredientObjects(.all))
