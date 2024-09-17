@@ -21,7 +21,7 @@ final class Category: Tag {
     private init() {}
 
     static func create(context: ModelContext, value: String) -> Self {
-        let category: Category = (try? context.fetch(.init(predicate: #Predicate { $0.value == value })).first) ?? .init()
+        let category = (try? context.fetch(.categories(.valueIs(value))).first) ?? .init()
         context.insert(category)
         category.value = value
         return category as! Self

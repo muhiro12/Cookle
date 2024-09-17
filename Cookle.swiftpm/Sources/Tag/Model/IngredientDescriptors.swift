@@ -12,13 +12,18 @@ extension Ingredient {
     enum Predicate {
         case all
         case none
+        case valueIs(String)
 
         var value: Foundation.Predicate<Ingredient> {
             switch self {
             case .all:
-                .true
+                return .true
             case .none:
-                .false
+                return .false
+            case .valueIs(let value):
+                return #Predicate {
+                    $0.value == value
+                }
             }
         }
     }

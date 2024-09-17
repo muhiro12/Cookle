@@ -12,13 +12,18 @@ extension Photo {
     enum Predicate {
         case all
         case none
+        case dataIs(Data)
 
         var value: Foundation.Predicate<Photo> {
             switch self {
             case .all:
-                .true
+                return .true
             case .none:
-                .false
+                return .false
+            case .dataIs(let data):
+                return #Predicate {
+                    $0.data == data
+                }
             }
         }
     }
