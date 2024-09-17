@@ -9,7 +9,7 @@ import SwiftData
 import SwiftUI
 
 struct RecipeListView: View {
-    @Query(.recipes()) private var recipes: [Recipe]
+    @Query(.recipes(.all)) private var recipes: [Recipe]
 
     @Binding private var recipe: Recipe?
 

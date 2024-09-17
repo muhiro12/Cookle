@@ -81,13 +81,3 @@ final class Recipe {
         self.modifiedTimestamp = .now
     }
 }
-
-extension FetchDescriptor where T == Recipe {
-    static func recipes(order: SortOrder = .forward) -> FetchDescriptor {
-        .init(
-            sortBy: [
-                .init(\.name, order: order)
-            ]
-        )
-    }
-}

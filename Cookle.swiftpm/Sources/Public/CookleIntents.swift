@@ -18,7 +18,7 @@ public extension CookleIntents {
     }
 
     static func performShowRandomRecipe() async throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
-        var descriptor = FetchDescriptor<Recipe>.recipes()
+        var descriptor = FetchDescriptor<Recipe>.recipes(.all)
 
         let count = try context.fetchCount(descriptor)
         let offset = Int.random(in: 0..<count)
