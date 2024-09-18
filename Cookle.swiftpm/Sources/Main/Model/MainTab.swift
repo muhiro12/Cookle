@@ -13,5 +13,12 @@ enum MainTab {
     case category
     case settings
     case debug
+    case menu
     case search
+}
+
+extension MainTab: Identifiable {
+    var id: String {
+        .init(describing: self)
+    }
 }

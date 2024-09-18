@@ -63,8 +63,6 @@ struct MainTabView: View {
                         Image(systemName: "frying.pan")
                     }
                 }
-            }
-            if horizontalSizeClass == .regular {
                 Tab(value: .settings) {
                     SettingsNavigationView()
                 } label: {
@@ -83,6 +81,16 @@ struct MainTabView: View {
                         } icon: {
                             Image(systemName: "flask")
                         }
+                    }
+                }
+            } else {
+                Tab(value: .menu) {
+                    MenuNavigationView()
+                } label: {
+                    Label {
+                        Text("Menu")
+                    } icon: {
+                        Image(systemName: "list.bullet")
                     }
                 }
             }

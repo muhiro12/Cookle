@@ -7,8 +7,11 @@
 
 import SwiftData
 import SwiftUI
+import SwiftUtilities
 
 struct TagListView<T: Tag>: View {
+    @Environment(\.isPresented) private var isPresented
+
     @Query(T.descriptor) private var tags: [T]
 
     @Binding private var tag: T?
@@ -35,6 +38,11 @@ struct TagListView<T: Tag>: View {
         .toolbar {
             ToolbarItem {
                 AddRecipeButton()
+            }
+            if isPresented {
+                ToolbarItem {
+                    CloseButton()
+                }
             }
         }
     }
