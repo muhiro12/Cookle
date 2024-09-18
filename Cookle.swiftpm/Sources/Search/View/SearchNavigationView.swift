@@ -10,15 +10,9 @@ import SwiftUI
 struct SearchNavigationView: View {
     @State private var recipe: Recipe?
 
-    @State private var searchText = ""
-
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {
-            List(selection: $recipe) {
-                SearchResults(searchText: searchText)
-            }
-            .navigationTitle(Text("Search"))
-            .searchable(text: $searchText)
+            SearchView(selection: $recipe)
         } detail: {
             if let recipe {
                 RecipeView()
