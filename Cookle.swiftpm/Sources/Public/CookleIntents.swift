@@ -17,6 +17,35 @@ public extension CookleIntents {
         .result()
     }
 
+    static func performShowLastOpenedRecipe() async throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
+        guard let id = AppStorage(.lastOpenedRecipeID).wrappedValue,
+              let recipe = try context.fetch(.recipes(.idIs(id))).first else {
+            return .result(dialog: "Not Found")
+        }
+        return .result(dialog: .init(stringLiteral: recipe.name)) {
+            cookleView {
+                VStack(alignment: .leading) {
+                    if let photo = recipe.photoObjects?.min(by: { $0.order < $1.order })?.photo,
+                       let image = UIImage(data: photo.data) {
+                        HStack {
+                            Spacer()
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 240)
+                                .clipShape(.rect(cornerRadius: 8))
+                            Spacer()
+                        }
+                    }
+                    RecipeIngredientsSection()
+                    Divider()
+                    RecipeStepsSection()
+                }
+                .environment(recipe)
+            }
+        }
+    }
+
     static func performShowRandomRecipe() async throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         var descriptor = FetchDescriptor.recipes(.all)
 
@@ -33,23 +62,18 @@ public extension CookleIntents {
         return .result(dialog: .init(stringLiteral: recipe.name)) {
             cookleView {
                 VStack(alignment: .leading) {
-                    RecipeIngredientsSection()
-                    Divider()
-                    RecipeStepsSection()
-                }
-                .environment(recipe)
-            }
-        }
-    }
-
-    static func performShowLastOpenedRecipe() async throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
-        guard let id = AppStorage(.lastOpenedRecipeID).wrappedValue,
-              let recipe = try context.fetch(.recipes(.idIs(id))).first else {
-            return .result(dialog: "Not Found")
-        }
-        return .result(dialog: .init(stringLiteral: recipe.name)) {
-            cookleView {
-                VStack(alignment: .leading) {
+                    if let photo = recipe.photoObjects?.min(by: { $0.order < $1.order })?.photo,
+                       let image = UIImage(data: photo.data) {
+                        HStack {
+                            Spacer()
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 240)
+                                .clipShape(.rect(cornerRadius: 8))
+                            Spacer()
+                        }
+                    }
                     RecipeIngredientsSection()
                     Divider()
                     RecipeStepsSection()

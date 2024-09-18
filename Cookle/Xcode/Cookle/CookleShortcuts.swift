@@ -20,20 +20,20 @@ struct CookleShortcuts: AppShortcutsProvider {
             systemImageName: "bird"
         ),
         AppShortcut(
-            intent: ShowRandomRecipeIntent(),
-            phrases: [
-                "Show random recipe in \(.applicationName)"
-            ],
-            shortTitle: "Show Random Recipe",
-            systemImageName: "book.pages"
-        ),
-        AppShortcut(
             intent: ShowLastOpenedRecipeIntent(),
             phrases: [
                 "Show last opened recipe in \(.applicationName)"
             ],
             shortTitle: "Show Last Opened Recipe",
             systemImageName: "clock"
+        ),
+        AppShortcut(
+            intent: ShowRandomRecipeIntent(),
+            phrases: [
+                "Show random recipe in \(.applicationName)"
+            ],
+            shortTitle: "Show Random Recipe",
+            systemImageName: "dice"
         )
     ]
 }
