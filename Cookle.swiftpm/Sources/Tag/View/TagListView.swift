@@ -21,7 +21,7 @@ struct TagListView<T: Tag>: View {
 
     var body: some View {
         List(tags, id: \.self, selection: $tag) { tag in
-            if tag.recipes.orEmpty.isNotEmpty {
+            if tag.recipes.isNotEmpty {
                 if tag.value.lowercased().contains(searchText.lowercased())
                     || searchText.isEmpty {
                     NavigationLink(value: tag) {

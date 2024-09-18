@@ -21,7 +21,7 @@ struct PhotoListView: View {
         ScrollView {
             LazyVGrid(columns: [.init(.adaptive(minimum: 120))]) {
                 ForEach(photos) { photo in
-                    if photo.recipes.orEmpty.isNotEmpty,
+                    if photo.recipes.isNotEmpty,
                        let image = UIImage(data: photo.data) {
                         NavigationLink(value: photo) {
                             Image(uiImage: image)
