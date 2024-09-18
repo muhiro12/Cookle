@@ -14,9 +14,11 @@ struct SearchNavigationView: View {
 
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {
-            SearchResultList(searchText: searchText, selection: $recipe)
-                .navigationTitle(Text("Search"))
-                .searchable(text: $searchText)
+            List(selection: $recipe) {
+                SearchResults(searchText: searchText)
+            }
+            .navigationTitle(Text("Search"))
+            .searchable(text: $searchText)
         } detail: {
             if let recipe {
                 RecipeView()

@@ -17,6 +17,17 @@ struct OpenCookleIntent: AppIntent {
     }
 }
 
+struct ShowSearchResultIntent: AppIntent {
+    static var title = LocalizedStringResource("Show Search Result")
+
+    @Parameter(title: "Search Text")
+    private var searchText: String
+
+    func perform() async throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
+        try await CookleIntents.performShowSearchResult(searchText: searchText)
+    }
+}
+
 struct ShowLastOpenedRecipeIntent: AppIntent {
     static var title = LocalizedStringResource("Show Last Opened Recipe")
 

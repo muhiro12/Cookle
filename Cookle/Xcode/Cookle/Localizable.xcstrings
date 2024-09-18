@@ -39,10 +39,16 @@
     "Open Cookle" : {
 
     },
+    "Search Text" : {
+
+    },
     "Show Last Opened Recipe" : {
 
     },
     "Show Random Recipe" : {
+
+    },
+    "Show Search Result" : {
 
     }
   },

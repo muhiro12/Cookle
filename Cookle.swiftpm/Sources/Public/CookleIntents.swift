@@ -17,6 +17,14 @@ public extension CookleIntents {
         .result()
     }
 
+    static func performShowSearchResult(searchText: String) async throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
+        .result(dialog: "Result") {
+            cookleView {
+                SearchResults(searchText: searchText)
+            }
+        }
+    }
+
     static func performShowLastOpenedRecipe() async throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         guard let id = AppStorage(.lastOpenedRecipeID).wrappedValue,
               let recipe = try context.fetch(.recipes(.idIs(id))).first else {

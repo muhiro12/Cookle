@@ -20,6 +20,14 @@ struct CookleShortcuts: AppShortcutsProvider {
             systemImageName: "bird"
         ),
         AppShortcut(
+            intent: ShowSearchResultIntent(),
+            phrases: [
+                "Search recipes in \(.applicationName)"
+            ],
+            shortTitle: "Show Search Result",
+            systemImageName: "magnifyingglass"
+        ),
+        AppShortcut(
             intent: ShowLastOpenedRecipeIntent(),
             phrases: [
                 "Show last opened recipe in \(.applicationName)"
