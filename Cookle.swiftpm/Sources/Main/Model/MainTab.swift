@@ -11,7 +11,7 @@ enum MainTab {
     case photo
     case ingredient
     case category
-    case search
     case settings
     case debug
+    case search
 }
