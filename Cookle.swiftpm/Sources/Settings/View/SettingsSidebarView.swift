@@ -43,13 +43,18 @@ struct SettingsSidebarView: View {
                 Text("Manage")
             }
             Section {
-                ShortcutsLink()
-                    .shortcutsLinkStyle(.automaticOutline)
-            }
-            Section {
                 NavigationLink(value: SettingsContent.license) {
                     Text("Licenses")
                 }
+            }
+            Section {
+                HStack {
+                    Spacer()
+                    ShortcutsLink()
+                        .shortcutsLinkStyle(.automaticOutline)
+                    Spacer()
+                }
+                .listRowBackground(EmptyView())
             }
         }
         .navigationTitle(Text("Settings"))
@@ -88,6 +93,8 @@ struct SettingsSidebarView: View {
 
 #Preview {
     CooklePreview { _ in
-        SettingsSidebarView()
+        NavigationStack {
+            SettingsSidebarView()
+        }
     }
 }
