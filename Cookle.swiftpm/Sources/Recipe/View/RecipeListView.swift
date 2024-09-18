@@ -21,7 +21,7 @@ struct RecipeListView: View {
 
     var body: some View {
         List(recipes, id: \.self, selection: $recipe) { recipe in
-            if recipe.name.containsNormalized(searchText)
+            if recipe.name.normalizedContains(searchText)
                 || searchText.isEmpty {
                 NavigationLink(value: recipe) {
                     Text(recipe.name)

@@ -22,7 +22,7 @@ struct TagListView<T: Tag>: View {
     var body: some View {
         List(tags, id: \.self, selection: $tag) { tag in
             if tag.recipes.isNotEmpty {
-                if tag.value.containsNormalized(searchText)
+                if tag.value.normalizedContains(searchText)
                     || searchText.isEmpty {
                     NavigationLink(value: tag) {
                         Text(tag.value)

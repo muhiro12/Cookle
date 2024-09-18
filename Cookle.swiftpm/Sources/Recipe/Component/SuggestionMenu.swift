@@ -19,9 +19,9 @@ struct SuggestionMenu<T: Tag>: View {
 
     var body: some View {
         HStack {
-            if tags.contains(where: { $0.value.containsNormalized(input) }) {
+            if tags.contains(where: { $0.value.normalizedContains(input) }) {
                 Menu {
-                    ForEach(tags.filter { $0.value.containsNormalized(input) }) { tag in
+                    ForEach(tags.filter { $0.value.normalizedContains(input) }) { tag in
                         Button(tag.value) {
                             input = tag.value
                         }
