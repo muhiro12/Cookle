@@ -19,80 +19,48 @@ struct OldMainTabView: View {
             DiaryNavigationView()
                 .tag(MainTab.diary)
                 .tabItem {
-                    Label {
-                        Text("Diary")
-                    } icon: {
-                        Image(systemName: "book")
-                    }
+                    MainTab.diary.label
                 }
             RecipeNavigationView()
                 .tag(MainTab.recipe)
                 .tabItem {
-                    Label {
-                        Text("Recipe")
-                    } icon: {
-                        Image(systemName: "book.pages")
-                    }
+                    MainTab.recipe.label
                 }
             PhotoNavigationView()
                 .tag(MainTab.photo)
                 .tabItem {
-                    Label {
-                        Text("Photo")
-                    } icon: {
-                        Image(systemName: "photo.stack")
-                    }
+                    MainTab.photo.label
                 }
             if horizontalSizeClass == .regular {
                 TagNavigationView<Ingredient>()
                     .tag(MainTab.ingredient)
                     .tabItem {
-                        Label {
-                            Text("Ingredient")
-                        } icon: {
-                            Image(systemName: "refrigerator")
-                        }
+                        MainTab.ingredient.label
                     }
                 TagNavigationView<Category>()
                     .tag(MainTab.category)
                     .tabItem {
-                        Label {
-                            Text("Category")
-                        } icon: {
-                            Image(systemName: "frying.pan")
-                        }
+                        MainTab.category.label
                     }
             }
             if horizontalSizeClass == .regular {
                 SettingsNavigationView()
                     .tag(MainTab.settings)
                     .tabItem {
-                        Label {
-                            Text("Settings")
-                        } icon: {
-                            Image(systemName: "gear")
-                        }
+                        MainTab.settings.label
                     }
                 if isDebugOn {
                     DebugNavigationView()
                         .tag(MainTab.debug)
                         .tabItem {
-                            Label {
-                                Text("Debug")
-                            } icon: {
-                                Image(systemName: "flask")
-                            }
+                            MainTab.debug.label
                         }
                 }
             }
             SearchNavigationView()
                 .tag(MainTab.search)
                 .tabItem {
-                    Label {
-                        Text("Search")
-                    } icon: {
-                        Image(systemName: "magnifyingglass")
-                    }
+                    MainTab.search.label
                 }
         }
     }

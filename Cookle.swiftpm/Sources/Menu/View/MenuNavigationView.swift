@@ -16,33 +16,17 @@ struct MenuNavigationView: View {
         NavigationStack {
             List(selection: $selection) {
                 NavigationLink(value: MainTab.ingredient) {
-                    Label {
-                        Text("Ingredient")
-                    } icon: {
-                        Image(systemName: "refrigerator")
-                    }
+                    MainTab.ingredient.label
                 }
                 NavigationLink(value: MainTab.category) {
-                    Label {
-                        Text("Category")
-                    } icon: {
-                        Image(systemName: "frying.pan")
-                    }
+                    MainTab.category.label
                 }
                 NavigationLink(value: MainTab.settings) {
-                    Label {
-                        Text("Settings")
-                    } icon: {
-                        Image(systemName: "gear")
-                    }
+                    MainTab.settings.label
                 }
                 if isDebugOn {
                     NavigationLink(value: MainTab.debug) {
-                        Label {
-                            Text("Debug")
-                        } icon: {
-                            Image(systemName: "flask")
-                        }
+                        MainTab.debug.label
                     }
                 }
             }

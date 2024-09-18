@@ -20,88 +20,52 @@ struct MainTabView: View {
             Tab(value: .diary) {
                 DiaryNavigationView()
             } label: {
-                Label {
-                    Text("Diary")
-                } icon: {
-                    Image(systemName: "book")
-                }
+                MainTab.diary.label
             }
             Tab(value: .recipe) {
                 RecipeNavigationView()
             } label: {
-                Label {
-                    Text("Recipe")
-                } icon: {
-                    Image(systemName: "book.pages")
-                }
+                MainTab.recipe.label
             }
             Tab(value: .photo) {
                 PhotoNavigationView()
             } label: {
-                Label {
-                    Text("Photo")
-                } icon: {
-                    Image(systemName: "photo.stack")
-                }
+                MainTab.photo.label
             }
             if horizontalSizeClass == .regular {
                 Tab(value: .ingredient) {
                     TagNavigationView<Ingredient>()
                 } label: {
-                    Label {
-                        Text("Ingredient")
-                    } icon: {
-                        Image(systemName: "refrigerator")
-                    }
+                    MainTab.ingredient.label
                 }
                 Tab(value: .category) {
                     TagNavigationView<Category>()
                 } label: {
-                    Label {
-                        Text("Category")
-                    } icon: {
-                        Image(systemName: "frying.pan")
-                    }
+                    MainTab.category.label
                 }
                 Tab(value: .settings) {
                     SettingsNavigationView()
                 } label: {
-                    Label {
-                        Text("Settings")
-                    } icon: {
-                        Image(systemName: "gear")
-                    }
+                    MainTab.settings.label
                 }
                 if isDebugOn {
                     Tab(value: .debug) {
                         DebugNavigationView()
                     } label: {
-                        Label {
-                            Text("Debug")
-                        } icon: {
-                            Image(systemName: "flask")
-                        }
+                        MainTab.debug.label
                     }
                 }
             } else {
                 Tab(value: .menu) {
                     MenuNavigationView()
                 } label: {
-                    Label {
-                        Text("Menu")
-                    } icon: {
-                        Image(systemName: "list.bullet")
-                    }
+                    MainTab.menu.label
                 }
             }
             Tab(value: .search, role: .search) {
                 SearchNavigationView()
             } label: {
-                Label {
-                    Text("Search")
-                } icon: {
-                    Image(systemName: "magnifyingglass")
-                }
+                MainTab.search.label
             }
         }
     }
