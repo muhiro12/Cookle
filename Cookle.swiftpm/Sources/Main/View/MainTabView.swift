@@ -43,22 +43,33 @@ struct MainTabView: View {
                         Image(systemName: "photo.stack")
                     }
                 }
-            TagNavigationView<Ingredient>()
-                .tag(MainTab.ingredient)
-                .tabItem {
-                    Label {
-                        Text("Ingredient")
-                    } icon: {
-                        Image(systemName: "refrigerator")
+            if horizontalSizeClass == .regular {
+                TagNavigationView<Ingredient>()
+                    .tag(MainTab.ingredient)
+                    .tabItem {
+                        Label {
+                            Text("Ingredient")
+                        } icon: {
+                            Image(systemName: "refrigerator")
+                        }
                     }
-                }
-            TagNavigationView<Category>()
-                .tag(MainTab.category)
+                TagNavigationView<Category>()
+                    .tag(MainTab.category)
+                    .tabItem {
+                        Label {
+                            Text("Category")
+                        } icon: {
+                            Image(systemName: "frying.pan")
+                        }
+                    }
+            }
+            SearchNavigationView()
+                .tag(MainTab.search)
                 .tabItem {
                     Label {
-                        Text("Category")
+                        Text("Search")
                     } icon: {
-                        Image(systemName: "frying.pan")
+                        Image(systemName: "magnifyingglass")
                     }
                 }
             if horizontalSizeClass == .regular {

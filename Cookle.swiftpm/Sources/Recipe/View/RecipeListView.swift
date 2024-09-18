@@ -15,8 +15,9 @@ struct RecipeListView: View {
 
     @State private var searchText = ""
 
-    init(selection: Binding<Recipe?> = .constant(nil)) {
+    init(selection: Binding<Recipe?> = .constant(nil), descriptor: FetchDescriptor<Recipe> = .recipes(.all)) {
         _recipe = selection
+        _recipes = .init(descriptor)
     }
 
     var body: some View {

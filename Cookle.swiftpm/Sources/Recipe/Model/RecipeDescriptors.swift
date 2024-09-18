@@ -13,6 +13,7 @@ extension Recipe {
         case all
         case none
         case idIs(ID)
+        case nameContains(String)
 
         var value: Foundation.Predicate<Recipe> {
             switch self {
@@ -23,6 +24,10 @@ extension Recipe {
             case .idIs(let id):
                 return #Predicate {
                     $0.persistentModelID == id
+                }
+            case .nameContains(let name):
+                return #Predicate {
+                    $0.name.localizedStandardContains(name)
                 }
             }
         }

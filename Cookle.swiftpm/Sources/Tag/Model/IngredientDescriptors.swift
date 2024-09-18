@@ -13,6 +13,7 @@ extension Ingredient {
         case all
         case none
         case valueIs(String)
+        case valueContains(String)
 
         var value: Foundation.Predicate<Ingredient> {
             switch self {
@@ -23,6 +24,10 @@ extension Ingredient {
             case .valueIs(let value):
                 return #Predicate {
                     $0.value == value
+                }
+            case .valueContains(let value):
+                return #Predicate {
+                    $0.value.localizedStandardContains(value)
                 }
             }
         }
