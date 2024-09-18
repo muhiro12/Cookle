@@ -15,137 +15,72 @@ struct MainTabView: View {
     @State private var selection = MainTab.diary
 
     var body: some View {
-        if #available(iOS 18.0, *) {
-            TabView(selection: $selection) {
-                Tab(value: .diary) {
-                    DiaryNavigationView()
-                } label: {
+        TabView(selection: $selection) {
+            DiaryNavigationView()
+                .tag(MainTab.diary)
+                .tabItem {
                     Label {
                         Text("Diary")
                     } icon: {
                         Image(systemName: "book")
                     }
                 }
-                Tab(value: .recipe) {
-                    RecipeNavigationView()
-                } label: {
+            RecipeNavigationView()
+                .tag(MainTab.recipe)
+                .tabItem {
                     Label {
                         Text("Recipe")
                     } icon: {
                         Image(systemName: "book.pages")
                     }
                 }
-                Tab(value: .photo) {
-                    PhotoNavigationView()
-                } label: {
+            PhotoNavigationView()
+                .tag(MainTab.photo)
+                .tabItem {
                     Label {
                         Text("Photo")
                     } icon: {
                         Image(systemName: "photo.stack")
                     }
                 }
-                Tab(value: .ingredient) {
-                    TagNavigationView<Ingredient>()
-                } label: {
+            TagNavigationView<Ingredient>()
+                .tag(MainTab.ingredient)
+                .tabItem {
                     Label {
                         Text("Ingredient")
                     } icon: {
                         Image(systemName: "refrigerator")
                     }
                 }
-                Tab(value: .category) {
-                    TagNavigationView<Category>()
-                } label: {
+            TagNavigationView<Category>()
+                .tag(MainTab.category)
+                .tabItem {
                     Label {
                         Text("Category")
                     } icon: {
                         Image(systemName: "frying.pan")
                     }
                 }
-                if horizontalSizeClass == .regular {
-                    Tab(value: .settings) {
-                        SettingsNavigationView()
-                    } label: {
+            if horizontalSizeClass == .regular {
+                SettingsNavigationView()
+                    .tag(MainTab.settings)
+                    .tabItem {
                         Label {
                             Text("Settings")
                         } icon: {
                             Image(systemName: "gear")
                         }
                     }
-                    if isDebugOn {
-                        Tab(value: .debug) {
-                            DebugNavigationView()
-                        } label: {
+                if isDebugOn {
+                    DebugNavigationView()
+                        .tag(MainTab.debug)
+                        .tabItem {
                             Label {
                                 Text("Debug")
                             } icon: {
                                 Image(systemName: "flask")
                             }
                         }
-                    }
-                }
-            }
-        } else {
-            TabView {
-                DiaryNavigationView()
-                    .tabItem {
-                        Label {
-                            Text("Diary")
-                        } icon: {
-                            Image(systemName: "book")
-                        }
-                    }
-                RecipeNavigationView()
-                    .tabItem {
-                        Label {
-                            Text("Recipe")
-                        } icon: {
-                            Image(systemName: "book.pages")
-                        }
-                    }
-                PhotoNavigationView()
-                    .tabItem {
-                        Label {
-                            Text("Photo")
-                        } icon: {
-                            Image(systemName: "photo.stack")
-                        }
-                    }
-                TagNavigationView<Ingredient>()
-                    .tabItem {
-                        Label {
-                            Text("Ingredient")
-                        } icon: {
-                            Image(systemName: "refrigerator")
-                        }
-                    }
-                TagNavigationView<Category>()
-                    .tabItem {
-                        Label {
-                            Text("Category")
-                        } icon: {
-                            Image(systemName: "frying.pan")
-                        }
-                    }
-                if horizontalSizeClass == .regular {
-                    SettingsNavigationView()
-                        .tabItem {
-                            Label {
-                                Text("Settings")
-                            } icon: {
-                                Image(systemName: "gear")
-                            }
-                        }
-                    if isDebugOn {
-                        DebugNavigationView()
-                            .tabItem {
-                                Label {
-                                    Text("Debug")
-                                } icon: {
-                                    Image(systemName: "flask")
-                                }
-                            }
-                    }
                 }
             }
         }
