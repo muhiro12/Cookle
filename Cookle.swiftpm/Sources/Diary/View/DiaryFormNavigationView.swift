@@ -80,7 +80,7 @@ struct DiaryFormNavigationView: View {
                         guard !searchText.isEmpty else {
                             return true
                         }
-                        return $0.name.lowercased().contains(searchText.lowercased())
+                        return $0.name.containsNormalized(searchText)
                     },
                     id: \.self,
                     selection: {
