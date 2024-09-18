@@ -18,9 +18,40 @@ public extension CookleIntents {
     }
 
     static func performShowSearchResult(searchText: String) async throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
-        .result(dialog: "Result") {
+        let recipes = try context.fetch(.recipes(.nameContains(searchText)))
+        let ingredients = try context.fetch(.ingredients(.valueContains(searchText)))
+        let categories = try context.fetch(.categories(.valueContains(searchText)))
+        return .result(dialog: "Result") {
             cookleView {
-                SearchResults(searchText: searchText)
+                ForEach(
+                    Array(
+                        Set(
+                            recipes
+                                + ingredients.flatMap { $0.recipes.orEmpty }
+                                + categories.flatMap { $0.recipes.orEmpty }
+                        )
+                    )
+                ) { recipe in
+                    VStack(alignment: .leading) {
+                        Text(recipe.name)
+                            .font(.headline)
+                        if let photo = recipe.photoObjects?.min(by: { $0.order < $1.order })?.photo,
+                           let image = UIImage(data: photo.data) {
+                            HStack {
+                                Spacer()
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 240)
+                                    .clipShape(.rect(cornerRadius: 8))
+                                Spacer()
+                            }
+                        }
+                        RecipeIngredientsSection()
+                        Divider()
+                    }
+                    .environment(recipe)
+                }
             }
         }
     }
