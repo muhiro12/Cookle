@@ -2,6 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>NSAppIconActionTintColorName</key>
+			<string>AccentColor</string>
+		</dict>
+	</dict>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-2619807738023307~8279602544</string>
 	<key>GADNativeAdValidatorEnabled</key>
