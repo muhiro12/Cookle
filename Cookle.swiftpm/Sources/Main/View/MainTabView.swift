@@ -15,57 +15,29 @@ struct MainTabView: View {
 
     @State private var selection = MainTab.diary
 
+    private var tabs: [MainTab] {
+        var tabs = MainTab.allCases
+        tabs.removeAll {
+            switch $0 {
+            case .diary, .recipe, .photo, .menu, .search:
+                false
+            case .ingredient, .category, .settings:
+                horizontalSizeClass == .compact
+            case .debug:
+                horizontalSizeClass == .compact || !isDebugOn
+            }
+        }
+        return tabs
+    }
+
     var body: some View {
         TabView(selection: $selection) {
-            Tab(value: .diary) {
-                DiaryNavigationView()
-            } label: {
-                MainTab.diary.label
-            }
-            Tab(value: .recipe) {
-                RecipeNavigationView()
-            } label: {
-                MainTab.recipe.label
-            }
-            Tab(value: .photo) {
-                PhotoNavigationView()
-            } label: {
-                MainTab.photo.label
-            }
-            if horizontalSizeClass == .regular {
-                Tab(value: .ingredient) {
-                    TagNavigationView<Ingredient>()
+            ForEach(tabs) { tab in
+                Tab(value: tab, role: tab == .search ? .search : nil) {
+                    tab.rootView
                 } label: {
-                    MainTab.ingredient.label
+                    tab.label
                 }
-                Tab(value: .category) {
-                    TagNavigationView<Category>()
-                } label: {
-                    MainTab.category.label
-                }
-                Tab(value: .settings) {
-                    SettingsNavigationView()
-                } label: {
-                    MainTab.settings.label
-                }
-                if isDebugOn {
-                    Tab(value: .debug) {
-                        DebugNavigationView()
-                    } label: {
-                        MainTab.debug.label
-                    }
-                }
-            } else {
-                Tab(value: .menu) {
-                    MenuNavigationView()
-                } label: {
-                    MainTab.menu.label
-                }
-            }
-            Tab(value: .search, role: .search) {
-                SearchNavigationView()
-            } label: {
-                MainTab.search.label
             }
         }
     }

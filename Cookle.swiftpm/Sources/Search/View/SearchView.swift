@@ -7,9 +7,11 @@
 
 import SwiftData
 import SwiftUI
+import SwiftUtilities
 
 struct SearchView: View {
     @Environment(\.modelContext) private var context
+    @Environment(\.isPresented) private var isPresented
 
     @Binding private var recipe: Recipe?
 
@@ -26,8 +28,15 @@ struct SearchView: View {
                 Text(recipe.name)
             }
         }
-        .navigationTitle(Text("Search"))
         .searchable(text: $searchText)
+        .navigationTitle(Text("Search"))
+        .toolbar {
+            if isPresented {
+                ToolbarItem {
+                    CloseButton()
+                }
+            }
+        }
         .onChange(of: searchText) {
             do {
                 let recipes = try context.fetch(.recipes(.nameContains(searchText)))

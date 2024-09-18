@@ -7,8 +7,11 @@
 
 import SwiftData
 import SwiftUI
+import SwiftUtilities
 
 struct DiaryListView: View {
+    @Environment(\.isPresented) private var isPresented
+
     @Query(.diaries(.all)) private var diaries: [Diary]
 
     @Binding private var diary: Diary?
@@ -44,6 +47,11 @@ struct DiaryListView: View {
         .toolbar {
             ToolbarItem {
                 AddDiaryButton()
+            }
+            if isPresented {
+                ToolbarItem {
+                    CloseButton()
+                }
             }
         }
     }

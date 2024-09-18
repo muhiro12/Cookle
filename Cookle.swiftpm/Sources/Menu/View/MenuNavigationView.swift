@@ -6,45 +6,55 @@
 //
 
 import SwiftUI
+import SwiftUtilities
 
 struct MenuNavigationView: View {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.isPresented) private var isPresented
+
     @AppStorage(.isDebugOn) private var isDebugOn
 
-    @State private var selection: MainTab?
+    @State private var tab: MainTab?
+
+    private var tabs: [MainTab] {
+        var tabs = MainTab.allCases
+        tabs.removeAll {
+            $0 == .debug && !isDebugOn
+        }
+        return tabs
+    }
 
     var body: some View {
         NavigationStack {
-            List(selection: $selection) {
-                NavigationLink(value: MainTab.ingredient) {
-                    MainTab.ingredient.label
+            ScrollView {
+                LazyVGrid(columns: [.init(.flexible()), .init(.flexible())]) {
+                    ForEach(tabs) { tab in
+                        Button {
+                            self.tab = tab
+                        } label: {
+                            HStack {
+                                Spacer()
+                                tab.label
+                                Spacer()
+                            }
+                            .padding()
+                        }
+                        .buttonStyle(.bordered)
+                    }
                 }
-                NavigationLink(value: MainTab.category) {
-                    MainTab.category.label
-                }
-                NavigationLink(value: MainTab.settings) {
-                    MainTab.settings.label
-                }
-                if isDebugOn {
-                    NavigationLink(value: MainTab.debug) {
-                        MainTab.debug.label
+                .padding()
+            }
+            .navigationTitle(Text("Menu"))
+            .toolbar {
+                if isPresented {
+                    ToolbarItem {
+                        CloseButton()
                     }
                 }
             }
-            .navigationTitle(Text("Menu"))
         }
-        .sheet(item: $selection) { selection in
-            switch selection {
-            case .ingredient:
-                TagNavigationView<Ingredient>()
-            case .category:
-                TagNavigationView<Category>()
-            case .settings:
-                SettingsNavigationView()
-            case .debug:
-                DebugNavigationView()
-            default:
-                EmptyView()
-            }
+        .fullScreenCover(item: $tab) { tab in
+            tab.rootView
         }
     }
 }

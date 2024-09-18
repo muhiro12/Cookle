@@ -7,8 +7,11 @@
 
 import SwiftData
 import SwiftUI
+import SwiftUtilities
 
 struct RecipeListView: View {
+    @Environment(\.isPresented) private var isPresented
+
     @Query private var recipes: [Recipe]
 
     @Binding private var recipe: Recipe?
@@ -34,6 +37,11 @@ struct RecipeListView: View {
         .toolbar {
             ToolbarItem {
                 AddRecipeButton()
+            }
+            if isPresented {
+                ToolbarItem {
+                    CloseButton()
+                }
             }
         }
     }

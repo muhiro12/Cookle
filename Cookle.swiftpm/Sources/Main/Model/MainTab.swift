@@ -7,19 +7,44 @@
 
 import SwiftUI
 
-enum MainTab {
+enum MainTab: CaseIterable {
     case diary
     case recipe
     case photo
     case ingredient
     case category
     case settings
-    case debug
     case menu
     case search
+    case debug
 }
 
 extension MainTab {
+    @ViewBuilder
+    var rootView: some View {
+        switch self {
+        case .diary:
+            DiaryNavigationView()
+        case .recipe:
+            RecipeNavigationView()
+        case .photo:
+            PhotoNavigationView()
+        case .ingredient:
+            TagNavigationView<Ingredient>()
+        case .category:
+            TagNavigationView<Category>()
+        case .settings:
+            SettingsNavigationView()
+        case .menu:
+            MenuNavigationView()
+        case .search:
+            SearchNavigationView()
+        case .debug:
+            DebugNavigationView()
+        }
+    }
+
+    @ViewBuilder
     var label: some View {
         switch self {
         case .diary:

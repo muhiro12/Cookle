@@ -14,54 +14,30 @@ struct OldMainTabView: View {
 
     @State private var selection = MainTab.diary
 
+    private var tabs: [MainTab] {
+        var tabs = MainTab.allCases
+        tabs.removeAll {
+            switch $0 {
+            case .diary, .recipe, .photo, .menu, .search:
+                false
+            case .ingredient, .category, .settings:
+                horizontalSizeClass == .compact
+            case .debug:
+                horizontalSizeClass == .compact || !isDebugOn
+            }
+        }
+        return tabs
+    }
+
     var body: some View {
         TabView(selection: $selection) {
-            DiaryNavigationView()
-                .tag(MainTab.diary)
-                .tabItem {
-                    MainTab.diary.label
-                }
-            RecipeNavigationView()
-                .tag(MainTab.recipe)
-                .tabItem {
-                    MainTab.recipe.label
-                }
-            PhotoNavigationView()
-                .tag(MainTab.photo)
-                .tabItem {
-                    MainTab.photo.label
-                }
-            if horizontalSizeClass == .regular {
-                TagNavigationView<Ingredient>()
-                    .tag(MainTab.ingredient)
+            ForEach(tabs) { tab in
+                tab.rootView
+                    .tag(tab)
                     .tabItem {
-                        MainTab.ingredient.label
-                    }
-                TagNavigationView<Category>()
-                    .tag(MainTab.category)
-                    .tabItem {
-                        MainTab.category.label
+                        tab.label
                     }
             }
-            if horizontalSizeClass == .regular {
-                SettingsNavigationView()
-                    .tag(MainTab.settings)
-                    .tabItem {
-                        MainTab.settings.label
-                    }
-                if isDebugOn {
-                    DebugNavigationView()
-                        .tag(MainTab.debug)
-                        .tabItem {
-                            MainTab.debug.label
-                        }
-                }
-            }
-            SearchNavigationView()
-                .tag(MainTab.search)
-                .tabItem {
-                    MainTab.search.label
-                }
         }
     }
 }

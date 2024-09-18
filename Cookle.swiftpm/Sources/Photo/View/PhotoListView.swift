@@ -7,8 +7,11 @@
 
 import SwiftData
 import SwiftUI
+import SwiftUtilities
 
 struct PhotoListView: View {
+    @Environment(\.isPresented) private var isPresented
+
     @Query(.photos(.all)) private var photos: [Photo]
 
     @Binding private var photo: Photo?
@@ -36,6 +39,11 @@ struct PhotoListView: View {
         .toolbar {
             ToolbarItem {
                 AddRecipeButton()
+            }
+            if isPresented {
+                ToolbarItem {
+                    CloseButton()
+                }
             }
         }
     }
