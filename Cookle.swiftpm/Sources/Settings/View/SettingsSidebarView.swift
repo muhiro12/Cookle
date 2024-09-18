@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 9/17/24.
 //
 
+import AppIntents
 import SwiftUI
 import SwiftUtilities
 
@@ -40,6 +41,10 @@ struct SettingsSidebarView: View {
                 }
             } header: {
                 Text("Manage")
+            }
+            Section {
+                ShortcutsLink()
+                    .shortcutsLinkStyle(.automaticOutline)
             }
             Section {
                 NavigationLink(value: SettingsContent.license) {
