@@ -16,18 +16,16 @@ struct MainTabView: View {
     @State private var selection = MainTab.diary
 
     private var tabs: [MainTab] {
-        var tabs = MainTab.allCases
-        tabs.removeAll {
+        MainTab.allCases.filter {
             switch $0 {
             case .diary, .recipe, .photo, .menu, .search:
-                false
+                true
             case .ingredient, .category, .settings:
-                horizontalSizeClass == .compact
+                horizontalSizeClass == .regular
             case .debug:
-                horizontalSizeClass == .compact || !isDebugOn
+                horizontalSizeClass == .regular && isDebugOn
             }
         }
-        return tabs
     }
 
     var body: some View {

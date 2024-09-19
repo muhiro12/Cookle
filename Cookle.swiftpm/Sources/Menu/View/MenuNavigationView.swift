@@ -17,11 +17,13 @@ struct MenuNavigationView: View {
     @State private var tab: MainTab?
 
     private var tabs: [MainTab] {
-        var tabs = MainTab.allCases
-        tabs.removeAll {
-            $0 == .debug && !isDebugOn
+        MainTab.allCases.filter {
+            if $0 != .debug {
+                true
+            } else {
+                isDebugOn
+            }
         }
-        return tabs
     }
 
     var body: some View {
