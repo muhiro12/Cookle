@@ -26,8 +26,12 @@ extension Category {
                     $0.value == value
                 }
             case .valueContains(let value):
+                let hiragana = value.applyingTransform(.hiraganaToKatakana, reverse: true).orEmpty
+                let katakana = value.applyingTransform(.hiraganaToKatakana, reverse: false).orEmpty
                 return #Predicate {
                     $0.value.localizedStandardContains(value)
+                        || $0.value.localizedStandardContains(hiragana)
+                        || $0.value.localizedStandardContains(katakana)
                 }
             }
         }

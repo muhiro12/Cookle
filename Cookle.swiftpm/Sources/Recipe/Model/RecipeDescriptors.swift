@@ -26,8 +26,12 @@ extension Recipe {
                     $0.persistentModelID == id
                 }
             case .nameContains(let name):
+                let hiragana = name.applyingTransform(.hiraganaToKatakana, reverse: true).orEmpty
+                let katakana = name.applyingTransform(.hiraganaToKatakana, reverse: false).orEmpty
                 return #Predicate {
                     $0.name.localizedStandardContains(name)
+                        || $0.name.localizedStandardContains(hiragana)
+                        || $0.name.localizedStandardContains(katakana)
                 }
             }
         }
