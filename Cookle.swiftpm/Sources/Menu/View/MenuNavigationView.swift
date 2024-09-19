@@ -38,6 +38,8 @@ struct MenuNavigationView: View {
                             HStack {
                                 Spacer()
                                 tab.label
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.5)
                                 Spacer()
                             }
                             .padding()
