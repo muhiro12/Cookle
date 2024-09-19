@@ -37,7 +37,7 @@ struct SearchView: View {
                     Image(systemName: "questionmark.square.dashed")
                 }
                 .font(.title)
-                .foregroundStyle(.placeholder)
+                .foregroundStyle(.secondary)
             } else {
                 Label {
                     Text("Please enter a search term")
@@ -45,7 +45,7 @@ struct SearchView: View {
                     Image(systemName: "rectangle.and.pencil.and.ellipsis")
                 }
                 .font(.title)
-                .foregroundStyle(.placeholder)
+                .foregroundStyle(.secondary)
             }
         }
         .searchable(text: $searchText)
