@@ -18,10 +18,11 @@ struct MenuNavigationView: View {
 
     private var tabs: [MainTab] {
         MainTab.allCases.filter {
-            if $0 != .debug {
-                true
-            } else {
+            switch $0 {
+            case .debug:
                 isDebugOn
+            default:
+                true
             }
         }
     }

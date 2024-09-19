@@ -23,9 +23,29 @@ struct SearchView: View {
     }
 
     var body: some View {
-        List(recipes, selection: $recipe) { recipe in
-            NavigationLink(value: recipe) {
-                Text(recipe.name)
+        Group {
+            if recipes.isNotEmpty {
+                List(recipes, selection: $recipe) { recipe in
+                    NavigationLink(value: recipe) {
+                        Text(recipe.name)
+                    }
+                }
+            } else if searchText.isNotEmpty {
+                Label {
+                    Text("Not Found")
+                } icon: {
+                    Image(systemName: "questionmark.square.dashed")
+                }
+                .font(.title)
+                .foregroundStyle(.placeholder)
+            } else {
+                Label {
+                    Text("Please enter a search term")
+                } icon: {
+                    Image(systemName: "rectangle.and.pencil.and.ellipsis")
+                }
+                .font(.title)
+                .foregroundStyle(.placeholder)
             }
         }
         .searchable(text: $searchText)
