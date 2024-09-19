@@ -18,20 +18,17 @@ public extension CookleIntents {
     }
 
     static func performShowSearchResult(searchText: String) async throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
-        let recipes = try context.fetch(.recipes(.nameContains(searchText)))
-        let ingredients = try context.fetch(.ingredients(.valueContains(searchText)))
-        let categories = try context.fetch(.categories(.valueContains(searchText)))
+        var recipes = try context.fetch(.recipes(.nameContains(searchText)))
+        if searchText.count > 1 {
+            let ingredients = try context.fetch(.ingredients(.valueContains(searchText)))
+            let categories = try context.fetch(.categories(.valueContains(searchText)))
+            recipes += ingredients.flatMap { $0.recipes.orEmpty }
+            recipes += categories.flatMap { $0.recipes.orEmpty }
+        }
+        recipes = Array(Set(recipes))
         return .result(dialog: "Result") {
             cookleView {
-                ForEach(
-                    Array(
-                        Set(
-                            recipes
-                                + ingredients.flatMap { $0.recipes.orEmpty }
-                                + categories.flatMap { $0.recipes.orEmpty }
-                        )
-                    )
-                ) { recipe in
+                ForEach(recipes) { recipe in
                     VStack(alignment: .leading) {
                         Text(recipe.name)
                             .font(.headline)
