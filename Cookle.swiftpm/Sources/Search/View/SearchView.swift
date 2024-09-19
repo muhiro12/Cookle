@@ -36,7 +36,7 @@ struct SearchView: View {
                 } icon: {
                     Image(systemName: "questionmark.square.dashed")
                 }
-                .font(.title)
+                .font(.title3)
                 .foregroundStyle(.secondary)
             } else {
                 Label {
@@ -44,7 +44,7 @@ struct SearchView: View {
                 } icon: {
                     Image(systemName: "rectangle.and.pencil.and.ellipsis")
                 }
-                .font(.title)
+                .font(.title3)
                 .foregroundStyle(.secondary)
             }
         }
