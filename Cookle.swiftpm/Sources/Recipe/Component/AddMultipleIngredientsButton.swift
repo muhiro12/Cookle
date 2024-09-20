@@ -1,11 +1,11 @@
 import SwiftUI
 
 struct AddMultipleIngredientsButton: View {
-    @Binding private var data: [IngredientTuple]
+    @Binding private var data: [RecipeFormIngredient]
 
     @State private var isPresented = false
 
-    init(ingredients: Binding<[IngredientTuple]>) {
+    init(ingredients: Binding<[RecipeFormIngredient]>) {
         self._data = ingredients
     }
 
@@ -28,7 +28,7 @@ struct AddMultipleIngredientsButton: View {
                     },
                     set: { texts in
                         data = stride(from: 0, to: texts.count, by: 2).map {
-                            IngredientTuple(
+                            RecipeFormIngredient(
                                 ingredient: texts[$0],
                                 amount: texts.endIndex > $0 + 1 ? texts[$0 + 1] : ""
                             )

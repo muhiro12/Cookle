@@ -1,5 +1,5 @@
 //
-//  MultiAddableIngredientSection.swift
+//  RecipeFormIngredientsSection.swift
 //  Cookle
 //
 //  Created by Hiromu Nakano on 2024/05/03.
@@ -7,63 +7,63 @@
 
 import SwiftUI
 
-typealias IngredientTuple = (ingredient: String, amount: String)
+typealias RecipeFormIngredient = (ingredient: String, amount: String)
 
-struct MultiAddableIngredientSection: View {
-    @Binding private var data: [IngredientTuple]
+struct RecipeFormIngredientsSection: View {
+    @Binding private var ingredients: [RecipeFormIngredient]
 
-    init(data: Binding<[IngredientTuple]>) {
-        self._data = data
+    init(_ ingredients: Binding<[RecipeFormIngredient]>) {
+        self._ingredients = ingredients
     }
 
     var body: some View {
         Section {
-            ForEach(data.indices, id: \.self) { index in
+            ForEach(ingredients.indices, id: \.self) { index in
                 HStack(alignment: .top) {
                     TextField(
                         text: .init(
                             get: {
-                                guard index < data.endIndex else {
+                                guard index < ingredients.endIndex else {
                                     return ""
                                 }
-                                return data[index].ingredient
+                                return ingredients[index].ingredient
                             },
                             set: { value in
-                                guard index < data.endIndex else {
+                                guard index < ingredients.endIndex else {
                                     return
                                 }
-                                data[index].ingredient = value
+                                ingredients[index].ingredient = value
                                 guard !value.isEmpty,
-                                      !data.contains(where: { $0.ingredient.isEmpty }) else {
+                                      !ingredients.contains(where: { $0.ingredient.isEmpty }) else {
                                     return
                                 }
-                                data.append(("", ""))
+                                ingredients.append(("", ""))
                             }
                         ),
                         axis: .vertical
                     ) {
                         Text("Ingredient")
                     }
-                    TextField(text: $data[index].amount) {
+                    TextField(text: $ingredients[index].amount) {
                         Text("Amount")
                     }
                     .multilineTextAlignment(.trailing)
-                    SuggestionMenu<Ingredient>(input: $data[index].ingredient)
+                    SuggestionMenu<Ingredient>(input: $ingredients[index].ingredient)
                         .frame(width: 24)
                 }
             }
             .onDelete {
-                data.remove(atOffsets: $0)
-                guard data.isEmpty else {
+                ingredients.remove(atOffsets: $0)
+                guard ingredients.isEmpty else {
                     return
                 }
-                data.append(("", ""))
+                ingredients.append(("", ""))
             }
         } header: {
             HStack {
                 Text("Ingredients")
                 Spacer()
-                AddMultipleIngredientsButton(ingredients: $data)
+                AddMultipleIngredientsButton(ingredients: $ingredients)
                     .font(.caption)
                     .textCase(nil)
             }
@@ -73,9 +73,9 @@ struct MultiAddableIngredientSection: View {
 
 #Preview {
     CooklePreview { preview in
-        Form { () -> MultiAddableIngredientSection in
-            MultiAddableIngredientSection(
-                data: .constant(preview.recipes[0].ingredientObjects!.map {
+        Form { () -> RecipeFormIngredientsSection in
+            RecipeFormIngredientsSection(
+                .constant(preview.recipes[0].ingredientObjects!.map {
                     ($0.ingredient!.value, $0.amount)
                 } + [("", "")])
             )

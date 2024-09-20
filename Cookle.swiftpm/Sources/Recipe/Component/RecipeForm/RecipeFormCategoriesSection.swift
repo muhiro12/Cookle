@@ -1,58 +1,57 @@
 //
-//  MultiAddableSection.swift
+//  RecipeFormCategoriesSection.swift
 //  Cookle
 //
 //  Created by Hiromu Nakano on 2024/04/11.
 //
 
-import SwiftData
 import SwiftUI
 
-struct MultiAddableCategorySection: View {
-    @Binding private var data: [String]
+struct RecipeFormCategoriesSection: View {
+    @Binding private var categories: [String]
 
-    init(data: Binding<[String]>) {
-        self._data = data
+    init(_ categories: Binding<[String]>) {
+        self._categories = categories
     }
 
     var body: some View {
         Section {
-            ForEach(data.indices, id: \.self) { index in
+            ForEach(categories.indices, id: \.self) { index in
                 HStack(alignment: .top) {
                     TextField(
                         text: .init(
                             get: {
-                                guard index < data.endIndex else {
+                                guard index < categories.endIndex else {
                                     return ""
                                 }
-                                return data[index]
+                                return categories[index]
                             },
                             set: { value in
-                                guard index < data.endIndex else {
+                                guard index < categories.endIndex else {
                                     return
                                 }
-                                data[index] = value
+                                categories[index] = value
                                 guard !value.isEmpty,
-                                      !data.contains("") else {
+                                      !categories.contains("") else {
                                     return
                                 }
-                                data.append("")
+                                categories.append("")
                             }
                         ),
                         axis: .vertical
                     ) {
                         Text("Category")
                     }
-                    SuggestionMenu<Category>(input: $data[index])
+                    SuggestionMenu<Category>(input: $categories[index])
                         .frame(width: 24)
                 }
             }
             .onDelete {
-                data.remove(atOffsets: $0)
-                guard data.isEmpty else {
+                categories.remove(atOffsets: $0)
+                guard categories.isEmpty else {
                     return
                 }
-                data.append("")
+                categories.append("")
             }
         } header: {
             Text("Categories")
@@ -62,9 +61,9 @@ struct MultiAddableCategorySection: View {
 
 #Preview {
     CooklePreview { preview in
-        Form { () -> MultiAddableCategorySection in
-            MultiAddableCategorySection(
-                data: .constant(preview.recipes[0].categories!.map { $0.value } + [""])
+        Form { () -> RecipeFormCategoriesSection in
+            RecipeFormCategoriesSection(
+                .constant(preview.recipes[0].categories!.map { $0.value } + [""])
             )
         }
     }

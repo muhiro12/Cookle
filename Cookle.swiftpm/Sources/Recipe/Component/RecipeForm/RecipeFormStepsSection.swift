@@ -1,5 +1,5 @@
 //
-//  MultiAddableStepSection.swift
+//  RecipeFormStepsSection.swift
 //  Cookle
 //
 //  Created by Hiromu Nakano on 2024/05/03.
@@ -7,37 +7,37 @@
 
 import SwiftUI
 
-struct MultiAddableStepSection: View {
-    @Binding private var data: [String]
+struct RecipeFormStepsSection: View {
+    @Binding private var steps: [String]
 
-    init(data: Binding<[String]>) {
-        self._data = data
+    init(_ steps: Binding<[String]>) {
+        self._steps = steps
     }
 
     var body: some View {
         Section {
-            ForEach(data.indices, id: \.self) { index in
+            ForEach(steps.indices, id: \.self) { index in
                 HStack(alignment: .top) {
                     Text((index + 1).description + ".")
                         .frame(width: 24)
                     TextField(
                         text: .init(
                             get: {
-                                guard index < data.endIndex else {
+                                guard index < steps.endIndex else {
                                     return ""
                                 }
-                                return data[index]
+                                return steps[index]
                             },
                             set: { value in
-                                guard index < data.endIndex else {
+                                guard index < steps.endIndex else {
                                     return
                                 }
-                                data[index] = value
+                                steps[index] = value
                                 guard !value.isEmpty,
-                                      !data.contains("") else {
+                                      !steps.contains("") else {
                                     return
                                 }
-                                data.append("")
+                                steps.append("")
                             }
                         ),
                         axis: .vertical
@@ -47,20 +47,20 @@ struct MultiAddableStepSection: View {
                 }
             }
             .onMove {
-                data.move(fromOffsets: $0, toOffset: $1)
+                steps.move(fromOffsets: $0, toOffset: $1)
             }
             .onDelete {
-                data.remove(atOffsets: $0)
-                guard data.isEmpty else {
+                steps.remove(atOffsets: $0)
+                guard steps.isEmpty else {
                     return
                 }
-                data.append("")
+                steps.append("")
             }
         } header: {
             HStack {
                 Text("Steps")
                 Spacer()
-                AddMultipleStepsButton(steps: $data)
+                AddMultipleStepsButton(steps: $steps)
                     .font(.caption)
                     .textCase(nil)
             }
@@ -70,9 +70,9 @@ struct MultiAddableStepSection: View {
 
 #Preview {
     CooklePreview { preview in
-        Form { () -> MultiAddableStepSection in
-            MultiAddableStepSection(
-                data: .constant(preview.recipes[0].steps + [""])
+        Form { () -> RecipeFormStepsSection in
+            RecipeFormStepsSection(
+                .constant(preview.recipes[0].steps + [""])
             )
         }
     }
