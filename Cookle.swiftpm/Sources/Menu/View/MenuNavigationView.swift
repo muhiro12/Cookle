@@ -66,8 +66,6 @@ struct MenuNavigationView: View {
 
 #Preview {
     CooklePreview { _ in
-        NavigationStack {
-            MenuNavigationView()
-        }
+        MenuNavigationView()
     }
 }
