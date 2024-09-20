@@ -17,6 +17,7 @@ struct SearchView: View {
 
     @State private var recipes = [Recipe]()
     @State private var searchText = ""
+    @State private var isFocused = false
 
     init(selection: Binding<Recipe?> = .constant(nil)) {
         _recipe = selection
@@ -31,24 +32,32 @@ struct SearchView: View {
                     }
                 }
             } else if searchText.isNotEmpty {
-                Label {
-                    Text("Not Found")
-                } icon: {
-                    Image(systemName: "questionmark.square.dashed")
+                Button {
+                    isFocused = true
+                } label: {
+                    Label {
+                        Text("Not Found")
+                    } icon: {
+                        Image(systemName: "questionmark.square.dashed")
+                    }
                 }
-                .font(.title3)
                 .foregroundStyle(.secondary)
+                .offset(y: -40)
             } else {
-                Label {
-                    Text("Please enter a search term")
-                } icon: {
-                    Image(systemName: "rectangle.and.pencil.and.ellipsis")
+                Button {
+                    isFocused = true
+                } label: {
+                    Label {
+                        Text("Please enter a search term")
+                    } icon: {
+                        Image(systemName: "rectangle.and.pencil.and.ellipsis")
+                    }
                 }
-                .font(.title3)
                 .foregroundStyle(.secondary)
+                .offset(y: -40)
             }
         }
-        .searchable(text: $searchText)
+        .searchable(text: $searchText, isPresented: $isFocused)
         .navigationTitle(Text("Search"))
         .toolbar {
             if isPresented {
