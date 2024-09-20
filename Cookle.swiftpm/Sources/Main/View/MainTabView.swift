@@ -17,10 +17,12 @@ struct MainTabView: View {
     private var tabs: [MainTab] {
         MainTab.allCases.filter {
             switch $0 {
-            case .diary, .recipe, .photo, .menu, .search:
+            case .diary, .recipe, .photo, .search:
                 true
             case .ingredient, .category, .settings:
                 horizontalSizeClass == .regular
+            case .menu:
+                horizontalSizeClass == .compact
             case .debug:
                 horizontalSizeClass == .regular && isDebugOn
             }

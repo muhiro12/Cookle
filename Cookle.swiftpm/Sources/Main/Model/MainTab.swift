@@ -15,8 +15,8 @@ enum MainTab: CaseIterable {
     case category
     case settings
     case menu
-    case search
     case debug
+    case search
 }
 
 extension MainTab {
@@ -37,10 +37,10 @@ extension MainTab {
             SettingsNavigationView()
         case .menu:
             MenuNavigationView()
-        case .search:
-            SearchNavigationView()
         case .debug:
             DebugNavigationView()
+        case .search:
+            SearchNavigationView()
         }
     }
 
@@ -83,17 +83,17 @@ extension MainTab {
             } icon: {
                 Image(systemName: "gear")
             }
-        case .debug:
-            Label {
-                Text("Debug")
-            } icon: {
-                Image(systemName: "flask")
-            }
         case .menu:
             Label {
                 Text("Menu")
             } icon: {
                 Image(systemName: "list.bullet")
+            }
+        case .debug:
+            Label {
+                Text("Debug")
+            } icon: {
+                Image(systemName: "flask")
             }
         case .search:
             Label {
