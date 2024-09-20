@@ -59,13 +59,21 @@ struct SearchView: View {
         }
         .onChange(of: searchText) {
             do {
-                var recipes = try context.fetch(.recipes(.nameContains(searchText)))
-                if searchText.count > 1 {
-                    let ingredients = try context.fetch(.ingredients(.valueContains(searchText)))
-                    let categories = try context.fetch(.categories(.valueContains(searchText)))
-                    recipes += ingredients.flatMap { $0.recipes.orEmpty }
-                    recipes += categories.flatMap { $0.recipes.orEmpty }
-                }
+                var recipes = try context.fetch(
+                    .recipes(.nameContains(searchText))
+                )
+                let ingredients = try context.fetch(
+                    searchText.count < 3
+                        ? .ingredients(.valueIs(searchText))
+                        : .ingredients(.valueContains(searchText))
+                )
+                let categories = try context.fetch(
+                    searchText.count < 3
+                        ? .categories(.valueIs(searchText))
+                        : .categories(.valueContains(searchText))
+                )
+                recipes += ingredients.flatMap { $0.recipes.orEmpty }
+                recipes += categories.flatMap { $0.recipes.orEmpty }
                 recipes = Array(Set(recipes))
                 self.recipes = recipes
             } catch {}
