@@ -60,7 +60,9 @@ struct SettingsSidebarView: View {
         .navigationTitle(Text("Settings"))
         .toolbar {
             if isPresented {
-                CloseButton()
+                ToolbarItem {
+                    CloseButton()
+                }
             }
         }
         .alert(Text("Are you sure you want to delete all data?"),
