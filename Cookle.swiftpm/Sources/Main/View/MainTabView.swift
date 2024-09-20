@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-@available(iOS 18.0, *)
 struct MainTabView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
@@ -31,17 +30,24 @@ struct MainTabView: View {
     var body: some View {
         TabView(selection: $selection) {
             ForEach(tabs) { tab in
-                Tab(value: tab, role: tab == .search ? .search : nil) {
+                if #available(iOS 18.0, *) {
+                    Tab(value: tab, role: tab == .search ? .search : nil) {
+                        tab.rootView
+                    } label: {
+                        tab.label
+                    }
+                } else {
                     tab.rootView
-                } label: {
-                    tab.label
+                        .tag(tab)
+                        .tabItem {
+                            tab.label
+                        }
                 }
             }
         }
     }
 }
 
-@available(iOS 18.0, *)
 #Preview {
     CooklePreview { _ in
         MainTabView()
