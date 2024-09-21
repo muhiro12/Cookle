@@ -6,7 +6,6 @@
 //
 
 import StoreKit
-import SwiftData
 import SwiftUI
 
 struct RecipeFormNavigationView: View {
