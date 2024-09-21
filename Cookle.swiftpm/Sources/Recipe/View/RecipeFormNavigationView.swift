@@ -60,6 +60,18 @@ struct RecipeFormNavigationView: View {
                 }
                 if let recipe {
                     ToolbarItem(placement: .confirmationAction) {
+                        CreateRecipeButton(
+                            name: name,
+                            photos: photos,
+                            servingSize: servingSize,
+                            cookingTime: cookingTime,
+                            ingredients: ingredients,
+                            steps: steps,
+                            categories: categories,
+                            note: note
+                        )
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
                         UpdateRecipeButton(
                             name: name,
                             photos: photos,
