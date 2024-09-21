@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CreateRecipeButton<Label: View>: View {
+struct CreateRecipeButton: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @Environment(\.requestReview) private var requestReview
@@ -20,7 +20,6 @@ struct CreateRecipeButton<Label: View>: View {
     private let steps: [String]
     private let categories: [String]
     private let note: String
-    private let label: () -> Label
 
     init(name: String,
          photos: [Data],
@@ -29,8 +28,7 @@ struct CreateRecipeButton<Label: View>: View {
          ingredients: [RecipeFormIngredient],
          steps: [String],
          categories: [String],
-         note: String,
-         @ViewBuilder label: @escaping () -> Label) {
+         note: String) {
         self.name = name
         self.photos = photos
         self.servingSize = servingSize
@@ -39,7 +37,6 @@ struct CreateRecipeButton<Label: View>: View {
         self.steps = steps
         self.categories = categories
         self.note = note
-        self.label = label
     }
 
     var body: some View {
@@ -75,7 +72,7 @@ struct CreateRecipeButton<Label: View>: View {
                 }
             }
         } label: {
-            label()
+            Text("Create")
         }
     }
 }
@@ -90,7 +87,5 @@ struct CreateRecipeButton<Label: View>: View {
         steps: .empty,
         categories: .empty,
         note: .empty
-    ) {
-        Text("Craate")
-    }
+    )
 }
