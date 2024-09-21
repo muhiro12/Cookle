@@ -83,14 +83,17 @@ struct UpdateRecipeButton: View {
 }
 
 #Preview {
-    UpdateRecipeButton(
-        name: .empty,
-        photos: .empty,
-        servingSize: .empty,
-        cookingTime: .empty,
-        ingredients: .empty,
-        steps: .empty,
-        categories: .empty,
-        note: .empty
-    )
+    CooklePreview { preview in
+        UpdateRecipeButton(
+            name: .empty,
+            photos: .empty,
+            servingSize: .empty,
+            cookingTime: .empty,
+            ingredients: .empty,
+            steps: .empty,
+            categories: .empty,
+            note: .empty
+        )
+        .environment(preview.recipes[0])
+    }
 }
