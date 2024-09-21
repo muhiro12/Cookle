@@ -58,71 +58,33 @@ struct RecipeFormNavigationView: View {
                 ToolbarItem {
                     EditButton()
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button {
-                        if let recipe {
-                            recipe.update(
-                                name: name,
-                                photos: zip(photos.indices, photos).map { index, element in
-                                    .create(context: context, photo: element, order: index + 1)
-                                },
-                                servingSize: Int(servingSize) ?? .zero,
-                                cookingTime: Int(cookingTime) ?? .zero,
-                                ingredients: zip(ingredients.indices, ingredients).compactMap { index, element in
-                                    guard !element.ingredient.isEmpty else {
-                                        return nil
-                                    }
-                                    return .create(context: context, ingredient: element.ingredient, amount: element.amount, order: index + 1)
-                                },
-                                steps: steps.filter { !$0.isEmpty },
-                                categories: categories.compactMap {
-                                    guard !$0.isEmpty else {
-                                        return nil
-                                    }
-                                    return .create(context: context, value: $0)
-                                },
-                                note: note
-                            )
-                        } else {
-                            _ = Recipe.create(
-                                context: context,
-                                name: name,
-                                photos: zip(photos.indices, photos).map { index, element in
-                                    .create(context: context, photo: element, order: index + 1)
-                                },
-                                servingSize: .init(servingSize) ?? .zero,
-                                cookingTime: .init(cookingTime) ?? .zero,
-                                ingredients: zip(ingredients.indices, ingredients).compactMap { index, element in
-                                    guard !element.ingredient.isEmpty else {
-                                        return nil
-                                    }
-                                    return .create(context: context, ingredient: element.ingredient, amount: element.amount, order: index + 1)
-                                },
-                                steps: steps.filter { !$0.isEmpty },
-                                categories: categories.compactMap {
-                                    guard !$0.isEmpty else {
-                                        return nil
-                                    }
-                                    return .create(context: context, value: $0)
-                                },
-                                note: note
-                            )
-                        }
-                        dismiss()
-                        if Int.random(in: 0..<5) == .zero {
-                            Task {
-                                try? await Task.sleep(for: .seconds(2))
-                                requestReview()
-                            }
-                        }
-                    } label: {
-                        Text(recipe != nil ? "Update" : "Add")
+                if let recipe {
+                    ToolbarItem(placement: .confirmationAction) {
+                        UpdateRecipeButton(
+                            name: name,
+                            photos: photos,
+                            servingSize: servingSize,
+                            cookingTime: cookingTime,
+                            ingredients: ingredients,
+                            steps: steps,
+                            categories: categories,
+                            note: note
+                        )
+                        .environment(recipe)
                     }
-                    .disabled(
-                        name.isEmpty
-                            || (!servingSize.isEmpty && Int(servingSize) == nil)
-                            || (!cookingTime.isEmpty && Int(cookingTime) == nil)
-                    )
+                } else {
+                    ToolbarItem(placement: .confirmationAction) {
+                        CreateRecipeButton(
+                            name: name,
+                            photos: photos,
+                            servingSize: servingSize,
+                            cookingTime: cookingTime,
+                            ingredients: ingredients,
+                            steps: steps,
+                            categories: categories,
+                            note: note
+                        )
+                    }
                 }
             }
         }
