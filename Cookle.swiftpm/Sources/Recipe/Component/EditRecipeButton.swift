@@ -13,7 +13,7 @@ struct EditRecipeButton: View {
     @State private var isPresented = false
 
     var body: some View {
-        Button("Edit Recipe", systemImage: "pencil") {
+        Button("Edit \(recipe.name)", systemImage: "pencil") {
             isPresented = true
         }
         .sheet(isPresented: $isPresented) {
