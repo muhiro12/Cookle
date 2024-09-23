@@ -12,6 +12,8 @@ typealias RecipeFormIngredient = (ingredient: String, amount: String)
 struct RecipeFormIngredientsSection: View {
     @Binding private var ingredients: [RecipeFormIngredient]
 
+    @FocusState private var focusedIndex: Int?
+
     init(_ ingredients: Binding<[RecipeFormIngredient]>) {
         self._ingredients = ingredients
     }
@@ -44,12 +46,18 @@ struct RecipeFormIngredientsSection: View {
                     ) {
                         Text("Ingredient")
                     }
+                    .focused($focusedIndex, equals: index)
                     TextField(text: $ingredients[index].amount) {
                         Text("Amount")
                     }
                     .multilineTextAlignment(.trailing)
-                    SuggestionMenu<Ingredient>(input: $ingredients[index].ingredient)
-                        .frame(width: 24)
+                }
+                .toolbar {
+                    if focusedIndex == index {
+                        ToolbarItem(placement: .keyboard) {
+                            SuggestionButtons<Ingredient>(input: $ingredients[index].ingredient)
+                        }
+                    }
                 }
             }
             .onMove {

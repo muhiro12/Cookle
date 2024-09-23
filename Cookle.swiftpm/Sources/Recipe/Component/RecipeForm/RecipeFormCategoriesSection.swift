@@ -10,6 +10,8 @@ import SwiftUI
 struct RecipeFormCategoriesSection: View {
     @Binding private var categories: [String]
 
+    @FocusState private var focusedIndex: Int?
+
     init(_ categories: Binding<[String]>) {
         self._categories = categories
     }
@@ -17,33 +19,37 @@ struct RecipeFormCategoriesSection: View {
     var body: some View {
         Section {
             ForEach(categories.indices, id: \.self) { index in
-                HStack(alignment: .top) {
-                    TextField(
-                        text: .init(
-                            get: {
-                                guard index < categories.endIndex else {
-                                    return ""
-                                }
-                                return categories[index]
-                            },
-                            set: { value in
-                                guard index < categories.endIndex else {
-                                    return
-                                }
-                                categories[index] = value
-                                guard !value.isEmpty,
-                                      !categories.contains("") else {
-                                    return
-                                }
-                                categories.append("")
+                TextField(
+                    text: .init(
+                        get: {
+                            guard index < categories.endIndex else {
+                                return ""
                             }
-                        ),
-                        axis: .vertical
-                    ) {
-                        Text("Category")
+                            return categories[index]
+                        },
+                        set: { value in
+                            guard index < categories.endIndex else {
+                                return
+                            }
+                            categories[index] = value
+                            guard !value.isEmpty,
+                                  !categories.contains("") else {
+                                return
+                            }
+                            categories.append("")
+                        }
+                    ),
+                    axis: .vertical
+                ) {
+                    Text("Category")
+                }
+                .focused($focusedIndex, equals: index)
+                .toolbar {
+                    if focusedIndex == index {
+                        ToolbarItem(placement: .keyboard) {
+                            SuggestionButtons<Category>(input: $categories[index])
+                        }
                     }
-                    SuggestionMenu<Category>(input: $categories[index])
-                        .frame(width: 24)
                 }
             }
         } header: {

@@ -38,7 +38,11 @@ extension Category {
         "Categories"
     }
 
-    static var descriptor: FetchDescriptor<Category> {
-        .categories(.all)
+    static func descriptor(_ predicate: TagPredicate<Category>, order: SortOrder) -> FetchDescriptor<Category> {
+        .categories(predicate, order: order)
+    }
+
+    static func descriptor(_ predicate: TagPredicate<Category>) -> FetchDescriptor<Category> {
+        .categories(predicate)
     }
 }

@@ -18,5 +18,7 @@ protocol Tag: PersistentModel {
     func update(value: String)
 
     static var title: LocalizedStringKey { get }
-    static var descriptor: FetchDescriptor<Self> { get }
+
+    static func descriptor(_ predicate: TagPredicate<Self>, order: SortOrder) -> FetchDescriptor<Self>
+    static func descriptor(_ predicate: TagPredicate<Self>) -> FetchDescriptor<Self>
 }

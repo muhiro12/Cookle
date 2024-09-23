@@ -40,7 +40,11 @@ extension Ingredient {
         "Ingredients"
     }
 
-    static var descriptor: FetchDescriptor<Ingredient> {
-        .ingredients(.all)
+    static func descriptor(_ predicate: TagPredicate<Ingredient>, order: SortOrder) -> FetchDescriptor<Ingredient> {
+        .ingredients(predicate, order: order)
+    }
+
+    static func descriptor(_ predicate: TagPredicate<Ingredient>) -> FetchDescriptor<Ingredient> {
+        .ingredients(predicate)
     }
 }

@@ -12,7 +12,7 @@ import SwiftUtilities
 struct TagListView<T: Tag>: View {
     @Environment(\.isPresented) private var isPresented
 
-    @Query(T.descriptor) private var tags: [T]
+    @Query(T.descriptor(.all)) private var tags: [T]
 
     @Binding private var tag: T?
 
