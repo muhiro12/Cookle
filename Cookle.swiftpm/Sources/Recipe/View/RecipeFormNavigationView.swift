@@ -40,6 +40,7 @@ struct RecipeFormNavigationView: View {
                 RecipeFormCategoriesSection($categories)
                 RecipeFormNoteSection($note)
             }
+            .environment(\.editMode, .constant(.active))
             .navigationTitle(Text("Recipe"))
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -53,9 +54,6 @@ struct RecipeFormNavigationView: View {
                     } label: {
                         Text("Cancel")
                     }
-                }
-                ToolbarItem {
-                    EditButton()
                 }
                 if let recipe {
                     ToolbarItem(placement: .confirmationAction) {

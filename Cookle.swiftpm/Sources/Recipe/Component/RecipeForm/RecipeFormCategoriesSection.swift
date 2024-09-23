@@ -46,13 +46,6 @@ struct RecipeFormCategoriesSection: View {
                         .frame(width: 24)
                 }
             }
-            .onDelete {
-                categories.remove(atOffsets: $0)
-                guard categories.isEmpty else {
-                    return
-                }
-                categories.append("")
-            }
         } header: {
             Text("Categories")
         }
