@@ -24,8 +24,7 @@ struct ModelContainerPreview<Content: View>: View {
         } else {
             ProgressView()
                 .task {
-                    let context = previewModelContainer.mainContext
-                    await preview.prepare(context)
+                    await preview.prepare(.init(previewModelContainer))
                     isReady = true
                 }
         }

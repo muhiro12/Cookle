@@ -22,28 +22,7 @@ struct RecipeFormIngredientsSection: View {
         Section {
             ForEach(ingredients.indices, id: \.self) { index in
                 HStack(alignment: .top) {
-                    TextField(
-                        text: .init(
-                            get: {
-                                guard index < ingredients.endIndex else {
-                                    return ""
-                                }
-                                return ingredients[index].ingredient
-                            },
-                            set: { value in
-                                guard index < ingredients.endIndex else {
-                                    return
-                                }
-                                ingredients[index].ingredient = value
-                                guard !value.isEmpty,
-                                      !ingredients.contains(where: { $0.ingredient.isEmpty }) else {
-                                    return
-                                }
-                                ingredients.append(("", ""))
-                            }
-                        ),
-                        axis: .vertical
-                    ) {
+                    TextField(text: $ingredients[index].ingredient, axis: .vertical) {
                         Text("Ingredient")
                     }
                     .focused($focusedIndex, equals: index)
@@ -71,6 +50,18 @@ struct RecipeFormIngredientsSection: View {
                     .font(.caption)
                     .textCase(nil)
             }
+        }
+        .onChange(of: ingredients.map { $0.ingredient }) {
+            ingredients.removeAll {
+                $0.ingredient.isEmpty && $0.amount.isEmpty
+            }
+            ingredients.append((.empty, .empty))
+        }
+        .onChange(of: ingredients.map { $0.amount }) {
+            ingredients.removeAll {
+                $0.ingredient.isEmpty && $0.amount.isEmpty
+            }
+            ingredients.append((.empty, .empty))
         }
     }
 }

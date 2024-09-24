@@ -19,28 +19,7 @@ struct RecipeFormCategoriesSection: View {
     var body: some View {
         Section {
             ForEach(categories.indices, id: \.self) { index in
-                TextField(
-                    text: .init(
-                        get: {
-                            guard index < categories.endIndex else {
-                                return ""
-                            }
-                            return categories[index]
-                        },
-                        set: { value in
-                            guard index < categories.endIndex else {
-                                return
-                            }
-                            categories[index] = value
-                            guard !value.isEmpty,
-                                  !categories.contains("") else {
-                                return
-                            }
-                            categories.append("")
-                        }
-                    ),
-                    axis: .vertical
-                ) {
+                TextField(text: $categories[index], axis: .vertical) {
                     Text("Category")
                 }
                 .focused($focusedIndex, equals: index)
@@ -54,6 +33,12 @@ struct RecipeFormCategoriesSection: View {
             }
         } header: {
             Text("Categories")
+        }
+        .onChange(of: categories) {
+            categories.removeAll {
+                $0.isEmpty
+            }
+            categories.append(.empty)
         }
     }
 }

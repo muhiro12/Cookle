@@ -20,28 +20,7 @@ struct RecipeFormStepsSection: View {
                 HStack(alignment: .top) {
                     Text((index + 1).description + ".")
                         .frame(width: 24)
-                    TextField(
-                        text: .init(
-                            get: {
-                                guard index < steps.endIndex else {
-                                    return ""
-                                }
-                                return steps[index]
-                            },
-                            set: { value in
-                                guard index < steps.endIndex else {
-                                    return
-                                }
-                                steps[index] = value
-                                guard !value.isEmpty,
-                                      !steps.contains("") else {
-                                    return
-                                }
-                                steps.append("")
-                            }
-                        ),
-                        axis: .vertical
-                    ) {
+                    TextField(text: $steps[index], axis: .vertical) {
                         Text("Step")
                     }
                 }
@@ -57,6 +36,12 @@ struct RecipeFormStepsSection: View {
                     .font(.caption)
                     .textCase(nil)
             }
+        }
+        .onChange(of: steps) {
+            steps.removeAll {
+                $0.isEmpty
+            }
+            steps.append(.empty)
         }
     }
 }
