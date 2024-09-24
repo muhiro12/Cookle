@@ -37,7 +37,7 @@ struct RecipePhotosSection: View {
                 }
                 .scrollTargetBehavior(.viewAligned)
                 .listRowInsets(.init(.zero))
-                .listRowBackground(Color.clear)
+                .listRowBackground(EmptyView())
             } header: {
                 Text("Photos")
             }
