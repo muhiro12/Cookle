@@ -1,7 +1,7 @@
 # Cookle
 
 Keep your favorite recipes  
-https://apps.apple.com/app/id6483363226
+[App Store](https://apps.apple.com/app/id6483363226)
 
 |-|-|
 |-|-|
