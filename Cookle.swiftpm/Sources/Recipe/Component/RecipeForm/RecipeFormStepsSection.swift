@@ -28,6 +28,9 @@ struct RecipeFormStepsSection: View {
             .onMove {
                 steps.move(fromOffsets: $0, toOffset: $1)
             }
+            .onDelete {
+                steps.remove(atOffsets: $0)
+            }
         } header: {
             HStack {
                 Text("Steps")
@@ -53,6 +56,5 @@ struct RecipeFormStepsSection: View {
                 .constant(preview.recipes[0].steps + [""])
             )
         }
-        .environment(\.editMode, .constant(.active))
     }
 }

@@ -42,6 +42,9 @@ struct RecipeFormIngredientsSection: View {
             .onMove {
                 ingredients.move(fromOffsets: $0, toOffset: $1)
             }
+            .onDelete {
+                ingredients.remove(atOffsets: $0)
+            }
         } header: {
             HStack {
                 Text("Ingredients")
@@ -75,6 +78,5 @@ struct RecipeFormIngredientsSection: View {
                 } + [("", "")])
             )
         }
-        .environment(\.editMode, .constant(.active))
     }
 }

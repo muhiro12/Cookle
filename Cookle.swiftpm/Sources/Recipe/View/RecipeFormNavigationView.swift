@@ -26,22 +26,54 @@ struct RecipeFormNavigationView: View {
     @State private var categories = [String]()
     @State private var note = ""
 
+    @State private var editMode = EditMode.inactive
     @State private var isDebugAlertPresented = false
 
     var body: some View {
         NavigationStack {
             Form {
                 RecipeFormNameSection($name)
+                    .hidden(editMode == .active)
                 RecipeFormPhotosSection($photos)
                 RecipeFormServingSizeSection($servingSize)
+                    .hidden(editMode == .active)
                 RecipeFormCookingTimeSection($cookingTime)
+                    .hidden(editMode == .active)
                 RecipeFormIngredientsSection($ingredients)
                 RecipeFormStepsSection($steps)
                 RecipeFormCategoriesSection($categories)
                 RecipeFormNoteSection($note)
+                    .hidden(editMode == .active)
+                Section {
+                    Button {
+                        withAnimation {
+                            editMode = editMode.isEditing ? .inactive : .active
+                        }
+                    } label: {
+                        editMode == .inactive ? Text("Change Order or Delete Row") : Text("Done Edit")
+                    }
+                    .frame(maxWidth: .infinity)
+                    CreateRecipeButton(
+                        name: name,
+                        photos: photos,
+                        servingSize: servingSize,
+                        cookingTime: cookingTime,
+                        ingredients: ingredients,
+                        steps: steps,
+                        categories: categories,
+                        note: note
+                    )
+                    .frame(maxWidth: .infinity)
+                    if recipe != nil {
+                        DeleteRecipeButton()
+                            .frame(maxWidth: .infinity)
+                            .labelStyle(.titleOnly)
+                            .foregroundStyle(.red)
+                    }
+                }
             }
-            .environment(\.editMode, .constant(.active))
-            .navigationTitle(Text("Recipe"))
+            .environment(\.editMode, $editMode)
+            .navigationTitle(editMode == .inactive ? Text("Recipe") : Text("Editing..."))
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button {
@@ -55,19 +87,17 @@ struct RecipeFormNavigationView: View {
                         Text("Cancel")
                     }
                 }
-                if let recipe {
-                    ToolbarItem(placement: .confirmationAction) {
-                        CreateRecipeButton(
-                            name: name,
-                            photos: photos,
-                            servingSize: servingSize,
-                            cookingTime: cookingTime,
-                            ingredients: ingredients,
-                            steps: steps,
-                            categories: categories,
-                            note: note
-                        )
+                if editMode == .active {
+                    ToolbarItem {
+                        Button {
+                            withAnimation {
+                                editMode = .inactive
+                            }
+                        } label: {
+                            Text("Done")
+                        }
                     }
+                } else if recipe != nil {
                     ToolbarItem(placement: .confirmationAction) {
                         UpdateRecipeButton(
                             name: name,
@@ -79,7 +109,6 @@ struct RecipeFormNavigationView: View {
                             categories: categories,
                             note: note
                         )
-                        .environment(recipe)
                     }
                 } else {
                     ToolbarItem(placement: .confirmationAction) {
@@ -138,5 +167,14 @@ struct RecipeFormNavigationView: View {
     CooklePreview { preview in
         RecipeFormNavigationView()
             .environment(preview.recipes[0])
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func hidden(_ hidden: Bool = true) -> some View {
+        if !hidden {
+            self
+        }
     }
 }

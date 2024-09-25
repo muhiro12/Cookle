@@ -10,6 +10,7 @@ import SwiftUI
 
 struct RecipeFormPhotosSection: View {
     @Environment(Recipe.self) private var recipe: Recipe?
+    @Environment(\.editMode) private var editMode
 
     @Binding private var photos: [Data]
 
@@ -20,30 +21,51 @@ struct RecipeFormPhotosSection: View {
     }
 
     var body: some View {
-        Section {
-            ScrollView(.horizontal) {
-                LazyHStack {
+        Group {
+            if editMode?.wrappedValue == .inactive {
+                Section {
+                    ScrollView(.horizontal) {
+                        LazyHStack {
+                            ForEach(photos, id: \.self) { photo in
+                                if let image = UIImage(data: photo) {
+                                    Image(uiImage: image)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 120)
+                                }
+                            }
+                            PhotosPicker(
+                                selection: $photosPickerItems,
+                                selectionBehavior: .ordered,
+                                matching: .images
+                            ) {
+                                Image(systemName: "photo.badge.plus")
+                            }
+                        }
+                        .scrollTargetLayout()
+                    }
+                    .scrollTargetBehavior(.viewAligned)
+                } header: {
+                    Text("Photos")
+                }
+            } else {
+                List {
                     ForEach(photos, id: \.self) { photo in
                         if let image = UIImage(data: photo) {
                             Image(uiImage: image)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(height: 120)
+                                .frame(height: 80)
                         }
                     }
-                    PhotosPicker(
-                        selection: $photosPickerItems,
-                        selectionBehavior: .ordered,
-                        matching: .images
-                    ) {
-                        Image(systemName: "photo.badge.plus")
+                    .onMove {
+                        photos.move(fromOffsets: $0, toOffset: $1)
+                    }
+                    .onDelete {
+                        photos.remove(atOffsets: $0)
                     }
                 }
-                .scrollTargetLayout()
             }
-            .scrollTargetBehavior(.viewAligned)
-        } header: {
-            Text("Photos")
         }
         .onChange(of: photosPickerItems) {
             photos = (recipe?.photos).orEmpty.map { $0.data }
@@ -72,7 +94,9 @@ struct RecipeFormPhotosSection: View {
 }
 
 #Preview {
-    Form {
-        RecipeFormPhotosSection(.constant([]))
+    CooklePreview { preview in
+        Form {
+            RecipeFormPhotosSection(.constant(preview.photos.map { $0.data }))
+        }
     }
 }

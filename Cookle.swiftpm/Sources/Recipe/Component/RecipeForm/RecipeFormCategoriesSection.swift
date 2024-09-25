@@ -31,6 +31,9 @@ struct RecipeFormCategoriesSection: View {
                     }
                 }
             }
+            .onDelete {
+                categories.remove(atOffsets: $0)
+            }
         } header: {
             Text("Categories")
         }
@@ -47,7 +50,7 @@ struct RecipeFormCategoriesSection: View {
     CooklePreview { preview in
         Form { () -> RecipeFormCategoriesSection in
             RecipeFormCategoriesSection(
-                .constant(preview.recipes[0].categories!.map { $0.value } + [""])
+                .constant(preview.categories.map { $0.value } + [.empty])
             )
         }
     }
