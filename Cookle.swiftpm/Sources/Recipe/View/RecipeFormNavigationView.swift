@@ -169,12 +169,3 @@ struct RecipeFormNavigationView: View {
             .environment(preview.recipes[0])
     }
 }
-
-private extension View {
-    @ViewBuilder
-    func hidden(_ hidden: Bool = true) -> some View {
-        if !hidden {
-            self
-        }
-    }
-}
