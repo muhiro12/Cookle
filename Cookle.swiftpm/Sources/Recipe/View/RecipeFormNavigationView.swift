@@ -53,6 +53,8 @@ struct RecipeFormNavigationView: View {
                         editMode == .inactive ? Text("Change Order or Delete Row") : Text("Done Edit")
                     }
                     .frame(maxWidth: .infinity)
+                }
+                Section {
                     CreateRecipeButton(
                         name: name,
                         photos: photos,
@@ -65,6 +67,17 @@ struct RecipeFormNavigationView: View {
                     )
                     .frame(maxWidth: .infinity)
                     if recipe != nil {
+                        UpdateRecipeButton(
+                            name: name,
+                            photos: photos,
+                            servingSize: servingSize,
+                            cookingTime: cookingTime,
+                            ingredients: ingredients,
+                            steps: steps,
+                            categories: categories,
+                            note: note
+                        )
+                        .frame(maxWidth: .infinity)
                         DeleteRecipeButton()
                             .frame(maxWidth: .infinity)
                             .labelStyle(.titleOnly)
