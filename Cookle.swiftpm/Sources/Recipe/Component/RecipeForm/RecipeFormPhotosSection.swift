@@ -21,51 +21,47 @@ struct RecipeFormPhotosSection: View {
     }
 
     var body: some View {
-        Group {
+        Section {
             if editMode?.wrappedValue == .inactive {
-                Section {
-                    ScrollView(.horizontal) {
-                        LazyHStack {
-                            ForEach(photos, id: \.self) { photo in
-                                if let image = UIImage(data: photo) {
-                                    Image(uiImage: image)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(height: 120)
-                                }
-                            }
-                            PhotosPicker(
-                                selection: $photosPickerItems,
-                                selectionBehavior: .ordered,
-                                matching: .images
-                            ) {
-                                Image(systemName: "photo.badge.plus")
+                ScrollView(.horizontal) {
+                    LazyHStack {
+                        ForEach(photos, id: \.self) { photo in
+                            if let image = UIImage(data: photo) {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 120)
                             }
                         }
-                        .scrollTargetLayout()
+                        PhotosPicker(
+                            selection: $photosPickerItems,
+                            selectionBehavior: .ordered,
+                            matching: .images
+                        ) {
+                            Image(systemName: "photo.badge.plus")
+                        }
                     }
-                    .scrollTargetBehavior(.viewAligned)
-                } header: {
-                    Text("Photos")
+                    .scrollTargetLayout()
                 }
+                .scrollTargetBehavior(.viewAligned)
             } else {
-                List {
-                    ForEach(photos, id: \.self) { photo in
-                        if let image = UIImage(data: photo) {
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 80)
-                        }
+                ForEach(photos, id: \.self) { photo in
+                    if let image = UIImage(data: photo) {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 80)
                     }
-                    .onMove {
-                        photos.move(fromOffsets: $0, toOffset: $1)
-                    }
-                    .onDelete {
-                        photos.remove(atOffsets: $0)
-                    }
+                }
+                .onMove {
+                    photos.move(fromOffsets: $0, toOffset: $1)
+                }
+                .onDelete {
+                    photos.remove(atOffsets: $0)
                 }
             }
+        } header: {
+            Text("Photos")
         }
         .onChange(of: photosPickerItems) {
             photos = (recipe?.photos).orEmpty.map { $0.data }
