@@ -22,19 +22,16 @@ struct PhotoView: View {
         List(selection: $recipe) {
             Section {
                 if let image = UIImage(data: photo.data) {
-                    HStack {
-                        Spacer()
-                        Button {
-                            isPhotoDetailPresented = true
-                        } label: {
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 240)
-                        }
-                        .buttonStyle(.plain)
-                        Spacer()
+                    Button {
+                        isPhotoDetailPresented = true
+                    } label: {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 240)
+                            .frame(maxWidth: .infinity)
                     }
+                    .buttonStyle(.plain)
                     .listRowBackground(EmptyView())
                 }
             }

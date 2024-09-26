@@ -48,13 +48,10 @@ struct SettingsSidebarView: View {
                 }
             }
             Section {
-                HStack {
-                    Spacer()
-                    ShortcutsLink()
-                        .shortcutsLinkStyle(.automaticOutline)
-                    Spacer()
-                }
-                .listRowBackground(EmptyView())
+                ShortcutsLink()
+                    .shortcutsLinkStyle(.automaticOutline)
+                    .frame(maxWidth: .infinity)
+                    .listRowBackground(EmptyView())
             }
         }
         .navigationTitle(Text("Settings"))

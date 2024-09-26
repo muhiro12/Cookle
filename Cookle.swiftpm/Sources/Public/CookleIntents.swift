@@ -42,15 +42,12 @@ public extension CookleIntents {
                             .font(.headline)
                         if let photo = recipe.photoObjects?.min(by: { $0.order < $1.order })?.photo,
                            let image = UIImage(data: photo.data) {
-                            HStack {
-                                Spacer()
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 240)
-                                    .clipShape(.rect(cornerRadius: 8))
-                                Spacer()
-                            }
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 240)
+                                .frame(maxWidth: .infinity)
+                                .clipShape(.rect(cornerRadius: 8))
                         }
                         RecipeIngredientsSection()
                         Divider()
@@ -71,15 +68,12 @@ public extension CookleIntents {
                 VStack(alignment: .leading) {
                     if let photo = recipe.photoObjects?.min(by: { $0.order < $1.order })?.photo,
                        let image = UIImage(data: photo.data) {
-                        HStack {
-                            Spacer()
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 240)
-                                .clipShape(.rect(cornerRadius: 8))
-                            Spacer()
-                        }
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 240)
+                            .frame(maxWidth: .infinity)
+                            .clipShape(.rect(cornerRadius: 8))
                     }
                     RecipeIngredientsSection()
                     Divider()
@@ -108,15 +102,12 @@ public extension CookleIntents {
                 VStack(alignment: .leading) {
                     if let photo = recipe.photoObjects?.min(by: { $0.order < $1.order })?.photo,
                        let image = UIImage(data: photo.data) {
-                        HStack {
-                            Spacer()
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 240)
-                                .clipShape(.rect(cornerRadius: 8))
-                            Spacer()
-                        }
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 240)
+                            .frame(maxWidth: .infinity)
+                            .clipShape(.rect(cornerRadius: 8))
                     }
                     RecipeIngredientsSection()
                     Divider()

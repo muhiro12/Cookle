@@ -35,14 +35,11 @@ struct MenuNavigationView: View {
                         Button {
                             self.tab = tab
                         } label: {
-                            HStack {
-                                Spacer()
-                                tab.label
-                                    .lineLimit(1)
-                                    .minimumScaleFactor(0.5)
-                                Spacer()
-                            }
-                            .padding()
+                            tab.label
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.5)
+                                .frame(maxWidth: .infinity)
+                                .padding()
                         }
                         .buttonStyle(.bordered)
                     }
