@@ -72,7 +72,11 @@ struct CreateRecipeButton: View {
                 }
             }
         } label: {
-            Text("Create")
+            Label {
+                Text("Create \(name)")
+            } icon: {
+                Image(systemName: "book.pages")
+            }
         }
     }
 }

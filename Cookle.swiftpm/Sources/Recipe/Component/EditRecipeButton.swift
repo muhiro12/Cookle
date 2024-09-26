@@ -13,8 +13,14 @@ struct EditRecipeButton: View {
     @State private var isPresented = false
 
     var body: some View {
-        Button("Edit \(recipe.name)", systemImage: "pencil") {
+        Button {
             isPresented = true
+        } label: {
+            Label {
+                Text("Edit \(recipe.name)")
+            } icon: {
+                Image(systemName: "pencil")
+            }
         }
         .sheet(isPresented: $isPresented) {
             RecipeFormNavigationView()

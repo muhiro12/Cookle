@@ -6,8 +6,14 @@ struct EditDiaryButton: View {
     @State private var isPresented = false
 
     var body: some View {
-        Button("Edit Diary", systemImage: "pencil") {
+        Button {
             isPresented = true
+        } label: {
+            Label {
+                Text("Edit \(diary.date.formatted(.dateTime.year().month().day()))")
+            } icon: {
+                Image(systemName: "pencil")
+            }
         }
         .sheet(isPresented: $isPresented) {
             DiaryFormNavigationView()

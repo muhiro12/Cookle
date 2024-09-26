@@ -6,8 +6,14 @@ struct DeleteDiaryButton: View {
     @State private var isPresented = false
 
     var body: some View {
-        Button("Delete \(diary.date.formatted(.dateTime.year().month().day()))", systemImage: "trash") {
+        Button {
             isPresented = true
+        } label: {
+            Label {
+                Text("Delete \(diary.date.formatted(.dateTime.year().month().day()))")
+            } icon: {
+                Image(systemName: "trash")
+            }
         }
         .alert("Delete \(diary.date.formatted(.dateTime.year().month().day()))", isPresented: $isPresented) {
             Button("Cancel", role: .cancel) {}

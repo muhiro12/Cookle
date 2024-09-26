@@ -4,8 +4,14 @@ struct AddDiaryButton: View {
     @State private var isPresented = false
 
     var body: some View {
-        Button("Add Diary", systemImage: "book") {
+        Button {
             isPresented = true
+        } label: {
+            Label {
+                Text("Add Diary")
+            } icon: {
+                Image(systemName: "book")
+            }
         }
         .sheet(isPresented: $isPresented) {
             DiaryFormNavigationView()

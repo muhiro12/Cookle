@@ -65,6 +65,7 @@ struct RecipeFormNavigationView: View {
                         categories: categories,
                         note: note
                     )
+                    .labelStyle(.titleOnly)
                     .frame(maxWidth: .infinity)
                     if recipe != nil {
                         UpdateRecipeButton(
@@ -77,10 +78,11 @@ struct RecipeFormNavigationView: View {
                             categories: categories,
                             note: note
                         )
+                        .labelStyle(.titleOnly)
                         .frame(maxWidth: .infinity)
                         DeleteRecipeButton()
-                            .frame(maxWidth: .infinity)
                             .labelStyle(.titleOnly)
+                            .frame(maxWidth: .infinity)
                             .foregroundStyle(.red)
                     }
                 }
@@ -122,6 +124,7 @@ struct RecipeFormNavigationView: View {
                             categories: categories,
                             note: note
                         )
+                        .labelStyle(.titleOnly)
                     }
                 } else {
                     ToolbarItem(placement: .confirmationAction) {
@@ -135,6 +138,7 @@ struct RecipeFormNavigationView: View {
                             categories: categories,
                             note: note
                         )
+                        .labelStyle(.titleOnly)
                     }
                 }
             }

@@ -72,7 +72,11 @@ struct UpdateRecipeButton: View {
                 }
             }
         } label: {
-            Text("Update")
+            Label {
+                Text("Update \(recipe.name)")
+            } icon: {
+                Image(systemName: "pencil")
+            }
         }
         .disabled(
             name.isEmpty

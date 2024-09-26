@@ -11,8 +11,14 @@ struct AddRecipeButton: View {
     @State private var isPresented = false
 
     var body: some View {
-        Button("Add Recipe", systemImage: "book.pages") {
+        Button {
             isPresented = true
+        } label: {
+            Label {
+                Text("Add Recipe")
+            } icon: {
+                Image(systemName: "book.pages")
+            }
         }
         .sheet(isPresented: $isPresented) {
             RecipeFormNavigationView()

@@ -6,8 +6,14 @@ struct DeleteRecipeButton: View {
     @State private var isPresented = false
 
     var body: some View {
-        Button("Delete \(recipe.name)", systemImage: "trash") {
+        Button {
             isPresented = true
+        } label: {
+            Label {
+                Text("Delete \(recipe.name)")
+            } icon: {
+                Image(systemName: "trash")
+            }
         }
         .alert("Delete \(recipe.name)", isPresented: $isPresented) {
             Button("Cancel", role: .cancel) {}
