@@ -19,6 +19,7 @@ struct RecipeIngredientsSection: View {
                         Text(object.ingredient?.value ?? "")
                         Spacer()
                         Text(object.amount)
+                            .foregroundStyle(.secondary)
                     }
                 }
             } header: {

@@ -19,6 +19,7 @@ struct RecipeFormStepsSection: View {
             ForEach(steps.indices, id: \.self) { index in
                 HStack(alignment: .top) {
                     Text((index + 1).description + ".")
+                        .foregroundStyle(.secondary)
                         .frame(width: 24)
                     TextField(text: $steps[index], axis: .vertical) {
                         Text("Step")
