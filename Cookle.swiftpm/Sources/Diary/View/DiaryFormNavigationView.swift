@@ -68,7 +68,7 @@ struct DiaryFormNavigationView: View {
                 }
                 Section {
                     TextField(text: $note, axis: .vertical) {
-                        Text("Note")
+                        Text("Classic spaghetti carbonara and warm beef stew for a comforting end to the day.")
                     }
                 } header: {
                     Text("Note")

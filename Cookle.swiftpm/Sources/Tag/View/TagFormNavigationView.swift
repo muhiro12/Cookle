@@ -13,7 +13,7 @@ struct TagFormNavigationView<T: Tag>: View {
             Form {
                 Section {
                     TextField(text: $value) {
-                        Text("Value")
+                        Text("Spaghetti")
                     }
                 } header: {
                     Text("Value")
