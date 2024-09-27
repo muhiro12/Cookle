@@ -28,18 +28,8 @@ struct SearchView: View {
             if recipes.isNotEmpty {
                 List(recipes, selection: $recipe) { recipe in
                     NavigationLink(value: recipe) {
-                        Label {
-                            Text(recipe.name)
-                        } icon: {
-                            if let data = recipe.photos?.first?.data,
-                               let image = UIImage(data: data) {
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .scaledToFit()
-                            } else {
-                                Color.clear
-                            }
-                        }
+                        RecipeLabel()
+                            .environment(recipe)
                     }
                 }
             } else if searchText.isNotEmpty {
