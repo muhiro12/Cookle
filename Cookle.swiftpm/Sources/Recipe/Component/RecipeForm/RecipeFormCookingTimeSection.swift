@@ -18,7 +18,7 @@ struct RecipeFormCookingTimeSection: View {
         Section {
             HStack {
                 TextField(text: $cookingTime) {
-                    Text("Cooking Time")
+                    Text("30")
                 }
                 .keyboardType(.numberPad)
                 Text("minutes")

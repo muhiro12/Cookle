@@ -18,7 +18,7 @@ struct RecipeFormServingSizeSection: View {
         Section {
             HStack {
                 TextField(text: $servingSize) {
-                    Text("Serving Size")
+                    Text("2")
                 }
                 .keyboardType(.numberPad)
                 Text("servings")

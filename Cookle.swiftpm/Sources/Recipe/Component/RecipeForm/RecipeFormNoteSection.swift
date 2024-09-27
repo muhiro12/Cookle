@@ -17,7 +17,7 @@ struct RecipeFormNoteSection: View {
     var body: some View {
         Section {
             TextField(text: $note, axis: .vertical) {
-                Text("Note")
+                Text("Use freshly grated Parmesan for the best flavor.")
             }
         } header: {
             Text("Note")

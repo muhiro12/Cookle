@@ -23,11 +23,11 @@ struct RecipeFormIngredientsSection: View {
             ForEach(ingredients.indices, id: \.self) { index in
                 HStack(alignment: .top) {
                     TextField(text: $ingredients[index].ingredient, axis: .vertical) {
-                        Text("Ingredient")
+                        Text("Spaghetti")
                     }
                     .focused($focusedIndex, equals: index)
                     TextField(text: $ingredients[index].amount) {
-                        Text("Amount")
+                        Text("200g")
                     }
                     .multilineTextAlignment(.trailing)
                 }

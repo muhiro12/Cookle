@@ -17,7 +17,7 @@ struct RecipeFormNameSection: View {
     var body: some View {
         Section {
             TextField(text: $name) {
-                Text("Name")
+                Text("Spaghetti Carbonara")
             }
         } header: {
             HStack {

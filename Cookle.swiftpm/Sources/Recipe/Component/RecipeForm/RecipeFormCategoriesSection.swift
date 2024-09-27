@@ -20,7 +20,7 @@ struct RecipeFormCategoriesSection: View {
         Section {
             ForEach(categories.indices, id: \.self) { index in
                 TextField(text: $categories[index], axis: .vertical) {
-                    Text("Category")
+                    Text("Italian")
                 }
                 .focused($focusedIndex, equals: index)
                 .toolbar {

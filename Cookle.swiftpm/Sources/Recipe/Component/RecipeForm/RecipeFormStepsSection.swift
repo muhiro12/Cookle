@@ -22,7 +22,7 @@ struct RecipeFormStepsSection: View {
                         .foregroundStyle(.secondary)
                         .frame(width: 24)
                     TextField(text: $steps[index], axis: .vertical) {
-                        Text("Step")
+                        Text("Boil water in a large pot and add salt.")
                     }
                 }
             }
