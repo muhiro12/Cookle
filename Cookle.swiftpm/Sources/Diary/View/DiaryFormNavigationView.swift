@@ -96,7 +96,18 @@ struct DiaryFormNavigationView: View {
                         }
                     }()
                 ) { recipe in
-                    Text(recipe.name)
+                    Label {
+                        Text(recipe.name)
+                    } icon: {
+                        if let data = recipe.photos?.first?.data,
+                           let image = UIImage(data: data) {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFit()
+                        } else {
+                            Color.clear
+                        }
+                    }
                 }
                 .searchable(text: $searchText)
                 .environment(\.editMode, .constant(.active))

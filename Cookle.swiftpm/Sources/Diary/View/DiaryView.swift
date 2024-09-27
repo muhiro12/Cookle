@@ -31,7 +31,18 @@ struct DiaryView: View {
                 Section {
                     ForEach(breakfasts, id: \.self) { recipe in
                         NavigationLink(value: recipe) {
-                            Text(recipe.name)
+                            Label {
+                                Text(recipe.name)
+                            } icon: {
+                                if let data = recipe.photos?.first?.data,
+                                   let image = UIImage(data: data) {
+                                    Image(uiImage: image)
+                                        .resizable()
+                                        .scaledToFit()
+                                } else {
+                                    Color.clear
+                                }
+                            }
                         }
                     }
                 } header: {
@@ -46,7 +57,18 @@ struct DiaryView: View {
                 Section {
                     ForEach(lunches, id: \.self) { recipe in
                         NavigationLink(value: recipe) {
-                            Text(recipe.name)
+                            Label {
+                                Text(recipe.name)
+                            } icon: {
+                                if let data = recipe.photos?.first?.data,
+                                   let image = UIImage(data: data) {
+                                    Image(uiImage: image)
+                                        .resizable()
+                                        .scaledToFit()
+                                } else {
+                                    Color.clear
+                                }
+                            }
                         }
                     }
                 } header: {
@@ -61,7 +83,18 @@ struct DiaryView: View {
                 Section {
                     ForEach(dinners, id: \.self) { recipe in
                         NavigationLink(value: recipe) {
-                            Text(recipe.name)
+                            Label {
+                                Text(recipe.name)
+                            } icon: {
+                                if let data = recipe.photos?.first?.data,
+                                   let image = UIImage(data: data) {
+                                    Image(uiImage: image)
+                                        .resizable()
+                                        .scaledToFit()
+                                } else {
+                                    Color.clear
+                                }
+                            }
                         }
                     }
                 } header: {

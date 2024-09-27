@@ -26,7 +26,18 @@ struct TagView<T: Tag>: View {
             Section {
                 ForEach(tag.recipes.orEmpty, id: \.self) { recipe in
                     NavigationLink(value: recipe) {
-                        Text(recipe.name)
+                        Label {
+                            Text(recipe.name)
+                        } icon: {
+                            if let data = recipe.photos?.first?.data,
+                               let image = UIImage(data: data) {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFit()
+                            } else {
+                                Color.clear
+                            }
+                        }
                     }
                 }
             } header: {

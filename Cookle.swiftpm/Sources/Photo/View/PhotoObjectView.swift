@@ -9,6 +9,8 @@ struct PhotoObjectView: View {
                 if let photo = object.photo,
                    let image = UIImage(data: photo.data) {
                     Image(uiImage: image)
+                        .resizable()
+                        .scaledToFit()
                 }
             } header: {
                 Text("Photo")
