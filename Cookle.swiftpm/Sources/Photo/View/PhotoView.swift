@@ -36,7 +36,7 @@ struct PhotoView: View {
                 }
             }
             Section {
-                ForEach(photo.recipes.orEmpty, id: \.self) { recipe in
+                ForEach(photo.recipes.orEmpty) { recipe in
                     NavigationLink(value: recipe) {
                         RecipeLabel()
                             .environment(recipe)

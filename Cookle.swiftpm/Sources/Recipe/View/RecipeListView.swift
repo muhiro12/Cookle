@@ -24,7 +24,7 @@ struct RecipeListView: View {
     }
 
     var body: some View {
-        List(recipes, id: \.self, selection: $recipe) { recipe in
+        List(recipes, selection: $recipe) { recipe in
             if recipe.name.normalizedContains(searchText)
                 || searchText.isEmpty {
                 NavigationLink(value: recipe) {
@@ -53,5 +53,11 @@ struct RecipeListView: View {
         NavigationStack {
             RecipeListView()
         }
+    }
+}
+
+struct ShortTitleLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.title
     }
 }

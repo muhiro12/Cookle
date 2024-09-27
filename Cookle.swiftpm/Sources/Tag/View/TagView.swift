@@ -24,7 +24,7 @@ struct TagView<T: Tag>: View {
                 Text("Value")
             }
             Section {
-                ForEach(tag.recipes.orEmpty, id: \.self) { recipe in
+                ForEach(tag.recipes.orEmpty) { recipe in
                     NavigationLink(value: recipe) {
                         RecipeLabel()
                             .environment(recipe)

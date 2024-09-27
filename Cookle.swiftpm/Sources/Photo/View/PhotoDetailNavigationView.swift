@@ -13,7 +13,7 @@ struct PhotoDetailNavigationView: View {
             GeometryReader { geometry in
                 ScrollView(.horizontal) {
                     LazyHStack(spacing: .zero) {
-                        ForEach(photos, id: \.self) { photo in
+                        ForEach(photos) { photo in
                             if let image = UIImage(data: photo.data) {
                                 Image(uiImage: image)
                                     .resizable()

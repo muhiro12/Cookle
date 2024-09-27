@@ -29,7 +29,7 @@ struct DiaryView: View {
                 .compactMap({ $0.recipe }),
                breakfasts.isNotEmpty {
                 Section {
-                    ForEach(breakfasts, id: \.self) { recipe in
+                    ForEach(breakfasts) { recipe in
                         NavigationLink(value: recipe) {
                             RecipeLabel()
                                 .environment(recipe)
@@ -45,7 +45,7 @@ struct DiaryView: View {
                 .compactMap({ $0.recipe }),
                lunches.isNotEmpty {
                 Section {
-                    ForEach(lunches, id: \.self) { recipe in
+                    ForEach(lunches) { recipe in
                         NavigationLink(value: recipe) {
                             RecipeLabel()
                                 .environment(recipe)
@@ -61,7 +61,7 @@ struct DiaryView: View {
                 .compactMap({ $0.recipe }),
                dinners.isNotEmpty {
                 Section {
-                    ForEach(dinners, id: \.self) { recipe in
+                    ForEach(dinners) { recipe in
                         NavigationLink(value: recipe) {
                             RecipeLabel()
                                 .environment(recipe)

@@ -81,5 +81,3 @@ final class Recipe {
         self.modifiedTimestamp = .now
     }
 }
-
-extension Recipe: Identifiable {}

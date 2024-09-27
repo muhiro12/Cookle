@@ -14,7 +14,7 @@ struct RecipeCategoriesSection: View {
         if let categories = recipe.categories,
            categories.isNotEmpty {
             Section {
-                ForEach(categories, id: \.self) {
+                ForEach(categories) {
                     Text($0.value)
                 }
             } header: {

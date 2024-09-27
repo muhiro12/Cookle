@@ -34,7 +34,7 @@ struct DiaryListView: View {
             selection: $diary
         ) { section in
             Section(section.key) {
-                ForEach(section.value, id: \.self) { diary in
+                ForEach(section.value) { diary in
                     if diary.recipes.isNotEmpty {
                         NavigationLink(value: diary) {
                             Text(diary.date.formatted(.dateTime.month().day()))

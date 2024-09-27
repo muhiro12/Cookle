@@ -14,7 +14,7 @@ struct RecipeIngredientsSection: View {
         if let objects = recipe.ingredientObjects,
            objects.isNotEmpty {
             Section {
-                ForEach(objects.sorted { $0.order < $1.order }, id: \.self) { object in
+                ForEach(objects.sorted { $0.order < $1.order }) { object in
                     HStack {
                         Text(object.ingredient?.value ?? "")
                         Spacer()

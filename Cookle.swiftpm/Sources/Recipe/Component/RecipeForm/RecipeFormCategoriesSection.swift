@@ -18,7 +18,7 @@ struct RecipeFormCategoriesSection: View {
 
     var body: some View {
         Section {
-            ForEach(categories.indices, id: \.self) { index in
+            ForEach(categories.indices) { index in
                 TextField(text: $categories[index], axis: .vertical) {
                     Text("Italian")
                 }

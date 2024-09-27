@@ -82,7 +82,6 @@ struct DiaryFormNavigationView: View {
                         }
                         return $0.name.normalizedContains(searchText)
                     },
-                    id: \.self,
                     selection: {
                         switch type {
                         case .breakfast:
