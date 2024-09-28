@@ -32,10 +32,9 @@ struct RecipeFormIngredientsSection: View {
                     .multilineTextAlignment(.trailing)
                 }
                 .toolbar {
-                    if focusedIndex == index {
-                        ToolbarItem(placement: .keyboard) {
-                            SuggestionButtons<Ingredient>(input: $ingredients[index].ingredient)
-                        }
+                    ToolbarItem(placement: .keyboard) {
+                        SuggestionButtons<Ingredient>(input: $ingredients[index].ingredient)
+                            .hidden(focusedIndex != index)
                     }
                 }
             }

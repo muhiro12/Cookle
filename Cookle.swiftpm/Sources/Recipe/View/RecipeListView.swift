@@ -25,13 +25,11 @@ struct RecipeListView: View {
 
     var body: some View {
         List(recipes, selection: $recipe) { recipe in
-            if recipe.name.normalizedContains(searchText)
-                || searchText.isEmpty {
-                NavigationLink(value: recipe) {
-                    RecipeLabel()
-                        .environment(recipe)
-                }
+            NavigationLink(value: recipe) {
+                RecipeLabel()
+                    .environment(recipe)
             }
+            .hidden(searchText.isNotEmpty && !recipe.name.normalizedContains(searchText))
         }
         .searchable(text: $searchText)
         .navigationTitle(Text("Recipes"))
@@ -39,10 +37,9 @@ struct RecipeListView: View {
             ToolbarItem {
                 AddRecipeButton()
             }
-            if isPresented {
-                ToolbarItem {
-                    CloseButton()
-                }
+            ToolbarItem {
+                CloseButton()
+                    .hidden(!isPresented)
             }
         }
     }

@@ -48,10 +48,9 @@ struct MenuNavigationView: View {
             }
             .navigationTitle(Text("Menu"))
             .toolbar {
-                if isPresented {
-                    ToolbarItem {
-                        CloseButton()
-                    }
+                ToolbarItem {
+                    CloseButton()
+                        .hidden(!isPresented)
                 }
             }
         }

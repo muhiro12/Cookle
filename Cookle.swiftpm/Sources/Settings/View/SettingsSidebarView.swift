@@ -26,15 +26,14 @@ struct SettingsSidebarView: View {
 
     var body: some View {
         List(selection: $content) {
-            if isSubscribeOn {
-                Section {
-                    Toggle("iCloud On", isOn: $isICloudOn)
-                } header: {
-                    Text("Settings")
-                }
-            } else {
-                StoreSection()
+            StoreSection()
+                .hidden(isSubscribeOn)
+            Section {
+                Toggle("iCloud On", isOn: $isICloudOn)
+            } header: {
+                Text("Settings")
             }
+            .hidden(!isSubscribeOn)
             Section {
                 Button("Delete All", systemImage: "trash", role: .destructive) {
                     isAlertPresented = true
@@ -56,10 +55,9 @@ struct SettingsSidebarView: View {
         }
         .navigationTitle(Text("Settings"))
         .toolbar {
-            if isPresented {
-                ToolbarItem {
-                    CloseButton()
-                }
+            ToolbarItem {
+                CloseButton()
+                    .hidden(!isPresented)
             }
         }
         .alert(Text("Are you sure you want to delete all data?"),

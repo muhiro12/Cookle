@@ -61,10 +61,9 @@ struct SearchView: View {
         .searchable(text: $searchText, isPresented: $isFocused)
         .navigationTitle(Text("Search"))
         .toolbar {
-            if isPresented {
-                ToolbarItem {
-                    CloseButton()
-                }
+            ToolbarItem {
+                CloseButton()
+                    .hidden(!isPresented)
             }
         }
         .onChange(of: searchText) {

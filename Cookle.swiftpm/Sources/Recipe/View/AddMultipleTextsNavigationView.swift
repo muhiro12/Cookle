@@ -19,14 +19,13 @@ struct AddMultipleTextsNavigationView: View {
         NavigationStack {
             TextEditor(text: $text)
                 .overlay(alignment: .topLeading) {
-                    if text.isEmpty {
-                        Text(placeholder)
-                            .font(.body)
-                            .foregroundStyle(.placeholder)
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 6)
-                            .allowsHitTesting(false)
-                    }
+                    Text(placeholder)
+                        .font(.body)
+                        .foregroundStyle(.placeholder)
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 6)
+                        .allowsHitTesting(false)
+                        .hidden(text.isNotEmpty)
                 }
                 .padding()
                 .scrollContentBackground(.hidden)

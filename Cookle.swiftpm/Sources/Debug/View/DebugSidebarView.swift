@@ -67,8 +67,9 @@ struct DebugSidebarView: View {
         }
         .navigationTitle(Text("Debug"))
         .toolbar {
-            if isPresented {
+            ToolbarItem {
                 CloseButton()
+                    .hidden(!isPresented)
             }
         }
         .alert("Create Preview Diary", isPresented: $isAlertPresented) {

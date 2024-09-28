@@ -21,9 +21,8 @@ struct RecipeView: View {
             RecipeCookingTimeSection()
             RecipeIngredientsSection()
             RecipeStepsSection()
-            if !isSubscribeOn {
-                AdvertisementSection(.medium)
-            }
+            AdvertisementSection(.medium)
+                .hidden(isSubscribeOn)
             RecipeCategoriesSection()
             RecipeNoteSection()
             RecipeDiariesSection()

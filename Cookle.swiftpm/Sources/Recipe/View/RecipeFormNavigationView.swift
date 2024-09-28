@@ -67,24 +67,24 @@ struct RecipeFormNavigationView: View {
                     )
                     .labelStyle(.titleOnly)
                     .frame(maxWidth: .infinity)
-                    if recipe != nil {
-                        UpdateRecipeButton(
-                            name: name,
-                            photos: photos,
-                            servingSize: servingSize,
-                            cookingTime: cookingTime,
-                            ingredients: ingredients,
-                            steps: steps,
-                            categories: categories,
-                            note: note
-                        )
+                    UpdateRecipeButton(
+                        name: name,
+                        photos: photos,
+                        servingSize: servingSize,
+                        cookingTime: cookingTime,
+                        ingredients: ingredients,
+                        steps: steps,
+                        categories: categories,
+                        note: note
+                    )
+                    .labelStyle(.titleOnly)
+                    .frame(maxWidth: .infinity)
+                    .hidden(recipe == nil)
+                    DeleteRecipeButton()
                         .labelStyle(.titleOnly)
                         .frame(maxWidth: .infinity)
-                        DeleteRecipeButton()
-                            .labelStyle(.titleOnly)
-                            .frame(maxWidth: .infinity)
-                            .foregroundStyle(.red)
-                    }
+                        .foregroundStyle(.red)
+                        .hidden(recipe == nil)
                 }
             }
             .environment(\.editMode, $editMode)

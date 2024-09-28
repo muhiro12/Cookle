@@ -40,10 +40,9 @@ struct PhotoListView: View {
             ToolbarItem {
                 AddRecipeButton()
             }
-            if isPresented {
-                ToolbarItem {
-                    CloseButton()
-                }
+            ToolbarItem {
+                CloseButton()
+                    .hidden(!isPresented)
             }
         }
     }

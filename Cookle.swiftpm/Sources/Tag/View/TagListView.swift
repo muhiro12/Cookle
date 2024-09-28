@@ -24,14 +24,14 @@ struct TagListView<T: Tag>: View {
 
     var body: some View {
         List(tags, selection: $tag) { tag in
-            if tag.recipes.isNotEmpty {
-                if tag.value.normalizedContains(searchText)
-                    || searchText.isEmpty {
-                    NavigationLink(value: tag) {
-                        Text(tag.value)
-                    }
-                }
+            NavigationLink(value: tag) {
+                Text(tag.value)
             }
+            .hidden(
+                searchText.isNotEmpty
+                    && !tag.value.normalizedContains(searchText)
+                    || tag.recipes.orEmpty.isEmpty
+            )
         }
         .searchable(text: $searchText)
         .navigationTitle(T.title)
@@ -39,10 +39,9 @@ struct TagListView<T: Tag>: View {
             ToolbarItem {
                 AddRecipeButton()
             }
-            if isPresented {
-                ToolbarItem {
-                    CloseButton()
-                }
+            ToolbarItem {
+                CloseButton()
+                    .hidden(!isPresented)
             }
         }
     }

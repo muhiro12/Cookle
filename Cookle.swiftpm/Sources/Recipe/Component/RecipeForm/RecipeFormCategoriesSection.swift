@@ -24,10 +24,9 @@ struct RecipeFormCategoriesSection: View {
                 }
                 .focused($focusedIndex, equals: index)
                 .toolbar {
-                    if focusedIndex == index {
-                        ToolbarItem(placement: .keyboard) {
-                            SuggestionButtons<Category>(input: $categories[index])
-                        }
+                    ToolbarItem(placement: .keyboard) {
+                        SuggestionButtons<Category>(input: $categories[index])
+                            .hidden(focusedIndex != index)
                     }
                 }
             }

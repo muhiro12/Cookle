@@ -11,13 +11,12 @@ struct RecipeServingSizeSection: View {
     @Environment(Recipe.self) private var recipe
 
     var body: some View {
-        if recipe.servingSize.isNotZero {
-            Section {
-                Text(recipe.servingSize.description + " servings")
-            } header: {
-                Text("Serving Size")
-            }
+        Section {
+            Text(recipe.servingSize.description + " servings")
+        } header: {
+            Text("Serving Size")
         }
+        .hidden(recipe.servingSize.isZero)
     }
 }
 

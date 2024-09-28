@@ -11,13 +11,12 @@ struct RecipeNoteSection: View {
     @Environment(Recipe.self) private var recipe
 
     var body: some View {
-        if recipe.note.isNotEmpty {
-            Section {
-                Text(recipe.note)
-            } header: {
-                Text("Note")
-            }
+        Section {
+            Text(recipe.note)
+        } header: {
+            Text("Note")
         }
+        .hidden(recipe.note.isEmpty)
     }
 }
 

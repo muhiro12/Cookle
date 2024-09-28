@@ -35,11 +35,10 @@ struct DiaryListView: View {
         ) { section in
             Section(section.key) {
                 ForEach(section.value) { diary in
-                    if diary.recipes.isNotEmpty {
-                        NavigationLink(value: diary) {
-                            Text(diary.date.formatted(.dateTime.month().day()))
-                        }
+                    NavigationLink(value: diary) {
+                        Text(diary.date.formatted(.dateTime.month().day()))
                     }
+                    .hidden(diary.recipes.orEmpty.isEmpty)
                 }
             }
         }
@@ -48,10 +47,9 @@ struct DiaryListView: View {
             ToolbarItem {
                 AddDiaryButton()
             }
-            if isPresented {
-                ToolbarItem {
-                    CloseButton()
-                }
+            ToolbarItem {
+                CloseButton()
+                    .hidden(!isPresented)
             }
         }
     }
