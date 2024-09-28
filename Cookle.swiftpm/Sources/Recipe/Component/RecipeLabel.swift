@@ -2,7 +2,7 @@ import SwiftUI
 
 struct RecipeLabel: View {
     @Environment(Recipe.self) private var recipe
-    
+
     var body: some View {
         Label {
             Text(recipe.name)
