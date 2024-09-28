@@ -20,7 +20,7 @@ struct RecipeFormIngredientsSection: View {
 
     var body: some View {
         Section {
-            ForEach(ingredients.indices) { index in
+            ForEach(ingredients.indices, id: \.self) { index in
                 HStack(alignment: .top) {
                     TextField(text: $ingredients[index].ingredient, axis: .vertical) {
                         Text("Spaghetti")
