@@ -122,7 +122,8 @@ struct RecipeFormNavigationView: View {
                             ingredients: ingredients,
                             steps: steps,
                             categories: categories,
-                            note: note
+                            note: note,
+                            useShortTitle: true
                         )
                         .labelStyle(.titleOnly)
                     }
@@ -136,7 +137,8 @@ struct RecipeFormNavigationView: View {
                             ingredients: ingredients,
                             steps: steps,
                             categories: categories,
-                            note: note
+                            note: note,
+                            useShortTitle: true
                         )
                         .labelStyle(.titleOnly)
                     }

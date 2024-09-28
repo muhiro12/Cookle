@@ -22,6 +22,8 @@ struct UpdateRecipeButton: View {
     private let categories: [String]
     private let note: String
 
+    private let useShortTitle: Bool
+
     init(name: String,
          photos: [Data],
          servingSize: String,
@@ -29,7 +31,8 @@ struct UpdateRecipeButton: View {
          ingredients: [RecipeFormIngredient],
          steps: [String],
          categories: [String],
-         note: String) {
+         note: String,
+         useShortTitle: Bool = false) {
         self.name = name
         self.photos = photos
         self.servingSize = servingSize
@@ -38,6 +41,7 @@ struct UpdateRecipeButton: View {
         self.steps = steps
         self.categories = categories
         self.note = note
+        self.useShortTitle = useShortTitle
     }
 
     var body: some View {
@@ -73,7 +77,11 @@ struct UpdateRecipeButton: View {
             }
         } label: {
             Label {
-                Text("Update \(recipe.name)")
+                if useShortTitle {
+                    Text("Update")
+                } else {
+                    Text("Update \(recipe.name)")
+                }
             } icon: {
                 Image(systemName: "pencil")
             }
