@@ -47,8 +47,8 @@ struct UpdateRecipeButton: View {
                 photos: zip(photos.indices, photos).map { index, element in
                     .create(context: context, photo: element, order: index + 1)
                 },
-                servingSize: Int(servingSize) ?? .zero,
-                cookingTime: Int(cookingTime) ?? .zero,
+                servingSize: toInt(servingSize) ?? .zero,
+                cookingTime: toInt(cookingTime) ?? .zero,
                 ingredients: zip(ingredients.indices, ingredients).compactMap { index, element in
                     guard !element.ingredient.isEmpty else {
                         return nil
@@ -80,9 +80,13 @@ struct UpdateRecipeButton: View {
         }
         .disabled(
             name.isEmpty
-                || (!servingSize.isEmpty && Int(servingSize) == nil)
-                || (!cookingTime.isEmpty && Int(cookingTime) == nil)
+                || (!servingSize.isEmpty && toInt(servingSize) == nil)
+                || (!cookingTime.isEmpty && toInt(cookingTime) == nil)
         )
+    }
+
+    private func toInt(_ string: String) -> Int? {
+        Int(string.applyingTransform(.fullwidthToHalfwidth, reverse: false) ?? .empty)
     }
 }
 
