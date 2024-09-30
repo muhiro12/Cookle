@@ -19,11 +19,6 @@ struct TagView<T: Tag>: View {
     var body: some View {
         List(selection: $recipe) {
             Section {
-                Text(tag.value)
-            } header: {
-                Text("Value")
-            }
-            Section {
                 ForEach(tag.recipes.orEmpty) { recipe in
                     NavigationLink(value: recipe) {
                         RecipeLabel()

@@ -18,11 +18,6 @@ struct DiaryView: View {
 
     var body: some View {
         List(selection: $recipe) {
-            Section {
-                Text(diary.date.formatted(.dateTime.year().month().day()))
-            } header: {
-                Text("Date")
-            }
             if let breakfasts = diary.objects?
                 .filter({ $0.type == .breakfast })
                 .sorted()
@@ -89,7 +84,7 @@ struct DiaryView: View {
                 Text("Updated At")
             }
         }
-        .navigationTitle(diary.date.formatted(.dateTime.year().month().day()))
+        .navigationTitle(diary.date.formatted(.dateTime.year().month().day().weekday()))
         .toolbar {
             ToolbarItem(placement: .destructiveAction) {
                 DeleteDiaryButton()
