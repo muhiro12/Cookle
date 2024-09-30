@@ -5,10 +5,30 @@ struct RecipeLabel: View {
 
     var body: some View {
         Label {
-            Text(recipe.name)
+            VStack(alignment: .leading) {
+                Text(recipe.name)
+                Text(
+                    recipe.ingredientObjects.orEmpty.sorted {
+                        $0.order < $1.order
+                    }.compactMap {
+                        $0.ingredient?.value
+                    }.joined(separator: ", ")
+                )
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                Text(
+                    recipe.categories.orEmpty.map {
+                        $0.value
+                    }.joined(separator: ", ")
+                )
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+            }
         } icon: {
-            if let data = recipe.photos?.first?.data,
-               let image = UIImage(data: data) {
+            if let photo = recipe.photoObjects?.min(by: { $0.order < $1.order })?.photo,
+               let image = UIImage(data: photo.data) {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
