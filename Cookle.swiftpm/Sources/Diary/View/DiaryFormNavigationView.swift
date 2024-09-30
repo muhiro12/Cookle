@@ -59,11 +59,11 @@ struct DiaryFormNavigationView: View {
             .navigationDestination(for: DiaryObjectType.self) { type in
                 switch type {
                 case .breakfast:
-                    DiaryFormRecipeListView(selection: $breakfasts)
+                    DiaryFormRecipeListView(selection: $breakfasts, type: type)
                 case .lunch:
-                    DiaryFormRecipeListView(selection: $lunches)
+                    DiaryFormRecipeListView(selection: $lunches, type: type)
                 case .dinner:
-                    DiaryFormRecipeListView(selection: $dinners)
+                    DiaryFormRecipeListView(selection: $dinners, type: type)
                 }
             }
             .navigationTitle(Text("Diary"))

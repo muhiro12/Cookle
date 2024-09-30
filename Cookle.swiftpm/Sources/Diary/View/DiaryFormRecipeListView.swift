@@ -18,9 +18,12 @@ struct DiaryFormRecipeListView: View {
     @State private var temporarySelection = Set<Recipe>()
     @State private var searchText = ""
 
-    init(selection: Binding<Set<Recipe>> = .constant([])) {
+    private let type: DiaryObjectType
+
+    init(selection: Binding<Set<Recipe>> = .constant([]), type: DiaryObjectType) {
         _selection = selection
         _temporarySelection = .init(initialValue: selection.wrappedValue)
+        self.type = type
     }
 
     var body: some View {
@@ -39,6 +42,7 @@ struct DiaryFormRecipeListView: View {
         }
         .searchable(text: $searchText)
         .environment(\.editMode, .constant(.active))
+        .navigationTitle(type.title)
         .toolbar {
             ToolbarItem {
                 Button {
@@ -55,7 +59,7 @@ struct DiaryFormRecipeListView: View {
 #Preview {
     CooklePreview { _ in
         NavigationStack {
-            DiaryFormRecipeListView()
+            DiaryFormRecipeListView(type: .dinner)
         }
     }
 }
