@@ -37,6 +37,7 @@ struct DiaryFormRecipeListView: View {
             selection: $temporarySelection
         ) { recipe in
             RecipeLabel()
+                .labelStyle(.titleAndLargeIcon)
                 .tag(recipe)
                 .environment(recipe)
         }

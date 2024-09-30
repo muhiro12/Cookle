@@ -39,6 +39,7 @@ struct PhotoView: View {
                 ForEach(photo.recipes.orEmpty) { recipe in
                     NavigationLink(value: recipe) {
                         RecipeLabel()
+                            .labelStyle(.titleOnly)
                             .environment(recipe)
                     }
                 }

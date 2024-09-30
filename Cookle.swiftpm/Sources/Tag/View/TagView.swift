@@ -22,6 +22,7 @@ struct TagView<T: Tag>: View {
                 ForEach(tag.recipes.orEmpty) { recipe in
                     NavigationLink(value: recipe) {
                         RecipeLabel()
+                            .labelStyle(.titleAndLargeIcon)
                             .environment(recipe)
                     }
                 }

@@ -27,6 +27,7 @@ struct DiaryView: View {
                     ForEach(breakfasts) { recipe in
                         NavigationLink(value: recipe) {
                             RecipeLabel()
+                                .labelStyle(.titleAndLargeIcon)
                                 .environment(recipe)
                         }
                     }
@@ -43,6 +44,7 @@ struct DiaryView: View {
                     ForEach(lunches) { recipe in
                         NavigationLink(value: recipe) {
                             RecipeLabel()
+                                .labelStyle(.titleAndLargeIcon)
                                 .environment(recipe)
                         }
                     }
@@ -59,6 +61,7 @@ struct DiaryView: View {
                     ForEach(dinners) { recipe in
                         NavigationLink(value: recipe) {
                             RecipeLabel()
+                                .labelStyle(.titleAndLargeIcon)
                                 .environment(recipe)
                         }
                     }

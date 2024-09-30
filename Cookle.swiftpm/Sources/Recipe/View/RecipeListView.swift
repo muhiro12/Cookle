@@ -27,6 +27,7 @@ struct RecipeListView: View {
         List(recipes, selection: $recipe) { recipe in
             NavigationLink(value: recipe) {
                 RecipeLabel()
+                    .labelStyle(.titleAndLargeIcon)
                     .environment(recipe)
             }
             .hidden(searchText.isNotEmpty && !recipe.name.normalizedContains(searchText))

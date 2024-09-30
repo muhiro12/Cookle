@@ -29,6 +29,7 @@ struct SearchView: View {
                 List(recipes, selection: $recipe) { recipe in
                     NavigationLink(value: recipe) {
                         RecipeLabel()
+                            .labelStyle(.titleAndLargeIcon)
                             .environment(recipe)
                     }
                 }
