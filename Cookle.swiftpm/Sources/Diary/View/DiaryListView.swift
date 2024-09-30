@@ -36,19 +36,8 @@ struct DiaryListView: View {
             Section(section.key) {
                 ForEach(section.value) { diary in
                     NavigationLink(value: diary) {
-                        HStack {
-                            VStack {
-                                Text(diary.date.formatted(.dateTime.weekday()))
-                                    .font(.caption.monospaced())
-                                Text(diary.date.formatted(.dateTime.day(.twoDigits)))
-                                    .font(.title2.monospacedDigit())
-                            }
-                            Divider()
-                            Text(diary.recipes.orEmpty.map { $0.name }.joined(separator: ", "))
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                                .lineLimit(2)
-                        }
+                        DiaryLabel()
+                            .environment(diary)
                     }
                     .hidden(diary.recipes.orEmpty.isEmpty)
                 }
