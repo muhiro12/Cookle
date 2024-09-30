@@ -12,6 +12,8 @@ import SwiftUtilities
 struct DiaryListView: View {
     @Environment(\.isPresented) private var isPresented
 
+    @AppStorage(.isSubscribeOn) private var isSubscribeOn
+
     @Query(.diaries(.all)) private var diaries: [Diary]
 
     @Binding private var diary: Diary?
@@ -42,6 +44,8 @@ struct DiaryListView: View {
                     .hidden(diary.recipes.orEmpty.isEmpty)
                 }
             }
+            AdvertisementSection(.small)
+                .hidden(isSubscribeOn)
         }
         .navigationTitle(Text("Diaries"))
         .toolbar {
