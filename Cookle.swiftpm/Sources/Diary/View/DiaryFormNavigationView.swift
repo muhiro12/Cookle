@@ -14,14 +14,11 @@ struct DiaryFormNavigationView: View {
 
     @Environment(Diary.self) private var diary: Diary?
 
-    @Query(.recipes(.all)) private var recipes: [Recipe]
-
     @State private var date = Date.now
     @State private var breakfasts = Set<Recipe>()
     @State private var lunches = Set<Recipe>()
     @State private var dinners = Set<Recipe>()
     @State private var note = ""
-    @State private var searchText = ""
 
     var body: some View {
         NavigationStack {
@@ -35,36 +32,21 @@ struct DiaryFormNavigationView: View {
                         Text(DiaryObjectType.breakfast.title)
                     }
                 } footer: {
-                    Text(recipes.compactMap {
-                        guard breakfasts.contains($0) else {
-                            return nil
-                        }
-                        return $0.name
-                    }.joined(separator: ", "))
+                    Text(breakfasts.map { $0.name }.joined(separator: ", "))
                 }
                 Section {
                     NavigationLink(value: DiaryObjectType.lunch) {
                         Text(DiaryObjectType.lunch.title)
                     }
                 } footer: {
-                    Text(recipes.compactMap {
-                        guard lunches.contains($0) else {
-                            return nil
-                        }
-                        return $0.name
-                    }.joined(separator: ", "))
+                    Text(lunches.map { $0.name }.joined(separator: ", "))
                 }
                 Section {
                     NavigationLink(value: DiaryObjectType.dinner) {
                         Text(DiaryObjectType.dinner.title)
                     }
                 } footer: {
-                    Text(recipes.compactMap {
-                        guard dinners.contains($0) else {
-                            return nil
-                        }
-                        return $0.name
-                    }.joined(separator: ", "))
+                    Text(dinners.map { $0.name }.joined(separator: ", "))
                 }
                 Section {
                     TextField(text: $note, axis: .vertical) {
@@ -75,31 +57,14 @@ struct DiaryFormNavigationView: View {
                 }
             }
             .navigationDestination(for: DiaryObjectType.self) { type in
-                List(
-                    recipes.filter {
-                        guard !searchText.isEmpty else {
-                            return true
-                        }
-                        return $0.name.normalizedContains(searchText)
-                    },
-                    selection: {
-                        switch type {
-                        case .breakfast:
-                            $breakfasts
-
-                        case .lunch:
-                            $lunches
-
-                        case .dinner:
-                            $dinners
-                        }
-                    }()
-                ) { recipe in
-                    RecipeLabel()
-                        .environment(recipe)
+                switch type {
+                case .breakfast:
+                    DiaryFormRecipeListView(selection: $breakfasts)
+                case .lunch:
+                    DiaryFormRecipeListView(selection: $lunches)
+                case .dinner:
+                    DiaryFormRecipeListView(selection: $dinners)
                 }
-                .searchable(text: $searchText)
-                .environment(\.editMode, .constant(.active))
             }
             .navigationTitle(Text("Diary"))
             .toolbar {
