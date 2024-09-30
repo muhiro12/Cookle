@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class IngredientObject {
+final class IngredientObject: SubObject {
     @Relationship
     private(set) var ingredient = Ingredient?.none
     private(set) var amount = String.empty
@@ -33,11 +33,5 @@ final class IngredientObject {
         object.amount = amount
         object.order = order
         return object
-    }
-}
-
-extension IngredientObject: Comparable {
-    static func < (lhs: IngredientObject, rhs: IngredientObject) -> Bool {
-        lhs.order < rhs.order
     }
 }

@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class DiaryObject {
+final class DiaryObject: SubObject {
     @Relationship
     private(set) var recipe = Recipe?.none
     private(set) var type = DiaryObjectType?.none
@@ -31,11 +31,5 @@ final class DiaryObject {
         context.insert(object)
         object.order = order
         return object
-    }
-}
-
-extension DiaryObject: Comparable {
-    static func < (lhs: DiaryObject, rhs: DiaryObject) -> Bool {
-        lhs.order < rhs.order
     }
 }

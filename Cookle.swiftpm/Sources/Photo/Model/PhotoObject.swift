@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class PhotoObject {
+final class PhotoObject: SubObject {
     @Relationship
     private(set) var photo = Photo?.none
     private(set) var order = Int.zero
@@ -31,11 +31,5 @@ final class PhotoObject {
         context.insert(object)
         object.order = order
         return object
-    }
-}
-
-extension PhotoObject: Comparable {
-    static func < (lhs: PhotoObject, rhs: PhotoObject) -> Bool {
-        lhs.order < rhs.order
     }
 }
