@@ -18,7 +18,7 @@ struct RecipePhotosSection: View {
             Section {
                 ScrollView(.horizontal) {
                     LazyHStack {
-                        ForEach(objects.sorted { $0.order < $1.order }) { photoObject in
+                        ForEach(objects.sorted()) { photoObject in
                             if let photo = photoObject.photo,
                                let image = UIImage(data: photo.data) {
                                 Button {

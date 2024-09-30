@@ -40,7 +40,7 @@ public extension CookleIntents {
                     VStack(alignment: .leading) {
                         Text(recipe.name)
                             .font(.headline)
-                        if let photo = recipe.photoObjects?.min(by: { $0.order < $1.order })?.photo,
+                        if let photo = recipe.photoObjects?.min()?.photo,
                            let image = UIImage(data: photo.data) {
                             Image(uiImage: image)
                                 .resizable()
@@ -66,7 +66,7 @@ public extension CookleIntents {
         return .result(dialog: .init(stringLiteral: recipe.name)) {
             cookleView {
                 VStack(alignment: .leading) {
-                    if let photo = recipe.photoObjects?.min(by: { $0.order < $1.order })?.photo,
+                    if let photo = recipe.photoObjects?.min()?.photo,
                        let image = UIImage(data: photo.data) {
                         Image(uiImage: image)
                             .resizable()
@@ -100,7 +100,7 @@ public extension CookleIntents {
         return .result(dialog: .init(stringLiteral: recipe.name)) {
             cookleView {
                 VStack(alignment: .leading) {
-                    if let photo = recipe.photoObjects?.min(by: { $0.order < $1.order })?.photo,
+                    if let photo = recipe.photoObjects?.min()?.photo,
                        let image = UIImage(data: photo.data) {
                         Image(uiImage: image)
                             .resizable()

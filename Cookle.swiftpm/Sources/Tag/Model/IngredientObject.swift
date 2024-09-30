@@ -35,3 +35,9 @@ final class IngredientObject {
         return object
     }
 }
+
+extension IngredientObject: Comparable {
+    static func < (lhs: IngredientObject, rhs: IngredientObject) -> Bool {
+        lhs.order < rhs.order
+    }
+}

@@ -33,3 +33,9 @@ final class DiaryObject {
         return object
     }
 }
+
+extension DiaryObject: Comparable {
+    static func < (lhs: DiaryObject, rhs: DiaryObject) -> Bool {
+        lhs.order < rhs.order
+    }
+}

@@ -165,7 +165,7 @@ struct RecipeFormNavigationView: View {
             photos = recipe?.photos.orEmpty.map { $0.data } ?? []
             servingSize = recipe?.servingSize.description ?? ""
             cookingTime = recipe?.cookingTime.description ?? ""
-            ingredients = (recipe?.ingredientObjects.orEmpty.sorted { $0.order < $1.order }.compactMap { object in
+            ingredients = (recipe?.ingredientObjects.orEmpty.sorted().compactMap { object in
                 guard let ingredient = object.ingredient else {
                     return nil
                 }

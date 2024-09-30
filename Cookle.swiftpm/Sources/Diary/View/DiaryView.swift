@@ -25,7 +25,7 @@ struct DiaryView: View {
             }
             if let breakfasts = diary.objects?
                 .filter({ $0.type == .breakfast })
-                .sorted(by: { $0.order < $1.order })
+                .sorted()
                 .compactMap({ $0.recipe }),
                breakfasts.isNotEmpty {
                 Section {
@@ -41,7 +41,7 @@ struct DiaryView: View {
             }
             if let lunches = diary.objects?
                 .filter({ $0.type == .lunch })
-                .sorted(by: { $0.order < $1.order })
+                .sorted()
                 .compactMap({ $0.recipe }),
                lunches.isNotEmpty {
                 Section {
@@ -57,7 +57,7 @@ struct DiaryView: View {
             }
             if let dinners = diary.objects?
                 .filter({ $0.type == .dinner })
-                .sorted(by: { $0.order < $1.order })
+                .sorted()
                 .compactMap({ $0.recipe }),
                dinners.isNotEmpty {
                 Section {

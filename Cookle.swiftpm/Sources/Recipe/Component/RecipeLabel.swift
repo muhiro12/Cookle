@@ -8,9 +8,7 @@ struct RecipeLabel: View {
             VStack(alignment: .leading) {
                 Text(recipe.name)
                 Text(
-                    recipe.ingredientObjects.orEmpty.sorted {
-                        $0.order < $1.order
-                    }.compactMap {
+                    recipe.ingredientObjects.orEmpty.sorted().compactMap {
                         $0.ingredient?.value
                     }.joined(separator: ", ")
                 )
@@ -27,7 +25,7 @@ struct RecipeLabel: View {
                 .lineLimit(1)
             }
         } icon: {
-            if let photo = recipe.photoObjects?.min(by: { $0.order < $1.order })?.photo,
+            if let photo = recipe.photoObjects?.min()?.photo,
                let image = UIImage(data: photo.data) {
                 Image(uiImage: image)
                     .resizable()

@@ -33,3 +33,9 @@ final class PhotoObject {
         return object
     }
 }
+
+extension PhotoObject: Comparable {
+    static func < (lhs: PhotoObject, rhs: PhotoObject) -> Bool {
+        lhs.order < rhs.order
+    }
+}
