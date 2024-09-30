@@ -35,6 +35,7 @@ struct AddMultipleIngredientsButton: View {
                         }
                     }
                 ),
+                title: "Ingredients",
                 placeholder: """
                              Spaghetti
                              200g

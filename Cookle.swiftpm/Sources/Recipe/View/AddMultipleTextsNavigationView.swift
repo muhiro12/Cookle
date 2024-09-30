@@ -7,11 +7,13 @@ struct AddMultipleTextsNavigationView: View {
 
     @State private var text: String
 
+    private let title: LocalizedStringKey
     private let placeholder: LocalizedStringKey
 
-    init(texts: Binding<[String]>, placeholder: LocalizedStringKey) {
+    init(texts: Binding<[String]>, title: LocalizedStringKey, placeholder: LocalizedStringKey) {
         self._texts = texts
         self.text = texts.wrappedValue.joined(separator: "\n")
+        self.title = title
         self.placeholder = placeholder
     }
 
@@ -33,6 +35,7 @@ struct AddMultipleTextsNavigationView: View {
                 .clipShape(.rect(cornerRadius: 8))
                 .padding()
                 .background(Color(.systemGroupedBackground))
+                .navigationTitle(title)
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button {
@@ -62,6 +65,7 @@ struct AddMultipleTextsNavigationView: View {
 #Preview {
     AddMultipleTextsNavigationView(
         texts: .constant([]),
+        title: "Ingredients",
         placeholder: """
                      Boil water in a large pot and add salt.
                      Cook the spaghetti until al dente.

@@ -25,6 +25,7 @@ struct AddMultipleStepsButton: View {
         .sheet(isPresented: $isPresented) {
             AddMultipleTextsNavigationView(
                 texts: $steps,
+                title: "Steps",
                 placeholder: """
                              Boil water in a large pot and add salt.
                              Cook the spaghetti until al dente.
