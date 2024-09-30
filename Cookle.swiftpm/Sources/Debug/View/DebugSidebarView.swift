@@ -23,7 +23,7 @@ struct DebugSidebarView: View {
                 Text("AppStorage")
             }
             Section {
-                Button("Create Preview Diary", systemImage: "flask") {
+                Button("Create Preview Diaries", systemImage: "flask") {
                     isAlertPresented = true
                 }
             } header: {
@@ -72,10 +72,10 @@ struct DebugSidebarView: View {
                     .hidden(!isPresented)
             }
         }
-        .alert("Create Preview Diary", isPresented: $isAlertPresented) {
+        .alert("Create Preview Diaries", isPresented: $isAlertPresented) {
             Button(role: .destructive) {
                 withAnimation {
-                    _ = CooklePreviewStore().createPreviewDiary(context)
+                    _ = CooklePreviewStore().createPreviewDiaries(context)
                 }
             } label: {
                 Text("Create")

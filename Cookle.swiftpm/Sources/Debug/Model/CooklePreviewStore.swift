@@ -32,7 +32,7 @@ final class CooklePreviewStore {
 
     @MainActor
     func prepare(_ context: ModelContext) async {
-        _ = createPreviewDiary(context)
+        _ = createPreviewDiaries(context)
         while !isReady {
             try! await Task.sleep(for: .seconds(0.2))
             diaries = try! context.fetch(.diaries(.all))
@@ -46,43 +46,49 @@ final class CooklePreviewStore {
         }
     }
 
-    func createPreviewDiary(_ context: ModelContext) -> Diary {
-        .create(
-            context: context,
-            date: .now,
-            objects: [
-                .create(
-                    context: context,
-                    recipe: cookPancakes(context),
-                    type: .breakfast,
-                    order: 1
-                ),
-                .create(
-                    context: context,
-                    recipe: cookChickenStirFry(context),
-                    type: .lunch,
-                    order: 1
-                ),
-                .create(
-                    context: context,
-                    recipe: cookVegetableSoup(context),
-                    type: .lunch,
-                    order: 2
-                ),
-                .create(
-                    context: context,
-                    recipe: cookSpaghettiCarbonara(context),
-                    type: .dinner,
-                    order: 1
-                ),
-                .create(
-                    context: context,
-                    recipe: cookBeefStew(context),
-                    type: .dinner,
-                    order: 2
-                )
-            ],
-            note: """
+    func createPreviewDiaries(_ context: ModelContext) -> [Diary] {
+        let pancakes = cookPancakes(context)
+        let chickenStirFry = cookChickenStirFry(context)
+        let vegetableSoup = cookVegetableSoup(context)
+        let spaghettiCarbonara = cookSpaghettiCarbonara(context)
+        let beefStew = cookBeefStew(context)
+        return (0..<10).map { i in
+            .create(
+                context: context,
+                date: .now.addingTimeInterval(TimeInterval(-i * 8) * 24 * 60 * 60),
+                objects: [
+                    .create(
+                        context: context,
+                        recipe: pancakes,
+                        type: .breakfast,
+                        order: 1
+                    ),
+                    .create(
+                        context: context,
+                        recipe: chickenStirFry,
+                        type: .lunch,
+                        order: 1
+                    ),
+                    .create(
+                        context: context,
+                        recipe: vegetableSoup,
+                        type: .lunch,
+                        order: 2
+                    ),
+                    .create(
+                        context: context,
+                        recipe: spaghettiCarbonara,
+                        type: .dinner,
+                        order: 1
+                    ),
+                    .create(
+                        context: context,
+                        recipe: beefStew,
+                        type: .dinner,
+                        order: 2
+                    )
+                ],
+                note: """
                   Today's menu:
                   - Breakfast: Delicious pancakes served with syrup, butter, and fresh fruits.
                   - Lunch: Chicken stir fry with bell peppers and broccoli, accompanied by a hearty vegetable soup.
@@ -93,7 +99,8 @@ final class CooklePreviewStore {
                   - The vegetable soup can be stored for up to 3 days, making it perfect for leftovers.
                   - The beef stew tastes even better the next day, so make extra for an easy meal tomorrow.
                   """
-        )
+            )
+        }
     }
 
     private func cookSpaghettiCarbonara(_ context: ModelContext) -> Recipe {
