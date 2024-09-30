@@ -39,12 +39,13 @@ struct DiaryListView: View {
                         HStack {
                             VStack {
                                 Text(diary.date.formatted(.dateTime.weekday()))
-                                    .font(.callout.uppercaseSmallCaps())
+                                    .font(.caption.monospaced())
                                 Text(diary.date.formatted(.dateTime.day(.twoDigits)))
-                                    .font(.title.monospacedDigit())
+                                    .font(.title2.monospacedDigit())
                             }
                             Divider()
                             Text(diary.recipes.orEmpty.map { $0.name }.joined(separator: ", "))
+                                .font(.subheadline)
                                 .foregroundStyle(.secondary)
                                 .lineLimit(2)
                         }
