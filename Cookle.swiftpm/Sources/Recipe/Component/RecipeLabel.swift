@@ -35,6 +35,7 @@ struct RecipeLabel: View {
                     .resizable()
                     .scaledToFit()
                     .foregroundStyle(.tint.secondary)
+                    .padding()
             }
         }
     }
