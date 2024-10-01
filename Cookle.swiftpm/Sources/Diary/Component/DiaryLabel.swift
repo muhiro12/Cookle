@@ -19,7 +19,7 @@ struct DiaryLabel: View {
         } icon: {
             VStack {
                 Text(diary.date.formatted(.dateTime.weekday()))
-                    .font(.caption.monospaced())
+                    .font(.caption.bold().monospaced())
                     .textCase(.uppercase)
                     .foregroundStyle(.tint)
                 Text(diary.date.formatted(.dateTime.day(.twoDigits)))
