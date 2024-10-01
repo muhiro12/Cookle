@@ -20,7 +20,7 @@ struct SuggestionButtons<T: Tag>: View {
 
     var body: some View {
         ScrollView(.horizontal) {
-            LazyHStack {
+            HStack {
                 ForEach(suggestions) { suggestion in
                     Button(suggestion.value) {
                         input = suggestion.value
