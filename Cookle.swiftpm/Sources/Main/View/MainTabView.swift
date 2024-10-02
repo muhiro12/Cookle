@@ -22,7 +22,7 @@ struct MainTabView: View {
             case .ingredient, .category, .settings:
                 horizontalSizeClass == .regular
             case .menu:
-                horizontalSizeClass == .compact
+                horizontalSizeClass == .compact || !isDebugOn
             case .debug:
                 horizontalSizeClass == .regular && isDebugOn
             }
