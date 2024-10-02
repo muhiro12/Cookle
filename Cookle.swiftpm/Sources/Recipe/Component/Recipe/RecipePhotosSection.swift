@@ -10,7 +10,7 @@ import SwiftUI
 struct RecipePhotosSection: View {
     @Environment(Recipe.self) private var recipe
 
-    @State private var isPhotoDetailPresented = false
+    @State private var selectedPhoto: Photo?
 
     var body: some View {
         if let objects = recipe.photoObjects,
@@ -22,7 +22,7 @@ struct RecipePhotosSection: View {
                             if let photo = photoObject.photo,
                                let image = UIImage(data: photo.data) {
                                 Button {
-                                    isPhotoDetailPresented = true
+                                    selectedPhoto = photo
                                 } label: {
                                     Image(uiImage: image)
                                         .resizable()
@@ -41,8 +41,8 @@ struct RecipePhotosSection: View {
             } header: {
                 Text("Photos")
             }
-            .fullScreenCover(isPresented: $isPhotoDetailPresented) {
-                PhotoDetailNavigationView(photos: objects.compactMap(\.photo))
+            .fullScreenCover(item: $selectedPhoto) { photo in
+                PhotoDetailNavigationView(photos: objects.sorted().compactMap(\.photo), initialValue: photo)
             }
         }
     }

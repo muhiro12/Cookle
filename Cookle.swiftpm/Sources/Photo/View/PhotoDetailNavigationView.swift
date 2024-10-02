@@ -2,10 +2,13 @@ import SwiftUI
 import SwiftUtilities
 
 struct PhotoDetailNavigationView: View {
+    @State private var currentID: Photo.ID?
+    
     private let photos: [Photo]
 
-    init(photos: [Photo]) {
+    init(photos: [Photo], initialValue: Photo? = nil) {
         self.photos = photos
+        self._currentID = .init(initialValue: initialValue?.id)
     }
 
     var body: some View {
@@ -25,8 +28,10 @@ struct PhotoDetailNavigationView: View {
                             }
                         }
                     }
+                    .scrollTargetLayout()
                 }
                 .scrollTargetBehavior(.paging)
+                .scrollPosition(id: $currentID)
             }
             .ignoresSafeArea(edges: .top)
             .toolbar {
