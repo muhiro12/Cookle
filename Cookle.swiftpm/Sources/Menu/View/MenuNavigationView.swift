@@ -9,7 +9,6 @@ import SwiftUI
 import SwiftUtilities
 
 struct MenuNavigationView: View {
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.isPresented) private var isPresented
 
     @AppStorage(.isDebugOn) private var isDebugOn
