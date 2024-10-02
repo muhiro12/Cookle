@@ -20,6 +20,8 @@ struct DiaryLabel: View {
             VStack {
                 Text(diary.date.formatted(.dateTime.weekday()))
                     .font(.caption.monospaced())
+                    .textCase(.uppercase)
+                    .foregroundStyle(.tint)
                 Text(diary.date.formatted(.dateTime.day(.twoDigits)))
                     .font(.title2.monospacedDigit())
             }
