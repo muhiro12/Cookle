@@ -161,19 +161,19 @@ struct RecipeFormNavigationView: View {
             Text("Are you really going to use DebugMode?")
         }
         .task {
-            name = recipe?.name ?? ""
-            photos = recipe?.photos.orEmpty.map { $0.data } ?? []
-            servingSize = recipe?.servingSize.description ?? ""
-            cookingTime = recipe?.cookingTime.description ?? ""
-            ingredients = (recipe?.ingredientObjects.orEmpty.sorted().compactMap { object in
+            name = recipe?.name ?? .empty
+            photos = recipe?.photoObjects?.sorted().compactMap { $0.photo?.data } ?? .empty
+            servingSize = recipe?.servingSize.description ?? .empty
+            cookingTime = recipe?.cookingTime.description ?? .empty
+            ingredients = (recipe?.ingredientObjects?.sorted().compactMap { object in
                 guard let ingredient = object.ingredient else {
                     return nil
                 }
                 return (ingredient.value, object.amount)
-            } ?? []) + [("", "")]
-            steps = (recipe?.steps ?? []) + [""]
-            categories = (recipe?.categories.orEmpty.map { $0.value } ?? []) + [""]
-            note = recipe?.note ?? ""
+            } ?? .empty) + [(.empty, .empty)]
+            steps = (recipe?.steps ?? .empty) + [.empty]
+            categories = (recipe?.categories?.map { $0.value } ?? .empty) + [.empty]
+            note = recipe?.note ?? .empty
         }
     }
 }
