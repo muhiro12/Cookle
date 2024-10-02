@@ -8,11 +8,18 @@
 import SwiftUI
 
 struct RecipeNavigationView: View {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
     @State private var recipe: Recipe?
 
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {
-            RecipeListView(selection: $recipe)
+            if horizontalSizeClass == .regular {
+                RecipeListView(selection: $recipe)
+            } else {
+                RecipeListView(selection: $recipe)
+                    .listStyle(.insetGrouped)
+            }
         } detail: {
             if let recipe {
                 RecipeView()
