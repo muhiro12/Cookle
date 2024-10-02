@@ -107,7 +107,10 @@ final class CooklePreviewStore {
         .create(
             context: context,
             name: "Spaghetti Carbonara",
-            photos: photoObjects(context: context),
+            photos: [
+                .create(context: context, photo: UIImage(resource: .spaghettiCarbonara1).pngData()!, order: 1),
+                .create(context: context, photo: UIImage(resource: .spaghettiCarbonara2).pngData()!, order: 2)
+            ],
             servingSize: 2,
             cookingTime: 30,
             ingredients: [
@@ -137,7 +140,10 @@ final class CooklePreviewStore {
         .create(
             context: context,
             name: "Beef Stew",
-            photos: photoObjects(context: context),
+            photos: [
+                .create(context: context, photo: UIImage(resource: .beefStew1).pngData()!, order: 1),
+                .create(context: context, photo: UIImage(resource: .beefStew2).pngData()!, order: 2)
+            ],
             servingSize: 6,
             cookingTime: 120,
             ingredients: [
@@ -173,7 +179,10 @@ final class CooklePreviewStore {
         .create(
             context: context,
             name: "Chicken Stir Fry",
-            photos: photoObjects(context: context),
+            photos: [
+                .create(context: context, photo: UIImage(resource: .chickenStirFry1).pngData()!, order: 1),
+                .create(context: context, photo: UIImage(resource: .chickenStirFry2).pngData()!, order: 2)
+            ],
             servingSize: 4,
             cookingTime: 20,
             ingredients: [
@@ -209,7 +218,10 @@ final class CooklePreviewStore {
         .create(
             context: context,
             name: "Vegetable Soup",
-            photos: photoObjects(context: context),
+            photos: [
+                .create(context: context, photo: UIImage(resource: .vegetableSoup1).pngData()!, order: 1),
+                .create(context: context, photo: UIImage(resource: .vegetableSoup2).pngData()!, order: 2)
+            ],
             servingSize: 4,
             cookingTime: 40,
             ingredients: [
@@ -245,7 +257,10 @@ final class CooklePreviewStore {
         .create(
             context: context,
             name: "Pancakes",
-            photos: photoObjects(context: context),
+            photos: [
+                .create(context: context, photo: UIImage(resource: .pancakes1).pngData()!, order: 1),
+                .create(context: context, photo: UIImage(resource: .pancakes2).pngData()!, order: 2)
+            ],
             servingSize: 4,
             cookingTime: 20,
             ingredients: [
@@ -270,14 +285,5 @@ final class CooklePreviewStore {
             ],
             note: "Serve with syrup, butter, and fresh fruits."
         )
-    }
-
-    private func photoObjects(context: ModelContext) -> [PhotoObject] {
-        [
-            .create(context: context, photo: UIImage(systemName: "fork.knife")!.jpegData(compressionQuality: 1.0)!, order: 1),
-            .create(context: context, photo: UIImage(systemName: "cup.and.saucer")!.jpegData(compressionQuality: 1.0)!, order: 2),
-            .create(context: context, photo: UIImage(systemName: "takeoutbag.and.cup.and.straw")!.jpegData(compressionQuality: 1.0)!, order: 3),
-            .create(context: context, photo: UIImage(systemName: "leaf")!.jpegData(compressionQuality: 1.0)!, order: 4)
-        ]
     }
 }
