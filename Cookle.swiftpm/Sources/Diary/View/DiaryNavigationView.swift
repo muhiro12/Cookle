@@ -9,19 +9,12 @@ import SwiftUI
 import SwiftUtilities
 
 struct DiaryNavigationView: View {
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-
     @State private var diary: Diary?
     @State private var recipe: Recipe?
 
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {
-            if horizontalSizeClass == .regular {
-                DiaryListView(selection: $diary)
-            } else {
-                DiaryListView(selection: $diary)
-                    .listStyle(.insetGrouped)
-            }
+            DiaryListView(selection: $diary)
         } content: {
             if let diary {
                 DiaryView(selection: $recipe)
