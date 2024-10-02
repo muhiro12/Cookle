@@ -11,9 +11,9 @@ struct TitleAndLargeIconLabelStyle: LabelStyle {
     func makeBody(configuration: Configuration) -> some View {
         HStack {
             configuration.icon
-                .frame(width: 64)
-                .padding()
+                .frame(width: 80)
             configuration.title
+                .padding(.leading)
         }
     }
 }
