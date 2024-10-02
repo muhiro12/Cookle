@@ -31,7 +31,10 @@ struct RecipeLabel: View {
                     .resizable()
                     .scaledToFit()
             } else {
-                Color.clear
+                Image(systemName: "photo")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundStyle(.tint.secondary)
             }
         }
     }
