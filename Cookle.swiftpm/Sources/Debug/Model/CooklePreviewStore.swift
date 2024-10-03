@@ -46,6 +46,11 @@ final class CooklePreviewStore {
         }
     }
 
+    #if !DEBUG
+    func createPreviewDiaries(_ context: ModelContext) -> [Diary] {
+        .empty
+    }
+    #else
     func createPreviewDiaries(_ context: ModelContext) -> [Diary] {
         let pancakes = cookPancakes(context)
         let chickenStirFry = cookChickenStirFry(context)
@@ -286,4 +291,5 @@ final class CooklePreviewStore {
             note: "Serve with syrup, butter, and fresh fruits."
         )
     }
+    #endif
 }
