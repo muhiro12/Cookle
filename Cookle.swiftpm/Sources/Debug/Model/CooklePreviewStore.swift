@@ -46,7 +46,7 @@ final class CooklePreviewStore {
         }
     }
 
-    #if !DEBUG
+    #if RELEASE
     func createPreviewDiaries(_ context: ModelContext) -> [Diary] {
         .empty
     }
