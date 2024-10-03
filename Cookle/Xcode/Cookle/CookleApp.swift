@@ -22,10 +22,10 @@ struct CookleApp: App {
     init() {
         sharedGoogleMobileAdsController = .init(
             adUnitID: {
-                #if RELEASE
-                Secret.adUnitID
-                #else
+                #if DEBUG
                 Secret.adUnitIDDev
+                #else
+                Secret.adUnitID
                 #endif
             }()
         )

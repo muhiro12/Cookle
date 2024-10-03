@@ -30,7 +30,6 @@ struct MainTabView: View {
     }
 
     var body: some View {
-        #if RELEASE || DEBUG
         if #available(iOS 18.0, *) {
             TabView(selection: $selection) {
                 ForEach(tabs) { tab in
@@ -52,17 +51,6 @@ struct MainTabView: View {
                 }
             }
         }
-        #else
-        TabView(selection: $selection) {
-            ForEach(tabs) { tab in
-                tab.rootView
-                    .tag(tab)
-                    .tabItem {
-                        tab.label
-                    }
-            }
-        }
-        #endif
     }
 }
 
