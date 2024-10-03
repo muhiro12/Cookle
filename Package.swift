@@ -35,6 +35,9 @@ let package = Package(
             exclude: [
                 "CooklePlaygroundsApp.swift",
                 "Package.swift"
+            ],
+            swiftSettings: [
+                .define("XCODE")
             ]
         )
     ]
