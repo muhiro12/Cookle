@@ -46,11 +46,6 @@ final class CooklePreviewStore {
         }
     }
 
-    #if !DEBUG
-    func createPreviewDiaries(_ context: ModelContext) -> [Diary] {
-        .empty
-    }
-    #else
     func createPreviewDiaries(_ context: ModelContext) -> [Diary] {
         let pancakes = cookPancakes(context)
         let chickenStirFry = cookChickenStirFry(context)
@@ -109,13 +104,21 @@ final class CooklePreviewStore {
     }
 
     private func cookSpaghettiCarbonara(_ context: ModelContext) -> Recipe {
-        .create(
+        #if DEBUG
+        let photos: [PhotoObject] = [
+            .create(context: context, photo: .init(base64Encoded: debugSpaghettiCarbonara1)!, order: 1),
+            .create(context: context, photo: .init(base64Encoded: debugSpaghettiCarbonara2)!, order: 2)
+        ]
+        #else
+        let photos: [PhotoObject] = [
+            .create(context: context, photo: UIImage(systemName: "frying.pan")!.withTintColor(.tintColor).pngData()!, order: 1),
+            .create(context: context, photo: UIImage(systemName: "oval.portrait")!.withTintColor(.tintColor).pngData()!, order: 2)
+        ]
+        #endif
+        return .create(
             context: context,
             name: "Spaghetti Carbonara",
-            photos: [
-                .create(context: context, photo: .init(base64Encoded: debugSpaghettiCarbonara1)!, order: 1),
-                .create(context: context, photo: .init(base64Encoded: debugSpaghettiCarbonara2)!, order: 2)
-            ],
+            photos: photos,
             servingSize: 2,
             cookingTime: 30,
             ingredients: [
@@ -142,13 +145,21 @@ final class CooklePreviewStore {
     }
 
     private func cookBeefStew(_ context: ModelContext) -> Recipe {
-        .create(
+        #if DEBUG
+        let photos: [PhotoObject] = [
+            .create(context: context, photo: .init(base64Encoded: debugBeefStew1)!, order: 1),
+            .create(context: context, photo: .init(base64Encoded: debugBeefStew2)!, order: 2)
+        ]
+        #else
+        let photos: [PhotoObject] = [
+            .create(context: context, photo: UIImage(systemName: "fork.knife")!.withTintColor(.tintColor).pngData()!, order: 1),
+            .create(context: context, photo: UIImage(systemName: "wineglass")!.withTintColor(.tintColor).pngData()!, order: 2)
+        ]
+        #endif
+        return .create(
             context: context,
             name: "Beef Stew",
-            photos: [
-                .create(context: context, photo: .init(base64Encoded: debugBeefStew1)!, order: 1),
-                .create(context: context, photo: .init(base64Encoded: debugBeefStew2)!, order: 2)
-            ],
+            photos: photos,
             servingSize: 6,
             cookingTime: 120,
             ingredients: [
@@ -181,13 +192,21 @@ final class CooklePreviewStore {
     }
 
     private func cookChickenStirFry(_ context: ModelContext) -> Recipe {
-        .create(
+        #if DEBUG
+        let photos: [PhotoObject] = [
+            .create(context: context, photo: .init(base64Encoded: debugChickenStirFry1)!, order: 1),
+            .create(context: context, photo: .init(base64Encoded: debugChickenStirFry2)!, order: 2)
+        ]
+        #else
+        let photos: [PhotoObject] = [
+            .create(context: context, photo: UIImage(systemName: "bird")!.withTintColor(.tintColor).pngData()!, order: 1),
+            .create(context: context, photo: UIImage(systemName: "tree")!.withTintColor(.tintColor).pngData()!, order: 2)
+        ]
+        #endif
+        return .create(
             context: context,
             name: "Chicken Stir Fry",
-            photos: [
-                .create(context: context, photo: .init(base64Encoded: debugChickenStirFry1)!, order: 1),
-                .create(context: context, photo: .init(base64Encoded: debugChickenStirFry2)!, order: 2)
-            ],
+            photos: photos,
             servingSize: 4,
             cookingTime: 20,
             ingredients: [
@@ -220,13 +239,21 @@ final class CooklePreviewStore {
     }
 
     private func cookVegetableSoup(_ context: ModelContext) -> Recipe {
-        .create(
+        #if DEBUG
+        let photos: [PhotoObject] = [
+            .create(context: context, photo: .init(base64Encoded: debugVegetableSoup1)!, order: 1),
+            .create(context: context, photo: .init(base64Encoded: debugVegetableSoup2)!, order: 2)
+        ]
+        #else
+        let photos: [PhotoObject] = [
+            .create(context: context, photo: UIImage(systemName: "cup")!.withTintColor(.tintColor).pngData()!, order: 1),
+            .create(context: context, photo: UIImage(systemName: "carrot")!.withTintColor(.tintColor).pngData()!, order: 2)
+        ]
+        #endif
+        return .create(
             context: context,
             name: "Vegetable Soup",
-            photos: [
-                .create(context: context, photo: .init(base64Encoded: debugVegetableSoup1)!, order: 1),
-                .create(context: context, photo: .init(base64Encoded: debugVegetableSoup2)!, order: 2)
-            ],
+            photos: photos,
             servingSize: 4,
             cookingTime: 40,
             ingredients: [
@@ -259,13 +286,21 @@ final class CooklePreviewStore {
     }
 
     private func cookPancakes(_ context: ModelContext) -> Recipe {
-        .create(
+        #if DEBUG
+        let photos: [PhotoObject] = [
+            .create(context: context, photo: .init(base64Encoded: debugPancakes1)!, order: 1),
+            .create(context: context, photo: .init(base64Encoded: debugPancakes2)!, order: 2)
+        ]
+        #else
+        let photos: [PhotoObject] = [
+            .create(context: context, photo: UIImage(systemName: "birthday.cake")!.withTintColor(.tintColor).pngData()!, order: 1),
+            .create(context: context, photo: UIImage(systemName: "mug")!.withTintColor(.tintColor).pngData()!, order: 2)
+        ]
+        #endif
+        return .create(
             context: context,
             name: "Pancakes",
-            photos: [
-                .create(context: context, photo: .init(base64Encoded: debugPancakes1)!, order: 1),
-                .create(context: context, photo: .init(base64Encoded: debugPancakes2)!, order: 2)
-            ],
+            photos: photos,
             servingSize: 4,
             cookingTime: 20,
             ingredients: [
@@ -291,5 +326,4 @@ final class CooklePreviewStore {
             note: "Serve with syrup, butter, and fresh fruits."
         )
     }
-    #endif
 }
