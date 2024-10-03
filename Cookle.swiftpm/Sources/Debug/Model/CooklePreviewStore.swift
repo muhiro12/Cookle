@@ -113,8 +113,8 @@ final class CooklePreviewStore {
             context: context,
             name: "Spaghetti Carbonara",
             photos: [
-                .create(context: context, photo: UIImage(resource: .spaghettiCarbonara1).pngData()!, order: 1),
-                .create(context: context, photo: UIImage(resource: .spaghettiCarbonara2).pngData()!, order: 2)
+                .create(context: context, photo: .init(base64Encoded: debugSpaghettiCarbonara1)!, order: 1),
+                .create(context: context, photo: .init(base64Encoded: debugSpaghettiCarbonara2)!, order: 2)
             ],
             servingSize: 2,
             cookingTime: 30,
@@ -146,8 +146,8 @@ final class CooklePreviewStore {
             context: context,
             name: "Beef Stew",
             photos: [
-                .create(context: context, photo: UIImage(resource: .beefStew1).pngData()!, order: 1),
-                .create(context: context, photo: UIImage(resource: .beefStew2).pngData()!, order: 2)
+                .create(context: context, photo: .init(base64Encoded: debugBeefStew1)!, order: 1),
+                .create(context: context, photo: .init(base64Encoded: debugBeefStew2)!, order: 2)
             ],
             servingSize: 6,
             cookingTime: 120,
@@ -185,8 +185,8 @@ final class CooklePreviewStore {
             context: context,
             name: "Chicken Stir Fry",
             photos: [
-                .create(context: context, photo: UIImage(resource: .chickenStirFry1).pngData()!, order: 1),
-                .create(context: context, photo: UIImage(resource: .chickenStirFry2).pngData()!, order: 2)
+                .create(context: context, photo: .init(base64Encoded: debugChickenStirFry1)!, order: 1),
+                .create(context: context, photo: .init(base64Encoded: debugChickenStirFry2)!, order: 2)
             ],
             servingSize: 4,
             cookingTime: 20,
@@ -224,8 +224,8 @@ final class CooklePreviewStore {
             context: context,
             name: "Vegetable Soup",
             photos: [
-                .create(context: context, photo: UIImage(resource: .vegetableSoup1).pngData()!, order: 1),
-                .create(context: context, photo: UIImage(resource: .vegetableSoup2).pngData()!, order: 2)
+                .create(context: context, photo: .init(base64Encoded: debugVegetableSoup1)!, order: 1),
+                .create(context: context, photo: .init(base64Encoded: debugVegetableSoup2)!, order: 2)
             ],
             servingSize: 4,
             cookingTime: 40,
@@ -263,8 +263,8 @@ final class CooklePreviewStore {
             context: context,
             name: "Pancakes",
             photos: [
-                .create(context: context, photo: UIImage(resource: .pancakes1).pngData()!, order: 1),
-                .create(context: context, photo: UIImage(resource: .pancakes2).pngData()!, order: 2)
+                .create(context: context, photo: .init(base64Encoded: debugPancakes1)!, order: 1),
+                .create(context: context, photo: .init(base64Encoded: debugPancakes2)!, order: 2)
             ],
             servingSize: 4,
             cookingTime: 20,
