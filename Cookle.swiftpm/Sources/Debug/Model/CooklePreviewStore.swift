@@ -246,7 +246,7 @@ final class CooklePreviewStore {
         ]
         #else
         let photos: [PhotoObject] = [
-            .create(context: context, photo: UIImage(systemName: "cup.and.saucer")!.withTintColor(.tintColor).pngData()!, order: 1),
+            .create(context: context, photo: UIImage(systemName: "cup")!.withTintColor(.tintColor).pngData()!, order: 1),
             .create(context: context, photo: UIImage(systemName: "carrot")!.withTintColor(.tintColor).pngData()!, order: 2)
         ]
         #endif
