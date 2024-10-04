@@ -4,11 +4,12 @@ struct CooklePreview<Content: View>: View {
     @AppStorage(.isDebugOn) private var isDebugOn
 
     private let content: (CooklePreviewStore) -> Content
+    private let preview: CooklePreviewStore
 
-    private let preview = CooklePreviewStore()
-
+    @MainActor
     init(_ content: @escaping (CooklePreviewStore) -> Content) {
         self.content = content
+        self.preview = .init()
     }
 
     var body: some View {

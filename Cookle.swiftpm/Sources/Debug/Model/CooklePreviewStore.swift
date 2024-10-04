@@ -9,6 +9,7 @@ import SwiftData
 import SwiftUI
 
 @Observable
+@MainActor
 final class CooklePreviewStore {
     private(set) var diaries = [Diary]()
     private(set) var diaryObjects = [DiaryObject]()
