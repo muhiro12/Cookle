@@ -38,8 +38,6 @@ struct RecipePhotosSection: View {
                 .scrollTargetBehavior(.viewAligned)
                 .listRowInsets(.init(.zero))
                 .listRowBackground(EmptyView())
-            } header: {
-                Text("Photos")
             }
             .fullScreenCover(item: $selectedPhoto) { photo in
                 PhotoDetailNavigationView(photos: objects.sorted().compactMap(\.photo), initialValue: photo)
