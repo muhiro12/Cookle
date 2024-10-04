@@ -15,6 +15,7 @@ import SwiftUI
 struct CookleApp: App {
     @AppStorage(.isSubscribeOn) private var isSubscribeOn
     @AppStorage(.isICloudOn) private var isICloudOn
+    @AppStorage(.isDebugOn) private var isDebugOn
 
     private let sharedGoogleMobileAdsController: GoogleMobileAdsController
     private let sharedStore: Store
@@ -50,6 +51,10 @@ struct CookleApp: App {
                     }
                 )
                 .task {
+                    #if DEBUG
+                    isDebugOn = true
+                    #endif
+
                     sharedGoogleMobileAdsController.start()
 
                     sharedStore.open(
