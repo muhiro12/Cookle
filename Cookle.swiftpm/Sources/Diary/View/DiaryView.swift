@@ -18,55 +18,23 @@ struct DiaryView: View {
 
     var body: some View {
         List(selection: $recipe) {
-            if let breakfasts = diary.objects?
-                .filter({ $0.type == .breakfast })
-                .sorted()
-                .compactMap({ $0.recipe }),
-               breakfasts.isNotEmpty {
-                Section {
-                    ForEach(breakfasts) { recipe in
-                        NavigationLink(value: recipe) {
-                            RecipeLabel()
-                                .labelStyle(.titleAndLargeIcon)
-                                .environment(recipe)
+            ForEach(DiaryObjectType.allCases) { type in
+                if let recipes = diary.objects?
+                    .filter({ $0.type == type })
+                    .sorted()
+                    .compactMap({ $0.recipe }),
+                   recipes.isNotEmpty {
+                    Section {
+                        ForEach(recipes) { recipe in
+                            NavigationLink(value: recipe) {
+                                RecipeLabel()
+                                    .labelStyle(.titleAndLargeIcon)
+                                    .environment(recipe)
+                            }
                         }
+                    } header: {
+                        Text(type.title)
                     }
-                } header: {
-                    Text("Breakfast")
-                }
-            }
-            if let lunches = diary.objects?
-                .filter({ $0.type == .lunch })
-                .sorted()
-                .compactMap({ $0.recipe }),
-               lunches.isNotEmpty {
-                Section {
-                    ForEach(lunches) { recipe in
-                        NavigationLink(value: recipe) {
-                            RecipeLabel()
-                                .labelStyle(.titleAndLargeIcon)
-                                .environment(recipe)
-                        }
-                    }
-                } header: {
-                    Text("Lunch")
-                }
-            }
-            if let dinners = diary.objects?
-                .filter({ $0.type == .dinner })
-                .sorted()
-                .compactMap({ $0.recipe }),
-               dinners.isNotEmpty {
-                Section {
-                    ForEach(dinners) { recipe in
-                        NavigationLink(value: recipe) {
-                            RecipeLabel()
-                                .labelStyle(.titleAndLargeIcon)
-                                .environment(recipe)
-                        }
-                    }
-                } header: {
-                    Text("Dinner")
                 }
             }
             if diary.note.isNotEmpty {

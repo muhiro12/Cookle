@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum DiaryObjectType: Codable {
+enum DiaryObjectType {
     case breakfast
     case lunch
     case dinner
@@ -23,3 +23,13 @@ enum DiaryObjectType: Codable {
         }
     }
 }
+
+extension DiaryObjectType: Identifiable {
+    var id: String {
+        .init(describing: self)
+    }
+}
+
+extension DiaryObjectType: CaseIterable {}
+
+extension DiaryObjectType: Codable {}
