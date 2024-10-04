@@ -74,8 +74,8 @@ struct DebugSidebarView: View {
         }
         .alert("Create Preview Diaries", isPresented: $isAlertPresented) {
             Button(role: .destructive) {
-                withAnimation {
-                    _ = CooklePreviewStore().createPreviewDiaries(context)
+                Task {
+                    _ = try? await CooklePreviewStore().createPreviewDiaries(context)
                 }
             } label: {
                 Text("Create")
