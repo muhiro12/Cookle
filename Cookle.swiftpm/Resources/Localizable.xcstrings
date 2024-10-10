@@ -2,19 +2,19 @@
   "sourceLanguage" : "en",
   "strings" : {
     "" : {
-
+      "shouldTranslate" : false
     },
     "*" : {
-
+      "shouldTranslate" : false
     },
     "2" : {
-
+      "shouldTranslate" : false
     },
     "30" : {
-
+      "shouldTranslate" : false
     },
     "200g" : {
-
+      "shouldTranslate" : false
     },
     "Add" : {
       "localizations" : {
