@@ -7,6 +7,15 @@
     "*" : {
 
     },
+    "2" : {
+
+    },
+    "30" : {
+
+    },
+    "200g" : {
+
+    },
     "Add" : {
       "localizations" : {
         "es" : {
@@ -175,6 +184,18 @@
         }
       }
     },
+    "AppStorage" : {
+
+    },
+    "Are you really going to create Preview Diary?" : {
+
+    },
+    "Are you really going to use DebugMode?" : {
+
+    },
+    "Are you sure you want to delete all data?" : {
+
+    },
     "Are you sure you want to delete this item? This action cannot be undone." : {
       "localizations" : {
         "es" : {
@@ -202,6 +223,9 @@
           }
         }
       }
+    },
+    "Boil water in a large pot and add salt." : {
+
     },
     "Boil water in a large pot and add salt.\nCook the spaghetti until al dente.\nIn a separate pan, cook the pancetta until crispy.\nBeat the eggs in a bowl and mix with grated Parmesan cheese.\nDrain the spaghetti and mix with pancetta and the egg mixture.\nSeason with black pepper and serve immediately." : {
       "localizations" : {
@@ -371,6 +395,12 @@
         }
       }
     },
+    "Change Order or Delete Row" : {
+
+    },
+    "Classic spaghetti carbonara and warm beef stew for a comforting end to the day." : {
+
+    },
     "Content" : {
       "localizations" : {
         "es" : {
@@ -428,6 +458,7 @@
       }
     },
     "Cookle" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -455,7 +486,17 @@
         }
       }
     },
+    "Create" : {
+
+    },
+    "Create %@" : {
+
+    },
+    "Create Preview Diaries" : {
+
+    },
     "Create Preview Diary" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -596,6 +637,7 @@
       }
     },
     "DebugNavigationView" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -820,6 +862,7 @@
       }
     },
     "Dinner" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -903,6 +946,9 @@
         }
       }
     },
+    "Done Edit" : {
+
+    },
     "Edit %@" : {
       "localizations" : {
         "es" : {
@@ -932,6 +978,7 @@
       }
     },
     "Edit Diary" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -960,6 +1007,7 @@
       }
     },
     "Edit Recipe" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -986,6 +1034,9 @@
           }
         }
       }
+    },
+    "Editing..." : {
+
     },
     "iCloud On" : {
       "localizations" : {
@@ -1099,6 +1150,9 @@
         }
       }
     },
+    "Italian" : {
+
+    },
     "Licenses" : {
       "localizations" : {
         "es" : {
@@ -1128,6 +1182,7 @@
       }
     },
     "Lunch" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1211,6 +1266,9 @@
         }
       }
     },
+    "Menu" : {
+
+    },
     "minutes" : {
       "localizations" : {
         "es" : {
@@ -1239,7 +1297,11 @@
         }
       }
     },
+    "Model" : {
+
+    },
     "Models" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1294,6 +1356,9 @@
           }
         }
       }
+    },
+    "Not Found" : {
+
     },
     "Note" : {
       "localizations" : {
@@ -1350,6 +1415,9 @@
           }
         }
       }
+    },
+    "OK" : {
+
     },
     "Order" : {
       "localizations" : {
@@ -1463,6 +1531,15 @@
         }
       }
     },
+    "Please enter a search term" : {
+
+    },
+    "Preview" : {
+
+    },
+    "Previews" : {
+
+    },
     "Recipe" : {
       "localizations" : {
         "es" : {
@@ -1518,6 +1595,12 @@
           }
         }
       }
+    },
+    "Result" : {
+
+    },
+    "Search" : {
+
     },
     "Serving Size" : {
       "localizations" : {
@@ -1603,6 +1686,9 @@
         }
       }
     },
+    "Spaghetti" : {
+
+    },
     "Spaghetti\n200g\nEggs\n2\nParmesan cheese\n50g\nPancetta\n100g\nBlack pepper\nto taste\nSalt\nto taste" : {
       "localizations" : {
         "es" : {
@@ -1631,7 +1717,11 @@
         }
       }
     },
+    "Spaghetti Carbonara" : {
+
+    },
     "Step" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1743,6 +1833,9 @@
         }
       }
     },
+    "Update %@" : {
+
+    },
     "Updated At" : {
       "localizations" : {
         "es" : {
@@ -1770,6 +1863,9 @@
           }
         }
       }
+    },
+    "Use freshly grated Parmesan for the best flavor." : {
+
     },
     "Value" : {
       "localizations" : {
