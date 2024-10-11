@@ -185,7 +185,7 @@
       }
     },
     "AppStorage" : {
-
+      "shouldTranslate" : false
     },
     "Are you really going to create Preview Diary?" : {
 
