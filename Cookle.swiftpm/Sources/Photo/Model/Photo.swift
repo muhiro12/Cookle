@@ -23,7 +23,7 @@ final class Photo {
     private init() {}
 
     static func create(context: ModelContext, data: Data) -> Photo {
-        let photo = (try? context.fetch(.photos(.dataIs(data))).first) ?? .init()
+        let photo = (try? context.fetchFirst(.photos(.dataIs(data)))) ?? .init()
         context.insert(photo)
         photo.data = data
         return photo

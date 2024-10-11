@@ -60,7 +60,7 @@ public extension CookleIntents {
 
     static func performShowLastOpenedRecipe() async throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         guard let id = AppStorage(.lastOpenedRecipeID).wrappedValue,
-              let recipe = try context.fetch(.recipes(.idIs(id))).first else {
+              let recipe = try context.fetchFirst(.recipes(.idIs(id))) else {
             return .result(dialog: "Not Found")
         }
         return .result(dialog: .init(stringLiteral: recipe.name)) {
@@ -85,18 +85,9 @@ public extension CookleIntents {
     }
 
     static func performShowRandomRecipe() async throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
-        var descriptor = FetchDescriptor.recipes(.all)
-
-        let count = try context.fetchCount(descriptor)
-        let offset = Int.random(in: 0..<count)
-
-        descriptor.fetchOffset = offset
-        descriptor.fetchLimit = 1
-
-        guard let recipe = try context.fetch(descriptor).first else {
+        guard let recipe = try context.fetchRandom(.recipes(.all)) else {
             return .result(dialog: "Not Found")
         }
-
         return .result(dialog: .init(stringLiteral: recipe.name)) {
             cookleView {
                 VStack(alignment: .leading) {
