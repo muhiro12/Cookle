@@ -18,6 +18,12 @@
     },
     "Add" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -46,6 +52,12 @@
     },
     "Add Diary" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Diary"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -74,6 +86,12 @@
     },
     "Add Multiple Ingredients at Once" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Multiple Ingredients at Once"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -102,6 +120,12 @@
     },
     "Add Multiple Steps at Once" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Multiple Steps at Once"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -130,6 +154,12 @@
     },
     "Add Recipe" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Recipe"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -158,6 +188,12 @@
     },
     "Amount" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amount"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -189,6 +225,12 @@
     },
     "Are you really going to create Preview Diary?" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you really going to create Preview Diary?"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -217,6 +259,12 @@
     },
     "Are you really going to use DebugMode?" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you really going to use DebugMode?"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -245,6 +293,12 @@
     },
     "Are you sure you want to delete all data?" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to delete all data?"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -273,6 +327,12 @@
     },
     "Are you sure you want to delete this item? This action cannot be undone." : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to delete this item? This action cannot be undone."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -301,6 +361,12 @@
     },
     "Boil water in a large pot and add salt." : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Boil water in a large pot and add salt."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -329,6 +395,12 @@
     },
     "Boil water in a large pot and add salt.\nCook the spaghetti until al dente.\nIn a separate pan, cook the pancetta until crispy.\nBeat the eggs in a bowl and mix with grated Parmesan cheese.\nDrain the spaghetti and mix with pancetta and the egg mixture.\nSeason with black pepper and serve immediately." : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Boil water in a large pot and add salt.\nCook the spaghetti until al dente.\nIn a separate pan, cook the pancetta until crispy.\nBeat the eggs in a bowl and mix with grated Parmesan cheese.\nDrain the spaghetti and mix with pancetta and the egg mixture.\nSeason with black pepper and serve immediately."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -357,6 +429,12 @@
     },
     "Breakfast" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Breakfast"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -385,6 +463,12 @@
     },
     "Breakfasts" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Breakfasts"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -413,6 +497,12 @@
     },
     "Cancel" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -441,6 +531,12 @@
     },
     "Categories" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Categories"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -469,6 +565,12 @@
     },
     "Category" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Category"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -497,6 +599,12 @@
     },
     "Change Order or Delete Row" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change Order or Delete Row"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -525,6 +633,12 @@
     },
     "Classic spaghetti carbonara and warm beef stew for a comforting end to the day." : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Classic spaghetti carbonara and warm beef stew for a comforting end to the day."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -553,6 +667,12 @@
     },
     "Content" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Content"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -581,6 +701,12 @@
     },
     "Cooking Time" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cooking Time"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -609,6 +735,12 @@
     },
     "Create" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -637,6 +769,12 @@
     },
     "Create %@" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create %@"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -665,6 +803,12 @@
     },
     "Create Preview Diaries" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create Preview Diaries"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -693,6 +837,12 @@
     },
     "Created At" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Created At"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -721,6 +871,12 @@
     },
     "Date" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -749,6 +905,12 @@
     },
     "Debug" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -777,6 +939,12 @@
     },
     "Debug On" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug On"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -805,6 +973,12 @@
     },
     "Delete" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -833,6 +1007,12 @@
     },
     "Delete %@" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete %@"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -861,6 +1041,12 @@
     },
     "Delete All" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete All"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -889,6 +1075,12 @@
     },
     "Detail" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Detail"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -917,6 +1109,12 @@
     },
     "Diaries" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diaries"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -945,6 +1143,12 @@
     },
     "Diary" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diary"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -973,6 +1177,12 @@
     },
     "DiaryObjects" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DiaryObjects"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1001,6 +1211,12 @@
     },
     "Dinners" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dinners"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1029,6 +1245,12 @@
     },
     "Done" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1057,6 +1279,12 @@
     },
     "Done Edit" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done Edit"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1085,6 +1313,12 @@
     },
     "Edit %@" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit %@"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1113,6 +1347,12 @@
     },
     "Editing..." : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editing..."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1141,6 +1381,12 @@
     },
     "iCloud On" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud On"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1169,6 +1415,12 @@
     },
     "Ingredient" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingredient"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1197,6 +1449,12 @@
     },
     "IngredientObjects" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IngredientObjects"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1225,6 +1483,12 @@
     },
     "Ingredients" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingredients"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1253,6 +1517,12 @@
     },
     "Italian" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Italian"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1281,6 +1551,12 @@
     },
     "Licenses" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Licenses"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1309,6 +1585,12 @@
     },
     "Lunches" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lunches"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1337,6 +1619,12 @@
     },
     "Manage" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1365,6 +1653,12 @@
     },
     "Menu" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menu"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1393,6 +1687,12 @@
     },
     "minutes" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "minutes"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1421,6 +1721,12 @@
     },
     "Model" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Model"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1449,6 +1755,12 @@
     },
     "Name" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1477,6 +1789,12 @@
     },
     "Not Found" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not Found"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1505,6 +1823,12 @@
     },
     "Note" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Note"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1533,6 +1857,12 @@
     },
     "Objects" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Objects"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1561,6 +1891,12 @@
     },
     "OK" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1589,6 +1925,12 @@
     },
     "Order" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Order"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1617,6 +1959,12 @@
     },
     "Photo" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Photo"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1645,6 +1993,12 @@
     },
     "PhotoObjects" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PhotoObjects"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1673,6 +2027,12 @@
     },
     "Photos" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Photos"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1700,16 +2060,115 @@
       }
     },
     "Please enter a search term" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please enter a search term"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Introduce una palabra clave de búsqueda"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veuillez entrer un mot-clé de recherche"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "検索ワードを入力してください"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请输入搜索词"
+          }
+        }
+      }
     },
     "Preview" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preview"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vista previa"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aperçu"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "プレビュー"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "预览"
+          }
+        }
+      }
     },
     "Previews" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previews"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vistas previas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aperçus"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "プレビュー一覧"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "预览列表"
+          }
+        }
+      }
     },
     "Recipe" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recipe"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1738,6 +2197,12 @@
     },
     "Recipes" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recipes"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1765,13 +2230,81 @@
       }
     },
     "Result" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Result"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resultado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultat"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "結果"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "结果"
+          }
+        }
+      }
     },
     "Search" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recherche"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "検索"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索"
+          }
+        }
+      }
     },
     "Serving Size" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serving Size"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1800,6 +2333,12 @@
     },
     "servings" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "servings"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1828,6 +2367,12 @@
     },
     "Settings" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1855,10 +2400,47 @@
       }
     },
     "Spaghetti" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spaghetti"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espagueti"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spaghetti"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スパゲッティ"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "意大利面"
+          }
+        }
+      }
     },
     "Spaghetti\n200g\nEggs\n2\nParmesan cheese\n50g\nPancetta\n100g\nBlack pepper\nto taste\nSalt\nto taste" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spaghetti\n200g\nEggs\n2\nParmesan cheese\n50g\nPancetta\n100g\nBlack pepper\nto taste\nSalt\nto taste"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1886,10 +2468,47 @@
       }
     },
     "Spaghetti Carbonara" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spaghetti Carbonara"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espagueti a la carbonara"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spaghetti carbonara"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スパゲッティ・カルボナーラ"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "培根蛋面"
+          }
+        }
+      }
     },
     "Steps" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Steps"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1918,6 +2537,12 @@
     },
     "Type" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1946,6 +2571,12 @@
     },
     "Update" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1973,10 +2604,47 @@
       }
     },
     "Update %@" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualizar %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mettre à jour %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ を更新"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更新 %@"
+          }
+        }
+      }
     },
     "Updated At" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Updated At"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2004,10 +2672,47 @@
       }
     },
     "Use freshly grated Parmesan for the best flavor." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use freshly grated Parmesan for the best flavor."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usa queso parmesano recién rallado para obtener el mejor sabor."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisez du parmesan fraîchement râpé pour un goût optimal."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "風味を最大限に引き出すためには、新鮮にすりおろしたパルメザンチーズを使ってください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用新鲜刨碎的帕尔马奶酪能带来最佳风味。"
+          }
+        }
+      }
     },
     "Value" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Value"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
