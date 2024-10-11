@@ -188,13 +188,88 @@
       "shouldTranslate" : false
     },
     "Are you really going to create Preview Diary?" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Realmente vas a crear un diario de vista previa?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voulez-vous vraiment créer un journal pour l’aperçu ?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "本当にプレビュー用の日記を作成しますか？"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你真的要创建预览用的日记吗？"
+          }
+        }
+      }
     },
     "Are you really going to use DebugMode?" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Realmente vas a usar el modo de depuración?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voulez-vous vraiment utiliser le mode débogage ?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "本当にデバッグモードを使用しますか？"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你真的要使用调试模式吗？"
+          }
+        }
+      }
     },
     "Are you sure you want to delete all data?" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro de que deseas eliminar todos los datos?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Êtes-vous sûr de vouloir supprimer toutes les données ?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "本当にすべてのデータを削除しますか？"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你确定要删除所有数据吗？"
+          }
+        }
+      }
     },
     "Are you sure you want to delete this item? This action cannot be undone." : {
       "localizations" : {
@@ -225,7 +300,32 @@
       }
     },
     "Boil water in a large pot and add salt." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hierve agua en una olla grande y añade sal."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Faites bouillir de l’eau dans une grande casserole et ajoutez du sel."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "大きな鍋に水を沸かし、塩を加える。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在大锅中烧开水并加入盐。"
+          }
+        }
+      }
     },
     "Boil water in a large pot and add salt.\nCook the spaghetti until al dente.\nIn a separate pan, cook the pancetta until crispy.\nBeat the eggs in a bowl and mix with grated Parmesan cheese.\nDrain the spaghetti and mix with pancetta and the egg mixture.\nSeason with black pepper and serve immediately." : {
       "localizations" : {
@@ -396,10 +496,60 @@
       }
     },
     "Change Order or Delete Row" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambio de orden O Eliminación de fila"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modification de l’ordre Ou Suppression de la ligne"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "順番の変更 または 行の削除"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "顺序的更改 或 行的删除"
+          }
+        }
+      }
     },
     "Classic spaghetti carbonara and warm beef stew for a comforting end to the day." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clásico espagueti carbonara y guiso de carne para un final reconfortante del día"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spaghetti carbonara classique et ragoût de bœuf chaud pour une fin de journée réconfortante."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "クラシックなスパゲッティ・カルボナーラと温かいビーフシチューで、一日の終わりを心地よく締めくくりましょう。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "经典的意大利面碳烤和温暖的牛肉炖菜，为一天画上圆满的句号。"
+          }
+        }
+      }
     },
     "Content" : {
       "localizations" : {
