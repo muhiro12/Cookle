@@ -3,6 +3,10 @@ import SwiftUI
 struct RecipeLabel: View {
     @Environment(Recipe.self) private var recipe
 
+    @State private var isEditPresented = false
+    @State private var isDuplicatePresented = false
+    @State private var isDeletePresented = false
+
     var body: some View {
         Label {
             VStack(alignment: .leading) {
@@ -16,9 +20,7 @@ struct RecipeLabel: View {
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
                 Text(
-                    recipe.categories.orEmpty.map {
-                        $0.value
-                    }.joined(separator: ", ")
+                    recipe.categories.orEmpty.map(\.value).joined(separator: ", ")
                 )
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
@@ -37,6 +39,31 @@ struct RecipeLabel: View {
                     .foregroundStyle(.tint.secondary)
                     .padding()
             }
+        }
+        .contextMenu {
+            EditRecipeButton {
+                isEditPresented = true
+            }
+            DuplicateRecipeButton {
+                isDuplicatePresented = true
+            }
+            DeleteRecipeButton {
+                isDeletePresented = true
+            }
+        }
+        .alert("Delete \(recipe.name)", isPresented: $isDeletePresented) {
+            Button("Cancel", role: .cancel) {}
+            Button("Delete", role: .destructive) {
+                recipe.delete()
+            }
+        } message: {
+            Text("Are you sure you want to delete this item? This action cannot be undone.")
+        }
+        .sheet(isPresented: $isEditPresented) {
+            RecipeFormNavigationView(type: .edit)
+        }
+        .sheet(isPresented: $isDuplicatePresented) {
+            RecipeFormNavigationView(type: .duplicate)
         }
     }
 }
