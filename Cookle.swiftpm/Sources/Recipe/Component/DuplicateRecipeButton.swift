@@ -23,7 +23,7 @@ struct DuplicateRecipeButton: View {
             }
         }
         .sheet(isPresented: $isPresented) {
-            RecipeFormNavigationView()
+            RecipeFormNavigationView(type: .duplicate)
         }
     }
 }

@@ -23,7 +23,7 @@ struct EditRecipeButton: View {
             }
         }
         .sheet(isPresented: $isPresented) {
-            RecipeFormNavigationView()
+            RecipeFormNavigationView(type: .edit)
         }
     }
 }

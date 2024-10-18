@@ -9,9 +9,7 @@ import StoreKit
 import SwiftUI
 
 struct RecipeFormNavigationView: View {
-    @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.requestReview) private var requestReview
 
     @Environment(Recipe.self) private var recipe: Recipe?
 
@@ -28,6 +26,12 @@ struct RecipeFormNavigationView: View {
 
     @State private var editMode = EditMode.inactive
     @State private var isDebugAlertPresented = false
+
+    private let type: RecipeFormType
+
+    init(type: RecipeFormType) {
+        self.type = type
+    }
 
     var body: some View {
         NavigationStack {
@@ -54,38 +58,6 @@ struct RecipeFormNavigationView: View {
                     }
                     .frame(maxWidth: .infinity)
                 }
-                Section {
-                    CreateRecipeButton(
-                        name: name,
-                        photos: photos,
-                        servingSize: servingSize,
-                        cookingTime: cookingTime,
-                        ingredients: ingredients,
-                        steps: steps,
-                        categories: categories,
-                        note: note
-                    )
-                    .labelStyle(.titleOnly)
-                    .frame(maxWidth: .infinity)
-                    UpdateRecipeButton(
-                        name: name,
-                        photos: photos,
-                        servingSize: servingSize,
-                        cookingTime: cookingTime,
-                        ingredients: ingredients,
-                        steps: steps,
-                        categories: categories,
-                        note: note
-                    )
-                    .labelStyle(.titleOnly)
-                    .frame(maxWidth: .infinity)
-                    .hidden(recipe == nil)
-                    DeleteRecipeButton()
-                        .labelStyle(.titleOnly)
-                        .frame(maxWidth: .infinity)
-                        .foregroundStyle(.red)
-                        .hidden(recipe == nil)
-                }
             }
             .environment(\.editMode, $editMode)
             .navigationTitle(editMode == .inactive ? Text("Recipe") : Text("Editing..."))
@@ -102,7 +74,8 @@ struct RecipeFormNavigationView: View {
                         Text("Cancel")
                     }
                 }
-                if editMode == .active {
+                switch editMode {
+                case .active:
                     ToolbarItem {
                         Button {
                             withAnimation {
@@ -112,35 +85,39 @@ struct RecipeFormNavigationView: View {
                             Text("Done")
                         }
                     }
-                } else if recipe != nil {
-                    ToolbarItem(placement: .confirmationAction) {
-                        UpdateRecipeButton(
-                            name: name,
-                            photos: photos,
-                            servingSize: servingSize,
-                            cookingTime: cookingTime,
-                            ingredients: ingredients,
-                            steps: steps,
-                            categories: categories,
-                            note: note,
-                            useShortTitle: true
-                        )
-                        .labelStyle(.titleOnly)
-                    }
-                } else {
-                    ToolbarItem(placement: .confirmationAction) {
-                        CreateRecipeButton(
-                            name: name,
-                            photos: photos,
-                            servingSize: servingSize,
-                            cookingTime: cookingTime,
-                            ingredients: ingredients,
-                            steps: steps,
-                            categories: categories,
-                            note: note,
-                            useShortTitle: true
-                        )
-                        .labelStyle(.titleOnly)
+                default:
+                    switch type {
+                    case .create,
+                         .duplicate:
+                        ToolbarItem(placement: .confirmationAction) {
+                            CreateRecipeButton(
+                                name: name,
+                                photos: photos,
+                                servingSize: servingSize,
+                                cookingTime: cookingTime,
+                                ingredients: ingredients,
+                                steps: steps,
+                                categories: categories,
+                                note: note,
+                                useShortTitle: true
+                            )
+                            .labelStyle(.titleOnly)
+                        }
+                    case .edit:
+                        ToolbarItem(placement: .confirmationAction) {
+                            UpdateRecipeButton(
+                                name: name,
+                                photos: photos,
+                                servingSize: servingSize,
+                                cookingTime: cookingTime,
+                                ingredients: ingredients,
+                                steps: steps,
+                                categories: categories,
+                                note: note,
+                                useShortTitle: true
+                            )
+                            .labelStyle(.titleOnly)
+                        }
                     }
                 }
             }
@@ -179,12 +156,12 @@ struct RecipeFormNavigationView: View {
 }
 
 #Preview {
-    RecipeFormNavigationView()
+    RecipeFormNavigationView(type: .create)
 }
 
 #Preview {
     CooklePreview { preview in
-        RecipeFormNavigationView()
+        RecipeFormNavigationView(type: .edit)
             .environment(preview.recipes[0])
     }
 }

@@ -28,11 +28,19 @@ struct RecipeView: View {
             RecipeDiariesSection()
             RecipeCreatedAtSection()
             RecipeUpdatedAtSection()
+            Section {
+                EditRecipeButton()
+                DuplicateRecipeButton()
+                DeleteRecipeButton()
+            }
         }
         .navigationTitle(recipe.name)
         .toolbar {
             ToolbarItem(placement: .destructiveAction) {
                 DeleteRecipeButton()
+            }
+            ToolbarItem(placement: .confirmationAction) {
+                DuplicateRecipeButton()
             }
             ToolbarItem(placement: .confirmationAction) {
                 EditRecipeButton()

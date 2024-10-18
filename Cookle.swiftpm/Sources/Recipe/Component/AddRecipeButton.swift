@@ -21,7 +21,7 @@ struct AddRecipeButton: View {
             }
         }
         .sheet(isPresented: $isPresented) {
-            RecipeFormNavigationView()
+            RecipeFormNavigationView(type: .create)
         }
     }
 }

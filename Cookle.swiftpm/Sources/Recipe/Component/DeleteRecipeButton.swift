@@ -6,7 +6,7 @@ struct DeleteRecipeButton: View {
     @State private var isPresented = false
 
     var body: some View {
-        Button {
+        Button(role: .destructive) {
             isPresented = true
         } label: {
             Label {
