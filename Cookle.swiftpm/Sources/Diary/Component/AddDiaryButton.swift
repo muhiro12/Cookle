@@ -3,9 +3,19 @@ import SwiftUI
 struct AddDiaryButton: View {
     @State private var isPresented = false
 
+    private let action: (() -> Void)?
+
+    init(action: (() -> Void)? = nil) {
+        self.action = action
+    }
+
     var body: some View {
         Button {
-            isPresented = true
+            if let action {
+                action()
+            } else {
+                isPresented = true
+            }
         } label: {
             Label {
                 Text("Add Diary")
