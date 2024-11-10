@@ -51,11 +51,14 @@ struct RecipeLabel: View {
                 isDeletePresented = true
             }
         }
-        .alert("Delete \(recipe.name)", isPresented: $isDeletePresented) {
-            Button("Cancel", role: .cancel) {}
+        .confirmationDialog(
+            Text("Delete \(recipe.name)"),
+            isPresented: $isDeletePresented
+        ) {
             Button("Delete", role: .destructive) {
                 recipe.delete()
             }
+            Button("Cancel", role: .cancel) {}
         } message: {
             Text("Are you sure you want to delete this item? This action cannot be undone.")
         }

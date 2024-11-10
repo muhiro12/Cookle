@@ -123,16 +123,19 @@ struct RecipeFormNavigationView: View {
             }
         }
         .interactiveDismissDisabled()
-        .alert("Debug", isPresented: $isDebugAlertPresented) {
-            Button(role: .cancel) {
-            } label: {
-                Text("Cancel")
-            }
+        .confirmationDialog(
+            Text("Debug"),
+            isPresented: $isDebugAlertPresented
+        ) {
             Button {
                 isDebugOn = true
                 dismiss()
             } label: {
                 Text("OK")
+            }
+            Button(role: .cancel) {
+            } label: {
+                Text("Cancel")
             }
         } message: {
             Text("Are you really going to use DebugMode?")
@@ -149,7 +152,7 @@ struct RecipeFormNavigationView: View {
                 return (ingredient.value, object.amount)
             } ?? .empty) + [(.empty, .empty)]
             steps = (recipe?.steps ?? .empty) + [.empty]
-            categories = (recipe?.categories?.map { $0.value } ?? .empty) + [.empty]
+            categories = (recipe?.categories?.map(\.value) ?? .empty) + [.empty]
             note = recipe?.note ?? .empty
         }
     }

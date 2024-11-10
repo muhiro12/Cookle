@@ -72,7 +72,10 @@ struct DebugSidebarView: View {
                     .hidden(!isPresented)
             }
         }
-        .alert("Create Preview Diaries", isPresented: $isAlertPresented) {
+        .confirmationDialog(
+            Text("Create Preview Diaries"),
+            isPresented: $isAlertPresented
+        ) {
             Button(role: .destructive) {
                 Task {
                     _ = try? await CooklePreviewStore().createPreviewDiaries(context)

@@ -25,11 +25,14 @@ struct DeleteDiaryButton: View {
                 Image(systemName: "trash")
             }
         }
-        .alert("Delete \(diary.date.formatted(.dateTime.year().month().day()))", isPresented: $isPresented) {
-            Button("Cancel", role: .cancel) {}
+        .confirmationDialog(
+            Text("Delete \(diary.date.formatted(.dateTime.year().month().day()))"),
+            isPresented: $isPresented
+        ) {
             Button("Delete", role: .destructive) {
                 diary.delete()
             }
+            Button("Cancel", role: .cancel) {}
         } message: {
             Text("Are you sure you want to delete this item? This action cannot be undone.")
         }

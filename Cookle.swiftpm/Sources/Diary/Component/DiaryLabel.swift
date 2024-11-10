@@ -25,7 +25,7 @@ struct DiaryLabel: View {
                     .font(.caption.bold().monospaced())
                     .textCase(.uppercase)
                     .foregroundStyle(.tint)
-                Text(diary.date.formatted(.dateTime.day(.twoDigits)))
+                Text(diary.date.formatted(.dateTime.day(.twoDigits).locale(.init(identifier: "en_US"))))
                     .font(.title2.monospacedDigit())
             }
             .foregroundStyle(Color(uiColor: .label))
@@ -38,11 +38,14 @@ struct DiaryLabel: View {
                 isDeletePresented = true
             }
         }
-        .alert("Delete \(diary.date.formatted(.dateTime.year().month().day()))", isPresented: $isDeletePresented) {
-            Button("Cancel", role: .cancel) {}
+        .confirmationDialog(
+            Text("Delete \(diary.date.formatted(.dateTime.year().month().day()))"),
+            isPresented: $isDeletePresented
+        ) {
             Button("Delete", role: .destructive) {
                 diary.delete()
             }
+            Button("Cancel", role: .cancel) {}
         } message: {
             Text("Are you sure you want to delete this item? This action cannot be undone.")
         }

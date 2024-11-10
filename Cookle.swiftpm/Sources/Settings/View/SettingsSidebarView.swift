@@ -60,8 +60,10 @@ struct SettingsSidebarView: View {
                     .hidden(!isPresented)
             }
         }
-        .alert(Text("Are you sure you want to delete all data?"),
-               isPresented: $isAlertPresented) {
+        .confirmationDialog(
+            Text("Are you sure you want to delete all data?"),
+            isPresented: $isAlertPresented
+        ) {
             Button(role: .destructive) {
                 withAnimation {
                     do {
