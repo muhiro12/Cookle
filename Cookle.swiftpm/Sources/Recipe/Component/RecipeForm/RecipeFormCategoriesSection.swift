@@ -49,7 +49,7 @@ struct RecipeFormCategoriesSection: View {
     CooklePreview { preview in
         Form { () -> RecipeFormCategoriesSection in
             RecipeFormCategoriesSection(
-                .constant(preview.categories.map { $0.value } + [.empty])
+                .constant(preview.categories.map(\.value) + [.empty])
             )
         }
     }

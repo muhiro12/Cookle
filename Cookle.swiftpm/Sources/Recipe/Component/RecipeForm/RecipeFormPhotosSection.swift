@@ -64,7 +64,7 @@ struct RecipeFormPhotosSection: View {
             Text("Photos")
         }
         .onChange(of: photosPickerItems) {
-            photos = (recipe?.photos).orEmpty.map { $0.data }
+            photos = (recipe?.photos).orEmpty.map(\.data)
             Task {
                 for item in photosPickerItems {
                     guard let data = try? await item.loadTransferable(type: Data.self) else {
@@ -92,7 +92,7 @@ struct RecipeFormPhotosSection: View {
 #Preview {
     CooklePreview { preview in
         Form {
-            RecipeFormPhotosSection(.constant(preview.photos.map { $0.data }))
+            RecipeFormPhotosSection(.constant(preview.photos.map(\.data)))
         }
     }
 }

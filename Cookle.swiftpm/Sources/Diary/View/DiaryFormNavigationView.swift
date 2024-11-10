@@ -32,21 +32,21 @@ struct DiaryFormNavigationView: View {
                         Text(DiaryObjectType.breakfast.title)
                     }
                 } footer: {
-                    Text(breakfasts.map { $0.name }.joined(separator: ", "))
+                    Text(breakfasts.map(\.name).joined(separator: ", "))
                 }
                 Section {
                     NavigationLink(value: DiaryObjectType.lunch) {
                         Text(DiaryObjectType.lunch.title)
                     }
                 } footer: {
-                    Text(lunches.map { $0.name }.joined(separator: ", "))
+                    Text(lunches.map(\.name).joined(separator: ", "))
                 }
                 Section {
                     NavigationLink(value: DiaryObjectType.dinner) {
                         Text(DiaryObjectType.dinner.title)
                     }
                 } footer: {
-                    Text(dinners.map { $0.name }.joined(separator: ", "))
+                    Text(dinners.map(\.name).joined(separator: ", "))
                 }
                 Section {
                     TextField(text: $note, axis: .vertical) {

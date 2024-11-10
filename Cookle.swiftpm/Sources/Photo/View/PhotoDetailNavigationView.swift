@@ -3,7 +3,7 @@ import SwiftUtilities
 
 struct PhotoDetailNavigationView: View {
     @State private var currentID: Photo.ID?
-    
+
     private let photos: [Photo]
 
     init(photos: [Photo], initialValue: Photo? = nil) {

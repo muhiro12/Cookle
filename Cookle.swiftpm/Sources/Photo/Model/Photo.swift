@@ -32,8 +32,6 @@ final class Photo {
 
 extension Photo {
     var title: String {
-        recipes.orEmpty.map {
-            $0.name
-        }.joined(separator: ", ")
+        recipes.orEmpty.map(\.name).joined(separator: ", ")
     }
 }

@@ -53,13 +53,13 @@ struct RecipeFormIngredientsSection: View {
                     .textCase(nil)
             }
         }
-        .onChange(of: ingredients.map { $0.ingredient }) {
+        .onChange(of: ingredients.map(\.ingredient)) {
             ingredients.removeAll {
                 $0.ingredient.isEmpty && $0.amount.isEmpty
             }
             ingredients.append((.empty, .empty))
         }
-        .onChange(of: ingredients.map { $0.amount }) {
+        .onChange(of: ingredients.map(\.amount)) {
             ingredients.removeAll {
                 $0.ingredient.isEmpty && $0.amount.isEmpty
             }

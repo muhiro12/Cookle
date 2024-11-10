@@ -31,8 +31,8 @@ public extension CookleIntents {
                 ? .categories(.valueIs(searchText))
                 : .categories(.valueContains(searchText))
         )
-        recipes += ingredients.flatMap { $0.recipes.orEmpty }
-        recipes += categories.flatMap { $0.recipes.orEmpty }
+        recipes += ingredients.flatMap(\.recipes.orEmpty)
+        recipes += categories.flatMap(\.recipes.orEmpty)
         recipes = Array(Set(recipes))
         return .result(dialog: "Result") {
             cookleView {
