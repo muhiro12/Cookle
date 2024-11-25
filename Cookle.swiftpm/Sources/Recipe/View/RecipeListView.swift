@@ -24,15 +24,21 @@ struct RecipeListView: View {
     }
 
     var body: some View {
-        List(recipes, selection: $recipe) { recipe in
-            NavigationLink(value: recipe) {
-                RecipeLabel()
-                    .labelStyle(.titleAndLargeIcon)
-                    .environment(recipe)
+        Group {
+            if recipes.isNotEmpty {
+                List(recipes, selection: $recipe) { recipe in
+                    NavigationLink(value: recipe) {
+                        RecipeLabel()
+                            .labelStyle(.titleAndLargeIcon)
+                            .environment(recipe)
+                    }
+                    .hidden(searchText.isNotEmpty && !recipe.name.normalizedContains(searchText))
+                }
+                .searchable(text: $searchText)
+            } else {
+                AddRecipeButton()
             }
-            .hidden(searchText.isNotEmpty && !recipe.name.normalizedContains(searchText))
         }
-        .searchable(text: $searchText)
         .navigationTitle(Text("Recipes"))
         .toolbar {
             ToolbarItem {

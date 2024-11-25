@@ -23,29 +23,35 @@ struct DiaryListView: View {
     }
 
     var body: some View {
-        List(
-            Array(
-                Dictionary(
-                    grouping: diaries
-                ) { $0.date.formatted(.dateTime.year().month()) }
-                .sorted {
-                    $0.value[0].date > $1.value[0].date
-                }
-            ),
-            id: \.key,
-            selection: $diary
-        ) { section in
-            Section(section.key) {
-                ForEach(section.value) { diary in
-                    NavigationLink(value: diary) {
-                        DiaryLabel()
-                            .environment(diary)
+        Group {
+            if diaries.isNotEmpty {
+                List(
+                    Array(
+                        Dictionary(
+                            grouping: diaries
+                        ) { $0.date.formatted(.dateTime.year().month()) }
+                            .sorted {
+                                $0.value[0].date > $1.value[0].date
+                            }
+                    ),
+                    id: \.key,
+                    selection: $diary
+                ) { section in
+                    Section(section.key) {
+                        ForEach(section.value) { diary in
+                            NavigationLink(value: diary) {
+                                DiaryLabel()
+                                    .environment(diary)
+                            }
+                            .hidden(diary.recipes.orEmpty.isEmpty)
+                        }
                     }
-                    .hidden(diary.recipes.orEmpty.isEmpty)
+                    AdvertisementSection(.small)
+                        .hidden(isSubscribeOn)
                 }
+            } else {
+                AddDiaryButton()
             }
-            AdvertisementSection(.small)
-                .hidden(isSubscribeOn)
         }
         .navigationTitle(Text("Diaries"))
         .toolbar {

@@ -21,18 +21,24 @@ struct PhotoListView: View {
     }
 
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: [.init(.adaptive(minimum: 120))]) {
-                ForEach(photos) { photo in
-                    if photo.recipes.isNotEmpty,
-                       let image = UIImage(data: photo.data) {
-                        NavigationLink(value: photo) {
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFit()
+        Group {
+            if photos.isNotEmpty {
+                ScrollView {
+                    LazyVGrid(columns: [.init(.adaptive(minimum: 120))]) {
+                        ForEach(photos) { photo in
+                            if photo.recipes.isNotEmpty,
+                               let image = UIImage(data: photo.data) {
+                                NavigationLink(value: photo) {
+                                    Image(uiImage: image)
+                                        .resizable()
+                                        .scaledToFit()
+                                }
+                            }
                         }
                     }
                 }
+            } else {
+                AddRecipeButton()
             }
         }
         .navigationTitle(Text("Photos"))

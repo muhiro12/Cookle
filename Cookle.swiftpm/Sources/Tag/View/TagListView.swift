@@ -23,17 +23,23 @@ struct TagListView<T: Tag>: View {
     }
 
     var body: some View {
-        List(tags, selection: $tag) { tag in
-            NavigationLink(value: tag) {
-                Text(tag.value)
+        Group {
+            if tags.isNotEmpty {
+                List(tags, selection: $tag) { tag in
+                    NavigationLink(value: tag) {
+                        Text(tag.value)
+                    }
+                    .hidden(
+                        searchText.isNotEmpty
+                        && !tag.value.normalizedContains(searchText)
+                        || tag.recipes.orEmpty.isEmpty
+                    )
+                }
+                .searchable(text: $searchText)
+            } else {
+                AddRecipeButton()
             }
-            .hidden(
-                searchText.isNotEmpty
-                    && !tag.value.normalizedContains(searchText)
-                    || tag.recipes.orEmpty.isEmpty
-            )
         }
-        .searchable(text: $searchText)
         .navigationTitle(T.title)
         .toolbar {
             ToolbarItem {
