@@ -61,7 +61,7 @@ struct SettingsSidebarView: View {
             }
         }
         .confirmationDialog(
-            Text("Are you sure you want to delete all data?"),
+            Text("Delete All"),
             isPresented: $isAlertPresented
         ) {
             Button(role: .destructive) {
@@ -86,6 +86,8 @@ struct SettingsSidebarView: View {
             } label: {
                 Text("Cancel")
             }
+        } message: {
+            Text("Are you sure you want to delete all data?")
         }
     }
 }
