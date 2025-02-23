@@ -18,7 +18,7 @@ struct AddDiaryButton: View {
             }
         } label: {
             Label {
-                Text("Add Diary")
+                Text("Add")
             } icon: {
                 Image(systemName: "book")
             }

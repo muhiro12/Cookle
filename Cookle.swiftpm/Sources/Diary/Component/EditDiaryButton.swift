@@ -20,7 +20,7 @@ struct EditDiaryButton: View {
             }
         } label: {
             Label {
-                Text("Edit \(diary.date.formatted(.dateTime.year().month().day()))")
+                Text("Edit")
             } icon: {
                 Image(systemName: "pencil")
             }

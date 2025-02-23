@@ -20,7 +20,7 @@ struct DeleteDiaryButton: View {
             }
         } label: {
             Label {
-                Text("Delete \(diary.date.formatted(.dateTime.year().month().day()))")
+                Text("Delete")
             } icon: {
                 Image(systemName: "trash")
             }
