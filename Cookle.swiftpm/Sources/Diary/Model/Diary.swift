@@ -30,7 +30,7 @@ final class Diary {
         context.insert(diary)
         diary.date = date
         diary.objects = objects
-        diary.recipes = objects.compactMap { $0.recipe }
+        diary.recipes = objects.compactMap(\.recipe)
         diary.note = note
         return diary
     }
@@ -40,7 +40,7 @@ final class Diary {
                 note: String) {
         self.date = date
         self.objects = objects
-        self.recipes = objects.compactMap { $0.recipe }
+        self.recipes = objects.compactMap(\.recipe)
         self.note = note
         self.modifiedTimestamp = .now
     }

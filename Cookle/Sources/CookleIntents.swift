@@ -13,11 +13,11 @@ import SwiftUI
 public enum CookleIntents {}
 
 public extension CookleIntents {
-    static func performOpenCookle() async throws -> some IntentResult {
+    static func performOpenCookle() throws -> some IntentResult {
         .result()
     }
 
-    static func performShowSearchResult(searchText: String) async throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
+    static func performShowSearchResult(searchText: String) throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         var recipes = try context.fetch(
             .recipes(.nameContains(searchText))
         )
@@ -58,7 +58,7 @@ public extension CookleIntents {
         }
     }
 
-    static func performShowLastOpenedRecipe() async throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
+    static func performShowLastOpenedRecipe() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         guard let id = AppStorage(.lastOpenedRecipeID).wrappedValue,
               let recipe = try context.fetchFirst(.recipes(.idIs(id))) else {
             return .result(dialog: "Not Found")
@@ -84,7 +84,7 @@ public extension CookleIntents {
         }
     }
 
-    static func performShowRandomRecipe() async throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
+    static func performShowRandomRecipe() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         guard let recipe = try context.fetchRandom(.recipes(.all)) else {
             return .result(dialog: "Not Found")
         }

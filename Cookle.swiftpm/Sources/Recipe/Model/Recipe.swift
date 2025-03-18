@@ -48,11 +48,11 @@ final class Recipe {
         let recipe = Recipe()
         context.insert(recipe)
         recipe.name = name
-        recipe.photos = photos.compactMap { $0.photo }
+        recipe.photos = photos.compactMap(\.photo)
         recipe.photoObjects = photos
         recipe.servingSize = servingSize
         recipe.cookingTime = cookingTime
-        recipe.ingredients = ingredients.compactMap { $0.ingredient }
+        recipe.ingredients = ingredients.compactMap(\.ingredient)
         recipe.ingredientObjects = ingredients
         recipe.steps = steps
         recipe.categories = categories
@@ -69,11 +69,11 @@ final class Recipe {
                 categories: [Category],
                 note: String) {
         self.name = name
-        self.photos = photos.compactMap { $0.photo }
+        self.photos = photos.compactMap(\.photo)
         self.photoObjects = photos
         self.servingSize = servingSize
         self.cookingTime = cookingTime
-        self.ingredients = ingredients.compactMap { $0.ingredient }
+        self.ingredients = ingredients.compactMap(\.ingredient)
         self.ingredientObjects = ingredients
         self.steps = steps
         self.categories = categories
