@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2024/05/20.
 //
 
+import AppIntents
 import CooklePlaygrounds
 import GoogleMobileAdsWrapper
 import LicenseListWrapper
@@ -48,6 +49,10 @@ struct CookleApp: App {
                     },
                     storeKit: {
                         sharedStore.buildSubscriptionSection()
+                    },
+                    appIntents: {
+                        ShortcutsLink()
+                            .shortcutsLinkStyle(.automaticOutline)
                     }
                 )
                 .task {

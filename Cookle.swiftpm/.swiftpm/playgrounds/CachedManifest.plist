@@ -14,7 +14,7 @@
 		cGVyQm91bmQiOiIyLjAuMCJ9XX19XX1dLCJkaXNwbGF5TmFtZSI6IkNvb2ts
 		ZSBQbGF5Z3JvdW5kcyIsInBhY2thZ2VLaW5kIjp7InJvb3QiOnt9fSwicGxh
 		dGZvcm1zIjpbeyJvcHRpb25zIjpbXSwicGxhdGZvcm1OYW1lIjoiaW9zIiwi
-		dmVyc2lvbiI6IjE3LjAifV0sInByb2R1Y3RzIjpbeyJuYW1lIjoiQ29va2xl
+		dmVyc2lvbiI6IjE4LjAifV0sInByb2R1Y3RzIjpbeyJuYW1lIjoiQ29va2xl
 		IFBsYXlncm91bmRzIiwic2V0dGluZ3MiOlt7ImJ1bmRsZUlkZW50aWZpZXIi
 		OlsiY29tLm11aGlybzEyLkNvb2tsZS5wbGF5Z3JvdW5kcyJdfSx7InRlYW1J
 		ZGVudGlmaWVyIjpbIjY2UEtGNTVISzUiXX0seyJkaXNwbGF5VmVyc2lvbiI6
@@ -32,24 +32,26 @@
 		InRhcmdldE1hcCI6eyJBcHBNb2R1bGUiOnsiZGVwZW5kZW5jaWVzIjpbeyJw
 		cm9kdWN0IjpbIlN3aWZ0VXRpbGl0aWVzIiwiU3dpZnRVdGlsaXRpZXMiLG51
 		bGwsbnVsbF19XSwiZXhjbHVkZSI6W10sIm5hbWUiOiJBcHBNb2R1bGUiLCJw
-		YWNrYWdlQWNjZXNzIjp0cnVlLCJwYXRoIjoiLiIsInJlc291cmNlcyI6W3si
-		cGF0aCI6IlJlc291cmNlcyIsInJ1bGUiOnsicHJvY2VzcyI6e319fV0sInNl
-		dHRpbmdzIjpbXSwidHlwZSI6ImV4ZWN1dGFibGUifX0sInRhcmdldHMiOlt7
-		ImRlcGVuZGVuY2llcyI6W3sicHJvZHVjdCI6WyJTd2lmdFV0aWxpdGllcyIs
-		IlN3aWZ0VXRpbGl0aWVzIixudWxsLG51bGxdfV0sImV4Y2x1ZGUiOltdLCJu
-		YW1lIjoiQXBwTW9kdWxlIiwicGFja2FnZUFjY2VzcyI6dHJ1ZSwicGF0aCI6
-		Ii4iLCJyZXNvdXJjZXMiOlt7InBhdGgiOiJSZXNvdXJjZXMiLCJydWxlIjp7
-		InByb2Nlc3MiOnt9fX1dLCJzZXR0aW5ncyI6W10sInR5cGUiOiJleGVjdXRh
-		YmxlIn1dLCJ0b29sc1ZlcnNpb24iOnsiX3ZlcnNpb24iOiI1LjguMCJ9fQ==
+		YWNrYWdlQWNjZXNzIjp0cnVlLCJwYXRoIjoiLiIsInJlc291cmNlcyI6W10s
+		InNldHRpbmdzIjpbeyJraW5kIjp7ImVuYWJsZVVwY29taW5nRmVhdHVyZSI6
+		eyJfMCI6IkJhcmVTbGFzaFJlZ2V4TGl0ZXJhbHMifX0sInRvb2wiOiJzd2lm
+		dCJ9XSwidHlwZSI6ImV4ZWN1dGFibGUifX0sInRhcmdldHMiOlt7ImRlcGVu
+		ZGVuY2llcyI6W3sicHJvZHVjdCI6WyJTd2lmdFV0aWxpdGllcyIsIlN3aWZ0
+		VXRpbGl0aWVzIixudWxsLG51bGxdfV0sImV4Y2x1ZGUiOltdLCJuYW1lIjoi
+		QXBwTW9kdWxlIiwicGFja2FnZUFjY2VzcyI6dHJ1ZSwicGF0aCI6Ii4iLCJy
+		ZXNvdXJjZXMiOltdLCJzZXR0aW5ncyI6W3sia2luZCI6eyJlbmFibGVVcGNv
+		bWluZ0ZlYXR1cmUiOnsiXzAiOiJCYXJlU2xhc2hSZWdleExpdGVyYWxzIn19
+		LCJ0b29sIjoic3dpZnQifV0sInR5cGUiOiJleGVjdXRhYmxlIn1dLCJ0b29s
+		c1ZlcnNpb24iOnsiX3ZlcnNpb24iOiI1LjkuMCJ9fQ==
 		</data>
 		<key>manifestHash</key>
 		<data>
-		/X3SkQqTdz6kyQSnX0VUreH5OwXA/YDXtjGPR0Ivhvo=
+		Pu16AkfedvzkFdiQY9z1n3LsMebbD/xjkx7P5pA+/7E=
 		</data>
 		<key>schemaVersion</key>
 		<integer>4</integer>
 		<key>swiftPMVersionString</key>
-		<string>5.10.0-dev</string>
+		<string>6.0.2-dev</string>
 	</dict>
 </dict>
 </plist>

@@ -13,6 +13,7 @@ struct DebugPreviewsView: View {
             StoreSection()
             AdvertisementSection(.medium)
             AdvertisementSection(.small)
+            ShortcutsLinkSection()
         }
         .navigationTitle(Text("Previews"))
     }

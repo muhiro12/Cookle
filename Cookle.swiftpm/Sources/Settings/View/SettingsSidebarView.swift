@@ -5,7 +5,6 @@
 //  Created by Hiromu Nakano on 9/17/24.
 //
 
-import AppIntents
 import SwiftUI
 import SwiftUtilities
 
@@ -46,12 +45,7 @@ struct SettingsSidebarView: View {
                     Text("Licenses")
                 }
             }
-            Section {
-                ShortcutsLink()
-                    .shortcutsLinkStyle(.automaticOutline)
-                    .frame(maxWidth: .infinity)
-                    .listRowBackground(EmptyView())
-            }
+            ShortcutsLinkSection()
         }
         .navigationTitle(Text("Settings"))
         .toolbar {

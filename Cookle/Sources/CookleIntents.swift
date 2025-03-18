@@ -129,7 +129,8 @@ private extension CookleIntents {
             .cookleEnvironment(
                 googleMobileAds: { _ in EmptyView() },
                 licenseList: { EmptyView() },
-                storeKit: { EmptyView() }
+                storeKit: { EmptyView() },
+                appIntents: { EmptyView() }
             )
     }
 }

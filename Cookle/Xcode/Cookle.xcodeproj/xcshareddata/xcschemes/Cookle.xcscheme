@@ -53,7 +53,7 @@
          </BuildableReference>
       </BuildableProductRunnable>
       <StoreKitConfigurationFileReference
-         identifier = "../Cookle/Configurations/Configuration.storekit">
+         identifier = "../Cookle/Xcode/Cookle/Configuration.storekit">
       </StoreKitConfigurationFileReference>
    </LaunchAction>
    <ProfileAction

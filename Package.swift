@@ -1,4 +1,4 @@
-// swift-tools-version: 5.10
+// swift-tools-version: 6.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "Cookle",
     platforms: [
-        .iOS(.v17)
+        .iOS(.v18)
     ],
     products: [
         .library(
@@ -31,12 +31,19 @@ let package = Package(
                 .product(name: "StoreKitWrapper", package: "StoreKitWrapper"),
                 .product(name: "SwiftUtilities", package: "SwiftUtilities")
             ],
-            path: "Cookle.swiftpm",
+            path: ".",
             exclude: [
-                "CooklePlaygroundsApp.swift",
-                "Package.swift"
+                "Cookle/Xcode"
+            ],
+            sources: [
+                "Cookle/Sources",
+                "Cookle.swiftpm/Sources"
+            ],
+            resources: [
+                .process("Cookle/Resources")
             ],
             swiftSettings: [
+                .swiftLanguageMode(.v5),
                 .define("XCODE")
             ]
         )
