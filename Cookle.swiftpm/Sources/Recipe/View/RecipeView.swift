@@ -49,8 +49,6 @@ struct RecipeView: View {
         .task {
             lastOpenedRecipeID = recipe.id
             UIApplication.shared.isIdleTimerDisabled = true
-            try? await Task.sleep(for: .seconds(60 * 10))
-            UIApplication.shared.isIdleTimerDisabled = false
         }
         .onDisappear {
             UIApplication.shared.isIdleTimerDisabled = false
