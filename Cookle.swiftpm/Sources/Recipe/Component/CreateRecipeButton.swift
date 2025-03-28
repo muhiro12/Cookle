@@ -11,7 +11,7 @@ struct CreateRecipeButton: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @Environment(\.requestReview) private var requestReview
-    
+
     @State private var recipe: Recipe?
     @State private var isConfirmationDialogPresented = false
     @State private var isImagePlaygroundPresented = false
@@ -72,7 +72,7 @@ struct CreateRecipeButton: View {
                 },
                 note: note
             )
-            if recipe?.photos?.isNotEmpty == true {            
+            if recipe?.photos?.isNotEmpty == true {
                 dismiss()
                 if Int.random(in: 0..<5) == .zero {
                     Task {
@@ -81,7 +81,7 @@ struct CreateRecipeButton: View {
                     }
                 }
             } else {
-                isConfirmationDialogPresented = true    
+                isConfirmationDialogPresented = true
             }
         } label: {
             Label {
@@ -101,7 +101,7 @@ struct CreateRecipeButton: View {
         )
         .confirmationDialog(
             Text("Add a photo?"),
-            isPresented: $isConfirmationDialogPresented 
+            isPresented: $isConfirmationDialogPresented
         ) {
             Button("Use Image Playground") {
                 isImagePlaygroundPresented = true
@@ -114,18 +114,13 @@ struct CreateRecipeButton: View {
             isPresented: $isImagePlaygroundPresented,
             recipe: recipe
         ) { url in
-            guard let recipe else {
+            guard let data = try? Data(contentsOf: url),
+                  let recipe else {
                 return
             }
             recipe.update(
-                name: recipe.name, 
-                photos: [
-                    .create(
-                        context: context,
-                        photo: url.dataRepresentation.compressed(),
-                        order: 1
-                    )
-                ],
+                name: recipe.name,
+                photos: [.create(context: context, photo: data, order: 1)],
                 servingSize: recipe.servingSize,
                 cookingTime: recipe.cookingTime,
                 ingredients: recipe.ingredientObjects ?? [],

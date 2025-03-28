@@ -102,7 +102,10 @@ struct RecipeFormPhotosSection: View {
             isPresented: $isImagePlaygroundPresented,
             recipe: recipe
         ) { url in
-            photos.append(url.dataRepresentation.compressed())
+            guard let data = try? Data(contentsOf: url) else {
+                return
+            }
+            photos.append(data.compressed())
         }
         .onChange(of: photosPickerItems) {
             photos = (recipe?.photos).orEmpty.map(\.data)
