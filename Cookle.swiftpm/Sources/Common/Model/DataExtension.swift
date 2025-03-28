@@ -1,7 +1,7 @@
 import SwiftUI
 
 extension Data {
-    func compressed(maxSize: Int = 500 * 1_024) -> Data {            
+    func compressed(maxSize: Int = 500 * 1_024) -> Data {
         var compressed = self
         var compressionQuality = 1.0
 

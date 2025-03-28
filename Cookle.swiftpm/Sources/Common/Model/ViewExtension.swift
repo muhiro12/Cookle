@@ -12,7 +12,7 @@ extension View {
                     recipe?.ingredients?.forEach { ingredient in
                         concepts.append(
                             .extracted(
-                                from: ingredient.value, 
+                                from: ingredient.value,
                                 title: recipe?.name
                             )
                         )
@@ -20,7 +20,7 @@ extension View {
                     recipe?.steps.forEach { step in
                         concepts.append(
                             .extracted(
-                                from: step, 
+                                from: step,
                                 title: recipe?.name
                             )
                         )
@@ -31,4 +31,4 @@ extension View {
             )
         }
     }
-} 
+}
