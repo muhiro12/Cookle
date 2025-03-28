@@ -11,6 +11,10 @@ struct CreateRecipeButton: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @Environment(\.requestReview) private var requestReview
+    
+    @State private var recipe: Recipe?
+    @State private var isConfirmationDialogPresented = false
+    @State private var isImagePlaygroundPresented = false
 
     private let name: String
     private let photos: [Data]
@@ -45,7 +49,7 @@ struct CreateRecipeButton: View {
 
     var body: some View {
         Button {
-            _ = Recipe.create(
+            recipe = Recipe.create(
                 context: context,
                 name: name,
                 photos: zip(photos.indices, photos).map { index, element in
@@ -68,12 +72,16 @@ struct CreateRecipeButton: View {
                 },
                 note: note
             )
-            dismiss()
-            if Int.random(in: 0..<5) == .zero {
-                Task {
-                    try? await Task.sleep(for: .seconds(2))
-                    requestReview()
+            if recipe?.photos?.isNotEmpty == true {            
+                dismiss()
+                if Int.random(in: 0..<5) == .zero {
+                    Task {
+                        try? await Task.sleep(for: .seconds(2))
+                        requestReview()
+                    }
                 }
+            } else {
+                isConfirmationDialogPresented = true    
             }
         } label: {
             Label {
@@ -91,6 +99,42 @@ struct CreateRecipeButton: View {
                 || (!servingSize.isEmpty && toInt(servingSize) == nil)
                 || (!cookingTime.isEmpty && toInt(cookingTime) == nil)
         )
+        .confirmationDialog(
+            Text("Add a photo?"),
+            isPresented: $isConfirmationDialogPresented 
+        ) {
+            Button("Use Image Playground") {
+                isImagePlaygroundPresented = true
+            }
+            Button("Later", role: .cancel) {}
+        } message: {
+            Text("No image yet. Try Image Playground?")
+        }
+        .imagePlaygroundSheet(
+            isPresented: $isImagePlaygroundPresented,
+            recipe: recipe
+        ) { url in
+            guard let recipe else {
+                return
+            }
+            recipe.update(
+                name: recipe.name, 
+                photos: [
+                    .create(
+                        context: context,
+                        photo: url.dataRepresentation.compressed(),
+                        order: 1
+                    )
+                ],
+                servingSize: recipe.servingSize,
+                cookingTime: recipe.cookingTime,
+                ingredients: recipe.ingredientObjects ?? [],
+                steps: recipe.steps,
+                categories: recipe.categories ?? [],
+                note: recipe.note
+            )
+            dismiss()
+        }
     }
 
     private func toInt(_ string: String) -> Int? {

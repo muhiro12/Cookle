@@ -15,6 +15,8 @@ struct RecipeFormPhotosSection: View {
     @Binding private var photos: [Data]
 
     @State private var photosPickerItems = [PhotosPickerItem]()
+    @State private var isPhotosPickerPresented = false
+    @State private var isImagePlaygroundPresented = false
 
     init(_ photos: Binding<[Data]>) {
         _photos = photos
@@ -33,12 +35,39 @@ struct RecipeFormPhotosSection: View {
                                     .frame(height: 120)
                             }
                         }
-                        PhotosPicker(
-                            selection: $photosPickerItems,
-                            selectionBehavior: .ordered,
-                            matching: .images
-                        ) {
-                            Image(systemName: "photo.badge.plus")
+                        if #available(iOS 18.1, *) {
+                            Menu {
+                                Button {
+                                    isPhotosPickerPresented = true
+                                } label: {
+                                    Label {
+                                        Text("Choose Photo")
+                                    } icon: {
+                                        Image(systemName: "photo.on.rectangle")
+                                    }
+                                }
+                                Button {
+                                    isImagePlaygroundPresented = true
+                                } label: {
+                                    Label {
+                                        Text("Image Playground")
+                                    } icon: {
+                                        Image(systemName: "apple.image.playground")
+                                    }
+                                }
+                            } label: {
+                                Image(systemName: "photo.badge.plus")
+                            }
+                        } else {
+                            Button {
+                                isPhotosPickerPresented = true
+                            } label: {
+                                Label {
+                                    Text("Choose Photo")
+                                } icon: {
+                                    Image(systemName: "photo.on.rectangle")
+                                }
+                            }
                         }
                     }
                     .scrollTargetLayout()
@@ -63,6 +92,18 @@ struct RecipeFormPhotosSection: View {
         } header: {
             Text("Photos")
         }
+        .photosPicker(
+            isPresented: $isPhotosPickerPresented,
+            selection: $photosPickerItems,
+            selectionBehavior: .ordered,
+            matching: .images
+        )
+        .imagePlaygroundSheet(
+            isPresented: $isImagePlaygroundPresented,
+            recipe: recipe
+        ) { url in
+            photos.append(url.dataRepresentation.compressed())
+        }
         .onChange(of: photosPickerItems) {
             photos = (recipe?.photos).orEmpty.map(\.data)
             Task {
@@ -70,19 +111,7 @@ struct RecipeFormPhotosSection: View {
                     guard let data = try? await item.loadTransferable(type: Data.self) else {
                         continue
                     }
-
-                    var photo = data
-                    var compressionQuality = 1.0
-                    let maxSize = 500 * 1_024
-
-                    while photo.count > maxSize && compressionQuality > 0 {
-                        if let jpeg = UIImage(data: data)?.jpegData(compressionQuality: compressionQuality) {
-                            photo = jpeg
-                        }
-                        compressionQuality -= 0.1
-                    }
-
-                    photos.append(photo.count < data.count ? photo : data)
+                    photos.append(data.compressed())
                 }
             }
         }
