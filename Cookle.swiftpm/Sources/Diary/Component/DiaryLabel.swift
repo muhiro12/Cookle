@@ -16,10 +16,6 @@ struct DiaryLabel: View {
     var body: some View {
         Label {
             VStack(alignment: .leading) {
-                Text(diary.recipes.orEmpty.map(\.name).joined(separator: ", "))
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
                 LazyVGrid(columns: [.init(.adaptive(minimum: 80))], alignment: .leading) {
                     ForEach(
                         diary.recipes.orEmpty.compactMap {
@@ -33,6 +29,10 @@ struct DiaryLabel: View {
                         }
                     }
                 }
+                Text(diary.recipes.orEmpty.map(\.name).joined(separator: ", "))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(2)
             }
         } icon: {
             VStack {
