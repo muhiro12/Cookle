@@ -20,7 +20,7 @@ struct DiaryLabel: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
-                HStack {
+                LazyVGrid(columns: [.init(.adaptive(minimum: 40))], alignment: .leading) {
                     ForEach(
                         diary.recipes.orEmpty.compactMap {
                             $0.photoObjects.orEmpty.min()?.photo
@@ -30,8 +30,6 @@ struct DiaryLabel: View {
                             Image(uiImage: image)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(height: 40)
-                                .clipShape(.rect(cornerRadius: 8))
                         }
                     }
                 }
