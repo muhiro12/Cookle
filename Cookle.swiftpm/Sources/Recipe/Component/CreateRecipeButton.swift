@@ -72,16 +72,12 @@ struct CreateRecipeButton: View {
                 },
                 note: note
             )
-            if recipe?.photos?.isNotEmpty == true {
-                dismiss()
-                if Int.random(in: 0..<5) == .zero {
-                    Task {
-                        try? await Task.sleep(for: .seconds(2))
-                        requestReview()
-                    }
+            dismiss()
+            if Int.random(in: 0..<5) == .zero {
+                Task {
+                    try? await Task.sleep(for: .seconds(2))
+                    requestReview()
                 }
-            } else {
-                isConfirmationDialogPresented = true
             }
         } label: {
             Label {
@@ -99,37 +95,6 @@ struct CreateRecipeButton: View {
                 || (!servingSize.isEmpty && toInt(servingSize) == nil)
                 || (!cookingTime.isEmpty && toInt(cookingTime) == nil)
         )
-        .confirmationDialog(
-            Text("Add a photo?"),
-            isPresented: $isConfirmationDialogPresented
-        ) {
-            Button("Use Image Playground") {
-                isImagePlaygroundPresented = true
-            }
-            Button("Later", role: .cancel) {}
-        } message: {
-            Text("No image yet. Try Image Playground?")
-        }
-        .imagePlaygroundSheet(
-            isPresented: $isImagePlaygroundPresented,
-            recipe: recipe
-        ) { url in
-            guard let data = try? Data(contentsOf: url),
-                  let recipe else {
-                return
-            }
-            recipe.update(
-                name: recipe.name,
-                photos: [.create(context: context, photo: data, order: 1)],
-                servingSize: recipe.servingSize,
-                cookingTime: recipe.cookingTime,
-                ingredients: recipe.ingredientObjects ?? [],
-                steps: recipe.steps,
-                categories: recipe.categories ?? [],
-                note: recipe.note
-            )
-            dismiss()
-        }
     }
 
     private func toInt(_ string: String) -> Int? {

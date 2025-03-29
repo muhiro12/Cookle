@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 9/21/24.
 //
 
+import ImagePlayground
 import PhotosUI
 import SwiftUI
 
@@ -35,7 +36,8 @@ struct RecipeFormPhotosSection: View {
                                     .frame(height: 120)
                             }
                         }
-                        if #available(iOS 18.1, *) {
+                        if #available(iOS 18.1, *),
+                           EnvironmentValues().supportsImagePlayground {
                             Menu {
                                 Button {
                                     isPhotosPickerPresented = true
@@ -58,15 +60,39 @@ struct RecipeFormPhotosSection: View {
                             } label: {
                                 Image(systemName: "photo.badge.plus")
                             }
+                            .imagePlaygroundSheet(
+                                isPresented: $isImagePlaygroundPresented,
+                                concepts: {
+                                    var concepts = [ImagePlaygroundConcept]()
+                                    recipe?.ingredients?.forEach { ingredient in
+                                        concepts.append(
+                                            .extracted(
+                                                from: ingredient.value,
+                                                title: recipe?.name
+                                            )
+                                        )
+                                    }
+                                    recipe?.steps.forEach { step in
+                                        concepts.append(
+                                            .extracted(
+                                                from: step,
+                                                title: recipe?.name
+                                            )
+                                        )
+                                    }
+                                    return concepts
+                                }()
+                            ) { url in
+                                guard let data = try? Data(contentsOf: url) else {
+                                    return
+                                }
+                                photos.append(data.compressed())
+                            }
                         } else {
                             Button {
                                 isPhotosPickerPresented = true
                             } label: {
-                                Label {
-                                    Text("Choose Photo")
-                                } icon: {
-                                    Image(systemName: "photo.on.rectangle")
-                                }
+                                Image(systemName: "photo.on.rectangle")
                             }
                         }
                     }
@@ -98,15 +124,6 @@ struct RecipeFormPhotosSection: View {
             selectionBehavior: .ordered,
             matching: .images
         )
-        .imagePlaygroundSheet(
-            isPresented: $isImagePlaygroundPresented,
-            recipe: recipe
-        ) { url in
-            guard let data = try? Data(contentsOf: url) else {
-                return
-            }
-            photos.append(data.compressed())
-        }
         .onChange(of: photosPickerItems) {
             photos = (recipe?.photos).orEmpty.map(\.data)
             Task {
