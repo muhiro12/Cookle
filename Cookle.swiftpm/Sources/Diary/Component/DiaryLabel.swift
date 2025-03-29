@@ -20,7 +20,7 @@ struct DiaryLabel: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
-                LazyVGrid(columns: [.init(.adaptive(minimum: 40))], alignment: .leading) {
+                LazyVGrid(columns: [.init(.adaptive(minimum: 80))], alignment: .leading) {
                     ForEach(
                         diary.recipes.orEmpty.compactMap {
                             $0.photoObjects.orEmpty.min()?.photo
