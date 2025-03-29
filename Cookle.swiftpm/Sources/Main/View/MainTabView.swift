@@ -30,7 +30,7 @@ struct MainTabView: View {
     }
 
     var body: some View {
-        if #available(iOS 18.0, *) {
+        if #available(iOS 18, *) {
             TabView(selection: $selection) {
                 ForEach(tabs) { tab in
                     Tab(value: tab, role: tab == .search ? .search : nil) {

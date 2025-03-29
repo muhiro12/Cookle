@@ -72,12 +72,17 @@ struct CreateRecipeButton: View {
                 },
                 note: note
             )
-            dismiss()
-            if Int.random(in: 0..<5) == .zero {
-                Task {
-                    try? await Task.sleep(for: .seconds(2))
-                    requestReview()
+            if recipe?.photos?.isNotEmpty == true,
+               CookleImagePlayground.isSupported {
+                dismiss()
+                if Int.random(in: 0..<5) == .zero {
+                    Task {
+                        try? await Task.sleep(for: .seconds(2))
+                        requestReview()
+                    }
                 }
+            } else {
+                isConfirmationDialogPresented = true
             }
         } label: {
             Label {
@@ -95,6 +100,45 @@ struct CreateRecipeButton: View {
                 || (!servingSize.isEmpty && toInt(servingSize) == nil)
                 || (!cookingTime.isEmpty && toInt(cookingTime) == nil)
         )
+        .confirmationDialog(
+            Text("Add a photo?"),
+            isPresented: $isConfirmationDialogPresented
+        ) {
+            Button("Use Image Playground") {
+                isImagePlaygroundPresented = true
+            }
+            Button("Later", role: .cancel) {
+                dismiss()
+            }
+        } message: {
+            Text("No image yet. Try Image Playground?")
+        }
+        .cookleImagePlayground(
+            isPresented: $isImagePlaygroundPresented,
+            recipe: recipe
+        ) { data in
+            if let recipe {
+                recipe.update(
+                    name: recipe.name,
+                    photos: [
+                        .create(
+                            context: context,
+                            photo: data,
+                            order: 1
+                        )
+                    ],
+                    servingSize: recipe.servingSize,
+                    cookingTime: recipe.cookingTime,
+                    ingredients: recipe.ingredientObjects ?? [],
+                    steps: recipe.steps,
+                    categories: recipe.categories ?? [],
+                    note: recipe.note
+                )
+            }
+            dismiss()
+        } onCancellation: {
+            dismiss()
+        }
     }
 
     private func toInt(_ string: String) -> Int? {
