@@ -54,12 +54,15 @@ struct DiaryView: View {
             } header: {
                 Text("Updated At")
             }
+            Section {
+                EditDiaryButton()
+                DeleteDiaryButton()
+            } header: {
+                Spacer()
+            }
         }
         .navigationTitle(diary.date.formatted(.dateTime.year().month().day().weekday()))
         .toolbar {
-            ToolbarItem(placement: .destructiveAction) {
-                DeleteDiaryButton()
-            }
             ToolbarItem(placement: .confirmationAction) {
                 EditDiaryButton()
             }

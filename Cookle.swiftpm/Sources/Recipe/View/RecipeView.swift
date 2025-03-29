@@ -36,12 +36,6 @@ struct RecipeView: View {
         }
         .navigationTitle(recipe.name)
         .toolbar {
-            ToolbarItem(placement: .destructiveAction) {
-                DeleteRecipeButton()
-            }
-            ToolbarItem(placement: .confirmationAction) {
-                DuplicateRecipeButton()
-            }
             ToolbarItem(placement: .confirmationAction) {
                 EditRecipeButton()
             }
