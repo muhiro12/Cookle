@@ -32,8 +32,6 @@ struct DiaryLabel: View {
                                 .scaledToFit()
                                 .frame(height: 40)
                                 .clipShape(.rect(cornerRadius: 8))
-                        } else {
-                            Color.red
                         }
                     }
                 }
