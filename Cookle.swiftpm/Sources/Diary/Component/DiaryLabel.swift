@@ -15,10 +15,29 @@ struct DiaryLabel: View {
 
     var body: some View {
         Label {
-            Text(diary.recipes.orEmpty.map(\.name).joined(separator: ", "))
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .lineLimit(2)
+            VStack(alignment: .leading) {
+                Text(diary.recipes.orEmpty.map(\.name).joined(separator: ", "))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(2)
+                HStack {
+                    ForEach(
+                        diary.recipes.orEmpty.compactMap {
+                            $0.photoObjects.orEmpty.min()?.photo
+                        }
+                    ) { photo in
+                        if let image = UIImage(data: photo.data) {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 40)
+                                .clipShape(.rect(cornerRadius: 8))
+                        } else {
+                            Color.red
+                        }
+                    }
+                }
+            }
         } icon: {
             VStack {
                 Text(diary.date.formatted(.dateTime.weekday()))
