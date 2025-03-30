@@ -123,7 +123,7 @@ struct CreateRecipeButton: View {
                     photos: [
                         .create(
                             context: context,
-                            photo: data,
+                            photo: data.compressed(),
                             order: 1
                         )
                     ],
