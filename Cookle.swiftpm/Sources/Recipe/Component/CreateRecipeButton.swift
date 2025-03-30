@@ -72,8 +72,10 @@ struct CreateRecipeButton: View {
                 },
                 note: note
             )
-            if recipe?.photos?.isNotEmpty == true,
+            if recipe?.photos?.isEmpty == true,
                CookleImagePlayground.isSupported {
+                isConfirmationDialogPresented = true
+            } else {
                 dismiss()
                 if Int.random(in: 0..<5) == .zero {
                     Task {
@@ -81,8 +83,6 @@ struct CreateRecipeButton: View {
                         requestReview()
                     }
                 }
-            } else {
-                isConfirmationDialogPresented = true
             }
         } label: {
             Label {
