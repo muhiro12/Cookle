@@ -12,13 +12,13 @@ struct RecipeFormPhotosSection: View {
     @Environment(Recipe.self) private var recipe: Recipe?
     @Environment(\.editMode) private var editMode
 
-    @Binding private var photos: [Data]
+    @Binding private var photos: [PhotoData]
 
     @State private var photosPickerItems = [PhotosPickerItem]()
     @State private var isPhotosPickerPresented = false
     @State private var isImagePlaygroundPresented = false
 
-    init(_ photos: Binding<[Data]>) {
+    init(_ photos: Binding<[PhotoData]>) {
         _photos = photos
     }
 
@@ -27,8 +27,8 @@ struct RecipeFormPhotosSection: View {
             if editMode?.wrappedValue == .inactive {
                 ScrollView(.horizontal) {
                     LazyHStack {
-                        ForEach(photos, id: \.self) { photo in
-                            if let image = UIImage(data: photo) {
+                        ForEach(photos, id: \.data) { photo in
+                            if let image = UIImage(data: photo.data) {
                                 Image(uiImage: image)
                                     .resizable()
                                     .scaledToFit()
@@ -70,8 +70,8 @@ struct RecipeFormPhotosSection: View {
                 }
                 .scrollTargetBehavior(.viewAligned)
             } else {
-                ForEach(photos, id: \.self) { photo in
-                    if let image = UIImage(data: photo) {
+                ForEach(photos, id: \.data) { photo in
+                    if let image = UIImage(data: photo.data) {
                         Image(uiImage: image)
                             .resizable()
                             .scaledToFit()
@@ -98,16 +98,26 @@ struct RecipeFormPhotosSection: View {
             isPresented: $isImagePlaygroundPresented,
             recipe: recipe
         ) { data in
-            photos.append(data.compressed())
+            photos.append(
+                .init(
+                    data: data.compressed(),
+                    source: .imagePlayground
+                )
+            )
         }
         .onChange(of: photosPickerItems) {
-            photos = (recipe?.photos).orEmpty.map(\.data)
+            photos = (recipe?.photos).orEmpty.map {
+                .init(
+                    data: $0.data,
+                    source: $0.source
+                )
+            }
             Task {
                 for item in photosPickerItems {
                     guard let data = try? await item.loadTransferable(type: Data.self) else {
                         continue
                     }
-                    photos.append(data.compressed())
+                    photos.append(.init(data: data.compressed(), source: .photosPicker))
                 }
             }
         }
@@ -117,7 +127,7 @@ struct RecipeFormPhotosSection: View {
 #Preview {
     CooklePreview { preview in
         Form {
-            RecipeFormPhotosSection(.constant(preview.photos.map(\.data)))
+            RecipeFormPhotosSection(.constant(preview.photos.map { .init(data: $0.data, source: $0.source) }))
         }
     }
 }

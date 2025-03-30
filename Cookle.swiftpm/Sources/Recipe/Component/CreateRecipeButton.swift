@@ -17,7 +17,7 @@ struct CreateRecipeButton: View {
     @State private var isImagePlaygroundPresented = false
 
     private let name: String
-    private let photos: [Data]
+    private let photos: [PhotoData]
     private let servingSize: String
     private let cookingTime: String
     private let ingredients: [RecipeFormIngredient]
@@ -28,7 +28,7 @@ struct CreateRecipeButton: View {
     private let useShortTitle: Bool
 
     init(name: String,
-         photos: [Data],
+         photos: [PhotoData],
          servingSize: String,
          cookingTime: String,
          ingredients: [RecipeFormIngredient],
@@ -53,7 +53,7 @@ struct CreateRecipeButton: View {
                 context: context,
                 name: name,
                 photos: zip(photos.indices, photos).map { index, element in
-                    .create(context: context, photo: element, order: index + 1)
+                    .create(context: context, photo: element.data, source: element.source, order: index + 1)
                 },
                 servingSize: toInt(servingSize) ?? .zero,
                 cookingTime: toInt(cookingTime) ?? .zero,
@@ -124,6 +124,7 @@ struct CreateRecipeButton: View {
                         .create(
                             context: context,
                             photo: data.compressed(),
+                            source: .imagePlayground,
                             order: 1
                         )
                     ],

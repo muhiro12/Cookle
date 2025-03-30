@@ -14,7 +14,7 @@ struct UpdateRecipeButton: View {
     @Environment(\.requestReview) private var requestReview
 
     private let name: String
-    private let photos: [Data]
+    private let photos: [PhotoData]
     private let servingSize: String
     private let cookingTime: String
     private let ingredients: [RecipeFormIngredient]
@@ -25,7 +25,7 @@ struct UpdateRecipeButton: View {
     private let useShortTitle: Bool
 
     init(name: String,
-         photos: [Data],
+         photos: [PhotoData],
          servingSize: String,
          cookingTime: String,
          ingredients: [RecipeFormIngredient],
@@ -49,7 +49,7 @@ struct UpdateRecipeButton: View {
             recipe.update(
                 name: name,
                 photos: zip(photos.indices, photos).map { index, element in
-                    .create(context: context, photo: element, order: index + 1)
+                    .create(context: context, photo: element.data, source: element.source, order: index + 1)
                 },
                 servingSize: toInt(servingSize) ?? .zero,
                 cookingTime: toInt(cookingTime) ?? .zero,

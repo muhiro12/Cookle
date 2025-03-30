@@ -16,7 +16,7 @@ struct RecipeFormNavigationView: View {
     @AppStorage(.isDebugOn) private var isDebugOn
 
     @State private var name = ""
-    @State private var photos = [Data]()
+    @State private var photos = [PhotoData]()
     @State private var servingSize = ""
     @State private var cookingTime = ""
     @State private var ingredients = [RecipeFormIngredient]()
@@ -142,7 +142,12 @@ struct RecipeFormNavigationView: View {
         }
         .task {
             name = recipe?.name ?? .empty
-            photos = recipe?.photoObjects?.sorted().compactMap { $0.photo?.data } ?? .empty
+            photos = recipe?.photoObjects?.sorted().compactMap {
+                guard let photo = $0.photo else {
+                    return nil
+                }
+                return .init(data: photo.data, source: photo.source)
+            } ?? .empty
             servingSize = recipe?.servingSize.description ?? .empty
             cookingTime = recipe?.cookingTime.description ?? .empty
             ingredients = (recipe?.ingredientObjects?.sorted().compactMap { object in
