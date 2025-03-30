@@ -11,6 +11,7 @@ import SwiftData
 enum PhotoPredicate {
     case all
     case none
+    case sourceIs(PhotoSource)
     case dataIs(Data)
 
     var value: Foundation.Predicate<Photo> {
@@ -19,6 +20,11 @@ enum PhotoPredicate {
             return .true
         case .none:
             return .false
+        case .sourceIs(let source):
+            let id = source.rawValue
+            return #Predicate {
+                $0.sourceID == id
+            }
         case .dataIs(let data):
             return #Predicate {
                 $0.data == data

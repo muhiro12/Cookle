@@ -12,7 +12,8 @@ import SwiftUtilities
 struct PhotoListView: View {
     @Environment(\.isPresented) private var isPresented
 
-    @Query(.photos(.all)) private var photos: [Photo]
+    @Query(.photos(.sourceIs(.photosPicker))) private var photos: [Photo]
+    @Query(.photos(.sourceIs(.imagePlayground))) private var imagePlaygrounds: [Photo]
 
     @Binding private var photo: Photo?
 
@@ -24,14 +25,22 @@ struct PhotoListView: View {
         Group {
             if photos.isNotEmpty {
                 ScrollView {
-                    LazyVGrid(columns: [.init(.adaptive(minimum: 120))]) {
-                        ForEach(photos) { photo in
-                            if photo.recipes.isNotEmpty,
-                               let image = UIImage(data: photo.data) {
-                                NavigationLink(value: photo) {
-                                    Image(uiImage: image)
-                                        .resizable()
-                                        .scaledToFit()
+                    ForEach([photos, imagePlaygrounds], id: \.first?.source) { photos in
+                        VStack {
+                            Text(photos[0].source.description)
+                                .font(.headline)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding()
+                            LazyVGrid(columns: [.init(.adaptive(minimum: 120))]) {
+                                ForEach(photos) { photo in
+                                    if photo.recipes.isNotEmpty,
+                                       let image = UIImage(data: photo.data) {
+                                        NavigationLink(value: photo) {
+                                            Image(uiImage: image)
+                                                .resizable()
+                                                .scaledToFit()
+                                        }
+                                    }
                                 }
                             }
                         }

@@ -14,4 +14,13 @@ enum PhotoSource: String {
 
 extension PhotoSource {
     static let defaultValue = PhotoSource.photosPicker
+
+    var description: String {
+        switch self {
+        case .photosPicker:
+            return "Photos"
+        case .imagePlayground:
+            return "Image Playground"
+        }
+    }
 }

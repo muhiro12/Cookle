@@ -291,7 +291,7 @@ final class CooklePreviewStore {
         .create(
             context: context,
             photo: UIImage(systemName: systemName)!.withTintColor(.init(.init(uiColor: .tintColor).adjusted(with: systemName.hashValue))).jpegData(compressionQuality: 1)!,
-            source: .photosPicker,
+            source: order == 1 ? .photosPicker : .imagePlayground,
             order: order
         )
     }
