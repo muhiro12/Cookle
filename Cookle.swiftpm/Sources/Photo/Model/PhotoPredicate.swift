@@ -21,9 +21,13 @@ enum PhotoPredicate {
         case .none:
             return .false
         case .sourceIs(let source):
-            let id = source.rawValue
+            if source == .defaultValue {
+                return #Predicate {
+                    $0.source == source || $0.source == nil
+                }
+            }
             return #Predicate {
-                $0.sourceID == id
+                $0.source == source
             }
         case .dataIs(let data):
             return #Predicate {
