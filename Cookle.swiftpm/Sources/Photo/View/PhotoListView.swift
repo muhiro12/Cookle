@@ -30,6 +30,7 @@ struct PhotoListView: View {
                             if let photo = photos.first {
                                 Text(photo.source.description)
                                     .font(.headline)
+                                    .foregroundStyle(.secondary)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .padding()
                             }
