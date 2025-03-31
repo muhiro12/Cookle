@@ -290,7 +290,7 @@ final class CooklePreviewStore {
     private func createPhotoObject(_ context: ModelContext, systemName: String, order: Int) -> PhotoObject {
         .create(
             context: context,
-            photo: .init(
+            photoData: .init(
                 data: UIImage(systemName: systemName)!.withTintColor(.init(.init(uiColor: .tintColor).adjusted(with: systemName.hashValue))).jpegData(compressionQuality: 1)!,
                 source: order == 1 ? .photosPicker : .imagePlayground
             ),
@@ -301,7 +301,7 @@ final class CooklePreviewStore {
     private func createPhotoObject(_ context: ModelContext, name: String, order: Int) async throws -> PhotoObject {
         .create(
             context: context,
-            photo: .init(
+            photoData: .init(
                 data: try await URLSession.shared.data(from: .init(string: "https://raw.githubusercontent.com/muhiro12/Cookle/refs/heads/main/.Resources/\(name).png")!).0,
                 source: .photosPicker
             ),

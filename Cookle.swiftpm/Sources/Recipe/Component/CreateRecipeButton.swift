@@ -53,7 +53,7 @@ struct CreateRecipeButton: View {
                 context: context,
                 name: name,
                 photos: zip(photos.indices, photos).map { index, element in
-                    .create( context: context, photo: element, order: index + 1)
+                    .create( context: context, photoData: element, order: index + 1)
                 },
                 servingSize: toInt(servingSize) ?? .zero,
                 cookingTime: toInt(cookingTime) ?? .zero,
@@ -123,7 +123,7 @@ struct CreateRecipeButton: View {
                     photos: [
                         .create(
                             context: context,
-                            photo: .init(
+                            photoData: .init(
                                 data: data.compressed(),
                                 source: .imagePlayground
                             ),
