@@ -18,7 +18,8 @@ struct MainView: View {
 
     init() {
         sharedModelContainer = try! .init(
-            for: Recipe.self,
+            for: .init(versionedSchema: CookleMigrationPlan.schemas[0]),
+            migrationPlan: CookleMigrationPlan.self,
             configurations: .init(
                 cloudKitDatabase: isICloudOn ? .automatic : .none
             )
