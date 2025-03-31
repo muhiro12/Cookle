@@ -26,22 +26,22 @@ struct PhotoListView: View {
             if photos.isNotEmpty {
                 ScrollView {
                     ForEach([photos, imagePlaygrounds], id: \.first?.source) { photos in
-                        VStack {
-                            if let photo = photos.first {
+                        if let photo = photos.first {
+                            VStack {
                                 Text(photo.source.description)
                                     .font(.headline)
                                     .foregroundStyle(.secondary)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .padding()
-                            }
-                            LazyVGrid(columns: [.init(.adaptive(minimum: 120))]) {
-                                ForEach(photos) { photo in
-                                    if photo.recipes.isNotEmpty,
-                                       let image = UIImage(data: photo.data) {
-                                        NavigationLink(value: photo) {
-                                            Image(uiImage: image)
-                                                .resizable()
-                                                .scaledToFit()
+                                LazyVGrid(columns: [.init(.adaptive(minimum: 120))]) {
+                                    ForEach(photos) { photo in
+                                        if photo.recipes.isNotEmpty,
+                                           let image = UIImage(data: photo.data) {
+                                            NavigationLink(value: photo) {
+                                                Image(uiImage: image)
+                                                    .resizable()
+                                                    .scaledToFit()
+                                            }
                                         }
                                     }
                                 }
