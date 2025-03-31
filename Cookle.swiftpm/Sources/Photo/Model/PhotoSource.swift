@@ -7,9 +7,9 @@
 
 import Foundation
 
-enum PhotoSource {
-    case photosPicker
-    case imagePlayground
+enum PhotoSource: String {
+    case photosPicker = "zW8rLxK4"
+    case imagePlayground = "Xe1Vt9bQ"
 }
 
 extension PhotoSource {
@@ -24,5 +24,3 @@ extension PhotoSource {
         }
     }
 }
-
-extension PhotoSource: Codable {}

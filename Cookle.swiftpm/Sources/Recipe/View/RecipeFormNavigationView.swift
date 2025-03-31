@@ -146,7 +146,7 @@ struct RecipeFormNavigationView: View {
                 guard let photo = $0.photo else {
                     return nil
                 }
-                return .init(data: photo.data, source: photo.sourceValue)
+                return .init(data: photo.data, source: photo.source)
             } ?? .empty
             servingSize = recipe?.servingSize.description ?? .empty
             cookingTime = recipe?.cookingTime.description ?? .empty

@@ -11,7 +11,7 @@ import SwiftData
 @Model
 final class Photo {
     private(set) var data = Data.empty
-    private(set) var source = PhotoSource?.some(.defaultValue)
+    private(set) var sourceID = PhotoSource.defaultValue.rawValue
 
     @Relationship(deleteRule: .cascade, inverse: \PhotoObject.photo)
     private(set) var objects = [PhotoObject]?.some(.empty)
@@ -27,7 +27,7 @@ final class Photo {
         let photo = (try? context.fetchFirst(.photos(.dataIs(photoData.data)))) ?? .init()
         context.insert(photo)
         photo.data = photoData.data
-        photo.source = photoData.source
+        photo.sourceID = photoData.source.rawValue
         return photo
     }
 }
@@ -37,8 +37,8 @@ extension Photo {
         recipes.orEmpty.map(\.name).joined(separator: ", ")
     }
 
-    var sourceValue: PhotoSource {
-        source ?? .defaultValue
+    var source: PhotoSource {
+        .init(rawValue: sourceID) ?? .defaultValue
     }
 }
 

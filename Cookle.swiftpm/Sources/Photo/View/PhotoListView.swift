@@ -27,10 +27,12 @@ struct PhotoListView: View {
                 ScrollView {
                     ForEach([photos, imagePlaygrounds], id: \.first?.source) { photos in
                         VStack {
-                            Text(photos[0].sourceValue.description)
-                                .font(.headline)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding()
+                            if let photo = photos.first {
+                                Text(photo.source.description)
+                                    .font(.headline)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding()
+                            }
                             LazyVGrid(columns: [.init(.adaptive(minimum: 120))]) {
                                 ForEach(photos) { photo in
                                     if photo.recipes.isNotEmpty,
