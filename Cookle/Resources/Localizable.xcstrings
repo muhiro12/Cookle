@@ -50,7 +50,11 @@
         }
       }
     },
+    "Add a photo?" : {
+
+    },
     "Add Diary" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -428,6 +432,7 @@
       }
     },
     "Breakfast" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -630,6 +635,9 @@
           }
         }
       }
+    },
+    "Choose Photo" : {
+
     },
     "Classic spaghetti carbonara and warm beef stew for a comforting end to the day." : {
       "localizations" : {
@@ -1311,6 +1319,12 @@
         }
       }
     },
+    "Duplicate %@" : {
+
+    },
+    "Edit" : {
+
+    },
     "Edit %@" : {
       "localizations" : {
         "en" : {
@@ -1412,6 +1426,9 @@
           }
         }
       }
+    },
+    "Image Playground" : {
+
     },
     "Ingredient" : {
       "localizations" : {
@@ -1548,6 +1565,9 @@
           }
         }
       }
+    },
+    "Later" : {
+
     },
     "Licenses" : {
       "localizations" : {
@@ -1787,6 +1807,9 @@
         }
       }
     },
+    "No image yet. Try Image Playground?" : {
+
+    },
     "Not Found" : {
       "localizations" : {
         "en" : {
@@ -1922,6 +1945,9 @@
           }
         }
       }
+    },
+    "Open Cookle" : {
+
     },
     "Order" : {
       "localizations" : {
@@ -2297,6 +2323,9 @@
         }
       }
     },
+    "Search Text" : {
+
+    },
     "Serving Size" : {
       "localizations" : {
         "en" : {
@@ -2398,6 +2427,15 @@
           }
         }
       }
+    },
+    "Show Last Opened Recipe" : {
+
+    },
+    "Show Random Recipe" : {
+
+    },
+    "Show Search Result" : {
+
     },
     "Spaghetti" : {
       "localizations" : {
@@ -2704,6 +2742,9 @@
           }
         }
       }
+    },
+    "Use Image Playground" : {
+
     },
     "Value" : {
       "localizations" : {
