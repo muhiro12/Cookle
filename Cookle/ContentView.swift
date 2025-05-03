@@ -8,10 +8,10 @@
 import SwiftUI
 import SwiftUtilities
 
-public struct ContentView: View {
-    public init() {}
+struct ContentView: View {
+    init() {}
 
-    public var body: some View {
+    var body: some View {
         MainView()
     }
 }

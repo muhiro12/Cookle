@@ -10,9 +10,9 @@ import SwiftData
 import SwiftUI
 
 @MainActor
-public enum CookleIntents {}
+enum CookleIntents {}
 
-public extension CookleIntents {
+extension CookleIntents {
     static func performOpenCookle() throws -> some IntentResult {
         .result()
     }

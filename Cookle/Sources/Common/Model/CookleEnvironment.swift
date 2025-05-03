@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public extension View {
+extension View {
     func cookleEnvironment(
         googleMobileAds: @escaping (String) -> some View,
         licenseList: @escaping () -> some View,
