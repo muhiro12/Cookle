@@ -14,7 +14,9 @@ struct CookleShortcuts: AppShortcutsProvider {
         AppShortcut(
             intent: OpenCookleIntent(),
             phrases: [
-                "Open \(.applicationName)"
+                "Open \(.applicationName)",
+                "Launch \(.applicationName)",
+                "Start \(.applicationName)"
             ],
             shortTitle: "Open Cookle",
             systemImageName: "bird"
@@ -22,7 +24,9 @@ struct CookleShortcuts: AppShortcutsProvider {
         AppShortcut(
             intent: ShowSearchResultIntent(),
             phrases: [
-                "Search recipes in \(.applicationName)"
+                "Search recipes in \(.applicationName)",
+                "Find a recipe with \(.applicationName)",
+                "Look up food using \(.applicationName)"
             ],
             shortTitle: "Show Search Result",
             systemImageName: "magnifyingglass"
@@ -30,7 +34,9 @@ struct CookleShortcuts: AppShortcutsProvider {
         AppShortcut(
             intent: ShowLastOpenedRecipeIntent(),
             phrases: [
-                "Show last opened recipe in \(.applicationName)"
+                "Show last opened recipe in \(.applicationName)",
+                "Continue my last recipe with \(.applicationName)",
+                "Resume cooking in \(.applicationName)"
             ],
             shortTitle: "Show Last Opened Recipe",
             systemImageName: "clock"
@@ -38,7 +44,9 @@ struct CookleShortcuts: AppShortcutsProvider {
         AppShortcut(
             intent: ShowRandomRecipeIntent(),
             phrases: [
-                "Show random recipe in \(.applicationName)"
+                "Show random recipe in \(.applicationName)",
+                "Suggest something to cook with \(.applicationName)",
+                "What should I make in \(.applicationName)?"
             ],
             shortTitle: "Show Random Recipe",
             systemImageName: "dice"

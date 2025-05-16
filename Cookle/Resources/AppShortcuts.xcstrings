@@ -1,0 +1,226 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Open ${applicationName}" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "new",
+            "values" : [
+              "Open ${applicationName}",
+              "Launch ${applicationName}",
+              "Start ${applicationName}"
+            ]
+          }
+        },
+        "es" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Abrir ${applicationName}",
+              "Lanzar ${applicationName}",
+              "Iniciar ${applicationName}"
+            ]
+          }
+        },
+        "fr" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Ouvrir ${applicationName}",
+              "Lancer ${applicationName}",
+              "Démarrer ${applicationName}"
+            ]
+          }
+        },
+        "ja" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}を開く",
+              "${applicationName}を起動",
+              "${applicationName}を開始"
+            ]
+          }
+        },
+        "zh-Hans" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "打开${applicationName}",
+              "启动${applicationName}",
+              "开始${applicationName}"
+            ]
+          }
+        }
+      }
+    },
+    "Search recipes in ${applicationName}" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "new",
+            "values" : [
+              "Search recipes in ${applicationName}",
+              "Find a recipe with ${applicationName}",
+              "Look up food using ${applicationName}"
+            ]
+          }
+        },
+        "es" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Buscar recetas en ${applicationName}",
+              "Encontrar una receta con ${applicationName}",
+              "Consultar platos en ${applicationName}"
+            ]
+          }
+        },
+        "fr" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Rechercher des recettes dans ${applicationName}",
+              "Trouver une recette avec ${applicationName}",
+              "Consulter un plat dans ${applicationName}"
+            ]
+          }
+        },
+        "ja" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}でレシピを検索",
+              "${applicationName}で料理を探す",
+              "${applicationName}で料理名を調べる"
+            ]
+          }
+        },
+        "zh-Hans" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "在${applicationName}中搜索食谱",
+              "用${applicationName}查找菜谱",
+              "使用${applicationName}查找美食"
+            ]
+          }
+        }
+      }
+    },
+    "Show last opened recipe in ${applicationName}" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "new",
+            "values" : [
+              "Show last opened recipe in ${applicationName}",
+              "Continue my last recipe with ${applicationName}",
+              "Resume cooking in ${applicationName}"
+            ]
+          }
+        },
+        "es" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Mostrar la última receta abierta en ${applicationName}",
+              "Continuar con la receta anterior en ${applicationName}",
+              "Reanudar cocina en ${applicationName}"
+            ]
+          }
+        },
+        "fr" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Afficher la dernière recette ouverte dans ${applicationName}",
+              "Reprendre la recette précédente avec ${applicationName}",
+              "Continuer la cuisine avec ${applicationName}"
+            ]
+          }
+        },
+        "ja" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}で最後に開いたレシピを表示",
+              "${applicationName}の続きのレシピを開く",
+              "${applicationName}で前回の料理を再開"
+            ]
+          }
+        },
+        "zh-Hans" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "显示在${applicationName}中最后打开的食谱",
+              "继续${applicationName}中的上一个菜谱",
+              "在${applicationName}中恢复烹饪"
+            ]
+          }
+        }
+      }
+    },
+    "Show random recipe in ${applicationName}" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "new",
+            "values" : [
+              "Show random recipe in ${applicationName}",
+              "Suggest something to cook with ${applicationName}",
+              "What should I make in ${applicationName}?"
+            ]
+          }
+        },
+        "es" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Mostrar una receta aleatoria en ${applicationName}",
+              "Sugerir qué cocinar con ${applicationName}",
+              "¿Qué debo preparar en ${applicationName}?"
+            ]
+          }
+        },
+        "fr" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Afficher une recette aléatoire dans ${applicationName}",
+              "Suggérer une recette avec ${applicationName}",
+              "Que dois-je cuisiner avec ${applicationName} ?"
+            ]
+          }
+        },
+        "ja" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}でランダムなレシピを表示",
+              "${applicationName}におまかせで料理を提案して",
+              "${applicationName}で何を作ればいいか教えて"
+            ]
+          }
+        },
+        "zh-Hans" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "在${applicationName}中显示随机食谱",
+              "用${applicationName}推荐做什么菜",
+              "我该在${applicationName}中做什么？"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
