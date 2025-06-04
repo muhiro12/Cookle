@@ -49,6 +49,7 @@ struct DiaryListView: View {
                     AdvertisementSection(.small)
                         .hidden(isSubscribeOn)
                 }
+                .cookleList()
             } else {
                 AddDiaryButton()
             }

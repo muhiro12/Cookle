@@ -34,6 +34,7 @@ struct RecipeView: View {
                 DeleteRecipeButton()
             }
         }
+        .cookleList()
         .navigationTitle(recipe.name)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {

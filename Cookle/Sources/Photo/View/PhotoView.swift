@@ -57,6 +57,7 @@ struct PhotoView: View {
                 Text("Updated At")
             }
         }
+        .cookleList()
         .navigationTitle(photo.title)
         .fullScreenCover(isPresented: $isPhotoDetailPresented) {
             PhotoDetailNavigationView(photos: [photo])
