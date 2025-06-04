@@ -1,7 +1,25 @@
 # Cookle
 
-Keep your favorite recipes  
+Keep your favorite recipes
+
 [App Store](https://apps.apple.com/app/id6483363226)
+
+Cookle is a lightweight recipe manager built entirely with SwiftUI. This repository contains the source for the iOS application published on the App Store.
+
+## Features
+
+- Create and manage recipes with photos, ingredients, steps and notes
+- Organize recipes using categories and quick keyword search
+- Record your cooking experiences in diaries
+- App Shortcuts for search, showing the last opened recipe and more
+- Optional iCloud synchronisation and subscription support
+- Google Mobile Ads integration
+
+## Development
+
+The project uses **Swift 5** and requires **Xcode 15** or later. After cloning the repository, open `Cookle.xcodeproj` in Xcode and build the `Cookle` scheme.
+
+## Screenshots
 
 |-|-|-|
 |-|-|-|
