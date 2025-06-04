@@ -65,6 +65,7 @@ struct DebugSidebarView: View {
                 Text("Model")
             }
         }
+        .cookleList()
         .navigationTitle(Text("Debug"))
         .toolbar {
             ToolbarItem {

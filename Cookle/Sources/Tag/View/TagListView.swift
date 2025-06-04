@@ -36,6 +36,7 @@ struct TagListView<T: Tag>: View {
                     )
                 }
                 .searchable(text: $searchText)
+                .cookleList()
             } else {
                 AddRecipeButton()
             }

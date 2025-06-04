@@ -34,6 +34,7 @@ struct RecipeListView: View {
                     }
                     .hidden(searchText.isNotEmpty && !recipe.name.normalizedContains(searchText))
                 }
+                .cookleList()
                 .searchable(text: $searchText)
             } else {
                 AddRecipeButton()
