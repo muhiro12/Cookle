@@ -14,8 +14,13 @@ struct OpenCookleIntent: AppIntent {
     static var openAppWhenRun = true
 
     @MainActor
-    func perform() throws -> some IntentResult {
+    static func perform() throws -> some IntentResult {
         .result()
+    }
+
+    @MainActor
+    func perform() throws -> some IntentResult {
+        try Self.perform()
     }
 }
 
@@ -26,7 +31,7 @@ struct ShowSearchResultIntent: AppIntent {
     private var searchText: String
 
     @MainActor
-    func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
+    static func perform(searchText: String) throws -> [Recipe] {
         var recipes = try CookleIntents.context.fetch(
             .recipes(.nameContains(searchText))
         )
@@ -43,6 +48,12 @@ struct ShowSearchResultIntent: AppIntent {
         recipes += ingredients.flatMap(\.recipes.orEmpty)
         recipes += categories.flatMap(\.recipes.orEmpty)
         recipes = Array(Set(recipes))
+        return recipes
+    }
+
+    @MainActor
+    func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
+        let recipes = try Self.perform(searchText: searchText)
         return .result(dialog: "Result") {
             CookleIntents.cookleView {
                 ForEach(recipes) { recipe in
@@ -72,9 +83,14 @@ struct ShowLastOpenedRecipeIntent: AppIntent {
     static var title = LocalizedStringResource("Show Last Opened Recipe")
 
     @MainActor
+    static func perform(id: PersistentIdentifier?) throws -> Recipe? {
+        guard let id else { return nil }
+        return try CookleIntents.context.fetchFirst(.recipes(.idIs(id)))
+    }
+
+    @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
-        guard let id = AppStorage(.lastOpenedRecipeID).wrappedValue,
-              let recipe = try CookleIntents.context.fetchFirst(.recipes(.idIs(id))) else {
+        guard let recipe = try Self.perform(id: AppStorage(.lastOpenedRecipeID).wrappedValue) else {
             return .result(dialog: "Not Found")
         }
         return .result(dialog: .init(stringLiteral: recipe.name)) {
@@ -103,8 +119,13 @@ struct ShowRandomRecipeIntent: AppIntent {
     static var title = LocalizedStringResource("Show Random Recipe")
 
     @MainActor
+    static func perform() throws -> Recipe? {
+        try CookleIntents.context.fetchRandom(.recipes(.all))
+    }
+
+    @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
-        guard let recipe = try CookleIntents.context.fetchRandom(.recipes(.all)) else {
+        guard let recipe = try Self.perform() else {
             return .result(dialog: "Not Found")
         }
         return .result(dialog: .init(stringLiteral: recipe.name)) {
