@@ -40,6 +40,7 @@ struct TagView<T: Tag>: View {
                 Text("Updated At")
             }
         }
+        .cookleList()
         .navigationTitle(tag.value)
         .toolbar {
             ToolbarItem {

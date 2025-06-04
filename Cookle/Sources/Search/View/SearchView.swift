@@ -33,6 +33,7 @@ struct SearchView: View {
                             .environment(recipe)
                     }
                 }
+                .cookleList()
             } else if searchText.isNotEmpty {
                 Button {
                     isFocused = true

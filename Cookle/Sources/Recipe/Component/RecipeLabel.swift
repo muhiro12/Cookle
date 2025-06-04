@@ -40,6 +40,7 @@ struct RecipeLabel: View {
                     .padding()
             }
         }
+        .cookleCard()
         .contextMenu {
             EditRecipeButton {
                 isEditPresented = true

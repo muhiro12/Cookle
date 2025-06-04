@@ -61,6 +61,7 @@ struct DiaryView: View {
                 Spacer()
             }
         }
+        .cookleList()
         .navigationTitle(diary.date.formatted(.dateTime.year().month().day().weekday()))
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {

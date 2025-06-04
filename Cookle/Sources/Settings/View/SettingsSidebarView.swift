@@ -47,6 +47,7 @@ struct SettingsSidebarView: View {
             }
             ShortcutsLinkSection()
         }
+        .cookleList()
         .navigationTitle(Text("Settings"))
         .toolbar {
             ToolbarItem {
