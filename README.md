@@ -14,6 +14,7 @@ Cookle is a lightweight recipe manager built entirely with SwiftUI. This reposit
 - App Shortcuts for search, showing the last opened recipe and more
 - Optional iCloud synchronisation and subscription support
 - Google Mobile Ads integration
+- Create recipes from photos using OCR
 
 ## Development
 
