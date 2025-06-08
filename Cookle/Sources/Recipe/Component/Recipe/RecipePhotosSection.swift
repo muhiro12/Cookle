@@ -40,7 +40,10 @@ struct RecipePhotosSection: View {
                 .listRowBackground(EmptyView())
             }
             .fullScreenCover(item: $selectedPhoto) { photo in
-                PhotoDetailNavigationView(photos: objects.sorted().compactMap(\.photo), initialValue: photo)
+                PhotoDetailNavigationView(
+                    photos: objects.sorted().compactMap(\.photo),
+                    initialValue: photo
+                )
             }
         }
     }

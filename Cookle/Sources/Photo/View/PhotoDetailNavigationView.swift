@@ -1,46 +1,18 @@
 import SwiftUI
-import SwiftUtilities
 
 struct PhotoDetailNavigationView: View {
-    @State private var currentID: Photo.ID?
-
     private let photos: [Photo]
+    private let initialValue: Photo?
 
     init(photos: [Photo], initialValue: Photo? = nil) {
         self.photos = photos
-        self._currentID = .init(initialValue: initialValue?.id)
+        self.initialValue = initialValue
     }
 
     var body: some View {
         NavigationStack {
-            GeometryReader { geometry in
-                ScrollView(.horizontal) {
-                    LazyHStack(spacing: .zero) {
-                        ForEach(photos) { photo in
-                            if let image = UIImage(data: photo.data) {
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(
-                                        width: geometry.size.width,
-                                        height: geometry.size.height
-                                    )
-                            }
-                        }
-                    }
-                    .scrollTargetLayout()
-                }
-                .scrollTargetBehavior(.paging)
-                .scrollPosition(id: $currentID)
-            }
-            .ignoresSafeArea(edges: .top)
-            .toolbar {
-                ToolbarItem {
-                    CloseButton()
-                }
-            }
+            PhotoDetailView(photos: photos, initialValue: initialValue)
         }
-        .environment(\.colorScheme, .dark)
     }
 }
 

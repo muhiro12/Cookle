@@ -1,64 +1,20 @@
 import SwiftUI
 
 struct AddMultipleTextsNavigationView: View {
-    @Environment(\.dismiss) private var dismiss
-
-    @Binding private var texts: [String]
-
-    @State private var text: String
-
+    @Binding var texts: [String]
     private let title: LocalizedStringKey
     private let placeholder: LocalizedStringKey
 
     init(texts: Binding<[String]>, title: LocalizedStringKey, placeholder: LocalizedStringKey) {
         self._texts = texts
-        self.text = texts.wrappedValue.joined(separator: "\n")
         self.title = title
         self.placeholder = placeholder
     }
 
     var body: some View {
         NavigationStack {
-            TextEditor(text: $text)
-                .overlay(alignment: .topLeading) {
-                    Text(placeholder)
-                        .font(.body)
-                        .foregroundStyle(.placeholder)
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 6)
-                        .allowsHitTesting(false)
-                        .hidden(text.isNotEmpty)
-                }
-                .padding()
-                .scrollContentBackground(.hidden)
-                .background(Color(.secondarySystemGroupedBackground))
-                .clipShape(.rect(cornerRadius: 8))
-                .padding()
-                .background(Color(.systemGroupedBackground))
-                .navigationTitle(title)
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button {
-                            text = ""
-                            dismiss()
-                        } label: {
-                            Text("Cancel")
-                        }
-                    }
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button {
-                            texts = text.split(separator: "\n", omittingEmptySubsequences: false).map {
-                                String($0)
-                            }
-                            text = ""
-                            dismiss()
-                        } label: {
-                            Text("Done")
-                        }
-                    }
-                }
+            AddMultipleTextsView(texts: $texts, title: title, placeholder: placeholder)
         }
-        .font(nil)
     }
 }
 
