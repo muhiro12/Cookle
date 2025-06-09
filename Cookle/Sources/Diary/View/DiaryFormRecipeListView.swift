@@ -42,6 +42,7 @@ struct DiaryFormRecipeListView: View {
                 .environment(recipe)
         }
         .searchable(text: $searchText)
+        .cookleList()
         .environment(\.editMode, .constant(.active))
         .navigationTitle(type.title)
         .toolbar {

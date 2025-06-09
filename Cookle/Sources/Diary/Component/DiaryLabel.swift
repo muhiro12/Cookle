@@ -45,6 +45,7 @@ struct DiaryLabel: View {
             }
             .foregroundStyle(Color(uiColor: .label))
         }
+        .cookleCard()
         .contextMenu {
             EditDiaryButton {
                 isEditPresented = true

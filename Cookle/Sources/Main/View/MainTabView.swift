@@ -40,6 +40,8 @@ struct MainTabView: View {
                     }
                 }
             }
+            .toolbarBackground(.visible, for: .tabBar)
+            .toolbarBackground(.ultraThickMaterial, for: .tabBar)
         } else {
             TabView(selection: $selection) {
                 ForEach(tabs) { tab in
@@ -50,6 +52,8 @@ struct MainTabView: View {
                         }
                 }
             }
+            .toolbarBackground(.visible, for: .tabBar)
+            .toolbarBackground(.ultraThickMaterial, for: .tabBar)
         }
     }
 }

@@ -10,6 +10,7 @@ import GoogleMobileAdsWrapper
 import LicenseListWrapper
 import StoreKitWrapper
 import SwiftUI
+import UIKit
 
 @main
 struct CookleApp: App {
@@ -34,6 +35,18 @@ struct CookleApp: App {
         sharedStore = .init()
 
         CookleShortcuts.updateAppShortcutParameters()
+
+        let tabBarAppearance = UITabBarAppearance()
+        tabBarAppearance.configureWithOpaqueBackground()
+        tabBarAppearance.backgroundEffect = UIBlurEffect(style: .systemChromeMaterial)
+        UITabBar.appearance().standardAppearance = tabBarAppearance
+        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+
+        let navBarAppearance = UINavigationBarAppearance()
+        navBarAppearance.configureWithOpaqueBackground()
+        navBarAppearance.backgroundEffect = UIBlurEffect(style: .systemChromeMaterial)
+        UINavigationBar.appearance().standardAppearance = navBarAppearance
+        UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
     }
 
     var body: some Scene {
