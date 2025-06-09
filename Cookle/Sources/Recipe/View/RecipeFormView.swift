@@ -37,86 +37,85 @@ struct RecipeFormView: View {
         Form {
             RecipeFormNameSection($name)
                 .hidden(editMode == .active)
-                RecipeFormPhotosSection($photos)
-                RecipeFormServingSizeSection($servingSize)
-                    .hidden(editMode == .active)
-                RecipeFormCookingTimeSection($cookingTime)
-                    .hidden(editMode == .active)
-                RecipeFormIngredientsSection($ingredients)
-                RecipeFormStepsSection($steps)
-                RecipeFormCategoriesSection($categories)
-                RecipeFormNoteSection($note)
-                    .hidden(editMode == .active)
-                Section {
-                    Button {
-                        withAnimation {
-                            editMode = editMode.isEditing ? .inactive : .active
-                        }
-                    } label: {
-                        editMode == .inactive ? Text("Change Order or Delete Row") : Text("Done Edit")
+            RecipeFormPhotosSection($photos)
+            RecipeFormServingSizeSection($servingSize)
+                .hidden(editMode == .active)
+            RecipeFormCookingTimeSection($cookingTime)
+                .hidden(editMode == .active)
+            RecipeFormIngredientsSection($ingredients)
+            RecipeFormStepsSection($steps)
+            RecipeFormCategoriesSection($categories)
+            RecipeFormNoteSection($note)
+                .hidden(editMode == .active)
+            Section {
+                Button {
+                    withAnimation {
+                        editMode = editMode.isEditing ? .inactive : .active
                     }
-                    .frame(maxWidth: .infinity)
+                } label: {
+                    editMode == .inactive ? Text("Change Order or Delete Row") : Text("Done Edit")
+                }
+                .frame(maxWidth: .infinity)
+            }
+        }
+        .environment(\.editMode, $editMode)
+        .navigationTitle(editMode == .inactive ? Text("Recipe") : Text("Editing..."))
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button {
+                    if name == "Enable Debug" {
+                        name = .empty
+                        isDebugAlertPresented = true
+                        return
+                    }
+                    dismiss()
+                } label: {
+                    Text("Cancel")
                 }
             }
-            .environment(\.editMode, $editMode)
-            .navigationTitle(editMode == .inactive ? Text("Recipe") : Text("Editing..."))
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
+            switch editMode {
+            case .active:
+                ToolbarItem {
                     Button {
-                        if name == "Enable Debug" {
-                            name = .empty
-                            isDebugAlertPresented = true
-                            return
+                        withAnimation {
+                            editMode = .inactive
                         }
-                        dismiss()
                     } label: {
-                        Text("Cancel")
+                        Text("Done")
                     }
                 }
-                switch editMode {
-                case .active:
-                    ToolbarItem {
-                        Button {
-                            withAnimation {
-                                editMode = .inactive
-                            }
-                        } label: {
-                            Text("Done")
-                        }
+            default:
+                switch type {
+                case .create,
+                     .duplicate:
+                    ToolbarItem(placement: .confirmationAction) {
+                        CreateRecipeButton(
+                            name: name,
+                            photos: photos,
+                            servingSize: servingSize,
+                            cookingTime: cookingTime,
+                            ingredients: ingredients,
+                            steps: steps,
+                            categories: categories,
+                            note: note,
+                            useShortTitle: true
+                        )
+                        .labelStyle(.titleOnly)
                     }
-                default:
-                    switch type {
-                    case .create,
-                         .duplicate:
-                        ToolbarItem(placement: .confirmationAction) {
-                            CreateRecipeButton(
-                                name: name,
-                                photos: photos,
-                                servingSize: servingSize,
-                                cookingTime: cookingTime,
-                                ingredients: ingredients,
-                                steps: steps,
-                                categories: categories,
-                                note: note,
-                                useShortTitle: true
-                            )
-                            .labelStyle(.titleOnly)
-                        }
-                    case .edit:
-                        ToolbarItem(placement: .confirmationAction) {
-                            UpdateRecipeButton(
-                                name: name,
-                                photos: photos,
-                                servingSize: servingSize,
-                                cookingTime: cookingTime,
-                                ingredients: ingredients,
-                                steps: steps,
-                                categories: categories,
-                                note: note,
-                                useShortTitle: true
-                            )
-                            .labelStyle(.titleOnly)
-                        }
+                case .edit:
+                    ToolbarItem(placement: .confirmationAction) {
+                        UpdateRecipeButton(
+                            name: name,
+                            photos: photos,
+                            servingSize: servingSize,
+                            cookingTime: cookingTime,
+                            ingredients: ingredients,
+                            steps: steps,
+                            categories: categories,
+                            note: note,
+                            useShortTitle: true
+                        )
+                        .labelStyle(.titleOnly)
                     }
                 }
             }

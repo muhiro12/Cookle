@@ -16,27 +16,26 @@ struct PhotoDetailView: View {
             ScrollView(.horizontal) {
                 LazyHStack(spacing: .zero) {
                     ForEach(photos) { photo in
-                            if let image = UIImage(data: photo.data) {
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(
-                                        width: geometry.size.width,
-                                        height: geometry.size.height
-                                    )
-                            }
+                        if let image = UIImage(data: photo.data) {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(
+                                    width: geometry.size.width,
+                                    height: geometry.size.height
+                                )
                         }
                     }
-                    .scrollTargetLayout()
                 }
-                .scrollTargetBehavior(.paging)
-                .scrollPosition(id: $currentID)
+                .scrollTargetLayout()
             }
-            .ignoresSafeArea(edges: .top)
-            .toolbar {
-                ToolbarItem {
-                    CloseButton()
-                }
+            .scrollTargetBehavior(.paging)
+            .scrollPosition(id: $currentID)
+        }
+        .ignoresSafeArea(edges: .top)
+        .toolbar {
+            ToolbarItem {
+                CloseButton()
             }
         }
         .environment(\.colorScheme, .dark)

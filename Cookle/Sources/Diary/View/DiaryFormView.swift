@@ -54,60 +54,59 @@ struct DiaryFormView: View {
             } header: {
                 Text("Note")
             }
+        }
+        .navigationDestination(for: DiaryObjectType.self) { type in
+            switch type {
+            case .breakfast:
+                DiaryFormRecipeListView(selection: $breakfasts, type: type)
+            case .lunch:
+                DiaryFormRecipeListView(selection: $lunches, type: type)
+            case .dinner:
+                DiaryFormRecipeListView(selection: $dinners, type: type)
             }
-            .navigationDestination(for: DiaryObjectType.self) { type in
-                switch type {
-                case .breakfast:
-                    DiaryFormRecipeListView(selection: $breakfasts, type: type)
-                case .lunch:
-                    DiaryFormRecipeListView(selection: $lunches, type: type)
-                case .dinner:
-                    DiaryFormRecipeListView(selection: $dinners, type: type)
+        }
+        .navigationTitle(Text("Diary"))
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button {
+                    dismiss()
+                } label: {
+                    Text("Cancel")
                 }
             }
-            .navigationTitle(Text("Diary"))
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Text("Cancel")
+            ToolbarItem(placement: .confirmationAction) {
+                Button {
+                    if let diary {
+                        diary.update(
+                            date: date,
+                            objects: zip(Array(breakfasts).indices, breakfasts).map { index, element in
+                                .create(context: context, recipe: element, type: .breakfast, order: index + 1)
+                            } + zip(Array(lunches).indices, lunches).map { index, element in
+                                .create(context: context, recipe: element, type: .lunch, order: index + 1)
+                            } + zip(Array(dinners).indices, dinners).map { index, element in
+                                .create(context: context, recipe: element, type: .dinner, order: index + 1)
+                            },
+                            note: note
+                        )
+                    } else {
+                        _ = Diary.create(
+                            context: context,
+                            date: date,
+                            objects: zip(Array(breakfasts).indices, breakfasts).map { index, element in
+                                .create(context: context, recipe: element, type: .breakfast, order: index + 1)
+                            } + zip(Array(lunches).indices, lunches).map { index, element in
+                                .create(context: context, recipe: element, type: .lunch, order: index + 1)
+                            } + zip(Array(dinners).indices, dinners).map { index, element in
+                                .create(context: context, recipe: element, type: .dinner, order: index + 1)
+                            },
+                            note: note
+                        )
                     }
+                    dismiss()
+                } label: {
+                    Text(diary != nil ? "Update" : "Add")
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button {
-                        if let diary {
-                            diary.update(
-                                date: date,
-                                objects: zip(Array(breakfasts).indices, breakfasts).map { index, element in
-                                    .create(context: context, recipe: element, type: .breakfast, order: index + 1)
-                                } + zip(Array(lunches).indices, lunches).map { index, element in
-                                    .create(context: context, recipe: element, type: .lunch, order: index + 1)
-                                } + zip(Array(dinners).indices, dinners).map { index, element in
-                                    .create(context: context, recipe: element, type: .dinner, order: index + 1)
-                                },
-                                note: note
-                            )
-                        } else {
-                            _ = Diary.create(
-                                context: context,
-                                date: date,
-                                objects: zip(Array(breakfasts).indices, breakfasts).map { index, element in
-                                    .create(context: context, recipe: element, type: .breakfast, order: index + 1)
-                                } + zip(Array(lunches).indices, lunches).map { index, element in
-                                    .create(context: context, recipe: element, type: .lunch, order: index + 1)
-                                } + zip(Array(dinners).indices, dinners).map { index, element in
-                                    .create(context: context, recipe: element, type: .dinner, order: index + 1)
-                                },
-                                note: note
-                            )
-                        }
-                        dismiss()
-                    } label: {
-                        Text(diary != nil ? "Update" : "Add")
-                    }
-                    .disabled(breakfasts.isEmpty && lunches.isEmpty && dinners.isEmpty)
-                }
+                .disabled(breakfasts.isEmpty && lunches.isEmpty && dinners.isEmpty)
             }
         }
         .interactiveDismissDisabled()
