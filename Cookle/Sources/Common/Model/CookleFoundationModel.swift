@@ -5,49 +5,37 @@
 //  Created by codex on 2025/06/30.
 //
 
-import SwiftUI
-#if canImport(FoundationModels)
 import FoundationModels
-#endif
+import SwiftUI
 
+@available(iOS 26.0, *)
 enum CookleFoundationModel {
+    @Generable
+    struct Ingredient {
+        var ingredient: String
+        var amount: String
+    }
+
+    @Generable
+    struct Draft {
+        var name: String
+        var servingSize: String
+        var cookingTime: String
+        var ingredients: [Ingredient]
+        var steps: [String]
+        var note: String
+    }
+
     static var isSupported: Bool {
-        if #available(iOS 19.0, *) {
-#if canImport(FoundationModels)
-            switch SystemLanguageModel.default.availability {
-            case .available:
-                return true
-            case .unavailable:
-                return false
-            }
-#else
-            return false
-#endif
-        } else {
+        switch SystemLanguageModel.default.availability {
+        case .available:
+            return true
+        case .unavailable:
             return false
         }
     }
 
-
-    @available(iOS 19.0, *)
     static func summarizeRecipe(_ text: String) async throws -> RecipeDraft {
-#if canImport(FoundationModels)
-        @Generable
-        struct Ingredient {
-            var ingredient: String
-            var amount: String
-        }
-
-        @Generable
-        struct Draft {
-            var name: String
-            var servingSize: String
-            var cookingTime: String
-            var ingredients: [Ingredient]
-            var steps: [String]
-            var note: String
-        }
-
         let prompt = """
         Summarize the following OCR text into a recipe with the properties name, servingSize, cookingTime, ingredients, steps and note.
 
@@ -68,8 +56,5 @@ enum CookleFoundationModel {
         draft.steps = response.content.steps
         draft.note = response.content.note
         return draft
-#else
-        throw OCRRecipeBuilder.OCRRecipeBuilderError.unsupported
-#endif
     }
 }

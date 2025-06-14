@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 26.0, *)
 struct GenerateRecipeFromPhotoButton: View {
     @Binding private var photos: [PhotoData]
     @Binding private var name: String
@@ -61,6 +62,7 @@ struct GenerateRecipeFromPhotoButton: View {
     }
 }
 
+@available(iOS 26.0, *)
 #Preview {
     GenerateRecipeFromPhotoButton(
         photos: .constant([]),
