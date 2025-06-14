@@ -38,6 +38,18 @@ struct RecipeFormView: View {
             RecipeFormNameSection($name)
                 .hidden(editMode == .active)
             RecipeFormPhotosSection($photos)
+            if CookleFoundationModel.isSupported {
+                GenerateRecipeFromPhotoButton(
+                    photos: $photos,
+                    name: $name,
+                    servingSize: $servingSize,
+                    cookingTime: $cookingTime,
+                    ingredients: $ingredients,
+                    steps: $steps,
+                    note: $note
+                )
+                .hidden(editMode == .active)
+            }
             RecipeFormServingSizeSection($servingSize)
                 .hidden(editMode == .active)
             RecipeFormCookingTimeSection($cookingTime)
