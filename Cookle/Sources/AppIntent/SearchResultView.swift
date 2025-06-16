@@ -1,12 +1,12 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 import SwiftUtilities
 
 struct SearchResultView: View {
-    @BridgeQuery private var recipes: [Recipe]
+    @Query private var recipes: [Recipe]
 
     init(_ predicate: RecipePredicate) {
-        _recipes = BridgeQuery(Query(.recipes(predicate)))
+        _recipes = .init(.recipes(predicate))
     }
 
     var body: some View {
@@ -30,4 +30,3 @@ struct SearchResultView: View {
         }
     }
 }
-
