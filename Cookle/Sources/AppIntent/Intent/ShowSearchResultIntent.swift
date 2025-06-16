@@ -9,7 +9,9 @@ import AppIntents
 import SwiftUtilities
 
 struct ShowSearchResultIntent: AppIntent, IntentPerformer {
-    static var title = LocalizedStringResource("Show Search Result")
+    static var title: LocalizedStringResource {
+        .init("Show Search Result")
+    }
 
     @Parameter(title: "Search Text")
     private var searchText: String

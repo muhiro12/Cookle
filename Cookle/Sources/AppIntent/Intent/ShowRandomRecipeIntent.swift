@@ -10,7 +10,9 @@ import SwiftUI
 import SwiftUtilities
 
 struct ShowRandomRecipeIntent: AppIntent, IntentPerformer {
-    static var title = LocalizedStringResource("Show Random Recipe")
+    static var title: LocalizedStringResource {
+        .init("Show Random Recipe")
+    }
 
     typealias Input = Void
     typealias Output = Recipe?

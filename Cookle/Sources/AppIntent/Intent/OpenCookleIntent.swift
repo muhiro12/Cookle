@@ -9,8 +9,13 @@ import AppIntents
 import SwiftUtilities
 
 struct OpenCookleIntent: AppIntent, IntentPerformer {
-    static var title = LocalizedStringResource("Open Cookle")
-    static var openAppWhenRun = true
+    static var title: LocalizedStringResource {
+        .init("Open Cookle")
+    }
+
+    static var openAppWhenRun: Bool {
+        true
+    }
 
     typealias Input = Void
     typealias Output = Void

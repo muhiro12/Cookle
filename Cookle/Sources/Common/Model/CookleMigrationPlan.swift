@@ -13,7 +13,9 @@ enum CookleMigrationPlan: SchemaMigrationPlan {
         CookleSchemaV1.self
     ]
 
-    static let stages: [MigrationStage] = []
+    static var stages: [MigrationStage] {
+        .empty
+    }
 }
 
 private extension CookleMigrationPlan {

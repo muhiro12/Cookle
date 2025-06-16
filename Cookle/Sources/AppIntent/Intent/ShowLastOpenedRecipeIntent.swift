@@ -11,7 +11,9 @@ import SwiftUI
 import SwiftUtilities
 
 struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
-    static var title = LocalizedStringResource("Show Last Opened Recipe")
+    static var title: LocalizedStringResource {
+        .init("Show Last Opened Recipe")
+    }
 
     typealias Input = PersistentIdentifier?
     typealias Output = Recipe?
