@@ -17,7 +17,7 @@ struct ShowSearchResultIntent: AppIntent, IntentPerformer {
     private var searchText: String
 
     typealias Input = String
-    typealias Output = [Recipe]
+    typealias Output = [RecipeEntity]
 
     @MainActor
     static func perform(_ input: Input) throws -> Output {
@@ -38,7 +38,7 @@ struct ShowSearchResultIntent: AppIntent, IntentPerformer {
         recipes += ingredients.flatMap(\.recipes.orEmpty)
         recipes += categories.flatMap(\.recipes.orEmpty)
         recipes = Array(Set(recipes))
-        return recipes
+        return recipes.compactMap(RecipeEntity.init)
     }
 
     @MainActor
