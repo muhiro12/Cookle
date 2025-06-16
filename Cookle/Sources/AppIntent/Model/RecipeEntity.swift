@@ -14,7 +14,7 @@ final class RecipeEntity: AppEntity {
 
     var displayRepresentation: DisplayRepresentation {
         .init(
-            title: .init(name, table: "AppIntents"),
+            title: .init(.init(name), table: "AppIntents"),
             image: .init(systemName: "book")
         )
     }
