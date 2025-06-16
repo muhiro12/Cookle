@@ -8,6 +8,11 @@ struct ShortcutsLinkSection: View {
             appIntents()
                 .frame(maxWidth: .infinity)
                 .listRowBackground(EmptyView())
+            NavigationLink {
+                AppIntentsNavigationView()
+            } label: {
+                Text("Run Shortcuts")
+            }
         }
     }
 }

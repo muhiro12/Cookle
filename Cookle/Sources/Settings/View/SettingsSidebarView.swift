@@ -44,6 +44,9 @@ struct SettingsSidebarView: View {
                 NavigationLink(value: SettingsContent.license) {
                     Text("Licenses")
                 }
+                NavigationLink(value: SettingsContent.shortcuts) {
+                    Text("Shortcuts")
+                }
             }
             ShortcutsLinkSection()
         }

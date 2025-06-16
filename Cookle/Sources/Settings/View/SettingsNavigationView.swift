@@ -10,6 +10,8 @@ struct SettingsNavigationView: View {
             switch selection {
             case .license:
                 LicenseView()
+            case .shortcuts:
+                AppIntentsNavigationView()
             case .none:
                 EmptyView()
             }

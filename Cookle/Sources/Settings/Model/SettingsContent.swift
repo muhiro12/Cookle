@@ -7,4 +7,5 @@
 
 enum SettingsContent {
     case license
+    case shortcuts
 }
