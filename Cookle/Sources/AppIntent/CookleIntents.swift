@@ -8,30 +8,37 @@
 import AppIntents
 import SwiftData
 import SwiftUI
+import SwiftUtilities
 
-struct OpenCookleIntent: AppIntent {
+struct OpenCookleIntent: AppIntent, IntentPerformer {
     static var title = LocalizedStringResource("Open Cookle")
     static var openAppWhenRun = true
 
+    typealias Input = Void
+    typealias Output = Void
+
     @MainActor
-    static func perform() throws -> some IntentResult {
-        .result()
-    }
+    static func perform(_ input: Input) throws -> Output {}
 
     @MainActor
     func perform() throws -> some IntentResult {
-        try Self.perform()
+        try Self.perform(())
+        return .result()
     }
 }
 
-struct ShowSearchResultIntent: AppIntent {
+struct ShowSearchResultIntent: AppIntent, IntentPerformer {
     static var title = LocalizedStringResource("Show Search Result")
 
     @Parameter(title: "Search Text")
     private var searchText: String
 
+    typealias Input = String
+    typealias Output = [Recipe]
+
     @MainActor
-    static func perform(searchText: String) throws -> [Recipe] {
+    static func perform(_ input: Input) throws -> Output {
+        let searchText = input
         var recipes = try CookleIntents.context.fetch(
             .recipes(.nameContains(searchText))
         )
@@ -53,44 +60,30 @@ struct ShowSearchResultIntent: AppIntent {
 
     @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
-        let recipes = try Self.perform(searchText: searchText)
+        _ = try Self.perform(searchText)
         return .result(dialog: "Result") {
             CookleIntents.cookleView {
-                ForEach(recipes) { recipe in
-                    VStack(alignment: .leading) {
-                        Text(recipe.name)
-                            .font(.headline)
-                        if let photo = recipe.photoObjects?.min()?.photo,
-                           let image = UIImage(data: photo.data) {
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 240)
-                                .frame(maxWidth: .infinity)
-                                .clipShape(.rect(cornerRadius: 8))
-                        }
-                        RecipeIngredientsSection()
-                        Divider()
-                    }
-                    .environment(recipe)
-                }
+                SearchResultView(.nameContains(searchText))
             }
         }
     }
 }
 
-struct ShowLastOpenedRecipeIntent: AppIntent {
+struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
     static var title = LocalizedStringResource("Show Last Opened Recipe")
 
+    typealias Input = PersistentIdentifier?
+    typealias Output = Recipe?
+
     @MainActor
-    static func perform(id: PersistentIdentifier?) throws -> Recipe? {
-        guard let id else { return nil }
+    static func perform(_ input: Input) throws -> Output {
+        guard let id = input else { return nil }
         return try CookleIntents.context.fetchFirst(.recipes(.idIs(id)))
     }
 
     @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
-        guard let recipe = try Self.perform(id: AppStorage(.lastOpenedRecipeID).wrappedValue) else {
+        guard let recipe = try Self.perform(AppStorage(.lastOpenedRecipeID).wrappedValue) else {
             return .result(dialog: "Not Found")
         }
         return .result(dialog: .init(stringLiteral: recipe.name)) {
@@ -115,17 +108,20 @@ struct ShowLastOpenedRecipeIntent: AppIntent {
     }
 }
 
-struct ShowRandomRecipeIntent: AppIntent {
+struct ShowRandomRecipeIntent: AppIntent, IntentPerformer {
     static var title = LocalizedStringResource("Show Random Recipe")
 
+    typealias Input = Void
+    typealias Output = Recipe?
+
     @MainActor
-    static func perform() throws -> Recipe? {
+    static func perform(_ input: Input) throws -> Output {
         try CookleIntents.context.fetchRandom(.recipes(.all))
     }
 
     @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
-        guard let recipe = try Self.perform() else {
+        guard let recipe = try Self.perform(()) else {
             return .result(dialog: "Not Found")
         }
         return .result(dialog: .init(stringLiteral: recipe.name)) {
