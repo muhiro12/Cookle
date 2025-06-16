@@ -4,8 +4,8 @@ import SwiftData
 struct RecipeEntityQuery: EntityStringQuery {
     func entities(for identifiers: [RecipeEntity.ID]) throws -> [RecipeEntity] {
         try identifiers.compactMap { id in
-            guard let pid = try? PersistentIdentifier(base64Encoded: id),
-                  let recipe = try CookleIntents.context.fetchFirst(.recipes(.idIs(pid))) else {
+            let persistentIdentifier = try PersistentIdentifier(base64Encoded: id)
+            guard let recipe = try CookleIntents.context.fetchFirst(.recipes(.idIs(persistentIdentifier))) else {
                 return nil
             }
             return RecipeEntity(recipe)
