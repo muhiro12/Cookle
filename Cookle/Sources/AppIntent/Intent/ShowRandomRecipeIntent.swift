@@ -15,16 +15,24 @@ struct ShowRandomRecipeIntent: AppIntent, IntentPerformer {
     }
 
     typealias Input = Void
-    typealias Output = Recipe?
+    typealias Output = RecipeEntity?
 
     @MainActor
-    static func perform(_: Input) throws -> Output {
+    private static func recipe() throws -> Recipe? {
         try CookleIntents.context.fetchRandom(.recipes(.all))
     }
 
     @MainActor
+    static func perform(_: Input) throws -> Output {
+        guard let recipe = try recipe() else {
+            return nil
+        }
+        return RecipeEntity(recipe)
+    }
+
+    @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
-        guard let recipe = try Self.perform(()) else {
+        guard let recipe = try Self.recipe() else {
             return .result(dialog: "Not Found")
         }
         return .result(dialog: .init(stringLiteral: recipe.name)) {
