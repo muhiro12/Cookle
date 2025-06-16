@@ -10,7 +10,7 @@ import AppIntents
 struct CookleShortcuts: AppShortcutsProvider {
     static let shortcutTileColor = ShortcutTileColor.yellow
 
-    static let appShortcuts = [
+    static var appShortcuts: [AppShortcut] {
         AppShortcut(
             intent: OpenCookleIntent(),
             phrases: [
@@ -20,7 +20,7 @@ struct CookleShortcuts: AppShortcutsProvider {
             ],
             shortTitle: "Open Cookle",
             systemImageName: "bird"
-        ),
+        )
         AppShortcut(
             intent: ShowSearchResultIntent(),
             phrases: [
@@ -30,7 +30,7 @@ struct CookleShortcuts: AppShortcutsProvider {
             ],
             shortTitle: "Show Search Result",
             systemImageName: "magnifyingglass"
-        ),
+        )
         AppShortcut(
             intent: ShowLastOpenedRecipeIntent(),
             phrases: [
@@ -40,7 +40,7 @@ struct CookleShortcuts: AppShortcutsProvider {
             ],
             shortTitle: "Show Last Opened Recipe",
             systemImageName: "clock"
-        ),
+        )
         AppShortcut(
             intent: ShowRandomRecipeIntent(),
             phrases: [
@@ -51,5 +51,5 @@ struct CookleShortcuts: AppShortcutsProvider {
             shortTitle: "Show Random Recipe",
             systemImageName: "dice"
         )
-    ]
+    }
 }
