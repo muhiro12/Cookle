@@ -21,10 +21,40 @@ final class RecipeEntity: AppEntity {
 
     let id: String
     let name: String
+    let photos: [Data]
+    let servingSize: Int
+    let cookingTime: Int
+    let ingredients: [String]
+    let steps: [String]
+    let categories: [String]
+    let note: String
+    let createdTimestamp: Date
+    let modifiedTimestamp: Date
 
-    init(id: String, name: String) {
+    init(
+        id: String,
+        name: String,
+        photos: [Data],
+        servingSize: Int,
+        cookingTime: Int,
+        ingredients: [String],
+        steps: [String],
+        categories: [String],
+        note: String,
+        createdTimestamp: Date,
+        modifiedTimestamp: Date
+    ) {
         self.id = id
         self.name = name
+        self.photos = photos
+        self.servingSize = servingSize
+        self.cookingTime = cookingTime
+        self.ingredients = ingredients
+        self.steps = steps
+        self.categories = categories
+        self.note = note
+        self.createdTimestamp = createdTimestamp
+        self.modifiedTimestamp = modifiedTimestamp
     }
 }
 
@@ -37,6 +67,18 @@ extension RecipeEntity: ModelBridgeable {
         guard let encodedID = try? model.id.base64Encoded() else {
             return nil
         }
-        self.init(id: encodedID, name: model.name)
+        self.init(
+            id: encodedID,
+            name: model.name,
+            photos: model.photos?.compactMap(\.data) ?? .empty,
+            servingSize: model.servingSize,
+            cookingTime: model.cookingTime,
+            ingredients: model.ingredients?.map(\.value) ?? .empty,
+            steps: model.steps,
+            categories: model.categories?.map(\.value) ?? .empty,
+            note: model.note,
+            createdTimestamp: model.createdTimestamp,
+            modifiedTimestamp: model.modifiedTimestamp
+        )
     }
 }
