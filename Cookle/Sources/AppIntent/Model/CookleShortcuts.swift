@@ -51,5 +51,15 @@ struct CookleShortcuts: AppShortcutsProvider {
             shortTitle: "Show Random Recipe",
             systemImageName: "dice"
         )
+        AppShortcut(
+            intent: GenerateRecipeIntent(),
+            phrases: [
+                "Generate a recipe in \(.applicationName)",
+                "Create recipe with \(.applicationName)",
+                "AI recipe in \(.applicationName)"
+            ],
+            shortTitle: "Generate Recipe",
+            systemImageName: "sparkles"
+        )
     }
 }

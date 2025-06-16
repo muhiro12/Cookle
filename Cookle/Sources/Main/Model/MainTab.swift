@@ -11,6 +11,7 @@ enum MainTab: CaseIterable {
     case diary
     case recipe
     case photo
+    case generator
     case ingredient
     case category
     case settings
@@ -29,6 +30,8 @@ extension MainTab {
             RecipeNavigationView()
         case .photo:
             PhotoNavigationView()
+        case .generator:
+            RecipeGeneratorNavigationView()
         case .ingredient:
             TagNavigationView<Ingredient>()
         case .category:
@@ -64,6 +67,12 @@ extension MainTab {
                 Text("Photo")
             } icon: {
                 Image(systemName: "photo.stack")
+            }
+        case .generator:
+            Label {
+                Text("Generate")
+            } icon: {
+                Image(systemName: "sparkles")
             }
         case .ingredient:
             Label {
