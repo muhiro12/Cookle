@@ -85,7 +85,7 @@ struct SearchView: View {
                 models += ingredients.flatMap(\.recipes.orEmpty)
                 models += categories.flatMap(\.recipes.orEmpty)
                 models = Array(Set(models))
-                self.recipes = models.compactMap(RecipeEntity.init)
+                recipes = models.compactMap(RecipeEntity.init)
             } catch {}
         }
     }
