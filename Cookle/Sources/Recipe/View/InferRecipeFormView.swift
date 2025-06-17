@@ -14,6 +14,8 @@ struct InferRecipeFormView: View {
     @Binding private var note: String
 
     @State private var text = ""
+    @State private var isLoading = false
+    @State private var errorMessage: String?
 
     private let placeholder: LocalizedStringKey = """
         Spaghetti Carbonara for 2 people.
@@ -68,8 +70,11 @@ struct InferRecipeFormView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button {
+                        isLoading = true
                         Task {
-                            if let inference = try? await InferRecipeIntent.perform(text) {
+                            defer { isLoading = false }
+                            do {
+                                let inference = try await InferRecipeIntent.perform(text)
                                 name = inference.name
                                 servingSize = inference.servingSize == 0 ? "" : inference.servingSize.description
                                 cookingTime = inference.cookingTime == 0 ? "" : inference.cookingTime.description
@@ -78,13 +83,29 @@ struct InferRecipeFormView: View {
                                 categories = inference.categories + [""]
                                 note = inference.note
                                 dismiss()
+                            } catch {
+                                errorMessage = error.localizedDescription
                             }
                         }
                     } label: {
                         Text("Done")
                     }
+                    .disabled(isLoading)
                 }
             }
             .font(nil)
+            .overlay {
+                if isLoading {
+                    ZStack {
+                        Color.black.opacity(0.2).ignoresSafeArea()
+                        ProgressView()
+                    }
+                }
+            }
+            .alert("Error", isPresented: .constant(errorMessage != nil), actions: {
+                Button("OK") { errorMessage = nil }
+            }, message: {
+                Text(errorMessage ?? "")
+            })
     }
 }
