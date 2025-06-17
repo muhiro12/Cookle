@@ -1696,40 +1696,6 @@
         }
       }
     },
-    "Subscription" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Subscription"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Suscripción"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abonnement"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "サブスクリプション"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "订阅"
-          }
-        }
-      }
-    },
     "Lunches" : {
       "localizations" : {
         "en" : {
@@ -2104,6 +2070,9 @@
         }
       }
     },
+    "Open App Store" : {
+
+    },
     "Open Cookle" : {
       "localizations" : {
         "en" : {
@@ -2307,6 +2276,9 @@
           }
         }
       }
+    },
+    "Please update Cookle to the latest version to continue using it." : {
+
     },
     "Preview" : {
       "localizations" : {
@@ -2886,6 +2858,40 @@
         }
       }
     },
+    "Subscription" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subscription"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suscripción"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abonnement"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "サブスクリプション"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "订阅"
+          }
+        }
+      }
+    },
     "Type" : {
       "localizations" : {
         "en" : {
@@ -2987,6 +2993,9 @@
           }
         }
       }
+    },
+    "Update Required" : {
+
     },
     "Updated At" : {
       "localizations" : {

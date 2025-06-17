@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TitleAndLargeIconLabelStyle: LabelStyle {
-    func makeBody(configuration: Configuration) -> some View {
+    func makeBody(configuration: LabelStyleConfiguration) -> some View {
         HStack {
             configuration.icon
                 .frame(width: 80)
