@@ -25,8 +25,12 @@ struct SettingsSidebarView: View {
 
     var body: some View {
         List(selection: $content) {
-            StoreSection()
-                .hidden(isSubscribeOn)
+            Section {
+                NavigationLink(value: SettingsContent.subscription) {
+                    Text("Subscription")
+                }
+            }
+            .hidden(isSubscribeOn)
             Section {
                 Toggle("iCloud On", isOn: $isICloudOn)
             } header: {
