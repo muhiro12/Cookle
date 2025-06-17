@@ -35,6 +35,8 @@ private extension CookleMigrationPlan {
             ]
         }
 
-        static let versionIdentifier: Schema.Version = .init(1, 0, 0)
+        static var versionIdentifier: Schema.Version {
+            .init(1, 0, 0)
+        }
     }
 }
