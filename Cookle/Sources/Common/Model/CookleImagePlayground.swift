@@ -5,8 +5,8 @@
 //  Created by Hiromu Nakano on 2025/03/30.
 //
 
-import ImagePlayground
 import AppIntents
+import ImagePlayground
 import SwiftUI
 
 enum CookleImagePlayground {
@@ -38,9 +38,9 @@ extension View {
                     concepts.append(
                         .text(recipe.name)
                     )
-                    recipe.ingredients.forEach { ingredient in
+                    recipe.ingredients.forEach { element in
                         concepts.append(
-                            .text(ingredient)
+                            .text(element.ingredient)
                         )
                     }
                     recipe.steps.forEach { step in

@@ -13,7 +13,7 @@ struct RecipeLabel: View {
             VStack(alignment: .leading) {
                 Text(recipe.name)
                 Text(
-                    recipe.ingredients.joined(separator: ", ")
+                    recipe.ingredients.map(\.ingredient).joined(separator: ", ")
                 )
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
