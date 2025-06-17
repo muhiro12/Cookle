@@ -13,7 +13,6 @@ struct RecipeIngredientsSection: View {
 
     var body: some View {
         if let objects = try? recipe.model(context: context)?.ingredientObjects,
-           let objects = objects,
            objects.isNotEmpty {
             Section {
                 ForEach(objects.sorted()) { object in

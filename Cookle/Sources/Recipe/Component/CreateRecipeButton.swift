@@ -49,7 +49,7 @@ struct CreateRecipeButton: View {
 
     var body: some View {
         Button {
-            if let model = Recipe.create(
+            let model = Recipe.create(
                 context: context,
                 name: name,
                 photos: zip(photos.indices, photos).map { index, element in
@@ -71,9 +71,8 @@ struct CreateRecipeButton: View {
                     return .create(context: context, value: $0)
                 },
                 note: note
-            ) {
-                recipe = RecipeEntity(model)
-            }
+            )
+            recipe = RecipeEntity(model)
             if recipe?.photos.isEmpty == true,
                CookleImagePlayground.isSupported {
                 isConfirmationDialogPresented = true

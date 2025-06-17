@@ -13,7 +13,6 @@ struct RecipeCategoriesSection: View {
 
     var body: some View {
         if let categories = try? recipe.model(context: context)?.categories,
-           let categories = categories,
            categories.isNotEmpty {
             Section {
                 ForEach(categories) {

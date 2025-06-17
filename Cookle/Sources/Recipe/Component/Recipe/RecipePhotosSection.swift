@@ -14,8 +14,7 @@ struct RecipePhotosSection: View {
     @State private var selectedPhoto: Photo?
 
     var body: some View {
-        if let objects = try? recipe.model(context: context)?.photoObjects,
-           let photoObjects = objects,
+        if let photoObjects = try? recipe.model(context: context)?.photoObjects,
            photoObjects.isNotEmpty {
             Section {
                 ScrollView(.horizontal) {

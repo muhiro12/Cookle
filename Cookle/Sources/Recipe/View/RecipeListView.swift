@@ -20,7 +20,7 @@ struct RecipeListView: View {
 
     init(selection: Binding<RecipeEntity?> = .constant(nil), descriptor: FetchDescriptor<Recipe> = .recipes(.all)) {
         _recipe = selection
-        _recipes = .init(descriptor)
+        _recipes = .init(.init(descriptor))
     }
 
     var body: some View {

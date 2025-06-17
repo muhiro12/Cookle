@@ -22,7 +22,14 @@ struct DiaryView: View {
                 if let recipes = diary.objects?
                     .filter({ $0.type == type })
                     .sorted()
-                    .compactMap({ RecipeEntity($0.recipe) }),
+                    .compactMap(
+                        { object -> RecipeEntity? in
+                            guard let model = object.recipe else {
+                                return nil
+                            }
+                            return RecipeEntity(model)
+                        }
+                    ),
                    recipes.isNotEmpty {
                     Section {
                         ForEach(recipes) { recipe in

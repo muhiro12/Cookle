@@ -79,11 +79,11 @@ struct DiaryFormView: View {
                     if let diary {
                         diary.update(
                             date: date,
-                            objects: zip(Array(breakfasts).indices, breakfasts).map { index, element in
+                            objects: zip(recipes(from: breakfasts).indices, recipes(from: breakfasts)).map { index, element in
                                 .create(context: context, recipe: element, type: .breakfast, order: index + 1)
-                            } + zip(Array(lunches).indices, lunches).map { index, element in
+                            } + zip(recipes(from: lunches).indices, recipes(from: lunches)).map { index, element in
                                 .create(context: context, recipe: element, type: .lunch, order: index + 1)
-                            } + zip(Array(dinners).indices, dinners).map { index, element in
+                            } + zip(recipes(from: dinners).indices, recipes(from: dinners)).map { index, element in
                                 .create(context: context, recipe: element, type: .dinner, order: index + 1)
                             },
                             note: note
@@ -92,11 +92,11 @@ struct DiaryFormView: View {
                         _ = Diary.create(
                             context: context,
                             date: date,
-                            objects: zip(Array(breakfasts).indices, breakfasts).map { index, element in
+                            objects: zip(recipes(from: breakfasts).indices, recipes(from: breakfasts)).map { index, element in
                                 .create(context: context, recipe: element, type: .breakfast, order: index + 1)
-                            } + zip(Array(lunches).indices, lunches).map { index, element in
+                            } + zip(recipes(from: lunches).indices, recipes(from: lunches)).map { index, element in
                                 .create(context: context, recipe: element, type: .lunch, order: index + 1)
-                            } + zip(Array(dinners).indices, dinners).map { index, element in
+                            } + zip(recipes(from: dinners).indices, recipes(from: dinners)).map { index, element in
                                 .create(context: context, recipe: element, type: .dinner, order: index + 1)
                             },
                             note: note
@@ -112,11 +112,23 @@ struct DiaryFormView: View {
         .interactiveDismissDisabled()
         .task {
             date = diary?.date ?? .now
-            breakfasts = .init(diary?.objects.orEmpty.filter { $0.type == .breakfast }.sorted().compactMap(\.recipe) ?? [])
-            lunches = .init(diary?.objects.orEmpty.filter { $0.type == .lunch }.sorted().compactMap(\.recipe) ?? [])
-            dinners = .init(diary?.objects.orEmpty.filter { $0.type == .dinner }.sorted().compactMap(\.recipe) ?? [])
+            breakfasts = recipeEntities(from: diary?.objects.orEmpty.filter { $0.type == .breakfast }.sorted().compactMap(\.recipe) ?? [])
+            lunches = recipeEntities(from: diary?.objects.orEmpty.filter { $0.type == .lunch }.sorted().compactMap(\.recipe) ?? [])
+            dinners = recipeEntities(from: diary?.objects.orEmpty.filter { $0.type == .dinner }.sorted().compactMap(\.recipe) ?? [])
             note = diary?.note ?? ""
         }
+    }
+}
+
+private extension DiaryFormView {
+    func recipes(from entities: Set<RecipeEntity>) -> [Recipe] {
+        entities.compactMap { entity -> Recipe? in
+            try? context.fetchFirst(.recipes(.idIs(.init(base64Encoded: entity.id))))
+        }
+    }
+
+    func recipeEntities(from models: [Recipe]) -> Set<RecipeEntity> {
+        Set(models.compactMap { RecipeEntity($0) })
     }
 }
 

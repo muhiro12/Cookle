@@ -13,7 +13,6 @@ struct RecipeDiariesSection: View {
 
     var body: some View {
         if let diaries = try? recipe.model(context: context)?.diaries,
-           let diaries = diaries,
            diaries.isNotEmpty {
             Section {
                 ForEach(diaries.sorted { $0.date > $1.date }) {
