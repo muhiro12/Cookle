@@ -8,6 +8,8 @@ struct SettingsNavigationView: View {
             SettingsSidebarView(selection: $selection)
         } detail: {
             switch selection {
+            case .subscription:
+                SubscriptionView()
             case .license:
                 LicenseView()
             case .none:

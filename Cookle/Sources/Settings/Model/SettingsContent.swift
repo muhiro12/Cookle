@@ -6,5 +6,6 @@
 //
 
 enum SettingsContent {
+    case subscription
     case license
 }
