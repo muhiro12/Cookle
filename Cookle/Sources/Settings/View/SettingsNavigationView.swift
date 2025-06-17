@@ -9,7 +9,7 @@ struct SettingsNavigationView: View {
         } detail: {
             switch selection {
             case .subscription:
-                SubscriptionView()
+                StoreListView()
             case .license:
                 LicenseView()
             case .none:

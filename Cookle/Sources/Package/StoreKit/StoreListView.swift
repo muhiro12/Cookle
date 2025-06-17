@@ -1,11 +1,9 @@
 import SwiftUI
 
-struct SubscriptionView: View {
-    @Environment(StoreKitPackage.self) private var storeKit
-
+struct StoreListView: View {
     var body: some View {
         List {
-            storeKit()
+            StoreSection()
         }
         .navigationTitle(Text("Subscription"))
     }
@@ -14,7 +12,7 @@ struct SubscriptionView: View {
 #Preview {
     CooklePreview { _ in
         NavigationStack {
-            SubscriptionView()
+            StoreListView()
         }
     }
 }
