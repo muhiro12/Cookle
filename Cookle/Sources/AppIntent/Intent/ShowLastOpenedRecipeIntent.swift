@@ -32,7 +32,8 @@ struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
 
     @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
-        guard let recipe = try Self.recipe(AppStorage(.lastOpenedRecipeID).wrappedValue) else {
+        guard let lastOpenedRecipeID = AppStorage(.lastOpenedRecipeID).wrappedValue,
+              let recipe = try Self.recipe(.init(base64Encoded: lastOpenedRecipeID)) else {
             return .result(dialog: "Not Found")
         }
         return .result(dialog: .init(stringLiteral: recipe.name)) {

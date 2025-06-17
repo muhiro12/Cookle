@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct RecipeLabel: View {
-    @Environment(Recipe.self) private var recipe
+    @Environment(RecipeEntity.self) private var recipe
+    @Environment(\.modelContext) private var context
 
     @State private var isEditPresented = false
     @State private var isDuplicatePresented = false
@@ -12,23 +13,21 @@ struct RecipeLabel: View {
             VStack(alignment: .leading) {
                 Text(recipe.name)
                 Text(
-                    recipe.ingredientObjects.orEmpty.sorted().compactMap {
-                        $0.ingredient?.value
-                    }.joined(separator: ", ")
+                    recipe.ingredients.joined(separator: ", ")
                 )
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
                 Text(
-                    recipe.categories.orEmpty.map(\.value).joined(separator: ", ")
+                    recipe.categories.joined(separator: ", ")
                 )
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
             }
         } icon: {
-            if let photo = recipe.photoObjects?.min()?.photo,
-               let image = UIImage(data: photo.data) {
+            if let data = recipe.photos.first,
+               let image = UIImage(data: data) {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
@@ -56,7 +55,9 @@ struct RecipeLabel: View {
             isPresented: $isDeletePresented
         ) {
             Button("Delete", role: .destructive) {
-                recipe.delete()
+                if let model = try? recipe.model(context: context) {
+                    model.delete()
+                }
             }
             Button("Cancel", role: .cancel) {}
         } message: {

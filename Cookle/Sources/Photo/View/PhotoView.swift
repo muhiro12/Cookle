@@ -10,11 +10,11 @@ import SwiftUI
 struct PhotoView: View {
     @Environment(Photo.self) private var photo
 
-    @Binding private var recipe: Recipe?
+    @Binding private var recipe: RecipeEntity?
 
     @State private var isPhotoDetailPresented = false
 
-    init(selection: Binding<Recipe?> = .constant(nil)) {
+    init(selection: Binding<RecipeEntity?> = .constant(nil)) {
         _recipe = selection
     }
 
@@ -36,7 +36,7 @@ struct PhotoView: View {
                 }
             }
             Section {
-                ForEach(photo.recipes.orEmpty) { recipe in
+                ForEach(photo.recipes.orEmpty.compactMap(RecipeEntity.init)) { recipe in
                     NavigationLink(value: recipe) {
                         RecipeLabel()
                             .labelStyle(.titleOnly)

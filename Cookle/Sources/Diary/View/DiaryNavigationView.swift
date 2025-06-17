@@ -12,7 +12,7 @@ struct DiaryNavigationView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     @State private var diary: Diary?
-    @State private var recipe: Recipe?
+    @State private var recipe: RecipeEntity?
 
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {

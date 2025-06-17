@@ -6,6 +6,7 @@
 //
 
 import ImagePlayground
+import AppIntents
 import SwiftUI
 
 enum CookleImagePlayground {
@@ -22,7 +23,7 @@ extension View {
     @ViewBuilder
     func cookleImagePlayground(
         isPresented: Binding<Bool>,
-        recipe: Recipe?,
+        recipe: RecipeEntity?,
         onCompletion: @escaping (Data) -> Void,
         onCancellation: (() -> Void)? = nil
     ) -> some View {
@@ -37,9 +38,9 @@ extension View {
                     concepts.append(
                         .text(recipe.name)
                     )
-                    recipe.ingredients?.forEach { ingredient in
+                    recipe.ingredients.forEach { ingredient in
                         concepts.append(
-                            .text(ingredient.value)
+                            .text(ingredient)
                         )
                     }
                     recipe.steps.forEach { step in

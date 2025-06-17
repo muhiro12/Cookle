@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PhotoNavigationView: View {
     @State private var photo: Photo?
-    @State private var recipe: Recipe?
+    @State private var recipe: RecipeEntity?
 
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {
