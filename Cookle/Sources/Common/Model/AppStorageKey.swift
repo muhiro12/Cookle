@@ -1,4 +1,3 @@
-import SwiftData
 import SwiftUI
 
 enum BoolAppStorageKey: String {
@@ -7,16 +6,16 @@ enum BoolAppStorageKey: String {
     case isDebugOn = "hd3fAy3G"
 }
 
-enum PersistentIdentifierAppStorageKey: String {
+enum StringAppStorageKey: String {
     case lastOpenedRecipeID = "zxcXvb12"
 }
 
 extension AppStorage {
-    init(_ key: BoolAppStorageKey) where Value == Bool {
-        self.init(wrappedValue: false, key.rawValue)
+    init(_ key: StringAppStorageKey) where Value == String? {
+        self.init(key.rawValue)
     }
 
-    init(_ key: PersistentIdentifierAppStorageKey) where Value == PersistentIdentifier? {
-        self.init(key.rawValue)
+    init(_ key: BoolAppStorageKey) where Value == Bool {
+        self.init(wrappedValue: false, key.rawValue)
     }
 }

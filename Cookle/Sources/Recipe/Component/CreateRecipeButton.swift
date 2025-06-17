@@ -12,7 +12,7 @@ struct CreateRecipeButton: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.requestReview) private var requestReview
 
-    @State private var recipe: Recipe?
+    @State private var recipe: RecipeEntity?
     @State private var isConfirmationDialogPresented = false
     @State private var isImagePlaygroundPresented = false
 
@@ -49,7 +49,7 @@ struct CreateRecipeButton: View {
 
     var body: some View {
         Button {
-            recipe = Recipe.create(
+            let model = Recipe.create(
                 context: context,
                 name: name,
                 photos: zip(photos.indices, photos).map { index, element in
@@ -72,7 +72,8 @@ struct CreateRecipeButton: View {
                 },
                 note: note
             )
-            if recipe?.photos?.isEmpty == true,
+            recipe = RecipeEntity(model)
+            if recipe?.photos.isEmpty == true,
                CookleImagePlayground.isSupported {
                 isConfirmationDialogPresented = true
             } else {
@@ -117,8 +118,9 @@ struct CreateRecipeButton: View {
             isPresented: $isImagePlaygroundPresented,
             recipe: recipe
         ) { data in
-            if let recipe {
-                recipe.update(
+            if let recipe,
+               let model = try? recipe.model(context: context) {
+                model.update(
                     name: recipe.name,
                     photos: [
                         .create(
@@ -132,9 +134,9 @@ struct CreateRecipeButton: View {
                     ],
                     servingSize: recipe.servingSize,
                     cookingTime: recipe.cookingTime,
-                    ingredients: recipe.ingredientObjects ?? [],
+                    ingredients: model.ingredientObjects ?? [],
                     steps: recipe.steps,
-                    categories: recipe.categories ?? [],
+                    categories: model.categories ?? [],
                     note: recipe.note
                 )
             }

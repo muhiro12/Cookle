@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TagNavigationView<T: Tag>: View {
     @State private var tag: T?
-    @State private var recipe: Recipe?
+    @State private var recipe: RecipeEntity?
 
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {

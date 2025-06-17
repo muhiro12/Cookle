@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct RecipeCategoriesSection: View {
-    @Environment(Recipe.self) private var recipe
+    @Environment(RecipeEntity.self) private var recipe
+    @Environment(\.modelContext) private var context
 
     var body: some View {
-        if let categories = recipe.categories,
+        if let categories = try? recipe.model(context: context)?.categories,
            categories.isNotEmpty {
             Section {
                 ForEach(categories) {
@@ -28,7 +29,7 @@ struct RecipeCategoriesSection: View {
     CooklePreview { preview in
         List {
             RecipeCategoriesSection()
-                .environment(preview.recipes[0])
+                .environment(RecipeEntity(preview.recipes[0])!)
         }
     }
 }

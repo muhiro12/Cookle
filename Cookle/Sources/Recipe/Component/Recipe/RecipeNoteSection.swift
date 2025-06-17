@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RecipeNoteSection: View {
-    @Environment(Recipe.self) private var recipe
+    @Environment(RecipeEntity.self) private var recipe
 
     var body: some View {
         Section {
@@ -24,7 +24,7 @@ struct RecipeNoteSection: View {
     CooklePreview { preview in
         List {
             RecipeNoteSection()
-                .environment(preview.recipes[0])
+                .environment(RecipeEntity(preview.recipes[0])!)
         }
     }
 }

@@ -58,8 +58,6 @@ final class RecipeEntity: AppEntity {
     }
 }
 
-// MARK: - ModelBridgeable
-
 extension RecipeEntity: ModelBridgeable {
     typealias Model = Recipe
 
@@ -80,5 +78,15 @@ extension RecipeEntity: ModelBridgeable {
             createdTimestamp: model.createdTimestamp,
             modifiedTimestamp: model.modifiedTimestamp
         )
+    }
+}
+
+extension RecipeEntity: Hashable {
+    static func == (lhs: RecipeEntity, rhs: RecipeEntity) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }

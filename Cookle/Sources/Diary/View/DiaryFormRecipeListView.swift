@@ -7,20 +7,21 @@
 
 import SwiftData
 import SwiftUI
+import SwiftUtilities
 
 struct DiaryFormRecipeListView: View {
     @Environment(\.dismiss) private var dismiss
 
-    @Query(.recipes(.all)) private var recipes: [Recipe]
+    @BridgeQuery(.init(.recipes(.all))) private var recipes: [RecipeEntity]
 
-    @Binding private var selection: Set<Recipe>
+    @Binding private var selection: Set<RecipeEntity>
 
-    @State private var temporarySelection = Set<Recipe>()
+    @State private var temporarySelection = Set<RecipeEntity>()
     @State private var searchText = ""
 
     private let type: DiaryObjectType
 
-    init(selection: Binding<Set<Recipe>> = .constant([]), type: DiaryObjectType) {
+    init(selection: Binding<Set<RecipeEntity>> = .constant([]), type: DiaryObjectType) {
         _selection = selection
         _temporarySelection = .init(initialValue: selection.wrappedValue)
         self.type = type

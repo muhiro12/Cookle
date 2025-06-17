@@ -13,13 +13,13 @@ struct SearchView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.isPresented) private var isPresented
 
-    @Binding private var recipe: Recipe?
+    @Binding private var recipe: RecipeEntity?
 
-    @State private var recipes = [Recipe]()
+    @State private var recipes = [RecipeEntity]()
     @State private var searchText = ""
     @State private var isFocused = false
 
-    init(selection: Binding<Recipe?> = .constant(nil)) {
+    init(selection: Binding<RecipeEntity?> = .constant(nil)) {
         _recipe = selection
     }
 
@@ -69,7 +69,7 @@ struct SearchView: View {
         }
         .onChange(of: searchText) {
             do {
-                var recipes = try context.fetch(
+                var models = try context.fetch(
                     .recipes(.nameContains(searchText))
                 )
                 let ingredients = try context.fetch(
@@ -82,10 +82,10 @@ struct SearchView: View {
                         ? .categories(.valueIs(searchText))
                         : .categories(.valueContains(searchText))
                 )
-                recipes += ingredients.flatMap(\.recipes.orEmpty)
-                recipes += categories.flatMap(\.recipes.orEmpty)
-                recipes = Array(Set(recipes))
-                self.recipes = recipes
+                models += ingredients.flatMap(\.recipes.orEmpty)
+                models += categories.flatMap(\.recipes.orEmpty)
+                models = Array(Set(models))
+                self.recipes = models.compactMap(RecipeEntity.init)
             } catch {}
         }
     }
