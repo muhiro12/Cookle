@@ -10,8 +10,6 @@ struct InferRecipeFormNavigationView: View {
     @Binding var categories: [String]
     @Binding var note: String
 
-    @State private var text = ""
-
     init(name: Binding<String>,
          servingSize: Binding<String>,
          cookingTime: Binding<String>,
@@ -30,15 +28,15 @@ struct InferRecipeFormNavigationView: View {
 
     var body: some View {
         NavigationStack {
-            InferRecipeFormView(text: $text) { inference in
-                name = inference.name
-                servingSize = inference.servingSize == 0 ? "" : inference.servingSize.description
-                cookingTime = inference.cookingTime == 0 ? "" : inference.cookingTime.description
-                ingredients = inference.ingredients.map { ($0.ingredient, $0.amount) } + [("", "")]
-                steps = inference.steps + [""]
-                categories = inference.categories + [""]
-                note = inference.note
-            }
+            InferRecipeFormView(
+                name: $name,
+                servingSize: $servingSize,
+                cookingTime: $cookingTime,
+                ingredients: $ingredients,
+                steps: $steps,
+                categories: $categories,
+                note: $note
+            )
         }
     }
 }

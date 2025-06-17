@@ -24,7 +24,7 @@ final class RecipeEntity: AppEntity {
     let photos: [Data]
     let servingSize: Int
     let cookingTime: Int
-    let ingredients: [String]
+    let ingredients: [(ingredient: String, amount: String)]
     let steps: [String]
     let categories: [String]
     let note: String
@@ -37,7 +37,7 @@ final class RecipeEntity: AppEntity {
         photos: [Data],
         servingSize: Int,
         cookingTime: Int,
-        ingredients: [String],
+        ingredients: [(ingredient: String, amount: String)],
         steps: [String],
         categories: [String],
         note: String,
@@ -73,7 +73,7 @@ extension RecipeEntity: ModelBridgeable {
             photos: model.photos?.compactMap(\.data) ?? .empty,
             servingSize: model.servingSize,
             cookingTime: model.cookingTime,
-            ingredients: model.ingredients?.map(\.value) ?? .empty,
+            ingredients: zip(model.ingredients ?? [], model.ingredientObjects ?? []).map { ($0.value, $1.amount) },
             steps: model.steps,
             categories: model.categories?.map(\.value) ?? .empty,
             note: model.note,

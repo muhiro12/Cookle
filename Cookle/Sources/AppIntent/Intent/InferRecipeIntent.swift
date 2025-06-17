@@ -7,6 +7,7 @@
 
 import AppIntents
 import FoundationModels
+import SwiftUtilities
 
 @available(iOS 26.0, *)
 struct InferRecipeIntent: AppIntent, IntentPerformer {
@@ -20,28 +21,22 @@ struct InferRecipeIntent: AppIntent, IntentPerformer {
     typealias Input = String
     typealias Output = RecipeEntity
 
-    @MainActor
-    static func inference(_ input: Input) async throws -> InferredRecipeForm {
+    static func perform(_ input: Input) async throws -> Output {
         let session = LanguageModelSession()
         let prompt = """
             Analyze the following text and provide a recipe form.
             """ + "\n" + input
-        let response = try await session.respond(
+        let inferred = try await session.respond(
             to: prompt,
-            generating: InferredRecipeForm.self
-        )
-        return response.content
-    }
-
-    static func perform(_ input: Input) async throws -> Output {
-        let inferred = try await inference(input)
+            generating: InferredRecipe.self
+        ).content
         return .init(
             id: UUID().uuidString,
             name: inferred.name,
             photos: [],
             servingSize: inferred.servingSize,
             cookingTime: inferred.cookingTime,
-            ingredients: inferred.ingredients.map(\.ingredient),
+            ingredients: inferred.ingredients.map { ($0.ingredient, $0.amount) },
             steps: inferred.steps,
             categories: inferred.categories,
             note: inferred.note,
