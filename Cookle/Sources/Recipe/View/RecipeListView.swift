@@ -12,13 +12,13 @@ import SwiftUtilities
 struct RecipeListView: View {
     @Environment(\.isPresented) private var isPresented
 
-    @Query private var recipes: [Recipe]
+    @BridgeQuery private var recipes: [RecipeEntity]
 
-    @Binding private var recipe: Recipe?
+    @Binding private var recipe: RecipeEntity?
 
     @State private var searchText = ""
 
-    init(selection: Binding<Recipe?> = .constant(nil), descriptor: FetchDescriptor<Recipe> = .recipes(.all)) {
+    init(selection: Binding<RecipeEntity?> = .constant(nil), descriptor: FetchDescriptor<Recipe> = .recipes(.all)) {
         _recipe = selection
         _recipes = .init(descriptor)
     }

@@ -15,9 +15,9 @@ struct DiaryFormView: View {
     @Environment(Diary.self) private var diary: Diary?
 
     @State private var date = Date.now
-    @State private var breakfasts = Set<Recipe>()
-    @State private var lunches = Set<Recipe>()
-    @State private var dinners = Set<Recipe>()
+    @State private var breakfasts = Set<RecipeEntity>()
+    @State private var lunches = Set<RecipeEntity>()
+    @State private var dinners = Set<RecipeEntity>()
     @State private var note = ""
 
     var body: some View {

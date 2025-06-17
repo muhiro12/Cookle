@@ -8,17 +8,19 @@
 import SwiftUI
 
 struct RecipePhotosSection: View {
-    @Environment(Recipe.self) private var recipe
+    @Environment(RecipeEntity.self) private var recipe
+    @Environment(\.modelContext) private var context
 
     @State private var selectedPhoto: Photo?
 
     var body: some View {
-        if let objects = recipe.photoObjects,
-           objects.isNotEmpty {
+        if let objects = try? recipe.model(context: context)?.photoObjects,
+           let photoObjects = objects,
+           photoObjects.isNotEmpty {
             Section {
                 ScrollView(.horizontal) {
                     LazyHStack {
-                        ForEach(objects.sorted()) { photoObject in
+                        ForEach(photoObjects.sorted()) { photoObject in
                             if let photo = photoObject.photo,
                                let image = UIImage(data: photo.data) {
                                 Button {
@@ -41,7 +43,7 @@ struct RecipePhotosSection: View {
             }
             .fullScreenCover(item: $selectedPhoto) { photo in
                 PhotoDetailNavigationView(
-                    photos: objects.sorted().compactMap(\.photo),
+                    photos: photoObjects.sorted().compactMap(\.photo),
                     initialValue: photo
                 )
             }
@@ -53,7 +55,7 @@ struct RecipePhotosSection: View {
     CooklePreview { preview in
         List {
             RecipePhotosSection()
-                .environment(preview.recipes[0])
+                .environment(RecipeEntity(preview.recipes[0])!)
         }
     }
 }

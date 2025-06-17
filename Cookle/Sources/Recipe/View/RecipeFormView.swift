@@ -11,7 +11,8 @@ import SwiftUI
 struct RecipeFormView: View {
     @Environment(\.dismiss) private var dismiss
 
-    @Environment(Recipe.self) private var recipe: Recipe?
+    @Environment(RecipeEntity.self) private var recipe: RecipeEntity?
+    @Environment(\.modelContext) private var context
 
     @AppStorage(.isDebugOn) private var isDebugOn
 
@@ -139,24 +140,28 @@ struct RecipeFormView: View {
             Text("Are you really going to use DebugMode?")
         }
         .task {
-            name = recipe?.name ?? .empty
-            photos = recipe?.photoObjects?.sorted().compactMap {
+            guard let entity = recipe,
+                  let model = try? entity.model(context: context) else {
+                return
+            }
+            name = model.name
+            photos = model.photoObjects?.sorted().compactMap {
                 guard let photo = $0.photo else {
                     return nil
                 }
                 return .init(data: photo.data, source: photo.source)
             } ?? .empty
-            servingSize = recipe?.servingSize.description ?? .empty
-            cookingTime = recipe?.cookingTime.description ?? .empty
-            ingredients = (recipe?.ingredientObjects?.sorted().compactMap { object in
+            servingSize = model.servingSize.description
+            cookingTime = model.cookingTime.description
+            ingredients = (model.ingredientObjects?.sorted().compactMap { object in
                 guard let ingredient = object.ingredient else {
                     return nil
                 }
                 return (ingredient.value, object.amount)
             } ?? .empty) + [(.empty, .empty)]
-            steps = (recipe?.steps ?? .empty) + [.empty]
-            categories = (recipe?.categories?.map(\.value) ?? .empty) + [.empty]
-            note = recipe?.note ?? .empty
+            steps = (model.steps) + [.empty]
+            categories = (model.categories?.map(\.value) ?? .empty) + [.empty]
+            note = model.note
         }
     }
 }
