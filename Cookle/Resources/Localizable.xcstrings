@@ -1447,6 +1447,9 @@
         }
       }
     },
+    "Error" : {
+
+    },
     "iCloud On" : {
       "localizations" : {
         "en" : {
@@ -1491,6 +1494,15 @@
         }
       },
       "shouldTranslate" : false
+    },
+    "Infer From Text" : {
+
+    },
+    "Infer Recipe" : {
+
+    },
+    "Infer Recipe From Text" : {
+
     },
     "Ingredient" : {
       "localizations" : {
@@ -2376,6 +2388,9 @@
         }
       }
     },
+    "Recipe Text" : {
+
+    },
     "Recipes" : {
       "localizations" : {
         "en" : {
@@ -2817,6 +2832,9 @@
           }
         }
       }
+    },
+    "Spaghetti Carbonara for 2 people.\nIngredients: Spaghetti 200g, Eggs 2, Pancetta 100g.\nCook spaghetti. Fry pancetta. Mix eggs and cheese. Combine all." : {
+
     },
     "Steps" : {
       "localizations" : {
