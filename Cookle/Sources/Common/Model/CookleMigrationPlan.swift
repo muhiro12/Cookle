@@ -9,9 +9,11 @@ import Foundation
 import SwiftData
 
 enum CookleMigrationPlan: SchemaMigrationPlan {
-    static let schemas: [any VersionedSchema.Type] = [
-        CookleSchemaV1.self
-    ]
+    static var schemas: [any VersionedSchema.Type] {
+        [
+            CookleSchemaV1.self
+        ]
+    }
 
     static var stages: [MigrationStage] {
         .empty
@@ -20,16 +22,18 @@ enum CookleMigrationPlan: SchemaMigrationPlan {
 
 private extension CookleMigrationPlan {
     enum CookleSchemaV1: VersionedSchema {
-        static let models: [any PersistentModel.Type] = [
-            Diary.self,
-            DiaryObject.self,
-            Photo.self,
-            PhotoObject.self,
-            Recipe.self,
-            Category.self,
-            Ingredient.self,
-            IngredientObject.self
-        ]
+        static var models: [any PersistentModel.Type] {
+            [
+                Diary.self,
+                DiaryObject.self,
+                Photo.self,
+                PhotoObject.self,
+                Recipe.self,
+                Category.self,
+                Ingredient.self,
+                IngredientObject.self
+            ]
+        }
 
         static let versionIdentifier: Schema.Version = .init(1, 0, 0)
     }
