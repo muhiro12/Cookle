@@ -19,6 +19,7 @@ struct CookleApp: App {
 
     private let sharedGoogleMobileAdsController: GoogleMobileAdsController
     private let sharedStore: Store
+    private let sharedConfigurationService: ConfigurationService
 
     init() {
         sharedGoogleMobileAdsController = .init(
@@ -32,6 +33,7 @@ struct CookleApp: App {
         )
 
         sharedStore = .init()
+        sharedConfigurationService = .init()
 
         CookleShortcuts.updateAppShortcutParameters()
     }
@@ -54,6 +56,7 @@ struct CookleApp: App {
                             .shortcutsLinkStyle(.automaticOutline)
                     }
                 )
+                .environment(sharedConfigurationService)
                 .task {
                     #if DEBUG
                     isDebugOn = true
