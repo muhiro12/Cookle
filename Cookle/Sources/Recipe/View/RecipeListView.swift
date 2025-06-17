@@ -61,7 +61,7 @@ struct RecipeListView: View {
 }
 
 struct ShortTitleLabelStyle: LabelStyle {
-    func makeBody(configuration: Configuration) -> some View {
+    func makeBody(configuration: LabelStyleConfiguration) -> some View {
         configuration.title
     }
 }
