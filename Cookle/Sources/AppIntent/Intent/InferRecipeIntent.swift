@@ -22,14 +22,24 @@ struct InferRecipeIntent: AppIntent, IntentPerformer {
     typealias Output = RecipeEntity
 
     static func perform(_ input: Input) async throws -> Output {
-        let session = LanguageModelSession()
+        let languageCode = Locale.current.language.languageCode?.identifier ?? "en"
+        let locale = Locale.current
+        let languageName = locale.localizedString(forLanguageCode: languageCode) ?? "English"
+
+        let instructions = """
+            You are a professional chef and culinary expert running a recipe website.
+            Kindly and thoroughly teach users how to prepare recipes, making your explanations easy to follow and friendly for home cooks of any skill level.
+            """
+        let session = LanguageModelSession(instructions: instructions)
+
         let prompt = """
-            Analyze the following text and provide a recipe form.
+            Analyze the following text and provide a recipe form. Please respond in \(languageName).
             """ + "\n" + input
         let inferred = try await session.respond(
             to: prompt,
             generating: InferredRecipe.self
         ).content
+
         return .init(
             id: UUID().uuidString,
             name: inferred.name,
