@@ -20,7 +20,6 @@ struct CooklePreview<Content: View>: View {
             isDebugOn = true
         }
         .environment(preview)
-        .cooklePlaygroundsEnvironment()
     }
 }
 
