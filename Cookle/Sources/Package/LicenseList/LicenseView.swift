@@ -1,10 +1,9 @@
 import SwiftUI
+import LicenseListWrapper
 
 struct LicenseView: View {
-    @Environment(LicenseListPackage.self) private var licenseList
-
     var body: some View {
-        licenseList()
+        LicenseListView()
             .navigationTitle(Text("Licenses"))
     }
 }
