@@ -41,21 +41,8 @@ struct CookleApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .cookleEnvironment(
-                    googleMobileAds: {
-                        sharedGoogleMobileAdsController.buildNativeAd($0)
-                    },
-                    licenseList: {
-                        LicenseListView()
-                    },
-                    storeKit: {
-                        sharedStore.buildSubscriptionSection()
-                    },
-                    appIntents: {
-                        ShortcutsLink()
-                            .shortcutsLinkStyle(.automaticOutline)
-                    }
-                )
+                .environment(sharedGoogleMobileAdsController)
+                .environment(sharedStore)
                 .environment(sharedConfigurationService)
                 .task {
                     #if DEBUG

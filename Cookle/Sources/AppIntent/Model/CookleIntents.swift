@@ -23,11 +23,5 @@ enum CookleIntents {
         content()
             .safeAreaPadding()
             .modelContainer(modelContainer)
-            .cookleEnvironment(
-                googleMobileAds: { _ in EmptyView() },
-                licenseList: { EmptyView() },
-                storeKit: { EmptyView() },
-                appIntents: { EmptyView() }
-            )
     }
 }
