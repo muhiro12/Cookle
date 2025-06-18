@@ -1,3 +1,5 @@
+import GoogleMobileAdsWrapper
+import StoreKitWrapper
 import SwiftUI
 
 struct CooklePreview<Content: View>: View {
@@ -6,10 +8,16 @@ struct CooklePreview<Content: View>: View {
     private let content: (CooklePreviewStore) -> Content
     private let preview: CooklePreviewStore
 
+    private var previewStore: Store
+    private var previewGoogleMobileAdsController: GoogleMobileAdsController
+
     @MainActor
     init(_ content: @escaping (CooklePreviewStore) -> Content) {
         self.content = content
         self.preview = .init()
+
+        self.previewStore = .init()
+        self.previewGoogleMobileAdsController = .init(adUnitID: Secret.adUnitIDDev)
     }
 
     var body: some View {
@@ -20,6 +28,8 @@ struct CooklePreview<Content: View>: View {
             isDebugOn = true
         }
         .environment(preview)
+        .environment(previewStore)
+        .environment(previewGoogleMobileAdsController)
     }
 }
 
