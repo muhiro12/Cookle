@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import GoogleMobileAdsWrapper
 
 struct AdvertisementSection {
     enum Size: String {
@@ -14,7 +15,7 @@ struct AdvertisementSection {
         case medium = "Medium"
     }
 
-    @Environment(GoogleMobileAdsPackage.self) private var googleMobileAds
+    @Environment(GoogleMobileAdsController.self) private var googleMobileAdsController
 
     private let size: Size
 
@@ -26,7 +27,7 @@ struct AdvertisementSection {
 extension AdvertisementSection: View {
     var body: some View {
         Section {
-            googleMobileAds(size.rawValue)
+            googleMobileAdsController.buildNativeAd(size.rawValue)
                 .frame(maxWidth: .infinity)
                 .padding(8)
         }

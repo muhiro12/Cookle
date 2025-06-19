@@ -1,9 +1,12 @@
 import SwiftUI
+import StoreKitWrapper
 
 struct StoreListView: View {
+    @Environment(Store.self) private var store
+
     var body: some View {
         List {
-            StoreSection()
+            store.buildSubscriptionSection()
         }
         .navigationTitle(Text("Subscription"))
     }

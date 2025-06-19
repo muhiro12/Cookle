@@ -6,11 +6,14 @@
 //
 
 import SwiftUI
+import StoreKitWrapper
 
 struct DebugPreviewsView: View {
+    @Environment(Store.self) private var store
+
     var body: some View {
         List {
-            StoreSection()
+            store.buildSubscriptionSection()
             AdvertisementSection(.medium)
             AdvertisementSection(.small)
             ShortcutsLinkSection()
