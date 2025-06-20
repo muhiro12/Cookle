@@ -169,7 +169,7 @@ struct InferRecipeFormView: View {
                     self.cameraPickerItem = nil
                 }
             }
-            .onChange(of: speechRecognizer.transcript) { newValue in
+            .onChange(of: speechRecognizer.transcript) { _, newValue in
                 guard !isRecording else {
                     return
                 }
