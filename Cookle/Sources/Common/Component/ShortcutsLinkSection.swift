@@ -1,5 +1,5 @@
-import SwiftUI
 import AppIntents
+import SwiftUI
 
 struct ShortcutsLinkSection: View {
     var body: some View {

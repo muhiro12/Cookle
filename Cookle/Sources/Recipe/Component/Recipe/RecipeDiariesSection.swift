@@ -15,7 +15,9 @@ struct RecipeDiariesSection: View {
         if let diaries = try? recipe.model(context: context)?.diaries,
            diaries.isNotEmpty {
             Section {
-                ForEach(diaries.sorted { $0.date > $1.date }) {
+                ForEach(diaries.sorted {
+                    $0.date > $1.date
+                }) {
                     Text($0.date.formatted(.dateTime.year().month().day()))
                 }
             } header: {
