@@ -20,9 +20,11 @@ struct DiaryView: View {
         List(selection: $recipe) {
             ForEach(DiaryObjectType.allCases) { type in
                 if let recipes = diary.objects?
-                    .filter {
-                        $0.type == type
-                    }
+                    .filter(
+                        {
+                            $0.type == type
+                        }
+                    )
                     .sorted()
                     .compactMap(
                         { object -> RecipeEntity? in
