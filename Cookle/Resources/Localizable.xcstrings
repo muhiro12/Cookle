@@ -461,6 +461,9 @@
         }
       }
     },
+    "Camera" : {
+
+    },
     "Cancel" : {
       "localizations" : {
         "en" : {
@@ -2186,6 +2189,9 @@
           }
         }
       }
+    },
+    "Photo Library" : {
+
     },
     "PhotoObjects" : {
       "localizations" : {
