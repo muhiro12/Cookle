@@ -15,15 +15,17 @@ struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
         .init("Show Last Opened Recipe")
     }
 
-    typealias Input = PersistentIdentifier?
+    typealias Input = (context: ModelContext, id: PersistentIdentifier?)
     typealias Output = RecipeEntity?
+
+    @Dependency(\.modelContainer) private var modelContainer
 
     @MainActor
     private static func recipe(_ input: Input) throws -> Recipe? {
-        guard let id = input else {
+        guard let id = input.id else {
             return nil
         }
-        return try CookleIntents.context.fetchFirst(.recipes(.idIs(id)))
+        return try input.context.fetchFirst(.recipes(.idIs(id)))
     }
 
     @MainActor
@@ -37,7 +39,9 @@ struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
     @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         guard let lastOpenedRecipeID = AppStorage(.lastOpenedRecipeID).wrappedValue,
-              let recipe = try Self.recipe(.init(base64Encoded: lastOpenedRecipeID)) else {
+              let recipe = try Self.recipe(
+                  (context: modelContainer.mainContext, id: .init(base64Encoded: lastOpenedRecipeID))
+              ) else {
             return .result(dialog: "Not Found")
         }
         return .result(dialog: .init(stringLiteral: recipe.name)) {
