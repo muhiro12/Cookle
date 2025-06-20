@@ -1,5 +1,5 @@
-import SwiftUI
 import LicenseListWrapper
+import SwiftUI
 
 struct LicenseView: View {
     var body: some View {

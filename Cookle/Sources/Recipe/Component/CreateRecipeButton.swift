@@ -63,7 +63,9 @@ struct CreateRecipeButton: View {
                     }
                     return .create(context: context, ingredient: element.ingredient, amount: element.amount, order: index + 1)
                 },
-                steps: steps.filter { !$0.isEmpty },
+                steps: steps.filter {
+                    !$0.isEmpty
+                },
                 categories: categories.compactMap {
                     guard !$0.isEmpty else {
                         return nil
