@@ -1,5 +1,6 @@
 import AppIntents
 import SwiftUI
+import PhotosUI
 
 @available(iOS 26.0, *)
 struct InferRecipeFormView: View {
@@ -16,6 +17,9 @@ struct InferRecipeFormView: View {
     @State private var text = ""
     @State private var isLoading = false
     @State private var errorMessage: String?
+    @State private var isSpeechPresented = false
+    @State private var isPhotosPickerPresented = false
+    @State private var photosPickerItem: PhotosPickerItem?
 
     private let placeholder: LocalizedStringKey = """
         Spaghetti Carbonara for 2 people.
@@ -92,6 +96,18 @@ struct InferRecipeFormView: View {
                     }
                     .disabled(isLoading)
                 }
+                ToolbarItemGroup(placement: .bottomBar) {
+                    Button {
+                        isSpeechPresented = true
+                    } label: {
+                        Image(systemName: "mic")
+                    }
+                    Button {
+                        isPhotosPickerPresented = true
+                    } label: {
+                        Image(systemName: "text.viewfinder")
+                    }
+                }
             }
             .font(nil)
             .overlay {
@@ -107,5 +123,28 @@ struct InferRecipeFormView: View {
             }, message: {
                 Text(errorMessage ?? "")
             })
+            .sheet(isPresented: $isSpeechPresented) {
+                SpeechRecognitionView { result in
+                    text += result
+                }
+            }
+            .photosPicker(
+                isPresented: $isPhotosPickerPresented,
+                selection: $photosPickerItem,
+                selectionBehavior: .ordered,
+                matching: .images
+            )
+            .onChange(of: photosPickerItem) { item in
+                guard let item else { return }
+                Task {
+                    guard
+                        let data = try? await item.loadTransferable(type: Data.self),
+                        let image = UIImage(data: data)
+                    else {
+                        return
+                    }
+                    text += image.recognizedText()
+                }
+            }
     }
 }
