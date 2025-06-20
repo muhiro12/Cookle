@@ -1,4 +1,5 @@
 import AppIntents
+import PhotosUI
 import SwiftUI
 
 @available(iOS 26.0, *)
@@ -16,6 +17,12 @@ struct InferRecipeFormView: View {
     @State private var text = ""
     @State private var isLoading = false
     @State private var errorMessage: String?
+    @State private var photoPickerItem: PhotosPickerItem?
+    @State private var cameraPickerItem: PhotosPickerItem?
+    @State private var isPhotoPickerPresented = false
+    @State private var isCameraPickerPresented = false
+    @State private var isRecording = false
+    @StateObject private var speechRecognizer = SpeechRecognizer()
 
     private let placeholder: LocalizedStringKey = """
         Spaghetti Carbonara for 2 people.
@@ -92,6 +99,33 @@ struct InferRecipeFormView: View {
                     }
                     .disabled(isLoading)
                 }
+                ToolbarItemGroup(placement: .bottomBar) {
+                    Button {
+                        if isRecording {
+                            speechRecognizer.stop()
+                            text += (text.isEmpty ? "" : "\n") + speechRecognizer.transcript
+                        } else {
+                            try? speechRecognizer.start()
+                        }
+                        isRecording.toggle()
+                    } label: {
+                        Image(systemName: isRecording ? "mic.fill" : "mic")
+                    }
+                    Menu {
+                        Button {
+                            isCameraPickerPresented = true
+                        } label: {
+                            Label("Camera", systemImage: "camera")
+                        }
+                        Button {
+                            isPhotoPickerPresented = true
+                        } label: {
+                            Label("Photo Library", systemImage: "photo")
+                        }
+                    } label: {
+                        Image(systemName: "text.viewfinder")
+                    }
+                }
             }
             .font(nil)
             .overlay {
@@ -107,5 +141,40 @@ struct InferRecipeFormView: View {
             }, message: {
                 Text(errorMessage ?? "")
             })
+            .photosPicker(isPresented: $isPhotoPickerPresented, selection: $photoPickerItem, matching: .images)
+            .photosPicker(isPresented: $isCameraPickerPresented, selection: $cameraPickerItem, matching: .images)
+            .onChange(of: photoPickerItem) {
+                guard let photoPickerItem else {
+                    return
+                }
+                Task {
+                    if let data = try? await photoPickerItem.loadTransferable(type: Data.self),
+                       let image = UIImage(data: data),
+                       let recognized = try? await TextRecognitionService.recognize(in: image) {
+                        text += (text.isEmpty ? "" : "\n") + recognized
+                    }
+                    self.photoPickerItem = nil
+                }
+            }
+            .onChange(of: cameraPickerItem) {
+                guard let cameraPickerItem else {
+                    return
+                }
+                Task {
+                    if let data = try? await cameraPickerItem.loadTransferable(type: Data.self),
+                       let image = UIImage(data: data),
+                       let recognized = try? await TextRecognitionService.recognize(in: image) {
+                        text += (text.isEmpty ? "" : "\n") + recognized
+                    }
+                    self.cameraPickerItem = nil
+                }
+            }
+            .onChange(of: speechRecognizer.transcript) { newValue in
+                guard !isRecording else {
+                    return
+                }
+                text += (text.isEmpty ? "" : "\n") + newValue
+                speechRecognizer.stop()
+            }
     }
 }
