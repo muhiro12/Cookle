@@ -100,6 +100,7 @@ struct InferRecipeFormView: View {
                     .disabled(isLoading)
                 }
                 ToolbarItemGroup(placement: .bottomBar) {
+                    // FIXME: Pressing this button is currently known to cause a crash. Investigate and fix the root cause.
                     Button {
                         if isRecording {
                             speechRecognizer.stop()
