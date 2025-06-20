@@ -6,8 +6,8 @@
 //  Copyright © 2022 Hiromu Nakano. All rights reserved.
 //
 
-import SwiftUI
 import GoogleMobileAdsWrapper
+import SwiftUI
 
 struct AdvertisementSection {
     enum Size: String {
