@@ -11,14 +11,14 @@ import SwiftUI
 import SwiftUtilities
 
 struct ShowRandomRecipeIntent: AppIntent, IntentPerformer {
-    static var title: LocalizedStringResource {
-        .init("Show Random Recipe")
-    }
-
     typealias Input = ModelContext
     typealias Output = RecipeEntity?
 
     @Dependency(\.modelContainer) private var modelContainer
+
+    static var title: LocalizedStringResource {
+        .init("Show Random Recipe")
+    }
 
     @MainActor
     private static func recipe(context: ModelContext) throws -> Recipe? {

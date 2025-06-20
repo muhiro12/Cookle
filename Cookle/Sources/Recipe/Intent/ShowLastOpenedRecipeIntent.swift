@@ -11,14 +11,14 @@ import SwiftUI
 import SwiftUtilities
 
 struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
-    static var title: LocalizedStringResource {
-        .init("Show Last Opened Recipe")
-    }
-
     typealias Input = (context: ModelContext, id: PersistentIdentifier?)
     typealias Output = RecipeEntity?
 
     @Dependency(\.modelContainer) private var modelContainer
+
+    static var title: LocalizedStringResource {
+        .init("Show Last Opened Recipe")
+    }
 
     @MainActor
     private static func recipe(_ input: Input) throws -> Recipe? {
