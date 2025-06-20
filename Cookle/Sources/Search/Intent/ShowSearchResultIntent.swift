@@ -10,17 +10,17 @@ import SwiftData
 import SwiftUtilities
 
 struct ShowSearchResultIntent: AppIntent, IntentPerformer {
-    static var title: LocalizedStringResource {
-        .init("Show Search Result")
-    }
+    typealias Input = (context: ModelContext, text: String)
+    typealias Output = [RecipeEntity]
 
     @Parameter(title: "Search Text")
     private var searchText: String
 
-    typealias Input = (context: ModelContext, text: String)
-    typealias Output = [RecipeEntity]
-
     @Dependency(\.modelContainer) private var modelContainer
+
+    static var title: LocalizedStringResource {
+        .init("Show Search Result")
+    }
 
     @MainActor
     static func perform(_ input: Input) throws -> Output {
