@@ -13,8 +13,19 @@
 		AD3909AB2DC4E8300052749F /* SwiftUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = AD3909AA2DC4E8300052749F /* SwiftUtilities */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		ADE3ED1C2E04DEF50003B4E8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AD8C8E602BFABEE200872BF2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AD8C8E672BFABEE200872BF2;
+			remoteInfo = Cookle;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		AD8C8E682BFABEE200872BF2 /* Cookle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cookle.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		ADE3ED182E04DEF50003B4E8 /* CookleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CookleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -29,6 +40,7 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		AD3B66982CA87EC900DCFC5F /* Cookle */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (AD128EB02DC4E9D0007514ED /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Cookle; sourceTree = "<group>"; };
+		ADE3ED192E04DEF50003B4E8 /* CookleTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = CookleTests; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +55,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		ADE3ED152E04DEF50003B4E8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -50,6 +69,7 @@
 			isa = PBXGroup;
 			children = (
 				AD3B66982CA87EC900DCFC5F /* Cookle */,
+				ADE3ED192E04DEF50003B4E8 /* CookleTests */,
 				AD8C8E692BFABEE200872BF2 /* Products */,
 				AD8C8E7C2BFAC06D00872BF2 /* Frameworks */,
 			);
@@ -59,6 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				AD8C8E682BFABEE200872BF2 /* Cookle.app */,
+				ADE3ED182E04DEF50003B4E8 /* CookleTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -99,6 +120,29 @@
 			productReference = AD8C8E682BFABEE200872BF2 /* Cookle.app */;
 			productType = "com.apple.product-type.application";
 		};
+		ADE3ED172E04DEF50003B4E8 /* CookleTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ADE3ED1E2E04DEF50003B4E8 /* Build configuration list for PBXNativeTarget "CookleTests" */;
+			buildPhases = (
+				ADE3ED142E04DEF50003B4E8 /* Sources */,
+				ADE3ED152E04DEF50003B4E8 /* Frameworks */,
+				ADE3ED162E04DEF50003B4E8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				ADE3ED1D2E04DEF50003B4E8 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				ADE3ED192E04DEF50003B4E8 /* CookleTests */,
+			);
+			name = CookleTests;
+			packageProductDependencies = (
+			);
+			productName = CookleTests;
+			productReference = ADE3ED182E04DEF50003B4E8 /* CookleTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -106,11 +150,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1540;
+				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 1630;
 				TargetAttributes = {
 					AD8C8E672BFABEE200872BF2 = {
 						CreatedOnToolsVersion = 15.4;
+					};
+					ADE3ED172E04DEF50003B4E8 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = AD8C8E672BFABEE200872BF2;
 					};
 				};
 			};
@@ -138,12 +186,20 @@
 			projectRoot = "";
 			targets = (
 				AD8C8E672BFABEE200872BF2 /* Cookle */,
+				ADE3ED172E04DEF50003B4E8 /* CookleTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		AD8C8E662BFABEE200872BF2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ADE3ED162E04DEF50003B4E8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -160,7 +216,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		ADE3ED142E04DEF50003B4E8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		ADE3ED1D2E04DEF50003B4E8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AD8C8E672BFABEE200872BF2 /* Cookle */;
+			targetProxy = ADE3ED1C2E04DEF50003B4E8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		AD8C8E772BFABEE300872BF2 /* Debug */ = {
@@ -371,6 +442,51 @@
 			};
 			name = Release;
 		};
+		ADE3ED1F2E04DEF50003B4E8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 66PKF55HK5;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.muhiro12.CookleTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Cookle.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Cookle";
+			};
+			name = Debug;
+		};
+		ADE3ED202E04DEF50003B4E8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 66PKF55HK5;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.muhiro12.CookleTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Cookle.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Cookle";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -388,6 +504,15 @@
 			buildConfigurations = (
 				AD8C8E7A2BFABEE300872BF2 /* Debug */,
 				AD8C8E7B2BFABEE300872BF2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		ADE3ED1E2E04DEF50003B4E8 /* Build configuration list for PBXNativeTarget "CookleTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ADE3ED1F2E04DEF50003B4E8 /* Debug */,
+				ADE3ED202E04DEF50003B4E8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
