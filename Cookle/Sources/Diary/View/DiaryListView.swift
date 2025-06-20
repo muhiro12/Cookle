@@ -29,7 +29,9 @@ struct DiaryListView: View {
                     Array(
                         Dictionary(
                             grouping: diaries
-                        ) { $0.date.formatted(.dateTime.year().month()) }
+                        ) {
+                            $0.date.formatted(.dateTime.year().month())
+                        }
                         .sorted {
                             $0.value[0].date > $1.value[0].date
                         }

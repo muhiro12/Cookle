@@ -20,13 +20,17 @@ struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
 
     @MainActor
     private static func recipe(_ input: Input) throws -> Recipe? {
-        guard let id = input else { return nil }
+        guard let id = input else {
+            return nil
+        }
         return try CookleIntents.context.fetchFirst(.recipes(.idIs(id)))
     }
 
     @MainActor
     static func perform(_ input: Input) throws -> Output {
-        guard let recipe = try recipe(input) else { return nil }
+        guard let recipe = try recipe(input) else {
+            return nil
+        }
         return RecipeEntity(recipe)
     }
 
