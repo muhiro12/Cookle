@@ -32,7 +32,7 @@
 		AD128EB02DC4E9D0007514ED /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Configuration/Info.plist,
+				Configurations/Info.plist,
 			);
 			target = AD8C8E672BFABEE200872BF2 /* Cookle */;
 		};
