@@ -11,7 +11,7 @@ import SwiftUI
 import SwiftUtilities
 
 struct ShowRandomRecipeIntent: AppIntent, IntentPerformer {
-    typealias Input = ModelContext
+    typealias Input = ModelContainer
     typealias Output = RecipeEntity?
 
     @Dependency private var modelContainer: ModelContainer
@@ -27,7 +27,7 @@ struct ShowRandomRecipeIntent: AppIntent, IntentPerformer {
 
     @MainActor
     static func perform(_ input: Input) throws -> Output {
-        guard let recipe = try recipe(context: input) else {
+        guard let recipe = try recipe(context: input.mainContext) else {
             return nil
         }
         return RecipeEntity(recipe)
