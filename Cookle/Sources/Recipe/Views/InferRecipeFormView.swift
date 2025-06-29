@@ -151,7 +151,7 @@ struct InferRecipeFormView: View {
                 Task {
                     if let data = try? await photoPickerItem.loadTransferable(type: Data.self),
                        let image = UIImage(data: data),
-                       let recognized = try? await TextRecognitionService.recognize(in: image) {
+                       let recognized = try? TextRecognitionService.recognize(in: image) {
                         text += (text.isEmpty ? "" : "\n") + recognized
                     }
                     self.photoPickerItem = nil
@@ -164,7 +164,7 @@ struct InferRecipeFormView: View {
                 Task {
                     if let data = try? await cameraPickerItem.loadTransferable(type: Data.self),
                        let image = UIImage(data: data),
-                       let recognized = try? await TextRecognitionService.recognize(in: image) {
+                       let recognized = try? TextRecognitionService.recognize(in: image) {
                         text += (text.isEmpty ? "" : "\n") + recognized
                     }
                     self.cameraPickerItem = nil

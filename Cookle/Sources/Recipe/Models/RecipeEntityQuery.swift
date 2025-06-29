@@ -2,7 +2,7 @@ import AppIntents
 import SwiftData
 
 struct RecipeEntityQuery: EntityStringQuery {
-    @Dependency(\.modelContainer) private var modelContainer
+    @Dependency private var modelContainer: ModelContainer
     @MainActor
     func entities(for identifiers: [RecipeEntity.ID]) throws -> [RecipeEntity] {
         try identifiers.compactMap { id in

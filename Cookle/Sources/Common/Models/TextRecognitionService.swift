@@ -2,7 +2,7 @@ import UIKit
 import Vision
 
 enum TextRecognitionService {
-    static func recognize(in image: UIImage) async throws -> String {
+    static func recognize(in image: UIImage) throws -> String {
         guard let cgImage = image.cgImage else {
             return ""
         }

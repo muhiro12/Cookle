@@ -66,7 +66,7 @@
          </BuildableReference>
       </BuildableProductRunnable>
       <StoreKitConfigurationFileReference
-         identifier = "../../Cookle/Configuration/Configuration.storekit">
+         identifier = "../../Cookle/Configurations/Configuration.storekit">
       </StoreKitConfigurationFileReference>
    </LaunchAction>
    <ProfileAction
