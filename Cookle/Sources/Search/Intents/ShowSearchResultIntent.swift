@@ -16,7 +16,7 @@ struct ShowSearchResultIntent: AppIntent, IntentPerformer {
     @Parameter(title: "Search Text")
     private var searchText: String
 
-    @Dependency(\.modelContainer) private var modelContainer
+    @Dependency private var modelContainer: ModelContainer
 
     static var title: LocalizedStringResource {
         .init("Show Search Result")

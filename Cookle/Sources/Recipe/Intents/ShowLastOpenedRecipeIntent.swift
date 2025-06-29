@@ -14,7 +14,7 @@ struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, id: PersistentIdentifier?)
     typealias Output = RecipeEntity?
 
-    @Dependency(\.modelContainer) private var modelContainer
+    @Dependency private var modelContainer: ModelContainer
 
     static var title: LocalizedStringResource {
         .init("Show Last Opened Recipe")
@@ -40,7 +40,7 @@ struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         guard let lastOpenedRecipeID = AppStorage(.lastOpenedRecipeID).wrappedValue,
               let recipe = try Self.recipe(
-                  (context: modelContainer.mainContext, id: .init(base64Encoded: lastOpenedRecipeID))
+                (context: modelContainer.mainContext, id: .init(base64Encoded: lastOpenedRecipeID))
               ) else {
             return .result(dialog: "Not Found")
         }

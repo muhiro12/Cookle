@@ -14,7 +14,7 @@ struct ShowRandomRecipeIntent: AppIntent, IntentPerformer {
     typealias Input = ModelContext
     typealias Output = RecipeEntity?
 
-    @Dependency(\.modelContainer) private var modelContainer
+    @Dependency private var modelContainer: ModelContainer
 
     static var title: LocalizedStringResource {
         .init("Show Random Recipe")
