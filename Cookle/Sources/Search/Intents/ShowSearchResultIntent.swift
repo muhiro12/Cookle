@@ -10,7 +10,7 @@ import SwiftData
 import SwiftUtilities
 
 struct ShowSearchResultIntent: AppIntent, IntentPerformer {
-    typealias Input = (context: ModelContext, text: String)
+    typealias Input = (container: ModelContainer, text: String)
     typealias Output = [RecipeEntity]
 
     @Parameter(title: "Search Text")
@@ -25,15 +25,15 @@ struct ShowSearchResultIntent: AppIntent, IntentPerformer {
     @MainActor
     static func perform(_ input: Input) throws -> Output {
         let searchText = input.text
-        var recipes = try input.context.fetch(
+        var recipes = try input.container.mainContext.fetch(
             .recipes(.nameContains(searchText))
         )
-        let ingredients = try input.context.fetch(
+        let ingredients = try input.container.mainContext.fetch(
             searchText.count < 3
                 ? .ingredients(.valueIs(searchText))
                 : .ingredients(.valueContains(searchText))
         )
-        let categories = try input.context.fetch(
+        let categories = try input.container.mainContext.fetch(
             searchText.count < 3
                 ? .categories(.valueIs(searchText))
                 : .categories(.valueContains(searchText))
@@ -46,7 +46,7 @@ struct ShowSearchResultIntent: AppIntent, IntentPerformer {
 
     @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
-        _ = try Self.perform((context: modelContainer.mainContext, text: searchText))
+        _ = try Self.perform((container: modelContainer, text: searchText))
         return .result(dialog: "Result") {
             CookleIntents.cookleView {
                 SearchResultView(.nameContains(searchText))
