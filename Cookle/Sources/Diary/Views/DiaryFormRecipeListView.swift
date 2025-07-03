@@ -12,7 +12,8 @@ import SwiftUtilities
 struct DiaryFormRecipeListView: View {
     @Environment(\.dismiss) private var dismiss
 
-    @BridgeQuery(.init(.recipes(.all))) private var recipes: [RecipeEntity]
+    @BridgeQuery(.recipes(.all))
+    private var recipes: [RecipeEntity]
 
     @Binding private var selection: Set<RecipeEntity>
 
