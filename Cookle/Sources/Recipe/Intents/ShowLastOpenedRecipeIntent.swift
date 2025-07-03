@@ -11,7 +11,7 @@ import SwiftUI
 import SwiftUtilities
 
 struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
-    typealias Input = (container: ModelContainer, id: PersistentIdentifier?)
+    typealias Input = (context: ModelContext, id: PersistentIdentifier?)
     typealias Output = RecipeEntity?
 
     @Dependency private var modelContainer: ModelContainer
@@ -20,15 +20,13 @@ struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
         .init("Show Last Opened Recipe")
     }
 
-    @MainActor
     private static func recipe(_ input: Input) throws -> Recipe? {
         guard let id = input.id else {
             return nil
         }
-        return try input.container.mainContext.fetchFirst(.recipes(.idIs(id)))
+        return try input.context.fetchFirst(.recipes(.idIs(id)))
     }
 
-    @MainActor
     static func perform(_ input: Input) throws -> Output {
         guard let recipe = try recipe(input) else {
             return nil
@@ -40,7 +38,7 @@ struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         guard let lastOpenedRecipeID = AppStorage(.lastOpenedRecipeID).wrappedValue,
               let recipe = try Self.recipe(
-                (container: modelContainer, id: .init(base64Encoded: lastOpenedRecipeID))
+                (context: modelContainer.mainContext, id: .init(base64Encoded: lastOpenedRecipeID))
               ) else {
             return .result(dialog: "Not Found")
         }

@@ -20,6 +20,7 @@ final class Category: Tag {
 
     private init() {}
 
+    @MainActor
     static func create(context: ModelContext, value: String) -> Self {
         let category = (try? context.fetchFirst(.categories(.valueIs(value)))) ?? .init()
         context.insert(category)

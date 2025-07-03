@@ -150,7 +150,7 @@ struct RecipeFormView: View {
         } message: {
             Text("Are you really going to use DebugMode?")
         }
-        .task {
+        .task { @MainActor in
             guard let entity = recipe,
                   let model = try? entity.model(context: context) else {
                 return

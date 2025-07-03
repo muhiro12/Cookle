@@ -22,6 +22,7 @@ final class Diary {
 
     private init() {}
 
+    @MainActor
     static func create(context: ModelContext,
                        date: Date,
                        objects: [DiaryObject],

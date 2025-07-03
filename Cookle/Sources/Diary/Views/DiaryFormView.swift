@@ -110,7 +110,7 @@ struct DiaryFormView: View {
             }
         }
         .interactiveDismissDisabled()
-        .task {
+        .task { @MainActor in
             date = diary?.date ?? .now
             breakfasts = recipeEntities(from: diary?.objects.orEmpty.filter {
                 $0.type == .breakfast

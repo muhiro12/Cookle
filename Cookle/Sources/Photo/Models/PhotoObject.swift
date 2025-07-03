@@ -24,6 +24,7 @@ final class PhotoObject: SubObject {
         self.photo = photo
     }
 
+    @MainActor
     static func create(context: ModelContext, photoData: PhotoData, order: Int) -> PhotoObject {
         let object = PhotoObject(
             photo: .create(context: context, photoData: photoData)

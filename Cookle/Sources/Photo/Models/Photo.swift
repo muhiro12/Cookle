@@ -23,6 +23,7 @@ final class Photo {
 
     private init() {}
 
+    @MainActor
     static func create(context: ModelContext, photoData: PhotoData) -> Photo {
         let photo = (try? context.fetchFirst(.photos(.dataIs(photoData.data)))) ?? .init()
         context.insert(photo)

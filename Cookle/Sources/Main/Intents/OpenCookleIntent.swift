@@ -20,7 +20,6 @@ struct OpenCookleIntent: AppIntent, IntentPerformer {
         true
     }
 
-    @MainActor
     static func perform(_: Input) throws -> Output {}
 
     @MainActor

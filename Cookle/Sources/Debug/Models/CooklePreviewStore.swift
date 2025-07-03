@@ -31,6 +31,7 @@ final class CooklePreviewStore {
             && !categories.isEmpty
     }
 
+    @MainActor
     func prepare(_ context: ModelContext) async {
         _ = try! await createPreviewDiaries(context, isPreview: true)
         while !isReady {
@@ -46,6 +47,7 @@ final class CooklePreviewStore {
         }
     }
 
+    @MainActor
     func createPreviewDiaries(_ context: ModelContext, isPreview: Bool = false) async throws -> [Diary] {
         let pancakes = try await cookPancakes(context, isPreview: isPreview)
         let chickenStirFry = try await cookChickenStirFry(context, isPreview: isPreview)
@@ -103,6 +105,7 @@ final class CooklePreviewStore {
         }
     }
 
+    @MainActor
     private func cookSpaghettiCarbonara(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
         .create(
             context: context,
@@ -136,6 +139,7 @@ final class CooklePreviewStore {
         )
     }
 
+    @MainActor
     private func cookBeefStew(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
         .create(
             context: context,
@@ -175,6 +179,7 @@ final class CooklePreviewStore {
         )
     }
 
+    @MainActor
     private func cookChickenStirFry(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
         .create(
             context: context,
@@ -214,6 +219,7 @@ final class CooklePreviewStore {
         )
     }
 
+    @MainActor
     private func cookVegetableSoup(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
         .create(
             context: context,
@@ -253,6 +259,7 @@ final class CooklePreviewStore {
         )
     }
 
+    @MainActor
     private func cookPancakes(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
         .create(
             context: context,
@@ -287,6 +294,7 @@ final class CooklePreviewStore {
         )
     }
 
+    @MainActor
     private func createPhotoObject(_ context: ModelContext, systemName: String, order: Int) -> PhotoObject {
         .create(
             context: context,
@@ -298,6 +306,7 @@ final class CooklePreviewStore {
         )
     }
 
+    @MainActor
     private func createPhotoObject(_ context: ModelContext, name: String, order: Int) async throws -> PhotoObject {
         .create(
             context: context,

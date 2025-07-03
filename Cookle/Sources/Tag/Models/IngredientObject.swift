@@ -25,6 +25,7 @@ final class IngredientObject: SubObject {
         self.ingredient = ingredient
     }
 
+    @MainActor
     static func create(context: ModelContext, ingredient: String, amount: String, order: Int) -> IngredientObject {
         let object = IngredientObject(
             ingredient: .create(context: context, value: ingredient)

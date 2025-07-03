@@ -22,6 +22,7 @@ final class Ingredient: Tag {
 
     private init() {}
 
+    @MainActor
     static func create(context: ModelContext, value: String) -> Self {
         let ingredient = (try? context.fetchFirst(.ingredients(.valueIs(value)))) ?? .init()
         context.insert(ingredient)

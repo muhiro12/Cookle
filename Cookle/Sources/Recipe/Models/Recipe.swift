@@ -36,6 +36,7 @@ final class Recipe {
 
     private init() {}
 
+    @MainActor
     static func create(context: ModelContext,
                        name: String,
                        photos: [PhotoObject],
