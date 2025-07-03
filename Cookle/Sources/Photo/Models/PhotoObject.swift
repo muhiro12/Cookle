@@ -24,11 +24,12 @@ final class PhotoObject: SubObject {
         self.photo = photo
     }
 
-    static func create(context: ModelContext, photoData: PhotoData, order: Int) -> PhotoObject {
+    @MainActor
+    static func create(container: ModelContainer, photoData: PhotoData, order: Int) -> PhotoObject {
         let object = PhotoObject(
-            photo: .create(context: context, photoData: photoData)
+            photo: .create(container: container, photoData: photoData)
         )
-        context.insert(object)
+        container.mainContext.insert(object)
         object.order = order
         return object
     }

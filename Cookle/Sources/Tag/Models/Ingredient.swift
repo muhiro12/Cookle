@@ -22,9 +22,10 @@ final class Ingredient: Tag {
 
     private init() {}
 
-    static func create(context: ModelContext, value: String) -> Self {
-        let ingredient = (try? context.fetchFirst(.ingredients(.valueIs(value)))) ?? .init()
-        context.insert(ingredient)
+    @MainActor
+    static func create(container: ModelContainer, value: String) -> Self {
+        let ingredient = (try? container.mainContext.fetchFirst(.ingredients(.valueIs(value)))) ?? .init()
+        container.mainContext.insert(ingredient)
         ingredient.value = value
         return ingredient as! Self
     }

@@ -14,7 +14,8 @@ protocol Tag: PersistentModel {
     var createdTimestamp: Date { get }
     var modifiedTimestamp: Date { get }
 
-    static func create(context: ModelContext, value: String) -> Self
+    @MainActor
+    static func create(container: ModelContainer, value: String) -> Self
     func update(value: String)
 
     static var title: LocalizedStringKey { get }

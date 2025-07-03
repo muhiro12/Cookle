@@ -31,58 +31,60 @@ final class CooklePreviewStore {
             && !categories.isEmpty
     }
 
-    func prepare(_ context: ModelContext) async {
-        _ = try! await createPreviewDiaries(context, isPreview: true)
+    @MainActor
+    func prepare(_ container: ModelContainer) async {
+        _ = try! await createPreviewDiaries(container, isPreview: true)
         while !isReady {
             try! await Task.sleep(for: .seconds(0.2))
-            diaries = try! context.fetch(.diaries(.all))
-            diaryObjects = try! context.fetch(.diaryObjects(.all))
-            recipes = try! context.fetch(.recipes(.all))
-            photos = try! context.fetch(.photos(.all))
-            photoObjects = try! context.fetch(.photoObjects(.all))
-            ingredients = try! context.fetch(.ingredients(.all))
-            ingredientObjects = try! context.fetch(.ingredientObjects(.all))
-            categories = try! context.fetch(.categories(.all))
+            diaries = try! container.mainContext.fetch(.diaries(.all))
+            diaryObjects = try! container.mainContext.fetch(.diaryObjects(.all))
+            recipes = try! container.mainContext.fetch(.recipes(.all))
+            photos = try! container.mainContext.fetch(.photos(.all))
+            photoObjects = try! container.mainContext.fetch(.photoObjects(.all))
+            ingredients = try! container.mainContext.fetch(.ingredients(.all))
+            ingredientObjects = try! container.mainContext.fetch(.ingredientObjects(.all))
+            categories = try! container.mainContext.fetch(.categories(.all))
         }
     }
 
-    func createPreviewDiaries(_ context: ModelContext, isPreview: Bool = false) async throws -> [Diary] {
-        let pancakes = try await cookPancakes(context, isPreview: isPreview)
-        let chickenStirFry = try await cookChickenStirFry(context, isPreview: isPreview)
-        let vegetableSoup = try await cookVegetableSoup(context, isPreview: isPreview)
-        let spaghettiCarbonara = try await cookSpaghettiCarbonara(context, isPreview: isPreview)
-        let beefStew = try await cookBeefStew(context, isPreview: isPreview)
+    @MainActor
+    func createPreviewDiaries(_ container: ModelContainer, isPreview: Bool = false) async throws -> [Diary] {
+        let pancakes = try await cookPancakes(container, isPreview: isPreview)
+        let chickenStirFry = try await cookChickenStirFry(container, isPreview: isPreview)
+        let vegetableSoup = try await cookVegetableSoup(container, isPreview: isPreview)
+        let spaghettiCarbonara = try await cookSpaghettiCarbonara(container, isPreview: isPreview)
+        let beefStew = try await cookBeefStew(container, isPreview: isPreview)
         return (0..<10).map { i in
             .create(
-                context: context,
+                container: container,
                 date: .now.addingTimeInterval(TimeInterval(-i * 8) * 24 * 60 * 60),
                 objects: [
                     .create(
-                        context: context,
+                        container: container,
                         recipe: pancakes,
                         type: .breakfast,
                         order: 1
                     ),
                     .create(
-                        context: context,
+                        container: container,
                         recipe: chickenStirFry,
                         type: .lunch,
                         order: 1
                     ),
                     .create(
-                        context: context,
+                        container: container,
                         recipe: vegetableSoup,
                         type: .lunch,
                         order: 2
                     ),
                     .create(
-                        context: context,
+                        container: container,
                         recipe: spaghettiCarbonara,
                         type: .dinner,
                         order: 1
                     ),
                     .create(
-                        context: context,
+                        container: container,
                         recipe: beefStew,
                         type: .dinner,
                         order: 2
@@ -103,23 +105,24 @@ final class CooklePreviewStore {
         }
     }
 
-    private func cookSpaghettiCarbonara(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
-        .create(
-            context: context,
+    @MainActor
+    private func cookSpaghettiCarbonara(_ container: ModelContainer, isPreview: Bool) async throws -> Recipe {
+        return .create(
+            container: container,
             name: "Spaghetti Carbonara",
             photos: [
-                isPreview ? createPhotoObject(context, systemName: "frying.pan", order: 1) : try await createPhotoObject(context, name: "SpaghettiCarbonara1", order: 1),
-                isPreview ? createPhotoObject(context, systemName: "oval.portrait", order: 2) : try await createPhotoObject(context, name: "SpaghettiCarbonara2", order: 2)
+                isPreview ? createPhotoObject(container, systemName: "frying.pan", order: 1) : try await createPhotoObject(container, name: "SpaghettiCarbonara1", order: 1),
+                isPreview ? createPhotoObject(container, systemName: "oval.portrait", order: 2) : try await createPhotoObject(container, name: "SpaghettiCarbonara2", order: 2)
             ],
             servingSize: 2,
             cookingTime: 30,
             ingredients: [
-                .create(context: context, ingredient: "Spaghetti", amount: "200g", order: 1),
-                .create(context: context, ingredient: "Eggs", amount: "2", order: 2),
-                .create(context: context, ingredient: "Parmesan cheese", amount: "50g", order: 3),
-                .create(context: context, ingredient: "Pancetta", amount: "100g", order: 4),
-                .create(context: context, ingredient: "Black pepper", amount: "to taste", order: 5),
-                .create(context: context, ingredient: "Salt", amount: "to taste", order: 6)
+                .create(container: container, ingredient: "Spaghetti", amount: "200g", order: 1),
+                .create(container: container, ingredient: "Eggs", amount: "2", order: 2),
+                .create(container: container, ingredient: "Parmesan cheese", amount: "50g", order: 3),
+                .create(container: container, ingredient: "Pancetta", amount: "100g", order: 4),
+                .create(container: container, ingredient: "Black pepper", amount: "to taste", order: 5),
+                .create(container: container, ingredient: "Salt", amount: "to taste", order: 6)
             ],
             steps: [
                 "Boil water in a large pot and add salt.",
@@ -130,33 +133,34 @@ final class CooklePreviewStore {
                 "Season with black pepper and serve immediately."
             ],
             categories: [
-                .create(context: context, value: "Italian")
+                .create(container: container, value: "Italian")
             ],
             note: "Use freshly grated Parmesan for the best flavor."
         )
     }
 
-    private func cookBeefStew(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
-        .create(
-            context: context,
+    @MainActor
+    private func cookBeefStew(_ container: ModelContainer, isPreview: Bool) async throws -> Recipe {
+        return .create(
+            container: container,
             name: "Beef Stew",
             photos: [
-                isPreview ? createPhotoObject(context, systemName: "fork.knife", order: 1) : try await createPhotoObject(context, name: "BeefStew1", order: 1),
-                isPreview ? createPhotoObject(context, systemName: "wineglass", order: 2) : try await createPhotoObject(context, name: "BeefStew2", order: 2)
+                isPreview ? createPhotoObject(container, systemName: "fork.knife", order: 1) : try await createPhotoObject(container, name: "BeefStew1", order: 1),
+                isPreview ? createPhotoObject(container, systemName: "wineglass", order: 2) : try await createPhotoObject(container, name: "BeefStew2", order: 2)
             ],
             servingSize: 6,
             cookingTime: 120,
             ingredients: [
-                .create(context: context, ingredient: "Beef chuck", amount: "1 kg", order: 1),
-                .create(context: context, ingredient: "Carrots", amount: "3", order: 2),
-                .create(context: context, ingredient: "Potatoes", amount: "4", order: 3),
-                .create(context: context, ingredient: "Onions", amount: "2", order: 4),
-                .create(context: context, ingredient: "Beef broth", amount: "4 cups", order: 5),
-                .create(context: context, ingredient: "Tomato paste", amount: "2 tbsp", order: 6),
-                .create(context: context, ingredient: "Flour", amount: "1/4 cup", order: 7),
-                .create(context: context, ingredient: "Salt", amount: "to taste", order: 8),
-                .create(context: context, ingredient: "Black pepper", amount: "to taste", order: 9),
-                .create(context: context, ingredient: "Olive oil", amount: "2 tbsp", order: 10)
+                .create(container: container, ingredient: "Beef chuck", amount: "1 kg", order: 1),
+                .create(container: container, ingredient: "Carrots", amount: "3", order: 2),
+                .create(container: container, ingredient: "Potatoes", amount: "4", order: 3),
+                .create(container: container, ingredient: "Onions", amount: "2", order: 4),
+                .create(container: container, ingredient: "Beef broth", amount: "4 cups", order: 5),
+                .create(container: container, ingredient: "Tomato paste", amount: "2 tbsp", order: 6),
+                .create(container: container, ingredient: "Flour", amount: "1/4 cup", order: 7),
+                .create(container: container, ingredient: "Salt", amount: "to taste", order: 8),
+                .create(container: container, ingredient: "Black pepper", amount: "to taste", order: 9),
+                .create(container: container, ingredient: "Olive oil", amount: "2 tbsp", order: 10)
             ],
             steps: [
                 "Cut the beef into large chunks and season with salt and pepper.",
@@ -169,32 +173,33 @@ final class CooklePreviewStore {
                 "Season with salt and pepper to taste, and serve hot."
             ],
             categories: [
-                .create(context: context, value: "Comfort Food")
+                .create(container: container, value: "Comfort Food")
             ],
             note: "This stew is even better the next day."
         )
     }
 
-    private func cookChickenStirFry(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
-        .create(
-            context: context,
+    @MainActor
+    private func cookChickenStirFry(_ container: ModelContainer, isPreview: Bool) async throws -> Recipe {
+        return .create(
+            container: container,
             name: "Chicken Stir Fry",
             photos: [
-                isPreview ? createPhotoObject(context, systemName: "bird", order: 1) : try await createPhotoObject(context, name: "ChickenStirFry1", order: 1),
-                isPreview ? createPhotoObject(context, systemName: "tree", order: 2) : try await createPhotoObject(context, name: "ChickenStirFry2", order: 2)
+                isPreview ? createPhotoObject(container, systemName: "bird", order: 1) : try await createPhotoObject(container, name: "ChickenStirFry1", order: 1),
+                isPreview ? createPhotoObject(container, systemName: "tree", order: 2) : try await createPhotoObject(container, name: "ChickenStirFry2", order: 2)
             ],
             servingSize: 4,
             cookingTime: 20,
             ingredients: [
-                .create(context: context, ingredient: "Chicken breast", amount: "500g", order: 1),
-                .create(context: context, ingredient: "Bell peppers", amount: "2", order: 2),
-                .create(context: context, ingredient: "Broccoli", amount: "1 head", order: 3),
-                .create(context: context, ingredient: "Soy sauce", amount: "3 tbsp", order: 4),
-                .create(context: context, ingredient: "Garlic", amount: "2 cloves", order: 5),
-                .create(context: context, ingredient: "Ginger", amount: "1 inch", order: 6),
-                .create(context: context, ingredient: "Vegetable oil", amount: "2 tbsp", order: 7),
-                .create(context: context, ingredient: "Cornstarch", amount: "1 tbsp", order: 8),
-                .create(context: context, ingredient: "Water", amount: "1/2 cup", order: 9)
+                .create(container: container, ingredient: "Chicken breast", amount: "500g", order: 1),
+                .create(container: container, ingredient: "Bell peppers", amount: "2", order: 2),
+                .create(container: container, ingredient: "Broccoli", amount: "1 head", order: 3),
+                .create(container: container, ingredient: "Soy sauce", amount: "3 tbsp", order: 4),
+                .create(container: container, ingredient: "Garlic", amount: "2 cloves", order: 5),
+                .create(container: container, ingredient: "Ginger", amount: "1 inch", order: 6),
+                .create(container: container, ingredient: "Vegetable oil", amount: "2 tbsp", order: 7),
+                .create(container: container, ingredient: "Cornstarch", amount: "1 tbsp", order: 8),
+                .create(container: container, ingredient: "Water", amount: "1/2 cup", order: 9)
             ],
             steps: [
                 "Cut the chicken into bite-sized pieces.",
@@ -208,33 +213,34 @@ final class CooklePreviewStore {
                 "Serve hot with rice."
             ],
             categories: [
-                .create(context: context, value: "Asian")
+                .create(container: container, value: "Asian")
             ],
             note: "You can use any vegetables you like for this stir fry."
         )
     }
 
-    private func cookVegetableSoup(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
-        .create(
-            context: context,
+    @MainActor
+    private func cookVegetableSoup(_ container: ModelContainer, isPreview: Bool) async throws -> Recipe {
+        return .create(
+            container: container,
             name: "Vegetable Soup",
             photos: [
-                isPreview ? createPhotoObject(context, systemName: "cup.and.saucer", order: 1) : try await createPhotoObject(context, name: "VegetableSoup1", order: 1),
-                isPreview ? createPhotoObject(context, systemName: "carrot", order: 2) : try await createPhotoObject(context, name: "VegetableSoup2", order: 2)
+                isPreview ? createPhotoObject(container, systemName: "cup.and.saucer", order: 1) : try await createPhotoObject(container, name: "VegetableSoup1", order: 1),
+                isPreview ? createPhotoObject(container, systemName: "carrot", order: 2) : try await createPhotoObject(container, name: "VegetableSoup2", order: 2)
             ],
             servingSize: 4,
             cookingTime: 40,
             ingredients: [
-                .create(context: context, ingredient: "Carrots", amount: "3", order: 1),
-                .create(context: context, ingredient: "Potatoes", amount: "2", order: 2),
-                .create(context: context, ingredient: "Celery", amount: "2 stalks", order: 3),
-                .create(context: context, ingredient: "Onion", amount: "1", order: 4),
-                .create(context: context, ingredient: "Garlic", amount: "2 cloves", order: 5),
-                .create(context: context, ingredient: "Vegetable broth", amount: "6 cups", order: 6),
-                .create(context: context, ingredient: "Tomatoes", amount: "2", order: 7),
-                .create(context: context, ingredient: "Salt", amount: "to taste", order: 8),
-                .create(context: context, ingredient: "Black pepper", amount: "to taste", order: 9),
-                .create(context: context, ingredient: "Olive oil", amount: "2 tbsp", order: 10)
+                .create(container: container, ingredient: "Carrots", amount: "3", order: 1),
+                .create(container: container, ingredient: "Potatoes", amount: "2", order: 2),
+                .create(container: container, ingredient: "Celery", amount: "2 stalks", order: 3),
+                .create(container: container, ingredient: "Onion", amount: "1", order: 4),
+                .create(container: container, ingredient: "Garlic", amount: "2 cloves", order: 5),
+                .create(container: container, ingredient: "Vegetable broth", amount: "6 cups", order: 6),
+                .create(container: container, ingredient: "Tomatoes", amount: "2", order: 7),
+                .create(container: container, ingredient: "Salt", amount: "to taste", order: 8),
+                .create(container: container, ingredient: "Black pepper", amount: "to taste", order: 9),
+                .create(container: container, ingredient: "Olive oil", amount: "2 tbsp", order: 10)
             ],
             steps: [
                 "Chop the carrots, potatoes, celery, onion, and tomatoes.",
@@ -247,30 +253,31 @@ final class CooklePreviewStore {
                 "Serve hot with a sprinkle of fresh herbs."
             ],
             categories: [
-                .create(context: context, value: "Healthy")
+                .create(container: container, value: "Healthy")
             ],
             note: "You can add any vegetables you have on hand."
         )
     }
 
-    private func cookPancakes(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
-        .create(
-            context: context,
+    @MainActor
+    private func cookPancakes(_ container: ModelContainer, isPreview: Bool) async throws -> Recipe {
+        return .create(
+            container: container,
             name: "Pancakes",
             photos: [
-                isPreview ? createPhotoObject(context, systemName: "birthday.cake", order: 1) : try await createPhotoObject(context, name: "Pancakes1", order: 1),
-                isPreview ? createPhotoObject(context, systemName: "mug", order: 2) : try await createPhotoObject(context, name: "Pancakes2", order: 2)
+                isPreview ? createPhotoObject(container, systemName: "birthday.cake", order: 1) : try await createPhotoObject(container, name: "Pancakes1", order: 1),
+                isPreview ? createPhotoObject(container, systemName: "mug", order: 2) : try await createPhotoObject(container, name: "Pancakes2", order: 2)
             ],
             servingSize: 4,
             cookingTime: 20,
             ingredients: [
-                .create(context: context, ingredient: "All-purpose flour", amount: "1 cup", order: 1),
-                .create(context: context, ingredient: "Milk", amount: "1 cup", order: 2),
-                .create(context: context, ingredient: "Egg", amount: "1", order: 3),
-                .create(context: context, ingredient: "Baking powder", amount: "2 tsp", order: 4),
-                .create(context: context, ingredient: "Salt", amount: "1/4 tsp", order: 5),
-                .create(context: context, ingredient: "Sugar", amount: "1 tbsp", order: 6),
-                .create(context: context, ingredient: "Butter", amount: "2 tbsp", order: 7)
+                .create(container: container, ingredient: "All-purpose flour", amount: "1 cup", order: 1),
+                .create(container: container, ingredient: "Milk", amount: "1 cup", order: 2),
+                .create(container: container, ingredient: "Egg", amount: "1", order: 3),
+                .create(container: container, ingredient: "Baking powder", amount: "2 tsp", order: 4),
+                .create(container: container, ingredient: "Salt", amount: "1/4 tsp", order: 5),
+                .create(container: container, ingredient: "Sugar", amount: "1 tbsp", order: 6),
+                .create(container: container, ingredient: "Butter", amount: "2 tbsp", order: 7)
             ],
             steps: [
                 "In a large bowl, mix together the flour, baking powder, salt, and sugar.",
@@ -281,15 +288,16 @@ final class CooklePreviewStore {
                 "Brown on both sides and serve hot."
             ],
             categories: [
-                .create(context: context, value: "Breakfast")
+                .create(container: container, value: "Breakfast")
             ],
             note: "Serve with syrup, butter, and fresh fruits."
         )
     }
 
-    private func createPhotoObject(_ context: ModelContext, systemName: String, order: Int) -> PhotoObject {
-        .create(
-            context: context,
+    @MainActor
+    private func createPhotoObject(_ container: ModelContainer, systemName: String, order: Int) -> PhotoObject {
+        return .create(
+            container: container,
             photoData: .init(
                 data: UIImage(systemName: systemName)!.withTintColor(.init(.init(uiColor: .tintColor).adjusted(by: systemName.hashValue))).jpegData(compressionQuality: 1)!,
                 source: order == 1 ? .photosPicker : .imagePlayground
@@ -298,9 +306,10 @@ final class CooklePreviewStore {
         )
     }
 
-    private func createPhotoObject(_ context: ModelContext, name: String, order: Int) async throws -> PhotoObject {
-        .create(
-            context: context,
+    @MainActor
+    private func createPhotoObject(_ container: ModelContainer, name: String, order: Int) async throws -> PhotoObject {
+        return .create(
+            container: container,
             photoData: .init(
                 data: try await URLSession.shared.data(from: .init(string: "https://raw.githubusercontent.com/muhiro12/Cookle/refs/heads/main/.Resources/\(name).png")!).0,
                 source: .photosPicker
