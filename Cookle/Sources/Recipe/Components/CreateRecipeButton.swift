@@ -50,10 +50,10 @@ struct CreateRecipeButton: View {
     var body: some View {
         Button {
             let model = Recipe.create(
-                container: context.container,
+                context: context,
                 name: name,
                 photos: zip(photos.indices, photos).map { index, element in
-                    .create(container: context.container, photoData: element, order: index + 1)
+                    .create(context: context, photoData: element, order: index + 1)
                 },
                 servingSize: toInt(servingSize) ?? .zero,
                 cookingTime: toInt(cookingTime) ?? .zero,
@@ -61,7 +61,7 @@ struct CreateRecipeButton: View {
                     guard !element.ingredient.isEmpty else {
                         return nil
                     }
-                    return .create(container: context.container, ingredient: element.ingredient, amount: element.amount, order: index + 1)
+                    return .create(context: context, ingredient: element.ingredient, amount: element.amount, order: index + 1)
                 },
                 steps: steps.filter {
                     !$0.isEmpty
@@ -70,7 +70,7 @@ struct CreateRecipeButton: View {
                     guard !$0.isEmpty else {
                         return nil
                     }
-                    return .create(container: context.container, value: $0)
+                    return .create(context: context, value: $0)
                 },
                 note: note
             )
@@ -126,7 +126,7 @@ struct CreateRecipeButton: View {
                     name: recipe.name,
                     photos: [
                         .create(
-                            container: context.container,
+                            context: context,
                             photoData: .init(
                                 data: data.compressed(),
                                 source: .imagePlayground

@@ -37,7 +37,7 @@ final class Recipe {
     private init() {}
 
     @MainActor
-    static func create(container: ModelContainer,
+    static func create(context: ModelContext,
                        name: String,
                        photos: [PhotoObject],
                        servingSize: Int,
@@ -47,7 +47,7 @@ final class Recipe {
                        categories: [Category],
                        note: String) -> Recipe {
         let recipe = Recipe()
-        container.mainContext.insert(recipe)
+        context.insert(recipe)
         recipe.name = name
         recipe.photos = photos.compactMap(\.photo)
         recipe.photoObjects = photos

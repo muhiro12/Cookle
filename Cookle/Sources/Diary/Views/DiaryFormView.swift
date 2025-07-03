@@ -80,24 +80,24 @@ struct DiaryFormView: View {
                         diary.update(
                             date: date,
                             objects: zip(recipes(from: breakfasts).indices, recipes(from: breakfasts)).map { index, element in
-                                .create(container: context.container, recipe: element, type: .breakfast, order: index + 1)
+                                .create(context: context, recipe: element, type: .breakfast, order: index + 1)
                             } + zip(recipes(from: lunches).indices, recipes(from: lunches)).map { index, element in
-                                .create(container: context.container, recipe: element, type: .lunch, order: index + 1)
+                                .create(context: context, recipe: element, type: .lunch, order: index + 1)
                             } + zip(recipes(from: dinners).indices, recipes(from: dinners)).map { index, element in
-                                .create(container: context.container, recipe: element, type: .dinner, order: index + 1)
+                                .create(context: context, recipe: element, type: .dinner, order: index + 1)
                             },
                             note: note
                         )
                     } else {
                         _ = Diary.create(
-                            container: context.container,
+                            context: context,
                             date: date,
                             objects: zip(recipes(from: breakfasts).indices, recipes(from: breakfasts)).map { index, element in
-                                .create(container: context.container, recipe: element, type: .breakfast, order: index + 1)
+                                .create(context: context, recipe: element, type: .breakfast, order: index + 1)
                             } + zip(recipes(from: lunches).indices, recipes(from: lunches)).map { index, element in
-                                .create(container: context.container, recipe: element, type: .lunch, order: index + 1)
+                                .create(context: context, recipe: element, type: .lunch, order: index + 1)
                             } + zip(recipes(from: dinners).indices, recipes(from: dinners)).map { index, element in
-                                .create(container: context.container, recipe: element, type: .dinner, order: index + 1)
+                                .create(context: context, recipe: element, type: .dinner, order: index + 1)
                             },
                             note: note
                         )

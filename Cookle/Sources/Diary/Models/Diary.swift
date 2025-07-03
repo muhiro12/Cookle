@@ -23,12 +23,12 @@ final class Diary {
     private init() {}
 
     @MainActor
-    static func create(container: ModelContainer,
+    static func create(context: ModelContext,
                        date: Date,
                        objects: [DiaryObject],
                        note: String) -> Diary {
         let diary = Diary()
-        container.mainContext.insert(diary)
+        context.insert(diary)
         diary.date = date
         diary.objects = objects
         diary.recipes = objects.compactMap(\.recipe)

@@ -24,9 +24,9 @@ final class Photo {
     private init() {}
 
     @MainActor
-    static func create(container: ModelContainer, photoData: PhotoData) -> Photo {
-        let photo = (try? container.mainContext.fetchFirst(.photos(.dataIs(photoData.data)))) ?? .init()
-        container.mainContext.insert(photo)
+    static func create(context: ModelContext, photoData: PhotoData) -> Photo {
+        let photo = (try? context.fetchFirst(.photos(.dataIs(photoData.data)))) ?? .init()
+        context.insert(photo)
         photo.data = photoData.data
         photo.sourceID = photoData.source.rawValue
         return photo

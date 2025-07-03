@@ -78,7 +78,7 @@ struct DebugSidebarView: View {
         ) {
             Button(role: .destructive) {
                 Task { @MainActor in
-                    _ = try? await CooklePreviewStore().createPreviewDiaries(context.container)
+                    _ = try? await CooklePreviewStore().createPreviewDiaries(context)
                 }
             } label: {
                 Text("Create")

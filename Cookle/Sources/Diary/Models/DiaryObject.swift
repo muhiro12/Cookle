@@ -27,9 +27,9 @@ final class DiaryObject: SubObject {
     }
 
     @MainActor
-    static func create(container: ModelContainer, recipe: Recipe, type: DiaryObjectType, order: Int) -> DiaryObject {
+    static func create(context: ModelContext, recipe: Recipe, type: DiaryObjectType, order: Int) -> DiaryObject {
         let object = DiaryObject(recipe: recipe, type: type)
-        container.mainContext.insert(object)
+        context.insert(object)
         object.order = order
         return object
     }

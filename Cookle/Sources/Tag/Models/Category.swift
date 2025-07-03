@@ -21,9 +21,9 @@ final class Category: Tag {
     private init() {}
 
     @MainActor
-    static func create(container: ModelContainer, value: String) -> Self {
-        let category = (try? container.mainContext.fetchFirst(.categories(.valueIs(value)))) ?? .init()
-        container.mainContext.insert(category)
+    static func create(context: ModelContext, value: String) -> Self {
+        let category = (try? context.fetchFirst(.categories(.valueIs(value)))) ?? .init()
+        context.insert(category)
         category.value = value
         return category as! Self
     }
