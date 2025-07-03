@@ -25,11 +25,12 @@ final class IngredientObject: SubObject {
         self.ingredient = ingredient
     }
 
-    static func create(context: ModelContext, ingredient: String, amount: String, order: Int) -> IngredientObject {
+    @MainActor
+    static func create(container: ModelContainer, ingredient: String, amount: String, order: Int) -> IngredientObject {
         let object = IngredientObject(
-            ingredient: .create(context: context, value: ingredient)
+            ingredient: .create(container: container, value: ingredient)
         )
-        context.insert(object)
+        container.mainContext.insert(object)
         object.amount = amount
         object.order = order
         return object
