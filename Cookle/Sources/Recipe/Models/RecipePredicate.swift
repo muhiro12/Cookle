@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-enum RecipePredicate {
+nonisolated enum RecipePredicate {
     case all
     case none
     case idIs(Recipe.ID)
@@ -36,7 +36,7 @@ enum RecipePredicate {
     }
 }
 
-extension FetchDescriptor where T == Recipe {
+nonisolated extension FetchDescriptor where T == Recipe {
     static func recipes(_ predicate: RecipePredicate, order: SortOrder = .forward) -> FetchDescriptor {
         .init(
             predicate: predicate.value,

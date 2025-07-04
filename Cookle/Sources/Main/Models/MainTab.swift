@@ -20,7 +20,7 @@ enum MainTab: CaseIterable {
 }
 
 extension MainTab {
-    @MainActor @ViewBuilder
+    @ViewBuilder
     var rootView: some View {
         switch self {
         case .diary:

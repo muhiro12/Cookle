@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class IngredientObject: SubObject {
+nonisolated final class IngredientObject: SubObject {
     @Relationship
     private(set) var ingredient = Ingredient?.none
     private(set) var amount = String.empty
@@ -25,7 +25,6 @@ final class IngredientObject: SubObject {
         self.ingredient = ingredient
     }
 
-    @MainActor
     static func create(context: ModelContext, ingredient: String, amount: String, order: Int) -> IngredientObject {
         let object = IngredientObject(
             ingredient: .create(context: context, value: ingredient)

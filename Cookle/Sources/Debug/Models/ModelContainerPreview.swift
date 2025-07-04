@@ -23,7 +23,7 @@ struct ModelContainerPreview<Content: View>: View {
                 .modelContainer(previewModelContainer)
         } else {
             ProgressView()
-                .task { @MainActor in
+                .task {
                     await preview.prepare(previewModelContainer.mainContext)
                     isReady = true
                 }

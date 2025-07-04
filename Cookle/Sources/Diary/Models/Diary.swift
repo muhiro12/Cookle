@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class Diary {
+nonisolated final class Diary {
     private(set) var date = Date.now
     @Relationship(deleteRule: .cascade)
     private(set) var objects = [DiaryObject]?.some(.empty)
@@ -22,7 +22,6 @@ final class Diary {
 
     private init() {}
 
-    @MainActor
     static func create(context: ModelContext,
                        date: Date,
                        objects: [DiaryObject],

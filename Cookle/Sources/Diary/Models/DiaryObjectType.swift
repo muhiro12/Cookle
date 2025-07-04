@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum DiaryObjectType {
+nonisolated enum DiaryObjectType {
     case breakfast
     case lunch
     case dinner

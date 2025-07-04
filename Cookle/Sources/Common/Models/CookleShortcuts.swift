@@ -7,7 +7,7 @@
 
 import AppIntents
 
-struct CookleShortcuts: AppShortcutsProvider {
+nonisolated struct CookleShortcuts: AppShortcutsProvider {
     static let shortcutTileColor = ShortcutTileColor.yellow
 
     static var appShortcuts: [AppShortcut] {

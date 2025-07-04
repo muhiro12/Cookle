@@ -2,7 +2,7 @@ import AppIntents
 import SwiftUtilities
 
 @Observable
-final class RecipeEntity: AppEntity {
+nonisolated final class RecipeEntity: AppEntity {
     static let defaultQuery = RecipeEntityQuery()
 
     static var typeDisplayRepresentation: TypeDisplayRepresentation {
