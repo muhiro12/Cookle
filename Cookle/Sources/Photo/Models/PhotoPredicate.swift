@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-enum PhotoPredicate {
+nonisolated enum PhotoPredicate {
     case all
     case none
     case sourceIs(PhotoSource)
@@ -33,7 +33,7 @@ enum PhotoPredicate {
     }
 }
 
-extension FetchDescriptor where T == Photo {
+nonisolated extension FetchDescriptor where T == Photo {
     static func photos(_ predicate: PhotoPredicate, order: SortOrder = .reverse) -> FetchDescriptor {
         .init(
             predicate: predicate.value,

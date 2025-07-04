@@ -16,7 +16,7 @@ struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
 
     @Dependency private var modelContainer: ModelContainer
 
-    static var title: LocalizedStringResource {
+    nonisolated static var title: LocalizedStringResource {
         .init("Show Last Opened Recipe")
     }
 
@@ -34,7 +34,6 @@ struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
         return RecipeEntity(recipe)
     }
 
-    @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         guard let lastOpenedRecipeID = AppStorage(.lastOpenedRecipeID).wrappedValue,
               let recipe = try Self.recipe(

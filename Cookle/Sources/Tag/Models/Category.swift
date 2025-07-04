@@ -9,7 +9,7 @@ import SwiftData
 import SwiftUI
 
 @Model
-final class Category: Tag {
+nonisolated final class Category: Tag {
     private(set) var value = String.empty
 
     @Relationship(inverse: \Recipe.categories)
@@ -20,7 +20,6 @@ final class Category: Tag {
 
     private init() {}
 
-    @MainActor
     static func create(context: ModelContext, value: String) -> Self {
         let category = (try? context.fetchFirst(.categories(.valueIs(value)))) ?? .init()
         context.insert(category)

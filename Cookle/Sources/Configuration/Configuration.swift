@@ -7,6 +7,6 @@
 
 import Foundation
 
-struct Configuration: Decodable {
+nonisolated struct Configuration: Decodable {
     let requiredVersion: String
 }

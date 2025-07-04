@@ -18,7 +18,7 @@ struct ShowSearchResultIntent: AppIntent, IntentPerformer {
 
     @Dependency private var modelContainer: ModelContainer
 
-    static var title: LocalizedStringResource {
+    nonisolated static var title: LocalizedStringResource {
         .init("Show Search Result")
     }
 
@@ -43,7 +43,6 @@ struct ShowSearchResultIntent: AppIntent, IntentPerformer {
         return recipes.compactMap(RecipeEntity.init)
     }
 
-    @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         _ = try Self.perform((context: modelContainer.mainContext, text: searchText))
         return .result(dialog: "Result") {

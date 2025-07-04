@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-enum TagPredicate<T: Tag> {
+nonisolated enum TagPredicate<T: Tag> {
     case all
     case none
     case valueIs(String)
@@ -56,7 +56,7 @@ enum TagPredicate<T: Tag> {
     }
 }
 
-extension FetchDescriptor where T == Ingredient {
+nonisolated extension FetchDescriptor where T == Ingredient {
     static func ingredients(_ predicate: TagPredicate<T>, order: SortOrder = .forward) -> FetchDescriptor {
         .init(
             predicate: predicate.value,
@@ -67,7 +67,7 @@ extension FetchDescriptor where T == Ingredient {
     }
 }
 
-extension FetchDescriptor where T == Category {
+nonisolated extension FetchDescriptor where T == Category {
     static func categories(_ predicate: TagPredicate<T>, order: SortOrder = .forward) -> FetchDescriptor {
         .init(
             predicate: predicate.value,

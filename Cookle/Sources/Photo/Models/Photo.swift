@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class Photo {
+nonisolated final class Photo {
     private(set) var data = Data.empty
     private(set) var sourceID = PhotoSource.defaultValue.rawValue
 
@@ -23,7 +23,6 @@ final class Photo {
 
     private init() {}
 
-    @MainActor
     static func create(context: ModelContext, photoData: PhotoData) -> Photo {
         let photo = (try? context.fetchFirst(.photos(.dataIs(photoData.data)))) ?? .init()
         context.insert(photo)

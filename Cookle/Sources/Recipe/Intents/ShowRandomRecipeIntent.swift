@@ -16,7 +16,7 @@ struct ShowRandomRecipeIntent: AppIntent, IntentPerformer {
 
     @Dependency private var modelContainer: ModelContainer
 
-    static var title: LocalizedStringResource {
+    nonisolated static var title: LocalizedStringResource {
         .init("Show Random Recipe")
     }
 
@@ -31,7 +31,6 @@ struct ShowRandomRecipeIntent: AppIntent, IntentPerformer {
         return RecipeEntity(recipe)
     }
 
-    @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         guard let recipe = try Self.recipe(context: modelContainer.mainContext) else {
             return .result(dialog: "Not Found")

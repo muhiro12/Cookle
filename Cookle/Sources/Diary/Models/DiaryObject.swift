@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class DiaryObject: SubObject {
+nonisolated final class DiaryObject: SubObject {
     @Relationship
     private(set) var recipe = Recipe?.none
     private(set) var type = DiaryObjectType?.none
@@ -26,7 +26,6 @@ final class DiaryObject: SubObject {
         self.type = type
     }
 
-    @MainActor
     static func create(context: ModelContext, recipe: Recipe, type: DiaryObjectType, order: Int) -> DiaryObject {
         let object = DiaryObject(recipe: recipe, type: type)
         context.insert(object)

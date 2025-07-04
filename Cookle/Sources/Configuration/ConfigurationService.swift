@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-@MainActor @Observable
+@Observable
 final class ConfigurationService {
     private(set) var configuration: Configuration?
 

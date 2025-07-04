@@ -8,7 +8,6 @@
 import SwiftData
 import SwiftUI
 
-@MainActor
 enum CookleIntents {
     static let modelContainer = try! ModelContainer(
         for: Recipe.self,

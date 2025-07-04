@@ -11,7 +11,6 @@ struct CooklePreview<Content: View>: View {
     private var previewStore: Store
     private var previewGoogleMobileAdsController: GoogleMobileAdsController
 
-    @MainActor
     init(_ content: @escaping (CooklePreviewStore) -> Content) {
         self.content = content
         self.preview = .init()

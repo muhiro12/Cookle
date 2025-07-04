@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum PhotoSource: String {
+nonisolated enum PhotoSource: String {
     case photosPicker = "zW8rLxK4"
     case imagePlayground = "Xe1Vt9bQ"
 }
