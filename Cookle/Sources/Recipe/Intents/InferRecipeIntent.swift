@@ -11,7 +11,7 @@ import SwiftUtilities
 
 @available(iOS 26.0, *)
 struct InferRecipeIntent: AppIntent, IntentPerformer {
-    static var title: LocalizedStringResource {
+    nonisolated static var title: LocalizedStringResource {
         .init("Infer Recipe")
     }
 
@@ -55,7 +55,6 @@ struct InferRecipeIntent: AppIntent, IntentPerformer {
         )
     }
 
-    @MainActor
     func perform() async throws -> some IntentResult {
         let result = try await Self.perform(text)
         return .result(value: result)
