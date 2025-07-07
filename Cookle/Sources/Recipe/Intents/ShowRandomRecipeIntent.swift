@@ -31,7 +31,7 @@ struct ShowRandomRecipeIntent: AppIntent, IntentPerformer {
         return RecipeEntity(recipe)
     }
 
-    func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
+    @MainActor func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         guard let recipe = try Self.recipe(context: modelContainer.mainContext) else {
             return .result(dialog: "Not Found")
         }

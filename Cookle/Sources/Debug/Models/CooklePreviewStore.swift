@@ -102,7 +102,7 @@ final class CooklePreviewStore {
         }
     }
 
-    private func cookSpaghettiCarbonara(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
+    @MainActor private func cookSpaghettiCarbonara(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
         .create(
             context: context,
             name: "Spaghetti Carbonara",
@@ -135,7 +135,7 @@ final class CooklePreviewStore {
         )
     }
 
-    private func cookBeefStew(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
+    @MainActor private func cookBeefStew(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
         .create(
             context: context,
             name: "Beef Stew",
@@ -174,7 +174,7 @@ final class CooklePreviewStore {
         )
     }
 
-    private func cookChickenStirFry(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
+    @MainActor private func cookChickenStirFry(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
         .create(
             context: context,
             name: "Chicken Stir Fry",
@@ -213,7 +213,7 @@ final class CooklePreviewStore {
         )
     }
 
-    private func cookVegetableSoup(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
+    @MainActor private func cookVegetableSoup(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
         .create(
             context: context,
             name: "Vegetable Soup",
@@ -252,7 +252,7 @@ final class CooklePreviewStore {
         )
     }
 
-    private func cookPancakes(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
+    @MainActor private func cookPancakes(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
         .create(
             context: context,
             name: "Pancakes",
@@ -286,7 +286,7 @@ final class CooklePreviewStore {
         )
     }
 
-    private func createPhotoObject(_ context: ModelContext, systemName: String, order: Int) -> PhotoObject {
+    @MainActor private func createPhotoObject(_ context: ModelContext, systemName: String, order: Int) -> PhotoObject {
         .create(
             context: context,
             photoData: .init(

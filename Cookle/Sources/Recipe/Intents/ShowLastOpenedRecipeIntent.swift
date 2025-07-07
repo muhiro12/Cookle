@@ -34,7 +34,7 @@ struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
         return RecipeEntity(recipe)
     }
 
-    func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
+    @MainActor func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         guard let lastOpenedRecipeID = AppStorage(.lastOpenedRecipeID).wrappedValue,
               let recipe = try Self.recipe(
                 (context: modelContainer.mainContext, id: .init(base64Encoded: lastOpenedRecipeID))

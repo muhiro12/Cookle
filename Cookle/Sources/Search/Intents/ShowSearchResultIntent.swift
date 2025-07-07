@@ -43,7 +43,7 @@ struct ShowSearchResultIntent: AppIntent, IntentPerformer {
         return recipes.compactMap(RecipeEntity.init)
     }
 
-    func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
+    @MainActor func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         _ = try Self.perform((context: modelContainer.mainContext, text: searchText))
         return .result(dialog: "Result") {
             CookleIntents.cookleView {
