@@ -495,6 +495,9 @@
         }
       }
     },
+    "Cannot Delete" : {
+
+    },
     "Categories" : {
       "localizations" : {
         "en" : {
@@ -2891,6 +2894,9 @@
           }
         }
       }
+    },
+    "This item is used by existing recipes." : {
+
     },
     "Type" : {
       "localizations" : {
