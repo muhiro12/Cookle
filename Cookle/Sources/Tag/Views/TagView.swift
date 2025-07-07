@@ -39,6 +39,12 @@ struct TagView<T: Tag>: View {
             } header: {
                 Text("Updated At")
             }
+            Section {
+                EditTagButton<T>()
+                DeleteTagButton<T>()
+            } header: {
+                Spacer()
+            }
         }
         .navigationTitle(tag.value)
         .toolbar {
