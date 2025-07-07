@@ -38,9 +38,9 @@ extension View {
                     concepts.append(
                         .text(recipe.name)
                     )
-                    recipe.ingredients.forEach { ingredient in
+                    recipe.ingredients.forEach { element in
                         concepts.append(
-                            .text(ingredient)
+                            .text(element.ingredient)
                         )
                     }
                     recipe.steps.forEach { step in
