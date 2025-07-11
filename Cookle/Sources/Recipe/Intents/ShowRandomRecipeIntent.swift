@@ -13,11 +13,11 @@ struct ShowRandomRecipeIntent: AppIntent, IntentPerformer {
     typealias Input = ModelContext
     typealias Output = RecipeEntity?
 
-    @Dependency private var modelContainer: ModelContainer
-
     nonisolated static var title: LocalizedStringResource {
         .init("Show Random Recipe")
     }
+
+    @Dependency private var modelContainer: ModelContainer
 
     private static func recipe(context: ModelContext) throws -> Recipe? {
         try context.fetchRandom(.recipes(.all))
