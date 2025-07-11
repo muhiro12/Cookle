@@ -23,7 +23,7 @@ extension View {
     @ViewBuilder
     func cookleImagePlayground(
         isPresented: Binding<Bool>,
-        recipe: RecipeEntity?,
+        recipe: Recipe?,
         onCompletion: @escaping (Data) -> Void,
         onCancellation: (() -> Void)? = nil
     ) -> some View {

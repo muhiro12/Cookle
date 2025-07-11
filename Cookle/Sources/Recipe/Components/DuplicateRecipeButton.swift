@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DuplicateRecipeButton: View {
-    @Environment(RecipeEntity.self) private var recipe
+    @Environment(Recipe.self) private var recipe
 
     @State private var isPresented = false
 
