@@ -5,11 +5,13 @@
 //  Created by Hiromu Nakano on 2025/06/20.
 //
 
-import Testing
 import SwiftData
+import Testing
 
 @testable import Cookle
+internal import Foundation
 
+@MainActor
 struct CookleTests {
     @Test func recipeSearch() throws {
         let container = try ModelContainer(

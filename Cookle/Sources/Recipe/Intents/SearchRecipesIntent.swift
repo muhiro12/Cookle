@@ -5,6 +5,10 @@ struct SearchRecipesIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, text: String)
     typealias Output = [Recipe]
 
+    nonisolated static var title: LocalizedStringResource {
+        "Search Recipes"
+    }
+
     static func perform(_ input: Input) throws -> Output {
         let (context, text) = input
         var recipes = try context.fetch(
