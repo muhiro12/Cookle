@@ -2,12 +2,17 @@ import AppIntents
 import SwiftData
 
 struct SearchRecipesIntent: AppIntent, IntentPerformer {
-    typealias Input = (context: ModelContext, text: String)
+    typealias Input = (context: ModelContext, searchText: String)
     typealias Output = [Recipe]
 
     nonisolated static var title: LocalizedStringResource {
         "Search Recipes"
     }
+
+    @Parameter(title: "Search for Recipes")
+    private var searchText: String
+
+    @Dependency private var modelContainer: ModelContainer
 
     static func perform(_ input: Input) throws -> Output {
         let (context, text) = input
@@ -25,7 +30,15 @@ struct SearchRecipesIntent: AppIntent, IntentPerformer {
         return Array(Set(recipes))
     }
 
-    func perform() throws -> some IntentResult {
-        .result()
+    func perform() throws -> some ReturnsValue<[RecipeEntity]> {
+        .result(
+            value: try Self.perform(
+                (
+                    context: modelContainer.mainContext,
+                    searchText: searchText
+                )
+            )
+            .compactMap(RecipeEntity.init)
+        )
     }
 }

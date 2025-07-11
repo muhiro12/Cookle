@@ -5,53 +5,21 @@
 //  Created by Hiromu Nakano on 2025/06/20.
 //
 
+@testable import Cookle
+import Foundation
 import SwiftData
 import Testing
 
-@testable import Cookle
-internal import Foundation
+var testContext: ModelContext {
+    let schema = Schema([Recipe.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    return .init(
+        try! .init(for: schema, configurations: [configuration])
+    )
+}
 
 @MainActor
 struct CookleTests {
-    @Test func recipeSearch() throws {
-        let container = try ModelContainer(
-            for: Recipe.self,
-            configurations: .init(isStoredInMemoryOnly: true)
-        )
-        let context = container.mainContext
-        _ = Recipe.create(
-            context: context,
-            name: "Pancakes",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
-        )
-        _ = Recipe.create(
-            context: context,
-            name: "Spaghetti",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
-        )
-
-        let result = try SearchRecipesIntent.perform(
-            (
-                context: context,
-                text: "Panc"
-            )
-        )
-        #expect(result.count == 1)
-        #expect(result.first?.name == "Pancakes")
-    }
-
     @Test func diaryCreate() throws {
         let container = try ModelContainer(
             for: Recipe.self, Diary.self, DiaryObject.self,

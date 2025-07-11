@@ -71,7 +71,7 @@ struct SearchView: View {
                 recipes = try SearchRecipesIntent.perform(
                     (
                         context: context,
-                        text: searchText
+                        searchText: searchText
                     )
                 )
             } catch {}
