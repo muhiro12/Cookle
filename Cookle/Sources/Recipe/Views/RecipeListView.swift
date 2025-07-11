@@ -7,18 +7,17 @@
 
 import SwiftData
 import SwiftUI
-import SwiftUtilities
 
 struct RecipeListView: View {
     @Environment(\.isPresented) private var isPresented
 
-    @BridgeQuery private var recipes: [RecipeEntity]
+    @Query private var recipes: [Recipe]
 
-    @Binding private var recipe: RecipeEntity?
+    @Binding private var recipe: Recipe?
 
     @State private var searchText = ""
 
-    init(selection: Binding<RecipeEntity?> = .constant(nil), descriptor: FetchDescriptor<Recipe> = .recipes(.all)) {
+    init(selection: Binding<Recipe?> = .constant(nil), descriptor: FetchDescriptor<Recipe> = .recipes(.all)) {
         _recipe = selection
         _recipes = .init(descriptor)
     }

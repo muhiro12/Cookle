@@ -8,7 +8,6 @@
 import AppIntents
 import SwiftData
 import SwiftUI
-import SwiftUtilities
 
 struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, id: PersistentIdentifier?)

@@ -6,13 +6,12 @@
 //
 
 import SwiftUI
-import SwiftUtilities
 
 struct DiaryNavigationView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     @State private var diary: Diary?
-    @State private var recipe: RecipeEntity?
+    @State private var recipe: Recipe?
 
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {

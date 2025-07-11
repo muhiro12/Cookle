@@ -1,5 +1,4 @@
 import AppIntents
-import SwiftUtilities
 
 @Observable
 nonisolated final class RecipeEntity: AppEntity {

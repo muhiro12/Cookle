@@ -11,7 +11,7 @@ import SwiftUI
 struct RecipeFormView: View {
     @Environment(\.dismiss) private var dismiss
 
-    @Environment(RecipeEntity.self) private var recipe: RecipeEntity?
+    @Environment(Recipe.self) private var recipe: Recipe?
     @Environment(\.modelContext) private var context
 
     @AppStorage(.isDebugOn) private var isDebugOn
@@ -151,8 +151,7 @@ struct RecipeFormView: View {
             Text("Are you really going to use DebugMode?")
         }
         .task {
-            guard let entity = recipe,
-                  let model = try? entity.model(context: context) else {
+            guard let model = recipe else {
                 return
             }
             name = model.name

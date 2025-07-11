@@ -1,5 +1,4 @@
 import SwiftUI
-import SwiftUtilities
 
 struct PhotoDetailView: View {
     @State private var currentID: Photo.ID?

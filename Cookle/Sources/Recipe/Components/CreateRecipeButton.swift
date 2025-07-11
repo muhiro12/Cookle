@@ -12,7 +12,7 @@ struct CreateRecipeButton: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.requestReview) private var requestReview
 
-    @State private var recipe: RecipeEntity?
+    @State private var recipe: Recipe?
     @State private var isConfirmationDialogPresented = false
     @State private var isImagePlaygroundPresented = false
 
@@ -74,8 +74,8 @@ struct CreateRecipeButton: View {
                 },
                 note: note
             )
-            recipe = RecipeEntity(model)
-            if recipe?.photos.isEmpty == true,
+            recipe = model
+            if recipe?.photos?.isEmpty == true,
                CookleImagePlayground.isSupported {
                 isConfirmationDialogPresented = true
             } else {
@@ -120,9 +120,8 @@ struct CreateRecipeButton: View {
             isPresented: $isImagePlaygroundPresented,
             recipe: recipe
         ) { data in
-            if let recipe,
-               let model = try? recipe.model(context: context) {
-                model.update(
+            if let recipe {
+                recipe.update(
                     name: recipe.name,
                     photos: [
                         .create(
@@ -136,9 +135,9 @@ struct CreateRecipeButton: View {
                     ],
                     servingSize: recipe.servingSize,
                     cookingTime: recipe.cookingTime,
-                    ingredients: model.ingredientObjects ?? [],
+                    ingredients: recipe.ingredientObjects ?? [],
                     steps: recipe.steps,
-                    categories: model.categories ?? [],
+                    categories: recipe.categories ?? [],
                     note: recipe.note
                 )
             }

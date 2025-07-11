@@ -10,16 +10,16 @@ import SwiftUI
 struct TagView<T: Tag>: View {
     @Environment(T.self) private var tag
 
-    @Binding private var recipe: RecipeEntity?
+    @Binding private var recipe: Recipe?
 
-    init(selection: Binding<RecipeEntity?> = .constant(nil)) {
+    init(selection: Binding<Recipe?> = .constant(nil)) {
         _recipe = selection
     }
 
     var body: some View {
         List(selection: $recipe) {
             Section {
-                ForEach(tag.recipes.orEmpty.compactMap(RecipeEntity.init)) { recipe in
+                ForEach(tag.recipes.orEmpty) { recipe in
                     NavigationLink(value: recipe) {
                         RecipeLabel()
                             .labelStyle(.titleAndLargeIcon)
