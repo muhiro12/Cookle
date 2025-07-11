@@ -82,9 +82,9 @@ struct DiaryFormView: View {
                                 context: context,
                                 diary: diary,
                                 date: date,
-                                breakfasts: recipes(from: breakfasts),
-                                lunches: recipes(from: lunches),
-                                dinners: recipes(from: dinners),
+                                breakfasts: .init(breakfasts),
+                                lunches: .init(lunches),
+                                dinners: .init(dinners),
                                 note: note
                             )
                         )
@@ -93,9 +93,9 @@ struct DiaryFormView: View {
                             (
                                 context: context,
                                 date: date,
-                                breakfasts: recipes(from: breakfasts),
-                                lunches: recipes(from: lunches),
-                                dinners: recipes(from: dinners),
+                                breakfasts: .init(breakfasts),
+                                lunches: .init(lunches),
+                                dinners: .init(dinners),
                                 note: note
                             )
                         )
@@ -125,10 +125,6 @@ struct DiaryFormView: View {
 }
 
 private extension DiaryFormView {
-    func recipes(from models: Set<Recipe>) -> [Recipe] {
-        Array(models)
-    }
-
     func recipeEntities(from models: [Recipe]) -> Set<Recipe> {
         Set(models)
     }
