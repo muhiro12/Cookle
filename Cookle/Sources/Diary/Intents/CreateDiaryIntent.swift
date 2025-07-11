@@ -16,6 +16,19 @@ struct CreateDiaryIntent: AppIntent, IntentPerformer {
         "Create New Diary"
     }
 
+    @Parameter(title: "Date")
+    private var date: Date
+    @Parameter(title: "Breakfasts")
+    private var breakfasts: Set<RecipeEntity>
+    @Parameter(title: "Lunches")
+    private var lunches: Set<RecipeEntity>
+    @Parameter(title: "Dinners")
+    private var dinners: Set<RecipeEntity>
+    @Parameter(title: "Note")
+    private var note: String
+
+    @Dependency private var modelContainer: ModelContainer
+
     static func perform(_ input: Input) -> Output {
         let (context, date, breakfasts, lunches, dinners, note) = input
         let objects = zip(breakfasts.indices, breakfasts).map { index, recipe in
@@ -34,6 +47,17 @@ struct CreateDiaryIntent: AppIntent, IntentPerformer {
     }
 
     func perform() throws -> some IntentResult {
-        .result()
+        let context = modelContainer.mainContext
+        _ = Self.perform(
+            (
+                context: context,
+                date: date,
+                breakfasts: breakfasts.compactMap { try? $0.model(context: context) },
+                lunches: lunches.compactMap { try? $0.model(context: context) },
+                dinners: dinners.compactMap { try? $0.model(context: context) },
+                note: note
+            )
+        )
+        return .result()
     }
 }

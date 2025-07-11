@@ -28,6 +28,8 @@ struct UpdateDiaryIntent: AppIntent, IntentPerformer {
     private var lunches: Set<RecipeEntity>
     @Parameter(title: "Dinners")
     private var dinners: Set<RecipeEntity>
+    @Parameter(title: "Note")
+    private var note: String
 
     @Dependency private var modelContainer: ModelContainer
 

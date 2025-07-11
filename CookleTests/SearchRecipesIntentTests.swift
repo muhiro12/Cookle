@@ -10,7 +10,7 @@ import Testing
 
 @MainActor
 struct SearchRecipesIntentTests {
-    private let context = testContext
+    let context = testContext
 
     @Test func perform() throws {
         _ = Recipe.create(
