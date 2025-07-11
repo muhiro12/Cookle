@@ -108,9 +108,9 @@ struct RecipeFormPhotosSection: View {
             Text("Photos")
         }
         .onChange(of: photosPickerItems) {
-            photos = recipe?.photos.map {
-                .init(data: $0, source: .photosPicker)
-            } ?? []
+            photos = recipe?.photos?.map {
+                .init(data: $0.data, source: .photosPicker)
+            } ?? .empty
             Task {
                 for item in photosPickerItems {
                     guard let data = try? await item.loadTransferable(type: Data.self) else {

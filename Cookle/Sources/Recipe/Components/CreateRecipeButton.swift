@@ -75,7 +75,7 @@ struct CreateRecipeButton: View {
                 note: note
             )
             recipe = model
-            if recipe?.photos.isEmpty == true,
+            if recipe?.photos?.isEmpty == true,
                CookleImagePlayground.isSupported {
                 isConfirmationDialogPresented = true
             } else {

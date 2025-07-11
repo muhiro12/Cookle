@@ -41,7 +41,7 @@ struct RecipeView: View {
             }
         }
         .task {
-            lastOpenedRecipeID = recipe.id
+            lastOpenedRecipeID = try? recipe.id.base64Encoded()
             UIApplication.shared.isIdleTimerDisabled = true
         }
         .onDisappear {

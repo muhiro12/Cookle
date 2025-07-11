@@ -27,7 +27,7 @@ struct RecipeLabel: View {
                 .lineLimit(1)
             }
         } icon: {
-            if let data = recipe.photos.first,
+            if let data = recipe.photos?.first?.data,
                let image = UIImage(data: data) {
                 Image(uiImage: image)
                     .resizable()
