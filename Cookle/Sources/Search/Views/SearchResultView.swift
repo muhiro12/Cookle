@@ -1,6 +1,5 @@
 import SwiftData
 import SwiftUI
-import SwiftUtilities
 
 struct SearchResultView: View {
     @Query private var recipes: [Recipe]

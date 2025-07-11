@@ -1,5 +1,4 @@
 import SwiftUI
-import SwiftUtilities
 
 struct DebugSidebarView: View {
     @Environment(\.modelContext) private var context

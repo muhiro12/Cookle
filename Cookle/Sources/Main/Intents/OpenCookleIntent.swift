@@ -6,7 +6,6 @@
 //
 
 import AppIntents
-import SwiftUtilities
 
 struct OpenCookleIntent: AppIntent, IntentPerformer {
     typealias Input = Void

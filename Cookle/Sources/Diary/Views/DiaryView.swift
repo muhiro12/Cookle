@@ -10,9 +10,9 @@ import SwiftUI
 struct DiaryView: View {
     @Environment(Diary.self) private var diary
 
-    @Binding private var recipe: RecipeEntity?
+    @Binding private var recipe: Recipe?
 
-    init(selection: Binding<RecipeEntity?> = .constant(nil)) {
+    init(selection: Binding<Recipe?> = .constant(nil)) {
         _recipe = selection
     }
 
@@ -26,14 +26,7 @@ struct DiaryView: View {
                         }
                     )
                     .sorted()
-                    .compactMap(
-                        { object -> RecipeEntity? in
-                            guard let model = object.recipe else {
-                                return nil
-                            }
-                            return RecipeEntity(model)
-                        }
-                    ),
+                    .compactMap(\.recipe),
                    recipes.isNotEmpty {
                     Section {
                         ForEach(recipes) { recipe in

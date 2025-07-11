@@ -7,7 +7,6 @@
 
 import SwiftData
 import SwiftUI
-import SwiftUtilities
 
 struct DiaryListView: View {
     @Environment(\.isPresented) private var isPresented

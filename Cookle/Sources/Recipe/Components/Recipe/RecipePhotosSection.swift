@@ -8,13 +8,12 @@
 import SwiftUI
 
 struct RecipePhotosSection: View {
-    @Environment(RecipeEntity.self) private var recipe
-    @Environment(\.modelContext) private var context
+    @Environment(Recipe.self) private var recipe
 
     @State private var selectedPhoto: Photo?
 
     var body: some View {
-        if let photoObjects = try? recipe.model(context: context)?.photoObjects,
+        if let photoObjects = recipe.photoObjects,
            photoObjects.isNotEmpty {
             Section {
                 ScrollView(.horizontal) {
@@ -54,7 +53,7 @@ struct RecipePhotosSection: View {
     CooklePreview { preview in
         List {
             RecipePhotosSection()
-                .environment(RecipeEntity(preview.recipes[0])!)
+                .environment(preview.recipes[0])
         }
     }
 }

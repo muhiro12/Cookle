@@ -1,8 +1,7 @@
 import SwiftUI
 
 struct DeleteRecipeButton: View {
-    @Environment(RecipeEntity.self) private var recipe
-    @Environment(\.modelContext) private var context
+    @Environment(Recipe.self) private var recipe
 
     @State private var isPresented = false
 
@@ -31,9 +30,7 @@ struct DeleteRecipeButton: View {
             isPresented: $isPresented
         ) {
             Button("Delete", role: .destructive) {
-                if let model = try? recipe.model(context: context) {
-                    model.delete()
-                }
+                recipe.delete()
             }
             Button("Cancel", role: .cancel) {}
         } message: {

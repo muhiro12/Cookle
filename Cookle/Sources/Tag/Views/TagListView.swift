@@ -7,7 +7,6 @@
 
 import SwiftData
 import SwiftUI
-import SwiftUtilities
 
 struct TagListView<T: Tag>: View {
     @Environment(\.isPresented) private var isPresented

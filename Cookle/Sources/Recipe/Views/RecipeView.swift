@@ -9,7 +9,7 @@ import SwiftData
 import SwiftUI
 
 struct RecipeView: View {
-    @Environment(RecipeEntity.self) private var recipe
+    @Environment(Recipe.self) private var recipe
 
     @AppStorage(.lastOpenedRecipeID) private var lastOpenedRecipeID
     @AppStorage(.isSubscribeOn) private var isSubscribeOn
@@ -41,7 +41,7 @@ struct RecipeView: View {
             }
         }
         .task {
-            lastOpenedRecipeID = recipe.id
+            lastOpenedRecipeID = try? recipe.id.base64Encoded()
             UIApplication.shared.isIdleTimerDisabled = true
         }
         .onDisappear {
@@ -54,7 +54,7 @@ struct RecipeView: View {
     CooklePreview { preview in
         NavigationStack {
             RecipeView()
-                .environment(RecipeEntity(preview.recipes[0])!)
+                .environment(preview.recipes[0])
         }
     }
 }

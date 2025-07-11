@@ -7,7 +7,6 @@
 
 import SwiftData
 import SwiftUI
-import SwiftUtilities
 
 struct PhotoListView: View {
     @Environment(\.isPresented) private var isPresented
