@@ -13,11 +13,11 @@ struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, id: PersistentIdentifier?)
     typealias Output = RecipeEntity?
 
-    @Dependency private var modelContainer: ModelContainer
-
     nonisolated static var title: LocalizedStringResource {
         .init("Show Last Opened Recipe")
     }
+
+    @Dependency private var modelContainer: ModelContainer
 
     private static func recipe(_ input: Input) throws -> Recipe? {
         guard let id = input.id else {

@@ -77,29 +77,27 @@ struct DiaryFormView: View {
             ToolbarItem(placement: .confirmationAction) {
                 Button {
                     if let diary {
-                        diary.update(
-                            date: date,
-                            objects: zip(recipes(from: breakfasts).indices, recipes(from: breakfasts)).map { index, element in
-                                .create(context: context, recipe: element, type: .breakfast, order: index + 1)
-                            } + zip(recipes(from: lunches).indices, recipes(from: lunches)).map { index, element in
-                                .create(context: context, recipe: element, type: .lunch, order: index + 1)
-                            } + zip(recipes(from: dinners).indices, recipes(from: dinners)).map { index, element in
-                                .create(context: context, recipe: element, type: .dinner, order: index + 1)
-                            },
-                            note: note
+                        UpdateDiaryIntent.perform(
+                            (
+                                context: context,
+                                diary: diary,
+                                date: date,
+                                breakfasts: .init(breakfasts),
+                                lunches: .init(lunches),
+                                dinners: .init(dinners),
+                                note: note
+                            )
                         )
                     } else {
-                        _ = Diary.create(
-                            context: context,
-                            date: date,
-                            objects: zip(recipes(from: breakfasts).indices, recipes(from: breakfasts)).map { index, element in
-                                .create(context: context, recipe: element, type: .breakfast, order: index + 1)
-                            } + zip(recipes(from: lunches).indices, recipes(from: lunches)).map { index, element in
-                                .create(context: context, recipe: element, type: .lunch, order: index + 1)
-                            } + zip(recipes(from: dinners).indices, recipes(from: dinners)).map { index, element in
-                                .create(context: context, recipe: element, type: .dinner, order: index + 1)
-                            },
-                            note: note
+                        _ = CreateDiaryIntent.perform(
+                            (
+                                context: context,
+                                date: date,
+                                breakfasts: .init(breakfasts),
+                                lunches: .init(lunches),
+                                dinners: .init(dinners),
+                                note: note
+                            )
                         )
                     }
                     dismiss()
@@ -127,10 +125,6 @@ struct DiaryFormView: View {
 }
 
 private extension DiaryFormView {
-    func recipes(from models: Set<Recipe>) -> [Recipe] {
-        Array(models)
-    }
-
     func recipeEntities(from models: [Recipe]) -> Set<Recipe> {
         Set(models)
     }

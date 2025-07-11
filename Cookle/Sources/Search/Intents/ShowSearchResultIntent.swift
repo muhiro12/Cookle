@@ -12,14 +12,14 @@ struct ShowSearchResultIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, text: String)
     typealias Output = [RecipeEntity]
 
+    nonisolated static var title: LocalizedStringResource {
+        .init("Show Search Result")
+    }
+
     @Parameter(title: "Search Text")
     private var searchText: String
 
     @Dependency private var modelContainer: ModelContainer
-
-    nonisolated static var title: LocalizedStringResource {
-        .init("Show Search Result")
-    }
 
     static func perform(_ input: Input) throws -> Output {
         let searchText = input.text
