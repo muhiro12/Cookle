@@ -9,7 +9,7 @@ import PhotosUI
 import SwiftUI
 
 struct RecipeFormPhotosSection: View {
-    @Environment(RecipeEntity.self) private var recipe: RecipeEntity?
+    @Environment(Recipe.self) private var recipe: Recipe?
     @Environment(\.editMode) private var editMode
 
     @Binding private var photos: [PhotoData]

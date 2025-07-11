@@ -15,9 +15,9 @@ struct DiaryFormView: View {
     @Environment(Diary.self) private var diary: Diary?
 
     @State private var date = Date.now
-    @State private var breakfasts = Set<RecipeEntity>()
-    @State private var lunches = Set<RecipeEntity>()
-    @State private var dinners = Set<RecipeEntity>()
+    @State private var breakfasts = Set<Recipe>()
+    @State private var lunches = Set<Recipe>()
+    @State private var dinners = Set<Recipe>()
     @State private var note = ""
 
     var body: some View {
@@ -127,16 +127,12 @@ struct DiaryFormView: View {
 }
 
 private extension DiaryFormView {
-    func recipes(from entities: Set<RecipeEntity>) -> [Recipe] {
-        entities.compactMap { entity -> Recipe? in
-            try? context.fetchFirst(.recipes(.idIs(.init(base64Encoded: entity.id))))
-        }
+    func recipes(from models: Set<Recipe>) -> [Recipe] {
+        Array(models)
     }
 
-    func recipeEntities(from models: [Recipe]) -> Set<RecipeEntity> {
-        Set(models.compactMap {
-            RecipeEntity($0)
-        })
+    func recipeEntities(from models: [Recipe]) -> Set<Recipe> {
+        Set(models)
     }
 }
 

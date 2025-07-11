@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct UpdateRecipeButton: View {
-    @Environment(RecipeEntity.self) private var recipe: RecipeEntity
+    @Environment(Recipe.self) private var recipe: Recipe
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @Environment(\.requestReview) private var requestReview
@@ -46,10 +46,7 @@ struct UpdateRecipeButton: View {
 
     var body: some View {
         Button {
-            guard let model = try? recipe.model(context: context) else {
-                return
-            }
-            model.update(
+            recipe.update(
                 name: name,
                 photos: zip(photos.indices, photos).map { index, element in
                     .create(context: context, photoData: element, order: index + 1)
