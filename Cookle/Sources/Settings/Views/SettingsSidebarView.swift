@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftUtilities
 
 struct SettingsSidebarView: View {
     @Environment(\.modelContext) private var context

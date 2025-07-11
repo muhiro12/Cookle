@@ -7,7 +7,6 @@
 
 import SwiftData
 import SwiftUI
-import SwiftUtilities
 
 struct SearchView: View {
     @Environment(\.modelContext) private var context

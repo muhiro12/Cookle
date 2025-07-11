@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftUtilities
 
 struct DiaryNavigationView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass

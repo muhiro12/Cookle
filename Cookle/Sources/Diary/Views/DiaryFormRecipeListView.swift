@@ -7,7 +7,6 @@
 
 import SwiftData
 import SwiftUI
-import SwiftUtilities
 
 struct DiaryFormRecipeListView: View {
     @Environment(\.dismiss) private var dismiss

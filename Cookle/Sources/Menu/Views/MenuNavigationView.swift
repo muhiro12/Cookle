@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftUtilities
 
 struct MenuNavigationView: View {
     @Environment(\.isPresented) private var isPresented

@@ -7,7 +7,6 @@
 
 import AppIntents
 import SwiftData
-import SwiftUtilities
 
 struct ShowSearchResultIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, text: String)
