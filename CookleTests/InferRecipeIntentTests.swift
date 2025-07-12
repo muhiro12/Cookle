@@ -8,7 +8,6 @@
 @testable import Cookle
 import Testing
 
-@available(iOS 26.0, *)
 struct InferRecipeIntentTests {
     @Test func perform() async throws {
         let result = try await InferRecipeIntent.perform("Pancake recipe")
