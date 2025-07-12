@@ -1,23 +1,8 @@
 import AppIntents
+import SwiftData
 
 @Observable
-nonisolated final class RecipeEntity: AppEntity {
-    static let defaultQuery = RecipeEntityQuery()
-
-    static var typeDisplayRepresentation: TypeDisplayRepresentation {
-        .init(
-            name: .init("Recipe", table: "AppIntents"),
-            numericFormat: LocalizedStringResource("\(placeholder: .int) Recipes", table: "AppIntents")
-        )
-    }
-
-    var displayRepresentation: DisplayRepresentation {
-        .init(
-            title: .init(.init(name), table: "AppIntents"),
-            image: .init(systemName: "book")
-        )
-    }
-
+nonisolated final class RecipeEntity {
     let id: String
     let name: String
     let photos: [Data]
@@ -57,6 +42,26 @@ nonisolated final class RecipeEntity: AppEntity {
     }
 }
 
+extension RecipeEntity: AppEntity {
+    static var defaultQuery: RecipeEntityQuery {
+        .init()
+    }
+
+    static var typeDisplayRepresentation: TypeDisplayRepresentation {
+        .init(
+            name: .init("Recipe", table: "AppIntents"),
+            numericFormat: LocalizedStringResource("\(placeholder: .int) Recipes", table: "AppIntents")
+        )
+    }
+
+    var displayRepresentation: DisplayRepresentation {
+        .init(
+            title: .init(.init(name), table: "AppIntents"),
+            image: .init(systemName: "book")
+        )
+    }
+}
+
 extension RecipeEntity: ModelBridgeable {
     typealias Model = Recipe
 
@@ -87,5 +92,12 @@ extension RecipeEntity: Hashable {
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
+    }
+}
+
+extension RecipeEntity {
+    func model(context: ModelContext) throws -> Recipe? {
+        let identifier = try PersistentIdentifier(base64Encoded: id)
+        return try context.fetchFirst(.recipes(.idIs(identifier)))
     }
 }

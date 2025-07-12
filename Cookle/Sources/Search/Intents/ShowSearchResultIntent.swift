@@ -10,7 +10,7 @@ import SwiftData
 
 struct ShowSearchResultIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, text: String)
-    typealias Output = [RecipeEntity]
+    typealias Output = [Recipe]
 
     nonisolated static var title: LocalizedStringResource {
         .init("Show Search Result")
@@ -39,7 +39,7 @@ struct ShowSearchResultIntent: AppIntent, IntentPerformer {
         recipes += ingredients.flatMap(\.recipes.orEmpty)
         recipes += categories.flatMap(\.recipes.orEmpty)
         recipes = Array(Set(recipes))
-        return recipes.compactMap(RecipeEntity.init)
+        return recipes
     }
 
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {

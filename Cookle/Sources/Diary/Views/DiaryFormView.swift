@@ -110,23 +110,23 @@ struct DiaryFormView: View {
         .interactiveDismissDisabled()
         .task {
             date = diary?.date ?? .now
-            breakfasts = recipeEntities(from: diary?.objects.orEmpty.filter {
-                $0.type == .breakfast
-            }.sorted().compactMap(\.recipe) ?? [])
-            lunches = recipeEntities(from: diary?.objects.orEmpty.filter {
-                $0.type == .lunch
-            }.sorted().compactMap(\.recipe) ?? [])
-            dinners = recipeEntities(from: diary?.objects.orEmpty.filter {
-                $0.type == .dinner
-            }.sorted().compactMap(\.recipe) ?? [])
+            breakfasts = .init(
+                diary?.objects.orEmpty.filter {
+                    $0.type == .breakfast
+                }.sorted().compactMap(\.recipe) ?? []
+            )
+            lunches = .init(
+                diary?.objects.orEmpty.filter {
+                    $0.type == .lunch
+                }.sorted().compactMap(\.recipe) ?? []
+            )
+            dinners = .init(
+                diary?.objects.orEmpty.filter {
+                    $0.type == .dinner
+                }.sorted().compactMap(\.recipe) ?? []
+            )
             note = diary?.note ?? ""
         }
-    }
-}
-
-private extension DiaryFormView {
-    func recipeEntities(from models: [Recipe]) -> Set<Recipe> {
-        Set(models)
     }
 }
 
