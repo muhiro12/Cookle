@@ -8,7 +8,6 @@
 @testable import Cookle
 import Testing
 
-@MainActor
 struct SearchRecipesIntentTests {
     let context = testContext
 

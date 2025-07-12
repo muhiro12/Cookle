@@ -10,7 +10,6 @@ import Foundation
 import SwiftData
 import Testing
 
-@MainActor
 struct CreateDiaryIntentTests {
     let context = testContext
 

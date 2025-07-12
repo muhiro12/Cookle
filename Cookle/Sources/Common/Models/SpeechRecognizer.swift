@@ -2,7 +2,6 @@ import AVFoundation
 import Speech
 import SwiftUI
 
-@MainActor
 final class SpeechRecognizer: NSObject, ObservableObject {
     @Published private(set) var transcript = ""
 
