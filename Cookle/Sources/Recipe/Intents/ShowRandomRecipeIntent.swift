@@ -11,27 +11,21 @@ import SwiftUI
 
 struct ShowRandomRecipeIntent: AppIntent, IntentPerformer {
     typealias Input = ModelContext
-    typealias Output = RecipeEntity?
-
-    @Dependency private var modelContainer: ModelContainer
+    typealias Output = Recipe?
 
     nonisolated static var title: LocalizedStringResource {
         .init("Show Random Recipe")
     }
 
-    private static func recipe(context: ModelContext) throws -> Recipe? {
-        try context.fetchRandom(.recipes(.all))
-    }
+    @Dependency private var modelContainer: ModelContainer
 
     static func perform(_ input: Input) throws -> Output {
-        guard let recipe = try recipe(context: input) else {
-            return nil
-        }
-        return RecipeEntity(recipe)
+        let context = input
+        return try context.fetchRandom(.recipes(.all))
     }
 
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
-        guard let recipe = try Self.recipe(context: modelContainer.mainContext) else {
+        guard let recipe = try Self.perform(modelContainer.mainContext) else {
             return .result(dialog: "Not Found")
         }
         return .result(dialog: .init(stringLiteral: recipe.name)) {

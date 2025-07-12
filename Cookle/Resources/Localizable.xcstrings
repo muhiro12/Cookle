@@ -807,6 +807,9 @@
         }
       }
     },
+    "Create New Diary" : {
+
+    },
     "Create Preview Diaries" : {
       "localizations" : {
         "en" : {
@@ -2508,6 +2511,12 @@
         }
       }
     },
+    "Search for Recipes" : {
+
+    },
+    "Search Recipes" : {
+
+    },
     "Search Text" : {
       "localizations" : {
         "en" : {
@@ -3023,6 +3032,9 @@
           }
         }
       }
+    },
+    "Update Diary" : {
+
     },
     "Update Required" : {
 
