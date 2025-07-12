@@ -37,6 +37,7 @@ struct SearchRecipesIntent: AppIntent, IntentPerformer {
         return Array(Set(recipes))
     }
 
+    @MainActor
     func perform() throws -> some ReturnsValue<[RecipeEntity]> {
         .result(
             value: try Self.perform(
