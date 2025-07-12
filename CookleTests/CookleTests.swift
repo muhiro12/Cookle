@@ -5,10 +5,13 @@
 //  Created by Hiromu Nakano on 2025/06/20.
 //
 
-import Testing
+@testable import Cookle
+import SwiftData
 
-struct CookleTests {
-    @Test func example() throws {
-        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
-    }
+var testContext: ModelContext {
+    let schema = Schema([Recipe.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    return .init(
+        try! .init(for: schema, configurations: [configuration])
+    )
 }

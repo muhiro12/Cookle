@@ -10,15 +10,15 @@
 //
 // @available(iOS 26.0, *)
 // struct InferRecipeIntent: AppIntent, IntentPerformer {
+//    typealias Input = String
+//    typealias Output = RecipeEntity
+//
 //    nonisolated static var title: LocalizedStringResource {
 //        .init("Infer Recipe")
 //    }
 //
 //    @Parameter(title: "Recipe Text")
 //    private var text: String
-//
-//    typealias Input = String
-//    typealias Output = RecipeEntity
 //
 //    static func perform(_ input: Input) async throws -> Output {
 //        let languageCode = Locale.current.language.languageCode?.identifier ?? "en"
