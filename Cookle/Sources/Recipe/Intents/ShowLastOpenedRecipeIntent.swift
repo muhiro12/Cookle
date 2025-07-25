@@ -28,7 +28,6 @@ struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
         return try context.fetchFirst(.recipes(.idIs(id)))
     }
 
-    @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         guard let recipe = try Self.perform(modelContainer.mainContext) else {
             return .result(dialog: "Not Found")
