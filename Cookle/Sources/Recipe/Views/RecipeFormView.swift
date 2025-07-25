@@ -39,17 +39,17 @@ struct RecipeFormView: View {
             RecipeFormNameSection($name)
                 .hidden(editMode == .active)
             RecipeFormPhotosSection($photos)
-            if #available(iOS 26.0, *) {
-                RecipeFormInferSection(
-                    name: $name,
-                    servingSize: $servingSize,
-                    cookingTime: $cookingTime,
-                    ingredients: $ingredients,
-                    steps: $steps,
-                    categories: $categories,
-                    note: $note
-                )
-            }
+            //            if #available(iOS 26.0, *) {
+            //                RecipeFormInferSection(
+            //                    name: $name,
+            //                    servingSize: $servingSize,
+            //                    cookingTime: $cookingTime,
+            //                    ingredients: $ingredients,
+            //                    steps: $steps,
+            //                    categories: $categories,
+            //                    note: $note
+            //                )
+            //            }
             RecipeFormServingSizeSection($servingSize)
                 .hidden(editMode == .active)
             RecipeFormCookingTimeSection($cookingTime)

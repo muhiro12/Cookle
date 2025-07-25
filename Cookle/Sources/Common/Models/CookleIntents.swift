@@ -16,7 +16,7 @@ enum CookleIntents {
         )
     )
 
-    static let context = modelContainer.mainContext
+    @MainActor static let context = modelContainer.mainContext
 
     static func cookleView(content: () -> some View) -> some View {
         content()
