@@ -42,7 +42,7 @@ struct ShowSearchResultIntent: AppIntent, IntentPerformer {
         return recipes
     }
 
-    @MainActor func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
+    func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         _ = try Self.perform((context: modelContainer.mainContext, text: searchText))
         return .result(dialog: "Result") {
             CookleIntents.cookleView {
