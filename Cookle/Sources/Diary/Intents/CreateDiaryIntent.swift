@@ -46,6 +46,7 @@ struct CreateDiaryIntent: AppIntent, IntentPerformer {
         )
     }
 
+    @MainActor
     func perform() throws -> some IntentResult {
         let context = modelContainer.mainContext
         _ = Self.perform(

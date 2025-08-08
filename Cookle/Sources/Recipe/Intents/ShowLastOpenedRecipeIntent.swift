@@ -19,6 +19,7 @@ struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
 
     @Dependency private var modelContainer: ModelContainer
 
+    @MainActor
     static func perform(_ input: Input) throws -> Output {
         let context = input
         guard let lastOpenedRecipeID = AppStorage(.lastOpenedRecipeID).wrappedValue else {
@@ -28,6 +29,7 @@ struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
         return try context.fetchFirst(.recipes(.idIs(id)))
     }
 
+    @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         guard let recipe = try Self.perform(modelContainer.mainContext) else {
             return .result(dialog: "Not Found")
