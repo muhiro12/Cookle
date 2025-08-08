@@ -19,7 +19,6 @@ struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
 
     @Dependency private var modelContainer: ModelContainer
 
-    @MainActor
     static func perform(_ input: Input) throws -> Output {
         let context = input
         guard let lastOpenedRecipeID = AppStorage(.lastOpenedRecipeID).wrappedValue else {
