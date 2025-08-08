@@ -12,7 +12,7 @@ struct RecipeCategoriesSection: View {
     @Environment(\.modelContext) private var context
 
     var body: some View {
-        if let categories = try? recipe.categories,
+        if let categories = recipe.categories,
            categories.isNotEmpty {
             Section {
                 ForEach(categories) {
