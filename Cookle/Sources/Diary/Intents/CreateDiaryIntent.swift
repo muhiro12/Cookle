@@ -8,6 +8,7 @@
 import AppIntents
 import SwiftData
 
+@MainActor
 struct CreateDiaryIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, date: Date, breakfasts: [Recipe], lunches: [Recipe], dinners: [Recipe], note: String)
     typealias Output = Diary

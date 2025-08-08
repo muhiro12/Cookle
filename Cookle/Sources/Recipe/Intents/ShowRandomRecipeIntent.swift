@@ -9,6 +9,7 @@ import AppIntents
 import SwiftData
 import SwiftUI
 
+@MainActor
 struct ShowRandomRecipeIntent: AppIntent, IntentPerformer {
     typealias Input = ModelContext
     typealias Output = Recipe?

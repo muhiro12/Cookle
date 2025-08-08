@@ -1,6 +1,7 @@
 import AppIntents
 import SwiftData
 
+@MainActor
 struct RecipeEntityQuery: EntityStringQuery {
     @Dependency private var modelContainer: ModelContainer
 

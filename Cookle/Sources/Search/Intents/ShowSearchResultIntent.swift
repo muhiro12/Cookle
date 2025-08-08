@@ -8,6 +8,7 @@
 import AppIntents
 import SwiftData
 
+@MainActor
 struct ShowSearchResultIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, text: String)
     typealias Output = [Recipe]

@@ -9,6 +9,7 @@ import AppIntents
 import FoundationModels
 
 @available(iOS 26.0, *)
+@MainActor
 struct InferRecipeIntent: AppIntent, IntentPerformer {
     typealias Input = String
     typealias Output = RecipeEntity
