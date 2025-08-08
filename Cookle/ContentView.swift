@@ -12,6 +12,9 @@ struct ContentView: View {
 
     var body: some View {
         MainView()
+            .onAppear {
+                Logger(#file).info("ContentView appeared")
+            }
     }
 }
 

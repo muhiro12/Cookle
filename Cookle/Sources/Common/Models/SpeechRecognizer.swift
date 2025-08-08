@@ -10,10 +10,12 @@ final class SpeechRecognizer: NSObject, ObservableObject {
     private var task: SFSpeechRecognitionTask?
 
     func start() throws {
+        Logger(#file).info("Start recording")
         let recognizer = SFSpeechRecognizer()
         audioEngine = .init()
         request = .init()
         guard let audioEngine, let request else {
+            Logger(#file).error("Failed to initialize audio engine or request")
             return
         }
 
@@ -27,7 +29,11 @@ final class SpeechRecognizer: NSObject, ObservableObject {
             request.append(buffer)
         }
 
-        task = recognizer?.recognitionTask(with: request) { result, _ in
+        task = recognizer?.recognitionTask(with: request) { result, error in
+            if let error {
+                Logger(#file).error("Speech recognition failed: \(error.localizedDescription)")
+                return
+            }
             guard let result else {
                 return
             }
@@ -36,14 +42,17 @@ final class SpeechRecognizer: NSObject, ObservableObject {
 
         audioEngine.prepare()
         try audioEngine.start()
+        Logger(#file).notice("Recording started")
     }
 
     func stop() {
+        Logger(#file).info("Stop recording")
         audioEngine?.stop()
         request?.endAudio()
         task?.cancel()
         audioEngine = nil
         request = nil
         task = nil
+        Logger(#file).notice("Recording stopped")
     }
 }

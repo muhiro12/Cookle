@@ -18,6 +18,7 @@ struct AddRecipeButton: View {
 
     var body: some View {
         Button {
+            Logger(#file).info("AddRecipeButton tapped")
             if let action {
                 action()
             } else {
