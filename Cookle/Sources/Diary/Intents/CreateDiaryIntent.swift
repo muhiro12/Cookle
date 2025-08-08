@@ -48,17 +48,31 @@ struct CreateDiaryIntent: AppIntent, IntentPerformer {
     }
 
     func perform() throws -> some IntentResult {
+        Logger(#file).info("Running CreateDiaryIntent")
         let context = modelContainer.mainContext
+        let breakfastModels = breakfasts.compactMap { try? $0.model(context: context) }
+        if breakfastModels.count != breakfasts.count {
+            Logger(#file).error("Failed to convert some breakfasts")
+        }
+        let lunchModels = lunches.compactMap { try? $0.model(context: context) }
+        if lunchModels.count != lunches.count {
+            Logger(#file).error("Failed to convert some lunches")
+        }
+        let dinnerModels = dinners.compactMap { try? $0.model(context: context) }
+        if dinnerModels.count != dinners.count {
+            Logger(#file).error("Failed to convert some dinners")
+        }
         _ = Self.perform(
             (
                 context: context,
                 date: date,
-                breakfasts: breakfasts.compactMap { try? $0.model(context: context) },
-                lunches: lunches.compactMap { try? $0.model(context: context) },
-                dinners: dinners.compactMap { try? $0.model(context: context) },
+                breakfasts: breakfastModels,
+                lunches: lunchModels,
+                dinners: dinnerModels,
                 note: note
             )
         )
+        Logger(#file).notice("CreateDiaryIntent finished successfully")
         return .result()
     }
 }
