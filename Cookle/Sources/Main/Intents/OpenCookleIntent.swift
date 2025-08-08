@@ -7,6 +7,7 @@
 
 import AppIntents
 
+@MainActor
 struct OpenCookleIntent: AppIntent, IntentPerformer {
     typealias Input = Void
     typealias Output = Void

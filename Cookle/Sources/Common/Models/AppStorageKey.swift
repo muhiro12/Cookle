@@ -10,7 +10,7 @@ enum StringAppStorageKey: String {
     case lastOpenedRecipeID = "zxcXvb12"
 }
 
-nonisolated extension AppStorage {
+extension AppStorage {
     init(_ key: StringAppStorageKey) where Value == String? {
         self.init(key.rawValue)
     }

@@ -9,6 +9,7 @@ import AppIntents
 import SwiftData
 import SwiftUI
 
+@MainActor
 struct ShowRandomRecipeIntent: AppIntent, IntentPerformer {
     typealias Input = ModelContext
     typealias Output = Recipe?
@@ -24,7 +25,6 @@ struct ShowRandomRecipeIntent: AppIntent, IntentPerformer {
         return try context.fetchRandom(.recipes(.all))
     }
 
-    @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         guard let recipe = try Self.perform(modelContainer.mainContext) else {
             return .result(dialog: "Not Found")

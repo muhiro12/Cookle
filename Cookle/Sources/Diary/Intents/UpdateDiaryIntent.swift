@@ -8,6 +8,7 @@
 import AppIntents
 import SwiftData
 
+@MainActor
 struct UpdateDiaryIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, diary: Diary, date: Date, breakfasts: [Recipe], lunches: [Recipe], dinners: [Recipe], note: String)
     typealias Output = Void

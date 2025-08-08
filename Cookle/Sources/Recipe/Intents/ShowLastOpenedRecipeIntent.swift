@@ -9,6 +9,7 @@ import AppIntents
 import SwiftData
 import SwiftUI
 
+@MainActor
 struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
     typealias Input = ModelContext
     typealias Output = Recipe?
@@ -28,7 +29,6 @@ struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
         return try context.fetchFirst(.recipes(.idIs(id)))
     }
 
-    @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         guard let recipe = try Self.perform(modelContainer.mainContext) else {
             return .result(dialog: "Not Found")

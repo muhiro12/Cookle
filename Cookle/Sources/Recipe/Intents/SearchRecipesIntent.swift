@@ -8,6 +8,7 @@
 import AppIntents
 import SwiftData
 
+@MainActor
 struct SearchRecipesIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, searchText: String)
     typealias Output = [Recipe]
@@ -37,7 +38,6 @@ struct SearchRecipesIntent: AppIntent, IntentPerformer {
         return Array(Set(recipes))
     }
 
-    @MainActor
     func perform() throws -> some ReturnsValue<[RecipeEntity]> {
         .result(
             value: try Self.perform(

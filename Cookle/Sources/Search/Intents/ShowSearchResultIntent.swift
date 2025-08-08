@@ -8,6 +8,7 @@
 import AppIntents
 import SwiftData
 
+@MainActor
 struct ShowSearchResultIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, text: String)
     typealias Output = [Recipe]
@@ -42,7 +43,6 @@ struct ShowSearchResultIntent: AppIntent, IntentPerformer {
         return recipes
     }
 
-    @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         _ = try Self.perform((context: modelContainer.mainContext, text: searchText))
         return .result(dialog: "Result") {

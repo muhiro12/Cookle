@@ -8,6 +8,7 @@
 import AppIntents
 import SwiftData
 
+@MainActor
 struct CreateDiaryIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, date: Date, breakfasts: [Recipe], lunches: [Recipe], dinners: [Recipe], note: String)
     typealias Output = Diary
@@ -46,7 +47,6 @@ struct CreateDiaryIntent: AppIntent, IntentPerformer {
         )
     }
 
-    @MainActor
     func perform() throws -> some IntentResult {
         let context = modelContainer.mainContext
         _ = Self.perform(
