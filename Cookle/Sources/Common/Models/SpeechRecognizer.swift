@@ -25,8 +25,12 @@ final class SpeechRecognizer: NSObject, ObservableObject {
 
         let inputNode = audioEngine.inputNode
         let format = inputNode.outputFormat(forBus: .zero)
-        inputNode.installTap(onBus: .zero, bufferSize: 1_024, format: format) { buffer, _ in
-            request.append(buffer)
+        inputNode.installTap(onBus: .zero, bufferSize: 1_024, format: format) { [weak self] buffer, _ in
+            let queueLabel = String(validatingUTF8: __dispatch_queue_get_label(nil)) ?? "unknown"
+            Logger(#file).debug(
+                "Appending buffer on queue: \(queueLabel), isMainThread: \(Thread.isMainThread)"
+            )
+            self?.request?.append(buffer)
         }
 
         task = recognizer?.recognitionTask(with: request) { result, error in
@@ -35,8 +39,12 @@ final class SpeechRecognizer: NSObject, ObservableObject {
                 return
             }
             guard let result else {
+                Logger(#file).error("Speech recognition returned nil result")
                 return
             }
+            Logger(#file).debug(
+                "Transcription: \(result.bestTranscription.formattedString), isFinal: \(result.isFinal)"
+            )
             self.transcript = result.bestTranscription.formattedString
         }
 
