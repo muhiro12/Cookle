@@ -25,8 +25,10 @@ final class SpeechRecognizer: NSObject, ObservableObject {
 
         let inputNode = audioEngine.inputNode
         let format = inputNode.outputFormat(forBus: .zero)
-        inputNode.installTap(onBus: .zero, bufferSize: 1_024, format: format) { buffer, _ in
-            request.append(buffer)
+        inputNode.installTap(onBus: .zero, bufferSize: 1_024, format: format) { [weak self] buffer, _ in
+            Task { @MainActor [buffer] in
+                self?.request?.append(buffer)
+            }
         }
 
         task = recognizer?.recognitionTask(with: request) { result, error in
