@@ -21,8 +21,6 @@ struct InferRecipeFormView: View {
     @State private var cameraPickerItem: PhotosPickerItem?
     @State private var isPhotoPickerPresented = false
     @State private var isCameraPickerPresented = false
-    @State private var isRecording = false
-    @StateObject private var speechRecognizer = SpeechRecognizer()
 
     private let placeholder: LocalizedStringKey = """
         Spaghetti Carbonara for 2 people.
@@ -99,22 +97,7 @@ struct InferRecipeFormView: View {
                     }
                     .disabled(isLoading)
                 }
-                ToolbarItemGroup(placement: .bottomBar) {
-                    Button {
-                        if isRecording {
-                            speechRecognizer.stop()
-                            text += (text.isEmpty ? "" : "\n") + speechRecognizer.transcript
-                        } else {
-                            do {
-                                try speechRecognizer.start()
-                            } catch {
-                                errorMessage = error.localizedDescription
-                            }
-                        }
-                        isRecording.toggle()
-                    } label: {
-                        Image(systemName: isRecording ? "mic.fill" : "mic")
-                    }
+                ToolbarItem(placement: .bottomBar) {
                     Menu {
                         Button {
                             isCameraPickerPresented = true
@@ -160,7 +143,7 @@ struct InferRecipeFormView: View {
                     self.photoPickerItem = nil
                 }
             }
-              .onChange(of: cameraPickerItem) {
+            .onChange(of: cameraPickerItem) {
                 guard let cameraPickerItem else {
                     return
                 }
@@ -172,19 +155,6 @@ struct InferRecipeFormView: View {
                     }
                     self.cameraPickerItem = nil
                 }
-            }
-            .onChange(of: speechRecognizer.errorMessage) { _, newValue in
-                guard let newValue else {
-                    return
-                }
-                errorMessage = newValue
-            }
-            .onChange(of: speechRecognizer.transcript) { _, newValue in
-                guard !isRecording else {
-                    return
-                }
-                text += (text.isEmpty ? "" : "\n") + newValue
-                speechRecognizer.stop()
             }
     }
 }
