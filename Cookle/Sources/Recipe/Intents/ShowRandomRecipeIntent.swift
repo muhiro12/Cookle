@@ -10,22 +10,17 @@ import SwiftData
 import SwiftUI
 
 @MainActor
-struct ShowRandomRecipeIntent: AppIntent, IntentPerformer {
-    typealias Input = ModelContext
-    typealias Output = Recipe?
-
+struct ShowRandomRecipeIntent: AppIntent {
     nonisolated static var title: LocalizedStringResource {
         .init("Show Random Recipe")
     }
 
     @Dependency private var modelContainer: ModelContainer
 
-    static func perform(_ input: Input) throws -> Output {
-        try RecipeService.randomRecipe(context: input)
-    }
-
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
-        guard let recipe = try Self.perform(modelContainer.mainContext) else {
+        guard let recipe = try RecipeService.randomRecipe(
+            context: modelContainer.mainContext
+        ) else {
             return .result(dialog: "Not Found")
         }
         return .result(dialog: .init(stringLiteral: recipe.name)) {
