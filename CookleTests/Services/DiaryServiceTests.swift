@@ -66,4 +66,3 @@ struct DiaryServiceTests {
         #expect(diary.objects?.first?.recipe === pancake)
     }
 }
-

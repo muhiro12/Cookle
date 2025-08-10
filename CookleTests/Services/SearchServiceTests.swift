@@ -42,4 +42,3 @@ struct SearchServiceTests {
         #expect(result.first?.name == "Pancakes")
     }
 }
-

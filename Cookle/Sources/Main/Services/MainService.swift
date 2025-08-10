@@ -4,4 +4,3 @@ import Foundation
 enum MainService {
     static func open() throws {}
 }
-

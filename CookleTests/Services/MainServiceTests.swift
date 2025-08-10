@@ -8,4 +8,3 @@ struct MainServiceTests {
         try MainService.open()
     }
 }
-
