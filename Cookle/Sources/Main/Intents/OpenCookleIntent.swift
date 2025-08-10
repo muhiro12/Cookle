@@ -18,7 +18,6 @@ struct OpenCookleIntent: AppIntent {
     }
 
     func perform() throws -> some IntentResult {
-        try MainService.open()
-        return .result()
+        .result()
     }
 }
