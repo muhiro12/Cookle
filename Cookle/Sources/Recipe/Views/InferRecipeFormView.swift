@@ -21,8 +21,6 @@ struct InferRecipeFormView: View {
     @State private var cameraPickerItem: PhotosPickerItem?
     @State private var isPhotoPickerPresented = false
     @State private var isCameraPickerPresented = false
-    @State private var isRecording = false
-    @StateObject private var speechRecognizer = SpeechRecognizer()
 
     private let placeholder: LocalizedStringKey = """
         Spaghetti Carbonara for 2 people.
@@ -99,19 +97,7 @@ struct InferRecipeFormView: View {
                     }
                     .disabled(isLoading)
                 }
-                ToolbarItemGroup(placement: .bottomBar) {
-                    // FIXME: Pressing this button is currently known to cause a crash. Investigate and fix the root cause.
-                    Button {
-                        if isRecording {
-                            speechRecognizer.stop()
-                            text += (text.isEmpty ? "" : "\n") + speechRecognizer.transcript
-                        } else {
-                            try? speechRecognizer.start()
-                        }
-                        isRecording.toggle()
-                    } label: {
-                        Image(systemName: isRecording ? "mic.fill" : "mic")
-                    }
+                ToolbarItem(placement: .bottomBar) {
                     Menu {
                         Button {
                             isCameraPickerPresented = true
@@ -169,13 +155,6 @@ struct InferRecipeFormView: View {
                     }
                     self.cameraPickerItem = nil
                 }
-            }
-            .onChange(of: speechRecognizer.transcript) { _, newValue in
-                guard !isRecording else {
-                    return
-                }
-                text += (text.isEmpty ? "" : "\n") + newValue
-                speechRecognizer.stop()
             }
     }
 }
