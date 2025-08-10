@@ -1,7 +1,7 @@
 import Foundation
+import FoundationModels
 import SwiftData
 import SwiftUI
-import FoundationModels
 
 @MainActor
 enum RecipeService {
@@ -36,6 +36,7 @@ enum RecipeService {
         return Array(Set(recipes))
     }
 
+    @available(iOS 26.0, *)
     static func infer(text: String) async throws -> RecipeEntity {
         let languageCode = Locale.current.language.languageCode?.identifier ?? "en"
         let locale = Locale.current
@@ -70,4 +71,3 @@ enum RecipeService {
         )
     }
 }
-
