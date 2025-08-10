@@ -21,8 +21,7 @@ struct ShowRandomRecipeIntent: AppIntent, IntentPerformer {
     @Dependency private var modelContainer: ModelContainer
 
     static func perform(_ input: Input) throws -> Output {
-        let context = input
-        return try context.fetchRandom(.recipes(.all))
+        try RecipeService.randomRecipe(context: input)
     }
 
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {

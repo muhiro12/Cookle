@@ -20,7 +20,9 @@ struct OpenCookleIntent: AppIntent, IntentPerformer {
         true
     }
 
-    static func perform(_: Input) throws -> Output {}
+    static func perform(_: Input) throws -> Output {
+        try MainService.open()
+    }
 
     func perform() throws -> some IntentResult {
         try Self.perform(())

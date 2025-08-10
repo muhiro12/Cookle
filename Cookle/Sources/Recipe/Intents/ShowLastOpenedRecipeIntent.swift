@@ -21,12 +21,7 @@ struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
     @Dependency private var modelContainer: ModelContainer
 
     static func perform(_ input: Input) throws -> Output {
-        let context = input
-        guard let lastOpenedRecipeID = AppStorage(.lastOpenedRecipeID).wrappedValue else {
-            return nil
-        }
-        let id = try PersistentIdentifier(base64Encoded: lastOpenedRecipeID)
-        return try context.fetchFirst(.recipes(.idIs(id)))
+        try RecipeService.lastOpenedRecipe(context: input)
     }
 
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
