@@ -1,5 +1,6 @@
 @testable import Cookle
 import SwiftData
+import SwiftUI
 import Testing
 
 @MainActor
@@ -96,4 +97,3 @@ struct RecipeServiceTests {
         #expect(!result.name.isEmpty)
     }
 }
-
