@@ -10,10 +10,7 @@ import FoundationModels
 
 @available(iOS 26.0, *)
 @MainActor
-struct InferRecipeIntent: AppIntent, IntentPerformer {
-    typealias Input = String
-    typealias Output = RecipeEntity
-
+struct InferRecipeIntent: AppIntent {
     nonisolated static var title: LocalizedStringResource {
         .init("Infer Recipe")
     }
@@ -21,12 +18,8 @@ struct InferRecipeIntent: AppIntent, IntentPerformer {
     @Parameter(title: "Recipe Text")
     private var text: String
 
-    static func perform(_ input: Input) async throws -> Output {
-        try await RecipeService.infer(text: input)
-    }
-
     func perform() async throws -> some IntentResult {
-        let result = try await Self.perform(text)
+        let result = try await RecipeService.infer(text: text)
         return .result(value: result)
     }
 }

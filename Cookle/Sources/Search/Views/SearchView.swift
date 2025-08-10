@@ -68,11 +68,9 @@ struct SearchView: View {
         }
         .onChange(of: searchText) {
             do {
-                recipes = try SearchRecipesIntent.perform(
-                    (
-                        context: context,
-                        searchText: searchText
-                    )
+                recipes = try RecipeService.search(
+                    context: context,
+                    text: searchText
                 )
             } catch {}
         }
