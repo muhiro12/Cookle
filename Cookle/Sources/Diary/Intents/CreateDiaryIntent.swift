@@ -9,10 +9,7 @@ import AppIntents
 import SwiftData
 
 @MainActor
-struct CreateDiaryIntent: AppIntent, IntentPerformer {
-    typealias Input = (context: ModelContext, date: Date, breakfasts: [Recipe], lunches: [Recipe], dinners: [Recipe], note: String)
-    typealias Output = Diary
-
+struct CreateDiaryIntent: AppIntent {
     nonisolated static var title: LocalizedStringResource {
         "Create New Diary"
     }
@@ -30,23 +27,6 @@ struct CreateDiaryIntent: AppIntent, IntentPerformer {
 
     @Dependency private var modelContainer: ModelContainer
 
-    static func perform(_ input: Input) -> Output {
-        let (context, date, breakfasts, lunches, dinners, note) = input
-        let objects = zip(breakfasts.indices, breakfasts).map { index, recipe in
-            DiaryObject.create(context: context, recipe: recipe, type: .breakfast, order: index + 1)
-        } + zip(lunches.indices, lunches).map { index, recipe in
-            DiaryObject.create(context: context, recipe: recipe, type: .lunch, order: index + 1)
-        } + zip(dinners.indices, dinners).map { index, recipe in
-            DiaryObject.create(context: context, recipe: recipe, type: .dinner, order: index + 1)
-        }
-        return Diary.create(
-            context: context,
-            date: date,
-            objects: objects,
-            note: note
-        )
-    }
-
     func perform() throws -> some IntentResult {
         Logger(#file).info("Running CreateDiaryIntent")
         let context = modelContainer.mainContext
@@ -62,15 +42,13 @@ struct CreateDiaryIntent: AppIntent, IntentPerformer {
         if dinnerModels.count != dinners.count {
             Logger(#file).error("Failed to convert some dinners")
         }
-        _ = Self.perform(
-            (
-                context: context,
-                date: date,
-                breakfasts: breakfastModels,
-                lunches: lunchModels,
-                dinners: dinnerModels,
-                note: note
-            )
+        _ = DiaryService.create(
+            context: context,
+            date: date,
+            breakfasts: breakfastModels,
+            lunches: lunchModels,
+            dinners: dinnerModels,
+            note: note
         )
         Logger(#file).notice("CreateDiaryIntent finished successfully")
         return .result()

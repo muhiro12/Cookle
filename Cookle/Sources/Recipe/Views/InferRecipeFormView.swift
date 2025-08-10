@@ -79,7 +79,7 @@ struct InferRecipeFormView: View {
                         Task {
                             defer { isLoading = false }
                             do {
-                                let inference = try await InferRecipeIntent.perform(text)
+                                let inference = try await RecipeService.infer(text: text)
                                 name = inference.name
                                 servingSize = inference.servingSize == 0 ? "" : inference.servingSize.description
                                 cookingTime = inference.cookingTime == 0 ? "" : inference.cookingTime.description

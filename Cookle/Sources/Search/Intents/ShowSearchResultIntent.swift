@@ -9,10 +9,7 @@ import AppIntents
 import SwiftData
 
 @MainActor
-struct ShowSearchResultIntent: AppIntent, IntentPerformer {
-    typealias Input = (context: ModelContext, text: String)
-    typealias Output = [Recipe]
-
+struct ShowSearchResultIntent: AppIntent {
     nonisolated static var title: LocalizedStringResource {
         .init("Show Search Result")
     }
@@ -22,29 +19,11 @@ struct ShowSearchResultIntent: AppIntent, IntentPerformer {
 
     @Dependency private var modelContainer: ModelContainer
 
-    static func perform(_ input: Input) throws -> Output {
-        let searchText = input.text
-        var recipes = try input.context.fetch(
-            .recipes(.nameContains(searchText))
-        )
-        let ingredients = try input.context.fetch(
-            searchText.count < 3
-                ? .ingredients(.valueIs(searchText))
-                : .ingredients(.valueContains(searchText))
-        )
-        let categories = try input.context.fetch(
-            searchText.count < 3
-                ? .categories(.valueIs(searchText))
-                : .categories(.valueContains(searchText))
-        )
-        recipes += ingredients.flatMap(\.recipes.orEmpty)
-        recipes += categories.flatMap(\.recipes.orEmpty)
-        recipes = Array(Set(recipes))
-        return recipes
-    }
-
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
-        _ = try Self.perform((context: modelContainer.mainContext, text: searchText))
+        _ = try SearchService.search(
+            context: modelContainer.mainContext,
+            text: searchText
+        )
         return .result(dialog: "Result") {
             CookleIntents.cookleView {
                 SearchResultView(.nameContains(searchText))

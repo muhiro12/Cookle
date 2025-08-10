@@ -1,18 +1,13 @@
-//
-//  ShowSearchResultIntentTests.swift
-//  Cookle
-//
-//  Created by Codex on 2025/07/12.
-//
-
 @testable import Cookle
-import Testing
 import SwiftData
+import Testing
 
-struct ShowSearchResultIntentTests {
-    let context = testContext
+@MainActor
+struct SearchServiceTests {
+    let context: ModelContext = testContext
 
-    @Test func perform() throws {
+    @Test
+    func search_returns_recipes_matching_text_in_ingredients_or_categories() throws {
         _ = Recipe.create(
             context: context,
             name: "Pancakes",
@@ -39,11 +34,9 @@ struct ShowSearchResultIntentTests {
             note: ""
         )
 
-        let result = try ShowSearchResultIntent.perform(
-            (
-                context: context,
-                text: "Egg"
-            )
+        let result = try SearchService.search(
+            context: context,
+            text: "Egg"
         )
         #expect(result.count == 1)
         #expect(result.first?.name == "Pancakes")

@@ -10,27 +10,17 @@ import SwiftData
 import SwiftUI
 
 @MainActor
-struct ShowLastOpenedRecipeIntent: AppIntent, IntentPerformer {
-    typealias Input = ModelContext
-    typealias Output = Recipe?
-
+struct ShowLastOpenedRecipeIntent: AppIntent {
     nonisolated static var title: LocalizedStringResource {
         .init("Show Last Opened Recipe")
     }
 
     @Dependency private var modelContainer: ModelContainer
 
-    static func perform(_ input: Input) throws -> Output {
-        let context = input
-        guard let lastOpenedRecipeID = AppStorage(.lastOpenedRecipeID).wrappedValue else {
-            return nil
-        }
-        let id = try PersistentIdentifier(base64Encoded: lastOpenedRecipeID)
-        return try context.fetchFirst(.recipes(.idIs(id)))
-    }
-
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
-        guard let recipe = try Self.perform(modelContainer.mainContext) else {
+        guard let recipe = try RecipeService.lastOpenedRecipe(
+            context: modelContainer.mainContext
+        ) else {
             return .result(dialog: "Not Found")
         }
         return .result(dialog: .init(stringLiteral: recipe.name)) {

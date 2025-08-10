@@ -8,10 +8,7 @@
 import AppIntents
 
 @MainActor
-struct OpenCookleIntent: AppIntent, IntentPerformer {
-    typealias Input = Void
-    typealias Output = Void
-
+struct OpenCookleIntent: AppIntent {
     nonisolated static var title: LocalizedStringResource {
         .init("Open Cookle")
     }
@@ -20,10 +17,8 @@ struct OpenCookleIntent: AppIntent, IntentPerformer {
         true
     }
 
-    static func perform(_: Input) throws -> Output {}
-
     func perform() throws -> some IntentResult {
-        try Self.perform(())
+        try MainService.open()
         return .result()
     }
 }

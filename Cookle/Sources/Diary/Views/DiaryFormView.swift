@@ -77,27 +77,23 @@ struct DiaryFormView: View {
             ToolbarItem(placement: .confirmationAction) {
                 Button {
                     if let diary {
-                        UpdateDiaryIntent.perform(
-                            (
-                                context: context,
-                                diary: diary,
-                                date: date,
-                                breakfasts: .init(breakfasts),
-                                lunches: .init(lunches),
-                                dinners: .init(dinners),
-                                note: note
-                            )
+                        DiaryService.update(
+                            context: context,
+                            diary: diary,
+                            date: date,
+                            breakfasts: .init(breakfasts),
+                            lunches: .init(lunches),
+                            dinners: .init(dinners),
+                            note: note
                         )
                     } else {
-                        _ = CreateDiaryIntent.perform(
-                            (
-                                context: context,
-                                date: date,
-                                breakfasts: .init(breakfasts),
-                                lunches: .init(lunches),
-                                dinners: .init(dinners),
-                                note: note
-                            )
+                        _ = DiaryService.create(
+                            context: context,
+                            date: date,
+                            breakfasts: .init(breakfasts),
+                            lunches: .init(lunches),
+                            dinners: .init(dinners),
+                            note: note
                         )
                     }
                     dismiss()
