@@ -23,24 +23,7 @@ struct ShowSearchResultIntent: AppIntent, IntentPerformer {
     @Dependency private var modelContainer: ModelContainer
 
     static func perform(_ input: Input) throws -> Output {
-        let searchText = input.text
-        var recipes = try input.context.fetch(
-            .recipes(.nameContains(searchText))
-        )
-        let ingredients = try input.context.fetch(
-            searchText.count < 3
-                ? .ingredients(.valueIs(searchText))
-                : .ingredients(.valueContains(searchText))
-        )
-        let categories = try input.context.fetch(
-            searchText.count < 3
-                ? .categories(.valueIs(searchText))
-                : .categories(.valueContains(searchText))
-        )
-        recipes += ingredients.flatMap(\.recipes.orEmpty)
-        recipes += categories.flatMap(\.recipes.orEmpty)
-        recipes = Array(Set(recipes))
-        return recipes
+        try SearchService.search(context: input.context, text: input.text)
     }
 
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {

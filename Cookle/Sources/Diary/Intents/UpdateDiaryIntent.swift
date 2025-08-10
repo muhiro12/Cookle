@@ -35,18 +35,14 @@ struct UpdateDiaryIntent: AppIntent, IntentPerformer {
     @Dependency private var modelContainer: ModelContainer
 
     static func perform(_ input: Input) {
-        let (context, diary, date, breakfasts, lunches, dinners, note) = input
-        let objects = zip(breakfasts.indices, breakfasts).map { index, recipe in
-            DiaryObject.create(context: context, recipe: recipe, type: .breakfast, order: index + 1)
-        } + zip(lunches.indices, lunches).map { index, recipe in
-            DiaryObject.create(context: context, recipe: recipe, type: .lunch, order: index + 1)
-        } + zip(dinners.indices, dinners).map { index, recipe in
-            DiaryObject.create(context: context, recipe: recipe, type: .dinner, order: index + 1)
-        }
-        diary.update(
-            date: date,
-            objects: objects,
-            note: note
+        DiaryService.update(
+            context: input.context,
+            diary: input.diary,
+            date: input.date,
+            breakfasts: input.breakfasts,
+            lunches: input.lunches,
+            dinners: input.dinners,
+            note: input.note
         )
     }
 

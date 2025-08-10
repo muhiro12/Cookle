@@ -31,19 +31,13 @@ struct CreateDiaryIntent: AppIntent, IntentPerformer {
     @Dependency private var modelContainer: ModelContainer
 
     static func perform(_ input: Input) -> Output {
-        let (context, date, breakfasts, lunches, dinners, note) = input
-        let objects = zip(breakfasts.indices, breakfasts).map { index, recipe in
-            DiaryObject.create(context: context, recipe: recipe, type: .breakfast, order: index + 1)
-        } + zip(lunches.indices, lunches).map { index, recipe in
-            DiaryObject.create(context: context, recipe: recipe, type: .lunch, order: index + 1)
-        } + zip(dinners.indices, dinners).map { index, recipe in
-            DiaryObject.create(context: context, recipe: recipe, type: .dinner, order: index + 1)
-        }
-        return Diary.create(
-            context: context,
-            date: date,
-            objects: objects,
-            note: note
+        DiaryService.create(
+            context: input.context,
+            date: input.date,
+            breakfasts: input.breakfasts,
+            lunches: input.lunches,
+            dinners: input.dinners,
+            note: input.note
         )
     }
 
