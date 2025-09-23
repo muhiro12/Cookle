@@ -5,6 +5,9 @@ import PackageDescription
 
 let package = Package(
     name: "CookleLibrary",
+    platforms: [
+        .iOS(.v18)
+    ],
     products: [
         .library(
             name: "CookleLibrary",
