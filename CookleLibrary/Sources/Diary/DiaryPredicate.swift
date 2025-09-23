@@ -23,7 +23,7 @@ public enum DiaryPredicate {
 }
 
 public extension FetchDescriptor where T == Diary {
-    public static func diaries(_ predicate: DiaryPredicate, order: SortOrder = .reverse) -> FetchDescriptor {
+    static func diaries(_ predicate: DiaryPredicate, order: SortOrder = .reverse) -> FetchDescriptor {
         .init(
             predicate: predicate.value,
             sortBy: [

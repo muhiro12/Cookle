@@ -38,38 +38,39 @@ public enum RecipeService {
         return Array(Set(recipes))
     }
 
-    @available(iOS 26.0, *)
-    public static func infer(text: String) async throws -> RecipeEntity {
-        let languageCode = Locale.current.language.languageCode?.identifier ?? "en"
-        let locale = Locale.current
-        let languageName = locale.localizedString(forLanguageCode: languageCode) ?? "English"
-
-        let instructions = """
-            You are a professional chef and culinary expert running a recipe website.
-            Kindly and thoroughly teach users how to prepare recipes, making your explanations easy to follow and friendly for home cooks of any skill level.
-            """
-        let session = LanguageModelSession(instructions: instructions)
-
-        let prompt = """
-            Analyze the following text and provide a recipe form. Please respond in \(languageName).
-            """ + "\n" + text
-        let inferred = try await session.respond(
-            to: prompt,
-            generating: InferredRecipe.self
-        ).content
-
-        return .init(
-            id: UUID().uuidString,
-            name: inferred.name,
-            photos: [],
-            servingSize: inferred.servingSize,
-            cookingTime: inferred.cookingTime,
-            ingredients: inferred.ingredients.map { ($0.ingredient, $0.amount) },
-            steps: inferred.steps,
-            categories: inferred.categories,
-            note: inferred.note,
-            createdTimestamp: .now,
-            modifiedTimestamp: .now
-        )
-    }
+    // TODO: Uncomment
+    //    @available(iOS 26.0, *)
+    //    public static func infer(text: String) async throws -> RecipeEntity {
+    //        let languageCode = Locale.current.language.languageCode?.identifier ?? "en"
+    //        let locale = Locale.current
+    //        let languageName = locale.localizedString(forLanguageCode: languageCode) ?? "English"
+    //
+    //        let instructions = """
+    //            You are a professional chef and culinary expert running a recipe website.
+    //            Kindly and thoroughly teach users how to prepare recipes, making your explanations easy to follow and friendly for home cooks of any skill level.
+    //            """
+    //        let session = LanguageModelSession(instructions: instructions)
+    //
+    //        let prompt = """
+    //            Analyze the following text and provide a recipe form. Please respond in \(languageName).
+    //            """ + "\n" + text
+    //        let inferred = try await session.respond(
+    //            to: prompt,
+    //            generating: InferredRecipe.self
+    //        ).content
+    //
+    //        return .init(
+    //            id: UUID().uuidString,
+    //            name: inferred.name,
+    //            photos: [],
+    //            servingSize: inferred.servingSize,
+    //            cookingTime: inferred.cookingTime,
+    //            ingredients: inferred.ingredients.map { ($0.ingredient, $0.amount) },
+    //            steps: inferred.steps,
+    //            categories: inferred.categories,
+    //            note: inferred.note,
+    //            createdTimestamp: .now,
+    //            modifiedTimestamp: .now
+    //        )
+    //    }
 }

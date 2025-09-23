@@ -82,4 +82,4 @@ public nonisolated final class Recipe {
     }
 }
 
-public extension Recipe: Identifiable {}
+extension Recipe: Identifiable {}

@@ -1,4 +1,3 @@
-import CookleLibrary
 import SwiftUI
 
 extension AppStorage {

@@ -7,15 +7,15 @@
 
 import Foundation
 
-public nonisolated enum PhotoSource: String {
+public nonisolated enum PhotoSource: String, Sendable {
     case photosPicker = "zW8rLxK4"
     case imagePlayground = "Xe1Vt9bQ"
 }
 
 public extension PhotoSource {
-    public static let defaultValue = PhotoSource.photosPicker
+    static let defaultValue = PhotoSource.photosPicker
 
-    public var description: String {
+    var description: String {
         switch self {
         case .photosPicker:
             return "Photos"

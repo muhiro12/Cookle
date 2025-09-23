@@ -57,7 +57,7 @@ public nonisolated enum TagPredicate<T: Tag> {
 }
 
 public extension FetchDescriptor where T == Ingredient {
-    public static func ingredients(_ predicate: TagPredicate<T>, order: SortOrder = .forward) -> FetchDescriptor {
+    static func ingredients(_ predicate: TagPredicate<T>, order: SortOrder = .forward) -> FetchDescriptor {
         .init(
             predicate: predicate.value,
             sortBy: [
@@ -68,7 +68,7 @@ public extension FetchDescriptor where T == Ingredient {
 }
 
 public extension FetchDescriptor where T == Category {
-    public static func categories(_ predicate: TagPredicate<T>, order: SortOrder = .forward) -> FetchDescriptor {
+    static func categories(_ predicate: TagPredicate<T>, order: SortOrder = .forward) -> FetchDescriptor {
         .init(
             predicate: predicate.value,
             sortBy: [

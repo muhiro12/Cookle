@@ -10,7 +10,7 @@ public nonisolated protocol SubObject: Comparable {
 }
 
 public extension SubObject {
-    public static func < (lhs: Self, rhs: Self) -> Bool {
+    static func < (lhs: Self, rhs: Self) -> Bool {
         lhs.order < rhs.order
     }
 }

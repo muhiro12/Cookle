@@ -33,13 +33,13 @@ public nonisolated final class Photo {
 }
 
 public extension Photo {
-    public var title: String {
+    var title: String {
         recipes.orEmpty.map(\.name).joined(separator: ", ")
     }
 
-    public var source: PhotoSource {
+    var source: PhotoSource {
         .init(rawValue: sourceID) ?? .defaultValue
     }
 }
 
-public extension Photo: Identifiable {}
+extension Photo: Identifiable {}

@@ -1,8 +1,8 @@
 //
 //  SwiftUtilities.swift
-//  Cookle
+//  CookleLibrary
 //
-//  Created by Hiromu Nakano on 2025/07/11.
+//  Created by Hiromu Nakano on 2025/09/23.
 //
 
 @_exported import SwiftUtilities

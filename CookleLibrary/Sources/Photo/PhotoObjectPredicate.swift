@@ -23,7 +23,7 @@ public enum PhotoObjectPredicate {
 }
 
 public extension FetchDescriptor where T == PhotoObject {
-    public static func photoObjects(_ predicate: PhotoObjectPredicate, order: SortOrder = .reverse) -> FetchDescriptor {
+    static func photoObjects(_ predicate: PhotoObjectPredicate, order: SortOrder = .reverse) -> FetchDescriptor {
         .init(
             predicate: predicate.value,
             sortBy: [

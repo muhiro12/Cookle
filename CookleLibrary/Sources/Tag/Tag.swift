@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2024/04/14.
 //
 
+import Foundation
 import SwiftData
 
 public nonisolated protocol Tag: PersistentModel {

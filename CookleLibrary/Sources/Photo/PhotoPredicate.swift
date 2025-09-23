@@ -34,7 +34,7 @@ public nonisolated enum PhotoPredicate {
 }
 
 public extension FetchDescriptor where T == Photo {
-    public static func photos(_ predicate: PhotoPredicate, order: SortOrder = .reverse) -> FetchDescriptor {
+    static func photos(_ predicate: PhotoPredicate, order: SortOrder = .reverse) -> FetchDescriptor {
         .init(
             predicate: predicate.value,
             sortBy: [

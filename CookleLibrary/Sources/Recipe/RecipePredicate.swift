@@ -37,7 +37,7 @@ public nonisolated enum RecipePredicate {
 }
 
 public extension FetchDescriptor where T == Recipe {
-    public static func recipes(_ predicate: RecipePredicate, order: SortOrder = .forward) -> FetchDescriptor {
+    static func recipes(_ predicate: RecipePredicate, order: SortOrder = .forward) -> FetchDescriptor {
         .init(
             predicate: predicate.value,
             sortBy: [

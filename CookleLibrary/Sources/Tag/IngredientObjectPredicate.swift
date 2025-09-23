@@ -23,7 +23,7 @@ public enum IngredientObjectPredicate {
 }
 
 public extension FetchDescriptor where T == IngredientObject {
-    public static func ingredientObjects(_ predicate: IngredientObjectPredicate, order _: SortOrder = .reverse) -> FetchDescriptor {
+    static func ingredientObjects(_ predicate: IngredientObjectPredicate, order _: SortOrder = .reverse) -> FetchDescriptor {
         .init(
             predicate: predicate.value,
             sortBy: [
