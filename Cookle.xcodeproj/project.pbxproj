@@ -11,6 +11,7 @@
 		AD3909A52DC4E80A0052749F /* LicenseListWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD3909A42DC4E80A0052749F /* LicenseListWrapper */; };
 		AD3909A82DC4E81D0052749F /* StoreKitWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD3909A72DC4E81D0052749F /* StoreKitWrapper */; };
 		AD3909AB2DC4E8300052749F /* SwiftUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = AD3909AA2DC4E8300052749F /* SwiftUtilities */; };
+		ADF13D702E8233A7002572CD /* CookleLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = ADF13D6F2E8233A7002572CD /* CookleLibrary */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,6 +27,7 @@
 /* Begin PBXFileReference section */
 		AD8C8E682BFABEE200872BF2 /* Cookle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cookle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADE3ED182E04DEF50003B4E8 /* CookleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CookleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		ADF13D6D2E823363002572CD /* CookleLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CookleLibrary; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -50,6 +52,7 @@
 			files = (
 				AD3909A22DC4E7F90052749F /* GoogleMobileAdsWrapper in Frameworks */,
 				AD3909AB2DC4E8300052749F /* SwiftUtilities in Frameworks */,
+				ADF13D702E8233A7002572CD /* CookleLibrary in Frameworks */,
 				AD3909A82DC4E81D0052749F /* StoreKitWrapper in Frameworks */,
 				AD3909A52DC4E80A0052749F /* LicenseListWrapper in Frameworks */,
 			);
@@ -68,6 +71,7 @@
 		AD8C8E5F2BFABEE200872BF2 = {
 			isa = PBXGroup;
 			children = (
+				ADF13D6D2E823363002572CD /* CookleLibrary */,
 				AD3B66982CA87EC900DCFC5F /* Cookle */,
 				ADE3ED192E04DEF50003B4E8 /* CookleTests */,
 				AD8C8E692BFABEE200872BF2 /* Products */,
@@ -115,6 +119,7 @@
 				AD3909A42DC4E80A0052749F /* LicenseListWrapper */,
 				AD3909A72DC4E81D0052749F /* StoreKitWrapper */,
 				AD3909AA2DC4E8300052749F /* SwiftUtilities */,
+				ADF13D6F2E8233A7002572CD /* CookleLibrary */,
 			);
 			productName = Cookle;
 			productReference = AD8C8E682BFABEE200872BF2 /* Cookle.app */;
@@ -180,6 +185,7 @@
 				AD3909A32DC4E80A0052749F /* XCRemoteSwiftPackageReference "LicenseListWrapper" */,
 				AD3909A62DC4E81D0052749F /* XCRemoteSwiftPackageReference "StoreKitWrapper" */,
 				AD3909A92DC4E8300052749F /* XCRemoteSwiftPackageReference "SwiftUtilities" */,
+				ADF13D6E2E8233A7002572CD /* XCLocalSwiftPackageReference "CookleLibrary" */,
 			);
 			productRefGroup = AD8C8E692BFABEE200872BF2 /* Products */;
 			projectDirPath = "";
@@ -523,6 +529,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		ADF13D6E2E8233A7002572CD /* XCLocalSwiftPackageReference "CookleLibrary" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = CookleLibrary;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		AD3909A02DC4E7F90052749F /* XCRemoteSwiftPackageReference "GoogleMobileAdsWrapper" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -578,6 +591,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AD3909A92DC4E8300052749F /* XCRemoteSwiftPackageReference "SwiftUtilities" */;
 			productName = SwiftUtilities;
+		};
+		ADF13D6F2E8233A7002572CD /* CookleLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CookleLibrary;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
