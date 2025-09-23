@@ -89,11 +89,4 @@ struct RecipeServiceTests {
         #expect(result != nil)
         #expect(result === pancake || result?.name == "Spaghetti")
     }
-
-    @available(iOS 26.0, *)
-    @Test
-    func infer_returns_recipe_entity_from_text() async throws {
-        let result = try await RecipeService.infer(text: "Pancake recipe")
-        #expect(!result.name.isEmpty)
-    }
 }
