@@ -1,8 +1,10 @@
 # AGENTS.md
 
-## Coding Guidelines for Codex Agents
+This document defines minimum standards for agents working in the Cookle repository.
 
-This document defines the minimum coding standards for implementing Agents in the Codex project.
+## Coding Guidelines for Cookle Agents
+
+These guidelines outline the minimum coding standards for implementing Agents in the Cookle project.
 
 ## Swift Code Guidelines
 
@@ -12,7 +14,7 @@ All Swift code must comply with the SwiftLint rules defined in the project.
 
 ### Avoid abbreviated variable names
 
-Do not use unclear abbreviations such as `res`, `img`, or `btn`.  
+Do not use unclear abbreviations such as `res`, `img`, or `btn`.
 Use descriptive and explicit names like `result`, `image`, or `button`.
 
 ### Use `.init(...)` when the return type is explicitly known
@@ -33,9 +35,9 @@ func makeUser() -> User {
 let user = User(name: "Carol") // ❌ Less preferred when type is not obvious
 ```
 
-### Multiline control‑flow and trailing‑closure formatting
+### Multiline control-flow and trailing-closure formatting
 
-Avoid single‑line bodies for **any** control‑flow statement (`if`, `guard`, `while`, `switch`, etc.) or trailing closures.  
+Avoid single-line bodies for **any** control-flow statement (`if`, `guard`, `while`, `switch`, etc.) or trailing closures.
 Always place the body on its own indented line between braces to improve readability and make diffs cleaner.
 
 #### Preferred
@@ -66,7 +68,7 @@ tasks.filter { $0.isCompleted }
 
 ### Follow markdownlint rules for Markdown files
 
-All Markdown documents must conform to the rules defined at:  
+All Markdown documents must conform to the rules defined at:
 https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
 
 ## Project-wide Conventions
@@ -80,3 +82,9 @@ Use English for:
 - Documentation and identifiers (variables, methods, etc.)
 
 Avoid using Japanese or other non-English languages in code unless strictly necessary (e.g., legal compliance, UI text localization).
+
+### Cookle-specific Guardrails
+
+- Do not assert medical or health effects as certainties; use cautious language such as "may" or "can help".
+- Provide nutrition facts only when supported by a reputable source and cite the reference.
+- Respect image copyrights by documenting the license and attribution whenever images are used.
