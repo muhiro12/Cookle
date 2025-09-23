@@ -8,9 +8,8 @@
 import AppIntents
 import SwiftData
 
-@MainActor
 struct ShowSearchResultIntent: AppIntent {
-    nonisolated static var title: LocalizedStringResource {
+    static var title: LocalizedStringResource {
         .init("Show Search Result")
     }
 
@@ -19,6 +18,7 @@ struct ShowSearchResultIntent: AppIntent {
 
     @Dependency private var modelContainer: ModelContainer
 
+    @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         _ = try SearchService.search(
             context: modelContainer.mainContext,

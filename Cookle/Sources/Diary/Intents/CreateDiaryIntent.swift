@@ -8,9 +8,8 @@
 import AppIntents
 import SwiftData
 
-@MainActor
 struct CreateDiaryIntent: AppIntent {
-    nonisolated static var title: LocalizedStringResource {
+    static var title: LocalizedStringResource {
         "Create New Diary"
     }
 
@@ -27,6 +26,7 @@ struct CreateDiaryIntent: AppIntent {
 
     @Dependency private var modelContainer: ModelContainer
 
+    @MainActor
     func perform() throws -> some IntentResult {
         Logger(#file).info("Running CreateDiaryIntent")
         let context = modelContainer.mainContext

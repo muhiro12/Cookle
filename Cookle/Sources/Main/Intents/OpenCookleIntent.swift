@@ -7,18 +7,17 @@
 
 import AppIntents
 
-@MainActor
 struct OpenCookleIntent: AppIntent {
-    nonisolated static var title: LocalizedStringResource {
+    static var title: LocalizedStringResource {
         .init("Open Cookle")
     }
 
-    nonisolated static var openAppWhenRun: Bool {
+    static var openAppWhenRun: Bool {
         true
     }
 
+    @MainActor
     func perform() throws -> some IntentResult {
-        try MainService.open()
-        return .result()
+        .result()
     }
 }
