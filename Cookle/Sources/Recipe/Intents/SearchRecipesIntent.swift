@@ -8,9 +8,8 @@
 import AppIntents
 import SwiftData
 
-@MainActor
 struct SearchRecipesIntent: AppIntent {
-    nonisolated static var title: LocalizedStringResource {
+    static var title: LocalizedStringResource {
         "Search Recipes"
     }
 
@@ -19,6 +18,7 @@ struct SearchRecipesIntent: AppIntent {
 
     @Dependency private var modelContainer: ModelContainer
 
+    @MainActor
     func perform() throws -> some ReturnsValue<[RecipeEntity]> {
         .result(
             value: try RecipeService.search(

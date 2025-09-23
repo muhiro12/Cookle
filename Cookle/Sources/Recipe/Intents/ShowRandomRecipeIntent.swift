@@ -9,14 +9,14 @@ import AppIntents
 import SwiftData
 import SwiftUI
 
-@MainActor
 struct ShowRandomRecipeIntent: AppIntent {
-    nonisolated static var title: LocalizedStringResource {
+    static var title: LocalizedStringResource {
         .init("Show Random Recipe")
     }
 
     @Dependency private var modelContainer: ModelContainer
 
+    @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         guard let recipe = try RecipeService.randomRecipe(
             context: modelContainer.mainContext

@@ -5,6 +5,9 @@ import PackageDescription
 
 let package = Package(
     name: "CookleLibrary",
+    platforms: [
+        .iOS(.v17)
+    ],
     products: [
         .library(
             name: "CookleLibrary",
@@ -13,9 +16,15 @@ let package = Package(
             ]
         )
     ],
+    dependencies: [
+        .package(url: "https://github.com/muhiro12/SwiftUtilities", "1.0.0"..<"2.0.0")
+    ],
     targets: [
         .target(
-            name: "CookleLibrary"
+            name: "CookleLibrary",
+            dependencies: [
+                .product(name: "SwiftUtilities", package: "SwiftUtilities")
+            ]
         ),
         .testTarget(
             name: "CookleLibraryTests",

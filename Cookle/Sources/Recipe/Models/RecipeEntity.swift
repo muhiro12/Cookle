@@ -2,7 +2,7 @@ import AppIntents
 import SwiftData
 
 @Observable
-nonisolated final class RecipeEntity {
+final class RecipeEntity: AppEntity, Hashable {
     let id: String
     let name: String
     let photos: [Data]
@@ -40,9 +40,7 @@ nonisolated final class RecipeEntity {
         self.createdTimestamp = createdTimestamp
         self.modifiedTimestamp = modifiedTimestamp
     }
-}
 
-extension RecipeEntity: AppEntity {
     static var defaultQuery: RecipeEntityQuery {
         .init()
     }
@@ -60,11 +58,17 @@ extension RecipeEntity: AppEntity {
             image: .init(systemName: "book")
         )
     }
+
+    static func == (lhs: RecipeEntity, rhs: RecipeEntity) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }
 
-extension RecipeEntity: ModelBridgeable {
-    typealias Model = Recipe
-
+extension RecipeEntity {
     convenience init?(_ model: Recipe) {
         guard let encodedID = try? model.id.base64Encoded() else {
             return nil
@@ -82,16 +86,6 @@ extension RecipeEntity: ModelBridgeable {
             createdTimestamp: model.createdTimestamp,
             modifiedTimestamp: model.modifiedTimestamp
         )
-    }
-}
-
-extension RecipeEntity: Hashable {
-    static func == (lhs: RecipeEntity, rhs: RecipeEntity) -> Bool {
-        lhs.id == rhs.id
-    }
-
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
     }
 }
 
