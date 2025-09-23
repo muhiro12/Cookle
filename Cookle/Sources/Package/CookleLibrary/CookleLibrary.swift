@@ -6,3 +6,5 @@
 //
 
 @_exported import CookleLibrary
+
+typealias Category = CookleLibrary.Category
