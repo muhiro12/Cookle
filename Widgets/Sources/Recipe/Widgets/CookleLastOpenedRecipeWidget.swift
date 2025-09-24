@@ -2,7 +2,7 @@ import SwiftUI
 import WidgetKit
 
 struct CookleLastOpenedRecipeWidget: Widget {
-    let kind: String = "CookleLastOpenedRecipeWidget"
+    private let kind: String = "com.muhiro12.Cookle.Widgets.LastOpenedRecipe"
 
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: LastOpenedRecipeProvider()) { entry in

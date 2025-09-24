@@ -2,7 +2,7 @@ import SwiftUI
 import WidgetKit
 
 struct CookleRandomRecipeWidget: Widget {
-    let kind: String = "CookleRandomRecipeWidget"
+    private let kind: String = "com.muhiro12.Cookle.Widgets.RandomRecipe"
 
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: RandomRecipeProvider()) { entry in

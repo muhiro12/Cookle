@@ -56,7 +56,7 @@ struct WidgetsEntryView: View {
 }
 
 struct Widgets: Widget {
-    let kind: String = "Widgets"
+    private let kind: String = "com.muhiro12.Cookle.Widgets.Demo"
 
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
