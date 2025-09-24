@@ -20,22 +20,7 @@ public enum RecipeService {
     }
 
     public static func search(context: ModelContext, text: String) throws -> [Recipe] {
-        var recipes = try context.fetch(
-            .recipes(.nameContains(text))
-        )
-        let ingredients = try context.fetch(
-            text.count < 3
-                ? .ingredients(.valueIs(text))
-                : .ingredients(.valueContains(text))
-        )
-        let categories = try context.fetch(
-            text.count < 3
-                ? .categories(.valueIs(text))
-                : .categories(.valueContains(text))
-        )
-        recipes += ingredients.flatMap(\.recipes.orEmpty)
-        recipes += categories.flatMap(\.recipes.orEmpty)
-        return Array(Set(recipes))
+        try context.fetch(.recipes(.anyTextMatches(text)))
     }
 
     // LLM-based inference with a graceful heuristic fallback.

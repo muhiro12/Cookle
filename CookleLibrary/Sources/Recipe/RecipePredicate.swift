@@ -13,6 +13,8 @@ public nonisolated enum RecipePredicate {
     case none
     case idIs(Recipe.ID)
     case nameContains(String)
+    /// Name OR ingredient OR category matches. For short text (<3), tags use equality; otherwise contains.
+    case anyTextMatches(String)
 
     public var value: Predicate<Recipe> {
         switch self {
@@ -31,6 +33,19 @@ public nonisolated enum RecipePredicate {
                 $0.name.localizedStandardContains(name)
                     || $0.name.localizedStandardContains(hiragana)
                     || $0.name.localizedStandardContains(katakana)
+            }
+        case .anyTextMatches(let text):
+            if text.count < 3 {
+                return #Predicate {
+                    $0.name.localizedStandardContains(text)
+                        || ($0.ingredients?.contains { $0.value == text }) == true
+                        || ($0.categories?.contains { $0.value == text }) == true
+                }
+            }
+            return #Predicate {
+                $0.name.localizedStandardContains(text)
+                    || ($0.ingredients?.contains { $0.value.localizedStandardContains(text) }) == true
+                    || ($0.categories?.contains { $0.value.localizedStandardContains(text) }) == true
             }
         }
     }
