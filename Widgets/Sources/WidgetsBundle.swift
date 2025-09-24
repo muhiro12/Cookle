@@ -12,6 +12,9 @@ import WidgetKit
 struct WidgetsBundle: WidgetBundle {
     var body: some Widget {
         Widgets()
+        CookleTodayDiaryWidget()
+        CookleRandomRecipeWidget()
+        CookleLastOpenedRecipeWidget()
         WidgetsLiveActivity()
     }
 }
