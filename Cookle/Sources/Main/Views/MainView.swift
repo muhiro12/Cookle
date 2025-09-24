@@ -5,7 +5,6 @@
 //  Created by Hiromu Nakano on 2024/05/27.
 //
 
-import SwiftData
 import SwiftUI
 
 struct MainView: View {
@@ -13,21 +12,7 @@ struct MainView: View {
     @Environment(\.requestReview) private var requestReview
     @Environment(ConfigurationService.self) private var configurationService
 
-    @AppStorage(.isICloudOn) private var isICloudOn
-
-    private var sharedModelContainer: ModelContainer!
-
     @State private var isUpdateAlertPresented = false
-
-    init() {
-        sharedModelContainer = try! .init(
-            for: .init(versionedSchema: CookleMigrationPlan.schemas[0]),
-            migrationPlan: CookleMigrationPlan.self,
-            configurations: .init(
-                cloudKitDatabase: isICloudOn ? .automatic : .none
-            )
-        )
-    }
 
     var body: some View {
         MainTabView()
@@ -61,8 +46,6 @@ struct MainView: View {
                     }
                 }
             }
-            .modelContainer(sharedModelContainer)
-            .id(isICloudOn)
     }
 }
 

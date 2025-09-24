@@ -1,11 +1,11 @@
-@testable import Cookle
+@testable import CookleLibrary
 import Foundation
 import SwiftData
 import Testing
 
 @MainActor
 struct DiaryServiceTests {
-    let context: ModelContext = testContext
+    let context: ModelContext = makeTestContext()
 
     @Test
     func create_creates_diary_with_breakfast_recipe() throws {

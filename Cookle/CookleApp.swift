@@ -9,6 +9,7 @@ import AppIntents
 import GoogleMobileAdsWrapper
 import LicenseListWrapper
 import StoreKitWrapper
+import SwiftData
 import SwiftUI
 
 @main
@@ -18,6 +19,7 @@ struct CookleApp: App {
     @AppStorage(.isDebugOn) private var isDebugOn
 
     private let sharedGoogleMobileAdsController: GoogleMobileAdsController
+    private let sharedModelContainer: ModelContainer
     private let sharedStore: Store
     private let sharedConfigurationService: ConfigurationService
 
@@ -32,6 +34,15 @@ struct CookleApp: App {
             }()
         )
 
+        // Centralize ModelContainer at the App level (like Incomes)
+        sharedModelContainer = try! .init(
+            for: .init(versionedSchema: CookleMigrationPlan.schemas[0]),
+            migrationPlan: CookleMigrationPlan.self,
+            configurations: .init(
+                cloudKitDatabase: CooklePreferences.bool(for: .isICloudOn) ? .automatic : .none
+            )
+        )
+
         sharedStore = .init()
         sharedConfigurationService = .init()
 
@@ -41,6 +52,8 @@ struct CookleApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .id(isICloudOn)
+                .modelContainer(sharedModelContainer)
                 .environment(sharedGoogleMobileAdsController)
                 .environment(sharedStore)
                 .environment(sharedConfigurationService)

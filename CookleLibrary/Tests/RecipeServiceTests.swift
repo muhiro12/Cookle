@@ -1,11 +1,10 @@
-@testable import Cookle
+@testable import CookleLibrary
 import SwiftData
-import SwiftUI
 import Testing
 
 @MainActor
 struct RecipeServiceTests {
-    let context: ModelContext = testContext
+    let context: ModelContext = makeTestContext()
 
     @Test
     func search_returns_recipes_matching_prefix() throws {
@@ -54,7 +53,7 @@ struct RecipeServiceTests {
             note: ""
         )
         let encoded = try recipe.id.base64Encoded()
-        AppStorage(.lastOpenedRecipeID).wrappedValue = encoded
+        CooklePreferences.set(encoded, for: .lastOpenedRecipeID)
 
         let result = try RecipeService.lastOpenedRecipe(context: context)
         #expect(result === recipe)
