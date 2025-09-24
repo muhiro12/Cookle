@@ -35,18 +35,22 @@ struct CookleApp: App {
         )
 
         // Centralize ModelContainer at the App level (like Incomes)
-        sharedModelContainer = try! .init(
+        let modelContainer = try! ModelContainer(
             for: .init(versionedSchema: CookleMigrationPlan.schemas[0]),
             migrationPlan: CookleMigrationPlan.self,
             configurations: .init(
                 cloudKitDatabase: CooklePreferences.bool(for: .isICloudOn) ? .automatic : .none
             )
         )
+        sharedModelContainer = modelContainer
 
         sharedStore = .init()
         sharedConfigurationService = .init()
 
         CookleShortcuts.updateAppShortcutParameters()
+
+        // Provide dependencies for AppIntents entity queries
+        AppDependencyManager.shared.add { modelContainer }
     }
 
     var body: some Scene {

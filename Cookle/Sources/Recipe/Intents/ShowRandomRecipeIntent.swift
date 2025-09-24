@@ -24,23 +24,23 @@ struct ShowRandomRecipeIntent: AppIntent {
             return .result(dialog: "Not Found")
         }
         return .result(dialog: .init(stringLiteral: recipe.name)) {
-            CookleIntents.cookleView {
-                VStack(alignment: .leading) {
-                    if let photo = recipe.photoObjects?.min()?.photo,
-                       let image = UIImage(data: photo.data) {
-                        Image(uiImage: image)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 240)
-                            .frame(maxWidth: .infinity)
-                            .clipShape(.rect(cornerRadius: 8))
-                    }
-                    RecipeIngredientsSection()
-                    Divider()
-                    RecipeStepsSection()
+            VStack(alignment: .leading) {
+                if let photo = recipe.photoObjects?.min()?.photo,
+                   let image = UIImage(data: photo.data) {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 240)
+                        .frame(maxWidth: .infinity)
+                        .clipShape(.rect(cornerRadius: 8))
                 }
-                .environment(recipe)
+                RecipeIngredientsSection()
+                Divider()
+                RecipeStepsSection()
             }
+            .environment(recipe)
+            .safeAreaPadding()
+            .modelContainer(modelContainer)
         }
     }
 }

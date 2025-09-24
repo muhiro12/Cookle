@@ -7,6 +7,7 @@
 
 import AppIntents
 import SwiftData
+import SwiftUI
 
 struct ShowSearchResultIntent: AppIntent {
     static var title: LocalizedStringResource {
@@ -25,9 +26,9 @@ struct ShowSearchResultIntent: AppIntent {
             text: searchText
         )
         return .result(dialog: "Result") {
-            CookleIntents.cookleView {
-                SearchResultView(.nameContains(searchText))
-            }
+            SearchResultView(.nameContains(searchText))
+                .safeAreaPadding()
+                .modelContainer(modelContainer)
         }
     }
 }
