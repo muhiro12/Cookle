@@ -7,15 +7,23 @@
 
 import FoundationModels
 
+/// Best-effort recipe structure inferred from free-form text.
 @available(iOS 26.0, *)
 @Generable
 public struct InferredRecipe {
+    /// Recipe name.
     public var name: String
+    /// Number of servings.
     public var servingSize: Int
+    /// Cooking time in minutes.
     public var cookingTime: Int
+    /// Ingredient/amount pairs.
     public var ingredients: [InferredRecipeIngredient]
+    /// Cooking steps.
     public var steps: [String]
+    /// Category labels.
     public var categories: [String]
+    /// Free-form note.
     public var note: String
 
     public init(

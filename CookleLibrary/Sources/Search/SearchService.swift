@@ -1,8 +1,14 @@
 import Foundation
 import SwiftData
 
+/// Legacy search aggregator over name, ingredients and categories.
 @MainActor
 public enum SearchService {
+    /// Searches recipes by name, ingredients and categories.
+    /// - Parameters:
+    ///   - context: Model context to query.
+    ///   - text: Search text.
+    /// - Returns: Matching recipes (deduplicated).
     public static func search(context: ModelContext, text: String) throws -> [Recipe] {
         var recipes = try context.fetch(
             .recipes(.nameContains(text))

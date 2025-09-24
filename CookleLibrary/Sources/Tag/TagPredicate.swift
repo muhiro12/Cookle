@@ -8,12 +8,14 @@
 import Foundation
 import SwiftData
 
+/// Predicates describing how to filter tag models.
 public nonisolated enum TagPredicate<T: Tag> {
     case all
     case none
     case valueIs(String)
     case valueContains(String)
 
+    /// Concrete SwiftData predicate for this case.
     public var value: Predicate<T> {
         switch self {
         case .all:
@@ -56,6 +58,7 @@ public nonisolated enum TagPredicate<T: Tag> {
     }
 }
 
+/// Convenience descriptors for tag queries.
 public extension FetchDescriptor where T == Ingredient {
     static func ingredients(_ predicate: TagPredicate<T>, order: SortOrder = .forward) -> FetchDescriptor {
         .init(

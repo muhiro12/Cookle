@@ -8,22 +8,33 @@
 import Foundation
 import SwiftData
 
+/// Persistent recipe entity.
 @Model
 public nonisolated final class Recipe {
+    /// Human-readable recipe name.
     public private(set) var name = String.empty
     @Relationship
+    /// Linked photos (flattened).
     public private(set) var photos = [Photo]?.some(.empty)
     @Relationship(deleteRule: .cascade)
+    /// Photo objects preserving order/metadata.
     public private(set) var photoObjects = [PhotoObject]?.some(.empty)
+    /// Number of servings.
     public private(set) var servingSize = Int.zero
+    /// Cooking time in minutes.
     public private(set) var cookingTime = Int.zero
     @Relationship
+    /// Linked ingredient tags.
     public private(set) var ingredients = [Ingredient]?.some(.empty)
     @Relationship(deleteRule: .cascade)
+    /// Ingredient objects with amount and order.
     public private(set) var ingredientObjects = [IngredientObject]?.some(.empty)
+    /// Ordered cooking steps.
     public private(set) var steps = [String].empty
     @Relationship
+    /// Linked category tags.
     public private(set) var categories = [Category]?.some(.empty)
+    /// Optional free-form note.
     public private(set) var note = String.empty
 
     @Relationship(inverse: \Diary.recipes)
@@ -31,11 +42,25 @@ public nonisolated final class Recipe {
     @Relationship(deleteRule: .cascade, inverse: \DiaryObject.recipe)
     public private(set) var diaryObjects = [DiaryObject]?.some(.empty)
 
+    /// Creation timestamp.
     public private(set) var createdTimestamp = Date.now
+    /// Last modification timestamp.
     public private(set) var modifiedTimestamp = Date.now
 
     private init() {}
 
+    /// Creates and inserts a new recipe.
+    /// - Parameters:
+    ///   - context: Model context to insert into.
+    ///   - name: Recipe name.
+    ///   - photos: Photo objects in display order.
+    ///   - servingSize: Number of servings.
+    ///   - cookingTime: Time in minutes.
+    ///   - ingredients: Ingredient objects in order.
+    ///   - steps: Cooking steps.
+    ///   - categories: Category tags.
+    ///   - note: Optional note.
+    /// - Returns: The newly created `Recipe`.
     public static func create(context: ModelContext,
                               name: String,
                               photos: [PhotoObject],
@@ -60,6 +85,7 @@ public nonisolated final class Recipe {
         return recipe
     }
 
+    /// Updates the recipe fields and refreshes the modification timestamp.
     public func update(name: String,
                        photos: [PhotoObject],
                        servingSize: Int,
