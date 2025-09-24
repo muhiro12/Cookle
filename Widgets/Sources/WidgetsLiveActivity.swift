@@ -9,71 +9,96 @@ import ActivityKit
 import SwiftUI
 import WidgetKit
 
-struct WidgetsAttributes: ActivityAttributes {
+// Live Activity for an ongoing cooking session.
+struct CookleCookingAttributes: ActivityAttributes {
     public struct ContentState: Codable, Hashable {
-        // Dynamic stateful properties about your activity go here!
-        var emoji: String
+        // Current step title (e.g. "Boil pasta")
+        var stepTitle: String
+        // 1-based current step index
+        var stepIndex: Int
+        // Total number of steps
+        var stepCount: Int
     }
 
-    // Fixed non-changing properties about your activity go here!
-    var name: String
+    // Fixed properties for the session
+    var recipeName: String
 }
 
-struct WidgetsLiveActivity: Widget {
+struct CookleCookingLiveActivity: Widget {
     var body: some WidgetConfiguration {
-        ActivityConfiguration(for: WidgetsAttributes.self) { context in
-            // Lock screen/banner UI goes here
-            VStack {
-                Text("Hello \(context.state.emoji)")
+        ActivityConfiguration(for: CookleCookingAttributes.self) { context in
+            // Lock screen/banner UI
+            VStack(alignment: .leading, spacing: 6) {
+                Text(context.attributes.recipeName)
+                    .font(.headline)
+                Text("Step \(context.state.stepIndex)/\(context.state.stepCount)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Text(context.state.stepTitle)
+                    .font(.subheadline)
+                    .lineLimit(2)
             }
-            .activityBackgroundTint(Color.cyan)
-            .activitySystemActionForegroundColor(Color.black)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(12)
+            .activityBackgroundTint(.thinMaterial)
+            .activitySystemActionForegroundColor(.primary)
         } dynamicIsland: { context in
             DynamicIsland {
-                // Expanded UI goes here. Compose the expanded UI through
-                // various regions, like leading/trailing/center/bottom
+                // Expanded
                 DynamicIslandExpandedRegion(.leading) {
-                    Text("Leading")
+                    VStack(alignment: .leading) {
+                        Text("Cookle")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                        Text("Step \(context.state.stepIndex)/\(context.state.stepCount)")
+                            .font(.caption)
+                    }
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    Text("Trailing")
+                    Image(systemName: "fork.knife")
+                        .symbolRenderingMode(.monochrome)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    Text("Bottom \(context.state.emoji)")
-                    // more content
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(context.attributes.recipeName)
+                            .font(.subheadline)
+                            .bold()
+                        Text(context.state.stepTitle)
+                            .font(.footnote)
+                            .lineLimit(2)
+                    }
                 }
             } compactLeading: {
-                Text("L")
+                Image(systemName: "fork.knife")
             } compactTrailing: {
-                Text("T \(context.state.emoji)")
+                Text("\(context.state.stepIndex)")
+                    .font(.caption2)
             } minimal: {
-                Text(context.state.emoji)
+                Image(systemName: "fork.knife")
             }
-            .widgetURL(URL(string: "http://www.apple.com"))
-            .keylineTint(Color.red)
+            .keylineTint(.accentColor)
         }
     }
 }
 
-extension WidgetsAttributes {
-    fileprivate static var preview: WidgetsAttributes {
-        WidgetsAttributes(name: "World")
+extension CookleCookingAttributes {
+    fileprivate static var preview: CookleCookingAttributes {
+        .init(recipeName: "Spaghetti Carbonara")
     }
 }
 
-extension WidgetsAttributes.ContentState {
-    fileprivate static var smiley: WidgetsAttributes.ContentState {
-        WidgetsAttributes.ContentState(emoji: "😀")
+extension CookleCookingAttributes.ContentState {
+    fileprivate static var step1: CookleCookingAttributes.ContentState {
+        .init(stepTitle: "Boil pasta in salted water", stepIndex: 1, stepCount: 5)
     }
-
-    fileprivate static var starEyes: WidgetsAttributes.ContentState {
-        WidgetsAttributes.ContentState(emoji: "🤩")
+    fileprivate static var step2: CookleCookingAttributes.ContentState {
+        .init(stepTitle: "Fry pancetta until crispy", stepIndex: 2, stepCount: 5)
     }
 }
 
-#Preview("Notification", as: .content, using: WidgetsAttributes.preview) {
-    WidgetsLiveActivity()
+#Preview("Cooking", as: .content, using: CookleCookingAttributes.preview) {
+    CookleCookingLiveActivity()
 } contentStates: {
-    WidgetsAttributes.ContentState.smiley
-    WidgetsAttributes.ContentState.starEyes
+    CookleCookingAttributes.ContentState.step1
+    CookleCookingAttributes.ContentState.step2
 }
