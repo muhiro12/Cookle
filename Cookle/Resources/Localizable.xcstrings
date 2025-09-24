@@ -186,6 +186,12 @@
         }
       }
     },
+    "Add Recipe To Today's Diary" : {
+
+    },
+    "Added to today's diary" : {
+
+    },
     "Amount" : {
       "localizations" : {
         "en" : {
@@ -426,6 +432,9 @@
           }
         }
       }
+    },
+    "Breakfast" : {
+
     },
     "Breakfasts" : {
       "localizations" : {
@@ -1311,6 +1320,9 @@
         }
       }
     },
+    "Dinner" : {
+
+    },
     "Dinners" : {
       "localizations" : {
         "en" : {
@@ -1958,6 +1970,9 @@
         }
       }
     },
+    "Lunch" : {
+
+    },
     "Lunches" : {
       "localizations" : {
         "en" : {
@@ -2025,6 +2040,9 @@
           }
         }
       }
+    },
+    "Meal Type" : {
+
     },
     "Menu" : {
       "localizations" : {
@@ -2161,6 +2179,9 @@
           }
         }
       }
+    },
+    "No diary for today" : {
+
     },
     "No image yet. Try Image Playground?" : {
       "localizations" : {
@@ -2740,6 +2761,9 @@
         }
       }
     },
+    "Recipe not found" : {
+
+    },
     "Recipe Text" : {
       "localizations" : {
         "en" : {
@@ -3181,6 +3205,9 @@
           }
         }
       }
+    },
+    "Show Today's Diary" : {
+
     },
     "Spaghetti" : {
       "localizations" : {
