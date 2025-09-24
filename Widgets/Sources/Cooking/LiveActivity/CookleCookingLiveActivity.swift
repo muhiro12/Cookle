@@ -1,28 +1,5 @@
-//
-//  WidgetsLiveActivity.swift
-//  Widgets
-//
-//  Created by Hiromu Nakano on 2025/09/25.
-//
-
-import ActivityKit
 import SwiftUI
 import WidgetKit
-
-// Live Activity for an ongoing cooking session.
-struct CookleCookingAttributes: ActivityAttributes {
-    public struct ContentState: Codable, Hashable {
-        // Current step title (e.g. "Boil pasta")
-        var stepTitle: String
-        // 1-based current step index
-        var stepIndex: Int
-        // Total number of steps
-        var stepCount: Int
-    }
-
-    // Fixed properties for the session
-    var recipeName: String
-}
 
 struct CookleCookingLiveActivity: Widget {
     var body: some WidgetConfiguration {
@@ -31,7 +8,7 @@ struct CookleCookingLiveActivity: Widget {
             VStack(alignment: .leading, spacing: 6) {
                 Text(context.attributes.recipeName)
                     .font(.headline)
-                Text("Step \(context.state.stepIndex)/\(context.state.stepCount)")
+                Text("Step \\ (context.state.stepIndex)/\\(context.state.stepCount)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 Text(context.state.stepTitle)
@@ -50,7 +27,7 @@ struct CookleCookingLiveActivity: Widget {
                         Text("Cookle")
                             .font(.caption2)
                             .foregroundStyle(.secondary)
-                        Text("Step \(context.state.stepIndex)/\(context.state.stepCount)")
+                        Text("Step \\ (context.state.stepIndex)/\\(context.state.stepCount)")
                             .font(.caption)
                     }
                 }
@@ -71,7 +48,7 @@ struct CookleCookingLiveActivity: Widget {
             } compactLeading: {
                 Image(systemName: "fork.knife")
             } compactTrailing: {
-                Text("\(context.state.stepIndex)")
+                Text("\\(context.state.stepIndex)")
                     .font(.caption2)
             } minimal: {
                 Image(systemName: "fork.knife")
@@ -81,24 +58,11 @@ struct CookleCookingLiveActivity: Widget {
     }
 }
 
-extension CookleCookingAttributes {
-    fileprivate static var preview: CookleCookingAttributes {
-        .init(recipeName: "Spaghetti Carbonara")
-    }
-}
-
-extension CookleCookingAttributes.ContentState {
-    fileprivate static var step1: CookleCookingAttributes.ContentState {
-        .init(stepTitle: "Boil pasta in salted water", stepIndex: 1, stepCount: 5)
-    }
-    fileprivate static var step2: CookleCookingAttributes.ContentState {
-        .init(stepTitle: "Fry pancetta until crispy", stepIndex: 2, stepCount: 5)
-    }
-}
-
+#if DEBUG
 #Preview("Cooking", as: .content, using: CookleCookingAttributes.preview) {
     CookleCookingLiveActivity()
 } contentStates: {
     CookleCookingAttributes.ContentState.step1
     CookleCookingAttributes.ContentState.step2
 }
+#endif
