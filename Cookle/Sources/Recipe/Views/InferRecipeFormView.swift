@@ -73,31 +73,30 @@ struct InferRecipeFormView: View {
                         Text("Cancel")
                     }
                 }
-                // TODO: Uncomment
-                //                ToolbarItem(placement: .confirmationAction) {
-                //                    Button {
-                //                        isLoading = true
-                //                        Task {
-                //                            defer { isLoading = false }
-                //                            do {
-                //                                let inference = try await RecipeService.infer(text: text)
-                //                                name = inference.name
-                //                                servingSize = inference.servingSize == 0 ? "" : inference.servingSize.description
-                //                                cookingTime = inference.cookingTime == 0 ? "" : inference.cookingTime.description
-                //                                ingredients = inference.ingredients.map { ($0.ingredient, $0.amount) } + [("", "")]
-                //                                steps = inference.steps + [""]
-                //                                categories = inference.categories + [""]
-                //                                note = inference.note
-                //                                dismiss()
-                //                            } catch {
-                //                                errorMessage = error.localizedDescription
-                //                            }
-                //                        }
-                //                    } label: {
-                //                        Text("Done")
-                //                    }
-                //                    .disabled(isLoading)
-                //                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button {
+                        isLoading = true
+                        Task {
+                            defer { isLoading = false }
+                            do {
+                                let inference = try await RecipeService.infer(text: text)
+                                name = inference.name
+                                servingSize = inference.servingSize == 0 ? "" : inference.servingSize.description
+                                cookingTime = inference.cookingTime == 0 ? "" : inference.cookingTime.description
+                                ingredients = inference.ingredients.map { ($0.ingredient, $0.amount) } + [("", "")]
+                                steps = inference.steps + [""]
+                                categories = inference.categories + [""]
+                                note = inference.note
+                                dismiss()
+                            } catch {
+                                errorMessage = error.localizedDescription
+                            }
+                        }
+                    } label: {
+                        Text("Done")
+                    }
+                    .disabled(isLoading)
+                }
                 ToolbarItem(placement: .bottomBar) {
                     Menu {
                         Button {
