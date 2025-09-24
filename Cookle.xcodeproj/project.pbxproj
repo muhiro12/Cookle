@@ -10,6 +10,7 @@
 		AD277E712E8449CC00B4AC19 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD277E702E8449CC00B4AC19 /* WidgetKit.framework */; };
 		AD277E732E8449CC00B4AC19 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD277E722E8449CC00B4AC19 /* SwiftUI.framework */; };
 		AD277E842E8449CD00B4AC19 /* Widgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AD277E6F2E8449CC00B4AC19 /* Widgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		AD2781342E844E0400B4AC19 /* CookleLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AD2781332E844E0400B4AC19 /* CookleLibrary */; };
 		AD3909A22DC4E7F90052749F /* GoogleMobileAdsWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD3909A12DC4E7F90052749F /* GoogleMobileAdsWrapper */; };
 		AD3909A52DC4E80A0052749F /* LicenseListWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD3909A42DC4E80A0052749F /* LicenseListWrapper */; };
 		AD3909A82DC4E81D0052749F /* StoreKitWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD3909A72DC4E81D0052749F /* StoreKitWrapper */; };
@@ -77,6 +78,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD277E732E8449CC00B4AC19 /* SwiftUI.framework in Frameworks */,
+				AD2781342E844E0400B4AC19 /* CookleLibrary in Frameworks */,
 				AD277E712E8449CC00B4AC19 /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -145,6 +147,7 @@
 			);
 			name = Widgets;
 			packageProductDependencies = (
+				AD2781332E844E0400B4AC19 /* CookleLibrary */,
 			);
 			productName = WidgetsExtension;
 			productReference = AD277E6F2E8449CC00B4AC19 /* Widgets.appex */;
@@ -616,6 +619,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		AD2781332E844E0400B4AC19 /* CookleLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CookleLibrary;
+		};
 		AD3909A12DC4E7F90052749F /* GoogleMobileAdsWrapper */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = AD3909A02DC4E7F90052749F /* XCRemoteSwiftPackageReference "GoogleMobileAdsWrapper" */;
