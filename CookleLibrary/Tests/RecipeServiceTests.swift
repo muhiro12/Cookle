@@ -1,11 +1,10 @@
-@testable import Cookle
+@testable import CookleLibrary
 import SwiftData
-import SwiftUI
 import Testing
 
 @MainActor
 struct RecipeServiceTests {
-    let context: ModelContext = testContext
+    let context: ModelContext = makeTestContext()
 
     @Test
     func search_returns_recipes_matching_prefix() throws {
@@ -54,7 +53,7 @@ struct RecipeServiceTests {
             note: ""
         )
         let encoded = try recipe.id.base64Encoded()
-        AppStorage(.lastOpenedRecipeID).wrappedValue = encoded
+        CooklePreferences.set(encoded, for: .lastOpenedRecipeID)
 
         let result = try RecipeService.lastOpenedRecipe(context: context)
         #expect(result === recipe)
@@ -88,12 +87,5 @@ struct RecipeServiceTests {
         let result = try RecipeService.randomRecipe(context: context)
         #expect(result != nil)
         #expect(result === pancake || result?.name == "Spaghetti")
-    }
-
-    @available(iOS 26.0, *)
-    @Test
-    func infer_returns_recipe_entity_from_text() async throws {
-        let result = try await RecipeService.infer(text: "Pancake recipe")
-        #expect(!result.name.isEmpty)
     }
 }

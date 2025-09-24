@@ -1,10 +1,10 @@
-@testable import Cookle
+@testable import CookleLibrary
 import SwiftData
 import Testing
 
 @MainActor
 struct SearchServiceTests {
-    let context: ModelContext = testContext
+    let context: ModelContext = makeTestContext()
 
     @Test
     func search_returns_recipes_matching_text_in_ingredients_or_categories() throws {

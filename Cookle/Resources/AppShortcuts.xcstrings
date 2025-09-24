@@ -2,11 +2,10 @@
   "sourceLanguage" : "en",
   "strings" : {
     "Open ${applicationName}" : {
-      "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringSet" : {
-            "state" : "new",
+            "state" : "translated",
             "values" : [
               "Open ${applicationName}",
               "Launch ${applicationName}",
@@ -57,11 +56,10 @@
       }
     },
     "Search recipes in ${applicationName}" : {
-      "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringSet" : {
-            "state" : "new",
+            "state" : "translated",
             "values" : [
               "Search recipes in ${applicationName}",
               "Find a recipe with ${applicationName}",
@@ -112,11 +110,10 @@
       }
     },
     "Show last opened recipe in ${applicationName}" : {
-      "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringSet" : {
-            "state" : "new",
+            "state" : "translated",
             "values" : [
               "Show last opened recipe in ${applicationName}",
               "Continue my last recipe with ${applicationName}",
@@ -167,11 +164,10 @@
       }
     },
     "Show random recipe in ${applicationName}" : {
-      "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringSet" : {
-            "state" : "new",
+            "state" : "translated",
             "values" : [
               "Show random recipe in ${applicationName}",
               "Suggest something to cook with ${applicationName}",
