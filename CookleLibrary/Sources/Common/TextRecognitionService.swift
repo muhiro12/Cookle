@@ -1,7 +1,11 @@
 import UIKit
 import Vision
 
+/// Text recognition utility using Vision.
 public enum TextRecognitionService {
+    /// Recognizes text lines from a `UIImage`.
+    /// - Parameter image: Source image.
+    /// - Returns: Joined text lines separated by newlines.
     public static func recognize(in image: UIImage) throws -> String {
         guard let cgImage = image.cgImage else {
             return ""

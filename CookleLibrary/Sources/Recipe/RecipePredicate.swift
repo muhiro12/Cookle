@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 
+/// Predicates describing how to filter `Recipe` records.
 public nonisolated enum RecipePredicate {
     case all
     case none
@@ -16,6 +17,7 @@ public nonisolated enum RecipePredicate {
     /// Name OR ingredient OR category matches. For short text (<3), tags use equality; otherwise contains.
     case anyTextMatches(String)
 
+    /// Concrete SwiftData predicate for this case.
     public var value: Predicate<Recipe> {
         switch self {
         case .all:
@@ -51,6 +53,7 @@ public nonisolated enum RecipePredicate {
     }
 }
 
+/// Convenience descriptors for `Recipe` queries.
 public extension FetchDescriptor where T == Recipe {
     static func recipes(_ predicate: RecipePredicate, order: SortOrder = .forward) -> FetchDescriptor {
         .init(

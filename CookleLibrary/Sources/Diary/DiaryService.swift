@@ -1,14 +1,17 @@
 import Foundation
 import SwiftData
 
+/// Diary-related domain services.
 @MainActor
 public enum DiaryService {
+    /// Returns the diary on the specified calendar day, if any.
     public static func diary(on date: Date, context: ModelContext) throws -> Diary? {
         let diaries = try context.fetch(.diaries(.all))
         let cal = Calendar.current
         return diaries.first { cal.isDate($0.date, inSameDayAs: date) }
     }
 
+    /// Adds a recipe to the diary of `date` for a given meal type, creating the diary when needed.
     public static func add(
         context: ModelContext,
         date: Date,
@@ -85,6 +88,7 @@ public enum DiaryService {
             )
         }
     }
+    /// Creates a new diary for the given date with provided recipes by meal type.
     public static func create(
         context: ModelContext,
         date: Date,
@@ -108,6 +112,7 @@ public enum DiaryService {
         )
     }
 
+    /// Updates the specified diary with new date, items and note.
     public static func update(
         context: ModelContext,
         diary: Diary,

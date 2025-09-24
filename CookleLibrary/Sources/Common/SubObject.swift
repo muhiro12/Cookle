@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 9/30/24.
 //
 
+/// Ordered sub-entity used inside composite models.
 public nonisolated protocol SubObject: Comparable {
     var order: Int { get }
 }

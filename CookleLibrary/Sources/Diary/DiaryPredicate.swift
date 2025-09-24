@@ -8,10 +8,12 @@
 import Foundation
 import SwiftData
 
+/// Predicates describing how to filter `Diary` records.
 public enum DiaryPredicate {
     case all
     case none
 
+    /// Concrete SwiftData predicate for this case.
     public var value: Predicate<Diary> {
         switch self {
         case .all:
@@ -22,6 +24,7 @@ public enum DiaryPredicate {
     }
 }
 
+/// Convenience descriptors for `Diary` queries.
 public extension FetchDescriptor where T == Diary {
     static func diaries(_ predicate: DiaryPredicate, order: SortOrder = .reverse) -> FetchDescriptor {
         .init(
