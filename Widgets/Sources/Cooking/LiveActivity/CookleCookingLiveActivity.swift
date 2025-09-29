@@ -8,7 +8,7 @@ struct CookleCookingLiveActivity: Widget {
             VStack(alignment: .leading, spacing: 6) {
                 Text(context.attributes.recipeName)
                     .font(.headline)
-                Text("Step \\ (context.state.stepIndex)/\\(context.state.stepCount)")
+                Text("Step \(context.state.stepIndex)/\(context.state.stepCount)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 Text(context.state.stepTitle)
@@ -27,7 +27,7 @@ struct CookleCookingLiveActivity: Widget {
                         Text("Cookle")
                             .font(.caption2)
                             .foregroundStyle(.secondary)
-                        Text("Step \\ (context.state.stepIndex)/\\(context.state.stepCount)")
+                        Text("Step \(context.state.stepIndex)/\(context.state.stepCount)")
                             .font(.caption)
                     }
                 }
@@ -48,7 +48,7 @@ struct CookleCookingLiveActivity: Widget {
             } compactLeading: {
                 Image(systemName: "fork.knife")
             } compactTrailing: {
-                Text("\\(context.state.stepIndex)")
+                Text("\(context.state.stepIndex)")
                     .font(.caption2)
             } minimal: {
                 Image(systemName: "fork.knife")
