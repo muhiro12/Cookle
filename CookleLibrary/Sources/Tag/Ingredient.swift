@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import SwiftUI
 
 /// Ingredient tag model.
 @Model
@@ -44,8 +45,8 @@ public nonisolated final class Ingredient: Tag {
 }
 
 extension Ingredient {
-    /// Localizable title key used in UI.
-    public static var titleKey: String {
+    /// Localized title used in UI.
+    public static var title: LocalizedStringKey {
         "Ingredients"
     }
 
