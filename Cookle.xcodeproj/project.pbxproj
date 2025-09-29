@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AD277E712E8449CC00B4AC19 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD277E702E8449CC00B4AC19 /* WidgetKit.framework */; };
+		AD277E732E8449CC00B4AC19 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD277E722E8449CC00B4AC19 /* SwiftUI.framework */; };
+		AD277E842E8449CD00B4AC19 /* Widgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AD277E6F2E8449CC00B4AC19 /* Widgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		AD2781342E844E0400B4AC19 /* CookleLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AD2781332E844E0400B4AC19 /* CookleLibrary */; };
 		AD3909A22DC4E7F90052749F /* GoogleMobileAdsWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD3909A12DC4E7F90052749F /* GoogleMobileAdsWrapper */; };
 		AD3909A52DC4E80A0052749F /* LicenseListWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD3909A42DC4E80A0052749F /* LicenseListWrapper */; };
 		AD3909A82DC4E81D0052749F /* StoreKitWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD3909A72DC4E81D0052749F /* StoreKitWrapper */; };
@@ -15,18 +19,34 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		ADE3ED1C2E04DEF50003B4E8 /* PBXContainerItemProxy */ = {
+		AD277E822E8449CD00B4AC19 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = AD8C8E602BFABEE200872BF2 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = AD8C8E672BFABEE200872BF2;
-			remoteInfo = Cookle;
+			remoteGlobalIDString = AD277E6E2E8449CC00B4AC19;
+			remoteInfo = WidgetsExtension;
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		AD277E852E8449CD00B4AC19 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				AD277E842E8449CD00B4AC19 /* Widgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		AD277E6F2E8449CC00B4AC19 /* Widgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Widgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		AD277E702E8449CC00B4AC19 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		AD277E722E8449CC00B4AC19 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		AD8C8E682BFABEE200872BF2 /* Cookle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cookle.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		ADE3ED182E04DEF50003B4E8 /* CookleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CookleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADF13D6D2E823363002572CD /* CookleLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CookleLibrary; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -38,14 +58,31 @@
 			);
 			target = AD8C8E672BFABEE200872BF2 /* Cookle */;
 		};
+		AD277E892E8449CD00B4AC19 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Configurations/Info.plist,
+			);
+			target = AD277E6E2E8449CC00B4AC19 /* Widgets */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		AD277E742E8449CC00B4AC19 /* Widgets */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (AD277E892E8449CD00B4AC19 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Widgets; sourceTree = "<group>"; };
 		AD3B66982CA87EC900DCFC5F /* Cookle */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (AD128EB02DC4E9D0007514ED /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Cookle; sourceTree = "<group>"; };
-		ADE3ED192E04DEF50003B4E8 /* CookleTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = CookleTests; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		AD277E6C2E8449CC00B4AC19 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AD277E732E8449CC00B4AC19 /* SwiftUI.framework in Frameworks */,
+				AD2781342E844E0400B4AC19 /* CookleLibrary in Frameworks */,
+				AD277E712E8449CC00B4AC19 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AD8C8E652BFABEE200872BF2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -58,13 +95,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		ADE3ED152E04DEF50003B4E8 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -73,7 +103,7 @@
 			children = (
 				ADF13D6D2E823363002572CD /* CookleLibrary */,
 				AD3B66982CA87EC900DCFC5F /* Cookle */,
-				ADE3ED192E04DEF50003B4E8 /* CookleTests */,
+				AD277E742E8449CC00B4AC19 /* Widgets */,
 				AD8C8E692BFABEE200872BF2 /* Products */,
 				AD8C8E7C2BFAC06D00872BF2 /* Frameworks */,
 			);
@@ -83,7 +113,7 @@
 			isa = PBXGroup;
 			children = (
 				AD8C8E682BFABEE200872BF2 /* Cookle.app */,
-				ADE3ED182E04DEF50003B4E8 /* CookleTests.xctest */,
+				AD277E6F2E8449CC00B4AC19 /* Widgets.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -91,6 +121,8 @@
 		AD8C8E7C2BFAC06D00872BF2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AD277E702E8449CC00B4AC19 /* WidgetKit.framework */,
+				AD277E722E8449CC00B4AC19 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -98,6 +130,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		AD277E6E2E8449CC00B4AC19 /* Widgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AD277E882E8449CD00B4AC19 /* Build configuration list for PBXNativeTarget "Widgets" */;
+			buildPhases = (
+				AD277E6B2E8449CC00B4AC19 /* Sources */,
+				AD277E6C2E8449CC00B4AC19 /* Frameworks */,
+				AD277E6D2E8449CC00B4AC19 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				AD277E742E8449CC00B4AC19 /* Widgets */,
+			);
+			name = Widgets;
+			packageProductDependencies = (
+				AD2781332E844E0400B4AC19 /* CookleLibrary */,
+			);
+			productName = WidgetsExtension;
+			productReference = AD277E6F2E8449CC00B4AC19 /* Widgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		AD8C8E672BFABEE200872BF2 /* Cookle */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = AD8C8E792BFABEE300872BF2 /* Build configuration list for PBXNativeTarget "Cookle" */;
@@ -105,10 +160,12 @@
 				AD8C8E642BFABEE200872BF2 /* Sources */,
 				AD8C8E652BFABEE200872BF2 /* Frameworks */,
 				AD8C8E662BFABEE200872BF2 /* Resources */,
+				AD277E852E8449CD00B4AC19 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				AD277E832E8449CD00B4AC19 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				AD3B66982CA87EC900DCFC5F /* Cookle */,
@@ -125,29 +182,6 @@
 			productReference = AD8C8E682BFABEE200872BF2 /* Cookle.app */;
 			productType = "com.apple.product-type.application";
 		};
-		ADE3ED172E04DEF50003B4E8 /* CookleTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = ADE3ED1E2E04DEF50003B4E8 /* Build configuration list for PBXNativeTarget "CookleTests" */;
-			buildPhases = (
-				ADE3ED142E04DEF50003B4E8 /* Sources */,
-				ADE3ED152E04DEF50003B4E8 /* Frameworks */,
-				ADE3ED162E04DEF50003B4E8 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				ADE3ED1D2E04DEF50003B4E8 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				ADE3ED192E04DEF50003B4E8 /* CookleTests */,
-			);
-			name = CookleTests;
-			packageProductDependencies = (
-			);
-			productName = CookleTests;
-			productReference = ADE3ED182E04DEF50003B4E8 /* CookleTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -158,12 +192,11 @@
 				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 1630;
 				TargetAttributes = {
+					AD277E6E2E8449CC00B4AC19 = {
+						CreatedOnToolsVersion = 26.0;
+					};
 					AD8C8E672BFABEE200872BF2 = {
 						CreatedOnToolsVersion = 15.4;
-					};
-					ADE3ED172E04DEF50003B4E8 = {
-						CreatedOnToolsVersion = 26.0;
-						TestTargetID = AD8C8E672BFABEE200872BF2;
 					};
 				};
 			};
@@ -192,20 +225,20 @@
 			projectRoot = "";
 			targets = (
 				AD8C8E672BFABEE200872BF2 /* Cookle */,
-				ADE3ED172E04DEF50003B4E8 /* CookleTests */,
+				AD277E6E2E8449CC00B4AC19 /* Widgets */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		AD8C8E662BFABEE200872BF2 /* Resources */ = {
+		AD277E6D2E8449CC00B4AC19 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		ADE3ED162E04DEF50003B4E8 /* Resources */ = {
+		AD8C8E662BFABEE200872BF2 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -215,14 +248,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		AD8C8E642BFABEE200872BF2 /* Sources */ = {
+		AD277E6B2E8449CC00B4AC19 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		ADE3ED142E04DEF50003B4E8 /* Sources */ = {
+		AD8C8E642BFABEE200872BF2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -232,14 +265,81 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		ADE3ED1D2E04DEF50003B4E8 /* PBXTargetDependency */ = {
+		AD277E832E8449CD00B4AC19 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = AD8C8E672BFABEE200872BF2 /* Cookle */;
-			targetProxy = ADE3ED1C2E04DEF50003B4E8 /* PBXContainerItemProxy */;
+			target = AD277E6E2E8449CC00B4AC19 /* Widgets */;
+			targetProxy = AD277E822E8449CD00B4AC19 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		AD277E862E8449CD00B4AC19 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = Widgets/Configurations/Widgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Widgets/Configurations/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Widgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 3.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.muhiro12.Cookle.Widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AD277E872E8449CD00B4AC19 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = Widgets/Configurations/Widgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Widgets/Configurations/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Widgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 3.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.muhiro12.Cookle.Widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		AD8C8E772BFABEE300872BF2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -448,58 +548,18 @@
 			};
 			name = Release;
 		};
-		ADE3ED1F2E04DEF50003B4E8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 66PKF55HK5;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.muhiro12.CookleTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Cookle.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Cookle";
-			};
-			name = Debug;
-		};
-		ADE3ED202E04DEF50003B4E8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 66PKF55HK5;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.muhiro12.CookleTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Cookle.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Cookle";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		AD277E882E8449CD00B4AC19 /* Build configuration list for PBXNativeTarget "Widgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AD277E862E8449CD00B4AC19 /* Debug */,
+				AD277E872E8449CD00B4AC19 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		AD8C8E632BFABEE200872BF2 /* Build configuration list for PBXProject "Cookle" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -514,15 +574,6 @@
 			buildConfigurations = (
 				AD8C8E7A2BFABEE300872BF2 /* Debug */,
 				AD8C8E7B2BFABEE300872BF2 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		ADE3ED1E2E04DEF50003B4E8 /* Build configuration list for PBXNativeTarget "CookleTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				ADE3ED1F2E04DEF50003B4E8 /* Debug */,
-				ADE3ED202E04DEF50003B4E8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -572,6 +623,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		AD2781332E844E0400B4AC19 /* CookleLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CookleLibrary;
+		};
 		AD3909A12DC4E7F90052749F /* GoogleMobileAdsWrapper */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = AD3909A02DC4E7F90052749F /* XCRemoteSwiftPackageReference "GoogleMobileAdsWrapper" */;
