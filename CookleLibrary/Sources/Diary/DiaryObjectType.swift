@@ -5,14 +5,16 @@
 //  Created by Hiromu Nakano on 2024/05/23.
 //
 
+import SwiftUI
+
 /// Meal kinds used in a diary.
 public nonisolated enum DiaryObjectType: String, CaseIterable, Codable, Identifiable {
     case breakfast
     case lunch
     case dinner
 
-    /// Localizable title key for UI sections.
-    public var titleKey: String {
+    /// Localized title used for display.
+    public var title: LocalizedStringKey {
         switch self {
         case .breakfast:
             "Breakfasts"
@@ -23,8 +25,8 @@ public nonisolated enum DiaryObjectType: String, CaseIterable, Codable, Identifi
         }
     }
 
-    /// Stable identifier.
+    /// Stable string identifier for this case.
     public var id: String {
-        rawValue
+        .init(describing: self)
     }
 }
