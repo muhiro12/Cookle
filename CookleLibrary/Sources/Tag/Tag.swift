@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import SwiftUI
 
 /// Common contract for tag-like models (e.g. `Ingredient`, `Category`).
 public nonisolated protocol Tag: PersistentModel {
@@ -24,8 +25,8 @@ public nonisolated protocol Tag: PersistentModel {
     /// Updates the tag's value.
     func update(value: String)
 
-    /// Localizable title key for UI sections.
-    static var titleKey: String { get }
+    /// Localized title used in UI.
+    static var title: LocalizedStringKey { get }
 
     /// Convenience descriptor using a predicate and explicit order.
     static func descriptor(_ predicate: TagPredicate<Self>, order: SortOrder) -> FetchDescriptor<Self>

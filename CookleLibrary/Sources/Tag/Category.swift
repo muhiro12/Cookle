@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import SwiftUI
 
 /// Category tag model.
 @Model
@@ -41,8 +42,8 @@ public nonisolated final class Category: Tag {
 }
 
 extension Category {
-    /// Localizable title key used in UI.
-    public static var titleKey: String {
+    /// Localized title used in UI.
+    public static var title: LocalizedStringKey {
         "Categories"
     }
 
