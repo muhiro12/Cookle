@@ -17,7 +17,7 @@ struct CookleCookingLiveActivity: Widget {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(12)
-            .activityBackgroundTint(.thinMaterial)
+            .activityBackgroundTint(.secondary)
             .activitySystemActionForegroundColor(.primary)
         } dynamicIsland: { context in
             DynamicIsland {
