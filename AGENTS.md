@@ -1,10 +1,10 @@
 # AGENTS.md
 
-This document defines minimum standards for agents working in the Cookle repository.
+This document outlines the expectations and tooling references for contributors working on the Cookle project.
 
-## Coding Guidelines for Cookle Agents
+## Coding Guidelines for Codex Agents
 
-These guidelines outline the minimum coding standards for implementing Agents in the Cookle project.
+This document defines the minimum coding standards for implementing Agents in the Codex project.
 
 ## Swift Code Guidelines
 
@@ -23,16 +23,18 @@ In contexts where the return type is clear (e.g., function return values, comput
 
 #### Examples
 
+##### Preferred
+
 ```swift
 var user: User {
-  .init(name: "Alice") // ✅ OK: return type is explicitly User
+    .init(name: "Alice") // ✅ Return context explicitly typed as User
 }
+```
 
-func makeUser() -> User {
-  .init(name: "Bob") // ✅ OK
-}
+##### Not preferred
 
-let user = User(name: "Carol") // ❌ Less preferred when type is not obvious
+```swift
+let user = .init(name: "Carol") // ❌ Local variable lacks an explicit type declaration
 ```
 
 ### Multiline control-flow and trailing-closure formatting
@@ -88,3 +90,33 @@ Avoid using Japanese or other non-English languages in code unless strictly nece
 - Do not assert medical or health effects as certainties; use cautious language such as "may" or "can help".
 - Provide nutrition facts only when supported by a reputable source and cite the reference.
 - Respect image copyrights by documenting the license and attribution whenever images are used.
+
+## Build and Test Commands
+
+Use these minimal, reliable commands to build and run tests via Xcode. They avoid hard-coding device names and work across environments.
+
+### Preferred: use `ci_scripts/` helpers
+
+These scripts standardize invocation, keep artifacts under `build/`, and do not accept arguments.
+
+- Run required build/tests based on local changes:
+
+  ```sh
+  bash ci_scripts/run_required_builds.sh
+  ```
+
+- Build the Cookle app target:
+
+  ```sh
+  bash ci_scripts/build_cookle.sh
+  ```
+
+- Run CookleLibrary tests:
+
+  ```sh
+  bash ci_scripts/test_cookle_library.sh
+  ```
+
+- Artifacts:
+  - Derived data: `build/DerivedData`
+  - Results bundle: `build/TestResults_<Scheme>_<timestamp>.xcresult`
