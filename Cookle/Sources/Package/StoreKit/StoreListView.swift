@@ -12,10 +12,9 @@ struct StoreListView: View {
     }
 }
 
-#Preview {
-    CooklePreview { _ in
-        NavigationStack {
-            StoreListView()
-        }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    NavigationStack {
+        StoreListView()
     }
 }

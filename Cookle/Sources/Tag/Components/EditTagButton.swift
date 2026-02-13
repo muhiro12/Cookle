@@ -1,3 +1,4 @@
+import SwiftData
 import SwiftUI
 
 struct EditTagButton<T: Tag>: View {
@@ -15,9 +16,9 @@ struct EditTagButton<T: Tag>: View {
     }
 }
 
-#Preview {
-    CooklePreview { preview in
-        EditTagButton<Ingredient>()
-            .environment(preview.ingredients[0])
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    @Previewable @Query var ingredients: [Ingredient]
+    EditTagButton<Ingredient>()
+        .environment(ingredients[0])
 }

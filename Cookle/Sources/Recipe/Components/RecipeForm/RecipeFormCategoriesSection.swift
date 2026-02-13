@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2024/04/11.
 //
 
+import SwiftData
 import SwiftUI
 
 struct RecipeFormCategoriesSection: View {
@@ -45,12 +46,12 @@ struct RecipeFormCategoriesSection: View {
     }
 }
 
-#Preview {
-    CooklePreview { preview in
-        Form { () -> RecipeFormCategoriesSection in
-            RecipeFormCategoriesSection(
-                .constant(preview.categories.map(\.value) + [.empty])
-            )
-        }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    @Previewable @Query var categories: [Category]
+    Form { () -> RecipeFormCategoriesSection in
+        RecipeFormCategoriesSection(
+            .constant(categories.map(\.value) + [.empty])
+        )
     }
 }

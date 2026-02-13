@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2024/04/13.
 //
 
+import SwiftData
 import SwiftUI
 
 struct EditRecipeButton: View {
@@ -38,9 +39,9 @@ struct EditRecipeButton: View {
     }
 }
 
-#Preview {
-    CooklePreview { preview in
-        EditRecipeButton()
-            .environment(preview.recipes[0])
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    @Previewable @Query var recipes: [Recipe]
+    EditRecipeButton()
+        .environment(recipes[0])
 }

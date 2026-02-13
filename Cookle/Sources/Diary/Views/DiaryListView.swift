@@ -67,10 +67,9 @@ struct DiaryListView: View {
     }
 }
 
-#Preview {
-    CooklePreview { _ in
-        NavigationStack {
-            DiaryListView()
-        }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    NavigationStack {
+        DiaryListView()
     }
 }

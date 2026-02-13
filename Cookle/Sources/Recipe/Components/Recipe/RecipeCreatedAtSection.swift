@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 9/17/24.
 //
 
+import SwiftData
 import SwiftUI
 
 struct RecipeCreatedAtSection: View {
@@ -19,11 +20,11 @@ struct RecipeCreatedAtSection: View {
     }
 }
 
-#Preview {
-    CooklePreview { preview in
-        List {
-            RecipeCreatedAtSection()
-                .environment(preview.recipes[0])
-        }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    @Previewable @Query var recipes: [Recipe]
+    List {
+        RecipeCreatedAtSection()
+            .environment(recipes[0])
     }
 }

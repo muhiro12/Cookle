@@ -29,8 +29,7 @@ struct AddDiaryButton: View {
     }
 }
 
-#Preview {
-    CooklePreview { _ in
-        AddDiaryButton()
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    AddDiaryButton()
 }

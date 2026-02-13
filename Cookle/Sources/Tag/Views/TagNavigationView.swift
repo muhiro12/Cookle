@@ -28,8 +28,7 @@ struct TagNavigationView<T: Tag>: View {
     }
 }
 
-#Preview {
-    CooklePreview { _ in
-        TagNavigationView<Ingredient>()
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    TagNavigationView<Ingredient>()
 }

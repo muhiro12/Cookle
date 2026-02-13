@@ -51,9 +51,9 @@ struct TagFormView<T: Tag>: View {
     }
 }
 
-#Preview {
-    CooklePreview { preview in
-        TagFormNavigationView<Category>()
-            .environment(preview.categories[0])
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    @Previewable @Query var categories: [Category]
+    TagFormNavigationView<Category>()
+        .environment(categories[0])
 }

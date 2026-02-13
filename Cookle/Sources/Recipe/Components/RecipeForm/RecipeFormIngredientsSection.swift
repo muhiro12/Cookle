@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2024/05/03.
 //
 
+import SwiftData
 import SwiftUI
 
 typealias RecipeFormIngredient = (ingredient: String, amount: String)
@@ -68,14 +69,14 @@ struct RecipeFormIngredientsSection: View {
     }
 }
 
-#Preview {
-    CooklePreview { preview in
-        Form { () -> RecipeFormIngredientsSection in
-            RecipeFormIngredientsSection(
-                .constant(preview.recipes[0].ingredientObjects!.map {
-                    ($0.ingredient!.value, $0.amount)
-                } + [("", "")])
-            )
-        }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    @Previewable @Query var recipes: [Recipe]
+    Form { () -> RecipeFormIngredientsSection in
+        RecipeFormIngredientsSection(
+            .constant(recipes[0].ingredientObjects!.map {
+                ($0.ingredient!.value, $0.amount)
+            } + [("", "")])
+        )
     }
 }

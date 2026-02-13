@@ -8,8 +8,7 @@ struct LicenseView: View {
     }
 }
 
-#Preview {
-    CooklePreview { _ in
-        LicenseView()
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    LicenseView()
 }

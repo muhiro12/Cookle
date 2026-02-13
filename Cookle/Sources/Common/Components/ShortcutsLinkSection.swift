@@ -12,8 +12,7 @@ struct ShortcutsLinkSection: View {
     }
 }
 
-#Preview {
-    CooklePreview { _ in
-        ShortcutsLinkSection()
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    ShortcutsLinkSection()
 }

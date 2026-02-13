@@ -89,10 +89,9 @@ struct SettingsSidebarView: View {
     }
 }
 
-#Preview {
-    CooklePreview { _ in
-        NavigationStack {
-            SettingsSidebarView()
-        }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    NavigationStack {
+        SettingsSidebarView()
     }
 }

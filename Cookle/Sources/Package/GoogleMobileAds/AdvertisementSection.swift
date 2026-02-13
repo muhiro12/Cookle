@@ -34,10 +34,9 @@ extension AdvertisementSection: View {
     }
 }
 
-#Preview {
-    CooklePreview { _ in
-        List {
-            AdvertisementSection(.medium)
-        }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    List {
+        AdvertisementSection(.medium)
     }
 }

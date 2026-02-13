@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2024/06/26.
 //
 
+import SwiftData
 import SwiftUI
 
 struct PhotoView: View {
@@ -64,9 +65,9 @@ struct PhotoView: View {
     }
 }
 
-#Preview {
-    CooklePreview { preview in
-        PhotoView()
-            .environment(preview.photos[0])
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    @Previewable @Query var photos: [Photo]
+    PhotoView()
+        .environment(photos[0])
 }

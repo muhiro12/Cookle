@@ -6,6 +6,7 @@
 //
 
 import PhotosUI
+import SwiftData
 import SwiftUI
 
 struct RecipeFormPhotosSection: View {
@@ -123,14 +124,14 @@ struct RecipeFormPhotosSection: View {
     }
 }
 
-#Preview {
-    CooklePreview { preview in
-        Form {
-            RecipeFormPhotosSection(
-                .constant(preview.photos.map {
-                    .init(data: $0.data, source: $0.source)
-                })
-            )
-        }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    @Previewable @Query var photos: [Photo]
+    Form {
+        RecipeFormPhotosSection(
+            .constant(photos.map {
+                .init(data: $0.data, source: $0.source)
+            })
+        )
     }
 }

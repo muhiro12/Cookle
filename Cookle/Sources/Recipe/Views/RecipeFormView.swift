@@ -6,6 +6,7 @@
 //
 
 import StoreKit
+import SwiftData
 import SwiftUI
 
 struct RecipeFormView: View {
@@ -180,9 +181,9 @@ struct RecipeFormView: View {
     RecipeFormNavigationView(type: .create)
 }
 
-#Preview {
-    CooklePreview { preview in
-        RecipeFormNavigationView(type: .edit)
-            .environment(preview.recipes[0])
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    @Previewable @Query var recipes: [Recipe]
+    RecipeFormNavigationView(type: .edit)
+        .environment(recipes[0])
 }

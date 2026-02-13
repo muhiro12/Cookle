@@ -76,8 +76,7 @@ struct DebugNavigationView: View {
     }
 }
 
-#Preview {
-    CooklePreview { _ in
-        DebugNavigationView()
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    DebugNavigationView()
 }

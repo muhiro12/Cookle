@@ -77,10 +77,9 @@ struct SearchView: View {
     }
 }
 
-#Preview {
-    CooklePreview { _ in
-        NavigationStack {
-            SearchView()
-        }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    NavigationStack {
+        SearchView()
     }
 }

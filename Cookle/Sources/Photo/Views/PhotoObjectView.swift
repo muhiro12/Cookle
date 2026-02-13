@@ -1,3 +1,4 @@
+import SwiftData
 import SwiftUI
 
 struct PhotoObjectView: View {
@@ -39,9 +40,9 @@ struct PhotoObjectView: View {
     }
 }
 
-#Preview {
-    CooklePreview { preview in
-        PhotoObjectView()
-            .environment(preview.photoObjects[0])
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    @Previewable @Query var photoObjects: [PhotoObject]
+    PhotoObjectView()
+        .environment(photoObjects[0])
 }

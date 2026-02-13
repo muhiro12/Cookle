@@ -35,8 +35,7 @@ struct DiaryNavigationView: View {
     }
 }
 
-#Preview {
-    CooklePreview { _ in
-        DiaryNavigationView()
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    DiaryNavigationView()
 }

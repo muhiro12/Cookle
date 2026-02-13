@@ -1,3 +1,4 @@
+import SwiftData
 import SwiftUI
 
 struct PhotoDetailNavigationView: View {
@@ -16,8 +17,8 @@ struct PhotoDetailNavigationView: View {
     }
 }
 
-#Preview {
-    CooklePreview { preview in
-        PhotoDetailNavigationView(photos: preview.photos)
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    @Previewable @Query var photos: [Photo]
+    PhotoDetailNavigationView(photos: photos)
 }

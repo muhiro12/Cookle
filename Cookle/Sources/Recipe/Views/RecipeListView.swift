@@ -51,11 +51,10 @@ struct RecipeListView: View {
     }
 }
 
-#Preview {
-    CooklePreview { _ in
-        NavigationStack {
-            RecipeListView()
-        }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    NavigationStack {
+        RecipeListView()
     }
 }
 

@@ -49,11 +49,11 @@ struct DebugDetailView<Model: PersistentModel>: View {
     }
 }
 
-#Preview {
-    CooklePreview { preview in
-        NavigationStack {
-            DebugDetailView<Recipe>()
-                .environment(preview.recipes[0])
-        }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    @Previewable @Query var recipes: [Recipe]
+    NavigationStack {
+        DebugDetailView<Recipe>()
+            .environment(recipes[0])
     }
 }

@@ -50,11 +50,11 @@ struct RecipeView: View {
     }
 }
 
-#Preview {
-    CooklePreview { preview in
-        NavigationStack {
-            RecipeView()
-                .environment(preview.recipes[0])
-        }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    @Previewable @Query var recipes: [Recipe]
+    NavigationStack {
+        RecipeView()
+            .environment(recipes[0])
     }
 }

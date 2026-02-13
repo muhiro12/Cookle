@@ -1,3 +1,4 @@
+import SwiftData
 import SwiftUI
 
 struct DeleteTagButton<T: Tag>: View {
@@ -50,9 +51,9 @@ struct DeleteTagButton<T: Tag>: View {
     }
 }
 
-#Preview {
-    CooklePreview { preview in
-        DeleteTagButton<Category>()
-            .environment(preview.categories[0])
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    @Previewable @Query var categories: [Category]
+    DeleteTagButton<Category>()
+        .environment(categories[0])
 }

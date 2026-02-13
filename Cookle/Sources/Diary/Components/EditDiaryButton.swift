@@ -1,3 +1,4 @@
+import SwiftData
 import SwiftUI
 
 struct EditDiaryButton: View {
@@ -31,9 +32,9 @@ struct EditDiaryButton: View {
     }
 }
 
-#Preview {
-    CooklePreview { preview in
-        EditDiaryButton()
-            .environment(preview.diaries[0])
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    @Previewable @Query var diaries: [Diary]
+    EditDiaryButton()
+        .environment(diaries[0])
 }

@@ -19,8 +19,7 @@ struct SettingsNavigationView: View {
     }
 }
 
-#Preview {
-    CooklePreview { _ in
-        SettingsNavigationView()
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    SettingsNavigationView()
 }

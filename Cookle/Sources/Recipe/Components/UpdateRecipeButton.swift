@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 9/21/24.
 //
 
+import SwiftData
 import SwiftUI
 
 struct UpdateRecipeButton: View {
@@ -100,18 +101,18 @@ struct UpdateRecipeButton: View {
     }
 }
 
-#Preview {
-    CooklePreview { preview in
-        UpdateRecipeButton(
-            name: .empty,
-            photos: .empty,
-            servingSize: .empty,
-            cookingTime: .empty,
-            ingredients: .empty,
-            steps: .empty,
-            categories: .empty,
-            note: .empty
-        )
-        .environment(preview.recipes[0])
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    @Previewable @Query var recipes: [Recipe]
+    UpdateRecipeButton(
+        name: .empty,
+        photos: .empty,
+        servingSize: .empty,
+        cookingTime: .empty,
+        ingredients: .empty,
+        steps: .empty,
+        categories: .empty,
+        note: .empty
+    )
+    .environment(recipes[0])
 }

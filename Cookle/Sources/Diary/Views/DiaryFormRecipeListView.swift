@@ -58,10 +58,9 @@ struct DiaryFormRecipeListView: View {
     }
 }
 
-#Preview {
-    CooklePreview { _ in
-        NavigationStack {
-            DiaryFormRecipeListView(type: .dinner)
-        }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    NavigationStack {
+        DiaryFormRecipeListView(type: .dinner)
     }
 }

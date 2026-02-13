@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2024/04/15.
 //
 
+import SwiftData
 import SwiftUI
 
 struct TagView<T: Tag>: View {
@@ -55,11 +56,11 @@ struct TagView<T: Tag>: View {
     }
 }
 
-#Preview {
-    CooklePreview { preview in
-        NavigationStack {
-            TagView<Ingredient>()
-                .environment(preview.ingredients[0])
-        }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    @Previewable @Query var ingredients: [Ingredient]
+    NavigationStack {
+        TagView<Ingredient>()
+            .environment(ingredients[0])
     }
 }

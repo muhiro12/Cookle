@@ -8,49 +8,26 @@
 import SwiftData
 import SwiftUI
 
-@Observable
 final class CooklePreviewStore {
-    private(set) var diaries = [Diary]()
-    private(set) var diaryObjects = [DiaryObject]()
-    private(set) var recipes = [Recipe]()
-    private(set) var photos = [Photo]()
-    private(set) var photoObjects = [PhotoObject]()
-    private(set) var ingredients = [Ingredient]()
-    private(set) var ingredientObjects = [IngredientObject]()
-    private(set) var categories = [Category]()
+    private var hasPreparedPreviewData = false
 
-    private var isReady: Bool {
-        !diaries.isEmpty
-            && !diaryObjects.isEmpty
-            && !recipes.isEmpty
-            && !photos.isEmpty
-            && !photoObjects.isEmpty
-            && !ingredients.isEmpty
-            && !ingredientObjects.isEmpty
-            && !categories.isEmpty
-    }
-
-    func prepare(_ context: ModelContext) async {
-        _ = try! await createPreviewDiaries(context, isPreview: true)
-        while !isReady {
-            try! await Task.sleep(for: .seconds(0.2))
-            diaries = try! context.fetch(.diaries(.all))
-            diaryObjects = try! context.fetch(.diaryObjects(.all))
-            recipes = try! context.fetch(.recipes(.all))
-            photos = try! context.fetch(.photos(.all))
-            photoObjects = try! context.fetch(.photoObjects(.all))
-            ingredients = try! context.fetch(.ingredients(.all))
-            ingredientObjects = try! context.fetch(.ingredientObjects(.all))
-            categories = try! context.fetch(.categories(.all))
+    func prepare(_ context: ModelContext) {
+        if !hasPreparedPreviewData {
+            do {
+                _ = try createPreviewDiaries(context)
+                hasPreparedPreviewData = true
+            } catch {
+                assertionFailure("Failed to prepare preview data: \(error.localizedDescription)")
+            }
         }
     }
 
-    func createPreviewDiaries(_ context: ModelContext, isPreview: Bool = false) async throws -> [Diary] {
-        let pancakes = try await cookPancakes(context, isPreview: isPreview)
-        let chickenStirFry = try await cookChickenStirFry(context, isPreview: isPreview)
-        let vegetableSoup = try await cookVegetableSoup(context, isPreview: isPreview)
-        let spaghettiCarbonara = try await cookSpaghettiCarbonara(context, isPreview: isPreview)
-        let beefStew = try await cookBeefStew(context, isPreview: isPreview)
+    func createPreviewDiaries(_ context: ModelContext) throws -> [Diary] {
+        let pancakes = try cookPancakes(context)
+        let chickenStirFry = try cookChickenStirFry(context)
+        let vegetableSoup = try cookVegetableSoup(context)
+        let spaghettiCarbonara = try cookSpaghettiCarbonara(context)
+        let beefStew = try cookBeefStew(context)
         return (0..<10).map { i in
             .create(
                 context: context,
@@ -102,13 +79,13 @@ final class CooklePreviewStore {
         }
     }
 
-    private func cookSpaghettiCarbonara(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
+    private func cookSpaghettiCarbonara(_ context: ModelContext) throws -> Recipe {
         .create(
             context: context,
             name: "Spaghetti Carbonara",
             photos: [
-                isPreview ? createPhotoObject(context, systemName: "frying.pan", order: 1) : try await createPhotoObject(context, name: "SpaghettiCarbonara1", order: 1),
-                isPreview ? createPhotoObject(context, systemName: "oval.portrait", order: 2) : try await createPhotoObject(context, name: "SpaghettiCarbonara2", order: 2)
+                createPhotoObject(context, systemName: "frying.pan", order: 1),
+                createPhotoObject(context, systemName: "oval.portrait", order: 2)
             ],
             servingSize: 2,
             cookingTime: 30,
@@ -135,13 +112,13 @@ final class CooklePreviewStore {
         )
     }
 
-    private func cookBeefStew(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
+    private func cookBeefStew(_ context: ModelContext) throws -> Recipe {
         .create(
             context: context,
             name: "Beef Stew",
             photos: [
-                isPreview ? createPhotoObject(context, systemName: "fork.knife", order: 1) : try await createPhotoObject(context, name: "BeefStew1", order: 1),
-                isPreview ? createPhotoObject(context, systemName: "wineglass", order: 2) : try await createPhotoObject(context, name: "BeefStew2", order: 2)
+                createPhotoObject(context, systemName: "fork.knife", order: 1),
+                createPhotoObject(context, systemName: "wineglass", order: 2)
             ],
             servingSize: 6,
             cookingTime: 120,
@@ -174,13 +151,13 @@ final class CooklePreviewStore {
         )
     }
 
-    private func cookChickenStirFry(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
+    private func cookChickenStirFry(_ context: ModelContext) throws -> Recipe {
         .create(
             context: context,
             name: "Chicken Stir Fry",
             photos: [
-                isPreview ? createPhotoObject(context, systemName: "bird", order: 1) : try await createPhotoObject(context, name: "ChickenStirFry1", order: 1),
-                isPreview ? createPhotoObject(context, systemName: "tree", order: 2) : try await createPhotoObject(context, name: "ChickenStirFry2", order: 2)
+                createPhotoObject(context, systemName: "bird", order: 1),
+                createPhotoObject(context, systemName: "tree", order: 2)
             ],
             servingSize: 4,
             cookingTime: 20,
@@ -213,13 +190,13 @@ final class CooklePreviewStore {
         )
     }
 
-    private func cookVegetableSoup(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
+    private func cookVegetableSoup(_ context: ModelContext) throws -> Recipe {
         .create(
             context: context,
             name: "Vegetable Soup",
             photos: [
-                isPreview ? createPhotoObject(context, systemName: "cup.and.saucer", order: 1) : try await createPhotoObject(context, name: "VegetableSoup1", order: 1),
-                isPreview ? createPhotoObject(context, systemName: "carrot", order: 2) : try await createPhotoObject(context, name: "VegetableSoup2", order: 2)
+                createPhotoObject(context, systemName: "cup.and.saucer", order: 1),
+                createPhotoObject(context, systemName: "carrot", order: 2)
             ],
             servingSize: 4,
             cookingTime: 40,
@@ -252,13 +229,13 @@ final class CooklePreviewStore {
         )
     }
 
-    private func cookPancakes(_ context: ModelContext, isPreview: Bool) async throws -> Recipe {
+    private func cookPancakes(_ context: ModelContext) throws -> Recipe {
         .create(
             context: context,
             name: "Pancakes",
             photos: [
-                isPreview ? createPhotoObject(context, systemName: "birthday.cake", order: 1) : try await createPhotoObject(context, name: "Pancakes1", order: 1),
-                isPreview ? createPhotoObject(context, systemName: "mug", order: 2) : try await createPhotoObject(context, name: "Pancakes2", order: 2)
+                createPhotoObject(context, systemName: "birthday.cake", order: 1),
+                createPhotoObject(context, systemName: "mug", order: 2)
             ],
             servingSize: 4,
             cookingTime: 20,
@@ -292,17 +269,6 @@ final class CooklePreviewStore {
             photoData: .init(
                 data: UIImage(systemName: systemName)!.withTintColor(.init(.init(uiColor: .tintColor).adjusted(by: systemName.hashValue))).jpegData(compressionQuality: 1)!,
                 source: order == 1 ? .photosPicker : .imagePlayground
-            ),
-            order: order
-        )
-    }
-
-    private func createPhotoObject(_ context: ModelContext, name: String, order: Int) async throws -> PhotoObject {
-        .create(
-            context: context,
-            photoData: .init(
-                data: try await URLSession.shared.data(from: .init(string: "https://raw.githubusercontent.com/muhiro12/Cookle/refs/heads/main/.Resources/\(name).png")!).0,
-                source: .photosPicker
             ),
             order: order
         )

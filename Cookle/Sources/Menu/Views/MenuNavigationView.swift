@@ -58,8 +58,7 @@ struct MenuNavigationView: View {
     }
 }
 
-#Preview {
-    CooklePreview { _ in
-        MenuNavigationView()
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    MenuNavigationView()
 }

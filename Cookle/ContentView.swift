@@ -18,8 +18,7 @@ struct ContentView: View {
     }
 }
 
-#Preview {
-    CooklePreview { _ in
-        ContentView()
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    ContentView()
 }

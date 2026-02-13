@@ -76,8 +76,10 @@ struct DebugSidebarView: View {
             isPresented: $isAlertPresented
         ) {
             Button(role: .destructive) {
-                Task {
-                    _ = try? await CooklePreviewStore().createPreviewDiaries(context)
+                do {
+                    _ = try CooklePreviewStore().createPreviewDiaries(context)
+                } catch {
+                    assertionFailure("Failed to create preview diaries: \(error.localizedDescription)")
                 }
             } label: {
                 Text("Create")
@@ -92,10 +94,9 @@ struct DebugSidebarView: View {
     }
 }
 
-#Preview {
-    CooklePreview { _ in
-        NavigationStack {
-            DebugSidebarView()
-        }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    NavigationStack {
+        DebugSidebarView()
     }
 }

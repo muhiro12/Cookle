@@ -50,8 +50,7 @@ struct DebugContentView<Model: PersistentModel>: View {
     }
 }
 
-#Preview {
-    CooklePreview { _ in
-        DebugContentView<Recipe>()
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    DebugContentView<Recipe>()
 }

@@ -52,10 +52,9 @@ struct TagListView<T: Tag>: View {
     }
 }
 
-#Preview {
-    CooklePreview { _ in
-        NavigationStack {
-            TagListView<Category>()
-        }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    NavigationStack {
+        TagListView<Category>()
     }
 }

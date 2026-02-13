@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 9/30/24.
 //
 
+import SwiftData
 import SwiftUI
 
 struct DiaryLabel: View {
@@ -70,11 +71,11 @@ struct DiaryLabel: View {
     }
 }
 
-#Preview {
-    CooklePreview { preview in
-        List {
-            DiaryLabel()
-                .environment(preview.diaries[0])
-        }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    @Previewable @Query var diaries: [Diary]
+    List {
+        DiaryLabel()
+            .environment(diaries[0])
     }
 }

@@ -49,8 +49,7 @@ struct MainView: View {
     }
 }
 
-#Preview {
-    CooklePreview { _ in
-        MainView()
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    MainView()
 }

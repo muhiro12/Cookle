@@ -1,3 +1,4 @@
+import SwiftData
 import SwiftUI
 
 struct DiaryObjectView: View {
@@ -39,9 +40,9 @@ struct DiaryObjectView: View {
     }
 }
 
-#Preview {
-    CooklePreview { preview in
-        DiaryObjectView()
-            .environment(preview.diaryObjects[0])
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    @Previewable @Query var diaryObjects: [DiaryObject]
+    DiaryObjectView()
+        .environment(diaryObjects[0])
 }

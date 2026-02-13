@@ -54,8 +54,7 @@ struct MainTabView: View {
     }
 }
 
-#Preview {
-    CooklePreview { _ in
-        MainTabView()
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    MainTabView()
 }

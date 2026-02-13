@@ -1,3 +1,4 @@
+import SwiftData
 import SwiftUI
 
 struct DeleteRecipeButton: View {
@@ -39,9 +40,9 @@ struct DeleteRecipeButton: View {
     }
 }
 
-#Preview {
-    CooklePreview { preview in
-        DeleteRecipeButton()
-            .environment(preview.recipes[0])
-    }
+@available(iOS 18.0, *)
+#Preview(traits: .modifier(CookleSampleData())) {
+    @Previewable @Query var recipes: [Recipe]
+    DeleteRecipeButton()
+        .environment(recipes[0])
 }
