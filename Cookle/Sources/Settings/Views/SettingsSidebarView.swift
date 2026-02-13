@@ -26,6 +26,7 @@ struct SettingsSidebarView: View {
     @Binding private var content: SettingsContent?
 
     @State private var isAlertPresented = false
+    @State private var isIntroductionPresented = false
 
     init(selection: Binding<SettingsContent?> = .constant(nil)) {
         self._content = selection
@@ -80,6 +81,9 @@ struct SettingsSidebarView: View {
                 Text("Manage")
             }
             Section {
+                Button("View App Introduction Again") {
+                    isIntroductionPresented = true
+                }
                 NavigationLink(value: SettingsContent.license) {
                     Text("Licenses")
                 }
@@ -121,6 +125,9 @@ struct SettingsSidebarView: View {
             }
         } message: {
             Text("Are you sure you want to delete all data?")
+        }
+        .sheet(isPresented: $isIntroductionPresented) {
+            IntroductionNavigationView()
         }
         .task {
             normalizeSuggestionTimeDefaultsIfNeeded()
