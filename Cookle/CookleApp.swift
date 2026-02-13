@@ -22,6 +22,7 @@ struct CookleApp: App {
     private let sharedModelContainer: ModelContainer
     private let sharedStore: Store
     private let sharedConfigurationService: ConfigurationService
+    private let sharedNotificationService: NotificationService
 
     init() {
         sharedGoogleMobileAdsController = .init(
@@ -46,6 +47,7 @@ struct CookleApp: App {
 
         sharedStore = .init()
         sharedConfigurationService = .init()
+        sharedNotificationService = .init(modelContainer: modelContainer)
 
         CookleShortcuts.updateAppShortcutParameters()
 
@@ -61,6 +63,7 @@ struct CookleApp: App {
                 .environment(sharedGoogleMobileAdsController)
                 .environment(sharedStore)
                 .environment(sharedConfigurationService)
+                .environment(sharedNotificationService)
                 .task {
                     #if DEBUG
                     isDebugOn = true
@@ -79,6 +82,8 @@ struct CookleApp: App {
                             isICloudOn = false
                         }
                     }
+
+                    await sharedNotificationService.synchronizeScheduledSuggestions()
                 }
         }
     }

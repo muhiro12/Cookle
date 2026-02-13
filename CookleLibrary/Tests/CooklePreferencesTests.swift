@@ -1,5 +1,5 @@
-import Foundation
 @testable import CookleLibrary
+import Foundation
 import Testing
 
 @Suite("CooklePreferences")
@@ -46,5 +46,45 @@ struct CooklePreferencesTests {
 
         CooklePreferences.set(nil, for: key)
         #expect(CooklePreferences.string(for: key) == nil)
+    }
+
+    @Test("Stores and retrieves integer preferences")
+    func intRoundTrip() {
+        let key = IntPreferenceKey.dailyRecipeSuggestionHour
+        let defaults = UserDefaults.standard
+        let originalValue = defaults.object(forKey: key.rawValue)
+        defer {
+            if let originalValue {
+                defaults.set(originalValue, forKey: key.rawValue)
+            } else {
+                defaults.removeObject(forKey: key.rawValue)
+            }
+        }
+
+        CooklePreferences.set(19, for: key)
+        #expect(CooklePreferences.int(for: key) == 19)
+
+        CooklePreferences.set(7, for: key)
+        #expect(CooklePreferences.int(for: key) == 7)
+    }
+
+    @Test("Returns default integer value when preference is not set")
+    func intDefaultValue() {
+        let key = IntPreferenceKey.dailyRecipeSuggestionMinute
+        let defaults = UserDefaults.standard
+        let originalValue = defaults.object(forKey: key.rawValue)
+        defer {
+            if let originalValue {
+                defaults.set(originalValue, forKey: key.rawValue)
+            } else {
+                defaults.removeObject(forKey: key.rawValue)
+            }
+        }
+
+        defaults.removeObject(forKey: key.rawValue)
+        #expect(CooklePreferences.int(for: key, default: 30) == 30)
+
+        CooklePreferences.set(15, for: key)
+        #expect(CooklePreferences.int(for: key, default: 30) == 15)
     }
 }
