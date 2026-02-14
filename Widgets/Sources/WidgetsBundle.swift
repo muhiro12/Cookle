@@ -14,6 +14,5 @@ struct WidgetsBundle: WidgetBundle {
         CookleTodayDiaryWidget()
         CookleRandomRecipeWidget()
         CookleLastOpenedRecipeWidget()
-        CookleCookingLiveActivity()
     }
 }
