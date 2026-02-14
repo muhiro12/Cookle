@@ -17,6 +17,7 @@ struct CookleApp: App {
     @AppStorage(.isSubscribeOn) private var isSubscribeOn
     @AppStorage(.isICloudOn) private var isICloudOn
     @AppStorage(.isDebugOn) private var isDebugOn
+    @AppStorage(.lastLaunchedAppVersion) private var lastLaunchedAppVersion
 
     private let sharedGoogleMobileAdsController: GoogleMobileAdsController
     private let sharedModelContainer: ModelContainer
@@ -56,6 +57,10 @@ struct CookleApp: App {
 
         // Provide dependencies for AppIntents entity queries
         AppDependencyManager.shared.add { modelContainer }
+
+        if let currentAppVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+            lastLaunchedAppVersion = currentAppVersion
+        }
     }
 
     var body: some Scene {
