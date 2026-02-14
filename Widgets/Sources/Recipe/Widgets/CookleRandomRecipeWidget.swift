@@ -24,6 +24,7 @@ struct CookleRandomRecipeWidget: Widget {
                     .padding(6)
             }
             .containerBackground(.fill.tertiary, for: .widget)
+            .widgetURL(CookleWidgetDeepLink.url(for: .recipe))
         }
         .configurationDisplayName("Random Recipe")
         .description("Shows a random recipe and its photo if available.")

@@ -38,6 +38,7 @@ struct CookleTodayDiaryWidget: Widget {
             }
             .padding(8)
             .containerBackground(.fill.tertiary, for: .widget)
+            .widgetURL(CookleWidgetDeepLink.url(for: .diary))
         }
         .configurationDisplayName("Today’s Meals")
         .description("Shows today’s breakfast, lunch and dinner from your diary.")

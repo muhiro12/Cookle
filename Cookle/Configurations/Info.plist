@@ -10,6 +10,17 @@
 			<string>AccentColor</string>
 		</dict>
 	</dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.muhiro12.Cookle</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>cookle</string>
+			</array>
+		</dict>
+	</array>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-2619807738023307~8279602544</string>
 	<key>GADNativeAdValidatorEnabled</key>

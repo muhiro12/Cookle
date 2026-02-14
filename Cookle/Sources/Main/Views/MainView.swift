@@ -17,9 +17,10 @@ struct MainView: View {
     @State private var hasLoaded = false
     @State private var isIntroductionPresented = false
     @State private var isUpdateAlertPresented = false
+    @State private var selectedTab = MainTab.diary
 
     var body: some View {
-        MainTabView()
+        MainTabView(selection: $selectedTab)
             .sheet(isPresented: $isIntroductionPresented) {
                 IntroductionNavigationView()
             }
@@ -57,10 +58,25 @@ struct MainView: View {
                     }
                 }
             }
+            .onOpenURL { deepLinkURL in
+                guard let destination = CookleWidgetDeepLink.destination(from: deepLinkURL) else {
+                    return
+                }
+                selectedTab = tab(for: destination)
+            }
     }
 }
 
 private extension MainView {
+    func tab(for destination: CookleWidgetDestination) -> MainTab {
+        switch destination {
+        case .diary:
+            return .diary
+        case .recipe:
+            return .recipe
+        }
+    }
+
     func shouldPresentIntroduction() -> Bool {
         do {
             let recipeCount = try context.fetchCount(

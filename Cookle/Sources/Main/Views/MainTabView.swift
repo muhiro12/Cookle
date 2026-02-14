@@ -12,7 +12,11 @@ struct MainTabView: View {
 
     @AppStorage(.isDebugOn) private var isDebugOn
 
-    @State private var selection = MainTab.diary
+    @Binding private var selection: MainTab
+
+    init(selection: Binding<MainTab>) {
+        _selection = selection
+    }
 
     private var tabs: [MainTab] {
         MainTab.allCases.filter {
@@ -56,5 +60,5 @@ struct MainTabView: View {
 
 @available(iOS 18.0, *)
 #Preview(traits: .modifier(CookleSampleData())) {
-    MainTabView()
+    MainTabView(selection: .constant(.diary))
 }

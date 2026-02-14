@@ -24,6 +24,7 @@ struct CookleLastOpenedRecipeWidget: Widget {
                     .padding(6)
             }
             .containerBackground(.fill.tertiary, for: .widget)
+            .widgetURL(CookleWidgetDeepLink.url(for: .recipe))
         }
         .configurationDisplayName("Last Opened Recipe")
         .description("Shows the recipe you opened most recently.")
