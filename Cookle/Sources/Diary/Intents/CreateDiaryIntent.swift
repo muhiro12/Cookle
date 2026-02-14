@@ -50,6 +50,7 @@ struct CreateDiaryIntent: AppIntent {
             dinners: dinnerModels,
             note: note
         )
+        CookleWidgetReloader.reloadTodayDiaryWidget()
         Logger(#file).notice("CreateDiaryIntent finished successfully")
         return .result()
     }

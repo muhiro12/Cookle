@@ -1,9 +1,9 @@
+import CookleLibrary
 import SwiftUI
 import WidgetKit
 
 struct CookleTodayDiaryWidget: Widget {
-    // Align with Incomes convention: com.muhiro12.Cookle.Widgets.*
-    private let kind: String = "com.muhiro12.Cookle.Widgets.TodayDiary"
+    private let kind: String = CookleWidgetKind.todayDiary
 
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: TodayDiaryProvider()) { entry in

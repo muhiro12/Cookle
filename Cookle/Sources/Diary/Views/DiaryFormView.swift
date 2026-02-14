@@ -96,6 +96,7 @@ struct DiaryFormView: View {
                             note: note
                         )
                     }
+                    CookleWidgetReloader.reloadTodayDiaryWidget()
                     dismiss()
                 } label: {
                     Text(diary != nil ? "Update" : "Add")

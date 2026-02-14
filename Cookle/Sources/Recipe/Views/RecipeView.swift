@@ -11,7 +11,6 @@ import SwiftUI
 struct RecipeView: View {
     @Environment(Recipe.self) private var recipe
 
-    @AppStorage(.lastOpenedRecipeID) private var lastOpenedRecipeID
     @AppStorage(.isSubscribeOn) private var isSubscribeOn
 
     var body: some View {
@@ -41,7 +40,10 @@ struct RecipeView: View {
             }
         }
         .task {
-            lastOpenedRecipeID = try? recipe.id.base64Encoded()
+            let lastOpenedRecipeID = try? recipe.id.base64Encoded()
+            CookleSharedPreferences.set(lastOpenedRecipeID, for: .lastOpenedRecipeID)
+            CooklePreferences.set(lastOpenedRecipeID, for: .lastOpenedRecipeID)
+            CookleWidgetReloader.reloadLastOpenedRecipeWidget()
             UIApplication.shared.isIdleTimerDisabled = true
         }
         .onDisappear {

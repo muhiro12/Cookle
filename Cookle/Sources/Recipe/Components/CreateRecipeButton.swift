@@ -75,6 +75,7 @@ struct CreateRecipeButton: View {
                 note: note
             )
             recipe = model
+            CookleWidgetReloader.reloadRecipeWidgets()
             if recipe?.photos?.isEmpty == true,
                CookleImagePlayground.isSupported {
                 isConfirmationDialogPresented = true
@@ -140,6 +141,7 @@ struct CreateRecipeButton: View {
                     categories: recipe.categories ?? [],
                     note: recipe.note
                 )
+                CookleWidgetReloader.reloadRecipeWidgets()
             }
             dismiss()
         } onCancellation: {

@@ -19,6 +19,7 @@ struct AddRecipeToTodayDiaryIntent: AppIntent {
             return .result(dialog: "Recipe not found")
         }
         _ = try DiaryService.add(context: context, date: .now, recipe: model, type: type.diaryType)
+        CookleWidgetReloader.reloadTodayDiaryWidget()
         return .result(dialog: "Added to today's diary")
     }
 }

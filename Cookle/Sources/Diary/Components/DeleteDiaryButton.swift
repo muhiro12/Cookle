@@ -32,6 +32,7 @@ struct DeleteDiaryButton: View {
         ) {
             Button("Delete", role: .destructive) {
                 diary.delete()
+                CookleWidgetReloader.reloadTodayDiaryWidget()
             }
             Button("Cancel", role: .cancel) {}
         } message: {

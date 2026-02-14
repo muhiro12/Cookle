@@ -71,6 +71,7 @@ struct UpdateRecipeButton: View {
                 },
                 note: note
             )
+            CookleWidgetReloader.reloadRecipeWidgets()
             dismiss()
             if Int.random(in: 0..<5) == .zero {
                 Task {

@@ -32,6 +32,7 @@ struct DeleteRecipeButton: View {
         ) {
             Button("Delete", role: .destructive) {
                 recipe.delete()
+                CookleWidgetReloader.reloadRecipeWidgets()
             }
             Button("Cancel", role: .cancel) {}
         } message: {

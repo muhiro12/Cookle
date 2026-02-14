@@ -12,7 +12,8 @@ public enum RecipeService {
     /// - Returns: The matching `Recipe` or `nil` when not found.
     public static func lastOpenedRecipe(
         context: ModelContext,
-        lastOpenedRecipeID: String? = CooklePreferences.string(for: .lastOpenedRecipeID)
+        lastOpenedRecipeID: String? = CookleSharedPreferences.string(for: .lastOpenedRecipeID)
+            ?? CooklePreferences.string(for: .lastOpenedRecipeID)
     ) throws -> Recipe? {
         guard let lastOpenedRecipeID else {
             return nil
