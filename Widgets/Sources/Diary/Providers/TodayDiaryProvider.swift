@@ -26,23 +26,17 @@ struct TodayDiaryProvider: AppIntentTimelineProvider {
 
     func timeline(for _: ConfigurationAppIntent, in _: Context) -> Timeline<TodayDiaryEntry> {
         let now = Date.now
-        var entries: [TodayDiaryEntry] = .init()
-        do {
-            let context = try ModelContainerFactory.sharedContext()
-            for hour in 0 ..< 5 {
-                if let date = Calendar.current.date(byAdding: .hour, value: hour, to: now) {
-                    let entry = (try? makeEntry(now: date, context: context)) ?? makeErrorEntry(now: date)
-                    entries.append(entry)
-                }
+        let entry: TodayDiaryEntry = {
+            do {
+                let context = try ModelContainerFactory.sharedContext()
+                return try makeEntry(now: now, context: context)
+            } catch {
+                return makeErrorEntry(now: now)
             }
-        } catch {
-            for hour in 0 ..< 5 {
-                if let date = Calendar.current.date(byAdding: .hour, value: hour, to: now) {
-                    entries.append(makeErrorEntry(now: date))
-                }
-            }
-        }
-        return .init(entries: entries, policy: .atEnd)
+        }()
+
+        let nextMidnight = Calendar.current.startOfDay(for: now).addingTimeInterval(24 * 60 * 60)
+        return .init(entries: [entry], policy: .after(nextMidnight))
     }
 
     private func makeEntry(now: Date, context: ModelContext) throws -> TodayDiaryEntry {

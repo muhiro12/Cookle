@@ -19,23 +19,19 @@ struct LastOpenedRecipeProvider: AppIntentTimelineProvider {
 
     func timeline(for _: ConfigurationAppIntent, in _: Context) -> Timeline<RecipeEntry> {
         let now = Date.now
-        var entries: [RecipeEntry] = .init()
-        do {
-            let context = try ModelContainerFactory.sharedContext()
-            for hour in 0 ..< 5 {
-                if let date = Calendar.current.date(byAdding: .hour, value: hour, to: now) {
-                    let entry = (try? makeEntry(date: date, context: context)) ?? makeErrorEntry(date: date)
-                    entries.append(entry)
-                }
+        let entry: RecipeEntry = {
+            do {
+                let context = try ModelContainerFactory.sharedContext()
+                return try makeEntry(date: now, context: context)
+            } catch {
+                return makeErrorEntry(date: now)
             }
-        } catch {
-            for hour in 0 ..< 5 {
-                if let date = Calendar.current.date(byAdding: .hour, value: hour, to: now) {
-                    entries.append(makeErrorEntry(date: date))
-                }
-            }
+        }()
+
+        guard let nextRefreshDate = Calendar.current.date(byAdding: .hour, value: 6, to: now) else {
+            return .init(entries: [entry], policy: .atEnd)
         }
-        return .init(entries: entries, policy: .atEnd)
+        return .init(entries: [entry], policy: .after(nextRefreshDate))
     }
 
     private func makeEntry(date: Date, context: ModelContext) throws -> RecipeEntry {
