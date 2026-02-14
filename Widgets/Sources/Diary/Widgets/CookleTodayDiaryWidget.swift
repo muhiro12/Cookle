@@ -12,22 +12,26 @@ struct CookleTodayDiaryWidget: Widget {
                     .font(.headline)
                 HStack {
                     Label(entry.breakfastText, systemImage: "sunrise.fill")
+                        .privacySensitive()
                     Spacer()
                 }
                 .font(.caption)
                 HStack {
                     Label(entry.lunchText, systemImage: "sun.max.fill")
+                        .privacySensitive()
                     Spacer()
                 }
                 .font(.caption)
                 HStack {
                     Label(entry.dinnerText, systemImage: "moon.fill")
+                        .privacySensitive()
                     Spacer()
                 }
                 .font(.caption)
                 if !entry.noteText.isEmpty {
                     Divider()
                     Text(entry.noteText)
+                        .privacySensitive()
                         .font(.caption2)
                         .lineLimit(2)
                 }

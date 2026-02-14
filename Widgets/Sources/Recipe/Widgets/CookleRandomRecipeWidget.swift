@@ -13,8 +13,10 @@ struct CookleRandomRecipeWidget: Widget {
                         .resizable()
                         .scaledToFill()
                         .clipped()
+                        .privacySensitive()
                 }
                 Text(entry.titleText)
+                    .privacySensitive()
                     .font(.headline)
                     .foregroundStyle(.primary)
                     .padding(8)
