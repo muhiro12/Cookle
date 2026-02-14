@@ -38,18 +38,26 @@ final class NotificationService: NSObject {
     func sendTestSuggestionNotification() async {
         await refreshAuthorizationStatus()
 
+        if authorizationStatus == .notDetermined {
+            _ = try? await notificationCenter.requestAuthorization(
+                options: [.alert, .sound, .badge]
+            )
+            await refreshAuthorizationStatus()
+        }
+
         guard isAuthorizationGranted else {
             return
         }
-        guard let recipe = try? RecipeService.randomRecipe(context: modelContainer.mainContext) else {
-            return
-        }
+
+        let recipeName = (try? RecipeService.randomRecipe(
+            context: modelContainer.mainContext
+        ))?.name ?? String(localized: "Recipe")
 
         let content = UNMutableNotificationContent()
         content.title = String(localized: "Recipe Suggestion")
-        content.body = String(localized: "How about making \(recipe.name) today?")
+        content.body = String(localized: "How about making \(recipeName) today?")
         content.sound = .default
-        content.interruptionLevel = .passive
+        content.interruptionLevel = .active
         content.threadIdentifier = suggestionThreadIdentifier
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
