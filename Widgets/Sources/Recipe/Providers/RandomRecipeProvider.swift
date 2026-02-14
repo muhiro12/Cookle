@@ -1,6 +1,5 @@
 import CookleLibrary
 import SwiftData
-import UIKit
 import WidgetKit
 
 struct RandomRecipeProvider: AppIntentTimelineProvider {
@@ -8,21 +7,29 @@ struct RandomRecipeProvider: AppIntentTimelineProvider {
         .init(date: .now, titleText: "Random Recipe", image: nil)
     }
 
-    func snapshot(for _: ConfigurationAppIntent, in _: Context) -> RecipeEntry {
+    func snapshot(for _: ConfigurationAppIntent, in context: Context) -> RecipeEntry {
         do {
-            let context = try ModelContainerFactory.sharedContext()
-            return try makeEntry(date: .now, context: context)
+            let modelContext = try ModelContainerFactory.sharedContext()
+            return try makeEntry(
+                date: .now,
+                context: modelContext,
+                family: context.family
+            )
         } catch {
             return makeErrorEntry(date: .now)
         }
     }
 
-    func timeline(for _: ConfigurationAppIntent, in _: Context) -> Timeline<RecipeEntry> {
+    func timeline(for _: ConfigurationAppIntent, in context: Context) -> Timeline<RecipeEntry> {
         let now = Date.now
         let entry: RecipeEntry = {
             do {
-                let context = try ModelContainerFactory.sharedContext()
-                return try makeEntry(date: now, context: context)
+                let modelContext = try ModelContainerFactory.sharedContext()
+                return try makeEntry(
+                    date: now,
+                    context: modelContext,
+                    family: context.family
+                )
             } catch {
                 return makeErrorEntry(date: now)
             }
@@ -34,10 +41,13 @@ struct RandomRecipeProvider: AppIntentTimelineProvider {
         return .init(entries: [entry], policy: .after(nextRefreshDate))
     }
 
-    private func makeEntry(date: Date, context: ModelContext) throws -> RecipeEntry {
+    private func makeEntry(date: Date, context: ModelContext, family: WidgetFamily) throws -> RecipeEntry {
         if let recipe = try RecipeService.randomRecipe(context: context) {
             let photo = recipe.photoObjects?.min()?.photo
-            let image = photo.flatMap { UIImage(data: $0.data) }
+            let imageData = photo?.data
+            let image = imageData.flatMap {
+                RecipeWidgetImageLoader.makeImage(from: $0, family: family)
+            }
             return .init(date: date, titleText: recipe.name, image: image)
         }
         return .init(date: date, titleText: "No Recipes", image: nil)
