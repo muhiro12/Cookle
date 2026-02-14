@@ -25,6 +25,8 @@ struct CookleApp: App {
     private let sharedNotificationService: NotificationService
 
     init() {
+        DatabaseMigrator.migrateStoreFilesIfNeeded()
+
         sharedGoogleMobileAdsController = .init(
             adUnitID: {
                 #if DEBUG
@@ -40,6 +42,7 @@ struct CookleApp: App {
             for: .init(versionedSchema: CookleMigrationPlan.schemas[0]),
             migrationPlan: CookleMigrationPlan.self,
             configurations: .init(
+                url: Database.url,
                 cloudKitDatabase: CooklePreferences.bool(for: .isICloudOn) ? .automatic : .none
             )
         )

@@ -5,7 +5,9 @@ public enum ModelContainerFactory {
         try ModelContainer(
             for: .init(versionedSchema: CookleMigrationPlan.schemas[0]),
             migrationPlan: CookleMigrationPlan.self,
-            configurations: .init()
+            configurations: .init(
+                url: Database.url
+            )
         )
     }
 
