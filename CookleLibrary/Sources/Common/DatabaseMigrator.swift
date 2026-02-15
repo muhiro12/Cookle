@@ -1,8 +1,8 @@
 import Foundation
 
 public enum DatabaseMigrator {
-    public static func migrateStoreFilesIfNeeded() {
-        migrateStoreFilesIfNeeded(
+    public static func migrateStoreFilesIfNeeded() throws {
+        try migrateStoreFilesIfNeeded(
             fileManager: .default,
             legacyURL: Database.legacyURL,
             currentURL: Database.url
@@ -13,39 +13,51 @@ public enum DatabaseMigrator {
         fileManager: FileManager,
         legacyURL: URL,
         currentURL: URL
-    ) {
-        guard fileManager.fileExists(atPath: legacyURL.path),
-              !fileManager.fileExists(atPath: currentURL.path) else {
+    ) throws {
+        guard fileManager.fileExists(atPath: legacyURL.path) else {
+            return
+        }
+        guard !fileManager.fileExists(atPath: currentURL.path) else {
             return
         }
 
+        try fileManager.createDirectory(
+            at: currentURL.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+
+        let legacyDirectoryURL = legacyURL.deletingLastPathComponent()
+        let currentDirectoryURL = currentURL.deletingLastPathComponent()
+        let baseName = legacyURL.lastPathComponent
+
+        let candidateNames = try fileManager.contentsOfDirectory(atPath: legacyDirectoryURL.path)
+            .filter { name in
+                name == baseName || name.hasPrefix(baseName + "-")
+            }
+
+        let orderedCandidateNames = candidateNames
+            .filter { $0 != baseName }
+            .sorted()
+            + [baseName]
+        var copiedDestinationURLs = [URL]()
+
         do {
-            try fileManager.createDirectory(
-                at: currentURL.deletingLastPathComponent(),
-                withIntermediateDirectories: true
-            )
-
-            let legacyDirectoryURL = legacyURL.deletingLastPathComponent()
-            let baseName = legacyURL.lastPathComponent
-
-            let candidateNames = try fileManager.contentsOfDirectory(atPath: legacyDirectoryURL.path)
-                .filter { name in
-                    name == baseName || name.hasPrefix(baseName + "-")
-                }
-
-            for candidateName in candidateNames {
+            for candidateName in orderedCandidateNames {
                 let sourceURL = legacyDirectoryURL.appendingPathComponent(candidateName)
-                let destinationURL = currentURL.deletingLastPathComponent().appendingPathComponent(candidateName)
-                do {
-                    try fileManager.moveItem(at: sourceURL, to: destinationURL)
-                } catch {
-                    if !fileManager.fileExists(atPath: destinationURL.path) {
-                        try fileManager.copyItem(at: sourceURL, to: destinationURL)
-                    }
+                let destinationURL = currentDirectoryURL.appendingPathComponent(candidateName)
+
+                if fileManager.fileExists(atPath: destinationURL.path) {
+                    try fileManager.removeItem(at: destinationURL)
                 }
+
+                try fileManager.copyItem(at: sourceURL, to: destinationURL)
+                copiedDestinationURLs.append(destinationURL)
             }
         } catch {
-            assertionFailure("Store migration failed: \(error.localizedDescription)")
+            for destinationURL in copiedDestinationURLs.reversed() {
+                try? fileManager.removeItem(at: destinationURL)
+            }
+            throw error
         }
     }
 }

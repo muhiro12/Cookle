@@ -26,7 +26,11 @@ struct CookleApp: App {
     private let sharedNotificationService: NotificationService
 
     init() {
-        DatabaseMigrator.migrateStoreFilesIfNeeded()
+        do {
+            try DatabaseMigrator.migrateStoreFilesIfNeeded()
+        } catch {
+            fatalError("Store migration failed: \(error.localizedDescription)")
+        }
 
         sharedGoogleMobileAdsController = .init(
             adUnitID: {

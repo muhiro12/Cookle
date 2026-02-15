@@ -4,7 +4,7 @@ import Testing
 
 struct DatabaseMigratorTests {
     @Test
-    func migrateStoreFilesIfNeeded_moves_legacy_store_files_when_current_missing() throws {
+    func migrateStoreFilesIfNeeded_copies_legacy_store_files_when_current_missing() throws {
         let fileManager: FileManager = .default
         let baseDirectory = fileManager.temporaryDirectory.appendingPathComponent(
             UUID().uuidString,
@@ -28,7 +28,7 @@ struct DatabaseMigratorTests {
         #expect(fileManager.createFile(atPath: legacyDirectory.appendingPathComponent("\(storeFileName)-shm").path, contents: Data()))
         #expect(fileManager.createFile(atPath: legacyDirectory.appendingPathComponent("\(storeFileName)-wal").path, contents: Data()))
 
-        DatabaseMigrator.migrateStoreFilesIfNeeded(
+        try DatabaseMigrator.migrateStoreFilesIfNeeded(
             fileManager: fileManager,
             legacyURL: legacyURL,
             currentURL: currentURL
@@ -37,6 +37,9 @@ struct DatabaseMigratorTests {
         #expect(fileManager.fileExists(atPath: currentURL.path))
         #expect(fileManager.fileExists(atPath: currentDirectory.appendingPathComponent("\(storeFileName)-shm").path))
         #expect(fileManager.fileExists(atPath: currentDirectory.appendingPathComponent("\(storeFileName)-wal").path))
+        #expect(fileManager.fileExists(atPath: legacyURL.path))
+        #expect(fileManager.fileExists(atPath: legacyDirectory.appendingPathComponent("\(storeFileName)-shm").path))
+        #expect(fileManager.fileExists(atPath: legacyDirectory.appendingPathComponent("\(storeFileName)-wal").path))
     }
 
     @Test
@@ -63,7 +66,7 @@ struct DatabaseMigratorTests {
         #expect(fileManager.createFile(atPath: legacyURL.path, contents: Data()))
         #expect(fileManager.createFile(atPath: currentURL.path, contents: Data()))
 
-        DatabaseMigrator.migrateStoreFilesIfNeeded(
+        try DatabaseMigrator.migrateStoreFilesIfNeeded(
             fileManager: fileManager,
             legacyURL: legacyURL,
             currentURL: currentURL
