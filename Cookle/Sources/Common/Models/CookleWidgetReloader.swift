@@ -2,8 +2,12 @@ import CookleLibrary
 import WidgetKit
 
 enum CookleWidgetReloader {
+    static func reloadDiaryWidget() {
+        WidgetCenter.shared.reloadTimelines(ofKind: CookleWidgetKind.diary)
+    }
+
     static func reloadTodayDiaryWidget() {
-        WidgetCenter.shared.reloadTimelines(ofKind: CookleWidgetKind.todayDiary)
+        reloadDiaryWidget()
     }
 
     static func reloadRecipeWidget() {

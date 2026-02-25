@@ -1,6 +1,6 @@
 import WidgetKit
 
-struct TodayDiaryEntry: TimelineEntry {
+struct DiaryEntry: TimelineEntry {
     let date: Date
     let titleText: String
     let breakfastText: String

@@ -11,7 +11,7 @@ import WidgetKit
 @main
 struct WidgetsBundle: WidgetBundle {
     var body: some Widget {
-        CookleTodayDiaryWidget()
+        CookleDiaryWidget()
         CookleRecipeWidget()
     }
 }

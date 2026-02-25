@@ -8,9 +8,30 @@
 import AppIntents
 import WidgetKit
 
-struct ConfigurationAppIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource { "Configuration" }
-    static var description: IntentDescription { "Cookle widgets configuration." }
+enum DiaryWidgetMode: String, AppEnum {
+    case latest
+    case today
+    case random
+
+    static var typeDisplayRepresentation: TypeDisplayRepresentation {
+        .init(name: "Diary Mode")
+    }
+
+    static var caseDisplayRepresentations: [Self: DisplayRepresentation] {
+        [
+            .latest: .init(title: "Latest"),
+            .today: .init(title: "Today"),
+            .random: .init(title: "Random")
+        ]
+    }
+}
+
+struct DiaryConfigurationAppIntent: WidgetConfigurationIntent {
+    static var title: LocalizedStringResource { "Diary Configuration" }
+    static var description: IntentDescription { "Configure which diary to show." }
+
+    @Parameter(title: "Mode", default: .today)
+    var mode: DiaryWidgetMode
 }
 
 enum RecipeWidgetMode: String, AppEnum {

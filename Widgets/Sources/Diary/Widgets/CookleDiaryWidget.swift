@@ -2,22 +2,26 @@ import CookleLibrary
 import SwiftUI
 import WidgetKit
 
-struct CookleTodayDiaryWidget: Widget {
-    private let kind: String = CookleWidgetKind.todayDiary
+struct CookleDiaryWidget: Widget {
+    private let kind: String = CookleWidgetKind.diary
 
     var body: some WidgetConfiguration {
-        AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: TodayDiaryProvider()) { entry in
-            CookleTodayDiaryWidgetView(entry: entry)
+        AppIntentConfiguration(
+            kind: kind,
+            intent: DiaryConfigurationAppIntent.self,
+            provider: DiaryProvider()
+        ) { entry in
+            CookleDiaryWidgetView(entry: entry)
                 .widgetURL(CookleWidgetDeepLink.url(for: .diary))
         }
-        .configurationDisplayName("Today’s Meals")
-        .description("Shows today’s breakfast, lunch and dinner from your diary.")
+        .configurationDisplayName("Diary")
+        .description("Shows diary by mode: Latest, Today, or Random.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
 
-private struct CookleTodayDiaryWidgetView: View {
-    let entry: TodayDiaryEntry
+private struct CookleDiaryWidgetView: View {
+    let entry: DiaryEntry
     @Environment(\.widgetFamily) private var widgetFamily
 
     var body: some View {
@@ -125,9 +129,9 @@ private struct MealRow: View {
     }
 }
 #Preview("Small", as: .systemSmall) {
-    CookleTodayDiaryWidget()
+    CookleDiaryWidget()
 } timeline: {
-    TodayDiaryEntry(
+    DiaryEntry(
         date: .init(timeIntervalSince1970: 1_735_000_000),
         titleText: "Today’s Meals",
         breakfastText: "Avocado toast",
@@ -138,9 +142,9 @@ private struct MealRow: View {
 }
 
 #Preview("Medium", as: .systemMedium) {
-    CookleTodayDiaryWidget()
+    CookleDiaryWidget()
 } timeline: {
-    TodayDiaryEntry(
+    DiaryEntry(
         date: .init(timeIntervalSince1970: 1_735_000_000),
         titleText: "Today’s Meals",
         breakfastText: "Greek yogurt with berries",
