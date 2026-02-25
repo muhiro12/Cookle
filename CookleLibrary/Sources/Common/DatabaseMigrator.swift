@@ -9,6 +9,14 @@ public enum DatabaseMigrator {
         )
     }
 
+    public static func replaceCurrentStoreFilesWithLegacy() throws {
+        try replaceCurrentStoreFilesWithLegacy(
+            fileManager: .default,
+            legacyURL: Database.legacyURL,
+            currentURL: Database.url
+        )
+    }
+
     static func migrateStoreFilesIfNeeded(
         fileManager: FileManager,
         legacyURL: URL,
@@ -21,6 +29,39 @@ public enum DatabaseMigrator {
             return
         }
 
+        try copyStoreFiles(
+            fileManager: fileManager,
+            legacyURL: legacyURL,
+            currentURL: currentURL,
+            overwriteCurrent: false
+        )
+    }
+
+    static func replaceCurrentStoreFilesWithLegacy(
+        fileManager: FileManager,
+        legacyURL: URL,
+        currentURL: URL
+    ) throws {
+        guard fileManager.fileExists(atPath: legacyURL.path) else {
+            return
+        }
+
+        try copyStoreFiles(
+            fileManager: fileManager,
+            legacyURL: legacyURL,
+            currentURL: currentURL,
+            overwriteCurrent: true
+        )
+    }
+}
+
+private extension DatabaseMigrator {
+    static func copyStoreFiles(
+        fileManager: FileManager,
+        legacyURL: URL,
+        currentURL: URL,
+        overwriteCurrent: Bool
+    ) throws {
         try fileManager.createDirectory(
             at: currentURL.deletingLastPathComponent(),
             withIntermediateDirectories: true
@@ -34,6 +75,9 @@ public enum DatabaseMigrator {
             .filter { name in
                 name == baseName || name.hasPrefix(baseName + "-")
             }
+        guard !candidateNames.isEmpty else {
+            return
+        }
 
         let orderedCandidateNames = candidateNames
             .filter { $0 != baseName }
@@ -47,7 +91,11 @@ public enum DatabaseMigrator {
                 let destinationURL = currentDirectoryURL.appendingPathComponent(candidateName)
 
                 if fileManager.fileExists(atPath: destinationURL.path) {
-                    try fileManager.removeItem(at: destinationURL)
+                    if overwriteCurrent {
+                        try fileManager.removeItem(at: destinationURL)
+                    } else {
+                        continue
+                    }
                 }
 
                 try fileManager.copyItem(at: sourceURL, to: destinationURL)

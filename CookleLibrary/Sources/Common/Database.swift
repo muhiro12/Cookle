@@ -6,5 +6,5 @@ public enum Database {
         groupContainer: .identifier(AppGroup.id)
     ).url
 
-    static let legacyURL = ModelConfiguration().url
+    public static let legacyURL = ModelConfiguration().url
 }
