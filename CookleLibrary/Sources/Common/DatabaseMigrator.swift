@@ -9,8 +9,8 @@ public enum DatabaseMigrator {
         )
     }
 
-    public static func replaceCurrentStoreFilesWithLegacy() throws {
-        try replaceCurrentStoreFilesWithLegacy(
+    public static func removeLegacyStoreFilesIfNeeded() throws {
+        try removeLegacyStoreFilesIfNeeded(
             fileManager: .default,
             legacyURL: Database.legacyURL,
             currentURL: Database.url
@@ -22,29 +22,40 @@ public enum DatabaseMigrator {
         legacyURL: URL,
         currentURL: URL
     ) throws {
+        guard legacyURL != currentURL else {
+            return
+        }
         guard fileManager.fileExists(atPath: legacyURL.path) else {
             return
         }
-        guard !fileManager.fileExists(atPath: currentURL.path) else {
-            return
-        }
 
-        try copyStoreFiles(
+        let legacyStoreCandidateNames = try storeCandidateNames(
             fileManager: fileManager,
-            legacyURL: legacyURL,
-            currentURL: currentURL,
-            overwriteCurrent: false
+            storeURL: legacyURL
         )
-    }
-
-    static func replaceCurrentStoreFilesWithLegacy(
-        fileManager: FileManager,
-        legacyURL: URL,
-        currentURL: URL
-    ) throws {
-        guard fileManager.fileExists(atPath: legacyURL.path) else {
+        guard !legacyStoreCandidateNames.isEmpty else {
             return
         }
+
+        try fileManager.createDirectory(
+            at: currentURL.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+
+        let currentStoreCandidateNames = try storeCandidateNames(
+            fileManager: fileManager,
+            storeURL: currentURL
+        )
+
+        // Make retries deterministic by clearing current candidates first.
+        try removeStoreFilesIfExists(
+            fileManager: fileManager,
+            storeURL: currentURL,
+            candidateNames: mergedCandidateNames(
+                primaryCandidateNames: legacyStoreCandidateNames,
+                secondaryCandidateNames: currentStoreCandidateNames
+            )
+        )
 
         try copyStoreFiles(
             fileManager: fileManager,
@@ -53,9 +64,52 @@ public enum DatabaseMigrator {
             overwriteCurrent: true
         )
     }
+
+    static func removeLegacyStoreFilesIfNeeded(
+        fileManager: FileManager,
+        legacyURL: URL,
+        currentURL: URL
+    ) throws {
+        guard legacyURL != currentURL else {
+            return
+        }
+        guard fileManager.fileExists(atPath: legacyURL.path) else {
+            return
+        }
+
+        let candidateNames = try storeCandidateNames(
+            fileManager: fileManager,
+            storeURL: legacyURL
+        )
+        guard !candidateNames.isEmpty else {
+            return
+        }
+
+        try removeStoreFilesIfExists(
+            fileManager: fileManager,
+            storeURL: legacyURL,
+            candidateNames: candidateNames
+        )
+    }
 }
 
 private extension DatabaseMigrator {
+    static func storeCandidateNames(
+        fileManager: FileManager,
+        storeURL: URL
+    ) throws -> [String] {
+        let storeDirectoryURL = storeURL.deletingLastPathComponent()
+        let baseName = storeURL.lastPathComponent
+        let candidateNames = try fileManager.contentsOfDirectory(atPath: storeDirectoryURL.path)
+            .filter { name in
+                name == baseName || name.hasPrefix(baseName + "-")
+            }
+        return candidateNames
+            .filter { $0 != baseName }
+            .sorted()
+            + [baseName]
+    }
+
     static func copyStoreFiles(
         fileManager: FileManager,
         legacyURL: URL,
@@ -69,24 +123,19 @@ private extension DatabaseMigrator {
 
         let legacyDirectoryURL = legacyURL.deletingLastPathComponent()
         let currentDirectoryURL = currentURL.deletingLastPathComponent()
-        let baseName = legacyURL.lastPathComponent
 
-        let candidateNames = try fileManager.contentsOfDirectory(atPath: legacyDirectoryURL.path)
-            .filter { name in
-                name == baseName || name.hasPrefix(baseName + "-")
-            }
+        let candidateNames = try storeCandidateNames(
+            fileManager: fileManager,
+            storeURL: legacyURL
+        )
         guard !candidateNames.isEmpty else {
             return
         }
 
-        let orderedCandidateNames = candidateNames
-            .filter { $0 != baseName }
-            .sorted()
-            + [baseName]
         var copiedDestinationURLs = [URL]()
 
         do {
-            for candidateName in orderedCandidateNames {
+            for candidateName in candidateNames {
                 let sourceURL = legacyDirectoryURL.appendingPathComponent(candidateName)
                 let destinationURL = currentDirectoryURL.appendingPathComponent(candidateName)
 
@@ -107,5 +156,31 @@ private extension DatabaseMigrator {
             }
             throw error
         }
+    }
+
+    static func removeStoreFilesIfExists(
+        fileManager: FileManager,
+        storeURL: URL,
+        candidateNames: [String]
+    ) throws {
+        let storeDirectoryURL = storeURL.deletingLastPathComponent()
+
+        for candidateName in candidateNames {
+            let fileURL = storeDirectoryURL.appendingPathComponent(candidateName)
+            guard fileManager.fileExists(atPath: fileURL.path) else {
+                continue
+            }
+            try fileManager.removeItem(at: fileURL)
+        }
+    }
+
+    static func mergedCandidateNames(
+        primaryCandidateNames: [String],
+        secondaryCandidateNames: [String]
+    ) -> [String] {
+        Array(
+            Set(primaryCandidateNames).union(secondaryCandidateNames)
+        )
+        .sorted()
     }
 }

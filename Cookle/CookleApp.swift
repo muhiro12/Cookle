@@ -32,22 +32,15 @@ struct CookleApp: App {
 
         do {
             try DatabaseMigrator.migrateStoreFilesIfNeeded()
-
-            var modelContainer = try Self.makeModelContainer(
+            let modelContainer = try Self.makeModelContainer(
                 url: Database.url,
                 cloudKitDatabase: cloudKitDatabase
             )
-
-            if try Self.shouldRecoverLegacyStore(
+            try Self.validateMigratedDataBeforeDeletingLegacyIfNeeded(
                 currentContainer: modelContainer,
                 cloudKitDatabase: cloudKitDatabase
-            ) {
-                try DatabaseMigrator.replaceCurrentStoreFilesWithLegacy()
-                modelContainer = try Self.makeModelContainer(
-                    url: Database.url,
-                    cloudKitDatabase: cloudKitDatabase
-                )
-            }
+            )
+            try DatabaseMigrator.removeLegacyStoreFilesIfNeeded()
 
             sharedModelContainer = modelContainer
         } catch {
@@ -128,49 +121,82 @@ private extension CookleApp {
         )
     }
 
-    static func shouldRecoverLegacyStore(
+    static func validateMigratedDataBeforeDeletingLegacyIfNeeded(
         currentContainer: ModelContainer,
         cloudKitDatabase: ModelConfiguration.CloudKitDatabase
-    ) throws -> Bool {
+    ) throws {
         let fileManager: FileManager = .default
         guard Database.legacyURL != Database.url else {
-            return false
+            return
         }
         guard fileManager.fileExists(atPath: Database.legacyURL.path) else {
-            return false
-        }
-        guard try !containsUserData(in: currentContainer) else {
-            return false
+            return
         }
 
-        let legacyContainer: ModelContainer
-        do {
-            legacyContainer = try makeModelContainer(
-                url: Database.legacyURL,
-                cloudKitDatabase: cloudKitDatabase
+        let legacyContainer = try makeModelContainer(
+            url: Database.legacyURL,
+            cloudKitDatabase: cloudKitDatabase
+        )
+        let legacyObjectCounts = try objectCounts(in: legacyContainer.mainContext)
+        let currentObjectCounts = try objectCounts(in: currentContainer.mainContext)
+        guard currentObjectCounts.hasMatchingRecipeAndDiaryCounts(as: legacyObjectCounts) else {
+            throw MigrationValidationError.recipeAndDiaryCountMismatch(
+                legacyObjectCounts: legacyObjectCounts,
+                currentObjectCounts: currentObjectCounts
             )
-        } catch {
-            return false
         }
-
-        return try containsUserData(in: legacyContainer)
     }
 
-    static func containsUserData(in container: ModelContainer) throws -> Bool {
-        let context = container.mainContext
-        return try hasAnyObjects(in: context, Recipe.self)
-            || hasAnyObjects(in: context, Diary.self)
-            || hasAnyObjects(in: context, Category.self)
-            || hasAnyObjects(in: context, Ingredient.self)
-            || hasAnyObjects(in: context, Photo.self)
+    static func objectCounts(in context: ModelContext) throws -> MigrationObjectCounts {
+        try .init(
+            recipeCount: count(in: context, Recipe.self),
+            diaryCount: count(in: context, Diary.self),
+            categoryCount: count(in: context, Category.self),
+            ingredientCount: count(in: context, Ingredient.self),
+            photoCount: count(in: context, Photo.self)
+        )
     }
 
-    static func hasAnyObjects<Model: PersistentModel>(
+    static func count<Model: PersistentModel>(
         in context: ModelContext,
         _: Model.Type
-    ) throws -> Bool {
-        var descriptor: FetchDescriptor<Model> = .init()
-        descriptor.fetchLimit = 1
-        return try !context.fetch(descriptor).isEmpty
+    ) throws -> Int {
+        let fetchDescriptor: FetchDescriptor<Model> = .init()
+        return try context.fetchCount(fetchDescriptor)
+    }
+}
+
+private struct MigrationObjectCounts {
+    let recipeCount: Int
+    let diaryCount: Int
+    let categoryCount: Int
+    let ingredientCount: Int
+    let photoCount: Int
+
+    nonisolated func hasMatchingRecipeAndDiaryCounts(as legacyObjectCounts: Self) -> Bool {
+        recipeCount == legacyObjectCounts.recipeCount
+            && diaryCount == legacyObjectCounts.diaryCount
+    }
+
+    nonisolated var summary: String {
+        "recipe=\(recipeCount), diary=\(diaryCount), category=\(categoryCount), ingredient=\(ingredientCount), photo=\(photoCount)"
+    }
+}
+
+private enum MigrationValidationError: LocalizedError {
+    case recipeAndDiaryCountMismatch(
+            legacyObjectCounts: MigrationObjectCounts,
+            currentObjectCounts: MigrationObjectCounts
+         )
+
+    var errorDescription: String? {
+        switch self {
+        case .recipeAndDiaryCountMismatch(let legacyObjectCounts, let currentObjectCounts):
+            return """
+            Migrated store validation failed. \
+            legacy[\(legacyObjectCounts.summary)] \
+            current[\(currentObjectCounts.summary)]
+            """
+        }
     }
 }
