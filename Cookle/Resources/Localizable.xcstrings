@@ -7,9 +7,6 @@
     "*" : {
       "shouldTranslate" : false
     },
-    "%lld." : {
-
-    },
     "2" : {
       "shouldTranslate" : false
     },
@@ -983,40 +980,6 @@
         }
       }
     },
-    "Daily random recipe suggestions" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Daily random recipe suggestions"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sugerencias diarias de recetas aleatorias"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Suggestions quotidiennes de recettes aléatoires"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "毎日のランダムレシピ提案"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "每日随机食谱推荐"
-          }
-        }
-      }
-    },
     "Daily recipe suggestions" : {
       "localizations" : {
         "en" : {
@@ -1047,40 +1010,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "每日食谱推荐"
-          }
-        }
-      }
-    },
-    "Daily suggestions & Premium" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Daily suggestions & Premium"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sugerencias diarias y Premium"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Suggestions quotidiennes et Premium"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "毎日の提案とプレミアム"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "每日推荐与高级功能"
           }
         }
       }
@@ -1662,40 +1591,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "编辑中…"
-          }
-        }
-      }
-    },
-    "Enable them in Settings to receive a random recipe at your chosen time each day." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enable them in Settings to receive a random recipe at your chosen time each day."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Actívalas en Ajustes para recibir una receta aleatoria cada día a la hora que elijas."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activez-les dans Réglages pour recevoir chaque jour une recette aléatoire à l’heure de votre choix."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "設定で有効にすると、毎日選んだ時間にランダムなレシピを受け取れます。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在“设置”中启用后，你可以每天在指定时间收到一份随机食谱。"
           }
         }
       }
@@ -2866,40 +2761,6 @@
         }
       }
     },
-    "Plan meals with diaries" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Plan meals with diaries"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Planifica comidas con diarios"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Planifiez les repas avec les journaux"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "日記で食事を計画"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "用日记规划餐食"
-          }
-        }
-      }
-    },
     "Please enter a search term" : {
       "localizations" : {
         "en" : {
@@ -2964,40 +2825,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "要继续使用，请将 Cookle 更新到最新版本。"
-          }
-        }
-      }
-    },
-    "Premium options" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Premium options"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Opciones Premium"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Options Premium"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "プレミアム機能"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "高级功能"
           }
         }
       }
@@ -3243,40 +3070,6 @@
         }
       }
     },
-    "Remove ads across the app" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remove ads across the app"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eliminar anuncios en toda la app"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Supprimer les publicités dans toute l’app"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "アプリ全体の広告を非表示"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "移除应用内所有广告"
-          }
-        }
-      }
-    },
     "Result" : {
       "localizations" : {
         "en" : {
@@ -3307,74 +3100,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "结果"
-          }
-        }
-      }
-    },
-    "Save recipes quickly" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Save recipes quickly"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Guarda recetas rápidamente"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enregistrez des recettes rapidement"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピをすばやく保存"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "快速保存食谱"
-          }
-        }
-      }
-    },
-    "Save recipes, plan daily meals, and find what to cook faster." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Save recipes, plan daily meals, and find what to cook faster."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Guarda recetas, planifica las comidas diarias y encuentra qué cocinar más rápido."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enregistrez des recettes, planifiez les repas quotidiens et trouvez plus vite quoi cuisiner."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピを保存し、毎日の献立を計画して、作る料理をすばやく見つけましょう。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "保存食谱、规划每日餐食，更快找到要做的菜。"
           }
         }
       }
@@ -3511,40 +3236,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "搜索文本"
-          }
-        }
-      }
-    },
-    "See recipe details at a glance" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "See recipe details at a glance"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Consulta los detalles de la receta de un vistazo"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Consultez les détails de la recette d’un coup d’œil"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピ詳細をひと目で確認"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "一目了然查看食谱详情"
           }
         }
       }
@@ -3790,40 +3481,6 @@
     "Show Today's Diary" : {
 
     },
-    "Skip for Now" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Skip for Now"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Omitir por ahora"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Passer pour le moment"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "今はスキップ"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "暂时跳过"
-          }
-        }
-      }
-    },
     "Spaghetti" : {
       "localizations" : {
         "en" : {
@@ -3960,40 +3617,6 @@
         }
       }
     },
-    "Start Cooking" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Start Cooking"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Empezar a cocinar"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Commencer à cuisiner"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "料理を始める"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "开始烹饪"
-          }
-        }
-      }
-    },
     "Steps" : {
       "localizations" : {
         "en" : {
@@ -4058,40 +3681,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "订阅"
-          }
-        }
-      }
-    },
-    "Sync data with iCloud" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sync data with iCloud"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sincronizar datos con iCloud"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Synchroniser les données avec iCloud"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "iCloudでデータを同期"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用 iCloud 同步数据"
           }
         }
       }
@@ -4398,108 +3987,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "值"
-          }
-        }
-      }
-    },
-    "View App Introduction Again" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "View App Introduction Again"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ver de nuevo la introducción de la app"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Revoir l’introduction de l’app"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "アプリ紹介をもう一度見る"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "再次查看应用介绍"
-          }
-        }
-      }
-    },
-    "Welcome" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Welcome"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bienvenido"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bienvenue"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ようこそ"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "欢迎"
-          }
-        }
-      }
-    },
-    "Welcome to Cookle" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Welcome to Cookle"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bienvenido a Cookle"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bienvenue sur Cookle"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cookleへようこそ"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "欢迎使用 Cookle"
           }
         }
       }
