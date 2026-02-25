@@ -15,7 +15,7 @@ struct CookleDiaryWidget: Widget {
                 .widgetURL(CookleWidgetDeepLink.url(for: .diary))
         }
         .configurationDisplayName("Diary")
-        .description("Shows diary by mode: Latest, Today, or Random.")
+        .description("Shows diary by selection: Latest, Today, or Random.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }

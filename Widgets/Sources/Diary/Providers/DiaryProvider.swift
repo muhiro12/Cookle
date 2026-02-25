@@ -20,7 +20,7 @@ struct DiaryProvider: AppIntentTimelineProvider {
             return try makeEntry(
                 date: .now,
                 context: modelContext,
-                mode: configuration.mode
+                selection: configuration.selection
             )
         } catch {
             return makeErrorEntry(date: .now)
@@ -35,22 +35,22 @@ struct DiaryProvider: AppIntentTimelineProvider {
                 return try makeEntry(
                     date: now,
                     context: modelContext,
-                    mode: configuration.mode
+                    selection: configuration.selection
                 )
             } catch {
                 return makeErrorEntry(date: now)
             }
         }()
 
-        let nextRefreshDate = timelineRefreshDate(date: now, mode: configuration.mode)
+        let nextRefreshDate = timelineRefreshDate(date: now, selection: configuration.selection)
         return .init(entries: [entry], policy: .after(nextRefreshDate))
     }
 }
 
 private extension DiaryProvider {
-    func makeEntry(date: Date, context: ModelContext, mode: DiaryWidgetMode) throws -> DiaryEntry {
-        guard let diary = try diary(for: mode, date: date, context: context) else {
-            return makeEmptyEntry(date: date, mode: mode)
+    func makeEntry(date: Date, context: ModelContext, selection: DiaryWidgetSelection) throws -> DiaryEntry {
+        guard let diary = try diary(for: selection, date: date, context: context) else {
+            return makeEmptyEntry(date: date, selection: selection)
         }
         return .init(
             date: date,
@@ -62,8 +62,8 @@ private extension DiaryProvider {
         )
     }
 
-    func diary(for mode: DiaryWidgetMode, date: Date, context: ModelContext) throws -> Diary? {
-        switch mode {
+    func diary(for selection: DiaryWidgetSelection, date: Date, context: ModelContext) throws -> Diary? {
+        switch selection {
         case .latest:
             return try latestDiary(context: context)
         case .today:
@@ -90,8 +90,8 @@ private extension DiaryProvider {
         return diaries.randomElement()
     }
 
-    func timelineRefreshDate(date: Date, mode: DiaryWidgetMode) -> Date {
-        switch mode {
+    func timelineRefreshDate(date: Date, selection: DiaryWidgetSelection) -> Date {
+        switch selection {
         case .today:
             return Calendar.current.startOfDay(for: date).addingTimeInterval(24 * 60 * 60)
         case .latest,
@@ -115,9 +115,9 @@ private extension DiaryProvider {
         return meals.first ?? "—"
     }
 
-    func makeEmptyEntry(date: Date, mode: DiaryWidgetMode) -> DiaryEntry {
+    func makeEmptyEntry(date: Date, selection: DiaryWidgetSelection) -> DiaryEntry {
         let titleText: String
-        switch mode {
+        switch selection {
         case .today:
             titleText = date.formatted(.dateTime.year().month().day().weekday())
         case .latest,

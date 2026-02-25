@@ -14,7 +14,7 @@ struct RecipeProvider: AppIntentTimelineProvider {
                 date: .now,
                 context: modelContext,
                 family: context.family,
-                mode: configuration.mode
+                selection: configuration.selection
             )
         } catch {
             return makeErrorEntry(date: .now)
@@ -30,7 +30,7 @@ struct RecipeProvider: AppIntentTimelineProvider {
                     date: now,
                     context: modelContext,
                     family: context.family,
-                    mode: configuration.mode
+                    selection: configuration.selection
                 )
             } catch {
                 return makeErrorEntry(date: now)
@@ -48,8 +48,8 @@ private extension RecipeProvider {
     func makeEntry(date: Date,
                    context: ModelContext,
                    family: WidgetFamily,
-                   mode: RecipeWidgetMode) throws -> RecipeEntry {
-        if let recipe = try recipe(for: mode, context: context) {
+                   selection: RecipeWidgetSelection) throws -> RecipeEntry {
+        if let recipe = try recipe(for: selection, context: context) {
             let photo = recipe.photoObjects?.min()?.photo
             let imageData = photo?.data
             let image = imageData.flatMap {
@@ -57,11 +57,11 @@ private extension RecipeProvider {
             }
             return .init(date: date, titleText: recipe.name, image: image)
         }
-        return .init(date: date, titleText: emptyTitle(for: mode), image: nil)
+        return .init(date: date, titleText: emptyTitle(for: selection), image: nil)
     }
 
-    func recipe(for mode: RecipeWidgetMode, context: ModelContext) throws -> Recipe? {
-        switch mode {
+    func recipe(for selection: RecipeWidgetSelection, context: ModelContext) throws -> Recipe? {
+        switch selection {
         case .latest:
             return try latestRecipe(context: context)
         case .lastOpened:
@@ -82,8 +82,8 @@ private extension RecipeProvider {
         return try context.fetch(descriptor).first
     }
 
-    func emptyTitle(for mode: RecipeWidgetMode) -> String {
-        switch mode {
+    func emptyTitle(for selection: RecipeWidgetSelection) -> String {
+        switch selection {
         case .lastOpened:
             return "Not Found"
         case .latest,

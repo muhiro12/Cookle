@@ -8,13 +8,13 @@
 import AppIntents
 import WidgetKit
 
-enum DiaryWidgetMode: String, AppEnum {
+enum DiaryWidgetSelection: String, AppEnum {
     case today
     case latest
     case random
 
     static var typeDisplayRepresentation: TypeDisplayRepresentation {
-        .init(name: "Diary Mode")
+        .init(name: "Diary Selection")
     }
 
     static var caseDisplayRepresentations: [Self: DisplayRepresentation] {
@@ -30,17 +30,17 @@ struct DiaryConfigurationAppIntent: WidgetConfigurationIntent {
     static var title: LocalizedStringResource { "Diary Configuration" }
     static var description: IntentDescription { "Configure which diary to show." }
 
-    @Parameter(title: "Mode", default: .today)
-    var mode: DiaryWidgetMode
+    @Parameter(title: "Selection", default: .today)
+    var selection: DiaryWidgetSelection
 }
 
-enum RecipeWidgetMode: String, AppEnum {
+enum RecipeWidgetSelection: String, AppEnum {
     case lastOpened
     case latest
     case random
 
     static var typeDisplayRepresentation: TypeDisplayRepresentation {
-        .init(name: "Recipe Mode")
+        .init(name: "Recipe Selection")
     }
 
     static var caseDisplayRepresentations: [Self: DisplayRepresentation] {
@@ -56,6 +56,6 @@ struct RecipeConfigurationAppIntent: WidgetConfigurationIntent {
     static var title: LocalizedStringResource { "Recipe Configuration" }
     static var description: IntentDescription { "Configure which recipe to show." }
 
-    @Parameter(title: "Mode", default: .lastOpened)
-    var mode: RecipeWidgetMode
+    @Parameter(title: "Selection", default: .lastOpened)
+    var selection: RecipeWidgetSelection
 }
