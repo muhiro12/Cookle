@@ -9,8 +9,8 @@ import AppIntents
 import WidgetKit
 
 enum DiaryWidgetMode: String, AppEnum {
-    case latest
     case today
+    case latest
     case random
 
     static var typeDisplayRepresentation: TypeDisplayRepresentation {
@@ -19,8 +19,8 @@ enum DiaryWidgetMode: String, AppEnum {
 
     static var caseDisplayRepresentations: [Self: DisplayRepresentation] {
         [
-            .latest: .init(title: "Latest"),
             .today: .init(title: "Today"),
+            .latest: .init(title: "Latest"),
             .random: .init(title: "Random")
         ]
     }
@@ -35,8 +35,8 @@ struct DiaryConfigurationAppIntent: WidgetConfigurationIntent {
 }
 
 enum RecipeWidgetMode: String, AppEnum {
-    case latest
     case lastOpened
+    case latest
     case random
 
     static var typeDisplayRepresentation: TypeDisplayRepresentation {
@@ -45,8 +45,8 @@ enum RecipeWidgetMode: String, AppEnum {
 
     static var caseDisplayRepresentations: [Self: DisplayRepresentation] {
         [
-            .latest: .init(title: "Latest"),
             .lastOpened: .init(title: "Last Opened"),
+            .latest: .init(title: "Latest"),
             .random: .init(title: "Random")
         ]
     }
@@ -56,6 +56,6 @@ struct RecipeConfigurationAppIntent: WidgetConfigurationIntent {
     static var title: LocalizedStringResource { "Recipe Configuration" }
     static var description: IntentDescription { "Configure which recipe to show." }
 
-    @Parameter(title: "Mode", default: .random)
+    @Parameter(title: "Mode", default: .lastOpened)
     var mode: RecipeWidgetMode
 }
