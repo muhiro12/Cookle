@@ -5,25 +5,18 @@
 //  Created by Hiromu Nakano on 2024/05/27.
 //
 
-import SwiftData
 import SwiftUI
 
 struct MainView: View {
-    @Environment(\.modelContext) private var context
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.requestReview) private var requestReview
     @Environment(ConfigurationService.self) private var configurationService
 
-    @State private var hasLoaded = false
-    @State private var isIntroductionPresented = false
     @State private var isUpdateAlertPresented = false
     @State private var selectedTab = MainTab.diary
 
     var body: some View {
         MainTabView(selection: $selectedTab)
-            .sheet(isPresented: $isIntroductionPresented) {
-                IntroductionNavigationView()
-            }
             .alert(Text("Update Required"), isPresented: $isUpdateAlertPresented) {
                 Button {
                     UIApplication.shared.open(
@@ -36,10 +29,6 @@ struct MainView: View {
                 Text("Please update Cookle to the latest version to continue using it.")
             }
             .task {
-                if !hasLoaded {
-                    hasLoaded = true
-                    isIntroductionPresented = shouldPresentIntroduction()
-                }
                 try? await configurationService.load()
                 isUpdateAlertPresented = configurationService.isUpdateRequired()
             }
@@ -74,18 +63,6 @@ private extension MainView {
             return .diary
         case .recipe:
             return .recipe
-        }
-    }
-
-    func shouldPresentIntroduction() -> Bool {
-        do {
-            let recipeCount = try context.fetchCount(
-                FetchDescriptor<Recipe>()
-            )
-            return recipeCount.isZero
-        } catch {
-            assertionFailure(error.localizedDescription)
-            return false
         }
     }
 }
