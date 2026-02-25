@@ -6,12 +6,15 @@ enum CookleWidgetReloader {
         WidgetCenter.shared.reloadTimelines(ofKind: CookleWidgetKind.todayDiary)
     }
 
+    static func reloadRecipeWidget() {
+        WidgetCenter.shared.reloadTimelines(ofKind: CookleWidgetKind.recipe)
+    }
+
     static func reloadRecipeWidgets() {
-        WidgetCenter.shared.reloadTimelines(ofKind: CookleWidgetKind.randomRecipe)
-        WidgetCenter.shared.reloadTimelines(ofKind: CookleWidgetKind.lastOpenedRecipe)
+        reloadRecipeWidget()
     }
 
     static func reloadLastOpenedRecipeWidget() {
-        WidgetCenter.shared.reloadTimelines(ofKind: CookleWidgetKind.lastOpenedRecipe)
+        reloadRecipeWidget()
     }
 }

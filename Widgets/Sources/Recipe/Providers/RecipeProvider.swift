@@ -1,0 +1,98 @@
+import CookleLibrary
+import SwiftData
+import WidgetKit
+
+struct RecipeProvider: AppIntentTimelineProvider {
+    func placeholder(in _: Context) -> RecipeEntry {
+        .init(date: .now, titleText: "Recipe", image: nil)
+    }
+
+    func snapshot(for configuration: RecipeConfigurationAppIntent, in context: Context) -> RecipeEntry {
+        do {
+            let modelContext = try ModelContainerFactory.sharedContext()
+            return try makeEntry(
+                date: .now,
+                context: modelContext,
+                family: context.family,
+                mode: configuration.mode
+            )
+        } catch {
+            return makeErrorEntry(date: .now)
+        }
+    }
+
+    func timeline(for configuration: RecipeConfigurationAppIntent, in context: Context) -> Timeline<RecipeEntry> {
+        let now = Date.now
+        let entry: RecipeEntry = {
+            do {
+                let modelContext = try ModelContainerFactory.sharedContext()
+                return try makeEntry(
+                    date: now,
+                    context: modelContext,
+                    family: context.family,
+                    mode: configuration.mode
+                )
+            } catch {
+                return makeErrorEntry(date: now)
+            }
+        }()
+
+        guard let nextRefreshDate = Calendar.current.date(byAdding: .hour, value: 6, to: now) else {
+            return .init(entries: [entry], policy: .atEnd)
+        }
+        return .init(entries: [entry], policy: .after(nextRefreshDate))
+    }
+}
+
+private extension RecipeProvider {
+    func makeEntry(date: Date,
+                   context: ModelContext,
+                   family: WidgetFamily,
+                   mode: RecipeWidgetMode) throws -> RecipeEntry {
+        if let recipe = try recipe(for: mode, context: context) {
+            let photo = recipe.photoObjects?.min()?.photo
+            let imageData = photo?.data
+            let image = imageData.flatMap {
+                RecipeWidgetImageLoader.makeImage(from: $0, family: family)
+            }
+            return .init(date: date, titleText: recipe.name, image: image)
+        }
+        return .init(date: date, titleText: emptyTitle(for: mode), image: nil)
+    }
+
+    func recipe(for mode: RecipeWidgetMode, context: ModelContext) throws -> Recipe? {
+        switch mode {
+        case .latest:
+            return try latestRecipe(context: context)
+        case .lastOpened:
+            return try RecipeService.lastOpenedRecipe(context: context)
+        case .random:
+            return try RecipeService.randomRecipe(context: context)
+        }
+    }
+
+    func latestRecipe(context: ModelContext) throws -> Recipe? {
+        let descriptor: FetchDescriptor<Recipe> = .init(
+            sortBy: [
+                .init(\.modifiedTimestamp, order: .reverse),
+                .init(\.createdTimestamp, order: .reverse),
+                .init(\.name)
+            ]
+        )
+        return try context.fetch(descriptor).first
+    }
+
+    func emptyTitle(for mode: RecipeWidgetMode) -> String {
+        switch mode {
+        case .lastOpened:
+            return "Not Found"
+        case .latest,
+             .random:
+            return "No Recipes"
+        }
+    }
+
+    func makeErrorEntry(date: Date) -> RecipeEntry {
+        .init(date: date, titleText: "Error", image: nil)
+    }
+}

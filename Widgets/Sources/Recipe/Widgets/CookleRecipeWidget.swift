@@ -2,21 +2,25 @@ import CookleLibrary
 import SwiftUI
 import WidgetKit
 
-struct CookleLastOpenedRecipeWidget: Widget {
-    private let kind: String = CookleWidgetKind.lastOpenedRecipe
+struct CookleRecipeWidget: Widget {
+    private let kind: String = CookleWidgetKind.recipe
 
     var body: some WidgetConfiguration {
-        AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: LastOpenedRecipeProvider()) { entry in
-            CookleLastOpenedRecipeWidgetView(entry: entry)
+        AppIntentConfiguration(
+            kind: kind,
+            intent: RecipeConfigurationAppIntent.self,
+            provider: RecipeProvider()
+        ) { entry in
+            CookleRecipeWidgetView(entry: entry)
                 .widgetURL(CookleWidgetDeepLink.url(for: .recipe))
         }
-        .configurationDisplayName("Last Opened Recipe")
-        .description("Shows the recipe you opened most recently.")
+        .configurationDisplayName("Recipe")
+        .description("Shows a recipe by mode: Latest, Last Opened, or Random.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
 
-private struct CookleLastOpenedRecipeWidgetView: View {
+private struct CookleRecipeWidgetView: View {
     let entry: RecipeEntry
     @Environment(\.widgetFamily) private var widgetFamily
 
@@ -99,24 +103,24 @@ private struct RecipeTitleBadge: View {
 }
 
 #Preview("Small", as: .systemSmall) {
-    CookleLastOpenedRecipeWidget()
+    CookleRecipeWidget()
 } timeline: {
     let image: UIImage? = nil
     let entry: RecipeEntry = .init(
         date: .init(timeIntervalSince1970: 1_735_000_000),
-        titleText: "Pan-Seared Salmon",
+        titleText: "Herb Omelette",
         image: image
     )
     entry
 }
 
 #Preview("Medium", as: .systemMedium) {
-    CookleLastOpenedRecipeWidget()
+    CookleRecipeWidget()
 } timeline: {
     let image: UIImage? = nil
     let entry: RecipeEntry = .init(
         date: .init(timeIntervalSince1970: 1_735_000_000),
-        titleText: "Miso Soup with Grilled Fish",
+        titleText: "Vegetable Curry with Coconut Milk",
         image: image
     )
     entry
