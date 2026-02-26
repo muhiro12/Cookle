@@ -8,6 +8,8 @@ struct DebugSidebarView: View {
 
     @Binding private var content: DebugContent?
 
+    @State private var previewStore = CooklePreviewStore()
+    @State private var isCreatingPreviewDiaries = false
     @State private var isAlertPresented = false
 
     init(selection: Binding<DebugContent?> = .constant(nil)) {
@@ -25,6 +27,7 @@ struct DebugSidebarView: View {
                 Button("Create Preview Diaries", systemImage: "flask") {
                     isAlertPresented = true
                 }
+                .disabled(isCreatingPreviewDiaries)
             } header: {
                 Text("Manage")
             }
@@ -76,20 +79,36 @@ struct DebugSidebarView: View {
             isPresented: $isAlertPresented
         ) {
             Button(role: .destructive) {
-                do {
-                    _ = try CooklePreviewStore().createPreviewDiaries(context)
-                } catch {
-                    assertionFailure("Failed to create preview diaries: \(error.localizedDescription)")
+                guard !isCreatingPreviewDiaries else {
+                    return
+                }
+                Task {
+                    await createPreviewDiaries()
                 }
             } label: {
                 Text("Create")
             }
+            .disabled(isCreatingPreviewDiaries)
             Button(role: .cancel) {
             } label: {
                 Text("Cancel")
             }
         } message: {
             Text("Are you really going to create Preview Diary?")
+        }
+    }
+
+    @MainActor
+    private func createPreviewDiaries() async {
+        isCreatingPreviewDiaries = true
+        defer {
+            isCreatingPreviewDiaries = false
+        }
+
+        do {
+            _ = try await previewStore.createPreviewDiariesWithRemoteImages(context)
+        } catch {
+            assertionFailure("Failed to create preview diaries: \(error.localizedDescription)")
         }
     }
 }

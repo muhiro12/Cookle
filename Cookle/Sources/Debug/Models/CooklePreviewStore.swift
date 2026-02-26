@@ -5,11 +5,20 @@
 //  Created by Hiromu Nakano on 2024/06/05.
 //
 
+import Foundation
 import SwiftData
 import SwiftUI
 
 final class CooklePreviewStore {
     private var hasPreparedPreviewData = false
+    private var remotePhotoDataCache = [SamplePhotoAsset: Data]()
+
+    private let remoteImageSession: URLSession = {
+        let configuration: URLSessionConfiguration = .ephemeral
+        configuration.timeoutIntervalForRequest = 5
+        configuration.timeoutIntervalForResource = 10
+        return .init(configuration: configuration)
+    }()
 
     func prepare(_ context: ModelContext) {
         if !hasPreparedPreviewData {
@@ -23,11 +32,44 @@ final class CooklePreviewStore {
     }
 
     func createPreviewDiaries(_ context: ModelContext) throws -> [Diary] {
-        let pancakes = try cookPancakes(context)
-        let chickenStirFry = try cookChickenStirFry(context)
-        let vegetableSoup = try cookVegetableSoup(context)
-        let spaghettiCarbonara = try cookSpaghettiCarbonara(context)
-        let beefStew = try cookBeefStew(context)
+        try createPreviewDiaries(
+            context,
+            remotePhotoDataMap: .init()
+        )
+    }
+
+    func createPreviewDiariesWithRemoteImages(_ context: ModelContext) async throws -> [Diary] {
+        let remotePhotoDataMap = await fetchRemotePhotoDataMap()
+        return try createPreviewDiaries(
+            context,
+            remotePhotoDataMap: remotePhotoDataMap
+        )
+    }
+
+    private func createPreviewDiaries(
+        _ context: ModelContext,
+        remotePhotoDataMap: [SamplePhotoAsset: Data]
+    ) throws -> [Diary] {
+        let pancakes = try cookPancakes(
+            context,
+            remotePhotoDataMap: remotePhotoDataMap
+        )
+        let chickenStirFry = try cookChickenStirFry(
+            context,
+            remotePhotoDataMap: remotePhotoDataMap
+        )
+        let vegetableSoup = try cookVegetableSoup(
+            context,
+            remotePhotoDataMap: remotePhotoDataMap
+        )
+        let spaghettiCarbonara = try cookSpaghettiCarbonara(
+            context,
+            remotePhotoDataMap: remotePhotoDataMap
+        )
+        let beefStew = try cookBeefStew(
+            context,
+            remotePhotoDataMap: remotePhotoDataMap
+        )
         return (0..<10).map { i in
             .create(
                 context: context,
@@ -79,13 +121,26 @@ final class CooklePreviewStore {
         }
     }
 
-    private func cookSpaghettiCarbonara(_ context: ModelContext) throws -> Recipe {
+    private func cookSpaghettiCarbonara(
+        _ context: ModelContext,
+        remotePhotoDataMap: [SamplePhotoAsset: Data]
+    ) throws -> Recipe {
         .create(
             context: context,
             name: "Spaghetti Carbonara",
             photos: [
-                createPhotoObject(context, systemName: "frying.pan", order: 1),
-                createPhotoObject(context, systemName: "oval.portrait", order: 2)
+                createPhotoObject(
+                    context,
+                    asset: .spaghettiCarbonara1,
+                    order: 1,
+                    remotePhotoDataMap: remotePhotoDataMap
+                ),
+                createPhotoObject(
+                    context,
+                    asset: .spaghettiCarbonara2,
+                    order: 2,
+                    remotePhotoDataMap: remotePhotoDataMap
+                )
             ],
             servingSize: 2,
             cookingTime: 30,
@@ -112,13 +167,26 @@ final class CooklePreviewStore {
         )
     }
 
-    private func cookBeefStew(_ context: ModelContext) throws -> Recipe {
+    private func cookBeefStew(
+        _ context: ModelContext,
+        remotePhotoDataMap: [SamplePhotoAsset: Data]
+    ) throws -> Recipe {
         .create(
             context: context,
             name: "Beef Stew",
             photos: [
-                createPhotoObject(context, systemName: "fork.knife", order: 1),
-                createPhotoObject(context, systemName: "wineglass", order: 2)
+                createPhotoObject(
+                    context,
+                    asset: .beefStew1,
+                    order: 1,
+                    remotePhotoDataMap: remotePhotoDataMap
+                ),
+                createPhotoObject(
+                    context,
+                    asset: .beefStew2,
+                    order: 2,
+                    remotePhotoDataMap: remotePhotoDataMap
+                )
             ],
             servingSize: 6,
             cookingTime: 120,
@@ -151,13 +219,26 @@ final class CooklePreviewStore {
         )
     }
 
-    private func cookChickenStirFry(_ context: ModelContext) throws -> Recipe {
+    private func cookChickenStirFry(
+        _ context: ModelContext,
+        remotePhotoDataMap: [SamplePhotoAsset: Data]
+    ) throws -> Recipe {
         .create(
             context: context,
             name: "Chicken Stir Fry",
             photos: [
-                createPhotoObject(context, systemName: "bird", order: 1),
-                createPhotoObject(context, systemName: "tree", order: 2)
+                createPhotoObject(
+                    context,
+                    asset: .chickenStirFry1,
+                    order: 1,
+                    remotePhotoDataMap: remotePhotoDataMap
+                ),
+                createPhotoObject(
+                    context,
+                    asset: .chickenStirFry2,
+                    order: 2,
+                    remotePhotoDataMap: remotePhotoDataMap
+                )
             ],
             servingSize: 4,
             cookingTime: 20,
@@ -190,13 +271,26 @@ final class CooklePreviewStore {
         )
     }
 
-    private func cookVegetableSoup(_ context: ModelContext) throws -> Recipe {
+    private func cookVegetableSoup(
+        _ context: ModelContext,
+        remotePhotoDataMap: [SamplePhotoAsset: Data]
+    ) throws -> Recipe {
         .create(
             context: context,
             name: "Vegetable Soup",
             photos: [
-                createPhotoObject(context, systemName: "cup.and.saucer", order: 1),
-                createPhotoObject(context, systemName: "carrot", order: 2)
+                createPhotoObject(
+                    context,
+                    asset: .vegetableSoup1,
+                    order: 1,
+                    remotePhotoDataMap: remotePhotoDataMap
+                ),
+                createPhotoObject(
+                    context,
+                    asset: .vegetableSoup2,
+                    order: 2,
+                    remotePhotoDataMap: remotePhotoDataMap
+                )
             ],
             servingSize: 4,
             cookingTime: 40,
@@ -229,13 +323,26 @@ final class CooklePreviewStore {
         )
     }
 
-    private func cookPancakes(_ context: ModelContext) throws -> Recipe {
+    private func cookPancakes(
+        _ context: ModelContext,
+        remotePhotoDataMap: [SamplePhotoAsset: Data]
+    ) throws -> Recipe {
         .create(
             context: context,
             name: "Pancakes",
             photos: [
-                createPhotoObject(context, systemName: "birthday.cake", order: 1),
-                createPhotoObject(context, systemName: "mug", order: 2)
+                createPhotoObject(
+                    context,
+                    asset: .pancakes1,
+                    order: 1,
+                    remotePhotoDataMap: remotePhotoDataMap
+                ),
+                createPhotoObject(
+                    context,
+                    asset: .pancakes2,
+                    order: 2,
+                    remotePhotoDataMap: remotePhotoDataMap
+                )
             ],
             servingSize: 4,
             cookingTime: 20,
@@ -264,13 +371,172 @@ final class CooklePreviewStore {
     }
 
     private func createPhotoObject(_ context: ModelContext, systemName: String, order: Int) -> PhotoObject {
-        .create(
+        let photoData = photoDataFromSystemImage(named: systemName)
+        return .create(
             context: context,
             photoData: .init(
-                data: UIImage(systemName: systemName)!.withTintColor(.init(.init(uiColor: .tintColor).adjusted(by: systemName.hashValue))).jpegData(compressionQuality: 1)!,
+                data: photoData,
                 source: order == 1 ? .photosPicker : .imagePlayground
             ),
             order: order
+        )
+    }
+
+    private func createPhotoObject(
+        _ context: ModelContext,
+        asset: SamplePhotoAsset,
+        order: Int,
+        remotePhotoDataMap: [SamplePhotoAsset: Data]
+    ) -> PhotoObject {
+        let photoData = remotePhotoDataMap[asset]
+            ?? photoDataFromSystemImage(named: asset.fallbackSystemImageName)
+        return .create(
+            context: context,
+            photoData: .init(
+                data: photoData,
+                source: order == 1 ? .photosPicker : .imagePlayground
+            ),
+            order: order
+        )
+    }
+
+    private func photoDataFromSystemImage(named systemImageName: String) -> Data {
+        let tintColor: UIColor = .init(
+            .init(uiColor: .tintColor).adjusted(by: systemImageName.hashValue)
+        )
+        if let imageData = UIImage(systemName: systemImageName)?
+            .withTintColor(tintColor)
+            .jpegData(compressionQuality: 1) {
+            return imageData
+        }
+        if let fallbackImageData = UIImage(systemName: "photo")?
+            .withTintColor(tintColor)
+            .jpegData(compressionQuality: 1) {
+            return fallbackImageData
+        }
+        return .init()
+    }
+
+    private func fetchRemotePhotoDataMap() async -> [SamplePhotoAsset: Data] {
+        let uncachedAssets = SamplePhotoAsset.allCases.filter { samplePhotoAsset in
+            remotePhotoDataCache[samplePhotoAsset] == nil
+        }
+        guard !uncachedAssets.isEmpty else {
+            return remotePhotoDataCache
+        }
+
+        let remoteImageSession = remoteImageSession
+        let fetchedPhotoPairs = await withTaskGroup(
+            of: (SamplePhotoAsset, Data?).self,
+            returning: [(SamplePhotoAsset, Data)].self
+        ) { taskGroup in
+            for samplePhotoAsset in uncachedAssets {
+                let remoteImageURL = samplePhotoAsset.remoteImageURL
+                taskGroup.addTask {
+                    guard let remoteImageURL else {
+                        return (samplePhotoAsset, nil)
+                    }
+
+                    do {
+                        let (remotePhotoData, response) = try await remoteImageSession.data(from: remoteImageURL)
+                        guard let httpURLResponse = response as? HTTPURLResponse else {
+                            return (samplePhotoAsset, nil)
+                        }
+                        guard (200...299).contains(httpURLResponse.statusCode) else {
+                            return (samplePhotoAsset, nil)
+                        }
+                        guard !remotePhotoData.isEmpty else {
+                            return (samplePhotoAsset, nil)
+                        }
+                        return (samplePhotoAsset, remotePhotoData)
+                    } catch {
+                        return (samplePhotoAsset, nil)
+                    }
+                }
+            }
+
+            var collectedPhotoPairs = [(SamplePhotoAsset, Data)]()
+            for await (samplePhotoAsset, remotePhotoData) in taskGroup {
+                guard let remotePhotoData else {
+                    continue
+                }
+                collectedPhotoPairs.append((samplePhotoAsset, remotePhotoData))
+            }
+            return collectedPhotoPairs
+        }
+
+        for (samplePhotoAsset, remotePhotoData) in fetchedPhotoPairs {
+            remotePhotoDataCache[samplePhotoAsset] = remotePhotoData
+        }
+        return remotePhotoDataCache
+    }
+}
+
+private enum SamplePhotoAsset: CaseIterable {
+    case spaghettiCarbonara1
+    case spaghettiCarbonara2
+    case beefStew1
+    case beefStew2
+    case chickenStirFry1
+    case chickenStirFry2
+    case vegetableSoup1
+    case vegetableSoup2
+    case pancakes1
+    case pancakes2
+
+    var fileName: String {
+        switch self {
+        case .spaghettiCarbonara1:
+            "SpaghettiCarbonara1.png"
+        case .spaghettiCarbonara2:
+            "SpaghettiCarbonara2.png"
+        case .beefStew1:
+            "BeefStew1.png"
+        case .beefStew2:
+            "BeefStew2.png"
+        case .chickenStirFry1:
+            "ChickenStirFry1.png"
+        case .chickenStirFry2:
+            "ChickenStirFry2.png"
+        case .vegetableSoup1:
+            "VegetableSoup1.png"
+        case .vegetableSoup2:
+            "VegetableSoup2.png"
+        case .pancakes1:
+            "Pancakes1.png"
+        case .pancakes2:
+            "Pancakes2.png"
+        }
+    }
+
+    var fallbackSystemImageName: String {
+        switch self {
+        case .spaghettiCarbonara1:
+            "frying.pan"
+        case .spaghettiCarbonara2:
+            "oval.portrait"
+        case .beefStew1:
+            "fork.knife"
+        case .beefStew2:
+            "wineglass"
+        case .chickenStirFry1:
+            "bird"
+        case .chickenStirFry2:
+            "tree"
+        case .vegetableSoup1:
+            "cup.and.saucer"
+        case .vegetableSoup2:
+            "carrot"
+        case .pancakes1:
+            "birthday.cake"
+        case .pancakes2:
+            "mug"
+        }
+    }
+
+    var remoteImageURL: URL? {
+        .init(
+            string: "https://raw.githubusercontent.com/muhiro12/Cookle/main/.Resources/\(fileName)"
         )
     }
 }
