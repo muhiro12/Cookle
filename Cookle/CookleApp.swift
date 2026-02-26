@@ -8,7 +8,6 @@
 import AppIntents
 import GoogleMobileAdsWrapper
 import LicenseListWrapper
-import OSLog
 import StoreKitWrapper
 import SwiftData
 import SwiftUI
@@ -25,43 +24,25 @@ struct CookleApp: App {
     private let sharedStore: Store
     private let sharedConfigurationService: ConfigurationService
     private let sharedNotificationService: NotificationService
-    private static let migrationTraceKeyword = "COOKLE_MIGRATION_TRACE"
-    private static let migrationLogger: Logger = .init(#file)
 
     init() {
         let cloudKitDatabase: ModelConfiguration.CloudKitDatabase = CooklePreferences.bool(for: .isICloudOn)
             ? .automatic
             : .none
-        let cloudKitDatabaseDescription = String(describing: cloudKitDatabase)
-
-        Self.traceNotice("app migration setup started cloudKitDatabase=\(cloudKitDatabaseDescription)")
-        Self.traceNotice("store paths current=\(Database.url.path) legacy=\(Database.legacyURL.path)")
 
         do {
-            Self.traceNotice("step=1 migrateStoreFilesIfNeeded begin")
             try DatabaseMigrator.migrateStoreFilesIfNeeded()
-            Self.traceNotice("step=1 migrateStoreFilesIfNeeded end")
-
-            Self.traceNotice("step=2 makeModelContainer begin")
             let modelContainer = try Self.makeCurrentModelContainer(
                 cloudKitDatabase: cloudKitDatabase
             )
-            Self.traceNotice("step=2 makeModelContainer end")
-
-            Self.traceNotice("step=3 validateMigratedDataBeforeDeletingLegacyIfNeeded begin")
             try Self.validateMigratedDataBeforeDeletingLegacyIfNeeded(
                 currentContainer: modelContainer,
                 cloudKitDatabase: cloudKitDatabase
             )
-            Self.traceNotice("step=3 validateMigratedDataBeforeDeletingLegacyIfNeeded end")
-
-            Self.traceNotice("step=4 removeLegacyStoreFilesIfNeeded begin")
             try DatabaseMigrator.removeLegacyStoreFilesIfNeeded()
-            Self.traceNotice("step=4 removeLegacyStoreFilesIfNeeded end")
 
             sharedModelContainer = modelContainer
         } catch {
-            Self.traceError("app migration setup failed error=\(String(describing: error))")
             fatalError("Failed to prepare data store: \(error.localizedDescription)")
         }
 
@@ -156,14 +137,10 @@ private extension CookleApp {
         cloudKitDatabase: ModelConfiguration.CloudKitDatabase
     ) throws {
         let fileManager: FileManager = .default
-
-        Self.traceNotice("validating migrated data started")
         guard Database.legacyURL != Database.url else {
-            Self.traceNotice("validation skipped because legacy and current are identical")
             return
         }
         guard fileManager.fileExists(atPath: Database.legacyURL.path) else {
-            Self.traceNotice("validation skipped because legacy store does not exist")
             return
         }
 
@@ -173,17 +150,12 @@ private extension CookleApp {
         )
         let legacyObjectCounts = try objectCounts(in: legacyContainer.mainContext)
         let currentObjectCounts = try objectCounts(in: currentContainer.mainContext)
-        Self.traceNotice(
-            "validation counts legacy=[\(legacyObjectCounts.summary)] current=[\(currentObjectCounts.summary)]"
-        )
         guard currentObjectCounts.hasMatchingRecipeAndDiaryCounts(as: legacyObjectCounts) else {
-            Self.traceError("validation failed because recipe/diary counts mismatched")
             throw MigrationValidationError.recipeAndDiaryCountMismatch(
                 legacyObjectCounts: legacyObjectCounts,
                 currentObjectCounts: currentObjectCounts
             )
         }
-        Self.traceNotice("validation succeeded")
     }
 
     static func objectCounts(in context: ModelContext) throws -> MigrationObjectCounts {
@@ -203,18 +175,6 @@ private extension CookleApp {
         let fetchDescriptor: FetchDescriptor<Model> = .init()
         return try context.fetchCount(fetchDescriptor)
     }
-
-    static func traceNotice(_ message: String) {
-        let traceMessage = "\(migrationTraceKeyword) \(message)"
-        migrationLogger.notice("\(traceMessage, privacy: .public)")
-        MigrationTraceStore.append(traceMessage)
-    }
-
-    static func traceError(_ message: String) {
-        let traceMessage = "\(migrationTraceKeyword) \(message)"
-        migrationLogger.error("\(traceMessage, privacy: .public)")
-        MigrationTraceStore.append(traceMessage)
-    }
 }
 
 private struct MigrationObjectCounts {
@@ -230,10 +190,7 @@ private struct MigrationObjectCounts {
     }
 
     nonisolated var summary: String {
-        """
-        recipe=\(recipeCount), diary=\(diaryCount), category=\(categoryCount), \
-        ingredient=\(ingredientCount), photo=\(photoCount)
-        """
+        "recipe=\(recipeCount), diary=\(diaryCount), category=\(categoryCount), ingredient=\(ingredientCount), photo=\(photoCount)"
     }
 }
 

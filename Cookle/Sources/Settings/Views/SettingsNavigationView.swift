@@ -10,8 +10,6 @@ struct SettingsNavigationView: View {
             switch selection {
             case .subscription:
                 StoreListView()
-            case .migrationLogs:
-                MigrationTraceLogView()
             case .license:
                 LicenseView()
             case .none:

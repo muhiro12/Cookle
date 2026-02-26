@@ -8,5 +8,4 @@
 enum SettingsContent {
     case subscription
     case license
-    case migrationLogs
 }
