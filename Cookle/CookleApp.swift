@@ -43,8 +43,7 @@ struct CookleApp: App {
             Self.traceNotice("step=1 migrateStoreFilesIfNeeded end")
 
             Self.traceNotice("step=2 makeModelContainer begin")
-            let modelContainer = try Self.makeModelContainer(
-                url: Database.url,
+            let modelContainer = try Self.makeCurrentModelContainer(
                 cloudKitDatabase: cloudKitDatabase
             )
             Self.traceNotice("step=2 makeModelContainer end")
@@ -126,6 +125,18 @@ struct CookleApp: App {
 }
 
 private extension CookleApp {
+    static func makeCurrentModelContainer(
+        cloudKitDatabase: ModelConfiguration.CloudKitDatabase
+    ) throws -> ModelContainer {
+        try .init(
+            for: .init(versionedSchema: CookleMigrationPlan.schemas[0]),
+            migrationPlan: CookleMigrationPlan.self,
+            configurations: .init(
+                cloudKitDatabase: cloudKitDatabase
+            )
+        )
+    }
+
     static func makeModelContainer(
         url: URL,
         cloudKitDatabase: ModelConfiguration.CloudKitDatabase
