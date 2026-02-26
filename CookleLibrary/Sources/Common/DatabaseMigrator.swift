@@ -1,6 +1,13 @@
 import Foundation
+import OSLog
 
 public enum DatabaseMigrator {
+    private static let migrationTraceKeyword = "COOKLE_MIGRATION_TRACE"
+    private static let logger: Logger = .init(
+        subsystem: Bundle.main.bundleIdentifier ?? "CookleLibrary",
+        category: "DatabaseMigrator"
+    )
+
     public static func migrateStoreFilesIfNeeded() throws {
         try migrateStoreFilesIfNeeded(
             fileManager: .default,
@@ -22,10 +29,16 @@ public enum DatabaseMigrator {
         legacyURL: URL,
         currentURL: URL
     ) throws {
+        traceNotice(
+            "migrateStoreFilesIfNeeded started legacyPath=\(legacyURL.path) currentPath=\(currentURL.path)"
+        )
+
         guard legacyURL != currentURL else {
+            traceNotice("migrateStoreFilesIfNeeded skipped because legacy and current are identical")
             return
         }
         guard fileManager.fileExists(atPath: legacyURL.path) else {
+            traceNotice("migrateStoreFilesIfNeeded skipped because legacy store does not exist")
             return
         }
 
@@ -33,7 +46,12 @@ public enum DatabaseMigrator {
             fileManager: fileManager,
             storeURL: legacyURL
         )
+        let legacyStoreCandidateDescription = legacyStoreCandidateNames.joined(separator: ",")
+        traceNotice(
+            "legacy store candidates count=\(legacyStoreCandidateNames.count) names=\(legacyStoreCandidateDescription)"
+        )
         guard !legacyStoreCandidateNames.isEmpty else {
+            traceNotice("migrateStoreFilesIfNeeded skipped because no legacy candidates were found")
             return
         }
 
@@ -41,20 +59,36 @@ public enum DatabaseMigrator {
             at: currentURL.deletingLastPathComponent(),
             withIntermediateDirectories: true
         )
+        traceNotice(
+            "ensured current parent directory exists path=\(currentURL.deletingLastPathComponent().path)"
+        )
 
         let currentStoreCandidateNames = try storeCandidateNames(
             fileManager: fileManager,
             storeURL: currentURL
         )
+        let currentStoreCandidateDescription = currentStoreCandidateNames.joined(separator: ",")
+        let currentStoreCandidateCount = currentStoreCandidateNames.count
+        let currentCandidatesMessage =
+            "current candidates before cleanup count=\(currentStoreCandidateCount) " +
+            "names=\(currentStoreCandidateDescription)"
+        traceNotice(currentCandidatesMessage)
 
         // Make retries deterministic by clearing current candidates first.
+        let mergedStoreCandidateNames = mergedCandidateNames(
+            primaryCandidateNames: legacyStoreCandidateNames,
+            secondaryCandidateNames: currentStoreCandidateNames
+        )
+        let mergedStoreCandidateDescription = mergedStoreCandidateNames.joined(separator: ",")
+        let mergedStoreCandidateCount = mergedStoreCandidateNames.count
+        let mergedCandidatesMessage =
+            "removing current candidates before copy count=\(mergedStoreCandidateCount) " +
+            "names=\(mergedStoreCandidateDescription)"
+        traceNotice(mergedCandidatesMessage)
         try removeStoreFilesIfExists(
             fileManager: fileManager,
             storeURL: currentURL,
-            candidateNames: mergedCandidateNames(
-                primaryCandidateNames: legacyStoreCandidateNames,
-                secondaryCandidateNames: currentStoreCandidateNames
-            )
+            candidateNames: mergedStoreCandidateNames
         )
 
         try copyStoreFiles(
@@ -63,6 +97,7 @@ public enum DatabaseMigrator {
             currentURL: currentURL,
             overwriteCurrent: true
         )
+        traceNotice("migrateStoreFilesIfNeeded completed successfully")
     }
 
     static func removeLegacyStoreFilesIfNeeded(
@@ -70,10 +105,14 @@ public enum DatabaseMigrator {
         legacyURL: URL,
         currentURL: URL
     ) throws {
+        traceNotice("removeLegacyStoreFilesIfNeeded started legacyPath=\(legacyURL.path)")
+
         guard legacyURL != currentURL else {
+            traceNotice("removeLegacyStoreFilesIfNeeded skipped because legacy and current are identical")
             return
         }
         guard fileManager.fileExists(atPath: legacyURL.path) else {
+            traceNotice("removeLegacyStoreFilesIfNeeded skipped because legacy store does not exist")
             return
         }
 
@@ -81,7 +120,12 @@ public enum DatabaseMigrator {
             fileManager: fileManager,
             storeURL: legacyURL
         )
+        let candidateDescription = candidateNames.joined(separator: ",")
+        traceNotice(
+            "legacy store candidates to remove count=\(candidateNames.count) names=\(candidateDescription)"
+        )
         guard !candidateNames.isEmpty else {
+            traceNotice("removeLegacyStoreFilesIfNeeded skipped because no legacy candidates were found")
             return
         }
 
@@ -90,6 +134,15 @@ public enum DatabaseMigrator {
             storeURL: legacyURL,
             candidateNames: candidateNames
         )
+        traceNotice("removeLegacyStoreFilesIfNeeded completed successfully")
+    }
+}
+
+private extension DatabaseMigrator {
+    static func traceNotice(_ message: String) {
+        let traceMessage = "\(migrationTraceKeyword) \(message)"
+        logger.notice("\(traceMessage, privacy: .public)")
+        MigrationTraceStore.append(traceMessage)
     }
 }
 

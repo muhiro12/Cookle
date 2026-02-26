@@ -80,6 +80,9 @@ struct SettingsSidebarView: View {
                 Text("Manage")
             }
             Section {
+                NavigationLink(value: SettingsContent.migrationLogs) {
+                    Text("Migration Logs")
+                }
                 NavigationLink(value: SettingsContent.license) {
                     Text("Licenses")
                 }
