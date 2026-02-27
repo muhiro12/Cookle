@@ -8,7 +8,7 @@
 import SwiftUI
 
 /// Meal kinds used in a diary.
-public nonisolated enum DiaryObjectType: CaseIterable, Codable, Identifiable {
+nonisolated public enum DiaryObjectType: CaseIterable, Codable, Identifiable {
     case breakfast
     case lunch
     case dinner

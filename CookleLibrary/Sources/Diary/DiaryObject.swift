@@ -10,7 +10,7 @@ import SwiftData
 
 /// Meal item linking a recipe to a diary with type and order.
 @Model
-public nonisolated final class DiaryObject: SubObject {
+nonisolated public final class DiaryObject: SubObject {
     @Relationship
     /// Linked recipe.
     public private(set) var recipe = Recipe?.none

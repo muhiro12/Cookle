@@ -10,7 +10,7 @@ import SwiftData
 import SwiftUI
 
 /// Common contract for tag-like models (e.g. `Ingredient`, `Category`).
-public nonisolated protocol Tag: PersistentModel {
+nonisolated public protocol Tag: PersistentModel {
     /// Display value of the tag.
     var value: String { get }
     /// Recipes associated with this tag.

@@ -1,6 +1,7 @@
 import SwiftData
 
 /// Domain service to delete all persisted app data.
+@preconcurrency
 @MainActor
 public enum DataResetService {
     public static func deleteAll(context: ModelContext) throws {

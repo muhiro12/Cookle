@@ -11,7 +11,7 @@ import SwiftUI
 
 /// Category tag model.
 @Model
-public nonisolated final class Category: Tag {
+nonisolated public final class Category: Tag {
     /// Category display value.
     public private(set) var value = String.empty
 

@@ -2,6 +2,7 @@ import Foundation
 import SwiftData
 
 /// Legacy search aggregator over name, ingredients and categories.
+@preconcurrency
 @MainActor
 public enum SearchService {
     /// Searches recipes by name, ingredients and categories.

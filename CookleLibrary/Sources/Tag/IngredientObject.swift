@@ -10,7 +10,7 @@ import SwiftData
 
 /// Ingredient item with amount and order, linked to a recipe.
 @Model
-public nonisolated final class IngredientObject: SubObject {
+nonisolated public final class IngredientObject: SubObject {
     @Relationship
     /// Linked ingredient tag.
     public private(set) var ingredient = Ingredient?.none

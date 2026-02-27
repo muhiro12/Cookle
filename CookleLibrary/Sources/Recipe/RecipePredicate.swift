@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 /// Predicates describing how to filter `Recipe` records.
-public nonisolated enum RecipePredicate {
+nonisolated public enum RecipePredicate {
     case all
     case none
     case idIs(Recipe.ID)

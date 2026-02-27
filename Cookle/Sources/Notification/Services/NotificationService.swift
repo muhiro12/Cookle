@@ -109,7 +109,7 @@ private extension NotificationService {
 
         await refreshAuthorizationStatus()
 
-        if requestAuthorizationIfNeeded && authorizationStatus == .notDetermined {
+        if requestAuthorizationIfNeeded, authorizationStatus == .notDetermined {
             _ = try? await notificationCenter.requestAuthorization(
                 options: [.alert, .sound, .badge]
             )

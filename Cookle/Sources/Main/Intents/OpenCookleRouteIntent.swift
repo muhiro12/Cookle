@@ -16,7 +16,7 @@ struct OpenCookleRouteIntent: AppIntent {
     }
 
     @MainActor
-    func perform() throws -> some IntentResult {
+    func perform() -> some IntentResult {
         CookleIntentRouteStore.store(url)
         return .result()
     }

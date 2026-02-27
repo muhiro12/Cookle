@@ -7,6 +7,7 @@ public enum ModelContainerFactory {
     }
 
     /// Creates the model container used by the main app and validates migrated data.
+    @preconcurrency
     @MainActor
     public static func appContainer(
         cloudKitDatabase: ModelConfiguration.CloudKitDatabase

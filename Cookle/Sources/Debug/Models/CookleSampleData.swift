@@ -34,7 +34,7 @@ struct CookleSampleData: PreviewModifier {
         let notificationService: NotificationService
     }
 
-    static func makeSharedContext() throws -> Context {
+    static func makeSharedContext() -> Context {
         CookleSampleDataContext.sharedContext
     }
 

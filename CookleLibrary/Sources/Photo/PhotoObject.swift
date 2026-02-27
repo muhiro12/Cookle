@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-public nonisolated final class PhotoObject: SubObject {
+nonisolated public final class PhotoObject: SubObject {
     @Relationship
     public private(set) var photo = Photo?.none
     public private(set) var order = Int.zero

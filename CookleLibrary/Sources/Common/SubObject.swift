@@ -6,7 +6,7 @@
 //
 
 /// Ordered sub-entity used inside composite models.
-public nonisolated protocol SubObject: Comparable {
+nonisolated public protocol SubObject: Comparable {
     var order: Int { get }
 }
 

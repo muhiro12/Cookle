@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 /// Predicates describing how to filter `Photo` records.
-public nonisolated enum PhotoPredicate {
+nonisolated public enum PhotoPredicate {
     case all
     case none
     case sourceIs(PhotoSource)

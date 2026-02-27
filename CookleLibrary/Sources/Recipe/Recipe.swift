@@ -10,7 +10,7 @@ import SwiftData
 
 /// Persistent recipe entity.
 @Model
-public nonisolated final class Recipe {
+nonisolated public final class Recipe {
     /// Human-readable recipe name.
     public private(set) var name = String.empty
     @Relationship

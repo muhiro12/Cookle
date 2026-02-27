@@ -15,8 +15,4 @@ struct SubObjectTests {
 
 private struct MockSubObject: SubObject {
     let order: Int
-
-    init(order: Int) {
-        self.order = order
-    }
 }

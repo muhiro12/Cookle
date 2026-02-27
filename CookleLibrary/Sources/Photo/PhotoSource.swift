@@ -8,7 +8,7 @@
 import Foundation
 
 /// Source where a photo was obtained.
-public nonisolated enum PhotoSource: String, Sendable {
+nonisolated public enum PhotoSource: String, Sendable {
     case photosPicker = "zW8rLxK4"
     case imagePlayground = "Xe1Vt9bQ"
 }

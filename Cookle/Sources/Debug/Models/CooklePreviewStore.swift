@@ -124,7 +124,7 @@ final class CooklePreviewStore {
     private func cookSpaghettiCarbonara(
         _ context: ModelContext,
         remotePhotoDataMap: [SamplePhotoAsset: Data]
-    ) throws -> Recipe {
+    ) -> Recipe {
         .create(
             context: context,
             name: "Spaghetti Carbonara",
@@ -170,7 +170,7 @@ final class CooklePreviewStore {
     private func cookBeefStew(
         _ context: ModelContext,
         remotePhotoDataMap: [SamplePhotoAsset: Data]
-    ) throws -> Recipe {
+    ) -> Recipe {
         .create(
             context: context,
             name: "Beef Stew",
@@ -222,7 +222,7 @@ final class CooklePreviewStore {
     private func cookChickenStirFry(
         _ context: ModelContext,
         remotePhotoDataMap: [SamplePhotoAsset: Data]
-    ) throws -> Recipe {
+    ) -> Recipe {
         .create(
             context: context,
             name: "Chicken Stir Fry",
@@ -274,7 +274,7 @@ final class CooklePreviewStore {
     private func cookVegetableSoup(
         _ context: ModelContext,
         remotePhotoDataMap: [SamplePhotoAsset: Data]
-    ) throws -> Recipe {
+    ) -> Recipe {
         .create(
             context: context,
             name: "Vegetable Soup",
@@ -326,7 +326,7 @@ final class CooklePreviewStore {
     private func cookPancakes(
         _ context: ModelContext,
         remotePhotoDataMap: [SamplePhotoAsset: Data]
-    ) throws -> Recipe {
+    ) -> Recipe {
         .create(
             context: context,
             name: "Pancakes",

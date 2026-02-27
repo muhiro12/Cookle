@@ -17,7 +17,7 @@ struct OpenCookleIntent: AppIntent {
     }
 
     @MainActor
-    func perform() throws -> some IntentResult {
+    func perform() -> some IntentResult {
         .result()
     }
 }

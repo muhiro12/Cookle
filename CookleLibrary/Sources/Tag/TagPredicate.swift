@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 /// Predicates describing how to filter tag models.
-public nonisolated enum TagPredicate<T: Tag> {
+nonisolated public enum TagPredicate<T: Tag> {
     case all
     case none
     case valueIs(String)

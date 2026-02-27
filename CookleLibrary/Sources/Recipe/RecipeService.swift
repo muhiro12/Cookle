@@ -3,6 +3,7 @@ import FoundationModels
 import SwiftData
 
 /// Recipe-related domain services.
+@preconcurrency
 @MainActor
 public enum RecipeService {
     /// Returns the last opened recipe stored in preferences, if available.
@@ -55,7 +56,7 @@ public enum RecipeService {
     /// - Parameter text: Free-form user text describing a recipe.
     /// - Returns: An `InferredRecipe` with best-effort fields filled.
     @available(iOS 26.0, *)
-    public static func infer(text: String) async throws -> InferredRecipe {
+    public static func infer(text: String) async -> InferredRecipe {
         let languageCode = Locale.current.language.languageCode?.identifier ?? "en"
         let locale = Locale.current
         let languageName = locale.localizedString(forLanguageCode: languageCode) ?? "English"

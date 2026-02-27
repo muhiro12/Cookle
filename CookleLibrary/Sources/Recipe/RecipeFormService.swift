@@ -2,6 +2,7 @@ import Foundation
 import SwiftData
 
 /// Recipe form domain service used by app and widgets.
+@preconcurrency
 @MainActor
 public enum RecipeFormService {
     /// Builds a validated draft from raw form input.

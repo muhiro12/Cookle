@@ -27,7 +27,7 @@ struct CreateDiaryIntent: AppIntent {
     @Dependency private var modelContainer: ModelContainer
 
     @MainActor
-    func perform() throws -> some IntentResult {
+    func perform() -> some IntentResult {
         Logger(#file).info("Running CreateDiaryIntent")
         let context = modelContainer.mainContext
         let breakfastModels = breakfasts.compactMap { try? $0.model(context: context) }

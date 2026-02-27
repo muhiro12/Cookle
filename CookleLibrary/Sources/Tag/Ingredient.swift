@@ -11,7 +11,7 @@ import SwiftUI
 
 /// Ingredient tag model.
 @Model
-public nonisolated final class Ingredient: Tag {
+nonisolated public final class Ingredient: Tag {
     /// Ingredient display value.
     public private(set) var value = String.empty
 

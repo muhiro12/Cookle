@@ -10,7 +10,7 @@ import SwiftData
 
 /// Persistent diary entity representing meals for a single day.
 @Model
-public nonisolated final class Diary {
+nonisolated public final class Diary {
     /// Target calendar date for this diary.
     public private(set) var date = Date.now
     @Relationship(deleteRule: .cascade)

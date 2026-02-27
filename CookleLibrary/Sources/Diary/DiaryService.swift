@@ -2,6 +2,7 @@ import Foundation
 import SwiftData
 
 /// Diary-related domain services.
+@preconcurrency
 @MainActor
 public enum DiaryService {
     /// Returns the diary on the specified calendar day, if any.

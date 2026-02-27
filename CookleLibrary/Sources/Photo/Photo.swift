@@ -10,7 +10,7 @@ import SwiftData
 
 /// Photo binary data and associations.
 @Model
-public nonisolated final class Photo {
+nonisolated public final class Photo {
     /// Raw image bytes.
     public private(set) var data = Data.empty
     /// Encoded source identifier (see `PhotoSource`).

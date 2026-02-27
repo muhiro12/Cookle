@@ -2,6 +2,7 @@ import Foundation
 import SwiftData
 
 /// Resolves a `CookleRoute` into a navigation outcome for the main UI.
+@preconcurrency
 @MainActor
 public enum CookleRouteExecutor {
     public static func execute(

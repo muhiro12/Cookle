@@ -34,7 +34,7 @@ struct DiaryServiceTests {
     }
 
     @Test
-    func update_updates_diary_with_new_note_and_recipe() throws {
+    func update_updates_diary_with_new_note_and_recipe() {
         let pancake = Recipe.create(
             context: context,
             name: "Pancakes",
