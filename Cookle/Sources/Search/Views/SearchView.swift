@@ -13,13 +13,18 @@ struct SearchView: View {
     @Environment(\.isPresented) private var isPresented
 
     @Binding private var recipe: Recipe?
+    @Binding private var incomingSearchQuery: String?
 
     @State private var recipes = [Recipe]()
     @State private var searchText = ""
     @State private var isFocused = false
 
-    init(selection: Binding<Recipe?> = .constant(nil)) {
+    init(
+        selection: Binding<Recipe?> = .constant(nil),
+        incomingSearchQuery: Binding<String?> = .constant(nil)
+    ) {
         _recipe = selection
+        _incomingSearchQuery = incomingSearchQuery
     }
 
     var body: some View {
@@ -67,12 +72,36 @@ struct SearchView: View {
             }
         }
         .onChange(of: searchText) {
-            do {
-                recipes = try RecipeService.search(
-                    context: context,
-                    text: searchText
-                )
-            } catch {}
+            performSearch()
+        }
+        .task {
+            applyIncomingSearchQueryIfNeeded()
+        }
+        .onChange(of: incomingSearchQuery) {
+            applyIncomingSearchQueryIfNeeded()
+        }
+    }
+}
+
+private extension SearchView {
+    func applyIncomingSearchQueryIfNeeded() {
+        guard let incomingSearchQuery else {
+            return
+        }
+        searchText = incomingSearchQuery
+        isFocused = true
+        self.incomingSearchQuery = nil
+        performSearch()
+    }
+
+    func performSearch() {
+        do {
+            recipes = try RecipeService.search(
+                context: context,
+                text: searchText
+            )
+        } catch {
+            recipes = []
         }
     }
 }

@@ -4,7 +4,12 @@ import WidgetKit
 
 struct RecipeProvider: AppIntentTimelineProvider {
     func placeholder(in _: Context) -> RecipeEntry {
-        .init(date: .now, titleText: "Recipe", image: nil)
+        .init(
+            date: .now,
+            titleText: "Recipe",
+            image: nil,
+            deepLinkURL: CookleDeepLinkURLBuilder.recipeURL()
+        )
     }
 
     func snapshot(for configuration: RecipeConfigurationAppIntent, in context: Context) -> RecipeEntry {
@@ -55,9 +60,27 @@ private extension RecipeProvider {
             let image = imageData.flatMap {
                 RecipeWidgetImageLoader.makeImage(from: $0, family: family)
             }
-            return .init(date: date, titleText: recipe.name, image: image)
+            let deepLinkURL: URL = {
+                if let recipeID = try? recipe.id.base64Encoded() {
+                    return CookleDeepLinkURLBuilder.preferredRecipeDetailURL(
+                        for: recipeID
+                    )
+                }
+                return CookleDeepLinkURLBuilder.preferredRecipeURL()
+            }()
+            return .init(
+                date: date,
+                titleText: recipe.name,
+                image: image,
+                deepLinkURL: deepLinkURL
+            )
         }
-        return .init(date: date, titleText: emptyTitle(for: selection), image: nil)
+        return .init(
+            date: date,
+            titleText: emptyTitle(for: selection),
+            image: nil,
+            deepLinkURL: CookleDeepLinkURLBuilder.recipeURL()
+        )
     }
 
     func recipe(for selection: RecipeWidgetSelection, context: ModelContext) throws -> Recipe? {
@@ -93,6 +116,11 @@ private extension RecipeProvider {
     }
 
     func makeErrorEntry(date: Date) -> RecipeEntry {
-        .init(date: date, titleText: "Error", image: nil)
+        .init(
+            date: date,
+            titleText: "Error",
+            image: nil,
+            deepLinkURL: CookleDeepLinkURLBuilder.recipeURL()
+        )
     }
 }

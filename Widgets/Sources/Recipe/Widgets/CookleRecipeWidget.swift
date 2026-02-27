@@ -12,7 +12,7 @@ struct CookleRecipeWidget: Widget {
             provider: RecipeProvider()
         ) { entry in
             CookleRecipeWidgetView(entry: entry)
-                .widgetURL(CookleWidgetDeepLink.url(for: .recipe))
+                .widgetURL(entry.deepLinkURL)
         }
         .configurationDisplayName("Recipe")
         .description("Shows a recipe by selection: Latest, Last Opened, or Random.")
@@ -109,7 +109,8 @@ private struct RecipeTitleBadge: View {
     let entry: RecipeEntry = .init(
         date: .init(timeIntervalSince1970: 1_735_000_000),
         titleText: "Herb Omelette",
-        image: image
+        image: image,
+        deepLinkURL: nil
     )
     entry
 }
@@ -121,7 +122,8 @@ private struct RecipeTitleBadge: View {
     let entry: RecipeEntry = .init(
         date: .init(timeIntervalSince1970: 1_735_000_000),
         titleText: "Vegetable Curry with Coconut Milk",
-        image: image
+        image: image,
+        deepLinkURL: nil
     )
     entry
 }

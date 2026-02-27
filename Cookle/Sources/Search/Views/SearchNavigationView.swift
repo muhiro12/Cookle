@@ -10,15 +10,30 @@ import SwiftUI
 struct SearchNavigationView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
-    @State private var recipe: Recipe?
+    @Binding private var recipe: Recipe?
+    @Binding private var incomingSearchQuery: String?
+
+    init(
+        selection: Binding<Recipe?> = .constant(nil),
+        incomingSearchQuery: Binding<String?> = .constant(nil)
+    ) {
+        _recipe = selection
+        _incomingSearchQuery = incomingSearchQuery
+    }
 
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {
             if horizontalSizeClass == .regular {
-                SearchView(selection: $recipe)
+                SearchView(
+                    selection: $recipe,
+                    incomingSearchQuery: $incomingSearchQuery
+                )
             } else {
-                SearchView(selection: $recipe)
-                    .listStyle(.insetGrouped)
+                SearchView(
+                    selection: $recipe,
+                    incomingSearchQuery: $incomingSearchQuery
+                )
+                .listStyle(.insetGrouped)
             }
         } detail: {
             if let recipe {

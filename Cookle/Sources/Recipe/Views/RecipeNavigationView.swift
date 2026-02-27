@@ -10,7 +10,11 @@ import SwiftUI
 struct RecipeNavigationView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
-    @State private var recipe: Recipe?
+    @Binding private var recipe: Recipe?
+
+    init(selection: Binding<Recipe?> = .constant(nil)) {
+        _recipe = selection
+    }
 
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {

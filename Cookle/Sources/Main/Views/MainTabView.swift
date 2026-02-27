@@ -13,9 +13,29 @@ struct MainTabView: View {
     @AppStorage(.isDebugOn) private var isDebugOn
 
     @Binding private var selection: MainTab
+    @Binding private var diarySelection: Diary?
+    @Binding private var diaryRecipeSelection: Recipe?
+    @Binding private var recipeSelection: Recipe?
+    @Binding private var searchSelection: Recipe?
+    @Binding private var incomingSearchQuery: String?
+    @Binding private var incomingSettingsSelection: SettingsContent?
 
-    init(selection: Binding<MainTab>) {
+    init(
+        selection: Binding<MainTab>,
+        diarySelection: Binding<Diary?> = .constant(nil),
+        diaryRecipeSelection: Binding<Recipe?> = .constant(nil),
+        recipeSelection: Binding<Recipe?> = .constant(nil),
+        searchSelection: Binding<Recipe?> = .constant(nil),
+        incomingSearchQuery: Binding<String?> = .constant(nil),
+        incomingSettingsSelection: Binding<SettingsContent?> = .constant(nil)
+    ) {
         _selection = selection
+        _diarySelection = diarySelection
+        _diaryRecipeSelection = diaryRecipeSelection
+        _recipeSelection = recipeSelection
+        _searchSelection = searchSelection
+        _incomingSearchQuery = incomingSearchQuery
+        _incomingSettingsSelection = incomingSettingsSelection
     }
 
     private var tabs: [MainTab] {
@@ -38,7 +58,7 @@ struct MainTabView: View {
             TabView(selection: $selection) {
                 ForEach(tabs) { tab in
                     Tab(value: tab, role: tab == .search ? .search : nil) {
-                        tab.rootView
+                        rootView(for: tab)
                     } label: {
                         tab.label
                     }
@@ -47,13 +67,43 @@ struct MainTabView: View {
         } else {
             TabView(selection: $selection) {
                 ForEach(tabs) { tab in
-                    tab.rootView
+                    rootView(for: tab)
                         .tag(tab)
                         .tabItem {
                             tab.label
                         }
                 }
             }
+        }
+    }
+}
+
+private extension MainTabView {
+    @ViewBuilder
+    func rootView(for tab: MainTab) -> some View {
+        switch tab {
+        case .diary:
+            DiaryNavigationView(
+                selection: $diarySelection,
+                recipeSelection: $diaryRecipeSelection
+            )
+        case .recipe:
+            RecipeNavigationView(selection: $recipeSelection)
+        case .search:
+            SearchNavigationView(
+                selection: $searchSelection,
+                incomingSearchQuery: $incomingSearchQuery
+            )
+        case .settings:
+            SettingsNavigationView(
+                incomingSelection: $incomingSettingsSelection
+            )
+        case .photo,
+             .ingredient,
+             .category,
+             .menu,
+             .debug:
+            tab.rootView
         }
     }
 }

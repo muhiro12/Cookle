@@ -8,29 +8,34 @@ public enum CookleWidgetDestination: String, Sendable {
 
 /// Deep-link helper shared by the app and widget extension.
 public enum CookleWidgetDeepLink {
-    public static let scheme = "cookle"
-
-    private static let host = "widget"
-
     /// Creates a deep-link URL for a widget destination.
     public static func url(for destination: CookleWidgetDestination) -> URL? {
-        var components = URLComponents()
-        components.scheme = scheme
-        components.host = host
-        components.path = "/\(destination.rawValue)"
-        return components.url
+        switch destination {
+        case .diary:
+            return CookleDeepLinkURLBuilder.diaryURL()
+        case .recipe:
+            return CookleDeepLinkURLBuilder.recipeURL()
+        }
     }
 
     /// Extracts a widget destination from a deep-link URL.
     public static func destination(from deepLinkURL: URL) -> CookleWidgetDestination? {
-        guard deepLinkURL.scheme?.lowercased() == scheme,
-              deepLinkURL.host?.lowercased() == host else {
+        guard let route = CookleRouteParser.parse(url: deepLinkURL) else {
             return nil
         }
-
-        let destinationPath = deepLinkURL.path.trimmingCharacters(
-            in: .init(charactersIn: "/")
-        )
-        return .init(rawValue: destinationPath)
+        switch route {
+        case .diary,
+             .diaryDate:
+            return .diary
+        case .recipe,
+             .recipeDetail:
+            return .recipe
+        case .home,
+             .search,
+             .settings,
+             .settingsSubscription,
+             .settingsLicense:
+            return nil
+        }
     }
 }

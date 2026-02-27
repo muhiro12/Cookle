@@ -10,7 +10,8 @@ struct DiaryProvider: AppIntentTimelineProvider {
             breakfastText: "—",
             lunchText: "—",
             dinnerText: "—",
-            noteText: ""
+            noteText: "",
+            deepLinkURL: CookleDeepLinkURLBuilder.diaryURL()
         )
     }
 
@@ -58,7 +59,10 @@ private extension DiaryProvider {
             breakfastText: mealText(for: .breakfast, from: diary),
             lunchText: mealText(for: .lunch, from: diary),
             dinnerText: mealText(for: .dinner, from: diary),
-            noteText: diary.note
+            noteText: diary.note,
+            deepLinkURL: CookleDeepLinkURLBuilder.preferredDiaryURL(
+                for: diary.date
+            )
         )
     }
 
@@ -131,7 +135,8 @@ private extension DiaryProvider {
             breakfastText: "—",
             lunchText: "—",
             dinnerText: "—",
-            noteText: ""
+            noteText: "",
+            deepLinkURL: CookleDeepLinkURLBuilder.diaryURL()
         )
     }
 
@@ -142,7 +147,8 @@ private extension DiaryProvider {
             breakfastText: "—",
             lunchText: "—",
             dinnerText: "—",
-            noteText: ""
+            noteText: "",
+            deepLinkURL: CookleDeepLinkURLBuilder.diaryURL()
         )
     }
 }

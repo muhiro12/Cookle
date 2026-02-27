@@ -12,7 +12,7 @@ struct CookleDiaryWidget: Widget {
             provider: DiaryProvider()
         ) { entry in
             CookleDiaryWidgetView(entry: entry)
-                .widgetURL(CookleWidgetDeepLink.url(for: .diary))
+                .widgetURL(entry.deepLinkURL)
         }
         .configurationDisplayName("Diary")
         .description("Shows diary by selection: Latest, Today, or Random.")
@@ -137,7 +137,8 @@ private struct MealRow: View {
         breakfastText: "Avocado toast",
         lunchText: "Chicken salad",
         dinnerText: "Salmon and rice",
-        noteText: "Light seasoning and extra veggies."
+        noteText: "Light seasoning and extra veggies.",
+        deepLinkURL: nil
     )
 }
 
@@ -150,6 +151,7 @@ private struct MealRow: View {
         breakfastText: "Greek yogurt with berries",
         lunchText: "Soba noodles with tofu",
         dinnerText: "Miso soup and grilled fish",
-        noteText: "Hydrated well and kept portions balanced."
+        noteText: "Hydrated well and kept portions balanced.",
+        deepLinkURL: nil
     )
 }

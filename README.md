@@ -86,6 +86,30 @@ Cookle exposes several intents so users can automate their workflows.
 - FoundationModels hooks are stubbed for future recipe inference workflows once
   supported on iOS.
 
+## Deep links
+
+Cookle uses a route-based deep-link system shared by the app and widgets.
+
+- Custom scheme: `cookle://...`
+- Universal Links: `https://muhiro12.github.io/Cookle/...`
+
+Supported routes:
+
+- `home`
+- `diary`
+- `diary/YYYY-MM-DD`
+- `recipe`
+- `recipe?id=<base64PersistentIdentifier>`
+- `search`
+- `search?q=<query>`
+- `settings`
+- `settings/subscription`
+- `settings/license`
+
+Legacy widget URLs such as `cookle://widget/diary` are no longer supported.
+Universal Links require Apple App Site Association (AASA) deployment for
+`muhiro12.github.io`.
+
 ## Monetization, sync, and configuration
 
 - A StoreKit subscription unlocks premium features such as iCloud sync, and the

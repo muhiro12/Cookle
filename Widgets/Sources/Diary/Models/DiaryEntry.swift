@@ -1,3 +1,4 @@
+import Foundation
 import WidgetKit
 
 struct DiaryEntry: TimelineEntry {
@@ -7,4 +8,5 @@ struct DiaryEntry: TimelineEntry {
     let lunchText: String
     let dinnerText: String
     let noteText: String
+    let deepLinkURL: URL?
 }
