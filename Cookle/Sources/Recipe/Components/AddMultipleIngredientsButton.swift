@@ -30,7 +30,7 @@ struct AddMultipleIngredientsButton: View {
                         data = stride(from: 0, to: texts.count, by: 2).map {
                             RecipeFormIngredient(
                                 ingredient: texts[$0],
-                                amount: texts.endIndex > $0 + 1 ? texts[$0 + 1] : ""
+                                amount: texts.endIndex > $0 + 1 ? texts[$0 + 1] : .empty
                             )
                         }
                     }

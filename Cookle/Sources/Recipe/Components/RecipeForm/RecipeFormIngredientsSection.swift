@@ -8,7 +8,7 @@
 import SwiftData
 import SwiftUI
 
-typealias RecipeFormIngredient = (ingredient: String, amount: String)
+typealias RecipeFormIngredient = RecipeFormIngredientInput
 
 struct RecipeFormIngredientsSection: View {
     @Binding private var ingredients: [RecipeFormIngredient]
@@ -58,13 +58,13 @@ struct RecipeFormIngredientsSection: View {
             ingredients.removeAll {
                 $0.ingredient.isEmpty && $0.amount.isEmpty
             }
-            ingredients.append((.empty, .empty))
+            ingredients.append(.init(ingredient: .empty, amount: .empty))
         }
         .onChange(of: ingredients.map(\.amount)) {
             ingredients.removeAll {
                 $0.ingredient.isEmpty && $0.amount.isEmpty
             }
-            ingredients.append((.empty, .empty))
+            ingredients.append(.init(ingredient: .empty, amount: .empty))
         }
     }
 }
@@ -75,8 +75,11 @@ struct RecipeFormIngredientsSection: View {
     Form { () -> RecipeFormIngredientsSection in
         RecipeFormIngredientsSection(
             .constant(recipes[0].ingredientObjects!.map {
-                ($0.ingredient!.value, $0.amount)
-            } + [("", "")])
+                .init(
+                    ingredient: $0.ingredient!.value,
+                    amount: $0.amount
+                )
+            } + [.init(ingredient: .empty, amount: .empty)])
         )
     }
 }

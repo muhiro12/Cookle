@@ -29,6 +29,18 @@ public enum RecipeService {
         try context.fetchRandom(.recipes(.all))
     }
 
+    /// Returns the most recently updated recipe.
+    public static func latestRecipe(context: ModelContext) throws -> Recipe? {
+        let descriptor: FetchDescriptor<Recipe> = .init(
+            sortBy: [
+                .init(\.modifiedTimestamp, order: .reverse),
+                .init(\.createdTimestamp, order: .reverse),
+                .init(\.name)
+            ]
+        )
+        return try context.fetch(descriptor).first
+    }
+
     /// Searches recipes by a unified text condition that matches name, ingredients, or categories.
     /// - Parameters:
     ///   - context: Model context to query.

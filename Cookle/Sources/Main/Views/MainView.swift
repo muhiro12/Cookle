@@ -16,26 +16,17 @@ struct MainView: View {
     @Environment(ConfigurationService.self) private var configurationService
 
     @State private var isUpdateAlertPresented = false
-    @State private var selectedTab = MainTab.diary
-    @State private var pendingRoute: CookleRoute?
-    @State private var selectedDiary: Diary?
-    @State private var selectedDiaryRecipe: Recipe?
-    @State private var selectedRecipe: Recipe?
-    @State private var selectedSearchRecipe: Recipe?
-    @State private var incomingSearchQuery: String?
-    @State private var incomingSettingsSelection: SettingsContent?
-    @State private var compactSettingsSelection: SettingsContent?
-    @State private var isCompactSettingsPresented = false
+    @State private var navigationState = MainNavigationState()
 
     var body: some View {
         MainTabView(
-            selection: $selectedTab,
-            diarySelection: $selectedDiary,
-            diaryRecipeSelection: $selectedDiaryRecipe,
-            recipeSelection: $selectedRecipe,
-            searchSelection: $selectedSearchRecipe,
-            incomingSearchQuery: $incomingSearchQuery,
-            incomingSettingsSelection: $incomingSettingsSelection
+            selection: $navigationState.selectedTab,
+            diarySelection: $navigationState.selectedDiary,
+            diaryRecipeSelection: $navigationState.selectedDiaryRecipe,
+            recipeSelection: $navigationState.selectedRecipe,
+            searchSelection: $navigationState.selectedSearchRecipe,
+            incomingSearchQuery: $navigationState.incomingSearchQuery,
+            incomingSettingsSelection: $navigationState.incomingSettingsSelection
         )
         .alert(Text("Update Required"), isPresented: $isUpdateAlertPresented) {
             Button {
@@ -51,7 +42,7 @@ struct MainView: View {
         .task {
             try? await configurationService.load()
             isUpdateAlertPresented = configurationService.isUpdateRequired()
-            applyPendingIntentRouteIfNeeded()
+            applyPendingIntentRouteIfNeededIfPossible()
         }
         .onChange(of: scenePhase) {
             guard scenePhase == .active else {
@@ -61,129 +52,68 @@ struct MainView: View {
                 try? await configurationService.load()
                 isUpdateAlertPresented = configurationService.isUpdateRequired()
             }
-            if Int.random(in: 0..<10) == .zero {
-                Task {
-                    try? await Task.sleep(for: .seconds(2))
-                    requestReview()
-                }
-            }
-            applyPendingIntentRouteIfNeeded()
+            requestReviewIfNeeded()
+            applyPendingIntentRouteIfNeededIfPossible()
         }
         .onOpenURL { deepLinkURL in
-            handleIncomingURL(deepLinkURL)
+            handleIncomingURLIfPossible(deepLinkURL)
         }
         .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
             guard let webpageURL = userActivity.webpageURL else {
                 return
             }
-            handleIncomingURL(webpageURL)
+            handleIncomingURLIfPossible(webpageURL)
         }
         .sheet(
-            isPresented: $isCompactSettingsPresented,
+            isPresented: $navigationState.isCompactSettingsPresented,
             onDismiss: {
-                compactSettingsSelection = nil
+                navigationState.compactSettingsSelection = nil
             }
         ) {
             SettingsNavigationView(
-                incomingSelection: $compactSettingsSelection
+                incomingSelection: $navigationState.compactSettingsSelection
             )
         }
     }
 }
 
 private extension MainView {
-    func applyPendingIntentRouteIfNeeded() {
-        guard let intentRouteURL = CookleIntentRouteStore.consume() else {
-            return
-        }
-        handleIncomingURL(intentRouteURL)
+    var isRegularWidth: Bool {
+        horizontalSizeClass == .regular
     }
 
-    func handleIncomingURL(_ url: URL) {
-        guard let route = CookleRouteParser.parse(url: url) else {
-            return
-        }
-        pendingRoute = route
-        Task { @MainActor in
-            applyPendingRouteIfNeeded()
-        }
-    }
-
-    func applyPendingRouteIfNeeded() {
-        guard let pendingRoute else {
-            return
-        }
-        self.pendingRoute = nil
+    func applyPendingIntentRouteIfNeededIfPossible() {
         do {
-            let outcome = try CookleRouteExecutor.execute(
-                route: pendingRoute,
-                context: context
+            try MainRouteService.applyPendingIntentRouteIfNeeded(
+                state: &navigationState,
+                context: context,
+                isRegularWidth: isRegularWidth
             )
-            applyRouteOutcome(outcome)
         } catch {
             assertionFailure(error.localizedDescription)
         }
     }
 
-    func applyRouteOutcome(_ outcome: CookleRouteOutcome) {
-        if outcome.isSettingsRoute == false {
-            isCompactSettingsPresented = false
-            compactSettingsSelection = nil
-        }
-
-        switch outcome {
-        case .home:
-            selectedTab = .diary
-            selectedDiary = nil
-            selectedDiaryRecipe = nil
-            selectedRecipe = nil
-            selectedSearchRecipe = nil
-            incomingSearchQuery = nil
-        case .diary(let diary):
-            selectedTab = .diary
-            selectedDiary = diary
-            selectedDiaryRecipe = nil
-        case .recipe(let recipe):
-            selectedTab = .recipe
-            selectedRecipe = recipe
-        case .search(let query):
-            selectedTab = .search
-            selectedSearchRecipe = nil
-            incomingSearchQuery = query
-        case .settings:
-            applySettingsRoute(destination: nil)
-        case .settingsSubscription:
-            applySettingsRoute(destination: .subscription)
-        case .settingsLicense:
-            applySettingsRoute(destination: .license)
+    func handleIncomingURLIfPossible(_ url: URL) {
+        do {
+            try MainRouteService.handleIncomingURL(
+                url,
+                state: &navigationState,
+                context: context,
+                isRegularWidth: isRegularWidth
+            )
+        } catch {
+            assertionFailure(error.localizedDescription)
         }
     }
 
-    func applySettingsRoute(destination: SettingsContent?) {
-        if horizontalSizeClass == .regular {
-            isCompactSettingsPresented = false
-            compactSettingsSelection = nil
-            selectedTab = .settings
-            incomingSettingsSelection = destination
-        } else {
-            compactSettingsSelection = destination
-            isCompactSettingsPresented = true
+    func requestReviewIfNeeded() {
+        guard MainReviewService.shouldRequestReview() else {
+            return
         }
-    }
-}
-
-private extension CookleRouteOutcome {
-    var isSettingsRoute: Bool {
-        switch self {
-        case .settings,
-             .settingsSubscription,
-             .settingsLicense:
-            return true
-        case .home,
-             .diary,
-             .recipe,
-             .search:
-            return false
+        Task {
+            try? await Task.sleep(for: MainReviewService.requestDelay)
+            requestReview()
         }
     }
 }

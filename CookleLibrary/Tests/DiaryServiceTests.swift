@@ -65,4 +65,47 @@ struct DiaryServiceTests {
         #expect(diary.note == "Updated")
         #expect(diary.objects?.first?.recipe === pancake)
     }
+
+    @Test
+    func latestDiary_returns_most_recent_diary() throws {
+        let first = Diary.create(
+            context: context,
+            date: .now.addingTimeInterval(-86_400),
+            objects: [],
+            note: "first"
+        )
+        _ = Diary.create(
+            context: context,
+            date: .now,
+            objects: [],
+            note: "second"
+        )
+        first.update(
+            date: .now.addingTimeInterval(86_400),
+            objects: [],
+            note: first.note
+        )
+
+        let result = try DiaryService.latestDiary(context: context)
+        #expect(result === first)
+    }
+
+    @Test
+    func randomDiary_returns_any_existing_diary() throws {
+        _ = Diary.create(
+            context: context,
+            date: .now,
+            objects: [],
+            note: "one"
+        )
+        _ = Diary.create(
+            context: context,
+            date: .now.addingTimeInterval(86_400),
+            objects: [],
+            note: "two"
+        )
+
+        let result = try DiaryService.randomDiary(context: context)
+        #expect(result != nil)
+    }
 }

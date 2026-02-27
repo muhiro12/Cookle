@@ -83,9 +83,14 @@ struct InferRecipeFormView: View {
                                 name = inference.name
                                 servingSize = inference.servingSize == 0 ? "" : inference.servingSize.description
                                 cookingTime = inference.cookingTime == 0 ? "" : inference.cookingTime.description
-                                ingredients = inference.ingredients.map { ($0.ingredient, $0.amount) } + [("", "")]
-                                steps = inference.steps + [""]
-                                categories = inference.categories + [""]
+                                ingredients = inference.ingredients.map { inferredIngredient in
+                                    .init(
+                                        ingredient: inferredIngredient.ingredient,
+                                        amount: inferredIngredient.amount
+                                    )
+                                } + [.init(ingredient: .empty, amount: .empty)]
+                                steps = inference.steps + [.empty]
+                                categories = inference.categories + [.empty]
                                 note = inference.note
                                 dismiss()
                             } catch {

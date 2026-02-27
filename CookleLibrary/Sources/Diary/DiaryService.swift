@@ -11,6 +11,23 @@ public enum DiaryService {
         return diaries.first { cal.isDate($0.date, inSameDayAs: date) }
     }
 
+    /// Returns the latest diary ordered by date and timestamps.
+    public static func latestDiary(context: ModelContext) throws -> Diary? {
+        let descriptor: FetchDescriptor<Diary> = .init(
+            sortBy: [
+                .init(\.date, order: .reverse),
+                .init(\.modifiedTimestamp, order: .reverse),
+                .init(\.createdTimestamp, order: .reverse)
+            ]
+        )
+        return try context.fetch(descriptor).first
+    }
+
+    /// Returns a random diary.
+    public static func randomDiary(context: ModelContext) throws -> Diary? {
+        try context.fetchRandom(.diaries(.all))
+    }
+
     /// Adds a recipe to the diary of `date` for a given meal type, creating the diary when needed.
     public static func add(
         context: ModelContext,

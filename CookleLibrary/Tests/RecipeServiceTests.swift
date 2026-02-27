@@ -88,4 +88,43 @@ struct RecipeServiceTests {
         #expect(result != nil)
         #expect(result === pancake || result?.name == "Spaghetti")
     }
+
+    @Test
+    func latestRecipe_returns_most_recent_recipe() throws {
+        let first = Recipe.create(
+            context: context,
+            name: "A",
+            photos: [],
+            servingSize: 1,
+            cookingTime: 10,
+            ingredients: [],
+            steps: [],
+            categories: [],
+            note: ""
+        )
+        let second = Recipe.create(
+            context: context,
+            name: "B",
+            photos: [],
+            servingSize: 1,
+            cookingTime: 10,
+            ingredients: [],
+            steps: [],
+            categories: [],
+            note: ""
+        )
+        first.update(
+            name: first.name,
+            photos: [],
+            servingSize: first.servingSize,
+            cookingTime: first.cookingTime,
+            ingredients: [],
+            steps: first.steps,
+            categories: [],
+            note: first.note
+        )
+
+        let result = try RecipeService.latestRecipe(context: context)
+        #expect(result === first)
+    }
 }

@@ -86,23 +86,12 @@ private extension RecipeProvider {
     func recipe(for selection: RecipeWidgetSelection, context: ModelContext) throws -> Recipe? {
         switch selection {
         case .latest:
-            return try latestRecipe(context: context)
+            return try RecipeService.latestRecipe(context: context)
         case .lastOpened:
             return try RecipeService.lastOpenedRecipe(context: context)
         case .random:
             return try RecipeService.randomRecipe(context: context)
         }
-    }
-
-    func latestRecipe(context: ModelContext) throws -> Recipe? {
-        let descriptor: FetchDescriptor<Recipe> = .init(
-            sortBy: [
-                .init(\.modifiedTimestamp, order: .reverse),
-                .init(\.createdTimestamp, order: .reverse),
-                .init(\.name)
-            ]
-        )
-        return try context.fetch(descriptor).first
     }
 
     func emptyTitle(for selection: RecipeWidgetSelection) -> String {

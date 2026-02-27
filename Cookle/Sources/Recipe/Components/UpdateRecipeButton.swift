@@ -47,37 +47,32 @@ struct UpdateRecipeButton: View {
 
     var body: some View {
         Button {
-            recipe.update(
-                name: name,
-                photos: zip(photos.indices, photos).map { index, element in
-                    .create(context: context, photoData: element, order: index + 1)
-                },
-                servingSize: toInt(servingSize) ?? .zero,
-                cookingTime: toInt(cookingTime) ?? .zero,
-                ingredients: zip(ingredients.indices, ingredients).compactMap { index, element in
-                    guard !element.ingredient.isEmpty else {
-                        return nil
+            do {
+                let draft = try RecipeFormService.makeDraft(
+                    name: name,
+                    photos: photos,
+                    servingSize: servingSize,
+                    cookingTime: cookingTime,
+                    ingredients: ingredients,
+                    steps: steps,
+                    categories: categories,
+                    note: note
+                )
+                RecipeFormService.update(
+                    context: context,
+                    recipe: recipe,
+                    draft: draft
+                )
+                CookleWidgetReloader.reloadRecipeWidgets()
+                dismiss()
+                if Int.random(in: 0..<5) == .zero {
+                    Task {
+                        try? await Task.sleep(for: .seconds(2))
+                        requestReview()
                     }
-                    return .create(context: context, ingredient: element.ingredient, amount: element.amount, order: index + 1)
-                },
-                steps: steps.filter {
-                    !$0.isEmpty
-                },
-                categories: categories.compactMap {
-                    guard !$0.isEmpty else {
-                        return nil
-                    }
-                    return .create(context: context, value: $0)
-                },
-                note: note
-            )
-            CookleWidgetReloader.reloadRecipeWidgets()
-            dismiss()
-            if Int.random(in: 0..<5) == .zero {
-                Task {
-                    try? await Task.sleep(for: .seconds(2))
-                    requestReview()
                 }
+            } catch {
+                assertionFailure(error.localizedDescription)
             }
         } label: {
             Label {
@@ -91,14 +86,17 @@ struct UpdateRecipeButton: View {
             }
         }
         .disabled(
-            name.isEmpty
-                || (!servingSize.isEmpty && toInt(servingSize) == nil)
-                || (!cookingTime.isEmpty && toInt(cookingTime) == nil)
+            (try? RecipeFormService.makeDraft(
+                name: name,
+                photos: photos,
+                servingSize: servingSize,
+                cookingTime: cookingTime,
+                ingredients: ingredients,
+                steps: steps,
+                categories: categories,
+                note: note
+            )) == nil
         )
-    }
-
-    private func toInt(_ string: String) -> Int? {
-        Int(string.applyingTransform(.fullwidthToHalfwidth, reverse: false) ?? .empty)
     }
 }
 

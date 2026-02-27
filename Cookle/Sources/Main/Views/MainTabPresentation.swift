@@ -1,23 +1,4 @@
-//
-//  MainTab.swift
-//  Cookle Playgrounds
-//
-//  Created by Hiromu Nakano on 9/17/24.
-//
-
 import SwiftUI
-
-enum MainTab: CaseIterable {
-    case diary
-    case recipe
-    case photo
-    case ingredient
-    case category
-    case settings
-    case menu
-    case debug
-    case search
-}
 
 extension MainTab {
     @ViewBuilder
@@ -102,11 +83,5 @@ extension MainTab {
                 Image(systemName: "magnifyingglass")
             }
         }
-    }
-}
-
-extension MainTab: Identifiable {
-    var id: String {
-        .init(describing: self)
     }
 }

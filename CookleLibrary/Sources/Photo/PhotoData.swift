@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct PhotoData {
+public struct PhotoData: Sendable {
     public let data: Data
     public let source: PhotoSource
 

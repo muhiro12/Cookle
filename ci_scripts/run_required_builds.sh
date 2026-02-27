@@ -46,6 +46,7 @@ if ! $needs_cookle_build && ! $needs_cookle_library_tests; then
 fi
 
 if $needs_cookle_build; then
+  bash ci_scripts/check_models_directory_consistency.sh
   echo "Running Cookle build."
   bash ci_scripts/build_cookle.sh
 fi

@@ -148,73 +148,42 @@ private extension NotificationService {
             return []
         }
 
-        let orderedRecipes = recipes.sorted { lhs, rhs in
-            if lhs.name != rhs.name {
-                return lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
-            }
-            return String(describing: lhs.persistentModelID) < String(describing: rhs.persistentModelID)
-        }
-
-        var requests = [UNNotificationRequest]()
-        let startOfToday = calendar.startOfDay(for: .now)
-        var previousIndex: Int?
-
-        for dayOffset in 0..<daysAhead {
-            guard let targetDay = calendar.date(byAdding: .day, value: dayOffset, to: startOfToday),
-                  let notifyDate = calendar.date(
-                    bySettingHour: notificationHour,
-                    minute: notificationMinute,
-                    second: 0,
-                    of: targetDay
-                  ),
-                  notifyDate > .now else {
-                continue
-            }
-
-            var recipeIndex = recipeIndexForDay(
-                day: targetDay,
-                recipeCount: orderedRecipes.count
+        let candidates = recipes.map { recipe in
+            DailyRecipeSuggestionCandidate(
+                name: recipe.name,
+                stableIdentifier: String(describing: recipe.persistentModelID)
             )
-            if orderedRecipes.count > 1,
-               let previousIndex,
-               previousIndex == recipeIndex {
-                recipeIndex = (recipeIndex + 1) % orderedRecipes.count
-            }
-            previousIndex = recipeIndex
+        }
+        let suggestions = DailyRecipeSuggestionService.buildSuggestions(
+            candidates: candidates,
+            now: .now,
+            calendar: calendar,
+            hour: notificationHour,
+            minute: notificationMinute,
+            daysAhead: daysAhead,
+            identifierPrefix: suggestionIdentifierPrefix
+        )
 
-            let recipe = orderedRecipes[recipeIndex]
+        return suggestions.map { suggestion in
             let dateComponents = calendar.dateComponents(
                 [.year, .month, .day, .hour, .minute],
-                from: notifyDate
+                from: suggestion.notifyDate
             )
 
             let content = UNMutableNotificationContent()
             content.title = String(localized: "Recipe Suggestion")
-            content.body = String(localized: "How about making \(recipe.name) today?")
+            content.body = String(localized: "How about making \(suggestion.recipeName) today?")
             content.sound = .default
             content.interruptionLevel = .passive
             content.threadIdentifier = suggestionThreadIdentifier
 
-            let dayIdentifier = calendar.dateComponents([.year, .month, .day], from: targetDay)
-            let identifier = "\(suggestionIdentifierPrefix)\(dayIdentifier.year ?? 0)-\(dayIdentifier.month ?? 0)-\(dayIdentifier.day ?? 0)"
             let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-            let request = UNNotificationRequest(
-                identifier: identifier,
+            return UNNotificationRequest(
+                identifier: suggestion.identifier,
                 content: content,
                 trigger: trigger
             )
-
-            requests.append(request)
         }
-
-        return requests
-    }
-
-    func recipeIndexForDay(day: Date, recipeCount: Int) -> Int {
-        let dayNumber = Int(calendar.startOfDay(for: day).timeIntervalSince1970 / 86_400)
-        let mixed = Int64(dayNumber) &* 1_103_515_245 &+ 12_345
-        let positiveMixed = mixed >= 0 ? mixed : -mixed
-        return Int(positiveMixed % Int64(recipeCount))
     }
 }
 

@@ -168,8 +168,11 @@ struct RecipeFormView: View {
                 guard let ingredient = object.ingredient else {
                     return nil
                 }
-                return (ingredient.value, object.amount)
-            } ?? .empty) + [(.empty, .empty)]
+                return RecipeFormIngredient(
+                    ingredient: ingredient.value,
+                    amount: object.amount
+                )
+            } ?? .empty) + [.init(ingredient: .empty, amount: .empty)]
             steps = (model.steps) + [.empty]
             categories = (model.categories?.map(\.value) ?? .empty) + [.empty]
             note = model.note

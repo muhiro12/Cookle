@@ -69,29 +69,12 @@ private extension DiaryProvider {
     func diary(for selection: DiaryWidgetSelection, date: Date, context: ModelContext) throws -> Diary? {
         switch selection {
         case .latest:
-            return try latestDiary(context: context)
+            return try DiaryService.latestDiary(context: context)
         case .today:
             return try DiaryService.diary(on: date, context: context)
         case .random:
-            return try randomDiary(context: context)
+            return try DiaryService.randomDiary(context: context)
         }
-    }
-
-    func latestDiary(context: ModelContext) throws -> Diary? {
-        let descriptor: FetchDescriptor<Diary> = .init(
-            sortBy: [
-                .init(\.date, order: .reverse),
-                .init(\.modifiedTimestamp, order: .reverse),
-                .init(\.createdTimestamp, order: .reverse)
-            ]
-        )
-        let diaries = try context.fetch(descriptor)
-        return diaries.first
-    }
-
-    func randomDiary(context: ModelContext) throws -> Diary? {
-        let diaries = try context.fetch(.diaries(.all))
-        return diaries.randomElement()
     }
 
     func timelineRefreshDate(date: Date, selection: DiaryWidgetSelection) -> Date {
