@@ -108,4 +108,71 @@ struct DiaryServiceTests {
         let result = try DiaryService.randomDiary(context: context)
         #expect(result != nil)
     }
+
+    @Test
+    func latestDiary_returns_nil_when_store_is_empty() throws {
+        let result = try DiaryService.latestDiary(context: context)
+        #expect(result == nil)
+    }
+
+    @Test
+    func randomDiary_returns_nil_when_store_is_empty() throws {
+        let result = try DiaryService.randomDiary(context: context)
+        #expect(result == nil)
+    }
+
+    @Test
+    func latestDiary_prefers_newer_date_over_modified_timestamp() throws {
+        let today = Date.now
+        let tomorrow = today.addingTimeInterval(86_400)
+
+        let todayDiary = Diary.create(
+            context: context,
+            date: today,
+            objects: [],
+            note: "today"
+        )
+        let tomorrowDiary = Diary.create(
+            context: context,
+            date: tomorrow,
+            objects: [],
+            note: "tomorrow"
+        )
+        todayDiary.update(
+            date: today,
+            objects: [],
+            note: "updated-today"
+        )
+
+        let result = try DiaryService.latestDiary(context: context)
+        #expect(result === tomorrowDiary)
+        #expect(result !== todayDiary)
+    }
+
+    @Test
+    func latestDiary_prefers_recently_updated_when_date_is_same() throws {
+        let sameDay = Date.now
+
+        let firstDiary = Diary.create(
+            context: context,
+            date: sameDay,
+            objects: [],
+            note: "first"
+        )
+        let secondDiary = Diary.create(
+            context: context,
+            date: sameDay,
+            objects: [],
+            note: "second"
+        )
+        firstDiary.update(
+            date: sameDay,
+            objects: [],
+            note: "updated-first"
+        )
+
+        let result = try DiaryService.latestDiary(context: context)
+        #expect(result === firstDiary)
+        #expect(result !== secondDiary)
+    }
 }

@@ -1,4 +1,5 @@
 @testable import CookleLibrary
+import Foundation
 import SwiftData
 import Testing
 
@@ -90,10 +91,22 @@ struct RecipeServiceTests {
     }
 
     @Test
-    func latestRecipe_returns_most_recent_recipe() throws {
-        let first = Recipe.create(
+    func latestRecipe_returns_nil_when_store_is_empty() throws {
+        let result = try RecipeService.latestRecipe(context: context)
+        #expect(result == nil)
+    }
+
+    @Test
+    func randomRecipe_returns_nil_when_store_is_empty() throws {
+        let result = try RecipeService.randomRecipe(context: context)
+        #expect(result == nil)
+    }
+
+    @Test
+    func latestRecipe_prefers_recently_updated_recipe_over_newer_created_recipe() throws {
+        let firstRecipe = Recipe.create(
             context: context,
-            name: "A",
+            name: "First",
             photos: [],
             servingSize: 1,
             cookingTime: 10,
@@ -102,9 +115,10 @@ struct RecipeServiceTests {
             categories: [],
             note: ""
         )
-        let second = Recipe.create(
+        Thread.sleep(forTimeInterval: 0.001)
+        let secondRecipe = Recipe.create(
             context: context,
-            name: "B",
+            name: "Second",
             photos: [],
             servingSize: 1,
             cookingTime: 10,
@@ -113,18 +127,50 @@ struct RecipeServiceTests {
             categories: [],
             note: ""
         )
-        first.update(
-            name: first.name,
+        firstRecipe.update(
+            name: firstRecipe.name,
             photos: [],
-            servingSize: first.servingSize,
-            cookingTime: first.cookingTime,
+            servingSize: firstRecipe.servingSize,
+            cookingTime: firstRecipe.cookingTime,
             ingredients: [],
-            steps: first.steps,
+            steps: firstRecipe.steps,
             categories: [],
-            note: first.note
+            note: firstRecipe.note
         )
 
         let result = try RecipeService.latestRecipe(context: context)
-        #expect(result === first)
+        #expect(result === firstRecipe)
+        #expect(result !== secondRecipe)
+    }
+
+    @Test
+    func latestRecipe_prefers_newer_created_when_not_updated() throws {
+        let firstRecipe = Recipe.create(
+            context: context,
+            name: "First",
+            photos: [],
+            servingSize: 1,
+            cookingTime: 10,
+            ingredients: [],
+            steps: [],
+            categories: [],
+            note: ""
+        )
+        Thread.sleep(forTimeInterval: 0.001)
+        let secondRecipe = Recipe.create(
+            context: context,
+            name: "Second",
+            photos: [],
+            servingSize: 1,
+            cookingTime: 10,
+            ingredients: [],
+            steps: [],
+            categories: [],
+            note: ""
+        )
+
+        let result = try RecipeService.latestRecipe(context: context)
+        #expect(result === secondRecipe)
+        #expect(result !== firstRecipe)
     }
 }
