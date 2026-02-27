@@ -170,6 +170,25 @@ enum Secret {
 - Provide the same environment variable when running builds on CI providers so
   ads and StoreKit configuration compile correctly.
 
+### Build output layout
+
+Cookle CI helper scripts keep generated files under `build/` and separate them
+by responsibility:
+
+- `build/work/` stores temporary xcodebuild data such as `DerivedData`,
+  `build/work/results/*.xcresult`, and temporary files.
+- `build/cache/` stores SwiftPM and compiler caches.
+- `build/logs/` stores script execution logs.
+
+You can override the root directory with `BUILD_ROOT`:
+
+```bash
+BUILD_ROOT=/tmp/cookle-build bash ci_scripts/build_cookle.sh
+```
+
+When a script exits, it always prints the result bundle path, log path, and the
+re-run command.
+
 ## Screenshots
 
 | iPhone | iPhone | iPhone |

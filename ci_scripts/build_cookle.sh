@@ -16,32 +16,27 @@ if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   exit 1
 fi
 
+build_layout_script="$script_directory/lib/build_layout.sh"
+if [[ ! -f "$build_layout_script" ]]; then
+  echo "Missing build layout helper: $build_layout_script" >&2
+  exit 1
+fi
+
+# shellcheck source=ci_scripts/lib/build_layout.sh
+source "$build_layout_script"
+initialize_build_layout "$repository_root"
+
 project_path="Cookle.xcodeproj"
-derived_data_path="build/DerivedData"
-results_directory="build"
-
-local_home_directory="$repository_root/build/xcodebuild_home"
-cache_directory="$repository_root/build/xcodebuild_cache"
-temporary_directory="$repository_root/build/xcodebuild_tmp"
-clang_module_cache_directory="$cache_directory/clang/ModuleCache"
-package_cache_directory="$repository_root/build/xcodebuild_package_cache"
-cloned_source_packages_directory="$repository_root/build/xcodebuild_source_packages"
-swiftpm_cache_directory="$repository_root/build/xcodebuild_swiftpm_cache"
-swiftpm_config_directory="$repository_root/build/xcodebuild_swiftpm_config"
-
-mkdir -p \
-  "$local_home_directory/Library/Caches" \
-  "$local_home_directory/Library/Developer" \
-  "$local_home_directory/Library/Logs" \
-  "$cache_directory" \
-  "$clang_module_cache_directory" \
-  "$package_cache_directory" \
-  "$cloned_source_packages_directory" \
-  "$swiftpm_cache_directory" \
-  "$swiftpm_config_directory" \
-  "$temporary_directory"
-
-mkdir -p "$derived_data_path" "$results_directory"
+derived_data_path="$BUILD_WORK_DERIVED_DATA_PATH"
+results_directory="$BUILD_WORK_RESULTS_DIRECTORY"
+local_home_directory="$BUILD_WORK_HOME_DIRECTORY"
+cache_directory="$BUILD_CACHE_DIRECTORY"
+temporary_directory="$BUILD_WORK_TEMP_DIRECTORY"
+clang_module_cache_directory="$BUILD_CACHE_CLANG_MODULE_DIRECTORY"
+package_cache_directory="$BUILD_CACHE_PACKAGE_DIRECTORY"
+cloned_source_packages_directory="$BUILD_CACHE_SOURCE_PACKAGES_DIRECTORY"
+swiftpm_cache_directory="$BUILD_CACHE_SWIFTPM_CACHE_DIRECTORY"
+swiftpm_config_directory="$BUILD_CACHE_SWIFTPM_CONFIG_DIRECTORY"
 
 resolve_simulator_identifier() {
   local booted_simulator_identifier
@@ -72,22 +67,39 @@ fi
 
 timestamp=$(date +%s)
 result_bundle_path="$results_directory/TestResults_Cookle_${timestamp}.xcresult"
+log_file_path="$BUILD_LOGS_DIRECTORY/build_cookle_${timestamp}.log"
 
-HOME="$local_home_directory" \
-TMPDIR="$temporary_directory" \
-XDG_CACHE_HOME="$cache_directory" \
-CLANG_MODULE_CACHE_PATH="$clang_module_cache_directory" \
-SWIFTPM_CACHE_PATH="$swiftpm_cache_directory" \
-SWIFTPM_CONFIG_PATH="$swiftpm_config_directory" \
-xcodebuild \
-  -project "$project_path" \
-  -scheme "Cookle" \
-  "${destination[@]}" \
-  -derivedDataPath "$derived_data_path" \
-  -resultBundlePath "$result_bundle_path" \
-  -clonedSourcePackagesDirPath "$cloned_source_packages_directory" \
-  -packageCachePath "$package_cache_directory" \
-  "CLANG_MODULE_CACHE_PATH=$clang_module_cache_directory" \
-  build
+print_run_summary() {
+  local exit_code="$1"
+  if [[ $exit_code -eq 0 ]]; then
+    echo "Finished Cookle build."
+  else
+    echo "Cookle build failed." >&2
+  fi
 
-echo "Finished Cookle build. Result bundle: $result_bundle_path"
+  echo "Result bundle: $result_bundle_path"
+  echo "Log file: $log_file_path"
+  echo "Re-run command: bash ci_scripts/build_cookle.sh"
+}
+
+trap 'print_run_summary "$?"' EXIT
+
+{
+  HOME="$local_home_directory" \
+  TMPDIR="$temporary_directory" \
+  XDG_CACHE_HOME="$cache_directory" \
+  CLANG_MODULE_CACHE_PATH="$clang_module_cache_directory" \
+  SWIFTPM_CACHE_PATH="$swiftpm_cache_directory" \
+  SWIFTPM_CONFIG_PATH="$swiftpm_config_directory" \
+  PLL_SOURCE_PACKAGES_PATH="$cloned_source_packages_directory" \
+  xcodebuild \
+    -project "$project_path" \
+    -scheme "Cookle" \
+    "${destination[@]}" \
+    -derivedDataPath "$derived_data_path" \
+    -resultBundlePath "$result_bundle_path" \
+    -clonedSourcePackagesDirPath "$cloned_source_packages_directory" \
+    -packageCachePath "$package_cache_directory" \
+    "CLANG_MODULE_CACHE_PATH=$clang_module_cache_directory" \
+    build
+} 2>&1 | tee "$log_file_path"
