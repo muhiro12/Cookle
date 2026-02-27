@@ -28,10 +28,15 @@ nonisolated public final class Category: Tag {
 
     /// Creates (or returns) a category with the given value.
     public static func create(context: ModelContext, value: String) -> Self {
-        let category = (try? context.fetchFirst(.categories(.valueIs(value)))) ?? .init()
+        if let existingCategory = try? context.fetchFirst(.categories(.valueIs(value))),
+           let category = existingCategory as? Self {
+            return category
+        }
+
+        let category: Self = .init()
         context.insert(category)
         category.value = value
-        return category as! Self
+        return category
     }
 
     /// Updates the category value.

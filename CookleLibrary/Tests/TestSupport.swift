@@ -14,6 +14,14 @@ func makeTestContext() -> ModelContext {
         PhotoObject.self
     ])
     let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: schema, configurations: [configuration])
+    let container: ModelContainer
+    do {
+        container = try ModelContainer(
+            for: schema,
+            configurations: [configuration]
+        )
+    } catch {
+        fatalError("Failed to create in-memory ModelContainer: \(error)")
+    }
     return .init(container)
 }

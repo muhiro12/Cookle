@@ -70,10 +70,10 @@ final class CooklePreviewStore {
             context,
             remotePhotoDataMap: remotePhotoDataMap
         )
-        return (0..<10).map { i in
+        return (0..<10).map { dayOffset in
             .create(
                 context: context,
-                date: .now.addingTimeInterval(TimeInterval(-i * 8) * 24 * 60 * 60),
+                date: .now.addingTimeInterval(TimeInterval(-dayOffset * 8) * 24 * 60 * 60),
                 objects: [
                     .create(
                         context: context,
@@ -369,7 +369,9 @@ final class CooklePreviewStore {
             note: "Serve with syrup, butter, and fresh fruits."
         )
     }
+}
 
+private extension CooklePreviewStore {
     private func createPhotoObject(_ context: ModelContext, systemName: String, order: Int) -> PhotoObject {
         let photoData = photoDataFromSystemImage(named: systemName)
         return .create(

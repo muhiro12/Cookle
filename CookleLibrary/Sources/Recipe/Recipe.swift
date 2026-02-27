@@ -61,6 +61,7 @@ nonisolated public final class Recipe {
     ///   - categories: Category tags.
     ///   - note: Optional note.
     /// - Returns: The newly created `Recipe`.
+    // swiftlint:disable:next function_parameter_count
     public static func create(context: ModelContext,
                               name: String,
                               photos: [PhotoObject],

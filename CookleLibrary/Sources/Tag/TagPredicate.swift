@@ -23,36 +23,16 @@ nonisolated public enum TagPredicate<T: Tag> {
         case .none:
             return .false
         case .valueIs(let value):
-            switch T.self {
-            case is Ingredient.Type:
-                return #Predicate<Ingredient> {
-                    $0.value == value
-                } as! Predicate<T>
-            case is Category.Type:
-                return #Predicate<Category> {
-                    $0.value == value
-                } as! Predicate<T>
-            default:
-                fatalError()
+            return #Predicate<T> { tag in
+                tag.value == value
             }
         case .valueContains(let value):
             let hiragana = value.applyingTransform(.hiraganaToKatakana, reverse: true).orEmpty
             let katakana = value.applyingTransform(.hiraganaToKatakana, reverse: false).orEmpty
-            switch T.self {
-            case is Ingredient.Type:
-                return #Predicate<Ingredient> {
-                    $0.value.localizedStandardContains(value)
-                        || $0.value.localizedStandardContains(hiragana)
-                        || $0.value.localizedStandardContains(katakana)
-                } as! Predicate<T>
-            case is Category.Type:
-                return #Predicate<Category> {
-                    $0.value.localizedStandardContains(value)
-                        || $0.value.localizedStandardContains(hiragana)
-                        || $0.value.localizedStandardContains(katakana)
-                } as! Predicate<T>
-            default:
-                fatalError()
+            return #Predicate<T> { tag in
+                tag.value.localizedStandardContains(value)
+                    || tag.value.localizedStandardContains(hiragana)
+                    || tag.value.localizedStandardContains(katakana)
             }
         }
     }

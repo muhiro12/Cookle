@@ -85,8 +85,10 @@ public enum RecipeService {
             let servingSize: Int = {
                 let pattern = #"(?i)(serves|for)\s*(\d+)"#
                 if let match = lines.joined(separator: " ").range(of: pattern, options: .regularExpression) {
-                    let s = String(lines.joined(separator: " ")[match])
-                    if let n = Int(s.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()) { return n }
+                    let matchedText = String(lines.joined(separator: " ")[match])
+                    if let servingSizeValue = Int(matchedText.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()) {
+                        return servingSizeValue
+                    }
                 }
                 return 0
             }()
@@ -94,8 +96,10 @@ public enum RecipeService {
             let cookingTime: Int = {
                 let pattern = #"(?i)(\d+)\s*(min|minutes)"#
                 if let match = lines.joined(separator: " ").range(of: pattern, options: .regularExpression) {
-                    let s = String(lines.joined(separator: " ")[match])
-                    if let n = Int(s.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()) { return n }
+                    let matchedText = String(lines.joined(separator: " ")[match])
+                    if let cookingTimeValue = Int(matchedText.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()) {
+                        return cookingTimeValue
+                    }
                 }
                 return 0
             }()

@@ -31,10 +31,15 @@ nonisolated public final class Ingredient: Tag {
 
     /// Creates (or returns) an ingredient with the given value.
     public static func create(context: ModelContext, value: String) -> Self {
-        let ingredient = (try? context.fetchFirst(.ingredients(.valueIs(value)))) ?? .init()
+        if let existingIngredient = try? context.fetchFirst(.ingredients(.valueIs(value))),
+           let ingredient = existingIngredient as? Self {
+            return ingredient
+        }
+
+        let ingredient: Self = .init()
         context.insert(ingredient)
         ingredient.value = value
-        return ingredient as! Self
+        return ingredient
     }
 
     /// Updates the ingredient value.
