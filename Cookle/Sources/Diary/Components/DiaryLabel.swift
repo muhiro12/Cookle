@@ -43,7 +43,10 @@ struct DiaryLabel: View {
                     .foregroundStyle(.tint)
                 Text(diary.date.formatted(.dateTime.day(.twoDigits).locale(.init(identifier: "en_US"))))
                     .font(.title2.monospacedDigit())
+                    .lineLimit(1)
+                    .fixedSize(horizontal: true, vertical: false)
             }
+            .frame(width: 28)
             .foregroundStyle(Color(uiColor: .label))
         }
         .contextMenu {
