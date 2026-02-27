@@ -37,8 +37,8 @@ repository contains the full iOS project together with its shared Swift package.
   configuration, and wrapper integrations.
 - `CookleLibrary/` – shared Swift package that exposes SwiftData models,
   services, predicates, migrations, and utilities used by the app and intents.
-- `CookleTests/` – app-level tests built with the Swift Testing package to
-  validate services that run inside the application bundle.
+- `Widgets/` – home-screen widget extension target built on top of
+  `CookleLibrary`.
 - `CookleLibrary/Tests/` – package tests for reusable utilities such as
   preferences, photo sources, and shared sub-object logic.
 - `ci_scripts/` – automation helpers used by Xcode Cloud and CI pipelines to
@@ -46,7 +46,7 @@ repository contains the full iOS project together with its shared Swift package.
 
 ## Technology stack
 
-- Swift 6 toolchain with Xcode 16.3 project settings and a minimum deployment
+- Swift 6 toolchain with Xcode 26.3 project settings and a minimum deployment
   target of iOS 17.0.
 - SwiftUI for all user interfaces, including adaptive tab navigation and preview
   infrastructure.
@@ -126,7 +126,7 @@ Universal Links require Apple App Site Association (AASA) deployment for
 1. Clone the repository and open the workspace directory.
 2. Provide `Cookle/Configurations/Secret.swift`, which is excluded from version
    control and injected in CI through `SECRETS_BASE64`.
-3. Open `Cookle.xcodeproj` in Xcode 16.3 or later and select the **Cookle**
+3. Open `Cookle.xcodeproj` in Xcode 26.3 or later and select the **Cookle**
    scheme.
 4. Build and run on an iOS 17 simulator or device.
 
@@ -146,20 +146,22 @@ enum Secret {
 
 ## Testing
 
-- Run the shared package tests:
+- Use the standard CI entry point:
 
   ```bash
-  cd CookleLibrary
-  swift test
+  bash ci_scripts/run_required_builds.sh
   ```
 
-- Execute the application test plan on the simulator:
+- Run the app build directly:
 
   ```bash
-  xcodebuild \
-    -scheme Cookle \
-    -testPlan Cookle \
-    -destination 'platform=iOS Simulator,name=iPhone 15'
+  bash ci_scripts/build_cookle.sh
+  ```
+
+- Run the shared package tests directly:
+
+  ```bash
+  bash ci_scripts/test_cookle_library.sh
   ```
 
 ## Continuous integration
