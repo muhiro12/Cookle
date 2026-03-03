@@ -107,11 +107,7 @@ struct DebugSidebarView: View {
             isCreatingPreviewDiaries = false
         }
 
-        do {
-            _ = try await previewStore.createPreviewDiariesWithRemoteImages(context)
-        } catch {
-            assertionFailure("Failed to create preview diaries: \(error.localizedDescription)")
-        }
+        _ = await previewStore.createPreviewDiariesWithRemoteImages(context)
     }
 }
 

@@ -22,25 +22,21 @@ final class CooklePreviewStore {
 
     func prepare(_ context: ModelContext) {
         if !hasPreparedPreviewData {
-            do {
-                _ = try createPreviewDiaries(context)
-                hasPreparedPreviewData = true
-            } catch {
-                assertionFailure("Failed to prepare preview data: \(error.localizedDescription)")
-            }
+            _ = createPreviewDiaries(context)
+            hasPreparedPreviewData = true
         }
     }
 
-    func createPreviewDiaries(_ context: ModelContext) throws -> [Diary] {
-        try createPreviewDiaries(
+    func createPreviewDiaries(_ context: ModelContext) -> [Diary] {
+        createPreviewDiaries(
             context,
             remotePhotoDataMap: .init()
         )
     }
 
-    func createPreviewDiariesWithRemoteImages(_ context: ModelContext) async throws -> [Diary] {
+    func createPreviewDiariesWithRemoteImages(_ context: ModelContext) async -> [Diary] {
         let remotePhotoDataMap = await fetchRemotePhotoDataMap()
-        return try createPreviewDiaries(
+        return createPreviewDiaries(
             context,
             remotePhotoDataMap: remotePhotoDataMap
         )
@@ -49,24 +45,24 @@ final class CooklePreviewStore {
     private func createPreviewDiaries(
         _ context: ModelContext,
         remotePhotoDataMap: [SamplePhotoAsset: Data]
-    ) throws -> [Diary] {
-        let pancakes = try cookPancakes(
+    ) -> [Diary] {
+        let pancakes = cookPancakes(
             context,
             remotePhotoDataMap: remotePhotoDataMap
         )
-        let chickenStirFry = try cookChickenStirFry(
+        let chickenStirFry = cookChickenStirFry(
             context,
             remotePhotoDataMap: remotePhotoDataMap
         )
-        let vegetableSoup = try cookVegetableSoup(
+        let vegetableSoup = cookVegetableSoup(
             context,
             remotePhotoDataMap: remotePhotoDataMap
         )
-        let spaghettiCarbonara = try cookSpaghettiCarbonara(
+        let spaghettiCarbonara = cookSpaghettiCarbonara(
             context,
             remotePhotoDataMap: remotePhotoDataMap
         )
-        let beefStew = try cookBeefStew(
+        let beefStew = cookBeefStew(
             context,
             remotePhotoDataMap: remotePhotoDataMap
         )

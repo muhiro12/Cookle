@@ -17,7 +17,6 @@ struct InferRecipeFormView: View {
 
     @State private var text = ""
     @State private var isLoading = false
-    @State private var errorMessage: String?
     @State private var photoPickerItem: PhotosPickerItem?
     @State private var cameraPickerItem: PhotosPickerItem?
     @State private var isPhotoPickerPresented = false
@@ -60,25 +59,7 @@ struct InferRecipeFormView: View {
                     Button {
                         isLoading = true
                         Task {
-                            defer { isLoading = false }
-                            do {
-                                let inference = try await RecipeService.infer(text: text)
-                                name = inference.name
-                                servingSize = inference.servingSize == 0 ? "" : inference.servingSize.description
-                                cookingTime = inference.cookingTime == 0 ? "" : inference.cookingTime.description
-                                ingredients = inference.ingredients.map { inferredIngredient in
-                                    .init(
-                                        ingredient: inferredIngredient.ingredient,
-                                        amount: inferredIngredient.amount
-                                    )
-                                } + [.init(ingredient: .empty, amount: .empty)]
-                                steps = inference.steps + [.empty]
-                                categories = inference.categories + [.empty]
-                                note = inference.note
-                                dismiss()
-                            } catch {
-                                errorMessage = error.localizedDescription
-                            }
+                            await applyInference()
                         }
                     } label: {
                         Text("Done")
@@ -111,11 +92,6 @@ struct InferRecipeFormView: View {
                     }
                 }
             }
-            .alert("Error", isPresented: .constant(errorMessage != nil), actions: {
-                Button("OK") { errorMessage = nil }
-            }, message: {
-                Text(errorMessage ?? "")
-            })
             .photosPicker(isPresented: $isPhotoPickerPresented, selection: $photoPickerItem, matching: .images)
             .photosPicker(isPresented: $isCameraPickerPresented, selection: $cameraPickerItem, matching: .images)
             .onChange(of: photoPickerItem) {
@@ -144,6 +120,28 @@ struct InferRecipeFormView: View {
                     self.cameraPickerItem = nil
                 }
             }
+    }
+
+    @MainActor
+    private func applyInference() async {
+        defer {
+            isLoading = false
+        }
+
+        let inference = await RecipeService.infer(text: text)
+        name = inference.name
+        servingSize = inference.servingSize == 0 ? "" : inference.servingSize.description
+        cookingTime = inference.cookingTime == 0 ? "" : inference.cookingTime.description
+        ingredients = inference.ingredients.map { inferredIngredient in
+            .init(
+                ingredient: inferredIngredient.ingredient,
+                amount: inferredIngredient.amount
+            )
+        } + [.init(ingredient: .empty, amount: .empty)]
+        steps = inference.steps + [.empty]
+        categories = inference.categories + [.empty]
+        note = inference.note
+        dismiss()
     }
 
     init(

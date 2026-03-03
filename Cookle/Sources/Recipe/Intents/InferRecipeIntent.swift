@@ -18,8 +18,8 @@ struct InferRecipeIntent: AppIntent {
     private var text: String
 
     @MainActor
-    func perform() async throws -> some IntentResult {
-        let inferred = try await RecipeService.infer(text: text)
+    func perform() async -> some IntentResult {
+        let inferred = await RecipeService.infer(text: text)
         let entity = RecipeEntity(
             id: UUID().uuidString,
             name: inferred.name,
