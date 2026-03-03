@@ -1,7 +1,7 @@
 import SwiftUI
 
 @available(iOS 26.0, *)
-struct RecipeFormInferSection: View {
+struct GenerateRecipeFromIngredientsButton: View {
     @Binding private var name: String
     @Binding private var servingSize: String
     @Binding private var cookingTime: String
@@ -10,20 +10,16 @@ struct RecipeFormInferSection: View {
     @Binding private var categories: [String]
     @Binding private var note: String
 
-    var body: some View {
-        Section {
-            InferRecipeFormButton(
-                name: $name,
-                servingSize: $servingSize,
-                cookingTime: $cookingTime,
-                ingredients: $ingredients,
-                steps: $steps,
-                categories: $categories,
-                note: $note
-            )
-            .frame(maxWidth: .infinity)
+    @State private var isPresented = false
 
-            GenerateRecipeFromIngredientsButton(
+    var body: some View {
+        Button {
+            isPresented = true
+        } label: {
+            Text("Generate Recipe From Ingredients")
+        }
+        .sheet(isPresented: $isPresented) {
+            GenerateRecipeFromIngredientsNavigationView(
                 name: $name,
                 servingSize: $servingSize,
                 cookingTime: $cookingTime,
@@ -32,9 +28,7 @@ struct RecipeFormInferSection: View {
                 categories: $categories,
                 note: $note
             )
-            .frame(maxWidth: .infinity)
-        } header: {
-            Text("Generate Recipe")
+            .interactiveDismissDisabled()
         }
     }
 
@@ -47,12 +41,12 @@ struct RecipeFormInferSection: View {
         categories: Binding<[String]>,
         note: Binding<String>
     ) {
-        _name = name
-        _servingSize = servingSize
-        _cookingTime = cookingTime
-        _ingredients = ingredients
-        _steps = steps
-        _categories = categories
-        _note = note
+        self._name = name
+        self._servingSize = servingSize
+        self._cookingTime = cookingTime
+        self._ingredients = ingredients
+        self._steps = steps
+        self._categories = categories
+        self._note = note
     }
 }

@@ -173,4 +173,50 @@ struct RecipeServiceTests {
         #expect(result === secondRecipe)
         #expect(result !== firstRecipe)
     }
+
+    @Test
+    func ingredientRecipeGenerationInput_deduplicates_normalized_values() throws {
+        let input = try RecipeService.ingredientRecipeGenerationInput(
+            availableIngredients: [
+                "Egg",
+                "egg",
+                "Ｅｇｇ",
+                "Milk"
+            ],
+            additionalInstructions: " Quick dinner "
+        )
+
+        #expect(input.availableIngredients == ["Egg", "Milk"])
+        #expect(input.additionalInstructions == "Quick dinner")
+    }
+
+    @Test
+    func ingredientRecipeGenerationInput_throws_when_ingredients_are_empty() {
+        #expect(throws: IngredientRecipeGenerationValidationError.emptyIngredients) {
+            _ = try RecipeService.ingredientRecipeGenerationInput(
+                availableIngredients: [
+                    "",
+                    "   "
+                ],
+                additionalInstructions: ""
+            )
+        }
+    }
+
+    @Test
+    func validateIngredientRecipeContent_throws_for_disallowed_ingredients() {
+        #expect(throws: IngredientRecipeGenerationValidationError.disallowedIngredients(["Pepper"])) {
+            try RecipeService.validateIngredientRecipeContent(
+                name: "Egg Bowl",
+                steps: ["Cook the eggs."],
+                generatedIngredients: [
+                    "Egg",
+                    "Pepper"
+                ],
+                allowedIngredients: [
+                    "Egg"
+                ]
+            )
+        }
+    }
 }
