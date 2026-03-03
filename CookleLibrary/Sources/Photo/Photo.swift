@@ -16,11 +16,11 @@ nonisolated public final class Photo {
     /// Encoded source identifier (see `PhotoSource`).
     public private(set) var sourceID = PhotoSource.defaultValue.rawValue
 
-    @Relationship(deleteRule: .cascade, inverse: \PhotoObject.photo)
     /// Photo objects linked to recipes.
+    @Relationship(deleteRule: .cascade, inverse: \PhotoObject.photo)
     public private(set) var objects = [PhotoObject]?.some(.empty)
-    @Relationship(inverse: \Recipe.photos)
     /// Recipes using this photo.
+    @Relationship(inverse: \Recipe.photos)
     public private(set) var recipes = [Recipe]?.some(.empty)
 
     /// Creation timestamp.

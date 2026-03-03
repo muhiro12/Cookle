@@ -10,10 +10,6 @@ import SwiftUI
 struct RecipeFormNameSection: View {
     @Binding private var name: String
 
-    init(_ name: Binding<String>) {
-        _name = name
-    }
-
     var body: some View {
         Section {
             TextField(text: $name) {
@@ -26,6 +22,10 @@ struct RecipeFormNameSection: View {
                     .foregroundStyle(.red)
             }
         }
+    }
+
+    init(_ name: Binding<String>) {
+        _name = name
     }
 }
 

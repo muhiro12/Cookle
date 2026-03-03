@@ -1,20 +1,19 @@
 import SwiftUI
 
 struct DebugSidebarView: View {
-    @Environment(\.modelContext) private var context
-    @Environment(\.isPresented) private var isPresented
+    @Environment(\.modelContext)
+    private var context
+    @Environment(\.isPresented)
+    private var isPresented
 
-    @AppStorage(.isDebugOn) private var isDebugOn
+    @AppStorage(.isDebugOn)
+    private var isDebugOn
 
     @Binding private var content: DebugContent?
 
     @State private var previewStore = CooklePreviewStore()
     @State private var isCreatingPreviewDiaries = false
     @State private var isAlertPresented = false
-
-    init(selection: Binding<DebugContent?> = .constant(nil)) {
-        _content = selection
-    }
 
     var body: some View {
         List(selection: $content) {
@@ -96,6 +95,9 @@ struct DebugSidebarView: View {
         } message: {
             Text("Are you really going to create Preview Diary?")
         }
+    }
+    init(selection: Binding<DebugContent?> = .constant(nil)) {
+        _content = selection
     }
 
     @MainActor

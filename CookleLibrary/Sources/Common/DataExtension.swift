@@ -1,6 +1,7 @@
 import UIKit
 
 extension Data {
+    /// Returns JPEG-compressed data capped near the supplied byte size.
     public func compressed(maxSize: Int = 500 * 1_024) -> Data {
         var compressed = self
         var compressionQuality = 1.0

@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct CreateRecipeButton: View {
-    @Environment(\.modelContext) private var context
-    @Environment(\.dismiss) private var dismiss
-    @Environment(\.requestReview) private var requestReview
+    @Environment(\.modelContext)
+    private var context
+    @Environment(\.dismiss)
+    private var dismiss
+    @Environment(\.requestReview)
+    private var requestReview
 
     @State private var recipe: Recipe?
     @State private var isConfirmationDialogPresented = false
@@ -26,26 +29,6 @@ struct CreateRecipeButton: View {
     private let note: String
 
     private let useShortTitle: Bool
-
-    init(name: String,
-         photos: [PhotoData],
-         servingSize: String,
-         cookingTime: String,
-         ingredients: [RecipeFormIngredient],
-         steps: [String],
-         categories: [String],
-         note: String,
-         useShortTitle: Bool = false) {
-        self.name = name
-        self.photos = photos
-        self.servingSize = servingSize
-        self.cookingTime = cookingTime
-        self.ingredients = ingredients
-        self.steps = steps
-        self.categories = categories
-        self.note = note
-        self.useShortTitle = useShortTitle
-    }
 
     var body: some View {
         Button {
@@ -147,6 +130,26 @@ struct CreateRecipeButton: View {
         } onCancellation: {
             dismiss()
         }
+    }
+
+    init(name: String,
+         photos: [PhotoData],
+         servingSize: String,
+         cookingTime: String,
+         ingredients: [RecipeFormIngredient],
+         steps: [String],
+         categories: [String],
+         note: String,
+         useShortTitle: Bool = false) {
+        self.name = name
+        self.photos = photos
+        self.servingSize = servingSize
+        self.cookingTime = cookingTime
+        self.ingredients = ingredients
+        self.steps = steps
+        self.categories = categories
+        self.note = note
+        self.useShortTitle = useShortTitle
     }
 }
 

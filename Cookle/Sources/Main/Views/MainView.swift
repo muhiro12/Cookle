@@ -9,11 +9,16 @@ import SwiftData
 import SwiftUI
 
 struct MainView: View {
-    @Environment(\.scenePhase) private var scenePhase
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @Environment(\.modelContext) private var context
-    @Environment(\.requestReview) private var requestReview
-    @Environment(ConfigurationService.self) private var configurationService
+    @Environment(\.scenePhase)
+    private var scenePhase
+    @Environment(\.horizontalSizeClass)
+    private var horizontalSizeClass
+    @Environment(\.modelContext)
+    private var context
+    @Environment(\.requestReview)
+    private var requestReview
+    @Environment(ConfigurationService.self)
+    private var configurationService
 
     @State private var isUpdateAlertPresented = false
     @State private var navigationState = MainNavigationState()

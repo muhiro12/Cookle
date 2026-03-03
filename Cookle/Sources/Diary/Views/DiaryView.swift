@@ -9,26 +9,21 @@ import SwiftData
 import SwiftUI
 
 struct DiaryView: View {
-    @Environment(Diary.self) private var diary
+    @Environment(Diary.self)
+    private var diary
 
     @Binding private var recipe: Recipe?
-
-    init(selection: Binding<Recipe?> = .constant(nil)) {
-        _recipe = selection
-    }
 
     var body: some View {
         List(selection: $recipe) {
             ForEach(DiaryObjectType.allCases) { type in
-                if let recipes = diary.objects?
-                    .filter(
-                        {
-                            $0.type == type
-                        }
-                    )
+                let recipes = diary.objects.orEmpty
+                    .filter { object in
+                        object.type == type
+                    }
                     .sorted()
-                    .compactMap(\.recipe),
-                   recipes.isNotEmpty {
+                    .compactMap(\.recipe)
+                if recipes.isNotEmpty {
                     Section {
                         ForEach(recipes) { recipe in
                             NavigationLink(value: recipe) {
@@ -72,6 +67,10 @@ struct DiaryView: View {
                 EditDiaryButton()
             }
         }
+    }
+
+    init(selection: Binding<Recipe?> = .constant(nil)) {
+        _recipe = selection
     }
 }
 

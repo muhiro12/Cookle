@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct AddMultipleTextsView: View {
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.dismiss)
+    private var dismiss
 
     @Binding private var texts: [String]
 
@@ -9,13 +10,6 @@ struct AddMultipleTextsView: View {
 
     private let title: LocalizedStringKey
     private let placeholder: LocalizedStringKey
-
-    init(texts: Binding<[String]>, title: LocalizedStringKey, placeholder: LocalizedStringKey) {
-        self._texts = texts
-        self.text = texts.wrappedValue.joined(separator: "\n")
-        self.title = title
-        self.placeholder = placeholder
-    }
 
     var body: some View {
         TextEditor(text: $text)
@@ -46,8 +40,8 @@ struct AddMultipleTextsView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button {
-                        texts = text.split(separator: "\n", omittingEmptySubsequences: false).map {
-                            String($0)
+                        texts = text.split(separator: "\n", omittingEmptySubsequences: false).map { line in
+                            String(line)
                         }
                         text = ""
                         dismiss()
@@ -57,6 +51,13 @@ struct AddMultipleTextsView: View {
                 }
             }
             .font(nil)
+    }
+
+    init(texts: Binding<[String]>, title: LocalizedStringKey, placeholder: LocalizedStringKey) {
+        self._texts = texts
+        self.text = texts.wrappedValue.joined(separator: "\n")
+        self.title = title
+        self.placeholder = placeholder
     }
 }
 

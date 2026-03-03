@@ -1,7 +1,9 @@
 import Foundation
 import SwiftData
 
+/// Builds model containers and contexts used by Cookle.
 public enum ModelContainerFactory {
+    /// Returns the shared model container configuration.
     public static func shared() throws -> ModelContainer {
         try makeModelContainer()
     }
@@ -24,6 +26,7 @@ public enum ModelContainerFactory {
         return currentContainer
     }
 
+    /// Returns a `ModelContext` backed by the shared container.
     public static func sharedContext() throws -> ModelContext {
         .init(try shared())
     }
@@ -114,13 +117,13 @@ struct MigrationObjectCounts: Equatable {
     let ingredientCount: Int
     let photoCount: Int
 
+    nonisolated var summary: String {
+        "recipe=\(recipeCount), diary=\(diaryCount), category=\(categoryCount), ingredient=\(ingredientCount), photo=\(photoCount)"
+    }
+
     nonisolated func hasMatchingRecipeAndDiaryCounts(as legacyObjectCounts: Self) -> Bool {
         recipeCount == legacyObjectCounts.recipeCount
             && diaryCount == legacyObjectCounts.diaryCount
-    }
-
-    nonisolated var summary: String {
-        "recipe=\(recipeCount), diary=\(diaryCount), category=\(categoryCount), ingredient=\(ingredientCount), photo=\(photoCount)"
     }
 }
 

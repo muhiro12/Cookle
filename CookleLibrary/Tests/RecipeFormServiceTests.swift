@@ -73,8 +73,8 @@ struct RecipeFormServiceTests {
             context: context,
             draft: createDraft
         )
-        let firstIngredientValues = recipe.ingredientObjects?.sorted().compactMap {
-            $0.ingredient?.value
+        let firstIngredientValues = recipe.ingredientObjects?.sorted().compactMap { ingredientObject in
+            ingredientObject.ingredient?.value
         } ?? []
         #expect(firstIngredientValues == ["Flour", "Milk"])
 
@@ -98,8 +98,8 @@ struct RecipeFormServiceTests {
             draft: updateDraft
         )
 
-        let updatedIngredientValues = recipe.ingredientObjects?.sorted().compactMap {
-            $0.ingredient?.value
+        let updatedIngredientValues = recipe.ingredientObjects?.sorted().compactMap { ingredientObject in
+            ingredientObject.ingredient?.value
         } ?? []
         #expect(updatedIngredientValues == ["Egg", "Butter"])
         #expect(recipe.modifiedTimestamp >= originalModifiedTimestamp)

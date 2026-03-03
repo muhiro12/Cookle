@@ -8,10 +8,14 @@
 import Foundation
 import SwiftData
 
+/// Predicates describing how to filter `PhotoObject` records.
 public enum PhotoObjectPredicate {
+    /// Matches every photo object.
     case all
+    /// Matches no photo objects.
     case none
 
+    /// Concrete SwiftData predicate for this case.
     public var value: Foundation.Predicate<PhotoObject> {
         switch self {
         case .all:
@@ -23,6 +27,7 @@ public enum PhotoObjectPredicate {
 }
 
 public extension FetchDescriptor where T == PhotoObject {
+    /// Builds a fetch descriptor for photo-object queries.
     static func photoObjects(_ predicate: PhotoObjectPredicate, order: SortOrder = .reverse) -> FetchDescriptor {
         .init(
             predicate: predicate.value,

@@ -9,15 +9,12 @@ import SwiftData
 import SwiftUI
 
 struct DuplicateRecipeButton: View {
-    @Environment(Recipe.self) private var recipe
+    @Environment(Recipe.self)
+    private var recipe
 
     @State private var isPresented = false
 
     private let action: (() -> Void)?
-
-    init(action: (() -> Void)? = nil) {
-        self.action = action
-    }
 
     var body: some View {
         Button {
@@ -36,6 +33,10 @@ struct DuplicateRecipeButton: View {
         .sheet(isPresented: $isPresented) {
             RecipeFormNavigationView(type: .duplicate)
         }
+    }
+
+    init(action: (() -> Void)? = nil) {
+        self.action = action
     }
 }
 

@@ -10,7 +10,9 @@ import SwiftData
 
 /// Predicates describing how to filter `Diary` records.
 public enum DiaryPredicate {
+    /// Matches every diary.
     case all
+    /// Matches no diaries.
     case none
 
     /// Concrete SwiftData predicate for this case.
@@ -26,6 +28,7 @@ public enum DiaryPredicate {
 
 /// Convenience descriptors for `Diary` queries.
 public extension FetchDescriptor where T == Diary {
+    /// Builds a fetch descriptor for diary queries.
     static func diaries(_ predicate: DiaryPredicate, order: SortOrder = .reverse) -> FetchDescriptor {
         .init(
             predicate: predicate.value,

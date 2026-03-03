@@ -10,9 +10,13 @@ import SwiftData
 
 /// Predicates describing how to filter tag models.
 nonisolated public enum TagPredicate<T: Tag> {
+    /// Matches every tag.
     case all
+    /// Matches no tags.
     case none
+    /// Matches tags whose value exactly equals the supplied text.
     case valueIs(String)
+    /// Matches tags whose value contains the supplied text.
     case valueContains(String)
 
     /// Concrete SwiftData predicate for this case.
@@ -40,6 +44,7 @@ nonisolated public enum TagPredicate<T: Tag> {
 
 /// Convenience descriptors for tag queries.
 public extension FetchDescriptor where T == Ingredient {
+    /// Builds a fetch descriptor for ingredient queries.
     static func ingredients(_ predicate: TagPredicate<T>, order: SortOrder = .forward) -> FetchDescriptor {
         .init(
             predicate: predicate.value,
@@ -51,6 +56,7 @@ public extension FetchDescriptor where T == Ingredient {
 }
 
 public extension FetchDescriptor where T == Category {
+    /// Builds a fetch descriptor for category queries.
     static func categories(_ predicate: TagPredicate<T>, order: SortOrder = .forward) -> FetchDescriptor {
         .init(
             predicate: predicate.value,

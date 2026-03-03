@@ -22,7 +22,8 @@ struct CookleDiaryWidget: Widget {
 
 private struct CookleDiaryWidgetView: View {
     let entry: DiaryEntry
-    @Environment(\.widgetFamily) private var widgetFamily
+    @Environment(\.widgetFamily)
+    private var widgetFamily
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -94,7 +95,8 @@ private struct CookleDiaryWidgetView: View {
 private struct MealRow: View {
     let title: String
     let systemImageName: String
-    @Environment(\.widgetFamily) private var widgetFamily
+    @Environment(\.widgetFamily)
+    private var widgetFamily
 
     var body: some View {
         HStack(alignment: .center, spacing: 8) {

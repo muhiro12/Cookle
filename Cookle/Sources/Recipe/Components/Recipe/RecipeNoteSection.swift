@@ -9,7 +9,8 @@ import SwiftData
 import SwiftUI
 
 struct RecipeNoteSection: View {
-    @Environment(Recipe.self) private var recipe
+    @Environment(Recipe.self)
+    private var recipe
 
     var body: some View {
         Section {

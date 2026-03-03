@@ -8,10 +8,14 @@
 import Foundation
 import SwiftData
 
+/// Predicates describing how to filter `IngredientObject` records.
 public enum IngredientObjectPredicate {
+    /// Matches every ingredient object.
     case all
+    /// Matches no ingredient objects.
     case none
 
+    /// Concrete SwiftData predicate for this case.
     public var value: Foundation.Predicate<IngredientObject> {
         switch self {
         case .all:
@@ -23,6 +27,7 @@ public enum IngredientObjectPredicate {
 }
 
 public extension FetchDescriptor where T == IngredientObject {
+    /// Builds a fetch descriptor for ingredient-object queries.
     static func ingredientObjects(_ predicate: IngredientObjectPredicate, order _: SortOrder = .reverse) -> FetchDescriptor {
         .init(
             predicate: predicate.value,

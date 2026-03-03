@@ -22,7 +22,8 @@ struct CookleRecipeWidget: Widget {
 
 private struct CookleRecipeWidgetView: View {
     let entry: RecipeEntry
-    @Environment(\.widgetFamily) private var widgetFamily
+    @Environment(\.widgetFamily)
+    private var widgetFamily
 
     var body: some View {
         ZStack(alignment: .bottomLeading) {
@@ -50,7 +51,8 @@ private struct CookleRecipeWidgetView: View {
 
 private struct RecipeBackgroundImage: View {
     let image: UIImage?
-    @Environment(\.widgetFamily) private var widgetFamily
+    @Environment(\.widgetFamily)
+    private var widgetFamily
 
     var body: some View {
         Group {

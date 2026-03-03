@@ -5,10 +5,6 @@ struct AddDiaryButton: View {
 
     private let action: (() -> Void)?
 
-    init(action: (() -> Void)? = nil) {
-        self.action = action
-    }
-
     var body: some View {
         Button {
             if let action {
@@ -26,6 +22,10 @@ struct AddDiaryButton: View {
         .sheet(isPresented: $isPresented) {
             DiaryFormNavigationView()
         }
+    }
+
+    init(action: (() -> Void)? = nil) {
+        self.action = action
     }
 }
 

@@ -9,7 +9,8 @@ import SwiftData
 import SwiftUI
 
 struct DiaryFormRecipeListView: View {
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.dismiss)
+    private var dismiss
 
     @Query(.recipes(.all))
     private var recipes: [Recipe]
@@ -21,19 +22,13 @@ struct DiaryFormRecipeListView: View {
 
     private let type: DiaryObjectType
 
-    init(selection: Binding<Set<Recipe>> = .constant([]), type: DiaryObjectType) {
-        _selection = selection
-        _temporarySelection = .init(initialValue: selection.wrappedValue)
-        self.type = type
-    }
-
     var body: some View {
         List(
-            recipes.filter {
+            recipes.filter { recipe in
                 guard !searchText.isEmpty else {
                     return true
                 }
-                return $0.name.normalizedContains(searchText)
+                return recipe.name.normalizedContains(searchText)
             },
             selection: $temporarySelection
         ) { recipe in
@@ -55,6 +50,12 @@ struct DiaryFormRecipeListView: View {
                 }
             }
         }
+    }
+
+    init(selection: Binding<Set<Recipe>> = .constant([]), type: DiaryObjectType) {
+        _selection = selection
+        _temporarySelection = .init(initialValue: selection.wrappedValue)
+        self.type = type
     }
 }
 

@@ -12,10 +12,6 @@ struct AddRecipeButton: View {
 
     private let action: (() -> Void)?
 
-    init(action: (() -> Void)? = nil) {
-        self.action = action
-    }
-
     var body: some View {
         Button {
             Logger(#file).info("AddRecipeButton tapped")
@@ -34,6 +30,10 @@ struct AddRecipeButton: View {
         .sheet(isPresented: $isPresented) {
             RecipeFormNavigationView(type: .create)
         }
+    }
+
+    init(action: (() -> Void)? = nil) {
+        self.action = action
     }
 }
 

@@ -11,10 +11,6 @@ import SwiftUI
 struct RecipeFormStepsSection: View {
     @Binding private var steps: [String]
 
-    init(_ steps: Binding<[String]>) {
-        self._steps = steps
-    }
-
     var body: some View {
         Section {
             ForEach(steps.indices, id: \.self) { index in
@@ -27,11 +23,11 @@ struct RecipeFormStepsSection: View {
                     }
                 }
             }
-            .onMove {
-                steps.move(fromOffsets: $0, toOffset: $1)
+            .onMove { sourceOffsets, destinationOffset in
+                steps.move(fromOffsets: sourceOffsets, toOffset: destinationOffset)
             }
-            .onDelete {
-                steps.remove(atOffsets: $0)
+            .onDelete { offsets in
+                steps.remove(atOffsets: offsets)
             }
         } header: {
             HStack {
@@ -43,11 +39,15 @@ struct RecipeFormStepsSection: View {
             }
         }
         .onChange(of: steps) {
-            steps.removeAll {
-                $0.isEmpty
+            steps.removeAll { step in
+                step.isEmpty
             }
             steps.append(.empty)
         }
+    }
+
+    init(_ steps: Binding<[String]>) {
+        self._steps = steps
     }
 }
 

@@ -9,8 +9,10 @@ import SwiftData
 import SwiftUI
 
 struct SearchView: View {
-    @Environment(\.modelContext) private var context
-    @Environment(\.isPresented) private var isPresented
+    @Environment(\.modelContext)
+    private var context
+    @Environment(\.isPresented)
+    private var isPresented
 
     @Binding private var recipe: Recipe?
     @Binding private var incomingSearchQuery: String?
@@ -18,14 +20,6 @@ struct SearchView: View {
     @State private var recipes = [Recipe]()
     @State private var searchText = ""
     @State private var isFocused = false
-
-    init(
-        selection: Binding<Recipe?> = .constant(nil),
-        incomingSearchQuery: Binding<String?> = .constant(nil)
-    ) {
-        _recipe = selection
-        _incomingSearchQuery = incomingSearchQuery
-    }
 
     var body: some View {
         Group {
@@ -80,6 +74,14 @@ struct SearchView: View {
         .onChange(of: incomingSearchQuery) {
             applyIncomingSearchQueryIfNeeded()
         }
+    }
+
+    init(
+        selection: Binding<Recipe?> = .constant(nil),
+        incomingSearchQuery: Binding<String?> = .constant(nil)
+    ) {
+        _recipe = selection
+        _incomingSearchQuery = incomingSearchQuery
     }
 }
 

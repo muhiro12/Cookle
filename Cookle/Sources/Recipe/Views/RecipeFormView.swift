@@ -10,12 +10,16 @@ import SwiftData
 import SwiftUI
 
 struct RecipeFormView: View {
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.dismiss)
+    private var dismiss
 
-    @Environment(Recipe.self) private var recipe: Recipe?
-    @Environment(\.modelContext) private var context
+    @Environment(Recipe.self)
+    private var recipe: Recipe?
+    @Environment(\.modelContext)
+    private var context
 
-    @AppStorage(.isDebugOn) private var isDebugOn
+    @AppStorage(.isDebugOn)
+    private var isDebugOn
 
     @State private var name = ""
     @State private var photos = [PhotoData]()
@@ -30,10 +34,6 @@ struct RecipeFormView: View {
     @State private var isDebugAlertPresented = false
 
     private let type: RecipeFormType
-
-    init(type: RecipeFormType) {
-        self.type = type
-    }
 
     var body: some View {
         Form {
@@ -156,8 +156,8 @@ struct RecipeFormView: View {
                 return
             }
             name = model.name
-            photos = model.photoObjects?.sorted().compactMap {
-                guard let photo = $0.photo else {
+            photos = model.photoObjects?.sorted().compactMap { photoObject in
+                guard let photo = photoObject.photo else {
                     return nil
                 }
                 return .init(data: photo.data, source: photo.source)
@@ -177,6 +177,10 @@ struct RecipeFormView: View {
             categories = (model.categories?.map(\.value) ?? .empty) + [.empty]
             note = model.note
         }
+    }
+
+    init(type: RecipeFormType) {
+        self.type = type
     }
 }
 

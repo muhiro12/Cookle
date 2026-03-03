@@ -2,7 +2,8 @@ import SwiftData
 import SwiftUI
 
 struct DiaryObjectView: View {
-    @Environment(DiaryObject.self) private var object
+    @Environment(DiaryObject.self)
+    private var object
 
     var body: some View {
         List {

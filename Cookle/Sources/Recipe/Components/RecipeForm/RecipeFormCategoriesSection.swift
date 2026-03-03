@@ -13,10 +13,6 @@ struct RecipeFormCategoriesSection: View {
 
     @FocusState private var focusedIndex: Int?
 
-    init(_ categories: Binding<[String]>) {
-        self._categories = categories
-    }
-
     var body: some View {
         Section {
             ForEach(categories.indices, id: \.self) { index in
@@ -31,18 +27,22 @@ struct RecipeFormCategoriesSection: View {
                     }
                 }
             }
-            .onDelete {
-                categories.remove(atOffsets: $0)
+            .onDelete { offsets in
+                categories.remove(atOffsets: offsets)
             }
         } header: {
             Text("Categories")
         }
         .onChange(of: categories) {
-            categories.removeAll {
-                $0.isEmpty
+            categories.removeAll { category in
+                category.isEmpty
             }
             categories.append(.empty)
         }
+    }
+
+    init(_ categories: Binding<[String]>) {
+        self._categories = categories
     }
 }
 

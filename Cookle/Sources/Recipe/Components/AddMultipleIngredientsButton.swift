@@ -5,10 +5,6 @@ struct AddMultipleIngredientsButton: View {
 
     @State private var isPresented = false
 
-    init(ingredients: Binding<[RecipeFormIngredient]>) {
-        self._data = ingredients
-    }
-
     var body: some View {
         Button {
             isPresented = true
@@ -24,13 +20,15 @@ struct AddMultipleIngredientsButton: View {
                            data[0].amount == "" {
                             return []
                         }
-                        return data.flatMap { [$0.ingredient, $0.amount] }
+                        return data.flatMap { ingredient in
+                            [ingredient.ingredient, ingredient.amount]
+                        }
                     },
                     set: { texts in
-                        data = stride(from: 0, to: texts.count, by: 2).map {
+                        data = stride(from: 0, to: texts.count, by: 2).map { index in
                             RecipeFormIngredient(
-                                ingredient: texts[$0],
-                                amount: texts.endIndex > $0 + 1 ? texts[$0 + 1] : .empty
+                                ingredient: texts[index],
+                                amount: texts.endIndex > index + 1 ? texts[index + 1] : .empty
                             )
                         }
                     }
@@ -53,6 +51,10 @@ struct AddMultipleIngredientsButton: View {
             )
             .interactiveDismissDisabled()
         }
+    }
+
+    init(ingredients: Binding<[RecipeFormIngredient]>) {
+        self._data = ingredients
     }
 }
 

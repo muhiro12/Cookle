@@ -12,10 +12,6 @@ struct AddMultipleStepsButton: View {
 
     @State private var isPresented = false
 
-    init(steps: Binding<[String]>) {
-        self._steps = steps
-    }
-
     var body: some View {
         Button {
             isPresented = true
@@ -37,6 +33,10 @@ struct AddMultipleStepsButton: View {
             )
             .interactiveDismissDisabled()
         }
+    }
+
+    init(steps: Binding<[String]>) {
+        self._steps = steps
     }
 }
 

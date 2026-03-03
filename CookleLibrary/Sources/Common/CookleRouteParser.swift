@@ -2,11 +2,14 @@ import Foundation
 
 /// Parses incoming URLs and maps them to app navigation routes.
 public enum CookleRouteParser {
+    /// Custom URL scheme accepted by the parser.
     public static let customScheme = CookleRouteURLDefaults.customScheme
+    /// Universal-link hosts accepted by the parser.
     public static let universalLinkHosts: Set<String> = [
         CookleRouteURLDefaults.universalLinkHost
     ]
 
+    /// Parses a URL into a route understood by the app.
     public static func parse(
         url: URL,
         allowedUniversalLinkHosts: Set<String> = universalLinkHosts
@@ -49,6 +52,12 @@ public enum CookleRouteParser {
 }
 
 private extension CookleRouteParser {
+    struct DateRoute {
+        let year: Int
+        let month: Int
+        let day: Int
+    }
+
     static func normalizedPathSegments(
         from pathComponents: [String]
     ) -> [String] {
@@ -200,11 +209,5 @@ private extension CookleRouteParser {
             month: month,
             day: day
         )
-    }
-
-    struct DateRoute {
-        let year: Int
-        let month: Int
-        let day: Int
     }
 }

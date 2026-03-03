@@ -9,7 +9,8 @@ import SwiftData
 import SwiftUI
 
 struct DiaryLabel: View {
-    @Environment(Diary.self) private var diary
+    @Environment(Diary.self)
+    private var diary
 
     @State private var isEditPresented = false
     @State private var isDeletePresented = false
@@ -19,8 +20,8 @@ struct DiaryLabel: View {
             VStack(alignment: .leading) {
                 LazyVGrid(columns: [.init(.adaptive(minimum: 80))], alignment: .leading) {
                     ForEach(
-                        diary.recipes.orEmpty.compactMap {
-                            $0.photoObjects.orEmpty.min()?.photo
+                        diary.recipes.orEmpty.compactMap { recipe in
+                            recipe.photoObjects.orEmpty.min()?.photo
                         }
                     ) { photo in
                         if let image = UIImage(data: photo.data) {

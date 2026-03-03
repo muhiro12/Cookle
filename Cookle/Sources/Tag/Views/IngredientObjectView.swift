@@ -2,7 +2,8 @@ import SwiftData
 import SwiftUI
 
 struct IngredientObjectView: View {
-    @Environment(IngredientObject.self) private var object
+    @Environment(IngredientObject.self)
+    private var object
 
     var body: some View {
         List {

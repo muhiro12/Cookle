@@ -2,7 +2,8 @@ import SwiftData
 import SwiftUI
 
 struct RecipeLabel: View {
-    @Environment(Recipe.self) private var recipe
+    @Environment(Recipe.self)
+    private var recipe
 
     @State private var isEditPresented = false
     @State private var isDuplicatePresented = false

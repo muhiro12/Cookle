@@ -9,17 +9,16 @@ import SwiftData
 import SwiftUI
 
 struct DiaryListView: View {
-    @Environment(\.isPresented) private var isPresented
+    @Environment(\.isPresented)
+    private var isPresented
 
-    @AppStorage(.isSubscribeOn) private var isSubscribeOn
+    @AppStorage(.isSubscribeOn)
+    private var isSubscribeOn
 
-    @Query(.diaries(.all)) private var diaries: [Diary]
+    @Query(.diaries(.all))
+    private var diaries: [Diary]
 
     @Binding private var diary: Diary?
-
-    init(selection: Binding<Diary?> = .constant(nil)) {
-        _diary = selection
-    }
 
     var body: some View {
         Group {
@@ -28,11 +27,11 @@ struct DiaryListView: View {
                     Array(
                         Dictionary(
                             grouping: diaries
-                        ) {
-                            $0.date.formatted(.dateTime.year().month())
+                        ) { diary in
+                            diary.date.formatted(.dateTime.year().month())
                         }
-                        .sorted {
-                            $0.value[0].date > $1.value[0].date
+                        .sorted { lhs, rhs in
+                            lhs.value[0].date > rhs.value[0].date
                         }
                     ),
                     id: \.key,
@@ -64,6 +63,10 @@ struct DiaryListView: View {
                     .hidden(!isPresented)
             }
         }
+    }
+
+    init(selection: Binding<Diary?> = .constant(nil)) {
+        _diary = selection
     }
 }
 

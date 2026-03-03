@@ -57,8 +57,8 @@ private extension RecipeProvider {
         if let recipe = try recipe(for: selection, context: context) {
             let photo = recipe.photoObjects?.min()?.photo
             let imageData = photo?.data
-            let image = imageData.flatMap {
-                RecipeWidgetImageLoader.makeImage(from: $0, family: family)
+            let image = imageData.flatMap { data in
+                RecipeWidgetImageLoader.makeImage(from: data, family: family)
             }
             let deepLinkURL: URL = {
                 if let recipeID = try? recipe.id.base64Encoded() {

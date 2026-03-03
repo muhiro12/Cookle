@@ -9,7 +9,8 @@ import SwiftData
 import SwiftUI
 
 struct RecipeIngredientsSection: View {
-    @Environment(Recipe.self) private var recipe
+    @Environment(Recipe.self)
+    private var recipe
 
     var body: some View {
         if let objects = recipe.ingredientObjects,

@@ -10,9 +10,13 @@ import SwiftData
 
 /// Predicates describing how to filter `Recipe` records.
 nonisolated public enum RecipePredicate {
+    /// Matches every recipe.
     case all
+    /// Matches no recipes.
     case none
+    /// Matches the recipe with the supplied persistent identifier.
     case idIs(Recipe.ID)
+    /// Matches recipes whose name contains the supplied text.
     case nameContains(String)
     /// Name OR ingredient OR category matches. For short text (<3), tags use equality; otherwise contains.
     case anyTextMatches(String)
@@ -25,29 +29,33 @@ nonisolated public enum RecipePredicate {
         case .none:
             return .false
         case .idIs(let id):
-            return #Predicate {
-                $0.persistentModelID == id
+            return #Predicate<Recipe> { recipe in
+                recipe.persistentModelID == id
             }
         case .nameContains(let name):
             let hiragana = name.applyingTransform(.hiraganaToKatakana, reverse: true).orEmpty
             let katakana = name.applyingTransform(.hiraganaToKatakana, reverse: false).orEmpty
-            return #Predicate {
-                $0.name.localizedStandardContains(name)
-                    || $0.name.localizedStandardContains(hiragana)
-                    || $0.name.localizedStandardContains(katakana)
+            return #Predicate<Recipe> { recipe in
+                recipe.name.localizedStandardContains(name)
+                    || recipe.name.localizedStandardContains(hiragana)
+                    || recipe.name.localizedStandardContains(katakana)
             }
         case .anyTextMatches(let text):
             if text.count < 3 {
-                return #Predicate {
-                    $0.name.localizedStandardContains(text)
-                        || ($0.ingredients?.contains { $0.value == text }) == true
-                        || ($0.categories?.contains { $0.value == text }) == true
+                return #Predicate<Recipe> { recipe in
+                    recipe.name.localizedStandardContains(text)
+                        || (recipe.ingredients?.contains { ingredient in ingredient.value == text }) == true
+                        || (recipe.categories?.contains { category in category.value == text }) == true
                 }
             }
-            return #Predicate {
-                $0.name.localizedStandardContains(text)
-                    || ($0.ingredients?.contains { $0.value.localizedStandardContains(text) }) == true
-                    || ($0.categories?.contains { $0.value.localizedStandardContains(text) }) == true
+            return #Predicate<Recipe> { recipe in
+                recipe.name.localizedStandardContains(text)
+                    || (recipe.ingredients?.contains { ingredient in
+                        ingredient.value.localizedStandardContains(text)
+                    }) == true
+                    || (recipe.categories?.contains { category in
+                        category.value.localizedStandardContains(text)
+                    }) == true
             }
         }
     }
@@ -55,6 +63,7 @@ nonisolated public enum RecipePredicate {
 
 /// Convenience descriptors for `Recipe` queries.
 public extension FetchDescriptor where T == Recipe {
+    /// Builds a fetch descriptor for recipe queries.
     static func recipes(_ predicate: RecipePredicate, order: SortOrder = .forward) -> FetchDescriptor {
         .init(
             predicate: predicate.value,

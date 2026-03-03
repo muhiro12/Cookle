@@ -16,6 +16,7 @@ public struct InferredRecipeIngredient {
     /// Human-readable amount.
     public var amount: String
 
+    /// Creates an inferred ingredient entry.
     public init(ingredient: String, amount: String) {
         self.ingredient = ingredient
         self.amount = amount

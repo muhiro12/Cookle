@@ -10,8 +10,7 @@ import SwiftData
 
 @Model
 nonisolated public final class PhotoObject: SubObject {
-    @Relationship
-    public private(set) var photo = Photo?.none
+    @Relationship public private(set) var photo = Photo?.none
     public private(set) var order = Int.zero
 
     @Relationship(inverse: \Recipe.photoObjects)

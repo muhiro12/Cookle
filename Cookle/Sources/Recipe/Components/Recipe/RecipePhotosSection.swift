@@ -9,7 +9,8 @@ import SwiftData
 import SwiftUI
 
 struct RecipePhotosSection: View {
-    @Environment(Recipe.self) private var recipe
+    @Environment(Recipe.self)
+    private var recipe
 
     @State private var selectedPhoto: Photo?
 

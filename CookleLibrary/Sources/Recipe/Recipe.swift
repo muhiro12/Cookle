@@ -13,32 +13,31 @@ import SwiftData
 nonisolated public final class Recipe {
     /// Human-readable recipe name.
     public private(set) var name = String.empty
-    @Relationship
     /// Linked photos (flattened).
-    public private(set) var photos = [Photo]?.some(.empty)
-    @Relationship(deleteRule: .cascade)
+    @Relationship public private(set) var photos = [Photo]?.some(.empty)
     /// Photo objects preserving order/metadata.
+    @Relationship(deleteRule: .cascade)
     public private(set) var photoObjects = [PhotoObject]?.some(.empty)
     /// Number of servings.
     public private(set) var servingSize = Int.zero
     /// Cooking time in minutes.
     public private(set) var cookingTime = Int.zero
-    @Relationship
     /// Linked ingredient tags.
-    public private(set) var ingredients = [Ingredient]?.some(.empty)
-    @Relationship(deleteRule: .cascade)
+    @Relationship public private(set) var ingredients = [Ingredient]?.some(.empty)
     /// Ingredient objects with amount and order.
+    @Relationship(deleteRule: .cascade)
     public private(set) var ingredientObjects = [IngredientObject]?.some(.empty)
     /// Ordered cooking steps.
     public private(set) var steps = [String].empty
-    @Relationship
     /// Linked category tags.
-    public private(set) var categories = [Category]?.some(.empty)
+    @Relationship public private(set) var categories = [Category]?.some(.empty)
     /// Optional free-form note.
     public private(set) var note = String.empty
 
+    /// Diaries referencing this recipe.
     @Relationship(inverse: \Diary.recipes)
     public private(set) var diaries = [Diary]?.some(.empty)
+    /// Diary objects referencing this recipe.
     @Relationship(deleteRule: .cascade, inverse: \DiaryObject.recipe)
     public private(set) var diaryObjects = [DiaryObject]?.some(.empty)
 
@@ -49,6 +48,7 @@ nonisolated public final class Recipe {
 
     private init() {}
 
+    // swiftlint:disable function_parameter_count
     /// Creates and inserts a new recipe.
     /// - Parameters:
     ///   - context: Model context to insert into.
@@ -61,7 +61,6 @@ nonisolated public final class Recipe {
     ///   - categories: Category tags.
     ///   - note: Optional note.
     /// - Returns: The newly created `Recipe`.
-    // swiftlint:disable:next function_parameter_count
     public static func create(context: ModelContext,
                               name: String,
                               photos: [PhotoObject],
@@ -85,6 +84,7 @@ nonisolated public final class Recipe {
         recipe.note = note
         return recipe
     }
+    // swiftlint:enable function_parameter_count
 
     /// Updates the recipe fields and refreshes the modification timestamp.
     public func update(name: String,

@@ -9,7 +9,8 @@ import StoreKitWrapper
 import SwiftUI
 
 struct DebugPreviewsView: View {
-    @Environment(Store.self) private var store
+    @Environment(Store.self)
+    private var store
 
     var body: some View {
         List {

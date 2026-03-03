@@ -2,15 +2,12 @@ import SwiftData
 import SwiftUI
 
 struct EditDiaryButton: View {
-    @Environment(Diary.self) private var diary
+    @Environment(Diary.self)
+    private var diary
 
     @State private var isPresented = false
 
     private let action: (() -> Void)?
-
-    init(action: (() -> Void)? = nil) {
-        self.action = action
-    }
 
     var body: some View {
         Button {
@@ -29,6 +26,10 @@ struct EditDiaryButton: View {
         .sheet(isPresented: $isPresented) {
             DiaryFormNavigationView()
         }
+    }
+
+    init(action: (() -> Void)? = nil) {
+        self.action = action
     }
 }
 

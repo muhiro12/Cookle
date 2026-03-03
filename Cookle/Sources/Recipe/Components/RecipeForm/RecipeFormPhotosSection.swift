@@ -10,18 +10,16 @@ import SwiftData
 import SwiftUI
 
 struct RecipeFormPhotosSection: View {
-    @Environment(Recipe.self) private var recipe: Recipe?
-    @Environment(\.editMode) private var editMode
+    @Environment(Recipe.self)
+    private var recipe: Recipe?
+    @Environment(\.editMode)
+    private var editMode
 
     @Binding private var photos: [PhotoData]
 
     @State private var photosPickerItems = [PhotosPickerItem]()
     @State private var isPhotosPickerPresented = false
     @State private var isImagePlaygroundPresented = false
-
-    init(_ photos: Binding<[PhotoData]>) {
-        _photos = photos
-    }
 
     var body: some View {
         Section {
@@ -80,11 +78,11 @@ struct RecipeFormPhotosSection: View {
                                 .frame(height: 80)
                         }
                     }
-                    .onMove {
-                        photos.move(fromOffsets: $0, toOffset: $1)
+                    .onMove { sourceOffsets, destinationOffset in
+                        photos.move(fromOffsets: sourceOffsets, toOffset: destinationOffset)
                     }
-                    .onDelete {
-                        photos.remove(atOffsets: $0)
+                    .onDelete { offsets in
+                        photos.remove(atOffsets: offsets)
                     }
                 }
             }
@@ -109,8 +107,8 @@ struct RecipeFormPhotosSection: View {
             Text("Photos")
         }
         .onChange(of: photosPickerItems) {
-            photos = recipe?.photos?.map {
-                .init(data: $0.data, source: .photosPicker)
+            photos = recipe?.photos?.map { photo in
+                .init(data: photo.data, source: .photosPicker)
             } ?? .empty
             Task {
                 for item in photosPickerItems {
@@ -122,6 +120,10 @@ struct RecipeFormPhotosSection: View {
             }
         }
     }
+
+    init(_ photos: Binding<[PhotoData]>) {
+        _photos = photos
+    }
 }
 
 @available(iOS 18.0, *)
@@ -129,8 +131,8 @@ struct RecipeFormPhotosSection: View {
     @Previewable @Query var photos: [Photo]
     Form {
         RecipeFormPhotosSection(
-            .constant(photos.map {
-                .init(data: $0.data, source: $0.source)
+            .constant(photos.map { photo in
+                .init(data: photo.data, source: photo.source)
             })
         )
     }

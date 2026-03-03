@@ -2,7 +2,8 @@ import SwiftData
 import SwiftUI
 
 struct EditTagButton<T: Tag>: View {
-    @Environment(T.self) private var tag
+    @Environment(T.self)
+    private var tag
 
     @State private var isPresented = false
 

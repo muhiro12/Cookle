@@ -10,10 +10,6 @@ import SwiftUI
 struct RecipeFormServingSizeSection: View {
     @Binding private var servingSize: String
 
-    init(_ servingSize: Binding<String>) {
-        _servingSize = servingSize
-    }
-
     var body: some View {
         Section {
             HStack {
@@ -26,6 +22,10 @@ struct RecipeFormServingSizeSection: View {
         } header: {
             Text("Serving Size")
         }
+    }
+
+    init(_ servingSize: Binding<String>) {
+        _servingSize = servingSize
     }
 }
 

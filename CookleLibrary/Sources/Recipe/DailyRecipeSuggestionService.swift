@@ -33,6 +33,7 @@ public struct DailyRecipeSuggestion: Sendable {
 
 /// Planner for recipe suggestion notification schedules.
 public enum DailyRecipeSuggestionService {
+    /// Builds future daily suggestion entries from the supplied candidates.
     public static func buildSuggestions(
         candidates: [DailyRecipeSuggestionCandidate],
         now: Date = .now,

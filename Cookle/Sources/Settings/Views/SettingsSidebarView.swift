@@ -9,13 +9,19 @@ import SwiftUI
 import UIKit
 
 struct SettingsSidebarView: View {
-    @Environment(\.modelContext) private var context
-    @Environment(\.isPresented) private var isPresented
-    @Environment(\.openURL) private var openURL
-    @Environment(NotificationService.self) private var notificationService
+    @Environment(\.modelContext)
+    private var context
+    @Environment(\.isPresented)
+    private var isPresented
+    @Environment(\.openURL)
+    private var openURL
+    @Environment(NotificationService.self)
+    private var notificationService
 
-    @AppStorage(.isSubscribeOn) private var isSubscribeOn
-    @AppStorage(.isICloudOn) private var isICloudOn
+    @AppStorage(.isSubscribeOn)
+    private var isSubscribeOn
+    @AppStorage(.isICloudOn)
+    private var isICloudOn
     @AppStorage(.isDailyRecipeSuggestionNotificationOn)
     private var isDailyRecipeSuggestionNotificationOn
     @AppStorage(.dailyRecipeSuggestionHour)
@@ -26,10 +32,6 @@ struct SettingsSidebarView: View {
     @Binding private var content: SettingsContent?
 
     @State private var isAlertPresented = false
-
-    init(selection: Binding<SettingsContent?> = .constant(nil)) {
-        self._content = selection
-    }
 
     var body: some View {
         List(selection: $content) {
@@ -135,6 +137,10 @@ struct SettingsSidebarView: View {
                 await notificationService.applySuggestionSettings()
             }
         }
+    }
+
+    init(selection: Binding<SettingsContent?> = .constant(nil)) {
+        self._content = selection
     }
 }
 

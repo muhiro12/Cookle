@@ -1,8 +1,7 @@
 import SwiftUI
 
 extension MainTab {
-    @ViewBuilder
-    var rootView: some View {
+    @ViewBuilder var rootView: some View {
         switch self {
         case .diary:
             DiaryNavigationView()
@@ -25,8 +24,7 @@ extension MainTab {
         }
     }
 
-    @ViewBuilder
-    var label: some View {
+    @ViewBuilder var label: some View {
         switch self {
         case .diary:
             Label {

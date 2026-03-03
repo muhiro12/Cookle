@@ -26,6 +26,7 @@ public struct InferredRecipe {
     /// Free-form note.
     public var note: String
 
+    /// Creates an inferred recipe value.
     public init(
         name: String,
         servingSize: Int,

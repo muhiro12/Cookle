@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct ContentView: View {
-    @Environment(\.scenePhase) private var scenePhase
-    @Environment(NotificationService.self) private var notificationService
-
-    init() {}
+    @Environment(\.scenePhase)
+    private var scenePhase
+    @Environment(NotificationService.self)
+    private var notificationService
 
     var body: some View {
         MainView()
@@ -30,6 +30,8 @@ struct ContentView: View {
                 }
             }
     }
+
+    init() {}
 }
 
 @available(iOS 18.0, *)

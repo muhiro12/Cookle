@@ -6,11 +6,6 @@ struct PhotoDetailView: View {
 
     private let photos: [Photo]
 
-    init(photos: [Photo], initialValue: Photo? = nil) {
-        self.photos = photos
-        self._currentID = .init(initialValue: initialValue?.id)
-    }
-
     var body: some View {
         GeometryReader { geometry in
             ScrollView(.horizontal) {
@@ -39,6 +34,11 @@ struct PhotoDetailView: View {
             }
         }
         .environment(\.colorScheme, .dark)
+    }
+
+    init(photos: [Photo], initialValue: Photo? = nil) {
+        self.photos = photos
+        self._currentID = .init(initialValue: initialValue?.id)
     }
 }
 

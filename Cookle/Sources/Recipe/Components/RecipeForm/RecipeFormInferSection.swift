@@ -10,22 +10,6 @@ struct RecipeFormInferSection: View {
     @Binding private var categories: [String]
     @Binding private var note: String
 
-    init(name: Binding<String>,
-         servingSize: Binding<String>,
-         cookingTime: Binding<String>,
-         ingredients: Binding<[RecipeFormIngredient]>,
-         steps: Binding<[String]>,
-         categories: Binding<[String]>,
-         note: Binding<String>) {
-        _name = name
-        _servingSize = servingSize
-        _cookingTime = cookingTime
-        _ingredients = ingredients
-        _steps = steps
-        _categories = categories
-        _note = note
-    }
-
     var body: some View {
         Section {
             InferRecipeFormButton(
@@ -41,5 +25,21 @@ struct RecipeFormInferSection: View {
         } header: {
             Text("Infer From Text")
         }
+    }
+
+    init(name: Binding<String>,
+         servingSize: Binding<String>,
+         cookingTime: Binding<String>,
+         ingredients: Binding<[RecipeFormIngredient]>,
+         steps: Binding<[String]>,
+         categories: Binding<[String]>,
+         note: Binding<String>) {
+        _name = name
+        _servingSize = servingSize
+        _cookingTime = cookingTime
+        _ingredients = ingredients
+        _steps = steps
+        _categories = categories
+        _note = note
     }
 }

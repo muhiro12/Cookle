@@ -9,10 +9,14 @@ import SwiftData
 import SwiftUI
 
 struct UpdateRecipeButton: View {
-    @Environment(Recipe.self) private var recipe: Recipe
-    @Environment(\.modelContext) private var context
-    @Environment(\.dismiss) private var dismiss
-    @Environment(\.requestReview) private var requestReview
+    @Environment(Recipe.self)
+    private var recipe: Recipe
+    @Environment(\.modelContext)
+    private var context
+    @Environment(\.dismiss)
+    private var dismiss
+    @Environment(\.requestReview)
+    private var requestReview
 
     private let name: String
     private let photos: [PhotoData]
@@ -24,26 +28,6 @@ struct UpdateRecipeButton: View {
     private let note: String
 
     private let useShortTitle: Bool
-
-    init(name: String,
-         photos: [PhotoData],
-         servingSize: String,
-         cookingTime: String,
-         ingredients: [RecipeFormIngredient],
-         steps: [String],
-         categories: [String],
-         note: String,
-         useShortTitle: Bool = false) {
-        self.name = name
-        self.photos = photos
-        self.servingSize = servingSize
-        self.cookingTime = cookingTime
-        self.ingredients = ingredients
-        self.steps = steps
-        self.categories = categories
-        self.note = note
-        self.useShortTitle = useShortTitle
-    }
 
     var body: some View {
         Button {
@@ -97,6 +81,26 @@ struct UpdateRecipeButton: View {
                 note: note
             )) == nil
         )
+    }
+
+    init(name: String,
+         photos: [PhotoData],
+         servingSize: String,
+         cookingTime: String,
+         ingredients: [RecipeFormIngredient],
+         steps: [String],
+         categories: [String],
+         note: String,
+         useShortTitle: Bool = false) {
+        self.name = name
+        self.photos = photos
+        self.servingSize = servingSize
+        self.cookingTime = cookingTime
+        self.ingredients = ingredients
+        self.steps = steps
+        self.categories = categories
+        self.note = note
+        self.useShortTitle = useShortTitle
     }
 }
 

@@ -10,10 +10,6 @@ import SwiftUI
 struct RecipeFormNoteSection: View {
     @Binding private var note: String
 
-    init(_ note: Binding<String>) {
-        _note = note
-    }
-
     var body: some View {
         Section {
             TextField(text: $note, axis: .vertical) {
@@ -22,6 +18,10 @@ struct RecipeFormNoteSection: View {
         } header: {
             Text("Note")
         }
+    }
+
+    init(_ note: Binding<String>) {
+        _note = note
     }
 }
 

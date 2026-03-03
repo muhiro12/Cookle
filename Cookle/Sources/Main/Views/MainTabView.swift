@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.horizontalSizeClass)
+    private var horizontalSizeClass
 
-    @AppStorage(.isDebugOn) private var isDebugOn
+    @AppStorage(.isDebugOn)
+    private var isDebugOn
 
     @Binding private var selection: MainTab
     @Binding private var diarySelection: Diary?
@@ -20,27 +22,9 @@ struct MainTabView: View {
     @Binding private var incomingSearchQuery: String?
     @Binding private var incomingSettingsSelection: SettingsContent?
 
-    init(
-        selection: Binding<MainTab>,
-        diarySelection: Binding<Diary?> = .constant(nil),
-        diaryRecipeSelection: Binding<Recipe?> = .constant(nil),
-        recipeSelection: Binding<Recipe?> = .constant(nil),
-        searchSelection: Binding<Recipe?> = .constant(nil),
-        incomingSearchQuery: Binding<String?> = .constant(nil),
-        incomingSettingsSelection: Binding<SettingsContent?> = .constant(nil)
-    ) {
-        _selection = selection
-        _diarySelection = diarySelection
-        _diaryRecipeSelection = diaryRecipeSelection
-        _recipeSelection = recipeSelection
-        _searchSelection = searchSelection
-        _incomingSearchQuery = incomingSearchQuery
-        _incomingSettingsSelection = incomingSettingsSelection
-    }
-
     private var tabs: [MainTab] {
-        MainTab.allCases.filter {
-            switch $0 {
+        MainTab.allCases.filter { tab in
+            switch tab {
             case .diary, .recipe, .photo, .search:
                 true
             case .ingredient, .category, .settings:
@@ -75,6 +59,24 @@ struct MainTabView: View {
                 }
             }
         }
+    }
+
+    init(
+        selection: Binding<MainTab>,
+        diarySelection: Binding<Diary?> = .constant(nil),
+        diaryRecipeSelection: Binding<Recipe?> = .constant(nil),
+        recipeSelection: Binding<Recipe?> = .constant(nil),
+        searchSelection: Binding<Recipe?> = .constant(nil),
+        incomingSearchQuery: Binding<String?> = .constant(nil),
+        incomingSettingsSelection: Binding<SettingsContent?> = .constant(nil)
+    ) {
+        _selection = selection
+        _diarySelection = diarySelection
+        _diaryRecipeSelection = diaryRecipeSelection
+        _recipeSelection = recipeSelection
+        _searchSelection = searchSelection
+        _incomingSearchQuery = incomingSearchQuery
+        _incomingSettingsSelection = incomingSettingsSelection
     }
 }
 

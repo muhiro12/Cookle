@@ -11,6 +11,7 @@ nonisolated public protocol SubObject: Comparable {
 }
 
 public extension SubObject {
+    /// Orders two sub-objects by their `order` value.
     static func < (lhs: Self, rhs: Self) -> Bool {
         lhs.order < rhs.order
     }

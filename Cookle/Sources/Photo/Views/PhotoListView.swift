@@ -9,16 +9,15 @@ import SwiftData
 import SwiftUI
 
 struct PhotoListView: View {
-    @Environment(\.isPresented) private var isPresented
+    @Environment(\.isPresented)
+    private var isPresented
 
-    @Query(.photos(.sourceIs(.photosPicker))) private var photos: [Photo]
-    @Query(.photos(.sourceIs(.imagePlayground))) private var imagePlaygrounds: [Photo]
+    @Query(.photos(.sourceIs(.photosPicker)))
+    private var photos: [Photo]
+    @Query(.photos(.sourceIs(.imagePlayground)))
+    private var imagePlaygrounds: [Photo]
 
     @Binding private var photo: Photo?
-
-    init(selection: Binding<Photo?> = .constant(nil)) {
-        _photo = selection
-    }
 
     var body: some View {
         Group {
@@ -62,6 +61,10 @@ struct PhotoListView: View {
                     .hidden(!isPresented)
             }
         }
+    }
+
+    init(selection: Binding<Photo?> = .constant(nil)) {
+        _photo = selection
     }
 }
 

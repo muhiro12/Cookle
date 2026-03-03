@@ -2,11 +2,15 @@ import Foundation
 
 /// Builds shareable URLs from app routes.
 public enum CookleRouteURLBuilder {
+    /// Default custom URL scheme used by the app.
     public static let customScheme = CookleRouteURLDefaults.customScheme
+    /// Default host used for universal links.
     public static let defaultUniversalLinkHost = CookleRouteURLDefaults.universalLinkHost
+    /// Default universal-link path prefix for app routes.
     public static let defaultUniversalLinkPathPrefix =
         CookleRouteURLDefaults.universalLinkPathPrefix
 
+    /// Builds a custom-scheme URL for the supplied route.
     public static func customSchemeURL(
         for route: CookleRoute
     ) -> URL? {
@@ -24,6 +28,7 @@ public enum CookleRouteURLBuilder {
         return urlComponents.url
     }
 
+    /// Builds a universal-link URL for the supplied route.
     public static func universalLinkURL(
         for route: CookleRoute,
         host: String = defaultUniversalLinkHost,

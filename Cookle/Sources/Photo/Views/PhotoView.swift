@@ -9,15 +9,12 @@ import SwiftData
 import SwiftUI
 
 struct PhotoView: View {
-    @Environment(Photo.self) private var photo
+    @Environment(Photo.self)
+    private var photo
 
     @Binding private var recipe: Recipe?
 
     @State private var isPhotoDetailPresented = false
-
-    init(selection: Binding<Recipe?> = .constant(nil)) {
-        _recipe = selection
-    }
 
     var body: some View {
         List(selection: $recipe) {
@@ -62,6 +59,10 @@ struct PhotoView: View {
         .fullScreenCover(isPresented: $isPhotoDetailPresented) {
             PhotoDetailNavigationView(photos: [photo])
         }
+    }
+
+    init(selection: Binding<Recipe?> = .constant(nil)) {
+        _recipe = selection
     }
 }
 

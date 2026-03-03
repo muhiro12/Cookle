@@ -2,7 +2,8 @@ import SwiftData
 import SwiftUI
 
 struct DebugDetailView<Model: PersistentModel>: View {
-    @Environment(Model.self) private var model: Model
+    @Environment(Model.self)
+    private var model: Model
 
     var body: some View {
         Group {
@@ -12,8 +13,8 @@ struct DebugDetailView<Model: PersistentModel>: View {
                     .toolbar {
                         ToolbarItem {
                             Menu("Recipes") {
-                                ForEach(diary.recipes.orEmpty) {
-                                    Text($0.name)
+                                ForEach(diary.recipes.orEmpty) { recipe in
+                                    Text(recipe.name)
                                 }
                             }
                         }
@@ -27,8 +28,8 @@ struct DebugDetailView<Model: PersistentModel>: View {
                     .toolbar {
                         ToolbarItem {
                             Menu("Objects") {
-                                ForEach(ingredient.objects.orEmpty) {
-                                    Text($0.amount)
+                                ForEach(ingredient.objects.orEmpty) { object in
+                                    Text(object.amount)
                                 }
                             }
                         }

@@ -4,7 +4,8 @@ import SwiftUI
 
 @available(iOS 26.0, *)
 struct InferRecipeFormView: View {
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.dismiss)
+    private var dismiss
 
     @Binding private var name: String
     @Binding private var servingSize: String
@@ -27,24 +28,6 @@ struct InferRecipeFormView: View {
         Ingredients: Spaghetti 200g, Eggs 2, Pancetta 100g.
         Cook spaghetti. Fry pancetta. Mix eggs and cheese. Combine all.
         """
-
-    init(
-        name: Binding<String>,
-        servingSize: Binding<String>,
-        cookingTime: Binding<String>,
-        ingredients: Binding<[RecipeFormIngredient]>,
-        steps: Binding<[String]>,
-        categories: Binding<[String]>,
-        note: Binding<String>
-    ) {
-        self._name = name
-        self._servingSize = servingSize
-        self._cookingTime = cookingTime
-        self._ingredients = ingredients
-        self._steps = steps
-        self._categories = categories
-        self._note = note
-    }
 
     var body: some View {
         TextEditor(text: $text)
@@ -161,5 +144,23 @@ struct InferRecipeFormView: View {
                     self.cameraPickerItem = nil
                 }
             }
+    }
+
+    init(
+        name: Binding<String>,
+        servingSize: Binding<String>,
+        cookingTime: Binding<String>,
+        ingredients: Binding<[RecipeFormIngredient]>,
+        steps: Binding<[String]>,
+        categories: Binding<[String]>,
+        note: Binding<String>
+    ) {
+        self._name = name
+        self._servingSize = servingSize
+        self._cookingTime = cookingTime
+        self._ingredients = ingredients
+        self._steps = steps
+        self._categories = categories
+        self._note = note
     }
 }

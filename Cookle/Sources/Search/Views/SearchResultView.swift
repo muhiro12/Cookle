@@ -4,10 +4,6 @@ import SwiftUI
 struct SearchResultView: View {
     @Query private var recipes: [Recipe]
 
-    init(_ predicate: RecipePredicate) {
-        _recipes = .init(.recipes(predicate))
-    }
-
     var body: some View {
         ForEach(recipes) { recipe in
             VStack(alignment: .leading) {
@@ -27,5 +23,9 @@ struct SearchResultView: View {
             }
             .environment(recipe)
         }
+    }
+
+    init(_ predicate: RecipePredicate) {
+        _recipes = .init(.recipes(predicate))
     }
 }

@@ -2,16 +2,13 @@ import SwiftData
 import SwiftUI
 
 struct DeleteTagButton<T: Tag>: View {
-    @Environment(T.self) private var tag
+    @Environment(T.self)
+    private var tag
 
     @State private var isConfirmationPresented = false
     @State private var isAlertPresented = false
 
     private let action: (() -> Void)?
-
-    init(action: (() -> Void)? = nil) {
-        self.action = action
-    }
 
     var body: some View {
         Button(role: .destructive) {
@@ -48,6 +45,10 @@ struct DeleteTagButton<T: Tag>: View {
         } message: {
             Text("Are you sure you want to delete this item? This action cannot be undone.")
         }
+    }
+
+    init(action: (() -> Void)? = nil) {
+        self.action = action
     }
 }
 

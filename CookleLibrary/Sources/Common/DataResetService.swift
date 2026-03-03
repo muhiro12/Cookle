@@ -4,6 +4,7 @@ import SwiftData
 @preconcurrency
 @MainActor
 public enum DataResetService {
+    /// Deletes every persisted Cookle model from the supplied context.
     public static func deleteAll(context: ModelContext) throws {
         try context.delete(model: Diary.self)
         try context.delete(model: DiaryObject.self)

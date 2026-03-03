@@ -9,9 +9,11 @@ import SwiftData
 import SwiftUI
 
 struct RecipeView: View {
-    @Environment(Recipe.self) private var recipe
+    @Environment(Recipe.self)
+    private var recipe
 
-    @AppStorage(.isSubscribeOn) private var isSubscribeOn
+    @AppStorage(.isSubscribeOn)
+    private var isSubscribeOn
 
     var body: some View {
         List {

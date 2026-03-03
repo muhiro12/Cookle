@@ -11,16 +11,15 @@ import SwiftData
 /// Ingredient item with amount and order, linked to a recipe.
 @Model
 nonisolated public final class IngredientObject: SubObject {
-    @Relationship
     /// Linked ingredient tag.
-    public private(set) var ingredient = Ingredient?.none
+    @Relationship public private(set) var ingredient = Ingredient?.none
     /// Human-readable amount (e.g. "2", "200g").
     public private(set) var amount = String.empty
     /// Display order within the list.
     public private(set) var order = Int.zero
 
-    @Relationship(inverse: \Recipe.ingredientObjects)
     /// Owning recipe (inverse relation).
+    @Relationship(inverse: \Recipe.ingredientObjects)
     public private(set) var recipe = Recipe?.none
 
     /// Creation timestamp.

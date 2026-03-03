@@ -9,10 +9,13 @@ import SwiftData
 import SwiftUI
 
 struct DiaryFormView: View {
-    @Environment(\.modelContext) private var context
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext)
+    private var context
+    @Environment(\.dismiss)
+    private var dismiss
 
-    @Environment(Diary.self) private var diary: Diary?
+    @Environment(Diary.self)
+    private var diary: Diary?
 
     @State private var date = Date.now
     @State private var breakfasts = Set<Recipe>()
@@ -108,18 +111,18 @@ struct DiaryFormView: View {
         .task {
             date = diary?.date ?? .now
             breakfasts = .init(
-                diary?.objects.orEmpty.filter {
-                    $0.type == .breakfast
+                diary?.objects.orEmpty.filter { object in
+                    object.type == .breakfast
                 }.sorted().compactMap(\.recipe) ?? []
             )
             lunches = .init(
-                diary?.objects.orEmpty.filter {
-                    $0.type == .lunch
+                diary?.objects.orEmpty.filter { object in
+                    object.type == .lunch
                 }.sorted().compactMap(\.recipe) ?? []
             )
             dinners = .init(
-                diary?.objects.orEmpty.filter {
-                    $0.type == .dinner
+                diary?.objects.orEmpty.filter { object in
+                    object.type == .dinner
                 }.sorted().compactMap(\.recipe) ?? []
             )
             note = diary?.note ?? ""

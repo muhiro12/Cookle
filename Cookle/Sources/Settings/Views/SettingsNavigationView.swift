@@ -5,12 +5,6 @@ struct SettingsNavigationView: View {
 
     @State private var selection: SettingsContent?
 
-    init(
-        incomingSelection: Binding<SettingsContent?> = .constant(nil)
-    ) {
-        _incomingSelection = incomingSelection
-    }
-
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {
             SettingsSidebarView(selection: $selection)
@@ -30,6 +24,12 @@ struct SettingsNavigationView: View {
         .onChange(of: incomingSelection) {
             applyIncomingSelectionIfNeeded()
         }
+    }
+
+    init(
+        incomingSelection: Binding<SettingsContent?> = .constant(nil)
+    ) {
+        _incomingSelection = incomingSelection
     }
 }
 

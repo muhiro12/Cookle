@@ -15,7 +15,8 @@ struct AdvertisementSection {
         case medium = "Medium"
     }
 
-    @Environment(GoogleMobileAdsController.self) private var googleMobileAdsController
+    @Environment(GoogleMobileAdsController.self)
+    private var googleMobileAdsController
 
     private let size: Size
 

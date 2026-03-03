@@ -12,22 +12,6 @@ struct InferRecipeFormButton: View {
 
     @State private var isPresented = false
 
-    init(name: Binding<String>,
-         servingSize: Binding<String>,
-         cookingTime: Binding<String>,
-         ingredients: Binding<[RecipeFormIngredient]>,
-         steps: Binding<[String]>,
-         categories: Binding<[String]>,
-         note: Binding<String>) {
-        self._name = name
-        self._servingSize = servingSize
-        self._cookingTime = cookingTime
-        self._ingredients = ingredients
-        self._steps = steps
-        self._categories = categories
-        self._note = note
-    }
-
     var body: some View {
         Button {
             isPresented = true
@@ -46,5 +30,21 @@ struct InferRecipeFormButton: View {
             )
             .interactiveDismissDisabled()
         }
+    }
+
+    init(name: Binding<String>,
+         servingSize: Binding<String>,
+         cookingTime: Binding<String>,
+         ingredients: Binding<[RecipeFormIngredient]>,
+         steps: Binding<[String]>,
+         categories: Binding<[String]>,
+         note: Binding<String>) {
+        self._name = name
+        self._servingSize = servingSize
+        self._cookingTime = cookingTime
+        self._ingredients = ingredients
+        self._steps = steps
+        self._categories = categories
+        self._note = note
     }
 }

@@ -14,16 +14,53 @@ import SwiftUI
 
 @main
 struct CookleApp: App {
-    @AppStorage(.isSubscribeOn) private var isSubscribeOn
-    @AppStorage(.isICloudOn) private var isICloudOn
-    @AppStorage(.isDebugOn) private var isDebugOn
-    @AppStorage(.lastLaunchedAppVersion) private var lastLaunchedAppVersion
+    @AppStorage(.isSubscribeOn)
+    private var isSubscribeOn
+    @AppStorage(.isICloudOn)
+    private var isICloudOn
+    @AppStorage(.isDebugOn)
+    private var isDebugOn
+    @AppStorage(.lastLaunchedAppVersion)
+    private var lastLaunchedAppVersion
 
     private let sharedGoogleMobileAdsController: GoogleMobileAdsController
     private let sharedModelContainer: ModelContainer
     private let sharedStore: Store
     private let sharedConfigurationService: ConfigurationService
     private let sharedNotificationService: NotificationService
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+                .id(isICloudOn)
+                .modelContainer(sharedModelContainer)
+                .environment(sharedGoogleMobileAdsController)
+                .environment(sharedStore)
+                .environment(sharedConfigurationService)
+                .environment(sharedNotificationService)
+                .task {
+                    #if DEBUG
+                    isDebugOn = true
+                    #endif
+
+                    sharedGoogleMobileAdsController.start()
+
+                    sharedStore.open(
+                        groupID: Secret.groupID,
+                        productIDs: [Secret.productID]
+                    ) { products in
+                        isSubscribeOn = products.contains { product in
+                            product.id == Secret.productID
+                        }
+                        if !isSubscribeOn {
+                            isICloudOn = false
+                        }
+                    }
+
+                    await sharedNotificationService.synchronizeScheduledSuggestions()
+                }
+        }
+    }
 
     init() {
         let cloudKitDatabase: ModelConfiguration.CloudKitDatabase = CooklePreferences.bool(for: .isICloudOn)
@@ -61,39 +98,6 @@ struct CookleApp: App {
 
         if let currentAppVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
             lastLaunchedAppVersion = currentAppVersion
-        }
-    }
-
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-                .id(isICloudOn)
-                .modelContainer(sharedModelContainer)
-                .environment(sharedGoogleMobileAdsController)
-                .environment(sharedStore)
-                .environment(sharedConfigurationService)
-                .environment(sharedNotificationService)
-                .task {
-                    #if DEBUG
-                    isDebugOn = true
-                    #endif
-
-                    sharedGoogleMobileAdsController.start()
-
-                    sharedStore.open(
-                        groupID: Secret.groupID,
-                        productIDs: [Secret.productID]
-                    ) {
-                        isSubscribeOn = $0.contains {
-                            $0.id == Secret.productID
-                        }
-                        if !isSubscribeOn {
-                            isICloudOn = false
-                        }
-                    }
-
-                    await sharedNotificationService.synchronizeScheduledSuggestions()
-                }
         }
     }
 }

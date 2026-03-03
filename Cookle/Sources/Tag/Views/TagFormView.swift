@@ -2,9 +2,11 @@ import SwiftData
 import SwiftUI
 
 struct TagFormView<T: Tag>: View {
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.dismiss)
+    private var dismiss
 
-    @Environment(T.self) private var tag: T
+    @Environment(T.self)
+    private var tag: T
 
     @State private var value = ""
 
@@ -18,8 +20,8 @@ struct TagFormView<T: Tag>: View {
                 Text("Value")
             }
             Section {
-                ForEach(tag.recipes.orEmpty) {
-                    Text($0.name)
+                ForEach(tag.recipes.orEmpty) { recipe in
+                    Text(recipe.name)
                 }
             } header: {
                 Text("Recipes")

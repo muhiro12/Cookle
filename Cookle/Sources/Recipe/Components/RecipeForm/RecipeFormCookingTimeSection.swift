@@ -10,10 +10,6 @@ import SwiftUI
 struct RecipeFormCookingTimeSection: View {
     @Binding private var cookingTime: String
 
-    init(_ cookingTime: Binding<String>) {
-        _cookingTime = cookingTime
-    }
-
     var body: some View {
         Section {
             HStack {
@@ -26,6 +22,10 @@ struct RecipeFormCookingTimeSection: View {
         } header: {
             Text("Cooking Time")
         }
+    }
+
+    init(_ cookingTime: Binding<String>) {
+        _cookingTime = cookingTime
     }
 }
 

@@ -2,7 +2,8 @@ import SwiftData
 import SwiftUI
 
 struct PhotoObjectView: View {
-    @Environment(PhotoObject.self) private var object
+    @Environment(PhotoObject.self)
+    private var object
 
     var body: some View {
         List {

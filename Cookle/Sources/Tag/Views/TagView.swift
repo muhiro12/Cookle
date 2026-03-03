@@ -9,13 +9,10 @@ import SwiftData
 import SwiftUI
 
 struct TagView<T: Tag>: View {
-    @Environment(T.self) private var tag
+    @Environment(T.self)
+    private var tag
 
     @Binding private var recipe: Recipe?
-
-    init(selection: Binding<Recipe?> = .constant(nil)) {
-        _recipe = selection
-    }
 
     var body: some View {
         List(selection: $recipe) {
@@ -53,6 +50,10 @@ struct TagView<T: Tag>: View {
                 EditTagButton<T>()
             }
         }
+    }
+
+    init(selection: Binding<Recipe?> = .constant(nil)) {
+        _recipe = selection
     }
 }
 

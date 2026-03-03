@@ -11,6 +11,9 @@ import SwiftUI
 
 /// Common contract for tag-like models (e.g. `Ingredient`, `Category`).
 nonisolated public protocol Tag: PersistentModel {
+    /// Localized title used in UI.
+    static var title: LocalizedStringKey { get }
+
     /// Display value of the tag.
     var value: String { get }
     /// Recipes associated with this tag.
@@ -22,14 +25,11 @@ nonisolated public protocol Tag: PersistentModel {
 
     /// Creates (or returns) a tag with the given value.
     static func create(context: ModelContext, value: String) -> Self
-    /// Updates the tag's value.
-    func update(value: String)
-
-    /// Localized title used in UI.
-    static var title: LocalizedStringKey { get }
-
     /// Convenience descriptor using a predicate and explicit order.
     static func descriptor(_ predicate: TagPredicate<Self>, order: SortOrder) -> FetchDescriptor<Self>
     /// Convenience descriptor using a predicate with default order.
     static func descriptor(_ predicate: TagPredicate<Self>) -> FetchDescriptor<Self>
+
+    /// Updates the tag's value.
+    func update(value: String)
 }

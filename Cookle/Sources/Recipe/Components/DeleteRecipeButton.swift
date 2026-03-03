@@ -2,15 +2,12 @@ import SwiftData
 import SwiftUI
 
 struct DeleteRecipeButton: View {
-    @Environment(Recipe.self) private var recipe
+    @Environment(Recipe.self)
+    private var recipe
 
     @State private var isPresented = false
 
     private let action: (() -> Void)?
-
-    init(action: (() -> Void)? = nil) {
-        self.action = action
-    }
 
     var body: some View {
         Button(role: .destructive) {
@@ -38,6 +35,10 @@ struct DeleteRecipeButton: View {
         } message: {
             Text("Are you sure you want to delete this item? This action cannot be undone.")
         }
+    }
+
+    init(action: (() -> Void)? = nil) {
+        self.action = action
     }
 }
 

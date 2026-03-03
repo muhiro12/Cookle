@@ -15,10 +15,6 @@ struct RecipeFormIngredientsSection: View {
 
     @FocusState private var focusedIndex: Int?
 
-    init(_ ingredients: Binding<[RecipeFormIngredient]>) {
-        self._ingredients = ingredients
-    }
-
     var body: some View {
         Section {
             ForEach(ingredients.indices, id: \.self) { index in
@@ -39,11 +35,11 @@ struct RecipeFormIngredientsSection: View {
                     }
                 }
             }
-            .onMove {
-                ingredients.move(fromOffsets: $0, toOffset: $1)
+            .onMove { sourceOffsets, destinationOffset in
+                ingredients.move(fromOffsets: sourceOffsets, toOffset: destinationOffset)
             }
-            .onDelete {
-                ingredients.remove(atOffsets: $0)
+            .onDelete { offsets in
+                ingredients.remove(atOffsets: offsets)
             }
         } header: {
             HStack {
@@ -55,17 +51,21 @@ struct RecipeFormIngredientsSection: View {
             }
         }
         .onChange(of: ingredients.map(\.ingredient)) {
-            ingredients.removeAll {
-                $0.ingredient.isEmpty && $0.amount.isEmpty
+            ingredients.removeAll { ingredient in
+                ingredient.ingredient.isEmpty && ingredient.amount.isEmpty
             }
             ingredients.append(.init(ingredient: .empty, amount: .empty))
         }
         .onChange(of: ingredients.map(\.amount)) {
-            ingredients.removeAll {
-                $0.ingredient.isEmpty && $0.amount.isEmpty
+            ingredients.removeAll { ingredient in
+                ingredient.ingredient.isEmpty && ingredient.amount.isEmpty
             }
             ingredients.append(.init(ingredient: .empty, amount: .empty))
         }
+    }
+
+    init(_ ingredients: Binding<[RecipeFormIngredient]>) {
+        self._ingredients = ingredients
     }
 }
 
@@ -74,10 +74,10 @@ struct RecipeFormIngredientsSection: View {
     @Previewable @Query var recipes: [Recipe]
     Form { () -> RecipeFormIngredientsSection in
         RecipeFormIngredientsSection(
-            .constant(recipes[0].ingredientObjects!.map {
+            .constant(recipes[0].ingredientObjects!.map { ingredientObject in
                 .init(
-                    ingredient: $0.ingredient!.value,
-                    amount: $0.amount
+                    ingredient: ingredientObject.ingredient!.value,
+                    amount: ingredientObject.amount
                 )
             } + [.init(ingredient: .empty, amount: .empty)])
         )

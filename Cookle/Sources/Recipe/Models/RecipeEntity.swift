@@ -3,6 +3,17 @@ import SwiftData
 
 @Observable
 final class RecipeEntity: AppEntity, Hashable {
+    static var defaultQuery: RecipeEntityQuery {
+        .init()
+    }
+
+    static var typeDisplayRepresentation: TypeDisplayRepresentation {
+        .init(
+            name: .init("Recipe", table: "AppIntents"),
+            numericFormat: LocalizedStringResource("\(placeholder: .int) Recipes", table: "AppIntents")
+        )
+    }
+
     let id: String
     let name: String
     let photos: [Data]
@@ -14,6 +25,13 @@ final class RecipeEntity: AppEntity, Hashable {
     let note: String
     let createdTimestamp: Date
     let modifiedTimestamp: Date
+
+    var displayRepresentation: DisplayRepresentation {
+        .init(
+            title: .init(.init(name), table: "AppIntents"),
+            image: .init(systemName: "book")
+        )
+    }
 
     init(
         id: String,
@@ -39,24 +57,6 @@ final class RecipeEntity: AppEntity, Hashable {
         self.note = note
         self.createdTimestamp = createdTimestamp
         self.modifiedTimestamp = modifiedTimestamp
-    }
-
-    static var defaultQuery: RecipeEntityQuery {
-        .init()
-    }
-
-    static var typeDisplayRepresentation: TypeDisplayRepresentation {
-        .init(
-            name: .init("Recipe", table: "AppIntents"),
-            numericFormat: LocalizedStringResource("\(placeholder: .int) Recipes", table: "AppIntents")
-        )
-    }
-
-    var displayRepresentation: DisplayRepresentation {
-        .init(
-            title: .init(.init(name), table: "AppIntents"),
-            image: .init(systemName: "book")
-        )
     }
 
     static func == (lhs: RecipeEntity, rhs: RecipeEntity) -> Bool {

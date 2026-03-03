@@ -2,15 +2,12 @@ import SwiftData
 import SwiftUI
 
 struct DebugContentView<Model: PersistentModel>: View {
-    @Environment(\.modelContext) private var context
+    @Environment(\.modelContext)
+    private var context
 
     @Query private var models: [Model]
 
     @Binding private var detail: Model?
-
-    init(selection: Binding<Model?> = .constant(nil)) {
-        _detail = selection
-    }
 
     var body: some View {
         List(selection: $detail) {
@@ -47,6 +44,10 @@ struct DebugContentView<Model: PersistentModel>: View {
             }
         }
         .navigationTitle(Text("Content"))
+    }
+
+    init(selection: Binding<Model?> = .constant(nil)) {
+        _detail = selection
     }
 }
 

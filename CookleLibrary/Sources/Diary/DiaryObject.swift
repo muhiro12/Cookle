@@ -11,16 +11,15 @@ import SwiftData
 /// Meal item linking a recipe to a diary with type and order.
 @Model
 nonisolated public final class DiaryObject: SubObject {
-    @Relationship
     /// Linked recipe.
-    public private(set) var recipe = Recipe?.none
+    @Relationship public private(set) var recipe = Recipe?.none
     /// Meal type (breakfast/lunch/dinner).
     public private(set) var type = DiaryObjectType?.none
     /// Display order within its section.
     public private(set) var order = Int.zero
 
-    @Relationship(inverse: \Diary.objects)
     /// Owning diary (inverse relation).
+    @Relationship(inverse: \Diary.objects)
     public private(set) var diary = Diary?.none
 
     /// Creation timestamp.

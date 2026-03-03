@@ -9,15 +9,17 @@ import SwiftData
 import SwiftUI
 
 struct RecipeCategoriesSection: View {
-    @Environment(Recipe.self) private var recipe
-    @Environment(\.modelContext) private var context
+    @Environment(Recipe.self)
+    private var recipe
+    @Environment(\.modelContext)
+    private var context
 
     var body: some View {
         if let categories = recipe.categories,
            categories.isNotEmpty {
             Section {
-                ForEach(categories) {
-                    Text($0.value)
+                ForEach(categories) { category in
+                    Text(category.value)
                 }
             } header: {
                 Text("Categories")

@@ -8,15 +8,17 @@
 import SwiftUI
 
 struct MenuNavigationView: View {
-    @Environment(\.isPresented) private var isPresented
+    @Environment(\.isPresented)
+    private var isPresented
 
-    @AppStorage(.isDebugOn) private var isDebugOn
+    @AppStorage(.isDebugOn)
+    private var isDebugOn
 
     @State private var tab: MainTab?
 
     private var tabs: [MainTab] {
-        MainTab.allCases.filter {
-            switch $0 {
+        MainTab.allCases.filter { tab in
+            switch tab {
             case .debug:
                 isDebugOn
             default:

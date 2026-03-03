@@ -8,18 +8,11 @@
 import SwiftUI
 
 struct SearchNavigationView: View {
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.horizontalSizeClass)
+    private var horizontalSizeClass
 
     @Binding private var recipe: Recipe?
     @Binding private var incomingSearchQuery: String?
-
-    init(
-        selection: Binding<Recipe?> = .constant(nil),
-        incomingSearchQuery: Binding<String?> = .constant(nil)
-    ) {
-        _recipe = selection
-        _incomingSearchQuery = incomingSearchQuery
-    }
 
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {
@@ -41,6 +34,14 @@ struct SearchNavigationView: View {
                     .environment(recipe)
             }
         }
+    }
+
+    init(
+        selection: Binding<Recipe?> = .constant(nil),
+        incomingSearchQuery: Binding<String?> = .constant(nil)
+    ) {
+        _recipe = selection
+        _incomingSearchQuery = incomingSearchQuery
     }
 }
 

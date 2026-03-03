@@ -9,18 +9,14 @@ import SwiftData
 import SwiftUI
 
 struct RecipeListView: View {
-    @Environment(\.isPresented) private var isPresented
+    @Environment(\.isPresented)
+    private var isPresented
 
     @Query private var recipes: [Recipe]
 
     @Binding private var recipe: Recipe?
 
     @State private var searchText = ""
-
-    init(selection: Binding<Recipe?> = .constant(nil), descriptor: FetchDescriptor<Recipe> = .recipes(.all)) {
-        _recipe = selection
-        _recipes = .init(descriptor)
-    }
 
     var body: some View {
         Group {
@@ -48,6 +44,11 @@ struct RecipeListView: View {
                     .hidden(!isPresented)
             }
         }
+    }
+
+    init(selection: Binding<Recipe?> = .constant(nil), descriptor: FetchDescriptor<Recipe> = .recipes(.all)) {
+        _recipe = selection
+        _recipes = .init(descriptor)
     }
 }
 

@@ -5,16 +5,16 @@ struct AddMultipleTextsNavigationView: View {
     private let title: LocalizedStringKey
     private let placeholder: LocalizedStringKey
 
-    init(texts: Binding<[String]>, title: LocalizedStringKey, placeholder: LocalizedStringKey) {
-        self._texts = texts
-        self.title = title
-        self.placeholder = placeholder
-    }
-
     var body: some View {
         NavigationStack {
             AddMultipleTextsView(texts: $texts, title: title, placeholder: placeholder)
         }
+    }
+
+    init(texts: Binding<[String]>, title: LocalizedStringKey, placeholder: LocalizedStringKey) {
+        self._texts = texts
+        self.title = title
+        self.placeholder = placeholder
     }
 }
 

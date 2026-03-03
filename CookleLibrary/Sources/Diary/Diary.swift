@@ -13,12 +13,11 @@ import SwiftData
 nonisolated public final class Diary {
     /// Target calendar date for this diary.
     public private(set) var date = Date.now
-    @Relationship(deleteRule: .cascade)
     /// Meal items (breakfast/lunch/dinner) with order information.
+    @Relationship(deleteRule: .cascade)
     public private(set) var objects = [DiaryObject]?.some(.empty)
-    @Relationship
     /// Flattened recipes derived from `objects`.
-    public private(set) var recipes = [Recipe]?.some(.empty)
+    @Relationship public private(set) var recipes = [Recipe]?.some(.empty)
     /// Free-form note for the day.
     public private(set) var note = String.empty
 

@@ -13,11 +13,6 @@ struct SuggestionButtons<T: Tag>: View {
 
     @Binding private var input: String
 
-    init(input: Binding<String>) {
-        _input = input
-        _suggestions = .init(T.descriptor(.valueContains(input.wrappedValue)))
-    }
-
     var body: some View {
         ScrollView(.horizontal) {
             HStack {
@@ -29,6 +24,11 @@ struct SuggestionButtons<T: Tag>: View {
                 }
             }
         }
+    }
+
+    init(input: Binding<String>) {
+        _input = input
+        _suggestions = .init(T.descriptor(.valueContains(input.wrappedValue)))
     }
 }
 

@@ -1,6 +1,8 @@
 import Foundation
 
+/// Migrates persisted store files between legacy and current locations.
 public enum DatabaseMigrator {
+    /// Copies legacy store files into the current location when required.
     public static func migrateStoreFilesIfNeeded() throws {
         try migrateStoreFilesIfNeeded(
             fileManager: .default,
@@ -9,6 +11,7 @@ public enum DatabaseMigrator {
         )
     }
 
+    /// Removes legacy store files after a successful migration.
     public static func removeLegacyStoreFilesIfNeeded() throws {
         try removeLegacyStoreFilesIfNeeded(
             fileManager: .default,

@@ -9,17 +9,15 @@ import SwiftData
 import SwiftUI
 
 struct TagListView<T: Tag>: View {
-    @Environment(\.isPresented) private var isPresented
+    @Environment(\.isPresented)
+    private var isPresented
 
-    @Query(T.descriptor(.all)) private var tags: [T]
+    @Query(T.descriptor(.all))
+    private var tags: [T]
 
     @Binding private var tag: T?
 
     @State private var searchText = ""
-
-    init(selection: Binding<T?> = .constant(nil)) {
-        _tag = selection
-    }
 
     var body: some View {
         Group {
@@ -49,6 +47,10 @@ struct TagListView<T: Tag>: View {
                     .hidden(!isPresented)
             }
         }
+    }
+
+    init(selection: Binding<T?> = .constant(nil)) {
+        _tag = selection
     }
 }
 
