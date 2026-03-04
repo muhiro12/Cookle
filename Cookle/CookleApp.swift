@@ -30,6 +30,7 @@ struct CookleApp: App {
     private let sharedConfigurationService: ConfigurationService
     private let sharedNotificationService: NotificationService
     private let sharedTipController: CookleTipController
+    private let sharedRecipeSummaryPreviewStore: RecipeSummaryPreviewStore
 
     var body: some Scene {
         WindowGroup {
@@ -41,6 +42,7 @@ struct CookleApp: App {
                 .environment(sharedConfigurationService)
                 .environment(sharedNotificationService)
                 .environment(sharedTipController)
+                .environment(sharedRecipeSummaryPreviewStore)
                 .task {
                     #if DEBUG
                     isDebugOn = true
@@ -94,6 +96,7 @@ struct CookleApp: App {
         sharedConfigurationService = .init()
         sharedNotificationService = .init(modelContainer: sharedModelContainer)
         sharedTipController = .init()
+        sharedRecipeSummaryPreviewStore = .init()
 
         CookleShortcuts.updateAppShortcutParameters()
 
