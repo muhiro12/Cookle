@@ -39,6 +39,9 @@ repository contains the full iOS project together with its shared Swift package.
   services, predicates, migrations, and utilities used by the app and intents.
 - `Widgets/` – home-screen widget extension target built on top of
   `CookleLibrary`.
+- `docs/architecture/` – current architecture rules and placement guidance.
+- `docs/adr/` – architecture decision records that capture why major design
+  choices were made.
 - `CookleLibrary/Tests/` – package tests for reusable utilities such as
   preferences, photo sources, and shared sub-object logic.
 - `ci_scripts/` – automation helpers used by Xcode Cloud and CI pipelines to
@@ -61,6 +64,11 @@ repository contains the full iOS project together with its shared Swift package.
 
 Cookle follows Apple's app architecture closely, but keeps reusable logic in the
 shared package so multiple targets can call the same workflows.
+
+Primary records:
+
+- [Shared service design](docs/architecture/shared-service-design.md)
+- [ADR 0001](docs/adr/0001-adopt-shared-services-and-workflow-adapters.md)
 
 - `CookleLibrary` owns shared SwiftData models, predicates, queries,
   validation, mutations, migrations, and route helpers.
