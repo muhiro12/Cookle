@@ -49,16 +49,19 @@ final class NotificationService: NSObject {
             return
         }
 
-        let recipeName = (try? RecipeService.randomRecipe(
+        let recipe = try? RecipeService.randomRecipe(
             context: modelContainer.mainContext
-        ))?.name ?? String(localized: "Recipe")
-
-        let content = UNMutableNotificationContent()
-        content.title = String(localized: "Recipe Suggestion")
-        content.body = String(localized: "How about making \(recipeName) today?")
-        content.sound = .default
-        content.interruptionLevel = .active
-        content.threadIdentifier = suggestionThreadIdentifier
+        )
+        let content: UNMutableNotificationContent
+        if let recipe {
+            content = notificationContent(for: recipe)
+            content.interruptionLevel = .active
+        } else {
+            content = fallbackNotificationContent(
+                recipeName: String(localized: "Recipe"),
+                interruptionLevel: .active
+            )
+        }
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
         let request = UNNotificationRequest(
@@ -148,10 +151,19 @@ private extension NotificationService {
             return []
         }
 
+        let recipesByStableIdentifier = Dictionary(
+            uniqueKeysWithValues: recipes.map { recipe in
+                (
+                    stableIdentifier(for: recipe),
+                    recipe
+                )
+            }
+        )
+
         let candidates = recipes.map { recipe in
             DailyRecipeSuggestionCandidate(
                 name: recipe.name,
-                stableIdentifier: String(describing: recipe.persistentModelID)
+                stableIdentifier: stableIdentifier(for: recipe)
             )
         }
         let suggestions = DailyRecipeSuggestionService.buildSuggestions(
@@ -170,12 +182,15 @@ private extension NotificationService {
                 from: suggestion.notifyDate
             )
 
-            let content = UNMutableNotificationContent()
-            content.title = String(localized: "Recipe Suggestion")
-            content.body = String(localized: "How about making \(suggestion.recipeName) today?")
-            content.sound = .default
-            content.interruptionLevel = .passive
-            content.threadIdentifier = suggestionThreadIdentifier
+            let content: UNMutableNotificationContent
+            if let recipe = recipesByStableIdentifier[suggestion.stableIdentifier] {
+                content = notificationContent(for: recipe)
+            } else {
+                content = fallbackNotificationContent(
+                    recipeName: suggestion.recipeName,
+                    interruptionLevel: .passive
+                )
+            }
 
             let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
             return UNNotificationRequest(
@@ -184,6 +199,52 @@ private extension NotificationService {
                 trigger: trigger
             )
         }
+    }
+
+    func notificationContent(for recipe: Recipe) -> UNMutableNotificationContent {
+        let recipeName = recipeNotificationTitle(for: recipe)
+        let content = UNMutableNotificationContent()
+        content.title = recipeName
+        content.body = RecipeBlurbService.makeBlurb(
+            request: recipeBlurbRequest(for: recipe)
+        ) ?? String(localized: "How about making \(recipeName) today?")
+        content.sound = .default
+        content.interruptionLevel = .passive
+        content.threadIdentifier = suggestionThreadIdentifier
+        return content
+    }
+
+    func fallbackNotificationContent(
+        recipeName: String,
+        interruptionLevel: UNNotificationInterruptionLevel
+    ) -> UNMutableNotificationContent {
+        let content = UNMutableNotificationContent()
+        content.title = String(localized: "Recipe Suggestion")
+        content.body = String(localized: "How about making \(recipeName) today?")
+        content.sound = .default
+        content.interruptionLevel = interruptionLevel
+        content.threadIdentifier = suggestionThreadIdentifier
+        return content
+    }
+
+    func stableIdentifier(for recipe: Recipe) -> String {
+        String(describing: recipe.persistentModelID)
+    }
+
+    func recipeBlurbRequest(for recipe: Recipe) -> RecipeBlurbRequest {
+        let ingredientValues = recipe.ingredientObjects?.sorted().compactMap { object in
+            object.ingredient?.value
+        } ?? []
+        return .init(
+            steps: recipe.steps,
+            ingredients: ingredientValues,
+            note: recipe.note
+        )
+    }
+
+    func recipeNotificationTitle(for recipe: Recipe) -> String {
+        let trimmedName = recipe.name.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmedName.isNotEmpty ? trimmedName : String(localized: "Recipe")
     }
 }
 

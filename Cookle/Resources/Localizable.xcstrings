@@ -85,6 +85,7 @@
       }
     },
     "Add at least one ingredient before generating." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -119,6 +120,7 @@
       }
     },
     "Add Ingredient" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1006,6 +1008,7 @@
       }
     },
     "Couldn't Generate Recipe" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1959,6 +1962,7 @@
       }
     },
     "Generate" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1993,6 +1997,7 @@
       }
     },
     "Generate Recipe" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2027,6 +2032,7 @@
       }
     },
     "Generate Recipe From Ingredients" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2061,6 +2067,7 @@
       }
     },
     "Generated recipes can only use the selected ingredients." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2232,7 +2239,6 @@
       "shouldTranslate" : false
     },
     "Infer From Text" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2879,6 +2885,7 @@
       }
     },
     "No ingredients selected yet." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2913,6 +2920,7 @@
       }
     },
     "No matching ingredients." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3627,6 +3635,7 @@
       }
     },
     "Please try again." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3695,6 +3704,7 @@
       }
     },
     "Preferences" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3797,6 +3807,7 @@
       }
     },
     "Quick dinner, high protein, not spicy." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -4341,6 +4352,7 @@
       }
     },
     "Selected Ingredients" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -4953,6 +4965,7 @@
       }
     },
     "The generated recipe used ingredients outside your selection. Try again with a different ingredient set." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -4987,6 +5000,7 @@
       }
     },
     "The generated recipe was incomplete. Try changing the selected ingredients or preferences." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5021,6 +5035,7 @@
       }
     },
     "The on-device model is still preparing. Try again later." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5055,6 +5070,7 @@
       }
     },
     "The on-device model is unavailable right now." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5089,6 +5105,7 @@
       }
     },
     "This device does not support on-device recipe generation." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5191,6 +5208,7 @@
       }
     },
     "Turn on Apple Intelligence to generate recipes on-device." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
