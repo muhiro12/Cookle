@@ -30,26 +30,7 @@ extension View {
         if #available(iOS 18.1, *) {
             imagePlaygroundSheet(
                 isPresented: isPresented,
-                concepts: {
-                    var concepts = [ImagePlaygroundConcept].empty
-                    guard let recipe else {
-                        return concepts
-                    }
-                    concepts.append(
-                        .text(recipe.name)
-                    )
-                    recipe.ingredients?.forEach { element in
-                        concepts.append(
-                            .text(element.value)
-                        )
-                    }
-                    recipe.steps.forEach { step in
-                        concepts.append(
-                            .extracted(from: step, title: recipe.name)
-                        )
-                    }
-                    return concepts
-                }()
+                concepts: imagePlaygroundConcepts(for: recipe)
             ) { url in
                 guard let data = try? Data(contentsOf: url) else {
                     return
@@ -59,5 +40,41 @@ extension View {
                 onCancellation?()
             }
         }
+    }
+
+    @available(iOS 18.1, *)
+    private func imagePlaygroundConcepts(for recipe: Recipe?) -> [ImagePlaygroundConcept] {
+        guard let recipe else {
+            return .empty
+        }
+
+        let ingredients = recipe.ingredientObjects?.sorted().compactMap { object in
+            object.ingredient?.value
+        } ?? .empty
+        guard let draft = RecipeImageConceptService.makeDraft(
+            request: .init(
+                name: recipe.name,
+                ingredients: ingredients,
+                steps: recipe.steps
+            )
+        ) else {
+            return .empty
+        }
+
+        var concepts = [ImagePlaygroundConcept].empty
+        concepts.append(
+            .text(draft.title)
+        )
+        draft.ingredients.forEach { ingredient in
+            concepts.append(
+                .text(ingredient)
+            )
+        }
+        if let combinedSteps = draft.combinedSteps {
+            concepts.append(
+                .extracted(from: combinedSteps, title: draft.title)
+            )
+        }
+        return concepts
     }
 }
