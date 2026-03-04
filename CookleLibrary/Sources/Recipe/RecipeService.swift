@@ -2,19 +2,6 @@ import Foundation
 import FoundationModels
 import SwiftData
 
-struct RecipeSummaryInput: Sendable {
-    let name: String
-    let ingredients: [String]
-    let steps: [String]
-    let categories: [String]
-    let note: String
-}
-
-enum RecipeSummaryValidationError: Error, Equatable {
-    case emptyRecipe
-    case invalidResponse
-}
-
 struct IngredientRecipeGenerationInput: Sendable {
     let availableIngredients: [String]
     let additionalInstructions: String
@@ -24,12 +11,6 @@ enum IngredientRecipeGenerationValidationError: Error, Equatable {
     case emptyIngredients
     case invalidResponse
     case disallowedIngredients([String])
-}
-
-@available(iOS 26.0, *)
-@Generable
-private struct RecipeSummaryResponse {
-    var summary: String
 }
 
 @available(iOS 26.0, *)
@@ -131,44 +112,6 @@ public enum RecipeService {
         try context.fetch(.recipes(.anyTextMatches(text)))
     }
 
-    static func recipeSummaryInput(
-        name: String,
-        ingredients: [String],
-        steps: [String],
-        categories: [String],
-        note: String
-    ) throws -> RecipeSummaryInput {
-        let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        let trimmedIngredients = trimmedNonEmptyValues(from: ingredients)
-        let trimmedSteps = trimmedNonEmptyValues(from: steps)
-        let trimmedCategories = trimmedNonEmptyValues(from: categories)
-        let trimmedNote = note.trimmingCharacters(in: .whitespacesAndNewlines)
-
-        guard trimmedName.isNotEmpty
-                || trimmedIngredients.isNotEmpty
-                || trimmedSteps.isNotEmpty
-                || trimmedCategories.isNotEmpty
-                || trimmedNote.isNotEmpty else {
-            throw RecipeSummaryValidationError.emptyRecipe
-        }
-
-        return .init(
-            name: trimmedName,
-            ingredients: trimmedIngredients,
-            steps: trimmedSteps,
-            categories: trimmedCategories,
-            note: trimmedNote
-        )
-    }
-
-    static func validateRecipeSummary(_ summary: String) throws -> String {
-        let trimmedSummary = summary.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard trimmedSummary.isNotEmpty else {
-            throw RecipeSummaryValidationError.invalidResponse
-        }
-        return trimmedSummary
-    }
-
     static func ingredientRecipeGenerationInput(
         availableIngredients: [String],
         additionalInstructions: String
@@ -233,56 +176,6 @@ public enum RecipeService {
         }
         guard disallowedIngredients.isEmpty else {
             throw IngredientRecipeGenerationValidationError.disallowedIngredients(disallowedIngredients)
-        }
-    }
-
-    /// Summarizes a recipe for compact list previews using the on-device model.
-    @available(iOS 26.0, *)
-    public static func summarize(request: RecipeSummaryRequest) async throws -> String {
-        let input: RecipeSummaryInput
-        do {
-            input = try recipeSummaryInput(
-                name: request.name,
-                ingredients: request.ingredients,
-                steps: request.steps,
-                categories: request.categories,
-                note: request.note
-            )
-        } catch let validationError as RecipeSummaryValidationError {
-            throw RecipeSummaryError(validationError: validationError)
-        }
-
-        let model = SystemLanguageModel.default
-        switch model.availability {
-        case .available:
-            break
-        case .unavailable(let reason):
-            throw RecipeSummaryError.modelUnavailable(reason)
-        }
-
-        let languageName = currentLanguageName()
-        let session = LanguageModelSession(
-            model: model,
-            instructions: recipeSummaryInstructions(languageName: languageName)
-        )
-
-        let response: RecipeSummaryResponse
-        do {
-            response = try await session.respond(
-                to: recipeSummaryPrompt(
-                    input: input,
-                    languageName: languageName
-                ),
-                generating: RecipeSummaryResponse.self
-            ).content
-        } catch {
-            throw RecipeSummaryError.invalidResponse
-        }
-
-        do {
-            return try validateRecipeSummary(response.summary)
-        } catch let validationError as RecipeSummaryValidationError {
-            throw RecipeSummaryError(validationError: validationError)
         }
     }
 
@@ -417,47 +310,6 @@ public enum RecipeService {
 }
 
 private extension RecipeService {
-    static func recipeSummaryInstructions(
-        languageName: String
-    ) -> String {
-        """
-        You create short recipe list previews in \(languageName).
-        Return exactly one or two concise sentences for a recipe list row.
-        Briefly describe the kind of dish, the main ingredients, and a notable cooking characteristic.
-        Do not use bullet points, markdown, headings, emojis, or lists.
-        Do not invent ingredients, health claims, or facts not present in the recipe data.
-        Keep the wording neutral, readable, and suitable for a compact mail-style preview.
-        """
-    }
-
-    static func recipeSummaryPrompt(
-        input: RecipeSummaryInput,
-        languageName: String
-    ) -> String {
-        let ingredientsLine = input.ingredients.isNotEmpty
-            ? input.ingredients.joined(separator: ", ")
-            : "None"
-        let stepsLine = input.steps.isNotEmpty
-            ? input.steps.joined(separator: " ")
-            : "None"
-        let categoriesLine = input.categories.isNotEmpty
-            ? input.categories.joined(separator: ", ")
-            : "None"
-        let noteLine = input.note.isNotEmpty ? input.note : "None"
-        let nameLine = input.name.isNotEmpty ? input.name : "None"
-
-        return """
-        Summarize this recipe in \(languageName) for a compact list preview.
-        Return only the structured response schema.
-
-        Name: \(nameLine)
-        Ingredients: \(ingredientsLine)
-        Steps: \(stepsLine)
-        Categories: \(categoriesLine)
-        Note: \(noteLine)
-        """
-    }
-
     static func currentLanguageName() -> String {
         let languageCode = Locale.current.language.languageCode?.identifier ?? "en"
         let locale = Locale.current
@@ -488,13 +340,6 @@ private extension RecipeService {
         """
     }
 
-    static func trimmedNonEmptyValues(from values: [String]) -> [String] {
-        values.compactMap { value in
-            let trimmedValue = value.trimmingCharacters(in: .whitespacesAndNewlines)
-            return trimmedValue.isNotEmpty ? trimmedValue : nil
-        }
-    }
-
     static func normalizedIngredientKey(_ value: String) -> String {
         let trimmedValue = value.trimmingCharacters(in: .whitespacesAndNewlines)
         let halfwidthValue = trimmedValue.applyingTransform(
@@ -514,18 +359,6 @@ private extension RecipeService {
             ],
             locale: .current
         )
-    }
-}
-
-@available(iOS 26.0, *)
-private extension RecipeSummaryError {
-    init(validationError: RecipeSummaryValidationError) {
-        switch validationError {
-        case .emptyRecipe:
-            self = .emptyRecipe
-        case .invalidResponse:
-            self = .invalidResponse
-        }
     }
 }
 

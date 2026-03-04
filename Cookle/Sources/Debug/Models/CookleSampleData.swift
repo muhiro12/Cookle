@@ -24,8 +24,7 @@ private enum CookleSampleDataContext {
                 store: .init(),
                 googleMobileAdsController: .init(adUnitID: Secret.adUnitIDDev),
                 notificationService: .init(modelContainer: modelContainer),
-                tipController: tipController,
-                recipeSummaryPreviewStore: .init()
+                tipController: tipController
             )
         } catch {
             fatalError("Failed to create shared Cookle sample data context: \(error.localizedDescription)")
@@ -40,7 +39,6 @@ struct CookleSampleData: PreviewModifier {
         let googleMobileAdsController: GoogleMobileAdsController
         let notificationService: NotificationService
         let tipController: CookleTipController
-        let recipeSummaryPreviewStore: RecipeSummaryPreviewStore
     }
 
     static func makeSharedContext() -> Context {
@@ -54,6 +52,5 @@ struct CookleSampleData: PreviewModifier {
             .environment(context.googleMobileAdsController)
             .environment(context.notificationService)
             .environment(context.tipController)
-            .environment(context.recipeSummaryPreviewStore)
     }
 }

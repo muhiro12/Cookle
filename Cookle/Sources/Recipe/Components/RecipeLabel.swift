@@ -4,47 +4,29 @@ import SwiftUI
 struct RecipeLabel: View {
     @Environment(Recipe.self)
     private var recipe
-    @Environment(RecipeSummaryPreviewStore.self)
-    private var recipeSummaryPreviewStore
 
     @State private var isEditPresented = false
     @State private var isDuplicatePresented = false
     @State private var isDeletePresented = false
 
-    private var ingredientSummary: String {
-        recipe.ingredientObjects?.sorted().compactMap { object in
-            object.ingredient?.value
-        }.joined(separator: ", ") ?? ""
-    }
-
-    private var categorySummary: String {
-        recipe.categories?.map(\.value).joined(separator: ", ") ?? ""
-    }
-
-    private var previewSummary: String? {
-        recipeSummaryPreviewStore.summary(for: recipe)
-    }
-
     var body: some View {
         Label {
             VStack(alignment: .leading) {
                 Text(recipe.name)
-                if let previewSummary {
-                    Text(previewSummary)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(2)
-                        .truncationMode(.tail)
-                } else {
-                    Text(ingredientSummary)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                    Text(categorySummary)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                }
+                Text(
+                    recipe.ingredientObjects?.sorted().compactMap { object in
+                        object.ingredient?.value
+                    }.joined(separator: ", ") ?? ""
+                )
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                Text(
+                    recipe.categories?.map(\.value).joined(separator: ", ") ?? ""
+                )
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
             }
         } icon: {
             if let data = recipe.photos?.first?.data,
@@ -88,18 +70,6 @@ struct RecipeLabel: View {
         .sheet(isPresented: $isDuplicatePresented) {
             RecipeFormNavigationView(type: .duplicate)
         }
-        .task(id: recipe.modifiedTimestamp) {
-            guard #available(iOS 26.0, *) else {
-                return
-            }
-
-            try? await Task.sleep(nanoseconds: 250_000_000)
-            guard Task.isCancelled == false else {
-                return
-            }
-
-            recipeSummaryPreviewStore.requestSummaryIfNeeded(for: recipe)
-        }
     }
 }
 
@@ -109,6 +79,5 @@ struct RecipeLabel: View {
     List {
         RecipeLabel()
             .environment(recipes[0])
-            .environment(RecipeSummaryPreviewStore())
     }
 }

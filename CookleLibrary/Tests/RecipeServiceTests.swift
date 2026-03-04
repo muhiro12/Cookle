@@ -175,68 +175,6 @@ struct RecipeServiceTests {
     }
 
     @Test
-    func recipeSummaryInput_throws_when_all_content_is_empty() {
-        #expect(throws: RecipeSummaryValidationError.emptyRecipe) {
-            _ = try RecipeService.recipeSummaryInput(
-                name: "   ",
-                ingredients: [
-                    "",
-                    "   "
-                ],
-                steps: [
-                    "\n"
-                ],
-                categories: [],
-                note: " "
-            )
-        }
-    }
-
-    @Test
-    func recipeSummaryInput_trims_and_removes_empty_values() throws {
-        let input = try RecipeService.recipeSummaryInput(
-            name: " Omelet ",
-            ingredients: [
-                " Egg ",
-                "",
-                " Milk  "
-            ],
-            steps: [
-                " Beat the eggs. ",
-                "   ",
-                "\nCook gently.\n"
-            ],
-            categories: [
-                " Breakfast ",
-                ""
-            ],
-            note: " Quick meal "
-        )
-
-        #expect(input.name == "Omelet")
-        #expect(input.ingredients == ["Egg", "Milk"])
-        #expect(input.steps == ["Beat the eggs.", "Cook gently."])
-        #expect(input.categories == ["Breakfast"])
-        #expect(input.note == "Quick meal")
-    }
-
-    @Test
-    func validateRecipeSummary_throws_when_summary_is_empty() {
-        #expect(throws: RecipeSummaryValidationError.invalidResponse) {
-            _ = try RecipeService.validateRecipeSummary("   ")
-        }
-    }
-
-    @Test
-    func validateRecipeSummary_accepts_non_empty_summary() throws {
-        let summary = try RecipeService.validateRecipeSummary(
-            " A quick egg dish with a soft, creamy finish. "
-        )
-
-        #expect(summary == "A quick egg dish with a soft, creamy finish.")
-    }
-
-    @Test
     func ingredientRecipeGenerationInput_deduplicates_normalized_values() throws {
         let input = try RecipeService.ingredientRecipeGenerationInput(
             availableIngredients: [
