@@ -57,6 +57,23 @@ repository contains the full iOS project together with its shared Swift package.
 - StoreKit, Google Mobile Ads, License List, and SwiftUtilities delivered
   through lightweight wrapper packages and Swift Package Manager.
 
+## Architecture rules
+
+Cookle follows Apple's app architecture closely, but keeps reusable logic in the
+shared package so multiple targets can call the same workflows.
+
+- `CookleLibrary` owns shared SwiftData models, predicates, queries,
+  validation, mutations, migrations, and route helpers.
+- The `Cookle` app target owns workflow services such as
+  `RecipeActionService`, `DiaryActionService`, `TagActionService`, and
+  `SettingsActionService` that add app-only side effects after shared mutations.
+- SwiftUI views and App Intents call those workflow services for commands
+  instead of mutating models directly.
+- `RecipeService.search` is the canonical recipe search API used by views,
+  intents, and widgets.
+- Route parsing and execution stay shared so deep links, widgets, and intents
+  speak the same navigation language.
+
 ## Data model overview
 
 CookleLibrary defines all persisted entities so the app, intents, and previews
@@ -79,10 +96,14 @@ Cookle exposes several intents so users can automate their workflows.
 
 - `CookleShortcuts` registers the app shortcuts and updates model containers
   based on the current iCloud setting.
-- Recipe intents cover search, last-opened, and random suggestions backed by
-  `RecipeService` queries.
-- The `CreateDiaryIntent` lets Shortcuts create diary entries by converting
-  `RecipeEntity` selections back to SwiftData models.
+- Recipe intents cover open, create, update, delete, search, last-opened, and
+  random suggestions, with mutations routed through `RecipeActionService`.
+- Diary intents cover create, update, delete, add-to-today, and show flows, and
+  use `DiaryActionService` for shared command handling.
+- Tag rename and delete intents wrap `TagActionService`, keeping tag mutations
+  aligned with the app UI.
+- Settings and navigation intents open the same route-based destinations used by
+  deep links and widgets.
 - FoundationModels hooks are stubbed for future recipe inference workflows once
   supported on iOS.
 

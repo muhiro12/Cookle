@@ -31,6 +31,10 @@ struct CookleApp: App {
     private let sharedRouteInbox: MainRouteInbox
     private let sharedNotificationService: NotificationService
     private let sharedTipController: CookleTipController
+    private let sharedRecipeActionService: RecipeActionService
+    private let sharedDiaryActionService: DiaryActionService
+    private let sharedTagActionService: TagActionService
+    private let sharedSettingsActionService: SettingsActionService
 
     var body: some Scene {
         WindowGroup {
@@ -43,6 +47,10 @@ struct CookleApp: App {
                 .environment(sharedRouteInbox)
                 .environment(sharedNotificationService)
                 .environment(sharedTipController)
+                .environment(sharedRecipeActionService)
+                .environment(sharedDiaryActionService)
+                .environment(sharedTagActionService)
+                .environment(sharedSettingsActionService)
                 .task {
                     #if DEBUG
                     isDebugOn = true
@@ -100,12 +108,28 @@ struct CookleApp: App {
             routeInbox: sharedRouteInbox
         )
         sharedTipController = .init()
+        sharedRecipeActionService = .init(
+            notificationService: sharedNotificationService
+        )
+        sharedDiaryActionService = .init()
+        sharedTagActionService = .init()
+        sharedSettingsActionService = .init(
+            notificationService: sharedNotificationService
+        )
 
         CookleShortcuts.updateAppShortcutParameters()
 
         // Provide dependencies for AppIntents entity queries
         let modelContainerForDependency = sharedModelContainer
         AppDependencyManager.shared.add { modelContainerForDependency }
+        let recipeActionServiceForDependency = sharedRecipeActionService
+        AppDependencyManager.shared.add { recipeActionServiceForDependency }
+        let diaryActionServiceForDependency = sharedDiaryActionService
+        AppDependencyManager.shared.add { diaryActionServiceForDependency }
+        let tagActionServiceForDependency = sharedTagActionService
+        AppDependencyManager.shared.add { tagActionServiceForDependency }
+        let settingsActionServiceForDependency = sharedSettingsActionService
+        AppDependencyManager.shared.add { settingsActionServiceForDependency }
 
         do {
             try sharedTipController.configureIfNeeded()

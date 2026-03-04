@@ -11,15 +11,20 @@ struct AddRecipeToTodayDiaryIntent: AppIntent {
     private var type: MealType
 
     @Dependency private var modelContainer: ModelContainer
+    @Dependency private var diaryActionService: DiaryActionService
 
     @MainActor
-    func perform() throws -> some IntentResult {
+    func perform() async throws -> some IntentResult {
         let context = modelContainer.mainContext
         guard let model = try recipe.model(context: context) else {
             return .result(dialog: "Recipe not found")
         }
-        _ = try DiaryService.add(context: context, date: .now, recipe: model, type: type.diaryType)
-        CookleWidgetReloader.reloadTodayDiaryWidget()
+        _ = try await diaryActionService.add(
+            context: context,
+            date: .now,
+            recipe: model,
+            type: type.diaryType
+        )
         return .result(dialog: "Added to today's diary")
     }
 }

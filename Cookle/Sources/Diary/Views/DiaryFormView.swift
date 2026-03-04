@@ -13,6 +13,8 @@ struct DiaryFormView: View {
     private var context
     @Environment(\.dismiss)
     private var dismiss
+    @Environment(DiaryActionService.self)
+    private var diaryActionService
 
     @Environment(Diary.self)
     private var diary: Diary?
@@ -79,28 +81,33 @@ struct DiaryFormView: View {
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button {
-                    if let diary {
-                        DiaryService.update(
-                            context: context,
-                            diary: diary,
-                            date: date,
-                            breakfasts: .init(breakfasts),
-                            lunches: .init(lunches),
-                            dinners: .init(dinners),
-                            note: note
-                        )
-                    } else {
-                        _ = DiaryService.create(
-                            context: context,
-                            date: date,
-                            breakfasts: .init(breakfasts),
-                            lunches: .init(lunches),
-                            dinners: .init(dinners),
-                            note: note
-                        )
+                    Task {
+                        do {
+                            if let diary {
+                                try await diaryActionService.update(
+                                    context: context,
+                                    diary: diary,
+                                    date: date,
+                                    breakfasts: .init(breakfasts),
+                                    lunches: .init(lunches),
+                                    dinners: .init(dinners),
+                                    note: note
+                                )
+                            } else {
+                                _ = try await diaryActionService.create(
+                                    context: context,
+                                    date: date,
+                                    breakfasts: .init(breakfasts),
+                                    lunches: .init(lunches),
+                                    dinners: .init(dinners),
+                                    note: note
+                                )
+                            }
+                            dismiss()
+                        } catch {
+                            assertionFailure(error.localizedDescription)
+                        }
                     }
-                    CookleWidgetReloader.reloadTodayDiaryWidget()
-                    dismiss()
                 } label: {
                     Text(diary != nil ? "Update" : "Add")
                 }

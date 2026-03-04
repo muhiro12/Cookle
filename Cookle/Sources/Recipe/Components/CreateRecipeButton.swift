@@ -12,10 +12,8 @@ struct CreateRecipeButton: View {
     private var context
     @Environment(\.dismiss)
     private var dismiss
-    @Environment(\.requestReview)
-    private var requestReview
-    @Environment(NotificationService.self)
-    private var notificationService
+    @Environment(RecipeActionService.self)
+    private var recipeActionService
 
     @State private var recipe: Recipe?
     @State private var isConfirmationDialogPresented = false
@@ -34,38 +32,35 @@ struct CreateRecipeButton: View {
 
     var body: some View {
         Button {
-            do {
-                let draft = try RecipeFormService.makeDraft(
-                    name: name,
-                    photos: photos,
-                    servingSize: servingSize,
-                    cookingTime: cookingTime,
-                    ingredients: ingredients,
-                    steps: steps,
-                    categories: categories,
-                    note: note
-                )
-                let model = RecipeFormService.create(
-                    context: context,
-                    draft: draft
-                )
-                recipe = model
-                CookleWidgetReloader.reloadRecipeWidgets()
-                synchronizeScheduledSuggestions()
-                if recipe?.photos?.isEmpty == true,
-                   CookleImagePlayground.isSupported {
-                    isConfirmationDialogPresented = true
-                } else {
-                    dismiss()
-                    if Int.random(in: 0..<5) == .zero {
-                        Task {
-                            try? await Task.sleep(for: .seconds(2))
-                            requestReview()
-                        }
+            Task {
+                do {
+                    let draft = try RecipeFormService.makeDraft(
+                        name: name,
+                        photos: photos,
+                        servingSize: servingSize,
+                        cookingTime: cookingTime,
+                        ingredients: ingredients,
+                        steps: steps,
+                        categories: categories,
+                        note: note
+                    )
+                    let shouldRequestReview = photos.isNotEmpty
+                        || CookleImagePlayground.isSupported == false
+                    let model = try await recipeActionService.create(
+                        context: context,
+                        draft: draft,
+                        requestReview: shouldRequestReview
+                    )
+                    recipe = model
+                    if recipe?.photos?.isEmpty == true,
+                       CookleImagePlayground.isSupported {
+                        isConfirmationDialogPresented = true
+                    } else {
+                        dismiss()
                     }
+                } catch {
+                    assertionFailure(error.localizedDescription)
                 }
-            } catch {
-                assertionFailure(error.localizedDescription)
             }
         } label: {
             Label {
@@ -107,30 +102,21 @@ struct CreateRecipeButton: View {
             isPresented: $isImagePlaygroundPresented,
             recipe: recipe
         ) { data in
-            if let recipe {
-                recipe.update(
-                    name: recipe.name,
-                    photos: [
-                        .create(
+            Task {
+                do {
+                    if let recipe {
+                        try await recipeActionService.replaceGeneratedPhoto(
                             context: context,
-                            photoData: .init(
-                                data: data.compressed(),
-                                source: .imagePlayground
-                            ),
-                            order: 1
+                            recipe: recipe,
+                            data: data
                         )
-                    ],
-                    servingSize: recipe.servingSize,
-                    cookingTime: recipe.cookingTime,
-                    ingredients: recipe.ingredientObjects ?? [],
-                    steps: recipe.steps,
-                    categories: recipe.categories ?? [],
-                    note: recipe.note
-                )
-                CookleWidgetReloader.reloadRecipeWidgets()
-                synchronizeScheduledSuggestions()
+                    }
+                    dismiss()
+                } catch {
+                    assertionFailure(error.localizedDescription)
+                    dismiss()
+                }
             }
-            dismiss()
         } onCancellation: {
             dismiss()
         }
@@ -154,12 +140,6 @@ struct CreateRecipeButton: View {
         self.categories = categories
         self.note = note
         self.useShortTitle = useShortTitle
-    }
-
-    func synchronizeScheduledSuggestions() {
-        Task {
-            await notificationService.synchronizeScheduledSuggestions()
-        }
     }
 }
 

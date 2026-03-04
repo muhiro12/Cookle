@@ -4,9 +4,14 @@ import SwiftUI
 struct DeleteTagButton<T: Tag>: View {
     @Environment(T.self)
     private var tag
+    @Environment(\.modelContext)
+    private var context
+    @Environment(TagActionService.self)
+    private var tagActionService
 
     @State private var isConfirmationPresented = false
     @State private var isAlertPresented = false
+    @State private var alertMessage = "This item is used by existing recipes."
 
     private let action: (() -> Void)?
 
@@ -32,14 +37,24 @@ struct DeleteTagButton<T: Tag>: View {
         ) {
             Button("OK", role: .cancel) {}
         } message: {
-            Text("This item is used by existing recipes.")
+            Text(alertMessage)
         }
         .confirmationDialog(
             Text("Delete \(tag.value)"),
             isPresented: $isConfirmationPresented
         ) {
             Button("Delete", role: .destructive) {
-                tag.delete()
+                Task {
+                    do {
+                        try await tagActionService.delete(
+                            context: context,
+                            tag: tag
+                        )
+                    } catch {
+                        alertMessage = error.localizedDescription
+                        isAlertPresented = true
+                    }
+                }
             }
             Button("Cancel", role: .cancel) {}
         } message: {

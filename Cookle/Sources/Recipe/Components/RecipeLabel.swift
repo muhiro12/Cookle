@@ -4,8 +4,10 @@ import SwiftUI
 struct RecipeLabel: View {
     @Environment(Recipe.self)
     private var recipe
-    @Environment(NotificationService.self)
-    private var notificationService
+    @Environment(\.modelContext)
+    private var context
+    @Environment(RecipeActionService.self)
+    private var recipeActionService
 
     @State private var isEditPresented = false
     @State private var isDuplicatePresented = false
@@ -60,9 +62,16 @@ struct RecipeLabel: View {
             isPresented: $isDeletePresented
         ) {
             Button("Delete", role: .destructive) {
-                recipe.delete()
-                CookleWidgetReloader.reloadRecipeWidgets()
-                synchronizeScheduledSuggestions()
+                Task {
+                    do {
+                        try await recipeActionService.delete(
+                            context: context,
+                            recipe: recipe
+                        )
+                    } catch {
+                        assertionFailure(error.localizedDescription)
+                    }
+                }
             }
             Button("Cancel", role: .cancel) {}
         } message: {
@@ -73,12 +82,6 @@ struct RecipeLabel: View {
         }
         .sheet(isPresented: $isDuplicatePresented) {
             RecipeFormNavigationView(type: .duplicate)
-        }
-    }
-
-    func synchronizeScheduledSuggestions() {
-        Task {
-            await notificationService.synchronizeScheduledSuggestions()
         }
     }
 }

@@ -20,6 +20,8 @@ struct SettingsSidebarView: View {
     private var notificationService
     @Environment(CookleTipController.self)
     private var tipController
+    @Environment(SettingsActionService.self)
+    private var settingsActionService
 
     @AppStorage(.isSubscribeOn)
     private var isSubscribeOn
@@ -128,9 +130,11 @@ struct SettingsSidebarView: View {
             isPresented: $isAlertPresented
         ) {
             Button(role: .destructive) {
-                withAnimation {
+                Task {
                     do {
-                        try DataResetService.deleteAll(context: context)
+                        try await settingsActionService.deleteAllData(
+                            context: context
+                        )
                     } catch {
                         assertionFailure(error.localizedDescription)
                     }

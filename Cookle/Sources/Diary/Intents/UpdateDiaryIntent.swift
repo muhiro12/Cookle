@@ -1,16 +1,9 @@
-//
-//  CreateDiaryIntent.swift
-//  Cookle
-//
-//  Created by Hiromu Nakano on 2025/07/12.
-//
-
 import AppIntents
 import SwiftData
 
-struct CreateDiaryIntent: AppIntent {
+struct UpdateDiaryIntent: AppIntent {
     static var title: LocalizedStringResource {
-        "Create New Diary"
+        "Update Diary"
     }
 
     @Parameter(title: "Date")
@@ -28,10 +21,18 @@ struct CreateDiaryIntent: AppIntent {
     @Dependency private var diaryActionService: DiaryActionService
 
     @MainActor
-    func perform() async throws -> some IntentResult {
+    func perform() async throws -> some IntentResult & ProvidesDialog {
         let context = modelContainer.mainContext
-        _ = try await diaryActionService.create(
+        guard let diary = try DiaryService.diary(
+            on: date,
+            context: context
+        ) else {
+            return .result(dialog: "Diary not found")
+        }
+
+        try await diaryActionService.update(
             context: context,
+            diary: diary,
             date: date,
             breakfasts: DiaryIntentSupport.resolveRecipes(
                 from: breakfasts,
@@ -47,6 +48,7 @@ struct CreateDiaryIntent: AppIntent {
             ),
             note: note
         )
-        return .result()
+
+        return .result(dialog: "Updated diary")
     }
 }

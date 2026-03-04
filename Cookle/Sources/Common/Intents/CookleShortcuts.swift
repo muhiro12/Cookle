@@ -22,6 +22,16 @@ struct CookleShortcuts: AppShortcutsProvider {
             systemImageName: "bird"
         )
         AppShortcut(
+            intent: OpenRecipesIntent(),
+            phrases: [
+                "Open recipes in \(.applicationName)",
+                "Show my recipes in \(.applicationName)",
+                "Browse recipes with \(.applicationName)"
+            ],
+            shortTitle: "Open Recipes",
+            systemImageName: "list.bullet"
+        )
+        AppShortcut(
             intent: ShowSearchResultIntent(),
             phrases: [
                 "Search recipes in \(.applicationName)",
@@ -50,6 +60,26 @@ struct CookleShortcuts: AppShortcutsProvider {
             ],
             shortTitle: "Show Random Recipe",
             systemImageName: "dice"
+        )
+        AppShortcut(
+            intent: ShowTodayDiaryIntent(),
+            phrases: [
+                "Show today's diary in \(.applicationName)",
+                "Open today's meals in \(.applicationName)",
+                "Check today's cooking log in \(.applicationName)"
+            ],
+            shortTitle: "Show Today's Diary",
+            systemImageName: "calendar"
+        )
+        AppShortcut(
+            intent: OpenSettingsIntent(),
+            phrases: [
+                "Open settings in \(.applicationName)",
+                "Show settings in \(.applicationName)",
+                "Go to settings in \(.applicationName)"
+            ],
+            shortTitle: "Open Settings",
+            systemImageName: "gearshape"
         )
     }
 }

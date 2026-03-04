@@ -15,10 +15,8 @@ struct UpdateRecipeButton: View {
     private var context
     @Environment(\.dismiss)
     private var dismiss
-    @Environment(\.requestReview)
-    private var requestReview
-    @Environment(NotificationService.self)
-    private var notificationService
+    @Environment(RecipeActionService.self)
+    private var recipeActionService
 
     private let name: String
     private let photos: [PhotoData]
@@ -33,33 +31,27 @@ struct UpdateRecipeButton: View {
 
     var body: some View {
         Button {
-            do {
-                let draft = try RecipeFormService.makeDraft(
-                    name: name,
-                    photos: photos,
-                    servingSize: servingSize,
-                    cookingTime: cookingTime,
-                    ingredients: ingredients,
-                    steps: steps,
-                    categories: categories,
-                    note: note
-                )
-                RecipeFormService.update(
-                    context: context,
-                    recipe: recipe,
-                    draft: draft
-                )
-                CookleWidgetReloader.reloadRecipeWidgets()
-                synchronizeScheduledSuggestions()
-                dismiss()
-                if Int.random(in: 0..<5) == .zero {
-                    Task {
-                        try? await Task.sleep(for: .seconds(2))
-                        requestReview()
-                    }
+            Task {
+                do {
+                    let draft = try RecipeFormService.makeDraft(
+                        name: name,
+                        photos: photos,
+                        servingSize: servingSize,
+                        cookingTime: cookingTime,
+                        ingredients: ingredients,
+                        steps: steps,
+                        categories: categories,
+                        note: note
+                    )
+                    try await recipeActionService.update(
+                        context: context,
+                        recipe: recipe,
+                        draft: draft
+                    )
+                    dismiss()
+                } catch {
+                    assertionFailure(error.localizedDescription)
                 }
-            } catch {
-                assertionFailure(error.localizedDescription)
             }
         } label: {
             Label {
@@ -104,12 +96,6 @@ struct UpdateRecipeButton: View {
         self.categories = categories
         self.note = note
         self.useShortTitle = useShortTitle
-    }
-
-    func synchronizeScheduledSuggestions() {
-        Task {
-            await notificationService.synchronizeScheduledSuggestions()
-        }
     }
 }
 

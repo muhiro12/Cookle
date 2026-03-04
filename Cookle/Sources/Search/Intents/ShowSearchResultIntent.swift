@@ -21,12 +21,15 @@ struct ShowSearchResultIntent: AppIntent {
 
     @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
-        _ = try SearchService.search(
+        let results = try RecipeService.search(
             context: modelContainer.mainContext,
             text: searchText
         )
+        guard results.isNotEmpty else {
+            return .result(dialog: "Not Found")
+        }
         return .result(dialog: "Result") {
-            SearchResultView(.nameContains(searchText))
+            SearchResultView(.anyTextMatches(searchText))
                 .safeAreaPadding()
                 .modelContainer(modelContainer)
         }

@@ -21,17 +21,44 @@ private enum CookleSampleDataContext {
             let routeInbox = MainActor.assumeIsolated {
                 MainRouteInbox()
             }
+            let notificationService = MainActor.assumeIsolated {
+                NotificationService(
+                    modelContainer: modelContainer,
+                    routeInbox: routeInbox
+                )
+            }
+            let configurationService = MainActor.assumeIsolated {
+                ConfigurationService()
+            }
+            let recipeActionService = MainActor.assumeIsolated {
+                RecipeActionService(
+                    notificationService: notificationService
+                )
+            }
+            let diaryActionService = MainActor.assumeIsolated {
+                DiaryActionService()
+            }
+            let tagActionService = MainActor.assumeIsolated {
+                TagActionService()
+            }
+            let settingsActionService = MainActor.assumeIsolated {
+                SettingsActionService(
+                    notificationService: notificationService
+                )
+            }
 
             return .init(
                 modelContainer: modelContainer,
                 store: .init(),
                 googleMobileAdsController: .init(adUnitID: Secret.adUnitIDDev),
                 routeInbox: routeInbox,
-                notificationService: .init(
-                    modelContainer: modelContainer,
-                    routeInbox: routeInbox
-                ),
-                tipController: tipController
+                notificationService: notificationService,
+                tipController: tipController,
+                configurationService: configurationService,
+                recipeActionService: recipeActionService,
+                diaryActionService: diaryActionService,
+                tagActionService: tagActionService,
+                settingsActionService: settingsActionService
             )
         } catch {
             fatalError("Failed to create shared Cookle sample data context: \(error.localizedDescription)")
@@ -47,6 +74,11 @@ struct CookleSampleData: PreviewModifier {
         let routeInbox: MainRouteInbox
         let notificationService: NotificationService
         let tipController: CookleTipController
+        let configurationService: ConfigurationService
+        let recipeActionService: RecipeActionService
+        let diaryActionService: DiaryActionService
+        let tagActionService: TagActionService
+        let settingsActionService: SettingsActionService
     }
 
     static func makeSharedContext() -> Context {
@@ -61,5 +93,10 @@ struct CookleSampleData: PreviewModifier {
             .environment(context.routeInbox)
             .environment(context.notificationService)
             .environment(context.tipController)
+            .environment(context.configurationService)
+            .environment(context.recipeActionService)
+            .environment(context.diaryActionService)
+            .environment(context.tagActionService)
+            .environment(context.settingsActionService)
     }
 }

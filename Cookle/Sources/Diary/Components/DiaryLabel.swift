@@ -11,6 +11,10 @@ import SwiftUI
 struct DiaryLabel: View {
     @Environment(Diary.self)
     private var diary
+    @Environment(\.modelContext)
+    private var context
+    @Environment(DiaryActionService.self)
+    private var diaryActionService
 
     @State private var isEditPresented = false
     @State private var isDeletePresented = false
@@ -63,7 +67,16 @@ struct DiaryLabel: View {
             isPresented: $isDeletePresented
         ) {
             Button("Delete", role: .destructive) {
-                diary.delete()
+                Task {
+                    do {
+                        try await diaryActionService.delete(
+                            context: context,
+                            diary: diary
+                        )
+                    } catch {
+                        assertionFailure(error.localizedDescription)
+                    }
+                }
             }
             Button("Cancel", role: .cancel) {}
         } message: {

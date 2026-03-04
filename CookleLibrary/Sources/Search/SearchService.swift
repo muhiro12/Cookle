@@ -1,32 +1,20 @@
 import Foundation
 import SwiftData
 
-/// Legacy search aggregator over name, ingredients and categories.
+/// Deprecated wrapper around `RecipeService.search(context:text:)`.
 @preconcurrency
 @MainActor
+@available(*, deprecated, message: "Use RecipeService.search(context:text:) instead")
 public enum SearchService {
-    /// Searches recipes by name, ingredients and categories.
+    /// Searches recipes using the canonical recipe search service.
     /// - Parameters:
     ///   - context: Model context to query.
     ///   - text: Search text.
     /// - Returns: Matching recipes (deduplicated).
     public static func search(context: ModelContext, text: String) throws -> [Recipe] {
-        var recipes = try context.fetch(
-            .recipes(.nameContains(text))
+        try RecipeService.search(
+            context: context,
+            text: text
         )
-        let ingredients = try context.fetch(
-            text.count < 3
-                ? .ingredients(.valueIs(text))
-                : .ingredients(.valueContains(text))
-        )
-        let categories = try context.fetch(
-            text.count < 3
-                ? .categories(.valueIs(text))
-                : .categories(.valueContains(text))
-        )
-        recipes += ingredients.flatMap(\.recipes.orEmpty)
-        recipes += categories.flatMap(\.recipes.orEmpty)
-        recipes = Array(Set(recipes))
-        return recipes
     }
 }

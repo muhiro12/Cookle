@@ -51,6 +51,14 @@ public enum RecipeService {
         try context.fetch(.recipes(.anyTextMatches(text)))
     }
 
+    /// Deletes the supplied recipe from the store.
+    public static func delete(
+        context: ModelContext,
+        recipe: Recipe
+    ) {
+        context.delete(recipe)
+    }
+
     // LLM-based inference with a graceful heuristic fallback.
     /// Infers a recipe structure from free-form text using an LLM, with a heuristic fallback.
     /// - Parameter text: Free-form user text describing a recipe.

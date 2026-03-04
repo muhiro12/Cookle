@@ -173,4 +173,27 @@ struct RecipeServiceTests {
         #expect(result === secondRecipe)
         #expect(result !== firstRecipe)
     }
+
+    @Test
+    func delete_removes_recipe_from_store() throws {
+        let recipe = Recipe.create(
+            context: context,
+            name: "Pancakes",
+            photos: [],
+            servingSize: 1,
+            cookingTime: 10,
+            ingredients: [],
+            steps: [],
+            categories: [],
+            note: ""
+        )
+
+        try RecipeService.delete(
+            context: context,
+            recipe: recipe
+        )
+
+        let result = try context.fetch(.recipes(.all))
+        #expect(result.isEmpty)
+    }
 }

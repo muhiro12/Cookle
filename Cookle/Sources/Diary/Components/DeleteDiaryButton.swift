@@ -4,6 +4,10 @@ import SwiftUI
 struct DeleteDiaryButton: View {
     @Environment(Diary.self)
     private var diary
+    @Environment(\.modelContext)
+    private var context
+    @Environment(DiaryActionService.self)
+    private var diaryActionService
 
     @State private var isPresented = false
 
@@ -28,8 +32,16 @@ struct DeleteDiaryButton: View {
             isPresented: $isPresented
         ) {
             Button("Delete", role: .destructive) {
-                diary.delete()
-                CookleWidgetReloader.reloadTodayDiaryWidget()
+                Task {
+                    do {
+                        try await diaryActionService.delete(
+                            context: context,
+                            diary: diary
+                        )
+                    } catch {
+                        assertionFailure(error.localizedDescription)
+                    }
+                }
             }
             Button("Cancel", role: .cancel) {}
         } message: {

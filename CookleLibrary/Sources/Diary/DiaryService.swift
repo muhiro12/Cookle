@@ -153,4 +153,12 @@ public enum DiaryService {
             note: note
         )
     }
+
+    /// Deletes the supplied diary from the store.
+    public static func delete(
+        context: ModelContext,
+        diary: Diary
+    ) {
+        context.delete(diary)
+    }
 }

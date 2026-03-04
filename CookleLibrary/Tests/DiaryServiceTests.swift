@@ -175,4 +175,22 @@ struct DiaryServiceTests {
         #expect(result === firstDiary)
         #expect(result !== secondDiary)
     }
+
+    @Test
+    func delete_removes_diary_from_store() throws {
+        let diary = Diary.create(
+            context: context,
+            date: .now,
+            objects: [],
+            note: "Diary"
+        )
+
+        try DiaryService.delete(
+            context: context,
+            diary: diary
+        )
+
+        let result = try context.fetch(.diaries(.all))
+        #expect(result.isEmpty)
+    }
 }
