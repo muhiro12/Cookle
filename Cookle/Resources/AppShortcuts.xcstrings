@@ -55,6 +55,116 @@
         }
       }
     },
+    "Open recipes in ${applicationName}" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Open recipes in ${applicationName}",
+              "Show my recipes in ${applicationName}",
+              "Browse recipes with ${applicationName}"
+            ]
+          }
+        },
+        "es" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Abrir las recetas en ${applicationName}",
+              "Mostrar mis recetas en ${applicationName}",
+              "Explorar recetas con ${applicationName}"
+            ]
+          }
+        },
+        "fr" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Ouvrir les recettes dans ${applicationName}",
+              "Afficher mes recettes dans ${applicationName}",
+              "Parcourir les recettes avec ${applicationName}"
+            ]
+          }
+        },
+        "ja" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}でレシピ一覧を開く",
+              "${applicationName}でマイレシピを表示",
+              "${applicationName}でレシピを閲覧"
+            ]
+          }
+        },
+        "zh-Hans" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "在${applicationName}中打开食谱列表",
+              "在${applicationName}中显示我的食谱",
+              "用${applicationName}浏览食谱"
+            ]
+          }
+        }
+      }
+    },
+    "Open settings in ${applicationName}" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Open settings in ${applicationName}",
+              "Show settings in ${applicationName}",
+              "Go to settings in ${applicationName}"
+            ]
+          }
+        },
+        "es" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Abrir ajustes en ${applicationName}",
+              "Mostrar ajustes en ${applicationName}",
+              "Ir a los ajustes en ${applicationName}"
+            ]
+          }
+        },
+        "fr" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Ouvrir les réglages dans ${applicationName}",
+              "Afficher les réglages dans ${applicationName}",
+              "Aller aux réglages dans ${applicationName}"
+            ]
+          }
+        },
+        "ja" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}で設定を開く",
+              "${applicationName}で設定を表示",
+              "${applicationName}の設定に移動"
+            ]
+          }
+        },
+        "zh-Hans" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "在${applicationName}中打开设置",
+              "在${applicationName}中显示设置",
+              "前往${applicationName}中的设置"
+            ]
+          }
+        }
+      }
+    },
     "Search recipes in ${applicationName}" : {
       "localizations" : {
         "en" : {
@@ -212,6 +322,61 @@
               "在${applicationName}中显示随机食谱",
               "用${applicationName}推荐做什么菜",
               "我该在${applicationName}中做什么？"
+            ]
+          }
+        }
+      }
+    },
+    "Show today's diary in ${applicationName}" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Show today's diary in ${applicationName}",
+              "Open today's meals in ${applicationName}",
+              "Check today's cooking log in ${applicationName}"
+            ]
+          }
+        },
+        "es" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Mostrar el diario de hoy en ${applicationName}",
+              "Abrir las comidas de hoy en ${applicationName}",
+              "Consultar el registro de cocina de hoy en ${applicationName}"
+            ]
+          }
+        },
+        "fr" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Afficher le journal d'aujourd'hui dans ${applicationName}",
+              "Ouvrir les repas d'aujourd'hui dans ${applicationName}",
+              "Consulter le journal de cuisine d'aujourd'hui dans ${applicationName}"
+            ]
+          }
+        },
+        "ja" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}で今日の日記を表示",
+              "${applicationName}で今日の食事を開く",
+              "${applicationName}で今日の料理記録を確認"
+            ]
+          }
+        },
+        "zh-Hans" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "在${applicationName}中显示今日日记",
+              "在${applicationName}中打开今天的餐食",
+              "在${applicationName}中查看今天的烹饪记录"
             ]
           }
         }
