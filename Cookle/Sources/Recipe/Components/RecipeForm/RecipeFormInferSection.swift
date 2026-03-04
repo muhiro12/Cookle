@@ -22,31 +22,18 @@ struct RecipeFormInferSection: View {
                 note: $note
             )
             .frame(maxWidth: .infinity)
-
-            GenerateRecipeFromIngredientsButton(
-                name: $name,
-                servingSize: $servingSize,
-                cookingTime: $cookingTime,
-                ingredients: $ingredients,
-                steps: $steps,
-                categories: $categories,
-                note: $note
-            )
-            .frame(maxWidth: .infinity)
         } header: {
-            Text("Generate Recipe")
+            Text("Infer From Text")
         }
     }
 
-    init(
-        name: Binding<String>,
-        servingSize: Binding<String>,
-        cookingTime: Binding<String>,
-        ingredients: Binding<[RecipeFormIngredient]>,
-        steps: Binding<[String]>,
-        categories: Binding<[String]>,
-        note: Binding<String>
-    ) {
+    init(name: Binding<String>,
+         servingSize: Binding<String>,
+         cookingTime: Binding<String>,
+         ingredients: Binding<[RecipeFormIngredient]>,
+         steps: Binding<[String]>,
+         categories: Binding<[String]>,
+         note: Binding<String>) {
         _name = name
         _servingSize = servingSize
         _cookingTime = cookingTime

@@ -128,16 +128,19 @@ struct InferRecipeFormView: View {
             isLoading = false
         }
 
-        let generatedRecipe = RecipeFormGeneratedRecipe(
-            inference: await RecipeService.infer(text: text)
-        )
-        name = generatedRecipe.name
-        servingSize = generatedRecipe.servingSize
-        cookingTime = generatedRecipe.cookingTime
-        ingredients = generatedRecipe.ingredients
-        steps = generatedRecipe.steps
-        categories = generatedRecipe.categories
-        note = generatedRecipe.note
+        let inference = await RecipeService.infer(text: text)
+        name = inference.name
+        servingSize = inference.servingSize == 0 ? "" : inference.servingSize.description
+        cookingTime = inference.cookingTime == 0 ? "" : inference.cookingTime.description
+        ingredients = inference.ingredients.map { inferredIngredient in
+            .init(
+                ingredient: inferredIngredient.ingredient,
+                amount: inferredIngredient.amount
+            )
+        } + [.init(ingredient: .empty, amount: .empty)]
+        steps = inference.steps + [.empty]
+        categories = inference.categories + [.empty]
+        note = inference.note
         dismiss()
     }
 
