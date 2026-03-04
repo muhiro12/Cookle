@@ -18,12 +18,19 @@ private enum CookleSampleDataContext {
                 try? tipController.configureIfNeeded()
                 return tipController
             }
+            let routeInbox = MainActor.assumeIsolated {
+                MainRouteInbox()
+            }
 
             return .init(
                 modelContainer: modelContainer,
                 store: .init(),
                 googleMobileAdsController: .init(adUnitID: Secret.adUnitIDDev),
-                notificationService: .init(modelContainer: modelContainer),
+                routeInbox: routeInbox,
+                notificationService: .init(
+                    modelContainer: modelContainer,
+                    routeInbox: routeInbox
+                ),
                 tipController: tipController
             )
         } catch {
@@ -37,6 +44,7 @@ struct CookleSampleData: PreviewModifier {
         let modelContainer: ModelContainer
         let store: Store
         let googleMobileAdsController: GoogleMobileAdsController
+        let routeInbox: MainRouteInbox
         let notificationService: NotificationService
         let tipController: CookleTipController
     }
@@ -50,6 +58,7 @@ struct CookleSampleData: PreviewModifier {
             .modelContainer(context.modelContainer)
             .environment(context.store)
             .environment(context.googleMobileAdsController)
+            .environment(context.routeInbox)
             .environment(context.notificationService)
             .environment(context.tipController)
     }

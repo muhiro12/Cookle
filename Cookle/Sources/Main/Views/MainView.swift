@@ -19,6 +19,8 @@ struct MainView: View {
     private var requestReview
     @Environment(ConfigurationService.self)
     private var configurationService
+    @Environment(MainRouteInbox.self)
+    private var routeInbox
 
     @State private var isUpdateAlertPresented = false
     @State private var navigationState = MainNavigationState()
@@ -48,6 +50,7 @@ struct MainView: View {
             try? await configurationService.load()
             isUpdateAlertPresented = configurationService.isUpdateRequired()
             applyPendingIntentRouteIfNeededIfPossible()
+            applyPendingRouteInboxIfNeededIfPossible()
         }
         .onChange(of: scenePhase) {
             guard scenePhase == .active else {
@@ -59,6 +62,10 @@ struct MainView: View {
             }
             requestReviewIfNeeded()
             applyPendingIntentRouteIfNeededIfPossible()
+            applyPendingRouteInboxIfNeededIfPossible()
+        }
+        .onChange(of: routeInbox.pendingURL) {
+            applyPendingRouteInboxIfNeededIfPossible()
         }
         .onOpenURL { deepLinkURL in
             handleIncomingURLIfPossible(deepLinkURL)
@@ -82,6 +89,7 @@ struct MainView: View {
     }
 }
 
+@MainActor
 private extension MainView {
     var isRegularWidth: Bool {
         horizontalSizeClass == .regular
@@ -97,6 +105,13 @@ private extension MainView {
         } catch {
             assertionFailure(error.localizedDescription)
         }
+    }
+
+    func applyPendingRouteInboxIfNeededIfPossible() {
+        guard let routeURL = routeInbox.consumePendingURL() else {
+            return
+        }
+        handleIncomingURLIfPossible(routeURL)
     }
 
     func handleIncomingURLIfPossible(_ url: URL) {

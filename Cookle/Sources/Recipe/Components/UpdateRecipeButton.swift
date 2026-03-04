@@ -17,6 +17,8 @@ struct UpdateRecipeButton: View {
     private var dismiss
     @Environment(\.requestReview)
     private var requestReview
+    @Environment(NotificationService.self)
+    private var notificationService
 
     private let name: String
     private let photos: [PhotoData]
@@ -48,6 +50,7 @@ struct UpdateRecipeButton: View {
                     draft: draft
                 )
                 CookleWidgetReloader.reloadRecipeWidgets()
+                synchronizeScheduledSuggestions()
                 dismiss()
                 if Int.random(in: 0..<5) == .zero {
                     Task {
@@ -101,6 +104,12 @@ struct UpdateRecipeButton: View {
         self.categories = categories
         self.note = note
         self.useShortTitle = useShortTitle
+    }
+
+    func synchronizeScheduledSuggestions() {
+        Task {
+            await notificationService.synchronizeScheduledSuggestions()
+        }
     }
 }
 

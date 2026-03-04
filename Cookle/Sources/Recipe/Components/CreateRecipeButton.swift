@@ -14,6 +14,8 @@ struct CreateRecipeButton: View {
     private var dismiss
     @Environment(\.requestReview)
     private var requestReview
+    @Environment(NotificationService.self)
+    private var notificationService
 
     @State private var recipe: Recipe?
     @State private var isConfirmationDialogPresented = false
@@ -49,6 +51,7 @@ struct CreateRecipeButton: View {
                 )
                 recipe = model
                 CookleWidgetReloader.reloadRecipeWidgets()
+                synchronizeScheduledSuggestions()
                 if recipe?.photos?.isEmpty == true,
                    CookleImagePlayground.isSupported {
                     isConfirmationDialogPresented = true
@@ -125,6 +128,7 @@ struct CreateRecipeButton: View {
                     note: recipe.note
                 )
                 CookleWidgetReloader.reloadRecipeWidgets()
+                synchronizeScheduledSuggestions()
             }
             dismiss()
         } onCancellation: {
@@ -150,6 +154,12 @@ struct CreateRecipeButton: View {
         self.categories = categories
         self.note = note
         self.useShortTitle = useShortTitle
+    }
+
+    func synchronizeScheduledSuggestions() {
+        Task {
+            await notificationService.synchronizeScheduledSuggestions()
+        }
     }
 }
 

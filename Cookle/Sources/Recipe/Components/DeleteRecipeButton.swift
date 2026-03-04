@@ -4,6 +4,8 @@ import SwiftUI
 struct DeleteRecipeButton: View {
     @Environment(Recipe.self)
     private var recipe
+    @Environment(NotificationService.self)
+    private var notificationService
 
     @State private var isPresented = false
 
@@ -30,6 +32,7 @@ struct DeleteRecipeButton: View {
             Button("Delete", role: .destructive) {
                 recipe.delete()
                 CookleWidgetReloader.reloadRecipeWidgets()
+                synchronizeScheduledSuggestions()
             }
             Button("Cancel", role: .cancel) {}
         } message: {
@@ -39,6 +42,12 @@ struct DeleteRecipeButton: View {
 
     init(action: (() -> Void)? = nil) {
         self.action = action
+    }
+
+    func synchronizeScheduledSuggestions() {
+        Task {
+            await notificationService.synchronizeScheduledSuggestions()
+        }
     }
 }
 

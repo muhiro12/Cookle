@@ -5,19 +5,26 @@ import UserNotifications
 @Observable
 final class NotificationService: NSObject {
     private let modelContainer: ModelContainer
+    private let routeInbox: MainRouteInbox
     private let notificationCenter = UNUserNotificationCenter.current()
     private let calendar = Calendar.current
-
-    private let suggestionIdentifierPrefix = "daily-recipe-suggestion-"
-    private let testSuggestionIdentifier = "daily-recipe-suggestion-test"
-    private let suggestionThreadIdentifier = "daily-recipe-suggestion"
+    private let attachmentStore: NotificationAttachmentStore
+    private let composer: RecipeSuggestionNotificationComposer
 
     private(set) var authorizationStatus: UNAuthorizationStatus = .notDetermined
 
-    init(modelContainer: ModelContainer) {
+    init(
+        modelContainer: ModelContainer,
+        routeInbox: MainRouteInbox
+    ) {
         self.modelContainer = modelContainer
+        self.routeInbox = routeInbox
+        let attachmentStore = NotificationAttachmentStore()
+        self.attachmentStore = attachmentStore
+        self.composer = .init(attachmentStore: attachmentStore)
         super.init()
         notificationCenter.delegate = self
+        registerNotificationCategories()
     }
 
     func synchronizeScheduledSuggestions() async {
@@ -40,7 +47,7 @@ final class NotificationService: NSObject {
 
         if authorizationStatus == .notDetermined {
             _ = try? await notificationCenter.requestAuthorization(
-                options: [.alert, .sound, .badge]
+                options: authorizationOptions
             )
             await refreshAuthorizationStatus()
         }
@@ -52,20 +59,18 @@ final class NotificationService: NSObject {
         let recipe = try? RecipeService.randomRecipe(
             context: modelContainer.mainContext
         )
-        let content: UNMutableNotificationContent
-        if let recipe {
-            content = notificationContent(for: recipe)
-            content.interruptionLevel = .active
-        } else {
-            content = fallbackNotificationContent(
-                recipeName: String(localized: "Recipe"),
-                interruptionLevel: .active
+        let content = recipe.map { resolvedRecipe in
+            composer.content(
+                for: resolvedRecipe,
+                stableIdentifier: stableIdentifier(for: resolvedRecipe)
             )
-        }
+        } ?? composer.fallbackContent(
+            recipeName: String(localized: "Recipe")
+        )
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
         let request = UNNotificationRequest(
-            identifier: testSuggestionIdentifier,
+            identifier: NotificationConstants.testSuggestionIdentifier,
             content: content,
             trigger: trigger
         )
@@ -78,9 +83,27 @@ extension NotificationService: UNUserNotificationCenterDelegate {
                                             willPresent _: UNNotification) async -> UNNotificationPresentationOptions { // swiftlint:disable:this async_without_await
         [.sound, .list, .banner]
     }
+
+    nonisolated func userNotificationCenter(_: UNUserNotificationCenter,
+                                            didReceive response: UNNotificationResponse) async {
+        await handleNotificationResponse(response)
+    }
+
+    nonisolated func userNotificationCenter(_: UNUserNotificationCenter,
+                                            openSettingsFor _: UNNotification?) {
+        let settingsURL = CookleDeepLinkURLBuilder.preferredURL(for: .settings)
+        Task { @MainActor in
+            routeInbox.store(settingsURL)
+        }
+    }
 }
 
 private extension NotificationService {
+    struct ScheduledSuggestionRequest {
+        let request: UNNotificationRequest
+        let stableIdentifier: String
+    }
+
     var isAuthorizationGranted: Bool {
         switch authorizationStatus {
         case .authorized,
@@ -103,9 +126,32 @@ private extension NotificationService {
         CooklePreferences.int(for: .dailyRecipeSuggestionMinute, default: 0).clamped(to: 0...59)
     }
 
+    var authorizationOptions: UNAuthorizationOptions {
+        [
+            .alert,
+            .sound,
+            .providesAppNotificationSettings
+        ]
+    }
+
+    func registerNotificationCategories() {
+        let browseRecipesAction = UNNotificationAction(
+            identifier: NotificationConstants.browseRecipesActionIdentifier,
+            title: "Browse Recipes",
+            options: [.foreground]
+        )
+        let suggestionCategory = UNNotificationCategory(
+            identifier: NotificationConstants.suggestionCategoryIdentifier,
+            actions: [browseRecipesAction],
+            intentIdentifiers: []
+        )
+        notificationCenter.setNotificationCategories([suggestionCategory])
+    }
+
     func syncSuggestions(requestAuthorizationIfNeeded: Bool) async {
         if !CooklePreferences.bool(for: .isDailyRecipeSuggestionNotificationOn) {
             await removeSuggestionRequests()
+            attachmentStore.removeAllAttachments()
             await refreshAuthorizationStatus()
             return
         }
@@ -114,27 +160,34 @@ private extension NotificationService {
 
         if requestAuthorizationIfNeeded, authorizationStatus == .notDetermined {
             _ = try? await notificationCenter.requestAuthorization(
-                options: [.alert, .sound, .badge]
+                options: authorizationOptions
             )
             await refreshAuthorizationStatus()
         }
 
         guard isAuthorizationGranted else {
             await removeSuggestionRequests()
+            attachmentStore.removeAllAttachments()
             return
         }
 
         await removeSuggestionRequests()
-        for request in buildDailySuggestionRequests() {
-            try? await notificationCenter.add(request)
+        let scheduledRequests = buildDailySuggestionRequests()
+        attachmentStore.pruneAttachments(
+            keepingStableIdentifiers: Set(
+                scheduledRequests.map(\.stableIdentifier)
+            )
+        )
+        for scheduledRequest in scheduledRequests {
+            try? await notificationCenter.add(scheduledRequest.request)
         }
     }
 
     func removeSuggestionRequests() async {
         let pendingRequests = await notificationCenter.pendingNotificationRequests()
         let suggestionIdentifiers = pendingRequests.compactMap { request in
-            if request.identifier.hasPrefix(suggestionIdentifierPrefix)
-                || request.identifier == testSuggestionIdentifier {
+            if request.identifier.hasPrefix(NotificationConstants.suggestionIdentifierPrefix)
+                || request.identifier == NotificationConstants.testSuggestionIdentifier {
                 return request.identifier
             }
             return nil
@@ -145,7 +198,7 @@ private extension NotificationService {
         notificationCenter.removePendingNotificationRequests(withIdentifiers: suggestionIdentifiers)
     }
 
-    func buildDailySuggestionRequests(daysAhead: Int = 14) -> [UNNotificationRequest] {
+    func buildDailySuggestionRequests(daysAhead: Int = 14) -> [ScheduledSuggestionRequest] {
         guard let recipes = try? modelContainer.mainContext.fetch(.recipes(.all)),
               recipes.isNotEmpty else {
             return []
@@ -173,7 +226,7 @@ private extension NotificationService {
             hour: notificationHour,
             minute: notificationMinute,
             daysAhead: daysAhead,
-            identifierPrefix: suggestionIdentifierPrefix
+            identifierPrefix: NotificationConstants.suggestionIdentifierPrefix
         )
 
         return suggestions.map { suggestion in
@@ -184,67 +237,67 @@ private extension NotificationService {
 
             let content: UNMutableNotificationContent
             if let recipe = recipesByStableIdentifier[suggestion.stableIdentifier] {
-                content = notificationContent(for: recipe)
+                content = composer.content(
+                    for: recipe,
+                    stableIdentifier: suggestion.stableIdentifier
+                )
             } else {
-                content = fallbackNotificationContent(
+                content = composer.fallbackContent(
                     recipeName: suggestion.recipeName,
-                    interruptionLevel: .passive
+                    stableIdentifier: suggestion.stableIdentifier
                 )
             }
 
             let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-            return UNNotificationRequest(
-                identifier: suggestion.identifier,
-                content: content,
-                trigger: trigger
+            return .init(
+                request: .init(
+                    identifier: suggestion.identifier,
+                    content: content,
+                    trigger: trigger
+                ),
+                stableIdentifier: suggestion.stableIdentifier
             )
         }
     }
 
-    func notificationContent(for recipe: Recipe) -> UNMutableNotificationContent {
-        let recipeName = recipeNotificationTitle(for: recipe)
-        let content = UNMutableNotificationContent()
-        content.title = recipeName
-        content.body = RecipeBlurbService.makeBlurb(
-            request: recipeBlurbRequest(for: recipe)
-        ) ?? String(localized: "How about making \(recipeName) today?")
-        content.sound = .default
-        content.interruptionLevel = .passive
-        content.threadIdentifier = suggestionThreadIdentifier
-        return content
+    nonisolated func handleNotificationResponse(_ response: UNNotificationResponse) async {
+        guard let routeURL = routeURL(for: response) else {
+            return
+        }
+        await MainActor.run {
+            routeInbox.store(routeURL)
+        }
     }
 
-    func fallbackNotificationContent(
-        recipeName: String,
-        interruptionLevel: UNNotificationInterruptionLevel
-    ) -> UNMutableNotificationContent {
-        let content = UNMutableNotificationContent()
-        content.title = String(localized: "Recipe Suggestion")
-        content.body = String(localized: "How about making \(recipeName) today?")
-        content.sound = .default
-        content.interruptionLevel = interruptionLevel
-        content.threadIdentifier = suggestionThreadIdentifier
-        return content
+    nonisolated func routeURL(for response: UNNotificationResponse) -> URL? {
+        switch response.actionIdentifier {
+        case NotificationConstants.browseRecipesActionIdentifier:
+            return CookleDeepLinkURLBuilder.preferredRecipeURL()
+        case UNNotificationDefaultActionIdentifier:
+            return routeURL(
+                from: response.notification.request.content.userInfo
+            ) ?? CookleDeepLinkURLBuilder.preferredRecipeURL()
+        case UNNotificationDismissActionIdentifier:
+            return nil
+        default:
+            return nil
+        }
+    }
+
+    nonisolated func routeURL(from userInfo: [AnyHashable: Any]) -> URL? {
+        guard let routeURLString = userInfo[
+            NotificationConstants.routeURLUserInfoKey
+        ] as? String else {
+            return nil
+        }
+        return .init(string: routeURLString)
     }
 
     func stableIdentifier(for recipe: Recipe) -> String {
-        String(describing: recipe.persistentModelID)
-    }
-
-    func recipeBlurbRequest(for recipe: Recipe) -> RecipeBlurbRequest {
-        let ingredientValues = recipe.ingredientObjects?.sorted().compactMap { object in
-            object.ingredient?.value
-        } ?? []
-        return .init(
-            steps: recipe.steps,
-            ingredients: ingredientValues,
-            note: recipe.note
-        )
-    }
-
-    func recipeNotificationTitle(for recipe: Recipe) -> String {
-        let trimmedName = recipe.name.trimmingCharacters(in: .whitespacesAndNewlines)
-        return trimmedName.isNotEmpty ? trimmedName : String(localized: "Recipe")
+        if let encodedIdentifier = try? recipe.id.base64Encoded() {
+            return encodedIdentifier
+        }
+        return String(describing: recipe.persistentModelID)
     }
 }
 
