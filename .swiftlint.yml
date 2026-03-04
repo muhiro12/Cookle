@@ -2,6 +2,7 @@ opt_in_rules:
     - all
 
 disabled_rules:
+    - contrasted_opening_brace # Conflicts with opening_brace
     - explicit_acl # Omit ACL
     - explicit_enum_raw_value # Omit raw values if possible
     - explicit_top_level_acl # Omit ACL
@@ -16,6 +17,3 @@ disabled_rules:
     - required_deinit # Omit deinit
     - sorted_enum_cases # Prioritize readability
     - vertical_whitespace_between_cases # Keep switch cases visually grouped together
-
-excluded:
-    - Cookle.swiftpm/Package.swift
