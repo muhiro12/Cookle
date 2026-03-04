@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import TipKit
 
 struct RecipeListView: View {
     @Environment(\.isPresented)
@@ -18,20 +19,32 @@ struct RecipeListView: View {
 
     @State private var searchText = ""
 
+    private let addRecipeTip = AddRecipeTip()
+    private let recipeDetailTip = RecipeDetailTip()
+
     var body: some View {
         Group {
             if recipes.isNotEmpty {
-                List(recipes, selection: $recipe) { recipe in
-                    NavigationLink(value: recipe) {
-                        RecipeLabel()
-                            .labelStyle(.titleAndLargeIcon)
-                            .environment(recipe)
+                List(selection: $recipe) {
+                    TipView(recipeDetailTip)
+
+                    ForEach(recipes) { recipe in
+                        NavigationLink(value: recipe) {
+                            RecipeLabel()
+                                .labelStyle(.titleAndLargeIcon)
+                                .environment(recipe)
+                        }
+                        .hidden(searchText.isNotEmpty && !recipe.name.normalizedContains(searchText))
                     }
-                    .hidden(searchText.isNotEmpty && !recipe.name.normalizedContains(searchText))
                 }
                 .searchable(text: $searchText)
             } else {
-                AddRecipeButton()
+                VStack(spacing: 16) {
+                    TipView(addRecipeTip)
+                    AddRecipeButton()
+                }
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
         .navigationTitle(Text("Recipes"))

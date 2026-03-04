@@ -1,10 +1,13 @@
 import SwiftUI
+import TipKit
 
 struct DebugSidebarView: View {
     @Environment(\.modelContext)
     private var context
     @Environment(\.isPresented)
     private var isPresented
+    @Environment(CookleTipController.self)
+    private var tipController
 
     @AppStorage(.isDebugOn)
     private var isDebugOn
@@ -29,6 +32,21 @@ struct DebugSidebarView: View {
                 .disabled(isCreatingPreviewDiaries)
             } header: {
                 Text("Manage")
+            }
+            Section("TipKit") {
+                Button("Reset Tips") {
+                    do {
+                        try tipController.resetTips()
+                    } catch {
+                        assertionFailure(error.localizedDescription)
+                    }
+                }
+                Button("Show All Tips For Testing") {
+                    Tips.showAllTipsForTesting()
+                }
+                Button("Hide All Tips For Testing") {
+                    Tips.hideAllTipsForTesting()
+                }
             }
             Section {
                 NavigationLink(value: DebugContent.preview) {

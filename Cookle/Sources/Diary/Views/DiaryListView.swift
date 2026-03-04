@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import TipKit
 
 struct DiaryListView: View {
     @Environment(\.isPresented)
@@ -17,8 +18,13 @@ struct DiaryListView: View {
 
     @Query(.diaries(.all))
     private var diaries: [Diary]
+    @Query(.recipes(.all))
+    private var recipes: [Recipe]
 
     @Binding private var diary: Diary?
+
+    private let addDiaryTip = AddDiaryTip()
+    private let startWithRecipesTip = StartWithRecipesTip()
 
     var body: some View {
         Group {
@@ -50,7 +56,16 @@ struct DiaryListView: View {
                         .hidden(isSubscribeOn)
                 }
             } else {
-                AddDiaryButton()
+                VStack(spacing: 16) {
+                    if recipes.isEmpty {
+                        TipView(startWithRecipesTip)
+                    } else {
+                        TipView(addDiaryTip)
+                    }
+                    AddDiaryButton()
+                }
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
         .navigationTitle(Text("Diaries"))

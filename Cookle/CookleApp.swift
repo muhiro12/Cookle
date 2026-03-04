@@ -11,6 +11,7 @@ import LicenseListWrapper
 import StoreKitWrapper
 import SwiftData
 import SwiftUI
+import TipKit
 
 @main
 struct CookleApp: App {
@@ -28,6 +29,7 @@ struct CookleApp: App {
     private let sharedStore: Store
     private let sharedConfigurationService: ConfigurationService
     private let sharedNotificationService: NotificationService
+    private let sharedTipController: CookleTipController
 
     var body: some Scene {
         WindowGroup {
@@ -38,6 +40,7 @@ struct CookleApp: App {
                 .environment(sharedStore)
                 .environment(sharedConfigurationService)
                 .environment(sharedNotificationService)
+                .environment(sharedTipController)
                 .task {
                     #if DEBUG
                     isDebugOn = true
@@ -62,6 +65,7 @@ struct CookleApp: App {
         }
     }
 
+    @MainActor
     init() {
         let cloudKitDatabase: ModelConfiguration.CloudKitDatabase = CooklePreferences.bool(for: .isICloudOn)
             ? .automatic
@@ -89,12 +93,19 @@ struct CookleApp: App {
         sharedStore = .init()
         sharedConfigurationService = .init()
         sharedNotificationService = .init(modelContainer: sharedModelContainer)
+        sharedTipController = .init()
 
         CookleShortcuts.updateAppShortcutParameters()
 
         // Provide dependencies for AppIntents entity queries
         let modelContainerForDependency = sharedModelContainer
         AppDependencyManager.shared.add { modelContainerForDependency }
+
+        do {
+            try sharedTipController.configureIfNeeded()
+        } catch {
+            assertionFailure(error.localizedDescription)
+        }
 
         if let currentAppVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
             lastLaunchedAppVersion = currentAppVersion

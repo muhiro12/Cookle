@@ -11,6 +11,8 @@ import SwiftUI
 struct RecipeView: View {
     @Environment(Recipe.self)
     private var recipe
+    @Environment(CookleTipController.self)
+    private var tipController
 
     @AppStorage(.isSubscribeOn)
     private var isSubscribeOn
@@ -42,6 +44,8 @@ struct RecipeView: View {
             }
         }
         .task {
+            tipController.donateDidOpenRecipeDetail()
+
             let lastOpenedRecipeID = try? recipe.id.base64Encoded()
             CookleSharedPreferences.set(lastOpenedRecipeID, for: .lastOpenedRecipeID)
             CooklePreferences.set(lastOpenedRecipeID, for: .lastOpenedRecipeID)

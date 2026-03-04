@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TipKit
 import UIKit
 
 struct SettingsSidebarView: View {
@@ -17,6 +18,8 @@ struct SettingsSidebarView: View {
     private var openURL
     @Environment(NotificationService.self)
     private var notificationService
+    @Environment(CookleTipController.self)
+    private var tipController
 
     @AppStorage(.isSubscribeOn)
     private var isSubscribeOn
@@ -32,13 +35,26 @@ struct SettingsSidebarView: View {
     @Binding private var content: SettingsContent?
 
     @State private var isAlertPresented = false
+    @State private var isDailySuggestionTipEligible = false
+    @State private var isSubscriptionTipEligible = false
+
+    private let dailySuggestionTip = DailySuggestionTip()
+    private let subscriptionTip = SubscriptionTip()
 
     var body: some View {
         List(selection: $content) {
             Section {
+                if shouldShowSubscriptionTip {
+                    TipView(subscriptionTip)
+                }
                 NavigationLink(value: SettingsContent.subscription) {
                     Text("Subscription")
                 }
+                .simultaneousGesture(
+                    TapGesture().onEnded {
+                        tipController.donateDidOpenSubscription()
+                    }
+                )
             }
             .hidden(isSubscribeOn)
             Section {
@@ -48,6 +64,10 @@ struct SettingsSidebarView: View {
             }
             .hidden(!isSubscribeOn)
             Section("Recipe Suggestion Notifications") {
+                if shouldShowDailySuggestionTip {
+                    TipView(dailySuggestionTip)
+                }
+
                 Toggle("Daily recipe suggestions", isOn: $isDailyRecipeSuggestionNotificationOn)
 
                 if isDailyRecipeSuggestionNotificationOn {
@@ -85,6 +105,14 @@ struct SettingsSidebarView: View {
                 NavigationLink(value: SettingsContent.license) {
                     Text("Licenses")
                 }
+                Button("Show tips again") {
+                    do {
+                        try tipController.resetTips()
+                        refreshTipEligibility()
+                    } catch {
+                        assertionFailure(error.localizedDescription)
+                    }
+                }
             }
             ShortcutsLinkSection()
         }
@@ -121,8 +149,10 @@ struct SettingsSidebarView: View {
             normalizeSuggestionTimeDefaultsIfNeeded()
             await notificationService.refreshAuthorizationStatus()
             await notificationService.synchronizeScheduledSuggestions()
+            refreshTipEligibility()
         }
         .onChange(of: isDailyRecipeSuggestionNotificationOn) {
+            refreshTipEligibility()
             Task {
                 await notificationService.applySuggestionSettings()
             }
@@ -137,6 +167,12 @@ struct SettingsSidebarView: View {
                 await notificationService.applySuggestionSettings()
             }
         }
+        .onChange(of: isSubscribeOn) {
+            refreshTipEligibility()
+        }
+        .onAppear {
+            refreshTipEligibility()
+        }
     }
 
     init(selection: Binding<SettingsContent?> = .constant(nil)) {
@@ -145,6 +181,14 @@ struct SettingsSidebarView: View {
 }
 
 private extension SettingsSidebarView {
+    var shouldShowDailySuggestionTip: Bool {
+        isDailyRecipeSuggestionNotificationOn == false && isDailySuggestionTipEligible
+    }
+
+    var shouldShowSubscriptionTip: Bool {
+        isSubscribeOn == false && shouldShowDailySuggestionTip == false && isSubscriptionTipEligible
+    }
+
     var dailySuggestionTime: Binding<Date> {
         .init {
             let clampedHour = min(max(dailyRecipeSuggestionHour, 0), 23)
@@ -178,6 +222,11 @@ private extension SettingsSidebarView {
         if let appSettingsURL = URL(string: UIApplication.openSettingsURLString) {
             openURL(appSettingsURL)
         }
+    }
+
+    func refreshTipEligibility() {
+        isDailySuggestionTipEligible = dailySuggestionTip.shouldDisplay
+        isSubscriptionTipEligible = subscriptionTip.shouldDisplay
     }
 }
 
