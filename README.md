@@ -209,15 +209,12 @@ enum Secret {
 
 ### Build output layout
 
-Cookle CI helper scripts store each run under `.build/ci_runs/<RUN_ID>/` with:
-
-- `summary.md`, `commands.txt`, and `meta.json`
-- `logs/` for per-step command logs
-- `results/` for generated result bundles (`*.xcresult`)
-- `work/` for run-scoped temporary build directories
-
-Shared compiler and package caches are stored under `.build/work/cache/`.
-Only the latest 5 runs under `.build/ci_runs/` are retained.
+Cookle CI helper scripts write all generated artifacts under `.build/ci/`.
+Run-scoped outputs are stored in `.build/ci/runs/<RUN_ID>/` (summary, commands,
+meta, logs, results, work), while shared caches and build state live in
+`.build/ci/shared/` (`cache/`, `DerivedData/`, `tmp/`, `home/`).
+Only the latest 5 runs under `.build/ci/runs/` are retained.
+The entire `.build/ci` directory is disposable.
 
 ## Screenshots
 
