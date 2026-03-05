@@ -17,14 +17,16 @@ nonisolated public final class Category: Tag {
 
     /// Recipes linked to this category.
     @Relationship(inverse: \Recipe.categories)
-    public private(set) var recipes = [Recipe]?.some(.empty)
+    public private(set) var recipes = [Recipe]()
 
     /// Creation timestamp.
     public private(set) var createdTimestamp = Date.now
     /// Last modification timestamp.
     public private(set) var modifiedTimestamp = Date.now
 
-    private init() {}
+    private init() {
+        // SwiftData-managed initializer.
+    }
 
     /// Creates (or returns) a category with the given value.
     public static func create(context: ModelContext, value: String) -> Self {
@@ -46,19 +48,24 @@ nonisolated public final class Category: Tag {
     }
 }
 
-extension Category {
+public extension Category {
     /// Localized title used in UI.
     public static var title: LocalizedStringKey {
         "Categories"
     }
 
     /// Convenience descriptor with explicit order.
-    public static func descriptor(_ predicate: TagPredicate<Category>, order: SortOrder) -> FetchDescriptor<Category> {
+    static func descriptor(
+        _ predicate: TagPredicate<Category>,
+        order: SortOrder
+    ) -> FetchDescriptor<Category> {
         .categories(predicate, order: order)
     }
 
     /// Convenience descriptor with default order.
-    public static func descriptor(_ predicate: TagPredicate<Category>) -> FetchDescriptor<Category> {
+    static func descriptor(
+        _ predicate: TagPredicate<Category>
+    ) -> FetchDescriptor<Category> {
         .categories(predicate)
     }
 }

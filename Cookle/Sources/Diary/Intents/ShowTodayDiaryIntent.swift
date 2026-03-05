@@ -10,7 +10,10 @@ struct ShowTodayDiaryIntent: AppIntent {
     @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         if let diary = try DiaryService.diary(on: .now, context: modelContainer.mainContext) {
-            return .result(dialog: .init(stringLiteral: diary.date.formatted(.dateTime.year().month().day().weekday()))) {
+            let dialog = diary.date.formatted(
+                .dateTime.year().month().day().weekday()
+            )
+            return .result(dialog: .init(stringLiteral: dialog)) {
                 DiaryView()
                     .environment(diary)
                     .safeAreaPadding()

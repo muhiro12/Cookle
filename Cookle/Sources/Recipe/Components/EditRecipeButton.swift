@@ -28,6 +28,7 @@ struct EditRecipeButton: View {
                 Text("Edit \(recipe.name)")
             } icon: {
                 Image(systemName: "pencil")
+                    .accessibilityHidden(true)
             }
         }
         .sheet(isPresented: $isPresented) {

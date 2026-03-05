@@ -12,7 +12,3 @@ struct SubObjectTests {
         #expect([higher, lower].sorted() == [lower, higher])
     }
 }
-
-private struct MockSubObject: SubObject {
-    let order: Int
-}

@@ -3,6 +3,14 @@ import SwiftData
 import WidgetKit
 
 struct DiaryProvider: AppIntentTimelineProvider {
+    private enum RefreshInterval {
+        static let hoursPerDay = 24
+        static let minutesPerHour = 60
+        static let secondsPerMinute = 60
+        static let timelineRefreshHours = 6
+        static let fallbackRefreshSeconds = 3_600
+    }
+
     func placeholder(in _: Context) -> DiaryEntry {
         .init(
             date: .now,
@@ -80,13 +88,27 @@ private extension DiaryProvider {
     func timelineRefreshDate(date: Date, selection: DiaryWidgetSelection) -> Date {
         switch selection {
         case .today:
-            return Calendar.current.startOfDay(for: date).addingTimeInterval(24 * 60 * 60)
+            let startOfDay = Calendar.current.startOfDay(
+                for: date
+            )
+            let secondsPerDay = TimeInterval(
+                RefreshInterval.hoursPerDay
+                    * RefreshInterval.minutesPerHour
+                    * RefreshInterval.secondsPerMinute
+            )
+            return startOfDay.addingTimeInterval(secondsPerDay)
         case .latest,
              .random:
-            if let nextDate = Calendar.current.date(byAdding: .hour, value: 6, to: date) {
+            if let nextDate = Calendar.current.date(
+                byAdding: .hour,
+                value: RefreshInterval.timelineRefreshHours,
+                to: date
+            ) {
                 return nextDate
             }
-            return date.addingTimeInterval(60 * 60)
+            return date.addingTimeInterval(
+                TimeInterval(RefreshInterval.fallbackRefreshSeconds)
+            )
         }
     }
 

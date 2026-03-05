@@ -52,6 +52,21 @@ public enum CookleRouteParser {
 }
 
 private extension CookleRouteParser {
+    enum ParseConstants {
+        static let settingsPathSegmentLimit = Int("2") ?? .zero
+        static let settingsPathSegmentCount = Int("2") ?? .zero
+        static let dateSegmentCount = Int("3") ?? .zero
+        static let yearSegmentIndex = Int("0") ?? .zero
+        static let monthSegmentIndex = Int("1") ?? .zero
+        static let daySegmentIndex = Int("2") ?? .zero
+        static let yearTextLength = Int("4") ?? .zero
+        static let monthDayTextLength = Int("2") ?? .zero
+        static let minimumDateComponent = Int("1") ?? .zero
+        static let maximumYear = Int("9999") ?? .zero
+        static let maximumMonth = Int("12") ?? .zero
+        static let maximumDay = Int("31") ?? .zero
+    }
+
     struct DateRoute {
         let year: Int
         let month: Int
@@ -70,11 +85,7 @@ private extension CookleRouteParser {
         from pathSegments: [String],
         queryItems: [URLQueryItem]
     ) -> CookleRoute? {
-        var normalizedSegments = pathSegments
-        if normalizedSegments.first?.lowercased() ==
-            CookleRouteURLDefaults.universalLinkPathPrefix.lowercased() {
-            _ = normalizedSegments.removeFirst()
-        }
+        let normalizedSegments = normalizedSegments(from: pathSegments)
 
         guard let destination = normalizedSegments.first?.lowercased() else {
             return .home
@@ -82,10 +93,7 @@ private extension CookleRouteParser {
 
         switch destination {
         case "home":
-            guard normalizedSegments.count == 1 else {
-                return nil
-            }
-            return .home
+            return parseHomeRoute(from: normalizedSegments)
         case "diary":
             return parseDiaryRoute(
                 from: Array(normalizedSegments.dropFirst())
@@ -96,32 +104,62 @@ private extension CookleRouteParser {
                 queryItems: queryItems
             )
         case "search":
-            guard normalizedSegments.count == 1 else {
-                return nil
-            }
-            let query = queryItems.first { queryItem in
-                queryItem.name == "q"
-            }?.value
-            if let query,
-               query.isNotEmpty {
-                return .search(query: query)
-            }
-            return .search(query: nil)
+            return parseSearchRoute(
+                from: normalizedSegments,
+                queryItems: queryItems
+            )
         case "settings":
-            guard normalizedSegments.count <= 2 else {
-                return nil
-            }
-            guard normalizedSegments.count == 2 else {
-                return .settings
-            }
-            switch normalizedSegments[1].lowercased() {
-            case "subscription":
-                return .settingsSubscription
-            case "license":
-                return .settingsLicense
-            default:
-                return nil
-            }
+            return parseSettingsRoute(from: normalizedSegments)
+        default:
+            return nil
+        }
+    }
+
+    static func normalizedSegments(from pathSegments: [String]) -> [String] {
+        var normalizedSegments = pathSegments
+        if normalizedSegments.first?.lowercased() ==
+            CookleRouteURLDefaults.universalLinkPathPrefix.lowercased() {
+            _ = normalizedSegments.removeFirst()
+        }
+        return normalizedSegments
+    }
+
+    static func parseHomeRoute(from normalizedSegments: [String]) -> CookleRoute? {
+        guard normalizedSegments.count == 1 else {
+            return nil
+        }
+        return .home
+    }
+
+    static func parseSearchRoute(
+        from normalizedSegments: [String],
+        queryItems: [URLQueryItem]
+    ) -> CookleRoute? {
+        guard normalizedSegments.count == 1 else {
+            return nil
+        }
+        let query = queryItems.first { queryItem in
+            queryItem.name == "q"
+        }?.value
+        if let query,
+           query.isNotEmpty {
+            return .search(query: query)
+        }
+        return .search(query: nil)
+    }
+
+    static func parseSettingsRoute(from normalizedSegments: [String]) -> CookleRoute? {
+        guard normalizedSegments.count <= ParseConstants.settingsPathSegmentLimit else {
+            return nil
+        }
+        guard normalizedSegments.count == ParseConstants.settingsPathSegmentCount else {
+            return .settings
+        }
+        switch normalizedSegments[1].lowercased() {
+        case "subscription":
+            return .settingsSubscription
+        case "license":
+            return .settingsLicense
         default:
             return nil
         }
@@ -166,26 +204,26 @@ private extension CookleRouteParser {
 
     static func parseDateRoute(from value: String) -> DateRoute? {
         let components = value.split(separator: "-")
-        guard components.count == 3 else {
+        guard components.count == ParseConstants.dateSegmentCount else {
             return nil
         }
-        let yearText = String(components[0])
-        let monthText = String(components[1])
-        let dayText = String(components[2])
-        guard yearText.count == 4,
-              monthText.count == 2,
-              dayText.count == 2,
+        let yearText = String(components[ParseConstants.yearSegmentIndex])
+        let monthText = String(components[ParseConstants.monthSegmentIndex])
+        let dayText = String(components[ParseConstants.daySegmentIndex])
+        guard yearText.count == ParseConstants.yearTextLength,
+              monthText.count == ParseConstants.monthDayTextLength,
+              dayText.count == ParseConstants.monthDayTextLength,
               let year = Int(yearText),
               let month = Int(monthText),
               let day = Int(dayText),
-              1...9_999 ~= year,
-              1...12 ~= month,
-              1...31 ~= day else {
+              ParseConstants.minimumDateComponent...ParseConstants.maximumYear ~= year,
+              ParseConstants.minimumDateComponent...ParseConstants.maximumMonth ~= month,
+              ParseConstants.minimumDateComponent...ParseConstants.maximumDay ~= day else {
             return nil
         }
 
         var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = .init(secondsFromGMT: 0)!
+        calendar.timeZone = TimeZone(secondsFromGMT: .zero) ?? .current
         let dateComponents = DateComponents(
             calendar: calendar,
             year: year,

@@ -2,6 +2,11 @@ import Foundation
 import UserNotifications
 
 struct RecipeSuggestionNotificationComposer {
+    private enum RelevanceScore {
+        static let withPhoto = Double("0.8") ?? .zero
+        static let fallback = Double("0.6") ?? .zero
+    }
+
     private let attachmentStore: NotificationAttachmentStore
 
     init(attachmentStore: NotificationAttachmentStore) {
@@ -13,20 +18,22 @@ struct RecipeSuggestionNotificationComposer {
         stableIdentifier: String
     ) -> UNMutableNotificationContent {
         let recipeName = recipeTitle(for: recipe)
-        let hasPhoto = recipe.photoObjects?.sorted().first?.photo != nil
+        let hasPhoto = recipe.photoObjects?.min()?.photo != nil
             || recipe.photos?.isEmpty == false
         let attachment = attachmentStore.attachment(
             for: recipe,
             stableIdentifier: stableIdentifier
         )
         return makeContent(
-            title: recipeName,
-            subtitle: subtitle(for: recipe),
-            body: body(for: recipe, recipeName: recipeName),
-            routeURL: routeURL(for: stableIdentifier),
-            stableIdentifier: stableIdentifier,
-            relevanceScore: hasPhoto ? 0.8 : 0.6,
-            attachment: attachment
+            .init(
+                title: recipeName,
+                subtitle: subtitle(for: recipe),
+                body: body(for: recipe, recipeName: recipeName),
+                routeURL: routeURL(for: stableIdentifier),
+                stableIdentifier: stableIdentifier,
+                relevanceScore: hasPhoto ? RelevanceScore.withPhoto : RelevanceScore.fallback,
+                attachment: attachment
+            )
         )
     }
 
@@ -36,45 +43,49 @@ struct RecipeSuggestionNotificationComposer {
     ) -> UNMutableNotificationContent {
         let resolvedStableIdentifier = stableIdentifier ?? .empty
         return makeContent(
-            title: String(localized: "Recipe Suggestion"),
-            subtitle: .empty,
-            body: String(localized: "How about making \(recipeName) today?"),
-            routeURL: routeURL(for: resolvedStableIdentifier),
-            stableIdentifier: resolvedStableIdentifier,
-            relevanceScore: 0.6,
-            attachment: nil
+            .init(
+                title: String(localized: "Recipe Suggestion"),
+                subtitle: .empty,
+                body: String(localized: "How about making \(recipeName) today?"),
+                routeURL: routeURL(for: resolvedStableIdentifier),
+                stableIdentifier: resolvedStableIdentifier,
+                relevanceScore: RelevanceScore.fallback,
+                attachment: nil
+            )
         )
     }
 }
 
 private extension RecipeSuggestionNotificationComposer {
-    func makeContent(
-        title: String,
-        subtitle: String,
-        body: String,
-        routeURL: URL,
-        stableIdentifier: String,
-        relevanceScore: Double,
-        attachment: UNNotificationAttachment?
-    ) -> UNMutableNotificationContent {
+    struct ContentInput {
+        let title: String
+        let subtitle: String
+        let body: String
+        let routeURL: URL
+        let stableIdentifier: String
+        let relevanceScore: Double
+        let attachment: UNNotificationAttachment?
+    }
+
+    func makeContent(_ input: ContentInput) -> UNMutableNotificationContent {
         let content = UNMutableNotificationContent()
-        content.title = title
-        content.subtitle = subtitle
-        content.body = body
+        content.title = input.title
+        content.subtitle = input.subtitle
+        content.body = input.body
         content.sound = .default
         content.interruptionLevel = .active
         content.threadIdentifier = NotificationConstants.suggestionThreadIdentifier
         content.categoryIdentifier = NotificationConstants.suggestionCategoryIdentifier
-        content.targetContentIdentifier = stableIdentifier.isEmpty
+        content.targetContentIdentifier = input.stableIdentifier.isEmpty
             ? "recipe"
-            : "recipe:\(stableIdentifier)"
-        content.relevanceScore = relevanceScore
+            : "recipe:\(input.stableIdentifier)"
+        content.relevanceScore = input.relevanceScore
         content.userInfo = [
-            NotificationConstants.routeURLUserInfoKey: routeURL.absoluteString,
+            NotificationConstants.routeURLUserInfoKey: input.routeURL.absoluteString,
             NotificationConstants.contentKindUserInfoKey: NotificationConstants.recipeSuggestionContentKind,
-            NotificationConstants.stableIdentifierUserInfoKey: stableIdentifier
+            NotificationConstants.stableIdentifierUserInfoKey: input.stableIdentifier
         ]
-        if let attachment {
+        if let attachment = input.attachment {
             content.attachments = [attachment]
         }
         return content

@@ -1,11 +1,5 @@
 import Foundation
 
-/// Widget destinations that can be opened from a widget tap.
-public enum CookleWidgetDestination: String, Sendable {
-    case diary
-    case recipe
-}
-
 /// Deep-link helper shared by the app and widget extension.
 public enum CookleWidgetDeepLink {
     /// Creates a deep-link URL for a widget destination.

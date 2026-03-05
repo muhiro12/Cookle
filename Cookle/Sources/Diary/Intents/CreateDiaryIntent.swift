@@ -28,24 +28,26 @@ struct CreateDiaryIntent: AppIntent {
     @Dependency private var diaryActionService: DiaryActionService
 
     @MainActor
-    func perform() async throws -> some IntentResult {
+    func perform() async -> some IntentResult {
         let context = modelContainer.mainContext
-        _ = try await diaryActionService.create(
+        _ = await diaryActionService.create(
             context: context,
             date: date,
-            breakfasts: DiaryIntentSupport.resolveRecipes(
-                from: breakfasts,
-                context: context
-            ),
-            lunches: DiaryIntentSupport.resolveRecipes(
-                from: lunches,
-                context: context
-            ),
-            dinners: DiaryIntentSupport.resolveRecipes(
-                from: dinners,
-                context: context
-            ),
-            note: note
+            input: .init(
+                breakfasts: DiaryIntentSupport.resolveRecipes(
+                    from: breakfasts,
+                    context: context
+                ),
+                lunches: DiaryIntentSupport.resolveRecipes(
+                    from: lunches,
+                    context: context
+                ),
+                dinners: DiaryIntentSupport.resolveRecipes(
+                    from: dinners,
+                    context: context
+                ),
+                note: note
+            )
         )
         return .result()
     }

@@ -19,7 +19,7 @@ struct DeleteTagButton<T: Tag>: View {
         Button(role: .destructive) {
             if let action {
                 action()
-            } else if tag is Ingredient, tag.recipes.orEmpty.isNotEmpty {
+            } else if tag is Ingredient, tag.recipes.isNotEmpty {
                 isAlertPresented = true
             } else {
                 isConfirmationPresented = true
@@ -29,13 +29,16 @@ struct DeleteTagButton<T: Tag>: View {
                 Text("Delete")
             } icon: {
                 Image(systemName: "trash")
+                    .accessibilityHidden(true)
             }
         }
         .alert(
             Text("Cannot Delete"),
             isPresented: $isAlertPresented
         ) {
-            Button("OK", role: .cancel) {}
+            Button("OK", role: .cancel) {
+                // Dismisses the alert.
+            }
         } message: {
             Text(alertMessage)
         }
@@ -56,7 +59,9 @@ struct DeleteTagButton<T: Tag>: View {
                     }
                 }
             }
-            Button("Cancel", role: .cancel) {}
+            Button("Cancel", role: .cancel) {
+                // Dismisses the confirmation dialog.
+            }
         } message: {
             Text("Are you sure you want to delete this item? This action cannot be undone.")
         }

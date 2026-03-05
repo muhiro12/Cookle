@@ -3,7 +3,7 @@
 
 import PackageDescription
 
-let package = Package(
+let kPackage = Package(
     name: "CookleLibrary",
     platforms: [
         .iOS(.v17)
@@ -34,3 +34,7 @@ let package = Package(
         )
     ]
 )
+
+var package: Package {
+    kPackage
+}

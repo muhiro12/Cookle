@@ -2,6 +2,8 @@ import Foundation
 
 /// Builds shareable URLs from app routes.
 public enum CookleRouteURLBuilder {
+    private static let minimumHostAndPathSegmentCount = Int("2") ?? .zero
+
     /// Default custom URL scheme used by the app.
     public static let customScheme = CookleRouteURLDefaults.customScheme
     /// Default host used for universal links.
@@ -18,7 +20,7 @@ public enum CookleRouteURLBuilder {
         var urlComponents = URLComponents()
         urlComponents.scheme = customScheme
         urlComponents.host = pathSegments.first
-        if pathSegments.count >= 2 {
+        if pathSegments.count >= minimumHostAndPathSegmentCount {
             urlComponents.path =
                 "/" + pathSegments.dropFirst().joined(separator: "/")
         } else {
@@ -56,7 +58,7 @@ private extension CookleRouteURLBuilder {
             return ["home"]
         case .diary:
             return ["diary"]
-        case .diaryDate(let year, let month, let day):
+        case let .diaryDate(year, month, day):
             return [
                 "diary",
                 String(
@@ -82,11 +84,11 @@ private extension CookleRouteURLBuilder {
 
     static func routeQueryItems(
         _ route: CookleRoute
-    ) -> [URLQueryItem]? {
+    ) -> [URLQueryItem] {
         switch route {
-        case .recipeDetail(let recipeID):
+        case let .recipeDetail(recipeID):
             guard recipeID.isNotEmpty else {
-                return nil
+                return []
             }
             return [
                 .init(
@@ -94,10 +96,10 @@ private extension CookleRouteURLBuilder {
                     value: recipeID
                 )
             ]
-        case .search(let query):
+        case let .search(query):
             guard let query,
                   query.isNotEmpty else {
-                return nil
+                return []
             }
             return [
                 .init(
@@ -112,7 +114,7 @@ private extension CookleRouteURLBuilder {
              .settings,
              .settingsSubscription,
              .settingsLicense:
-            return nil
+            return []
         }
     }
 }

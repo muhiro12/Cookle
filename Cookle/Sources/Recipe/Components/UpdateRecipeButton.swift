@@ -62,6 +62,7 @@ struct UpdateRecipeButton: View {
                 }
             } icon: {
                 Image(systemName: "pencil")
+                    .accessibilityHidden(true)
             }
         }
         .disabled(

@@ -4,6 +4,13 @@ import SwiftUI
 
 @available(iOS 26.0, *)
 struct InferRecipeFormView: View {
+    private enum Layout {
+        static let placeholderVerticalPadding = CGFloat(Int("8") ?? .zero)
+        static let placeholderHorizontalPadding = CGFloat(Int("6") ?? .zero)
+        static let textEditorCornerRadius = CGFloat(Int("8") ?? .zero)
+        static let loadingOverlayOpacity = Double("0.2") ?? .zero
+    }
+
     @Environment(\.dismiss)
     private var dismiss
 
@@ -31,117 +38,92 @@ struct InferRecipeFormView: View {
     var body: some View {
         TextEditor(text: $text)
             .overlay(alignment: .topLeading) {
-                Text(placeholder)
-                    .font(.body)
-                    .foregroundStyle(.placeholder)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 6)
-                    .allowsHitTesting(false)
-                    .hidden(text.isNotEmpty)
+                placeholderOverlay
             }
             .padding()
             .scrollContentBackground(.hidden)
             .background(Color(.secondarySystemGroupedBackground))
-            .clipShape(.rect(cornerRadius: 8))
+            .clipShape(.rect(cornerRadius: Layout.textEditorCornerRadius))
             .padding()
             .background(Color(.systemGroupedBackground))
             .navigationTitle(Text("Recipe Text"))
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button {
-                        text = ""
-                        dismiss()
-                    } label: {
-                        Text("Cancel")
-                    }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button {
-                        isLoading = true
-                        Task {
-                            await applyInference()
-                        }
-                    } label: {
-                        Text("Done")
-                    }
-                    .disabled(isLoading)
-                }
-                ToolbarItem(placement: .bottomBar) {
-                    Menu {
-                        Button {
-                            isCameraPickerPresented = true
-                        } label: {
-                            Label("Camera", systemImage: "camera")
-                        }
-                        Button {
-                            isPhotoPickerPresented = true
-                        } label: {
-                            Label("Photo Library", systemImage: "photo")
-                        }
-                    } label: {
-                        Image(systemName: "text.viewfinder")
-                    }
-                }
+                toolbarItems
             }
             .font(nil)
             .overlay {
-                if isLoading {
-                    ZStack {
-                        Color.black.opacity(0.2).ignoresSafeArea()
-                        ProgressView()
-                    }
-                }
+                loadingOverlay
             }
             .photosPicker(isPresented: $isPhotoPickerPresented, selection: $photoPickerItem, matching: .images)
             .photosPicker(isPresented: $isCameraPickerPresented, selection: $cameraPickerItem, matching: .images)
             .onChange(of: photoPickerItem) {
-                guard let photoPickerItem else {
-                    return
-                }
-                Task {
-                    if let data = try? await photoPickerItem.loadTransferable(type: Data.self),
-                       let image = UIImage(data: data),
-                       let recognized = try? TextRecognitionService.recognize(in: image) {
-                        text += (text.isEmpty ? "" : "\n") + recognized
-                    }
-                    self.photoPickerItem = nil
-                }
+                handlePhotoPickerChange()
             }
             .onChange(of: cameraPickerItem) {
-                guard let cameraPickerItem else {
-                    return
-                }
-                Task {
-                    if let data = try? await cameraPickerItem.loadTransferable(type: Data.self),
-                       let image = UIImage(data: data),
-                       let recognized = try? TextRecognitionService.recognize(in: image) {
-                        text += (text.isEmpty ? "" : "\n") + recognized
-                    }
-                    self.cameraPickerItem = nil
-                }
+                handleCameraPickerChange()
             }
     }
 
-    @MainActor
-    private func applyInference() async {
-        defer {
-            isLoading = false
-        }
+    var placeholderOverlay: some View {
+        Text(placeholder)
+            .font(.body)
+            .foregroundStyle(.placeholder)
+            .padding(.vertical, Layout.placeholderVerticalPadding)
+            .padding(.horizontal, Layout.placeholderHorizontalPadding)
+            .allowsHitTesting(false)
+            .hidden(text.isNotEmpty)
+    }
 
-        let inference = await RecipeService.infer(text: text)
-        name = inference.name
-        servingSize = inference.servingSize == 0 ? "" : inference.servingSize.description
-        cookingTime = inference.cookingTime == 0 ? "" : inference.cookingTime.description
-        ingredients = inference.ingredients.map { inferredIngredient in
-            .init(
-                ingredient: inferredIngredient.ingredient,
-                amount: inferredIngredient.amount
-            )
-        } + [.init(ingredient: .empty, amount: .empty)]
-        steps = inference.steps + [.empty]
-        categories = inference.categories + [.empty]
-        note = inference.note
-        dismiss()
+    @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
+        ToolbarItem(placement: .cancellationAction) {
+            Button {
+                text = ""
+                dismiss()
+            } label: {
+                Text("Cancel")
+            }
+        }
+        ToolbarItem(placement: .confirmationAction) {
+            Button {
+                isLoading = true
+                Task {
+                    await applyInference()
+                }
+            } label: {
+                Text("Done")
+            }
+            .disabled(isLoading)
+        }
+        ToolbarItem(placement: .bottomBar) {
+            importTextMenu
+        }
+    }
+
+    @ViewBuilder var loadingOverlay: some View {
+        if isLoading {
+            ZStack {
+                Color.black.opacity(Layout.loadingOverlayOpacity).ignoresSafeArea()
+                ProgressView()
+            }
+        }
+    }
+
+    var importTextMenu: some View {
+        Menu {
+            Button {
+                isCameraPickerPresented = true
+            } label: {
+                Label("Camera", systemImage: "camera")
+            }
+            Button {
+                isPhotoPickerPresented = true
+            } label: {
+                Label("Photo Library", systemImage: "photo")
+            }
+        } label: {
+            Image(systemName: "text.viewfinder")
+                .accessibilityLabel(Text("Import Text"))
+        }
     }
 
     init(
@@ -160,5 +142,59 @@ struct InferRecipeFormView: View {
         self._steps = steps
         self._categories = categories
         self._note = note
+    }
+}
+
+@available(iOS 26.0, *)
+private extension InferRecipeFormView {
+    @MainActor
+    func applyInference() async {
+        defer {
+            isLoading = false
+        }
+
+        let inference = await RecipeService.infer(text: text)
+        name = inference.name
+        servingSize = inference.servingSize == .zero ? .empty : inference.servingSize.description
+        cookingTime = inference.cookingTime == .zero ? .empty : inference.cookingTime.description
+        ingredients = inference.ingredients.map { inferredIngredient in
+            .init(
+                ingredient: inferredIngredient.ingredient,
+                amount: inferredIngredient.amount
+            )
+        } + [.init(ingredient: .empty, amount: .empty)]
+        steps = inference.steps + [.empty]
+        categories = inference.categories + [.empty]
+        note = inference.note
+        dismiss()
+    }
+
+    func handlePhotoPickerChange() {
+        guard let photoPickerItem else {
+            return
+        }
+        Task {
+            await appendRecognizedText(from: photoPickerItem)
+            self.photoPickerItem = nil
+        }
+    }
+
+    func handleCameraPickerChange() {
+        guard let cameraPickerItem else {
+            return
+        }
+        Task {
+            await appendRecognizedText(from: cameraPickerItem)
+            self.cameraPickerItem = nil
+        }
+    }
+
+    func appendRecognizedText(from pickerItem: PhotosPickerItem) async {
+        guard let data = try? await pickerItem.loadTransferable(type: Data.self),
+              let image = UIImage(data: data),
+              let recognized = try? TextRecognitionService.recognize(in: image) else {
+            return
+        }
+        text += (text.isEmpty ? "" : "\n") + recognized
     }
 }

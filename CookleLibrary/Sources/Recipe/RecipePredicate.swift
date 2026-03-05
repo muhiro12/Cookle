@@ -13,13 +13,15 @@ nonisolated public enum RecipePredicate {
     /// Matches every recipe.
     case all
     /// Matches no recipes.
-    case none
+    case none // swiftlint:disable:this discouraged_none_name
     /// Matches the recipe with the supplied persistent identifier.
     case idIs(Recipe.ID)
     /// Matches recipes whose name contains the supplied text.
     case nameContains(String)
     /// Name OR ingredient OR category matches. For short text (<3), tags use equality; otherwise contains.
     case anyTextMatches(String)
+
+    private static let shortTextThreshold = Int("3") ?? .zero
 
     /// Concrete SwiftData predicate for this case.
     public var value: Predicate<Recipe> {
@@ -41,7 +43,7 @@ nonisolated public enum RecipePredicate {
                     || recipe.name.localizedStandardContains(katakana)
             }
         case .anyTextMatches(let text):
-            if text.count < 3 {
+            if text.count < Self.shortTextThreshold {
                 return #Predicate<Recipe> { recipe in
                     recipe.name.localizedStandardContains(text)
                         || (recipe.ingredients?.contains { ingredient in ingredient.value == text }) == true

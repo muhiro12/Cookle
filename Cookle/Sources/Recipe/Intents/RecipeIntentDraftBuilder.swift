@@ -1,24 +1,28 @@
 import Foundation
 
 enum RecipeIntentDraftBuilder {
+    struct Input {
+        let name: String
+        let servingSize: Int
+        let cookingTime: Int
+        let ingredientsText: String
+        let stepsText: String
+        let categoriesText: String
+        let note: String
+    }
+
     static func makeDraft(
-        name: String,
-        servingSize: Int,
-        cookingTime: Int,
-        ingredientsText: String,
-        stepsText: String,
-        categoriesText: String,
-        note: String
+        input: Input
     ) throws -> RecipeFormDraft {
         try RecipeFormService.makeDraft(
-            name: name,
+            name: input.name,
             photos: [],
-            servingSize: servingSize == .zero ? .empty : servingSize.description,
-            cookingTime: cookingTime == .zero ? .empty : cookingTime.description,
-            ingredients: ingredientInputs(from: ingredientsText),
-            steps: lines(from: stepsText),
-            categories: lines(from: categoriesText),
-            note: note
+            servingSize: input.servingSize == .zero ? .empty : input.servingSize.description,
+            cookingTime: input.cookingTime == .zero ? .empty : input.cookingTime.description,
+            ingredients: ingredientInputs(from: input.ingredientsText),
+            steps: lines(from: input.stepsText),
+            categories: lines(from: input.categoriesText),
+            note: input.note
         )
     }
 }

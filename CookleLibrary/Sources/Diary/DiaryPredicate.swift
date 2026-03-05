@@ -13,7 +13,7 @@ public enum DiaryPredicate {
     /// Matches every diary.
     case all
     /// Matches no diaries.
-    case none
+    case none // swiftlint:disable:this discouraged_none_name
 
     /// Concrete SwiftData predicate for this case.
     public var value: Predicate<Diary> {

@@ -4,7 +4,7 @@ import Foundation
 extension Logger {
     init(_ file: String) {
         self.init(
-            subsystem: Bundle.main.bundleIdentifier!,
+            subsystem: Bundle.main.bundleIdentifier ?? "com.muhiro12.Cookle",
             category: file
         )
     }

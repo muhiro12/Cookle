@@ -1,24 +1,14 @@
 import Foundation
 
-/// Input used to derive a short deterministic recipe blurb.
-public struct RecipeBlurbRequest: Sendable {
-    public let steps: [String]
-    public let ingredients: [String]
-    public let note: String
-
-    public init(
-        steps: [String],
-        ingredients: [String],
-        note: String
-    ) {
-        self.steps = steps
-        self.ingredients = ingredients
-        self.note = note
-    }
-}
-
 /// Builds short deterministic recipe blurbs from saved recipe content.
 public enum RecipeBlurbService {
+    private enum BlurbConstants {
+        static let minimumDetailedStepLength = Int("12") ?? .zero
+        static let ingredientSummaryCount = Int("2") ?? .zero
+        static let ellipsisLength = Int("3") ?? .zero
+    }
+
+    /// Returns a concise, deterministic blurb from recipe steps, note, or ingredients.
     public static func makeBlurb(
         request: RecipeBlurbRequest,
         maxLength: Int = 72
@@ -26,7 +16,7 @@ public enum RecipeBlurbService {
         let normalizedSteps = normalizedLines(from: request.steps)
 
         if let step = normalizedSteps.first(where: { line in
-            line.count >= 12
+            line.count >= BlurbConstants.minimumDetailedStepLength
         }) {
             return truncatedBlurb(step, maxLength: maxLength)
         }
@@ -40,7 +30,7 @@ public enum RecipeBlurbService {
         }
 
         let ingredientSummary = normalizedIngredients(from: request.ingredients)
-            .prefix(2)
+            .prefix(BlurbConstants.ingredientSummaryCount)
             .joined(separator: ", ")
         if ingredientSummary.isEmpty {
             return nil
@@ -48,9 +38,7 @@ public enum RecipeBlurbService {
 
         return truncatedBlurb(ingredientSummary, maxLength: maxLength)
     }
-}
 
-extension RecipeBlurbService {
     static func normalizedLines(from values: [String]) -> [String] {
         values.compactMap { value in
             let normalizedValue = normalizedLine(from: value)
@@ -112,11 +100,11 @@ extension RecipeBlurbService {
         guard trimmedValue.count > maxLength else {
             return trimmedValue
         }
-        guard maxLength > 3 else {
+        guard maxLength > BlurbConstants.ellipsisLength else {
             return String(trimmedValue.prefix(maxLength))
         }
 
-        let prefixLength = maxLength - 3
+        let prefixLength = maxLength - BlurbConstants.ellipsisLength
         let rawPrefix = String(trimmedValue.prefix(prefixLength))
         let prefixWithoutTrailingWhitespace = rawPrefix.trimmingCharacters(in: .whitespacesAndNewlines)
         let truncatedPrefix: String
@@ -138,10 +126,8 @@ extension RecipeBlurbService {
         let safePrefix = cleanedPrefix.isNotEmpty ? cleanedPrefix : prefixWithoutTrailingWhitespace
         return safePrefix + "..."
     }
-}
 
-private extension RecipeBlurbService {
-    static func normalizedLine(from value: String) -> String {
+    private static func normalizedLine(from value: String) -> String {
         let trimmedValue = value.trimmingCharacters(in: .whitespacesAndNewlines)
         guard trimmedValue.isNotEmpty else {
             return ""

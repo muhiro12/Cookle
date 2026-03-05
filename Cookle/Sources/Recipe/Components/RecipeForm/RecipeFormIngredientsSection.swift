@@ -73,13 +73,20 @@ struct RecipeFormIngredientsSection: View {
 #Preview(traits: .modifier(CookleSampleData())) {
     @Previewable @Query var recipes: [Recipe]
     Form { () -> RecipeFormIngredientsSection in
+        let previewIngredients: [RecipeFormIngredient] = recipes[0].ingredientObjects?.compactMap { ingredientObject in
+            guard let ingredient = ingredientObject.ingredient else {
+                return nil
+            }
+            return RecipeFormIngredient(
+                ingredient: ingredient.value,
+                amount: ingredientObject.amount
+            )
+        } ?? []
         RecipeFormIngredientsSection(
-            .constant(recipes[0].ingredientObjects!.map { ingredientObject in
-                .init(
-                    ingredient: ingredientObject.ingredient!.value,
-                    amount: ingredientObject.amount
-                )
-            } + [.init(ingredient: .empty, amount: .empty)])
+            .constant(
+                previewIngredients
+                    + [.init(ingredient: .empty, amount: .empty)]
+            )
         )
     }
 }

@@ -13,7 +13,7 @@ public enum PhotoObjectPredicate {
     /// Matches every photo object.
     case all
     /// Matches no photo objects.
-    case none
+    case none // swiftlint:disable:this discouraged_none_name
 
     /// Concrete SwiftData predicate for this case.
     public var value: Foundation.Predicate<PhotoObject> {

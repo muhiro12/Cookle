@@ -37,9 +37,12 @@ struct MainView: View {
         )
         .alert(Text("Update Required"), isPresented: $isUpdateAlertPresented) {
             Button {
-                UIApplication.shared.open(
-                    .init(string: "https://apps.apple.com/app/id6483363226")!
-                )
+                guard let appStoreURL = URL(
+                    string: "https://apps.apple.com/app/id6483363226"
+                ) else {
+                    return
+                }
+                UIApplication.shared.open(appStoreURL)
             } label: {
                 Text("Open App Store")
             }
@@ -80,12 +83,13 @@ struct MainView: View {
             isPresented: $navigationState.isCompactSettingsPresented,
             onDismiss: {
                 navigationState.compactSettingsSelection = nil
+            },
+            content: {
+                SettingsNavigationView(
+                    incomingSelection: $navigationState.compactSettingsSelection
+                )
             }
-        ) {
-            SettingsNavigationView(
-                incomingSelection: $navigationState.compactSettingsSelection
-            )
-        }
+        )
     }
 }
 

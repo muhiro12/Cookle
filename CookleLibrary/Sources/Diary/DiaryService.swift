@@ -37,75 +37,27 @@ public enum DiaryService {
         type: DiaryObjectType
     ) throws -> Diary {
         if let existing = try diary(on: date, context: context) {
-            let objects = existing.objects.orEmpty
-            let breakfasts = objects.filter { $0.type == .breakfast }.sorted().compactMap(\.recipe)
-            let lunches = objects.filter { $0.type == .lunch }.sorted().compactMap(\.recipe)
-            let dinners = objects.filter { $0.type == .dinner }.sorted().compactMap(\.recipe)
-
-            switch type {
-            case .breakfast:
-                Self.update(
-                    context: context,
-                    diary: existing,
-                    date: date,
-                    breakfasts: breakfasts + [recipe],
-                    lunches: lunches,
-                    dinners: dinners,
-                    note: existing.note
-                )
-            case .lunch:
-                Self.update(
-                    context: context,
-                    diary: existing,
-                    date: date,
-                    breakfasts: breakfasts,
-                    lunches: lunches + [recipe],
-                    dinners: dinners,
-                    note: existing.note
-                )
-            case .dinner:
-                Self.update(
-                    context: context,
-                    diary: existing,
-                    date: date,
-                    breakfasts: breakfasts,
-                    lunches: lunches,
-                    dinners: dinners + [recipe],
-                    note: existing.note
-                )
-            }
+            var meals = mealRecipes(from: existing.objects.orEmpty)
+            append(recipe: recipe, to: &meals, for: type)
+            Self.update(
+                context: context,
+                diary: existing,
+                date: date,
+                breakfasts: meals.breakfasts,
+                lunches: meals.lunches,
+                dinners: meals.dinners,
+                note: existing.note
+            )
             return existing
         }
-        switch type {
-        case .breakfast:
-            return Self.create(
-                context: context,
-                date: date,
-                breakfasts: [recipe],
-                lunches: [],
-                dinners: [],
-                note: ""
-            )
-        case .lunch:
-            return Self.create(
-                context: context,
-                date: date,
-                breakfasts: [],
-                lunches: [recipe],
-                dinners: [],
-                note: ""
-            )
-        case .dinner:
-            return Self.create(
-                context: context,
-                date: date,
-                breakfasts: [],
-                lunches: [],
-                dinners: [recipe],
-                note: ""
-            )
-        }
+        return createNewDiary(
+            context: context,
+            date: date,
+            recipe: recipe,
+            type: type
+        )
     }
+    // swiftlint:disable function_parameter_count
     /// Creates a new diary for the given date with provided recipes by meal type.
     public static func create(
         context: ModelContext,
@@ -153,6 +105,7 @@ public enum DiaryService {
             note: note
         )
     }
+    // swiftlint:enable function_parameter_count
 
     /// Deletes the supplied diary from the store.
     public static func delete(
@@ -160,5 +113,82 @@ public enum DiaryService {
         diary: Diary
     ) {
         context.delete(diary)
+    }
+}
+
+private extension DiaryService {
+    struct MealRecipes {
+        var breakfasts: [Recipe]
+        var lunches: [Recipe]
+        var dinners: [Recipe]
+    }
+
+    static func mealRecipes(from objects: [DiaryObject]) -> MealRecipes {
+        .init(
+            breakfasts: objects
+                .filter { $0.type == .breakfast }
+                .sorted()
+                .compactMap(\.recipe),
+            lunches: objects
+                .filter { $0.type == .lunch }
+                .sorted()
+                .compactMap(\.recipe),
+            dinners: objects
+                .filter { $0.type == .dinner }
+                .sorted()
+                .compactMap(\.recipe)
+        )
+    }
+
+    static func append(
+        recipe: Recipe,
+        to meals: inout MealRecipes,
+        for type: DiaryObjectType
+    ) {
+        switch type {
+        case .breakfast:
+            meals.breakfasts.append(recipe)
+        case .lunch:
+            meals.lunches.append(recipe)
+        case .dinner:
+            meals.dinners.append(recipe)
+        }
+    }
+
+    static func createNewDiary(
+        context: ModelContext,
+        date: Date,
+        recipe: Recipe,
+        type: DiaryObjectType
+    ) -> Diary {
+        switch type {
+        case .breakfast:
+            return Self.create(
+                context: context,
+                date: date,
+                breakfasts: [recipe],
+                lunches: [],
+                dinners: [],
+                note: ""
+            )
+        case .lunch:
+            return Self.create(
+                context: context,
+                date: date,
+                breakfasts: [],
+                lunches: [recipe],
+                dinners: [],
+                note: ""
+            )
+        case .dinner:
+            return Self.create(
+                context: context,
+                date: date,
+                breakfasts: [],
+                lunches: [],
+                dinners: [recipe],
+                note: ""
+            )
+        }
     }
 }

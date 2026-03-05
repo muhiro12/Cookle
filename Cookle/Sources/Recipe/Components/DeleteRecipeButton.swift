@@ -25,6 +25,7 @@ struct DeleteRecipeButton: View {
                 Text("Delete \(recipe.name)")
             } icon: {
                 Image(systemName: "trash")
+                    .accessibilityHidden(true)
             }
         }
         .confirmationDialog(
@@ -43,7 +44,9 @@ struct DeleteRecipeButton: View {
                     }
                 }
             }
-            Button("Cancel", role: .cancel) {}
+            Button("Cancel", role: .cancel) {
+                // Dismisses the confirmation dialog.
+            }
         } message: {
             Text("Are you sure you want to delete this item? This action cannot be undone.")
         }

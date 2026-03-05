@@ -1,48 +1,20 @@
 import Foundation
 
-/// Candidate used to generate daily suggestion schedules.
-public struct DailyRecipeSuggestionCandidate: Sendable {
-    public let name: String
-    public let stableIdentifier: String
-
-    public init(
-        name: String,
-        stableIdentifier: String
-    ) {
-        self.name = name
-        self.stableIdentifier = stableIdentifier
-    }
-}
-
-/// Computed daily suggestion schedule entry.
-public struct DailyRecipeSuggestion: Sendable {
-    public let identifier: String
-    public let recipeName: String
-    public let stableIdentifier: String
-    public let notifyDate: Date
-
-    public init(
-        identifier: String,
-        recipeName: String,
-        stableIdentifier: String,
-        notifyDate: Date
-    ) {
-        self.identifier = identifier
-        self.recipeName = recipeName
-        self.stableIdentifier = stableIdentifier
-        self.notifyDate = notifyDate
-    }
-}
-
 /// Planner for recipe suggestion notification schedules.
 public enum DailyRecipeSuggestionService {
+    private enum HashConstants {
+        static let secondsPerDay = Int("86400") ?? .zero
+        static let multiplier = Int64("1103515245") ?? .zero
+        static let increment = Int64("12345") ?? .zero
+    }
+
     /// Builds future daily suggestion entries from the supplied candidates.
     public static func buildSuggestions(
         candidates: [DailyRecipeSuggestionCandidate],
-        now: Date = .now,
-        calendar: Calendar = .current,
         hour: Int,
         minute: Int,
+        now: Date = .now,
+        calendar: Calendar = .current,
         daysAhead: Int = 14,
         identifierPrefix: String = "daily-recipe-suggestion-"
     ) -> [DailyRecipeSuggestion] {
@@ -50,12 +22,7 @@ public enum DailyRecipeSuggestionService {
             return []
         }
 
-        let orderedCandidates = candidates.sorted { lhs, rhs in
-            if lhs.name != rhs.name {
-                return lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
-            }
-            return lhs.stableIdentifier < rhs.stableIdentifier
-        }
+        let orderedCandidates = sortedCandidates(candidates)
 
         var suggestions = [DailyRecipeSuggestion]()
         let startOfToday = calendar.startOfDay(for: now)
@@ -89,36 +56,64 @@ public enum DailyRecipeSuggestionService {
             }
             previousIndex = recipeIndex
 
-            let candidate = orderedCandidates[recipeIndex]
-            let dayIdentifier = calendar.dateComponents(
-                [.year, .month, .day],
-                from: targetDay
-            )
-            let identifier = "\(identifierPrefix)\(dayIdentifier.year ?? 0)-\(dayIdentifier.month ?? 0)-\(dayIdentifier.day ?? 0)"
             suggestions.append(
-                .init(
-                    identifier: identifier,
-                    recipeName: candidate.name,
-                    stableIdentifier: candidate.stableIdentifier,
-                    notifyDate: notifyDate
+                makeSuggestion(
+                    for: orderedCandidates[recipeIndex],
+                    targetDay: targetDay,
+                    notifyDate: notifyDate,
+                    calendar: calendar,
+                    identifierPrefix: identifierPrefix
                 )
             )
         }
         return suggestions
     }
-}
 
-private extension DailyRecipeSuggestionService {
-    static func recipeIndexForDay(
+    private static func recipeIndexForDay(
         day: Date,
         calendar: Calendar,
         recipeCount: Int
     ) -> Int {
         let dayNumber = Int(
-            calendar.startOfDay(for: day).timeIntervalSince1970 / 86_400
+            calendar.startOfDay(for: day).timeIntervalSince1970
+                / Double(HashConstants.secondsPerDay)
         )
-        let mixed = Int64(dayNumber) &* 1_103_515_245 &+ 12_345
+        let mixed = Int64(dayNumber) &* HashConstants.multiplier &+ HashConstants.increment
         let positiveMixed = mixed >= 0 ? mixed : -mixed
         return Int(positiveMixed % Int64(recipeCount))
+    }
+
+    private static func sortedCandidates(
+        _ candidates: [DailyRecipeSuggestionCandidate]
+    ) -> [DailyRecipeSuggestionCandidate] {
+        candidates.sorted { lhs, rhs in
+            if lhs.name != rhs.name {
+                return lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
+            }
+            return lhs.stableIdentifier < rhs.stableIdentifier
+        }
+    }
+
+    private static func makeSuggestion(
+        for candidate: DailyRecipeSuggestionCandidate,
+        targetDay: Date,
+        notifyDate: Date,
+        calendar: Calendar,
+        identifierPrefix: String
+    ) -> DailyRecipeSuggestion {
+        let dayIdentifier = calendar.dateComponents(
+            [.year, .month, .day],
+            from: targetDay
+        )
+        let year = dayIdentifier.year ?? .zero
+        let month = dayIdentifier.month ?? .zero
+        let day = dayIdentifier.day ?? .zero
+        let identifier = "\(identifierPrefix)\(year)-\(month)-\(day)"
+        return .init(
+            identifier: identifier,
+            recipeName: candidate.name,
+            stableIdentifier: candidate.stableIdentifier,
+            notifyDate: notifyDate
+        )
     }
 }

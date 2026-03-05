@@ -1,6 +1,12 @@
 import SwiftUI
 
 struct AddMultipleTextsView: View {
+    private enum Layout {
+        static let placeholderVerticalPadding = CGFloat(Int("8") ?? .zero)
+        static let placeholderHorizontalPadding = CGFloat(Int("6") ?? .zero)
+        static let textEditorCornerRadius = CGFloat(Int("8") ?? .zero)
+    }
+
     @Environment(\.dismiss)
     private var dismiss
 
@@ -17,15 +23,15 @@ struct AddMultipleTextsView: View {
                 Text(placeholder)
                     .font(.body)
                     .foregroundStyle(.placeholder)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 6)
+                    .padding(.vertical, Layout.placeholderVerticalPadding)
+                    .padding(.horizontal, Layout.placeholderHorizontalPadding)
                     .allowsHitTesting(false)
                     .hidden(text.isNotEmpty)
             }
             .padding()
             .scrollContentBackground(.hidden)
             .background(Color(.secondarySystemGroupedBackground))
-            .clipShape(.rect(cornerRadius: 8))
+            .clipShape(.rect(cornerRadius: Layout.textEditorCornerRadius))
             .padding()
             .background(Color(.systemGroupedBackground))
             .navigationTitle(title)

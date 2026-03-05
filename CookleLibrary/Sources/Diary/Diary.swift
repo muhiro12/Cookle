@@ -26,7 +26,9 @@ nonisolated public final class Diary {
     /// Last modification timestamp.
     public private(set) var modifiedTimestamp = Date.now
 
-    private init() {}
+    private init() {
+        // SwiftData-managed initializer.
+    }
 
     /// Creates and inserts a diary with given objects and note.
     public static func create(context: ModelContext,

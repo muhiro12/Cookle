@@ -13,7 +13,7 @@ nonisolated public enum TagPredicate<T: Tag> {
     /// Matches every tag.
     case all
     /// Matches no tags.
-    case none
+    case none // swiftlint:disable:this discouraged_none_name
     /// Matches tags whose value exactly equals the supplied text.
     case valueIs(String)
     /// Matches tags whose value contains the supplied text.

@@ -7,36 +7,57 @@ struct PhotoObjectView: View {
 
     var body: some View {
         List {
-            Section {
-                if let photo = object.photo,
-                   let image = UIImage(data: photo.data) {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFit()
-                }
-            } header: {
-                Text("Photo")
+            photoSection
+            orderSection
+            recipeSection
+            createdAtSection
+            updatedAtSection
+        }
+    }
+
+    var photoSection: some View {
+        Section {
+            if let photo = object.photo,
+               let image = UIImage(data: photo.data) {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+                    .accessibilityLabel(Text("Photo"))
             }
-            Section {
-                Text(object.order.description)
-            } header: {
-                Text("Order")
-            }
-            Section {
-                Text(object.recipe?.name ?? "")
-            } header: {
-                Text("Recipe")
-            }
-            Section {
-                Text(object.createdTimestamp.formatted(.dateTime.year().month().day()))
-            } header: {
-                Text("Created At")
-            }
-            Section {
-                Text(object.modifiedTimestamp.formatted(.dateTime.year().month().day()))
-            } header: {
-                Text("Updated At")
-            }
+        } header: {
+            Text("Photo")
+        }
+    }
+
+    var orderSection: some View {
+        Section {
+            Text(object.order.description)
+        } header: {
+            Text("Order")
+        }
+    }
+
+    var recipeSection: some View {
+        Section {
+            Text(object.recipe?.name ?? "")
+        } header: {
+            Text("Recipe")
+        }
+    }
+
+    var createdAtSection: some View {
+        Section {
+            Text(object.createdTimestamp.formatted(.dateTime.year().month().day()))
+        } header: {
+            Text("Created At")
+        }
+    }
+
+    var updatedAtSection: some View {
+        Section {
+            Text(object.modifiedTimestamp.formatted(.dateTime.year().month().day()))
+        } header: {
+            Text("Updated At")
         }
     }
 }

@@ -30,8 +30,6 @@ struct ContentView: View {
                 }
             }
     }
-
-    init() {}
 }
 
 @available(iOS 18.0, *)

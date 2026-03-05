@@ -13,7 +13,7 @@ public enum IngredientObjectPredicate {
     /// Matches every ingredient object.
     case all
     /// Matches no ingredient objects.
-    case none
+    case none // swiftlint:disable:this discouraged_none_name
 
     /// Concrete SwiftData predicate for this case.
     public var value: Foundation.Predicate<IngredientObject> {
@@ -28,7 +28,10 @@ public enum IngredientObjectPredicate {
 
 public extension FetchDescriptor where T == IngredientObject {
     /// Builds a fetch descriptor for ingredient-object queries.
-    static func ingredientObjects(_ predicate: IngredientObjectPredicate, order _: SortOrder = .reverse) -> FetchDescriptor {
+    static func ingredientObjects(
+        _ predicate: IngredientObjectPredicate,
+        order _: SortOrder = .reverse
+    ) -> FetchDescriptor {
         .init(
             predicate: predicate.value,
             sortBy: [

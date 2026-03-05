@@ -9,6 +9,10 @@ import SwiftData
 import SwiftUI
 
 struct PhotoListView: View {
+    private enum Layout {
+        static let photoGridMinimum = CGFloat(Int("120") ?? .zero)
+    }
+
     @Environment(\.isPresented)
     private var isPresented
 
@@ -31,7 +35,7 @@ struct PhotoListView: View {
                                     .foregroundStyle(.secondary)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .padding()
-                                LazyVGrid(columns: [.init(.adaptive(minimum: 120))]) {
+                                LazyVGrid(columns: [.init(.adaptive(minimum: Layout.photoGridMinimum))]) {
                                     ForEach(photos) { photo in
                                         if photo.recipes.isNotEmpty,
                                            let image = UIImage(data: photo.data) {

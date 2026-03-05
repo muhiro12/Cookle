@@ -21,9 +21,12 @@ enum MealType: String, AppEnum {
 extension MealType {
     var diaryType: DiaryObjectType {
         switch self {
-        case .breakfast: .breakfast
-        case .lunch: .lunch
-        case .dinner: .dinner
+        case .breakfast:
+            .breakfast
+        case .lunch:
+            .lunch
+        case .dinner:
+            .dinner
         }
     }
 }

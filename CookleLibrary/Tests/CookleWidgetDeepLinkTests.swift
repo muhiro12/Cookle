@@ -8,7 +8,7 @@ struct CookleWidgetDeepLinkTests {
     func createsDiaryURL() {
         let diaryURL = CookleWidgetDeepLink.url(for: .diary)
         #expect(
-            diaryURL?.absoluteString == "https://muhiro12.github.io/Cookle/diary"
+            diaryURL?.absoluteString == "https://muhiro12.github.io/Cookle/diary?"
         )
     }
 

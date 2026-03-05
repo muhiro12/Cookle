@@ -32,7 +32,12 @@ nonisolated public final class IngredientObject: SubObject {
     }
 
     /// Creates and inserts a new ingredient object for the given value.
-    public static func create(context: ModelContext, ingredient: String, amount: String, order: Int) -> IngredientObject {
+    public static func create(
+        context: ModelContext,
+        ingredient: String,
+        amount: String,
+        order: Int
+    ) -> IngredientObject {
         let object = IngredientObject(
             ingredient: .create(context: context, value: ingredient)
         )

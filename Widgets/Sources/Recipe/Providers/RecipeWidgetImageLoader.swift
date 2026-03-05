@@ -3,6 +3,11 @@ import UIKit
 import WidgetKit
 
 enum RecipeWidgetImageLoader {
+    private enum Layout {
+        static let smallWidgetMaxPixelSize = 340
+        static let mediumWidgetMaxPixelSize = 720
+    }
+
     static func makeImage(from imageData: Data, family widgetFamily: WidgetFamily) -> UIImage? {
         let sourceOptions: [CFString: Any] = [
             kCGImageSourceShouldCache: false
@@ -33,11 +38,11 @@ enum RecipeWidgetImageLoader {
     private static func maximumPixelSize(family widgetFamily: WidgetFamily) -> Int {
         switch widgetFamily {
         case .systemSmall:
-            return 340
+            return Layout.smallWidgetMaxPixelSize
         case .systemMedium:
-            return 720
+            return Layout.mediumWidgetMaxPixelSize
         default:
-            return 720
+            return Layout.mediumWidgetMaxPixelSize
         }
     }
 }

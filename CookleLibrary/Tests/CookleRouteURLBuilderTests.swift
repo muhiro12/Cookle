@@ -13,7 +13,7 @@ struct CookleRouteURLBuilderTests {
         )
         let url = CookleRouteURLBuilder.customSchemeURL(for: route)
         #expect(
-            url?.absoluteString == "cookle://diary/2026-02-27"
+            url?.absoluteString == "cookle://diary/2026-02-27?"
         )
     }
 
@@ -31,7 +31,7 @@ struct CookleRouteURLBuilderTests {
         let route = CookleRoute.settingsSubscription
         let url = CookleRouteURLBuilder.customSchemeURL(for: route)
         #expect(
-            url?.absoluteString == "cookle://settings/subscription"
+            url?.absoluteString == "cookle://settings/subscription?"
         )
     }
 

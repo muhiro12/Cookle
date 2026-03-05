@@ -9,6 +9,12 @@ import SwiftData
 import SwiftUI
 
 struct SearchView: View {
+    private enum Layout {
+        static let placeholderOffsetY = CGFloat(
+            -(Double("40") ?? .zero)
+        )
+    }
+
     @Environment(\.modelContext)
     private var context
     @Environment(\.isPresented)
@@ -24,37 +30,11 @@ struct SearchView: View {
     var body: some View {
         Group {
             if recipes.isNotEmpty {
-                List(recipes, selection: $recipe) { recipe in
-                    NavigationLink(value: recipe) {
-                        RecipeLabel()
-                            .labelStyle(.titleAndLargeIcon)
-                            .environment(recipe)
-                    }
-                }
+                searchResults
             } else if searchText.isNotEmpty {
-                Button {
-                    isFocused = true
-                } label: {
-                    Label {
-                        Text("Not Found")
-                    } icon: {
-                        Image(systemName: "questionmark.square.dashed")
-                    }
-                }
-                .foregroundStyle(.secondary)
-                .offset(y: -40)
+                notFoundPlaceholder
             } else {
-                Button {
-                    isFocused = true
-                } label: {
-                    Label {
-                        Text("Please enter a search term")
-                    } icon: {
-                        Image(systemName: "rectangle.and.pencil.and.ellipsis")
-                    }
-                }
-                .foregroundStyle(.secondary)
-                .offset(y: -40)
+                searchPromptPlaceholder
             }
         }
         .searchable(text: $searchText, isPresented: $isFocused)
@@ -76,12 +56,54 @@ struct SearchView: View {
         }
     }
 
+    var searchResults: some View {
+        List(recipes, selection: $recipe) { recipe in
+            NavigationLink(value: recipe) {
+                RecipeLabel()
+                    .labelStyle(.titleAndLargeIcon)
+                    .environment(recipe)
+            }
+        }
+    }
+
+    var notFoundPlaceholder: some View {
+        placeholderButton(
+            title: "Not Found",
+            systemImage: "questionmark.square.dashed"
+        )
+    }
+
+    var searchPromptPlaceholder: some View {
+        placeholderButton(
+            title: "Please enter a search term",
+            systemImage: "rectangle.and.pencil.and.ellipsis"
+        )
+    }
+
     init(
         selection: Binding<Recipe?> = .constant(nil),
         incomingSearchQuery: Binding<String?> = .constant(nil)
     ) {
         _recipe = selection
         _incomingSearchQuery = incomingSearchQuery
+    }
+
+    func placeholderButton(
+        title: LocalizedStringKey,
+        systemImage: String
+    ) -> some View {
+        Button {
+            isFocused = true
+        } label: {
+            Label {
+                Text(title)
+            } icon: {
+                Image(systemName: systemImage)
+                    .accessibilityHidden(true)
+            }
+        }
+        .foregroundStyle(.secondary)
+        .offset(y: Layout.placeholderOffsetY)
     }
 }
 

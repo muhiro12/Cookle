@@ -17,7 +17,7 @@ struct TagView<T: Tag>: View {
     var body: some View {
         List(selection: $recipe) {
             Section {
-                ForEach(tag.recipes.orEmpty) { recipe in
+                ForEach(tag.recipes) { recipe in
                     NavigationLink(value: recipe) {
                         RecipeLabel()
                             .labelStyle(.titleAndLargeIcon)

@@ -8,10 +8,14 @@
 import SwiftUI
 
 struct TitleAndLargeIconLabelStyle: LabelStyle {
+    private enum Layout {
+        static let iconWidth = CGFloat(Int("80") ?? .zero)
+    }
+
     func makeBody(configuration: LabelStyleConfiguration) -> some View {
         HStack {
             configuration.icon
-                .frame(width: 80)
+                .frame(width: Layout.iconWidth)
             configuration.title
                 .padding(.leading)
         }

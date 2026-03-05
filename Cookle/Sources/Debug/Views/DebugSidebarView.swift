@@ -19,101 +19,127 @@ struct DebugSidebarView: View {
     @State private var isAlertPresented = false
 
     var body: some View {
-        List(selection: $content) {
-            Section {
-                Toggle("Debug On", isOn: $isDebugOn)
-            } header: {
-                Text("AppStorage")
+        sidebarList
+            .navigationTitle(Text("Debug"))
+            .toolbar {
+                ToolbarItem {
+                    CloseButton()
+                        .hidden(!isPresented)
+                }
             }
-            Section {
-                Button("Create Preview Diaries", systemImage: "flask") {
-                    isAlertPresented = true
+            .confirmationDialog(
+                Text("Create Preview Diaries"),
+                isPresented: $isAlertPresented
+            ) {
+                Button(role: .destructive) {
+                    guard !isCreatingPreviewDiaries else {
+                        return
+                    }
+                    Task {
+                        await createPreviewDiaries()
+                    }
+                } label: {
+                    Text("Create")
                 }
                 .disabled(isCreatingPreviewDiaries)
-            } header: {
-                Text("Manage")
+                Button(role: .cancel) {
+                    // Dismisses the confirmation dialog.
+                } label: {
+                    Text("Cancel")
+                }
+            } message: {
+                Text("Are you really going to create Preview Diary?")
             }
-            Section("TipKit") {
-                Button("Reset Tips") {
-                    do {
-                        try tipController.resetTips()
-                    } catch {
-                        assertionFailure(error.localizedDescription)
-                    }
-                }
-                Button("Show All Tips For Testing") {
-                    Tips.showAllTipsForTesting()
-                }
-                Button("Hide All Tips For Testing") {
-                    Tips.hideAllTipsForTesting()
-                }
-            }
-            Section {
-                NavigationLink(value: DebugContent.preview) {
-                    Text("Previews")
-                }
-            } header: {
-                Text("Preview")
-            }
-            Section {
-                NavigationLink(value: DebugContent.diary) {
-                    Text("Diaries")
-                }
-                NavigationLink(value: DebugContent.diaryObject) {
-                    Text("DiaryObjects")
-                }
-                NavigationLink(value: DebugContent.recipe) {
-                    Text("Recipes")
-                }
-                NavigationLink(value: DebugContent.photo) {
-                    Text("Photos")
-                }
-                NavigationLink(value: DebugContent.photoObject) {
-                    Text("PhotoObjects")
-                }
-                NavigationLink(value: DebugContent.ingredient) {
-                    Text("Ingredients")
-                }
-                NavigationLink(value: DebugContent.ingredientObject) {
-                    Text("IngredientObjects")
-                }
-                NavigationLink(value: DebugContent.category) {
-                    Text("Categories")
-                }
-            } header: {
-                Text("Model")
-            }
-        }
-        .navigationTitle(Text("Debug"))
-        .toolbar {
-            ToolbarItem {
-                CloseButton()
-                    .hidden(!isPresented)
-            }
-        }
-        .confirmationDialog(
-            Text("Create Preview Diaries"),
-            isPresented: $isAlertPresented
-        ) {
-            Button(role: .destructive) {
-                guard !isCreatingPreviewDiaries else {
-                    return
-                }
-                Task {
-                    await createPreviewDiaries()
-                }
-            } label: {
-                Text("Create")
-            }
-            .disabled(isCreatingPreviewDiaries)
-            Button(role: .cancel) {
-            } label: {
-                Text("Cancel")
-            }
-        } message: {
-            Text("Are you really going to create Preview Diary?")
+    }
+
+    var sidebarList: some View {
+        List(selection: $content) {
+            appStorageSection
+            manageSection
+            tipKitSection
+            previewSection
+            modelSection
         }
     }
+
+    var appStorageSection: some View {
+        Section {
+            Toggle("Debug On", isOn: $isDebugOn)
+        } header: {
+            Text("AppStorage")
+        }
+    }
+
+    var manageSection: some View {
+        Section {
+            Button("Create Preview Diaries", systemImage: "flask") {
+                isAlertPresented = true
+            }
+            .disabled(isCreatingPreviewDiaries)
+        } header: {
+            Text("Manage")
+        }
+    }
+
+    var tipKitSection: some View {
+        Section("TipKit") {
+            Button("Reset Tips") {
+                do {
+                    try tipController.resetTips()
+                } catch {
+                    assertionFailure(error.localizedDescription)
+                }
+            }
+            Button("Show All Tips For Testing") {
+                Tips.showAllTipsForTesting()
+            }
+            Button("Hide All Tips For Testing") {
+                Tips.hideAllTipsForTesting()
+            }
+        }
+    }
+
+    var previewSection: some View {
+        Section {
+            NavigationLink(value: DebugContent.preview) {
+                Text("Previews")
+            }
+        } header: {
+            Text("Preview")
+        }
+    }
+
+    var modelSection: some View {
+        Section {
+            NavigationLink(value: DebugContent.diary) {
+                Text("Diaries")
+            }
+            NavigationLink(value: DebugContent.diaryObject) {
+                Text("DiaryObjects")
+            }
+            NavigationLink(value: DebugContent.recipe) {
+                Text("Recipes")
+            }
+            NavigationLink(value: DebugContent.photo) {
+                Text("Photos")
+            }
+            NavigationLink(value: DebugContent.photoObject) {
+                Text("PhotoObjects")
+            }
+            NavigationLink(value: DebugContent.ingredient) {
+                Text("Ingredients")
+            }
+            NavigationLink(value: DebugContent.ingredientObject) {
+                Text("IngredientObjects")
+            }
+            NavigationLink(value: DebugContent.category) {
+                Text("Categories")
+            }
+        } header: {
+            Text("Model")
+        }
+    }
+
     init(selection: Binding<DebugContent?> = .constant(nil)) {
         _content = selection
     }

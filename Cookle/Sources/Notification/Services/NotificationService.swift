@@ -79,9 +79,12 @@ final class NotificationService: NSObject {
 }
 
 extension NotificationService: UNUserNotificationCenterDelegate {
-    nonisolated func userNotificationCenter(_: UNUserNotificationCenter,
-                                            willPresent _: UNNotification) async -> UNNotificationPresentationOptions { // swiftlint:disable:this async_without_await
-        [.sound, .list, .banner]
+    nonisolated func userNotificationCenter(
+        _: UNUserNotificationCenter,
+        willPresent _: UNNotification
+    ) async -> UNNotificationPresentationOptions {
+        await Task.yield()
+        return [.sound, .list, .banner]
     }
 
     nonisolated func userNotificationCenter(_: UNUserNotificationCenter,
@@ -99,6 +102,13 @@ extension NotificationService: UNUserNotificationCenterDelegate {
 }
 
 private extension NotificationService {
+    enum SuggestionTimeDefaults {
+        static let minimumTimeComponent = Int("0") ?? .zero
+        static let defaultHour = Int("20") ?? .zero
+        static let maximumHour = Int("23") ?? .zero
+        static let maximumMinute = Int("59") ?? .zero
+    }
+
     struct ScheduledSuggestionRequest {
         let request: UNNotificationRequest
         let stableIdentifier: String
@@ -119,11 +129,23 @@ private extension NotificationService {
     }
 
     var notificationHour: Int {
-        CooklePreferences.int(for: .dailyRecipeSuggestionHour, default: 20).clamped(to: 0...23)
+        CooklePreferences.int(
+            for: .dailyRecipeSuggestionHour,
+            default: SuggestionTimeDefaults.defaultHour
+        )
+        .clamped(
+            to: SuggestionTimeDefaults.minimumTimeComponent...SuggestionTimeDefaults.maximumHour
+        )
     }
 
     var notificationMinute: Int {
-        CooklePreferences.int(for: .dailyRecipeSuggestionMinute, default: 0).clamped(to: 0...59)
+        CooklePreferences.int(
+            for: .dailyRecipeSuggestionMinute,
+            default: SuggestionTimeDefaults.minimumTimeComponent
+        )
+        .clamped(
+            to: SuggestionTimeDefaults.minimumTimeComponent...SuggestionTimeDefaults.maximumMinute
+        )
     }
 
     var authorizationOptions: UNAuthorizationOptions {
@@ -204,56 +226,27 @@ private extension NotificationService {
             return []
         }
 
-        let recipesByStableIdentifier = Dictionary(
-            uniqueKeysWithValues: recipes.map { recipe in
-                (
-                    stableIdentifier(for: recipe),
-                    recipe
-                )
-            }
-        )
-
-        let candidates = recipes.map { recipe in
-            DailyRecipeSuggestionCandidate(
-                name: recipe.name,
-                stableIdentifier: stableIdentifier(for: recipe)
-            )
-        }
+        let recipesByStableIdentifier = recipeMapByStableIdentifier(from: recipes)
+        let candidates = suggestionCandidates(from: recipes)
         let suggestions = DailyRecipeSuggestionService.buildSuggestions(
             candidates: candidates,
-            now: .now,
-            calendar: calendar,
             hour: notificationHour,
             minute: notificationMinute,
+            now: .now,
+            calendar: calendar,
             daysAhead: daysAhead,
             identifierPrefix: NotificationConstants.suggestionIdentifierPrefix
         )
 
         return suggestions.map { suggestion in
-            let dateComponents = calendar.dateComponents(
-                [.year, .month, .day, .hour, .minute],
-                from: suggestion.notifyDate
-            )
-
-            let content: UNMutableNotificationContent
-            if let recipe = recipesByStableIdentifier[suggestion.stableIdentifier] {
-                content = composer.content(
-                    for: recipe,
-                    stableIdentifier: suggestion.stableIdentifier
-                )
-            } else {
-                content = composer.fallbackContent(
-                    recipeName: suggestion.recipeName,
-                    stableIdentifier: suggestion.stableIdentifier
-                )
-            }
-
-            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-            return .init(
-                request: .init(
+            ScheduledSuggestionRequest(
+                request: UNNotificationRequest(
                     identifier: suggestion.identifier,
-                    content: content,
-                    trigger: trigger
+                    content: suggestionContent(
+                        for: suggestion,
+                        recipesByStableIdentifier: recipesByStableIdentifier
+                    ),
+                    trigger: suggestionTrigger(for: suggestion.notifyDate)
                 ),
                 stableIdentifier: suggestion.stableIdentifier
             )
@@ -298,6 +291,53 @@ private extension NotificationService {
             return encodedIdentifier
         }
         return String(describing: recipe.persistentModelID)
+    }
+
+    func recipeMapByStableIdentifier(from recipes: [Recipe]) -> [String: Recipe] {
+        Dictionary(
+            uniqueKeysWithValues: recipes.map { recipe in
+                (
+                    stableIdentifier(for: recipe),
+                    recipe
+                )
+            }
+        )
+    }
+
+    func suggestionCandidates(from recipes: [Recipe]) -> [DailyRecipeSuggestionCandidate] {
+        recipes.map { recipe in
+            .init(
+                name: recipe.name,
+                stableIdentifier: stableIdentifier(for: recipe)
+            )
+        }
+    }
+
+    func suggestionContent(
+        for suggestion: DailyRecipeSuggestion,
+        recipesByStableIdentifier: [String: Recipe]
+    ) -> UNMutableNotificationContent {
+        if let recipe = recipesByStableIdentifier[suggestion.stableIdentifier] {
+            return composer.content(
+                for: recipe,
+                stableIdentifier: suggestion.stableIdentifier
+            )
+        }
+        return composer.fallbackContent(
+            recipeName: suggestion.recipeName,
+            stableIdentifier: suggestion.stableIdentifier
+        )
+    }
+
+    func suggestionTrigger(for notifyDate: Date) -> UNCalendarNotificationTrigger {
+        let dateComponents = calendar.dateComponents(
+            [.year, .month, .day, .hour, .minute],
+            from: notifyDate
+        )
+        return .init(
+            dateMatching: dateComponents,
+            repeats: false
+        )
     }
 }
 

@@ -30,23 +30,25 @@ struct UpdateDiaryIntent: AppIntent {
             return .result(dialog: "Diary not found")
         }
 
-        try await diaryActionService.update(
+        await diaryActionService.update(
             context: context,
             diary: diary,
             date: date,
-            breakfasts: DiaryIntentSupport.resolveRecipes(
-                from: breakfasts,
-                context: context
-            ),
-            lunches: DiaryIntentSupport.resolveRecipes(
-                from: lunches,
-                context: context
-            ),
-            dinners: DiaryIntentSupport.resolveRecipes(
-                from: dinners,
-                context: context
-            ),
-            note: note
+            input: .init(
+                breakfasts: DiaryIntentSupport.resolveRecipes(
+                    from: breakfasts,
+                    context: context
+                ),
+                lunches: DiaryIntentSupport.resolveRecipes(
+                    from: lunches,
+                    context: context
+                ),
+                dinners: DiaryIntentSupport.resolveRecipes(
+                    from: dinners,
+                    context: context
+                ),
+                note: note
+            )
         )
 
         return .result(dialog: "Updated diary")

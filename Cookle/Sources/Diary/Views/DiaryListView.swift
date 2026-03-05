@@ -10,6 +10,10 @@ import SwiftUI
 import TipKit
 
 struct DiaryListView: View {
+    private enum Layout {
+        static let emptyStateSpacing = CGFloat(Int("16") ?? .zero)
+    }
+
     @Environment(\.isPresented)
     private var isPresented
 
@@ -29,43 +33,9 @@ struct DiaryListView: View {
     var body: some View {
         Group {
             if diaries.isNotEmpty {
-                List(
-                    Array(
-                        Dictionary(
-                            grouping: diaries
-                        ) { diary in
-                            diary.date.formatted(.dateTime.year().month())
-                        }
-                        .sorted { lhs, rhs in
-                            lhs.value[0].date > rhs.value[0].date
-                        }
-                    ),
-                    id: \.key,
-                    selection: $diary
-                ) { section in
-                    Section(section.key) {
-                        ForEach(section.value) { diary in
-                            NavigationLink(value: diary) {
-                                DiaryLabel()
-                                    .environment(diary)
-                            }
-                            .hidden(diary.recipes.orEmpty.isEmpty)
-                        }
-                    }
-                    AdvertisementSection(.small)
-                        .hidden(isSubscribeOn)
-                }
+                diaryList
             } else {
-                VStack(spacing: 16) {
-                    if recipes.isEmpty {
-                        TipView(startWithRecipesTip)
-                    } else {
-                        TipView(addDiaryTip)
-                    }
-                    AddDiaryButton()
-                }
-                .padding()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                emptyStateView
             }
         }
         .navigationTitle(Text("Diaries"))
@@ -78,6 +48,46 @@ struct DiaryListView: View {
                     .hidden(!isPresented)
             }
         }
+    }
+
+    var groupedDiaries: [(key: String, value: [Diary])] {
+        Array(
+            Dictionary(grouping: diaries) { diary in
+                diary.date.formatted(.dateTime.year().month())
+            }
+            .sorted { lhs, rhs in
+                lhs.value[0].date > rhs.value[0].date
+            }
+        )
+    }
+
+    var diaryList: some View {
+        List(groupedDiaries, id: \.key, selection: $diary) { section in
+            Section(section.key) {
+                ForEach(section.value) { diary in
+                    NavigationLink(value: diary) {
+                        DiaryLabel()
+                            .environment(diary)
+                    }
+                    .hidden(diary.recipes.orEmpty.isEmpty)
+                }
+            }
+            AdvertisementSection(.small)
+                .hidden(isSubscribeOn)
+        }
+    }
+
+    var emptyStateView: some View {
+        VStack(spacing: Layout.emptyStateSpacing) {
+            if recipes.isEmpty {
+                TipView(startWithRecipesTip)
+            } else {
+                TipView(addDiaryTip)
+            }
+            AddDiaryButton()
+        }
+        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     init(selection: Binding<Diary?> = .constant(nil)) {

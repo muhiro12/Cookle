@@ -21,6 +21,7 @@ struct EditDiaryButton: View {
                 Text("Edit")
             } icon: {
                 Image(systemName: "pencil")
+                    .accessibilityHidden(true)
             }
         }
         .sheet(isPresented: $isPresented) {

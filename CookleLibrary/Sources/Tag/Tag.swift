@@ -17,7 +17,7 @@ nonisolated public protocol Tag: PersistentModel {
     /// Display value of the tag.
     var value: String { get }
     /// Recipes associated with this tag.
-    var recipes: [Recipe]? { get }
+    var recipes: [Recipe] { get }
     /// Creation timestamp.
     var createdTimestamp: Date { get }
     /// Last modification timestamp.

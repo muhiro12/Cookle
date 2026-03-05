@@ -106,12 +106,13 @@ private extension ModelContainerFactoryTests {
     }
 
     func seed(context: ModelContext) throws {
+        let cookingTime = Int("10") ?? .zero
         let recipe = Recipe.create(
             context: context,
             name: "Recipe",
             photos: [],
             servingSize: 1,
-            cookingTime: 10,
+            cookingTime: cookingTime,
             ingredients: [],
             steps: [],
             categories: [],

@@ -15,6 +15,7 @@ struct PhotoDetailView: View {
                             Image(uiImage: image)
                                 .resizable()
                                 .scaledToFit()
+                                .accessibilityLabel(Text("Photo"))
                                 .frame(
                                     width: geometry.size.width,
                                     height: geometry.size.height

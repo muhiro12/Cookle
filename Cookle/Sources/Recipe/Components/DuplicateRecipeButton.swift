@@ -28,6 +28,7 @@ struct DuplicateRecipeButton: View {
                 Text("Duplicate \(recipe.name)")
             } icon: {
                 Image(systemName: "document.on.document")
+                    .accessibilityHidden(true)
             }
         }
         .sheet(isPresented: $isPresented) {

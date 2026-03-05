@@ -3,13 +3,16 @@
 //  Cookle
 //
 //  Created by Hiromu Nakano on 2022/01/17.
-//  Copyright © 2022 Hiromu Nakano. All rights reserved.
 //
 
 import GoogleMobileAdsWrapper
 import SwiftUI
 
 struct AdvertisementSection {
+    private enum Layout {
+        static let sectionPadding = CGFloat(Int("8") ?? .zero)
+    }
+
     enum Size: String {
         case small = "Small"
         case medium = "Medium"
@@ -30,7 +33,7 @@ extension AdvertisementSection: View {
         Section {
             googleMobileAdsController.buildNativeAd(size.rawValue)
                 .frame(maxWidth: .infinity)
-                .padding(8)
+                .padding(Layout.sectionPadding)
         }
     }
 }

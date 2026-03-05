@@ -28,7 +28,9 @@ nonisolated public final class Photo {
     /// Last modification timestamp.
     public private(set) var modifiedTimestamp = Date.now
 
-    private init() {}
+    private init() {
+        // SwiftData-managed initializer.
+    }
 
     /// Creates (or returns) a photo for the given data.
     public static func create(context: ModelContext, photoData: PhotoData) -> Photo {

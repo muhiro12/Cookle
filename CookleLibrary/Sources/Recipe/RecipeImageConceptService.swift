@@ -1,41 +1,6 @@
-import Foundation
-
-/// Input used to build Image Playground concepts from recipe content.
-public struct RecipeImageConceptRequest: Sendable {
-    public let name: String
-    public let ingredients: [String]
-    public let steps: [String]
-
-    public init(
-        name: String,
-        ingredients: [String],
-        steps: [String]
-    ) {
-        self.name = name
-        self.ingredients = ingredients
-        self.steps = steps
-    }
-}
-
-/// Normalized recipe content passed into Image Playground.
-public struct RecipeImageConceptDraft: Sendable {
-    public let title: String
-    public let ingredients: [String]
-    public let combinedSteps: String?
-
-    public init(
-        title: String,
-        ingredients: [String],
-        combinedSteps: String?
-    ) {
-        self.title = title
-        self.ingredients = ingredients
-        self.combinedSteps = combinedSteps
-    }
-}
-
 /// Builds Image Playground concept input from saved recipe content.
 public enum RecipeImageConceptService {
+    /// Returns a normalized concept draft for Image Playground generation.
     public static func makeDraft(
         request: RecipeImageConceptRequest
     ) -> RecipeImageConceptDraft? {
@@ -59,9 +24,7 @@ public enum RecipeImageConceptService {
             combinedSteps: combinedSteps
         )
     }
-}
 
-extension RecipeImageConceptService {
     static func normalizedText(from value: String) -> String? {
         let trimmedValue = value.trimmingCharacters(in: .whitespacesAndNewlines)
         guard trimmedValue.isNotEmpty else {

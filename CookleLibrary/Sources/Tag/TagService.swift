@@ -1,20 +1,4 @@
-import Foundation
 import SwiftData
-
-/// Errors thrown by tag workflows.
-public enum TagServiceError: Equatable, LocalizedError {
-    case emptyValue
-    case ingredientInUse(String)
-
-    public var errorDescription: String? {
-        switch self {
-        case .emptyValue:
-            return "Value must not be empty."
-        case .ingredientInUse(let value):
-            return "Ingredient '\(value)' is used by existing recipes."
-        }
-    }
-}
 
 /// Shared tag workflows used by app targets and intents.
 @preconcurrency
@@ -45,7 +29,7 @@ public enum TagService {
         context: ModelContext,
         ingredient: Ingredient
     ) throws {
-        if ingredient.recipes.orEmpty.isNotEmpty {
+        if ingredient.recipes.isNotEmpty {
             throw TagServiceError.ingredientInUse(ingredient.value)
         }
         context.delete(ingredient)
@@ -58,10 +42,8 @@ public enum TagService {
     ) {
         context.delete(category)
     }
-}
 
-private extension TagService {
-    static func normalized(_ value: String) throws -> String {
+    private static func normalized(_ value: String) throws -> String {
         let normalizedValue = value.trimmingCharacters(
             in: .whitespacesAndNewlines
         )

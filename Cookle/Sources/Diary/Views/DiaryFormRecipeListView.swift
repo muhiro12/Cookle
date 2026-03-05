@@ -52,7 +52,7 @@ struct DiaryFormRecipeListView: View {
         }
     }
 
-    init(selection: Binding<Set<Recipe>> = .constant([]), type: DiaryObjectType) {
+    init(selection: Binding<Set<Recipe>>, type: DiaryObjectType) {
         _selection = selection
         _temporarySelection = .init(initialValue: selection.wrappedValue)
         self.type = type
@@ -62,6 +62,9 @@ struct DiaryFormRecipeListView: View {
 @available(iOS 18.0, *)
 #Preview(traits: .modifier(CookleSampleData())) {
     NavigationStack {
-        DiaryFormRecipeListView(type: .dinner)
+        DiaryFormRecipeListView(
+            selection: .constant([]),
+            type: .dinner
+        )
     }
 }

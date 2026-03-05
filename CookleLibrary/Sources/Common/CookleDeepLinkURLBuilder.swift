@@ -19,9 +19,9 @@ public enum CookleDeepLinkURLBuilder {
             CookleRouteURLBuilder.customSchemeURL(for: .home) {
             return homeCustomSchemeURL
         }
-        return .init(
+        return URL(
             string: "\(CookleRouteURLDefaults.customScheme)://home"
-        )!
+        ) ?? .temporaryDirectory
     }
 
     /// Returns the home route as a universal link.

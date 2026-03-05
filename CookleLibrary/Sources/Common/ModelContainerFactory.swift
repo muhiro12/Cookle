@@ -30,9 +30,7 @@ public enum ModelContainerFactory {
     public static func sharedContext() throws -> ModelContext {
         .init(try shared())
     }
-}
 
-extension ModelContainerFactory {
     static func makeModelContainer(
         url: URL? = nil,
         cloudKitDatabase: ModelConfiguration.CloudKitDatabase = .none
@@ -86,11 +84,9 @@ extension ModelContainerFactory {
             )
         }
     }
-}
 
-private extension ModelContainerFactory {
     @MainActor
-    static func objectCounts(in context: ModelContext) throws -> MigrationObjectCounts {
+    private static func objectCounts(in context: ModelContext) throws -> MigrationObjectCounts {
         try .init(
             recipeCount: count(in: context, Recipe.self),
             diaryCount: count(in: context, Diary.self),
@@ -101,49 +97,11 @@ private extension ModelContainerFactory {
     }
 
     @MainActor
-    static func count<Model: PersistentModel>(
+    private static func count<Model: PersistentModel>(
         in context: ModelContext,
         _: Model.Type
     ) throws -> Int {
         let fetchDescriptor: FetchDescriptor<Model> = .init()
         return try context.fetchCount(fetchDescriptor)
-    }
-}
-
-struct MigrationObjectCounts: Equatable {
-    let recipeCount: Int
-    let diaryCount: Int
-    let categoryCount: Int
-    let ingredientCount: Int
-    let photoCount: Int
-
-    nonisolated var summary: String {
-        "recipe=\(recipeCount), diary=\(diaryCount), category=\(categoryCount), ingredient=\(ingredientCount), photo=\(photoCount)"
-    }
-
-    nonisolated func hasMatchingRecipeAndDiaryCounts(as legacyObjectCounts: Self) -> Bool {
-        recipeCount == legacyObjectCounts.recipeCount
-            && diaryCount == legacyObjectCounts.diaryCount
-    }
-}
-
-enum MigrationValidationError: Equatable, LocalizedError {
-    case recipeAndDiaryCountMismatch(
-            legacyObjectCounts: MigrationObjectCounts,
-            currentObjectCounts: MigrationObjectCounts
-         )
-
-    var errorDescription: String? {
-        switch self {
-        case .recipeAndDiaryCountMismatch(
-            let legacyObjectCounts,
-            let currentObjectCounts
-        ):
-            return """
-            Migrated store validation failed. \
-            legacy[\(legacyObjectCounts.summary)] \
-            current[\(currentObjectCounts.summary)]
-            """
-        }
     }
 }

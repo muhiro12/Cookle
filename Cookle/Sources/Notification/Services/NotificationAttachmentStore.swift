@@ -98,7 +98,7 @@ private extension NotificationAttachmentStore {
     }
 
     func primaryPhoto(for recipe: Recipe) -> Photo? {
-        if let photo = recipe.photoObjects?.sorted().first?.photo {
+        if let photo = recipe.photoObjects?.min()?.photo {
             return photo
         }
         return recipe.photos?.first

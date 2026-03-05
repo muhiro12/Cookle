@@ -19,15 +19,17 @@ struct RecipeEntityQuery: EntityStringQuery {
 
     @MainActor
     func entities(matching string: String) throws -> [RecipeEntity] {
-        try modelContainer.mainContext.fetch(
+        let recipes = try modelContainer.mainContext.fetch(
             .recipes(.nameContains(string))
-        ).compactMap(RecipeEntity.init)
+        )
+        return recipes.compactMap(RecipeEntity.init)
     }
 
     @MainActor
     func suggestedEntities() throws -> [RecipeEntity] {
-        try modelContainer.mainContext.fetch(
+        let recipes = try modelContainer.mainContext.fetch(
             .recipes(.all)
-        ).compactMap(RecipeEntity.init)
+        )
+        return recipes.compactMap(RecipeEntity.init)
     }
 }

@@ -9,7 +9,9 @@ struct OpenCookleRouteIntent: AppIntent {
     @Parameter(title: "URL")
     private var url: URL
 
-    init() {}
+    init() {
+        // Keeps AppIntent default initialization available.
+    }
 
     init(url: URL) {
         self.url = url

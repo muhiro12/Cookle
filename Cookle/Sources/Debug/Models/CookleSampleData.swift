@@ -3,69 +3,6 @@ import StoreKitWrapper
 import SwiftData
 import SwiftUI
 
-private enum CookleSampleDataContext {
-    static let previewStore = CooklePreviewStore()
-
-    static let sharedContext: CookleSampleData.Context = {
-        do {
-            let modelContainer = try ModelContainer(
-                for: Recipe.self,
-                configurations: .init(isStoredInMemoryOnly: true)
-            )
-            previewStore.prepare(modelContainer.mainContext)
-            let tipController = MainActor.assumeIsolated {
-                let tipController = CookleTipController()
-                try? tipController.configureIfNeeded()
-                return tipController
-            }
-            let routeInbox = MainActor.assumeIsolated {
-                MainRouteInbox()
-            }
-            let notificationService = MainActor.assumeIsolated {
-                NotificationService(
-                    modelContainer: modelContainer,
-                    routeInbox: routeInbox
-                )
-            }
-            let configurationService = MainActor.assumeIsolated {
-                ConfigurationService()
-            }
-            let recipeActionService = MainActor.assumeIsolated {
-                RecipeActionService(
-                    notificationService: notificationService
-                )
-            }
-            let diaryActionService = MainActor.assumeIsolated {
-                DiaryActionService()
-            }
-            let tagActionService = MainActor.assumeIsolated {
-                TagActionService()
-            }
-            let settingsActionService = MainActor.assumeIsolated {
-                SettingsActionService(
-                    notificationService: notificationService
-                )
-            }
-
-            return .init(
-                modelContainer: modelContainer,
-                store: .init(),
-                googleMobileAdsController: .init(adUnitID: Secret.adUnitIDDev),
-                routeInbox: routeInbox,
-                notificationService: notificationService,
-                tipController: tipController,
-                configurationService: configurationService,
-                recipeActionService: recipeActionService,
-                diaryActionService: diaryActionService,
-                tagActionService: tagActionService,
-                settingsActionService: settingsActionService
-            )
-        } catch {
-            fatalError("Failed to create shared Cookle sample data context: \(error.localizedDescription)")
-        }
-    }()
-}
-
 struct CookleSampleData: PreviewModifier {
     struct Context {
         let modelContainer: ModelContainer

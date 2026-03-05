@@ -7,7 +7,7 @@ struct CookleRouteParserTests {
     @Test("Parses custom scheme home route")
     func parseCustomSchemeHomeRoute() {
         let route = CookleRouteParser.parse(
-            url: .init(string: "cookle://home")!
+            url: testURL("cookle://home")
         )
         #expect(route == .home)
     }
@@ -15,7 +15,7 @@ struct CookleRouteParserTests {
     @Test("Parses custom scheme diary route")
     func parseCustomSchemeDiaryRoute() {
         let route = CookleRouteParser.parse(
-            url: .init(string: "cookle://diary")!
+            url: testURL("cookle://diary")
         )
         #expect(route == .diary)
     }
@@ -23,7 +23,7 @@ struct CookleRouteParserTests {
     @Test("Parses custom scheme diary date route")
     func parseCustomSchemeDiaryDateRoute() {
         let route = CookleRouteParser.parse(
-            url: .init(string: "cookle://diary/2026-02-27")!
+            url: testURL("cookle://diary/2026-02-27")
         )
         #expect(route == .diaryDate(year: 2_026, month: 2, day: 27))
     }
@@ -31,7 +31,7 @@ struct CookleRouteParserTests {
     @Test("Parses custom scheme recipe detail route with query")
     func parseCustomSchemeRecipeDetailRoute() {
         let route = CookleRouteParser.parse(
-            url: .init(string: "cookle://recipe?id=recipe-id")!
+            url: testURL("cookle://recipe?id=recipe-id")
         )
         #expect(route == .recipeDetail("recipe-id"))
     }
@@ -39,7 +39,7 @@ struct CookleRouteParserTests {
     @Test("Parses custom scheme search route with query")
     func parseCustomSchemeSearchRoute() {
         let route = CookleRouteParser.parse(
-            url: .init(string: "cookle://search?q=soup")!
+            url: testURL("cookle://search?q=soup")
         )
         #expect(route == .search(query: "soup"))
     }
@@ -47,7 +47,7 @@ struct CookleRouteParserTests {
     @Test("Parses custom scheme settings subscription route")
     func parseCustomSchemeSettingsSubscriptionRoute() {
         let route = CookleRouteParser.parse(
-            url: .init(string: "cookle://settings/subscription")!
+            url: testURL("cookle://settings/subscription")
         )
         #expect(route == .settingsSubscription)
     }
@@ -55,7 +55,7 @@ struct CookleRouteParserTests {
     @Test("Parses universal link route with path prefix")
     func parseUniversalLinkRouteWithPrefix() {
         let route = CookleRouteParser.parse(
-            url: .init(string: "https://muhiro12.github.io/Cookle/recipe?id=recipe-id")!
+            url: testURL("https://muhiro12.github.io/Cookle/recipe?id=recipe-id")
         )
         #expect(route == .recipeDetail("recipe-id"))
     }
@@ -63,7 +63,7 @@ struct CookleRouteParserTests {
     @Test("Parses universal link route without path prefix")
     func parseUniversalLinkRouteWithoutPrefix() {
         let route = CookleRouteParser.parse(
-            url: .init(string: "https://muhiro12.github.io/diary/2026-02-27")!
+            url: testURL("https://muhiro12.github.io/diary/2026-02-27")
         )
         #expect(route == .diaryDate(year: 2_026, month: 2, day: 27))
     }
@@ -71,10 +71,10 @@ struct CookleRouteParserTests {
     @Test("Defaults to home when URL has no destination")
     func parseDefaultsToHomeWhenNoDestination() {
         let customSchemeRoute = CookleRouteParser.parse(
-            url: .init(string: "cookle://")!
+            url: testURL("cookle://")
         )
         let universalLinkRoute = CookleRouteParser.parse(
-            url: .init(string: "https://muhiro12.github.io/Cookle")!
+            url: testURL("https://muhiro12.github.io/Cookle")
         )
         #expect(customSchemeRoute == .home)
         #expect(universalLinkRoute == .home)
@@ -83,7 +83,7 @@ struct CookleRouteParserTests {
     @Test("Rejects unknown universal link host")
     func parseRejectsUnknownUniversalLinkHost() {
         let route = CookleRouteParser.parse(
-            url: .init(string: "https://example.com/Cookle/recipe")!
+            url: testURL("https://example.com/Cookle/recipe")
         )
         #expect(route == nil)
     }
@@ -91,7 +91,7 @@ struct CookleRouteParserTests {
     @Test("Rejects legacy widget deep-link URL")
     func parseRejectsLegacyWidgetURL() {
         let route = CookleRouteParser.parse(
-            url: .init(string: "cookle://widget/diary")!
+            url: testURL("cookle://widget/diary")
         )
         #expect(route == nil)
     }
@@ -99,7 +99,7 @@ struct CookleRouteParserTests {
     @Test("Rejects invalid diary date")
     func parseRejectsInvalidDiaryDate() {
         let route = CookleRouteParser.parse(
-            url: .init(string: "cookle://diary/2026-02-31")!
+            url: testURL("cookle://diary/2026-02-31")
         )
         #expect(route == nil)
     }
@@ -107,7 +107,7 @@ struct CookleRouteParserTests {
     @Test("Rejects route with extra path segments")
     func parseRejectsRouteWithExtraPathSegments() {
         let route = CookleRouteParser.parse(
-            url: .init(string: "cookle://recipe/extra?id=recipe-id")!
+            url: testURL("cookle://recipe/extra?id=recipe-id")
         )
         #expect(route == nil)
     }
@@ -115,8 +115,15 @@ struct CookleRouteParserTests {
     @Test("Rejects recipe route with empty id")
     func parseRejectsRecipeRouteWithEmptyID() {
         let route = CookleRouteParser.parse(
-            url: .init(string: "cookle://recipe?id=")!
+            url: testURL("cookle://recipe?id=")
         )
         #expect(route == nil)
     }
+}
+
+private func testURL(_ value: String) -> URL {
+    guard let url = URL(string: value) else {
+        fatalError("Invalid test URL: \(value)")
+    }
+    return url
 }

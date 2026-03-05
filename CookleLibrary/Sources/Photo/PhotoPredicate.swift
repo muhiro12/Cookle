@@ -13,7 +13,7 @@ nonisolated public enum PhotoPredicate {
     /// Matches every photo.
     case all
     /// Matches no photos.
-    case none
+    case none // swiftlint:disable:this discouraged_none_name
     /// Matches photos created from the supplied source.
     case sourceIs(PhotoSource)
     /// Matches photos whose binary data equals the supplied payload.

@@ -65,19 +65,19 @@ public enum RecipeService {
     /// - Returns: An `InferredRecipe` with best-effort fields filled.
     @available(iOS 26.0, *)
     public static func infer(text: String) async -> InferredRecipe {
-        let languageCode = Locale.current.language.languageCode?.identifier ?? "en"
-        let locale = Locale.current
-        let languageName = locale.localizedString(forLanguageCode: languageCode) ?? "English"
+        let languageName = inferredLanguageName()
 
         let instructions = """
             You are a professional chef and culinary expert running a recipe website.
-            Kindly and thoroughly teach users how to prepare recipes, making your explanations easy to follow and friendly for home cooks of any skill level.
+            Kindly and thoroughly teach users how to prepare recipes.
+            Make your explanations easy to follow and friendly for home cooks of any skill level.
             """
         let session = LanguageModelSession(instructions: instructions)
 
-        let prompt = """
-            Analyze the following text and provide a recipe form. Please respond in \(languageName).
-            """ + "\n" + text
+        let prompt = inferencePrompt(
+            languageName: languageName,
+            text: text
+        )
 
         do {
             return try await session.respond(
@@ -85,42 +85,65 @@ public enum RecipeService {
                 generating: InferredRecipe.self
             ).content
         } catch {
-            // Heuristic fallback: extract name from first line, simple numbers for serving/time.
-            let lines = text.split(separator: "\n").map(String.init)
-            let first = lines.first?.trimmingCharacters(in: .whitespacesAndNewlines)
-            let name = (first?.isEmpty == false) ? first! : "Recipe"
-
-            let servingSize: Int = {
-                let pattern = #"(?i)(serves|for)\s*(\d+)"#
-                if let match = lines.joined(separator: " ").range(of: pattern, options: .regularExpression) {
-                    let matchedText = String(lines.joined(separator: " ")[match])
-                    if let servingSizeValue = Int(matchedText.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()) {
-                        return servingSizeValue
-                    }
-                }
-                return 0
-            }()
-
-            let cookingTime: Int = {
-                let pattern = #"(?i)(\d+)\s*(min|minutes)"#
-                if let match = lines.joined(separator: " ").range(of: pattern, options: .regularExpression) {
-                    let matchedText = String(lines.joined(separator: " ")[match])
-                    if let cookingTimeValue = Int(matchedText.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()) {
-                        return cookingTimeValue
-                    }
-                }
-                return 0
-            }()
-
-            return InferredRecipe(
-                name: name,
-                servingSize: servingSize,
-                cookingTime: cookingTime,
-                ingredients: [],
-                steps: [],
-                categories: [],
-                note: ""
-            )
+            return fallbackInference(from: text)
         }
+    }
+}
+
+@available(iOS 26.0, *)
+private extension RecipeService {
+    static func inferredLanguageName() -> String {
+        let languageCode = Locale.current.language.languageCode?.identifier ?? "en"
+        let locale = Locale.current
+        return locale.localizedString(forLanguageCode: languageCode) ?? "English"
+    }
+
+    static func inferencePrompt(
+        languageName: String,
+        text: String
+    ) -> String {
+        """
+        Analyze the following text and provide a recipe form. Please respond in \(languageName).
+        """ + "\n" + text
+    }
+
+    static func fallbackInference(from text: String) -> InferredRecipe {
+        let lines = text.split(separator: "\n").map(String.init)
+        let firstLine = lines.first?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let name = firstLine?.isEmpty == false ? firstLine ?? "Recipe" : "Recipe"
+        let sourceText = lines.joined(separator: " ")
+
+        return .init(
+            name: name,
+            servingSize: extractedNumber(
+                in: sourceText,
+                pattern: #"(?i)(serves|for)\s*(\d+)"#
+            ),
+            cookingTime: extractedNumber(
+                in: sourceText,
+                pattern: #"(?i)(\d+)\s*(min|minutes)"#
+            ),
+            ingredients: [],
+            steps: [],
+            categories: [],
+            note: ""
+        )
+    }
+
+    static func extractedNumber(
+        in sourceText: String,
+        pattern: String
+    ) -> Int {
+        guard let match = sourceText.range(
+            of: pattern,
+            options: .regularExpression
+        ) else {
+            return .zero
+        }
+        let matchedText = String(sourceText[match])
+        let digits = matchedText
+            .components(separatedBy: CharacterSet.decimalDigits.inverted)
+            .joined()
+        return Int(digits) ?? .zero
     }
 }

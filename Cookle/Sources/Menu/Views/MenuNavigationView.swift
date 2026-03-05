@@ -8,6 +8,12 @@
 import SwiftUI
 
 struct MenuNavigationView: View {
+    private enum Layout {
+        static let minimumScaleFactor = CGFloat(
+            Double("0.5") ?? .zero
+        )
+    }
+
     @Environment(\.isPresented)
     private var isPresented
 
@@ -37,7 +43,7 @@ struct MenuNavigationView: View {
                         } label: {
                             tab.label
                                 .lineLimit(1)
-                                .minimumScaleFactor(0.5)
+                                .minimumScaleFactor(Layout.minimumScaleFactor)
                                 .frame(maxWidth: .infinity)
                                 .padding()
                         }

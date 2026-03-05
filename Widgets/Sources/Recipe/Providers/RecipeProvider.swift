@@ -3,6 +3,10 @@ import SwiftData
 import WidgetKit
 
 struct RecipeProvider: AppIntentTimelineProvider {
+    private enum RefreshInterval {
+        static let timelineRefreshHours = 6
+    }
+
     func placeholder(in _: Context) -> RecipeEntry {
         .init(
             date: .now,
@@ -42,7 +46,11 @@ struct RecipeProvider: AppIntentTimelineProvider {
             }
         }()
 
-        guard let nextRefreshDate = Calendar.current.date(byAdding: .hour, value: 6, to: now) else {
+        guard let nextRefreshDate = Calendar.current.date(
+            byAdding: .hour,
+            value: RefreshInterval.timelineRefreshHours,
+            to: now
+        ) else {
             return .init(entries: [entry], policy: .atEnd)
         }
         return .init(entries: [entry], policy: .after(nextRefreshDate))

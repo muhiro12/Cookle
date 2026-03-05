@@ -25,6 +25,7 @@ struct AddRecipeButton: View {
                 Text("Add Recipe")
             } icon: {
                 Image(systemName: "book.pages")
+                    .accessibilityHidden(true)
             }
         }
         .sheet(isPresented: $isPresented) {

@@ -71,6 +71,7 @@ struct CreateRecipeButton: View {
                 }
             } icon: {
                 Image(systemName: "book.pages")
+                    .accessibilityHidden(true)
             }
         }
         .disabled(

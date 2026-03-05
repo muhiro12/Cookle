@@ -46,7 +46,9 @@ nonisolated public final class Recipe {
     /// Last modification timestamp.
     public private(set) var modifiedTimestamp = Date.now
 
-    private init() {}
+    private init() {
+        // SwiftData-managed initializer.
+    }
 
     // swiftlint:disable function_parameter_count
     /// Creates and inserts a new recipe.
@@ -86,6 +88,7 @@ nonisolated public final class Recipe {
     }
     // swiftlint:enable function_parameter_count
 
+    // swiftlint:disable function_parameter_count
     /// Updates the recipe fields and refreshes the modification timestamp.
     public func update(name: String,
                        photos: [PhotoObject],
@@ -107,6 +110,7 @@ nonisolated public final class Recipe {
         self.note = note
         self.modifiedTimestamp = .now
     }
+    // swiftlint:enable function_parameter_count
 }
 
 extension Recipe: Identifiable {}

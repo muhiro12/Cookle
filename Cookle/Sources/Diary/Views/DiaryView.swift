@@ -16,50 +16,11 @@ struct DiaryView: View {
 
     var body: some View {
         List(selection: $recipe) {
-            ForEach(DiaryObjectType.allCases) { type in
-                let recipes = diary.objects.orEmpty
-                    .filter { object in
-                        object.type == type
-                    }
-                    .sorted()
-                    .compactMap(\.recipe)
-                if recipes.isNotEmpty {
-                    Section {
-                        ForEach(recipes) { recipe in
-                            NavigationLink(value: recipe) {
-                                RecipeLabel()
-                                    .labelStyle(.titleAndLargeIcon)
-                                    .environment(recipe)
-                            }
-                        }
-                    } header: {
-                        Text(type.title)
-                    }
-                }
-            }
-            if diary.note.isNotEmpty {
-                Section {
-                    Text(diary.note)
-                } header: {
-                    Text("Note")
-                }
-            }
-            Section {
-                Text(diary.createdTimestamp.formatted(.dateTime.year().month().day()))
-            } header: {
-                Text("Created At")
-            }
-            Section {
-                Text(diary.modifiedTimestamp.formatted(.dateTime.year().month().day()))
-            } header: {
-                Text("Updated At")
-            }
-            Section {
-                EditDiaryButton()
-                DeleteDiaryButton()
-            } header: {
-                Spacer()
-            }
+            mealSections
+            noteSection
+            createdAtSection
+            updatedAtSection
+            actionSection
         }
         .navigationTitle(diary.date.formatted(.dateTime.year().month().day().weekday()))
         .toolbar {
@@ -69,8 +30,71 @@ struct DiaryView: View {
         }
     }
 
+    @ViewBuilder var mealSections: some View {
+        ForEach(DiaryObjectType.allCases) { type in
+            let recipes = mealRecipes(for: type)
+            if recipes.isNotEmpty {
+                Section {
+                    ForEach(recipes) { recipe in
+                        NavigationLink(value: recipe) {
+                            RecipeLabel()
+                                .labelStyle(.titleAndLargeIcon)
+                                .environment(recipe)
+                        }
+                    }
+                } header: {
+                    Text(type.title)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder var noteSection: some View {
+        if diary.note.isNotEmpty {
+            Section {
+                Text(diary.note)
+            } header: {
+                Text("Note")
+            }
+        }
+    }
+
+    var createdAtSection: some View {
+        Section {
+            Text(diary.createdTimestamp.formatted(.dateTime.year().month().day()))
+        } header: {
+            Text("Created At")
+        }
+    }
+
+    var updatedAtSection: some View {
+        Section {
+            Text(diary.modifiedTimestamp.formatted(.dateTime.year().month().day()))
+        } header: {
+            Text("Updated At")
+        }
+    }
+
+    var actionSection: some View {
+        Section {
+            EditDiaryButton()
+            DeleteDiaryButton()
+        } header: {
+            Spacer()
+        }
+    }
+
     init(selection: Binding<Recipe?> = .constant(nil)) {
         _recipe = selection
+    }
+
+    func mealRecipes(for type: DiaryObjectType) -> [Recipe] {
+        diary.objects.orEmpty
+            .filter { object in
+                object.type == type
+            }
+            .sorted()
+            .compactMap(\.recipe)
     }
 }
 

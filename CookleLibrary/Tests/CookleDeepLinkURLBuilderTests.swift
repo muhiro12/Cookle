@@ -8,7 +8,7 @@ struct CookleDeepLinkURLBuilderTests {
     func routeURLBuildsHomeURL() {
         let url = CookleDeepLinkURLBuilder.routeURL(for: .home)
         #expect(
-            url?.absoluteString == "https://muhiro12.github.io/Cookle/home"
+            url?.absoluteString == "https://muhiro12.github.io/Cookle/home?"
         )
     }
 
@@ -16,7 +16,7 @@ struct CookleDeepLinkURLBuilderTests {
     func preferredURLBuildsHomeURL() {
         let url = CookleDeepLinkURLBuilder.preferredURL(for: .home)
         #expect(
-            url.absoluteString == "https://muhiro12.github.io/Cookle/home"
+            url.absoluteString == "https://muhiro12.github.io/Cookle/home?"
         )
     }
 
@@ -31,7 +31,7 @@ struct CookleDeepLinkURLBuilderTests {
     @Test("Builds preferred diary URL from date components")
     func preferredDiaryURLBuildsDiaryDateRoute() {
         var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = .init(secondsFromGMT: 0)!
+        calendar.timeZone = TimeZone(secondsFromGMT: .zero) ?? .current
         let date = calendar.date(
             from: .init(
                 year: 2_026,
@@ -41,7 +41,7 @@ struct CookleDeepLinkURLBuilderTests {
                 minute: 0,
                 second: 0
             )
-        )!
+        ) ?? .now
 
         let url = CookleDeepLinkURLBuilder.preferredDiaryURL(
             for: date,
@@ -49,7 +49,7 @@ struct CookleDeepLinkURLBuilderTests {
         )
 
         #expect(
-            url.absoluteString == "https://muhiro12.github.io/Cookle/diary/2026-02-27"
+            url.absoluteString == "https://muhiro12.github.io/Cookle/diary/2026-02-27?"
         )
     }
 }

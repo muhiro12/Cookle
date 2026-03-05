@@ -37,101 +37,12 @@ struct RecipeFormView: View {
 
     var body: some View {
         Form {
-            RecipeFormNameSection($name)
-                .hidden(editMode == .active)
-            RecipeFormPhotosSection($photos)
-            if #available(iOS 26.0, *) {
-                RecipeFormInferSection(
-                    name: $name,
-                    servingSize: $servingSize,
-                    cookingTime: $cookingTime,
-                    ingredients: $ingredients,
-                    steps: $steps,
-                    categories: $categories,
-                    note: $note
-                )
-            }
-            RecipeFormServingSizeSection($servingSize)
-                .hidden(editMode == .active)
-            RecipeFormCookingTimeSection($cookingTime)
-                .hidden(editMode == .active)
-            RecipeFormIngredientsSection($ingredients)
-            RecipeFormStepsSection($steps)
-            RecipeFormCategoriesSection($categories)
-            RecipeFormNoteSection($note)
-                .hidden(editMode == .active)
-            Section {
-                Button {
-                    withAnimation {
-                        editMode = editMode.isEditing ? .inactive : .active
-                    }
-                } label: {
-                    editMode == .inactive ? Text("Change Order or Delete Row") : Text("Done Edit")
-                }
-                .frame(maxWidth: .infinity)
-            }
+            formSections
         }
         .environment(\.editMode, $editMode)
         .navigationTitle(editMode == .inactive ? Text("Recipe") : Text("Editing..."))
         .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button {
-                    if name == "Enable Debug" {
-                        name = .empty
-                        isDebugAlertPresented = true
-                        return
-                    }
-                    dismiss()
-                } label: {
-                    Text("Cancel")
-                }
-            }
-            switch editMode {
-            case .active:
-                ToolbarItem {
-                    Button {
-                        withAnimation {
-                            editMode = .inactive
-                        }
-                    } label: {
-                        Text("Done")
-                    }
-                }
-            default:
-                switch type {
-                case .create,
-                     .duplicate:
-                    ToolbarItem(placement: .confirmationAction) {
-                        CreateRecipeButton(
-                            name: name,
-                            photos: photos,
-                            servingSize: servingSize,
-                            cookingTime: cookingTime,
-                            ingredients: ingredients,
-                            steps: steps,
-                            categories: categories,
-                            note: note,
-                            useShortTitle: true
-                        )
-                        .labelStyle(.titleOnly)
-                    }
-                case .edit:
-                    ToolbarItem(placement: .confirmationAction) {
-                        UpdateRecipeButton(
-                            name: name,
-                            photos: photos,
-                            servingSize: servingSize,
-                            cookingTime: cookingTime,
-                            ingredients: ingredients,
-                            steps: steps,
-                            categories: categories,
-                            note: note,
-                            useShortTitle: true
-                        )
-                        .labelStyle(.titleOnly)
-                    }
-                }
-            }
+            toolbarItems
         }
         .interactiveDismissDisabled()
         .confirmationDialog(
@@ -145,6 +56,7 @@ struct RecipeFormView: View {
                 Text("OK")
             }
             Button(role: .cancel) {
+                // Dismisses the confirmation dialog.
             } label: {
                 Text("Cancel")
             }
@@ -152,35 +64,144 @@ struct RecipeFormView: View {
             Text("Are you really going to use DebugMode?")
         }
         .task {
-            guard let model = recipe else {
-                return
+            applyRecipeIfNeeded()
+        }
+    }
+
+    @ViewBuilder var formSections: some View {
+        RecipeFormNameSection($name)
+            .hidden(editMode == .active)
+        RecipeFormPhotosSection($photos)
+        if #available(iOS 26.0, *) {
+            RecipeFormInferSection(
+                name: $name,
+                servingSize: $servingSize,
+                cookingTime: $cookingTime,
+                ingredients: $ingredients,
+                steps: $steps,
+                categories: $categories,
+                note: $note
+            )
+        }
+        RecipeFormServingSizeSection($servingSize)
+            .hidden(editMode == .active)
+        RecipeFormCookingTimeSection($cookingTime)
+            .hidden(editMode == .active)
+        RecipeFormIngredientsSection($ingredients)
+        RecipeFormStepsSection($steps)
+        RecipeFormCategoriesSection($categories)
+        RecipeFormNoteSection($note)
+            .hidden(editMode == .active)
+        Section {
+            Button {
+                withAnimation {
+                    editMode = editMode.isEditing ? .inactive : .active
+                }
+            } label: {
+                editMode == .inactive ? Text("Change Order or Delete Row") : Text("Done Edit")
             }
-            name = model.name
-            photos = model.photoObjects?.sorted().compactMap { photoObject in
-                guard let photo = photoObject.photo else {
-                    return nil
+            .frame(maxWidth: .infinity)
+        }
+    }
+
+    @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
+        ToolbarItem(placement: .cancellationAction) {
+            Button {
+                if name == "Enable Debug" {
+                    name = .empty
+                    isDebugAlertPresented = true
+                    return
                 }
-                return .init(data: photo.data, source: photo.source)
-            } ?? .empty
-            servingSize = model.servingSize.description
-            cookingTime = model.cookingTime.description
-            ingredients = (model.ingredientObjects?.sorted().compactMap { object in
-                guard let ingredient = object.ingredient else {
-                    return nil
+                dismiss()
+            } label: {
+                Text("Cancel")
+            }
+        }
+        switch editMode {
+        case .active:
+            ToolbarItem {
+                Button {
+                    withAnimation {
+                        editMode = .inactive
+                    }
+                } label: {
+                    Text("Done")
                 }
-                return RecipeFormIngredient(
-                    ingredient: ingredient.value,
-                    amount: object.amount
+            }
+        default:
+            confirmationToolbarItem
+        }
+    }
+
+    @ToolbarContentBuilder var confirmationToolbarItem: some ToolbarContent {
+        switch type {
+        case .create,
+             .duplicate:
+            ToolbarItem(placement: .confirmationAction) {
+                CreateRecipeButton(
+                    name: name,
+                    photos: photos,
+                    servingSize: servingSize,
+                    cookingTime: cookingTime,
+                    ingredients: ingredients,
+                    steps: steps,
+                    categories: categories,
+                    note: note,
+                    useShortTitle: true
                 )
-            } ?? .empty) + [.init(ingredient: .empty, amount: .empty)]
-            steps = (model.steps) + [.empty]
-            categories = (model.categories?.map(\.value) ?? .empty) + [.empty]
-            note = model.note
+                .labelStyle(.titleOnly)
+            }
+        case .edit:
+            ToolbarItem(placement: .confirmationAction) {
+                UpdateRecipeButton(
+                    name: name,
+                    photos: photos,
+                    servingSize: servingSize,
+                    cookingTime: cookingTime,
+                    ingredients: ingredients,
+                    steps: steps,
+                    categories: categories,
+                    note: note,
+                    useShortTitle: true
+                )
+                .labelStyle(.titleOnly)
+            }
         }
     }
 
     init(type: RecipeFormType) {
         self.type = type
+    }
+
+    func applyRecipeIfNeeded() {
+        guard let model = recipe else {
+            return
+        }
+        name = model.name
+        photos = model.photoObjects?
+            .sorted()
+            .compactMap { photoObject in
+                guard let photo = photoObject.photo else {
+                    return nil
+                }
+                return .init(data: photo.data, source: photo.source)
+            } ?? .empty
+        servingSize = model.servingSize.description
+        cookingTime = model.cookingTime.description
+        ingredients = (model.ingredientObjects?
+                        .sorted()
+                        .compactMap { object in
+                            guard let ingredient = object.ingredient else {
+                                return nil
+                            }
+                            return .init(
+                                ingredient: ingredient.value,
+                                amount: object.amount
+                            )
+                        } ?? .empty) + [.init(ingredient: .empty, amount: .empty)]
+        steps = model.steps + [.empty]
+        categories = (model.categories?.map(\.value) ?? .empty) + [.empty]
+        note = model.note
     }
 }
 

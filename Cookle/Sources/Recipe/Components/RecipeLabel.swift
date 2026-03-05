@@ -17,20 +17,14 @@ struct RecipeLabel: View {
         Label {
             VStack(alignment: .leading) {
                 Text(recipe.name)
-                Text(
-                    recipe.ingredientObjects?.sorted().compactMap { object in
-                        object.ingredient?.value
-                    }.joined(separator: ", ") ?? ""
-                )
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
-                Text(
-                    recipe.categories?.map(\.value).joined(separator: ", ") ?? ""
-                )
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
+                Text(ingredientsText)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                Text(categoriesText)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
             }
         } icon: {
             if let data = recipe.photos?.first?.data,
@@ -38,12 +32,14 @@ struct RecipeLabel: View {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
+                    .accessibilityHidden(true)
             } else {
                 Image(systemName: "photo")
                     .resizable()
                     .scaledToFit()
                     .foregroundStyle(.tint.secondary)
                     .padding()
+                    .accessibilityHidden(true)
             }
         }
         .contextMenu {
@@ -73,7 +69,9 @@ struct RecipeLabel: View {
                     }
                 }
             }
-            Button("Cancel", role: .cancel) {}
+            Button("Cancel", role: .cancel) {
+                // Dismisses the confirmation dialog.
+            }
         } message: {
             Text("Are you sure you want to delete this item? This action cannot be undone.")
         }
@@ -92,5 +90,22 @@ struct RecipeLabel: View {
     List {
         RecipeLabel()
             .environment(recipes[0])
+    }
+}
+
+private extension RecipeLabel {
+    var ingredientsText: String {
+        recipe.ingredientObjects?
+            .sorted()
+            .compactMap { object in
+                object.ingredient?.value
+            }
+            .joined(separator: ", ") ?? ""
+    }
+
+    var categoriesText: String {
+        recipe.categories?
+            .map(\.value)
+            .joined(separator: ", ") ?? ""
     }
 }

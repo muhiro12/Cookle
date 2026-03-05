@@ -26,7 +26,7 @@ struct TagFormView<T: Tag>: View {
                 Text("Value")
             }
             Section {
-                ForEach(tag.recipes.orEmpty) { recipe in
+                ForEach(tag.recipes) { recipe in
                     Text(recipe.name)
                 }
             } header: {
@@ -68,7 +68,9 @@ struct TagFormView<T: Tag>: View {
             Text("Cannot Update"),
             isPresented: $isErrorPresented
         ) {
-            Button("OK", role: .cancel) {}
+            Button("OK", role: .cancel) {
+                // Dismisses the alert.
+            }
         } message: {
             Text(errorMessage)
         }

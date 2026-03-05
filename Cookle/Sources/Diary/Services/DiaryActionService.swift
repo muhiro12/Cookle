@@ -4,21 +4,25 @@ import SwiftData
 @MainActor
 @Observable
 final class DiaryActionService {
+    struct FormInput {
+        let breakfasts: [Recipe]
+        let lunches: [Recipe]
+        let dinners: [Recipe]
+        let note: String
+    }
+
     func create(
         context: ModelContext,
         date: Date,
-        breakfasts: [Recipe],
-        lunches: [Recipe],
-        dinners: [Recipe],
-        note: String
+        input: FormInput
     ) -> Diary {
         let diary = DiaryService.create(
             context: context,
             date: date,
-            breakfasts: breakfasts,
-            lunches: lunches,
-            dinners: dinners,
-            note: note
+            breakfasts: input.breakfasts,
+            lunches: input.lunches,
+            dinners: input.dinners,
+            note: input.note
         )
         handleDiaryMutation()
         return diary
@@ -28,19 +32,16 @@ final class DiaryActionService {
         context: ModelContext,
         diary: Diary,
         date: Date,
-        breakfasts: [Recipe],
-        lunches: [Recipe],
-        dinners: [Recipe],
-        note: String
+        input: FormInput
     ) {
         DiaryService.update(
             context: context,
             diary: diary,
             date: date,
-            breakfasts: breakfasts,
-            lunches: lunches,
-            dinners: dinners,
-            note: note
+            breakfasts: input.breakfasts,
+            lunches: input.lunches,
+            dinners: input.dinners,
+            note: input.note
         )
         handleDiaryMutation()
     }

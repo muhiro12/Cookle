@@ -9,6 +9,12 @@ import SwiftData
 import SwiftUI
 
 struct DiaryLabel: View {
+    private enum Layout {
+        static let photoGridMinimum = CGFloat(Int("80") ?? .zero)
+        static let titleLineLimit = Int("2") ?? .zero
+        static let iconWidth = CGFloat(Int("28") ?? .zero)
+    }
+
     @Environment(Diary.self)
     private var diary
     @Environment(\.modelContext)
@@ -22,7 +28,7 @@ struct DiaryLabel: View {
     var body: some View {
         Label {
             VStack(alignment: .leading) {
-                LazyVGrid(columns: [.init(.adaptive(minimum: 80))], alignment: .leading) {
+                LazyVGrid(columns: [.init(.adaptive(minimum: Layout.photoGridMinimum))], alignment: .leading) {
                     ForEach(
                         diary.recipes.orEmpty.compactMap { recipe in
                             recipe.photoObjects.orEmpty.min()?.photo
@@ -32,13 +38,14 @@ struct DiaryLabel: View {
                             Image(uiImage: image)
                                 .resizable()
                                 .scaledToFit()
+                                .accessibilityHidden(true)
                         }
                     }
                 }
                 Text(diary.recipes.orEmpty.map(\.name).joined(separator: ", "))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
-                    .lineLimit(2)
+                    .lineLimit(Layout.titleLineLimit)
             }
         } icon: {
             VStack {
@@ -51,7 +58,7 @@ struct DiaryLabel: View {
                     .lineLimit(1)
                     .fixedSize(horizontal: true, vertical: false)
             }
-            .frame(width: 28)
+            .frame(width: Layout.iconWidth)
             .foregroundStyle(Color(uiColor: .label))
         }
         .contextMenu {
@@ -78,7 +85,9 @@ struct DiaryLabel: View {
                     }
                 }
             }
-            Button("Cancel", role: .cancel) {}
+            Button("Cancel", role: .cancel) {
+                // Dismisses the confirmation dialog.
+            }
         } message: {
             Text("Are you sure you want to delete this item? This action cannot be undone.")
         }

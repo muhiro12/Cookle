@@ -17,17 +17,19 @@ nonisolated public final class Ingredient: Tag {
 
     /// Ingredient objects that carry amounts and order.
     @Relationship(deleteRule: .cascade, inverse: \IngredientObject.ingredient)
-    public private(set) var objects = [IngredientObject]?.some(.empty)
+    public private(set) var objects = [IngredientObject]()
     /// Recipes linked to this ingredient.
     @Relationship(inverse: \Recipe.ingredients)
-    public private(set) var recipes = [Recipe]?.some(.empty)
+    public private(set) var recipes = [Recipe]()
 
     /// Creation timestamp.
     public private(set) var createdTimestamp = Date.now
     /// Last modification timestamp.
     public private(set) var modifiedTimestamp = Date.now
 
-    private init() {}
+    private init() {
+        // SwiftData-managed initializer.
+    }
 
     /// Creates (or returns) an ingredient with the given value.
     public static func create(context: ModelContext, value: String) -> Self {
@@ -49,19 +51,24 @@ nonisolated public final class Ingredient: Tag {
     }
 }
 
-extension Ingredient {
+public extension Ingredient {
     /// Localized title used in UI.
     public static var title: LocalizedStringKey {
         "Ingredients"
     }
 
     /// Convenience descriptor with explicit order.
-    public static func descriptor(_ predicate: TagPredicate<Ingredient>, order: SortOrder) -> FetchDescriptor<Ingredient> {
+    static func descriptor(
+        _ predicate: TagPredicate<Ingredient>,
+        order: SortOrder
+    ) -> FetchDescriptor<Ingredient> {
         .ingredients(predicate, order: order)
     }
 
     /// Convenience descriptor with default order.
-    public static func descriptor(_ predicate: TagPredicate<Ingredient>) -> FetchDescriptor<Ingredient> {
+    static func descriptor(
+        _ predicate: TagPredicate<Ingredient>
+    ) -> FetchDescriptor<Ingredient> {
         .ingredients(predicate)
     }
 }

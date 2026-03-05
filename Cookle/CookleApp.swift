@@ -52,25 +52,7 @@ struct CookleApp: App {
                 .environment(sharedTagActionService)
                 .environment(sharedSettingsActionService)
                 .task {
-                    #if DEBUG
-                    isDebugOn = true
-                    #endif
-
-                    sharedGoogleMobileAdsController.start()
-
-                    sharedStore.open(
-                        groupID: Secret.groupID,
-                        productIDs: [Secret.productID]
-                    ) { products in
-                        isSubscribeOn = products.contains { product in
-                            product.id == Secret.productID
-                        }
-                        if !isSubscribeOn {
-                            isICloudOn = false
-                        }
-                    }
-
-                    await sharedNotificationService.synchronizeScheduledSuggestions()
+                    await performStartupTasks()
                 }
         }
     }
@@ -81,23 +63,12 @@ struct CookleApp: App {
             ? .automatic
             : .none
 
-        do {
-            let modelContainer = try ModelContainerFactory.appContainer(
-                cloudKitDatabase: cloudKitDatabase
-            )
-            sharedModelContainer = modelContainer
-        } catch {
-            fatalError("Failed to prepare data store: \(error.localizedDescription)")
-        }
+        sharedModelContainer = Self.makeModelContainer(
+            cloudKitDatabase: cloudKitDatabase
+        )
 
         sharedGoogleMobileAdsController = .init(
-            adUnitID: {
-                #if DEBUG
-                Secret.adUnitIDDev
-                #else
-                Secret.adUnitID
-                #endif
-            }()
+            adUnitID: Self.adUnitID
         )
 
         sharedStore = .init()
@@ -119,7 +90,56 @@ struct CookleApp: App {
 
         CookleShortcuts.updateAppShortcutParameters()
 
-        // Provide dependencies for AppIntents entity queries
+        registerAppIntentDependencies()
+        configureTipController()
+        updateLastLaunchedVersion()
+    }
+}
+
+private extension CookleApp {
+    static var adUnitID: String {
+        #if DEBUG
+        Secret.adUnitIDDev
+        #else
+        Secret.adUnitID
+        #endif
+    }
+
+    static func makeModelContainer(
+        cloudKitDatabase: ModelConfiguration.CloudKitDatabase
+    ) -> ModelContainer {
+        do {
+            return try ModelContainerFactory.appContainer(
+                cloudKitDatabase: cloudKitDatabase
+            )
+        } catch {
+            fatalError("Failed to prepare data store: \(error.localizedDescription)")
+        }
+    }
+
+    func performStartupTasks() async {
+        #if DEBUG
+        isDebugOn = true
+        #endif
+
+        sharedGoogleMobileAdsController.start()
+        sharedStore.open(
+            groupID: Secret.groupID,
+            productIDs: [Secret.productID]
+        ) { products in
+            isSubscribeOn = products.contains { product in
+                product.id == Secret.productID
+            }
+            if !isSubscribeOn {
+                isICloudOn = false
+            }
+        }
+
+        await sharedNotificationService.synchronizeScheduledSuggestions()
+    }
+
+    func registerAppIntentDependencies() {
+        // Provide dependencies for AppIntents entity queries.
         let modelContainerForDependency = sharedModelContainer
         AppDependencyManager.shared.add { modelContainerForDependency }
         let recipeActionServiceForDependency = sharedRecipeActionService
@@ -130,13 +150,17 @@ struct CookleApp: App {
         AppDependencyManager.shared.add { tagActionServiceForDependency }
         let settingsActionServiceForDependency = sharedSettingsActionService
         AppDependencyManager.shared.add { settingsActionServiceForDependency }
+    }
 
+    func configureTipController() {
         do {
             try sharedTipController.configureIfNeeded()
         } catch {
             assertionFailure(error.localizedDescription)
         }
+    }
 
+    func updateLastLaunchedVersion() {
         if let currentAppVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
             lastLaunchedAppVersion = currentAppVersion
         }

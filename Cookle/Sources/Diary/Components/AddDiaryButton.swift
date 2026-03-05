@@ -22,6 +22,7 @@ struct AddDiaryButton: View {
                 Text("Add")
             } icon: {
                 Image(systemName: "book")
+                    .accessibilityHidden(true)
             }
         }
         .sheet(isPresented: $isPresented) {

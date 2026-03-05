@@ -1,15 +1,12 @@
-//
-//  RecipeListView.swift
-//  Cookle
-//
-//  Created by Hiromu Nakano on 2024/04/13.
-//
-
 import SwiftData
 import SwiftUI
 import TipKit
 
 struct RecipeListView: View {
+    private enum Layout {
+        static let emptyStateSpacing = CGFloat(Int("16") ?? .zero)
+    }
+
     @Environment(\.isPresented)
     private var isPresented
 
@@ -39,7 +36,7 @@ struct RecipeListView: View {
                 }
                 .searchable(text: $searchText)
             } else {
-                VStack(spacing: 16) {
+                VStack(spacing: Layout.emptyStateSpacing) {
                     TipView(addRecipeTip)
                     AddRecipeButton()
                 }
@@ -69,11 +66,5 @@ struct RecipeListView: View {
 #Preview(traits: .modifier(CookleSampleData())) {
     NavigationStack {
         RecipeListView()
-    }
-}
-
-struct ShortTitleLabelStyle: LabelStyle {
-    func makeBody(configuration: LabelStyleConfiguration) -> some View {
-        configuration.title
     }
 }

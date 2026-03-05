@@ -5,6 +5,7 @@ import SwiftData
 @preconcurrency
 @MainActor
 public enum RecipeFormService {
+    // swiftlint:disable function_parameter_count
     /// Builds a validated draft from raw form input.
     public static func makeDraft(
         name: String,
@@ -40,6 +41,7 @@ public enum RecipeFormService {
             note: note
         )
     }
+    // swiftlint:enable function_parameter_count
 
     /// Creates a new recipe from a validated draft.
     public static func create(

@@ -1,25 +1,5 @@
 import Foundation
 
-/// Boolean preference keys.
-public enum BoolPreferenceKey: String {
-    case isSubscribeOn = "qWeRty12"
-    case isICloudOn = "AO9Yo1cC"
-    case isDebugOn = "hd3fAy3G"
-    case isDailyRecipeSuggestionNotificationOn = "m9Pq2Ls4"
-}
-
-/// String preference keys.
-public enum StringPreferenceKey: String {
-    case lastOpenedRecipeID = "zxcXvb12"
-    case lastLaunchedAppVersion = "s9Kp4Ld2"
-}
-
-/// Integer preference keys.
-public enum IntPreferenceKey: String {
-    case dailyRecipeSuggestionHour = "r5Vn8Kt1"
-    case dailyRecipeSuggestionMinute = "u7Bx3Jd6"
-}
-
 /// Thin wrapper around `UserDefaults` for app preferences.
 public enum CooklePreferences {
     private static var userDefaults: UserDefaults {
