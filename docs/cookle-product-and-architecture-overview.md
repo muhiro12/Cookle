@@ -1,6 +1,6 @@
 # Cookle Product and Architecture Overview
 
-Implementation snapshot based on the repository state on March 4, 2026.
+Implementation snapshot based on the repository state on March 5, 2026.
 
 ## Purpose
 
@@ -375,7 +375,7 @@ Views should not own:
 
 ## Operational Notes
 
-- Standard build and test entry point: `bash ci_scripts/run_required_builds.sh`
+- Standard build and test entry point: `bash ci_scripts/tasks/verify.sh`
 - Shared package tests cover core reusable behavior such as:
   - search
   - route parsing and URL building
