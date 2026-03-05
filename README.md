@@ -175,22 +175,28 @@ enum Secret {
 
 ## Testing
 
-- Use the standard CI entry point:
+- Use the recommended final gate:
 
   ```bash
-  bash ci_scripts/run_required_builds.sh
+  bash ci_scripts/tasks/verify.sh
+  ```
+
+- Run required builds/tests based on local changes:
+
+  ```bash
+  bash ci_scripts/tasks/run_required_builds.sh
   ```
 
 - Run the app build directly:
 
   ```bash
-  bash ci_scripts/build_cookle.sh
+  bash ci_scripts/tasks/build_app.sh
   ```
 
 - Run the shared package tests directly:
 
   ```bash
-  bash ci_scripts/test_cookle_library.sh
+  bash ci_scripts/tasks/test_shared_library.sh
   ```
 
 ## Continuous integration
@@ -203,22 +209,15 @@ enum Secret {
 
 ### Build output layout
 
-Cookle CI helper scripts keep generated files under `build/` and separate them
-by responsibility:
+Cookle CI helper scripts store each run under `.build/ci_runs/<RUN_ID>/` with:
 
-- `build/work/` stores temporary xcodebuild data such as `DerivedData`,
-  `build/work/results/*.xcresult`, and temporary files.
-- `build/cache/` stores SwiftPM and compiler caches.
-- `build/logs/` stores script execution logs.
+- `summary.md`, `commands.txt`, and `meta.json`
+- `logs/` for per-step command logs
+- `results/` for generated result bundles (`*.xcresult`)
+- `work/` for run-scoped temporary build directories
 
-You can override the root directory with `BUILD_ROOT`:
-
-```bash
-BUILD_ROOT=/tmp/cookle-build bash ci_scripts/build_cookle.sh
-```
-
-When a script exits, it always prints the result bundle path, log path, and the
-re-run command.
+Shared compiler and package caches are stored under `.build/work/cache/`.
+Only the latest 5 runs under `.build/ci_runs/` are retained.
 
 ## Screenshots
 
