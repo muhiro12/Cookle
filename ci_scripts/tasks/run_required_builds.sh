@@ -11,7 +11,7 @@ script_directory=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 repository_root=$(cd "$script_directory/../.." && pwd)
 cd "$repository_root"
 
-source "$repository_root/ci_scripts/lib/ci_run_artifacts.sh"
+source "$repository_root/ci_scripts/lib/ci_runs.sh"
 
 if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   echo "This script must run inside a git repository." >&2

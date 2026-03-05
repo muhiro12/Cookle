@@ -2,7 +2,7 @@
 
 This document is the current source of truth for how shared logic is organized
 in Cookle. It records the stable placement rules. Historical decisions and
-tradeoffs live in [`docs/adr/`](../adr/).
+tradeoffs live in [`Designs/Decisions/`](../Decisions/).
 
 ## Goal
 
