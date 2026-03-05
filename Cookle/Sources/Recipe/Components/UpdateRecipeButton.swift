@@ -43,7 +43,7 @@ struct UpdateRecipeButton: View {
                         categories: categories,
                         note: note
                     )
-                    try await recipeActionService.update(
+                    _ = await recipeActionService.update(
                         context: context,
                         recipe: recipe,
                         draft: draft

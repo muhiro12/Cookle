@@ -7,7 +7,9 @@ struct RecipeEntityQuery: EntityStringQuery {
     @MainActor
     func entities(for identifiers: [RecipeEntity.ID]) throws -> [RecipeEntity] {
         try identifiers.compactMap { id in
-            let persistentIdentifier = try PersistentIdentifier(base64Encoded: id)
+            let persistentIdentifier = try RecipeStableIdentifierCodec.decode(
+                id
+            )
             guard let recipe = try modelContainer.mainContext.fetchFirst(
                 .recipes(.idIs(persistentIdentifier))
             ) else {

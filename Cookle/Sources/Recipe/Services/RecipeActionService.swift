@@ -19,13 +19,19 @@ final class RecipeActionService {
         context: ModelContext,
         draft: RecipeFormDraft,
         requestReview: Bool = true
-    ) async -> Recipe {
+    ) async -> MutationOutcome<Recipe> {
         let recipe = RecipeFormService.create(
             context: context,
             draft: draft
         )
-        await handleRecipeMutation(requestReview: requestReview)
-        return recipe
+        let effects = recipeMutationEffects(
+            requestReview: requestReview
+        )
+        await applyEffects(effects)
+        return .init(
+            value: recipe,
+            effects: effects
+        )
     }
 
     func update(
@@ -33,31 +39,45 @@ final class RecipeActionService {
         recipe: Recipe,
         draft: RecipeFormDraft,
         requestReview: Bool = true
-    ) async {
+    ) async -> MutationOutcome<Void> {
         RecipeFormService.update(
             context: context,
             recipe: recipe,
             draft: draft
         )
-        await handleRecipeMutation(requestReview: requestReview)
+        let effects = recipeMutationEffects(
+            requestReview: requestReview
+        )
+        await applyEffects(effects)
+        return .init(
+            value: (),
+            effects: effects
+        )
     }
 
     func delete(
         context: ModelContext,
         recipe: Recipe
-    ) async throws {
-        try RecipeService.delete(
+    ) async -> MutationOutcome<Void> {
+        RecipeService.delete(
             context: context,
             recipe: recipe
         )
-        await handleRecipeMutation(requestReview: false)
+        let effects = recipeMutationEffects(
+            requestReview: false
+        )
+        await applyEffects(effects)
+        return .init(
+            value: (),
+            effects: effects
+        )
     }
 
     func replaceGeneratedPhoto(
         context: ModelContext,
         recipe: Recipe,
         data: Data
-    ) async throws {
+    ) async -> MutationOutcome<Void> {
         let updatedDraft = RecipeFormDraft(
             name: recipe.name,
             photos: [
@@ -82,21 +102,57 @@ final class RecipeActionService {
             note: recipe.note
         )
 
-        try await update(
+        return await update(
             context: context,
             recipe: recipe,
             draft: updatedDraft,
             requestReview: false
         )
     }
+
+    func recordOpenedRecipe(
+        _ recipe: Recipe
+    ) async -> MutationOutcome<Void> {
+        RecipeService.recordLastOpenedRecipe(recipe)
+        let effects: MutationEffect = [
+            .recipeDataChanged
+        ]
+        await applyEffects(effects)
+        return .init(
+            value: (),
+            effects: effects
+        )
+    }
 }
 
 private extension RecipeActionService {
-    func handleRecipeMutation(requestReview: Bool) async {
-        CookleWidgetReloader.reloadRecipeWidgets()
-        await notificationService.synchronizeScheduledSuggestions()
+    func recipeMutationEffects(
+        requestReview: Bool
+    ) -> MutationEffect {
+        var effects: MutationEffect = [
+            .recipeDataChanged,
+            .notificationPlanChanged
+        ]
 
         if requestReview {
+            effects.insert(.reviewPromptEligible)
+        }
+
+        return effects
+    }
+
+    func applyEffects(
+        _ effects: MutationEffect
+    ) async {
+        if effects.contains(.recipeDataChanged) {
+            CookleWidgetReloader.reloadRecipeWidgets()
+        }
+
+        if effects.contains(.notificationPlanChanged) {
+            await notificationService.synchronizeScheduledSuggestions()
+        }
+
+        if effects.contains(.reviewPromptEligible) {
             await reviewRequester.requestIfNeeded()
         }
     }

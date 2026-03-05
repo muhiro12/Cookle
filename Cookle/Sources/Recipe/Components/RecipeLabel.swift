@@ -59,14 +59,10 @@ struct RecipeLabel: View {
         ) {
             Button("Delete", role: .destructive) {
                 Task {
-                    do {
-                        try await recipeActionService.delete(
-                            context: context,
-                            recipe: recipe
-                        )
-                    } catch {
-                        assertionFailure(error.localizedDescription)
-                    }
+                    _ = await recipeActionService.delete(
+                        context: context,
+                        recipe: recipe
+                    )
                 }
             }
             Button("Cancel", role: .cancel) {

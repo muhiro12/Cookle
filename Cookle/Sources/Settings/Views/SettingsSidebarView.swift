@@ -10,13 +10,6 @@ import TipKit
 import UIKit
 
 struct SettingsSidebarView: View {
-    private enum NotificationDefaults {
-        static let minimumTimeComponent = Int("0") ?? .zero
-        static let maximumHour = Int("23") ?? .zero
-        static let maximumMinute = Int("59") ?? .zero
-        static let defaultHour = Int("20") ?? .zero
-    }
-
     @Environment(\.modelContext)
     private var context
     @Environment(\.isPresented)
@@ -223,32 +216,28 @@ private extension SettingsSidebarView {
 
     var dailySuggestionTime: Binding<Date> {
         .init {
-            let clampedHour = min(
-                max(dailyRecipeSuggestionHour, NotificationDefaults.minimumTimeComponent),
-                NotificationDefaults.maximumHour
+            DailySuggestionTimePolicy.date(
+                hour: dailyRecipeSuggestionHour,
+                minute: dailyRecipeSuggestionMinute,
+                on: .now,
+                calendar: .current
             )
-            let clampedMinute = min(
-                max(dailyRecipeSuggestionMinute, NotificationDefaults.minimumTimeComponent),
-                NotificationDefaults.maximumMinute
-            )
-            return Calendar.current.date(
-                bySettingHour: clampedHour,
-                minute: clampedMinute,
-                second: 0,
-                of: .now
-            ) ?? .now
         } set: { newValue in
-            dailyRecipeSuggestionHour = Calendar.current.component(.hour, from: newValue)
-            dailyRecipeSuggestionMinute = Calendar.current.component(.minute, from: newValue)
+            let components = DailySuggestionTimePolicy.components(
+                from: newValue,
+                calendar: .current
+            )
+            dailyRecipeSuggestionHour = components.hour
+            dailyRecipeSuggestionMinute = components.minute
         }
     }
 
     func normalizeSuggestionTimeDefaultsIfNeeded() {
         if UserDefaults.standard.object(forKey: IntPreferenceKey.dailyRecipeSuggestionHour.rawValue) == nil {
-            dailyRecipeSuggestionHour = NotificationDefaults.defaultHour
+            dailyRecipeSuggestionHour = DailySuggestionTimePolicy.defaultHour
         }
         if UserDefaults.standard.object(forKey: IntPreferenceKey.dailyRecipeSuggestionMinute.rawValue) == nil {
-            dailyRecipeSuggestionMinute = NotificationDefaults.minimumTimeComponent
+            dailyRecipeSuggestionMinute = DailySuggestionTimePolicy.minimumTimeComponent
         }
     }
 

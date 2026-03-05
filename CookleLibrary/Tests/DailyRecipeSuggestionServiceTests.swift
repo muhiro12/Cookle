@@ -24,8 +24,8 @@ struct DailyRecipeSuggestionServiceTests {
                 .init(name: "Alpha", stableIdentifier: "1"),
                 .init(name: "Beta", stableIdentifier: "2")
             ],
-            hour: 20,
-            minute: 0,
+            hour: DailySuggestionTimePolicy.defaultHour,
+            minute: DailySuggestionTimePolicy.minimumTimeComponent,
             now: now,
             calendar: calendar,
             daysAhead: 5
@@ -58,8 +58,8 @@ struct DailyRecipeSuggestionServiceTests {
                 .init(name: "Alpha", stableIdentifier: "recipe-alpha"),
                 .init(name: "Beta", stableIdentifier: "recipe-beta")
             ],
-            hour: 20,
-            minute: 0,
+            hour: DailySuggestionTimePolicy.defaultHour,
+            minute: DailySuggestionTimePolicy.minimumTimeComponent,
             now: now,
             calendar: calendar,
             daysAhead: 2

@@ -34,19 +34,17 @@ struct UpdateRecipeIntent: AppIntent {
             throw RecipeMutationIntentError.recipeNotFound
         }
 
-        let draft = try RecipeIntentDraftBuilder.makeDraft(
-            input: .init(
-                name: name,
-                servingSize: servingSize,
-                cookingTime: cookingTime,
-                ingredientsText: ingredientsText,
-                stepsText: stepsText,
-                categoriesText: categoriesText,
-                note: note
-            )
+        let draft = try RecipeFormService.makeDraft(
+            name: name,
+            servingSize: servingSize,
+            cookingTime: cookingTime,
+            ingredientsText: ingredientsText,
+            stepsText: stepsText,
+            categoriesText: categoriesText,
+            note: note
         )
 
-        try await recipeActionService.update(
+        _ = await recipeActionService.update(
             context: modelContainer.mainContext,
             recipe: model,
             draft: draft,

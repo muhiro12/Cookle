@@ -46,12 +46,12 @@ struct CreateRecipeButton: View {
                     )
                     let shouldRequestReview = photos.isNotEmpty
                         || CookleImagePlayground.isSupported == false
-                    let model = try await recipeActionService.create(
+                    let outcome = await recipeActionService.create(
                         context: context,
                         draft: draft,
                         requestReview: shouldRequestReview
                     )
-                    recipe = model
+                    recipe = outcome.value
                     if recipe?.photos?.isEmpty == true,
                        CookleImagePlayground.isSupported {
                         isConfirmationDialogPresented = true
@@ -104,19 +104,14 @@ struct CreateRecipeButton: View {
             recipe: recipe
         ) { data in
             Task {
-                do {
-                    if let recipe {
-                        try await recipeActionService.replaceGeneratedPhoto(
-                            context: context,
-                            recipe: recipe,
-                            data: data
-                        )
-                    }
-                    dismiss()
-                } catch {
-                    assertionFailure(error.localizedDescription)
-                    dismiss()
+                if let recipe {
+                    _ = await recipeActionService.replaceGeneratedPhoto(
+                        context: context,
+                        recipe: recipe,
+                        data: data
+                    )
                 }
+                dismiss()
             }
         } onCancellation: {
             dismiss()

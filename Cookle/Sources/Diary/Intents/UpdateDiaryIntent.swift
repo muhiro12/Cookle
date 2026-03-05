@@ -23,17 +23,9 @@ struct UpdateDiaryIntent: AppIntent {
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
         let context = modelContainer.mainContext
-        guard let diary = try DiaryService.diary(
-            on: date,
-            context: context
-        ) else {
-            return .result(dialog: "Diary not found")
-        }
-
-        await diaryActionService.update(
+        let outcome = try await diaryActionService.update(
             context: context,
-            diary: diary,
-            date: date,
+            on: date,
             input: .init(
                 breakfasts: DiaryIntentSupport.resolveRecipes(
                     from: breakfasts,
@@ -50,6 +42,10 @@ struct UpdateDiaryIntent: AppIntent {
                 note: note
             )
         )
+
+        guard outcome.value != nil else {
+            return .result(dialog: "Diary not found")
+        }
 
         return .result(dialog: "Updated diary")
     }

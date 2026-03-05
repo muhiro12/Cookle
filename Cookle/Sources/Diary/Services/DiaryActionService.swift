@@ -15,7 +15,7 @@ final class DiaryActionService {
         context: ModelContext,
         date: Date,
         input: FormInput
-    ) -> Diary {
+    ) -> MutationOutcome<Diary> {
         let diary = DiaryService.create(
             context: context,
             date: date,
@@ -24,8 +24,14 @@ final class DiaryActionService {
             dinners: input.dinners,
             note: input.note
         )
-        handleDiaryMutation()
-        return diary
+        let effects: MutationEffect = [
+            .diaryDataChanged
+        ]
+        applyEffects(effects)
+        return .init(
+            value: diary,
+            effects: effects
+        )
     }
 
     func update(
@@ -33,7 +39,7 @@ final class DiaryActionService {
         diary: Diary,
         date: Date,
         input: FormInput
-    ) {
+    ) -> MutationOutcome<Void> {
         DiaryService.update(
             context: context,
             diary: diary,
@@ -43,7 +49,38 @@ final class DiaryActionService {
             dinners: input.dinners,
             note: input.note
         )
-        handleDiaryMutation()
+        let effects: MutationEffect = [
+            .diaryDataChanged
+        ]
+        applyEffects(effects)
+        return .init(
+            value: (),
+            effects: effects
+        )
+    }
+
+    func update(
+        context: ModelContext,
+        on date: Date,
+        input: FormInput
+    ) async throws -> MutationOutcome<Diary?> {
+        guard let diary = try DiaryService.diary(
+            on: date,
+            context: context
+        ) else {
+            return .init(value: nil)
+        }
+
+        let mutationOutcome = await update(
+            context: context,
+            diary: diary,
+            date: date,
+            input: input
+        )
+        return .init(
+            value: diary,
+            effects: mutationOutcome.effects
+        )
     }
 
     func add(
@@ -51,31 +88,69 @@ final class DiaryActionService {
         date: Date,
         recipe: Recipe,
         type: DiaryObjectType
-    ) throws -> Diary {
+    ) throws -> MutationOutcome<Diary> {
         let diary = try DiaryService.add(
             context: context,
             date: date,
             recipe: recipe,
             type: type
         )
-        handleDiaryMutation()
-        return diary
+        let effects: MutationEffect = [
+            .diaryDataChanged
+        ]
+        applyEffects(effects)
+        return .init(
+            value: diary,
+            effects: effects
+        )
     }
 
     func delete(
         context: ModelContext,
         diary: Diary
-    ) throws {
-        try DiaryService.delete(
+    ) -> MutationOutcome<Void> {
+        DiaryService.delete(
             context: context,
             diary: diary
         )
-        handleDiaryMutation()
+        let effects: MutationEffect = [
+            .diaryDataChanged
+        ]
+        applyEffects(effects)
+        return .init(
+            value: (),
+            effects: effects
+        )
+    }
+
+    func delete(
+        context: ModelContext,
+        on date: Date
+    ) async throws -> MutationOutcome<Bool> {
+        guard let diary = try DiaryService.diary(
+            on: date,
+            context: context
+        ) else {
+            return .init(value: false)
+        }
+
+        let mutationOutcome = await delete(
+            context: context,
+            diary: diary
+        )
+        return .init(
+            value: true,
+            effects: mutationOutcome.effects
+        )
     }
 }
 
 private extension DiaryActionService {
-    func handleDiaryMutation() {
-        CookleWidgetReloader.reloadTodayDiaryWidget()
+    func applyEffects(
+        _ effects: MutationEffect
+    ) {
+        if effects.contains(.diaryDataChanged) {
+            CookleWidgetReloader.reloadTodayDiaryWidget()
+        }
     }
 }

@@ -70,9 +70,9 @@ final class RecipeEntity: AppEntity, Hashable {
 
 extension RecipeEntity {
     convenience init?(_ model: Recipe) {
-        guard let encodedID = try? model.id.base64Encoded() else {
-            return nil
-        }
+        let encodedID = RecipeStableIdentifierCodec.stableIdentifier(
+            for: model
+        )
         self.init(
             id: encodedID,
             name: model.name,
@@ -91,7 +91,9 @@ extension RecipeEntity {
 
 extension RecipeEntity {
     func model(context: ModelContext) throws -> Recipe? {
-        let identifier = try PersistentIdentifier(base64Encoded: id)
-        return try context.fetchFirst(.recipes(.idIs(identifier)))
+        try RecipeStableIdentifierCodec.recipe(
+            from: id,
+            context: context
+        )
     }
 }

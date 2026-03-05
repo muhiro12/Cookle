@@ -24,7 +24,7 @@ struct DeleteRecipeIntent: AppIntent {
             return .result(dialog: "Recipe not found")
         }
 
-        try await recipeActionService.delete(
+        _ = await recipeActionService.delete(
             context: modelContainer.mainContext,
             recipe: model
         )

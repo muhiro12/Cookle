@@ -34,14 +34,10 @@ struct DeleteDiaryButton: View {
         ) {
             Button("Delete", role: .destructive) {
                 Task {
-                    do {
-                        try await diaryActionService.delete(
-                            context: context,
-                            diary: diary
-                        )
-                    } catch {
-                        assertionFailure(error.localizedDescription)
-                    }
+                    _ = await diaryActionService.delete(
+                        context: context,
+                        diary: diary
+                    )
                 }
             }
             Button("Cancel", role: .cancel) {

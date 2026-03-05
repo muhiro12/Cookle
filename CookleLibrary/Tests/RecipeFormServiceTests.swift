@@ -134,4 +134,35 @@ struct RecipeFormServiceTests {
             )
         }
     }
+
+    @Test
+    func makeDraft_from_text_input_parses_multiline_values() throws {
+        let draft = try RecipeFormService.makeDraft(
+            name: "Pasta",
+            servingSize: 2,
+            cookingTime: 15,
+            ingredientsText: """
+            Spaghetti: 100g
+            Olive Oil - 1 tbsp
+            Salt
+            """,
+            stepsText: """
+            Boil water
+
+             Cook pasta
+            """,
+            categoriesText: """
+            Dinner
+             Quick
+            """,
+            note: "note"
+        )
+
+        #expect(draft.servingSize == 2)
+        #expect(draft.cookingTime == 15)
+        #expect(draft.ingredients.map(\.ingredient) == ["Spaghetti", "Olive Oil", "Salt"])
+        #expect(draft.ingredients.map(\.amount) == ["100g", "1 tbsp", ""])
+        #expect(draft.steps == ["Boil water", "Cook pasta"])
+        #expect(draft.categories == ["Dinner", "Quick"])
+    }
 }

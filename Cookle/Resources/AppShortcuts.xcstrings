@@ -56,7 +56,6 @@
       }
     },
     "Open recipes in ${applicationName}" : {
-      "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringSet" : {
@@ -111,7 +110,6 @@
       }
     },
     "Open settings in ${applicationName}" : {
-      "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringSet" : {
@@ -328,7 +326,6 @@
       }
     },
     "Show today's diary in ${applicationName}" : {
-      "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringSet" : {

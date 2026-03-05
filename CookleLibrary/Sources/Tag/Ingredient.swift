@@ -53,7 +53,7 @@ nonisolated public final class Ingredient: Tag {
 
 public extension Ingredient {
     /// Localized title used in UI.
-    public static var title: LocalizedStringKey {
+    static var title: LocalizedStringKey {
         "Ingredients"
     }
 

@@ -50,7 +50,7 @@ nonisolated public final class Category: Tag {
 
 public extension Category {
     /// Localized title used in UI.
-    public static var title: LocalizedStringKey {
+    static var title: LocalizedStringKey {
         "Categories"
     }
 

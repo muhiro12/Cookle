@@ -19,17 +19,14 @@ struct DeleteDiaryIntent: AppIntent {
             dialog: .init(stringLiteral: "Delete diary for \(formattedDate)?")
         )
 
-        guard let diary = try DiaryService.diary(
-            on: date,
-            context: modelContainer.mainContext
-        ) else {
+        let outcome = try await diaryActionService.delete(
+            context: modelContainer.mainContext,
+            on: date
+        )
+
+        guard outcome.value else {
             return .result(dialog: "Diary not found")
         }
-
-        try await diaryActionService.delete(
-            context: modelContainer.mainContext,
-            diary: diary
-        )
 
         return .result(dialog: .init(stringLiteral: "Deleted diary for \(formattedDate)"))
     }

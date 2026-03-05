@@ -26,23 +26,21 @@ struct CreateRecipeIntent: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult & ReturnsValue<RecipeEntity> {
-        let draft = try RecipeIntentDraftBuilder.makeDraft(
-            input: .init(
-                name: name,
-                servingSize: servingSize,
-                cookingTime: cookingTime,
-                ingredientsText: ingredientsText,
-                stepsText: stepsText,
-                categoriesText: categoriesText,
-                note: note
-            )
+        let draft = try RecipeFormService.makeDraft(
+            name: name,
+            servingSize: servingSize,
+            cookingTime: cookingTime,
+            ingredientsText: ingredientsText,
+            stepsText: stepsText,
+            categoriesText: categoriesText,
+            note: note
         )
-        let recipe = try await recipeActionService.create(
+        let outcome = await recipeActionService.create(
             context: modelContainer.mainContext,
             draft: draft,
             requestReview: false
         )
-        guard let entity = RecipeEntity(recipe) else {
+        guard let entity = RecipeEntity(outcome.value) else {
             throw RecipeMutationIntentError.failedToBuildEntity
         }
         return .result(value: entity)

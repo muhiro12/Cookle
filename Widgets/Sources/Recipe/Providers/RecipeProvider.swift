@@ -69,7 +69,9 @@ private extension RecipeProvider {
                 RecipeWidgetImageLoader.makeImage(from: data, family: family)
             }
             let deepLinkURL: URL = {
-                if let recipeID = try? recipe.id.base64Encoded() {
+                if let recipeID = RecipeStableIdentifierCodec.encodeIfPossible(
+                    recipe.id
+                ) {
                     return CookleDeepLinkURLBuilder.preferredRecipeDetailURL(
                         for: recipeID
                     )

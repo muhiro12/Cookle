@@ -13,6 +13,8 @@ struct RecipeView: View {
     private var recipe
     @Environment(CookleTipController.self)
     private var tipController
+    @Environment(RecipeActionService.self)
+    private var recipeActionService
 
     @AppStorage(.isSubscribeOn)
     private var isSubscribeOn
@@ -45,11 +47,9 @@ struct RecipeView: View {
         }
         .task {
             tipController.donateDidOpenRecipeDetail()
-
-            let lastOpenedRecipeID = try? recipe.id.base64Encoded()
-            CookleSharedPreferences.set(lastOpenedRecipeID, for: .lastOpenedRecipeID)
-            CooklePreferences.set(lastOpenedRecipeID, for: .lastOpenedRecipeID)
-            CookleWidgetReloader.reloadLastOpenedRecipeWidget()
+            _ = await recipeActionService.recordOpenedRecipe(
+                recipe
+            )
             UIApplication.shared.isIdleTimerDisabled = true
         }
         .onDisappear {

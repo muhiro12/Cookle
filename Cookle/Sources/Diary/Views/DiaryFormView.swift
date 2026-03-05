@@ -127,7 +127,7 @@ private extension DiaryFormView {
     @MainActor
     func saveDiary() async {
         if let diary {
-            await diaryActionService.update(
+            _ = await diaryActionService.update(
                 context: context,
                 diary: diary,
                 date: date,

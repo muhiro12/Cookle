@@ -102,13 +102,6 @@ extension NotificationService: UNUserNotificationCenterDelegate {
 }
 
 private extension NotificationService {
-    enum SuggestionTimeDefaults {
-        static let minimumTimeComponent = Int("0") ?? .zero
-        static let defaultHour = Int("20") ?? .zero
-        static let maximumHour = Int("23") ?? .zero
-        static let maximumMinute = Int("59") ?? .zero
-    }
-
     struct ScheduledSuggestionRequest {
         let request: UNNotificationRequest
         let stableIdentifier: String
@@ -129,23 +122,31 @@ private extension NotificationService {
     }
 
     var notificationHour: Int {
-        CooklePreferences.int(
-            for: .dailyRecipeSuggestionHour,
-            default: SuggestionTimeDefaults.defaultHour
+        let suggestionTime = DailySuggestionTimePolicy.normalized(
+            hour: CooklePreferences.int(
+                for: .dailyRecipeSuggestionHour,
+                default: DailySuggestionTimePolicy.defaultHour
+            ),
+            minute: CooklePreferences.int(
+                for: .dailyRecipeSuggestionMinute,
+                default: DailySuggestionTimePolicy.minimumTimeComponent
+            )
         )
-        .clamped(
-            to: SuggestionTimeDefaults.minimumTimeComponent...SuggestionTimeDefaults.maximumHour
-        )
+        return suggestionTime.hour
     }
 
     var notificationMinute: Int {
-        CooklePreferences.int(
-            for: .dailyRecipeSuggestionMinute,
-            default: SuggestionTimeDefaults.minimumTimeComponent
+        let suggestionTime = DailySuggestionTimePolicy.normalized(
+            hour: CooklePreferences.int(
+                for: .dailyRecipeSuggestionHour,
+                default: DailySuggestionTimePolicy.defaultHour
+            ),
+            minute: CooklePreferences.int(
+                for: .dailyRecipeSuggestionMinute,
+                default: DailySuggestionTimePolicy.minimumTimeComponent
+            )
         )
-        .clamped(
-            to: SuggestionTimeDefaults.minimumTimeComponent...SuggestionTimeDefaults.maximumMinute
-        )
+        return suggestionTime.minute
     }
 
     var authorizationOptions: UNAuthorizationOptions {
@@ -287,10 +288,9 @@ private extension NotificationService {
     }
 
     func stableIdentifier(for recipe: Recipe) -> String {
-        if let encodedIdentifier = try? recipe.id.base64Encoded() {
-            return encodedIdentifier
-        }
-        return String(describing: recipe.persistentModelID)
+        RecipeStableIdentifierCodec.stableIdentifier(
+            for: recipe
+        )
     }
 
     func recipeMapByStableIdentifier(from recipes: [Recipe]) -> [String: Recipe] {
@@ -338,11 +338,5 @@ private extension NotificationService {
             dateMatching: dateComponents,
             repeats: false
         )
-    }
-}
-
-private extension Comparable {
-    func clamped(to limits: ClosedRange<Self>) -> Self {
-        min(max(self, limits.lowerBound), limits.upperBound)
     }
 }

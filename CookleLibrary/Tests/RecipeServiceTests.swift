@@ -42,6 +42,26 @@ struct RecipeServiceTests {
 
     @Test
     func lastOpenedRecipe_returns_recipe_from_storage() throws {
+        let preferenceKey = StringPreferenceKey.lastOpenedRecipeID.rawValue
+        let defaults = UserDefaults.standard
+        let sharedDefaults = UserDefaults(
+            suiteName: CookleSharedPreferences.appGroupIdentifier
+        )
+        let originalDefaultValue = defaults.string(
+            forKey: preferenceKey
+        )
+        let originalSharedValue = sharedDefaults?.string(
+            forKey: preferenceKey
+        )
+        defer {
+            restoreLastOpenedRecipePreference(
+                defaults: defaults,
+                sharedDefaults: sharedDefaults,
+                defaultValue: originalDefaultValue,
+                sharedValue: originalSharedValue
+            )
+        }
+
         let recipe = Recipe.create(
             context: context,
             name: "Pancakes",
@@ -53,11 +73,57 @@ struct RecipeServiceTests {
             categories: [],
             note: ""
         )
-        let encoded = try recipe.id.base64Encoded()
-        CooklePreferences.set(encoded, for: .lastOpenedRecipeID)
+        RecipeService.recordLastOpenedRecipe(recipe)
 
         let result = try RecipeService.lastOpenedRecipe(context: context)
         #expect(result === recipe)
+    }
+
+    @Test
+    func recordLastOpenedRecipe_stores_shared_preference() {
+        let preferenceKey = StringPreferenceKey.lastOpenedRecipeID.rawValue
+        let defaults = UserDefaults.standard
+        let sharedDefaults = UserDefaults(
+            suiteName: CookleSharedPreferences.appGroupIdentifier
+        )
+        let originalDefaultValue = defaults.string(
+            forKey: preferenceKey
+        )
+        let originalSharedValue = sharedDefaults?.string(
+            forKey: preferenceKey
+        )
+        defer {
+            restoreLastOpenedRecipePreference(
+                defaults: defaults,
+                sharedDefaults: sharedDefaults,
+                defaultValue: originalDefaultValue,
+                sharedValue: originalSharedValue
+            )
+        }
+
+        let recipe = Recipe.create(
+            context: context,
+            name: "Toast",
+            photos: [],
+            servingSize: 1,
+            cookingTime: 5,
+            ingredients: [],
+            steps: [],
+            categories: [],
+            note: ""
+        )
+
+        RecipeService.recordLastOpenedRecipe(recipe)
+
+        let sharedStoredIdentifier = sharedDefaults?.string(
+            forKey: preferenceKey
+        )
+        #expect(sharedStoredIdentifier != nil)
+        #expect(
+            sharedStoredIdentifier == CooklePreferences.string(
+                for: .lastOpenedRecipeID
+            )
+        )
     }
 
     @Test
@@ -195,5 +261,28 @@ struct RecipeServiceTests {
 
         let result = try context.fetch(.recipes(.all))
         #expect(result.isEmpty)
+    }
+}
+
+private func restoreLastOpenedRecipePreference(
+    defaults: UserDefaults,
+    sharedDefaults: UserDefaults?,
+    defaultValue: String?,
+    sharedValue: String?
+) {
+    let key = StringPreferenceKey.lastOpenedRecipeID.rawValue
+
+    if let defaultValue {
+        defaults.set(defaultValue, forKey: key)
+    } else {
+        defaults.removeObject(forKey: key)
+    }
+
+    if let sharedDefaults {
+        if let sharedValue {
+            sharedDefaults.set(sharedValue, forKey: key)
+        } else {
+            sharedDefaults.removeObject(forKey: key)
+        }
     }
 }

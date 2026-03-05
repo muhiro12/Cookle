@@ -19,8 +19,10 @@ public enum RecipeService {
         guard let lastOpenedRecipeID else {
             return nil
         }
-        let id = try PersistentIdentifier(base64Encoded: lastOpenedRecipeID)
-        return try context.fetchFirst(.recipes(.idIs(id)))
+        return try RecipeStableIdentifierCodec.recipe(
+            from: lastOpenedRecipeID,
+            context: context
+        )
     }
 
     /// Returns any single recipe from the store.
@@ -57,6 +59,21 @@ public enum RecipeService {
         recipe: Recipe
     ) {
         context.delete(recipe)
+    }
+
+    /// Stores the current recipe as the last opened target.
+    public static func recordLastOpenedRecipe(_ recipe: Recipe) {
+        let encodedRecipeID = RecipeStableIdentifierCodec.encodeIfPossible(
+            recipe.id
+        )
+        CookleSharedPreferences.set(
+            encodedRecipeID,
+            for: .lastOpenedRecipeID
+        )
+        CooklePreferences.set(
+            encodedRecipeID,
+            for: .lastOpenedRecipeID
+        )
     }
 
     // LLM-based inference with a graceful heuristic fallback.
