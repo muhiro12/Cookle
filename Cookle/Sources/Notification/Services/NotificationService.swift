@@ -1,9 +1,16 @@
+@preconcurrency import MHPlatform
 import SwiftData
 import SwiftUI
 import UserNotifications
 
 @Observable
 final class NotificationService: NSObject {
+    private struct ScheduledSuggestionRequest {
+        let request: UNNotificationRequest
+        let stableIdentifier: String
+        let hasAttachment: Bool
+    }
+
     private let modelContainer: ModelContainer
     private let routeInbox: MainRouteInbox
     private let notificationCenter = UNUserNotificationCenter.current()
@@ -43,14 +50,11 @@ final class NotificationService: NSObject {
     }
 
     func sendTestSuggestionNotification() async {
-        await refreshAuthorizationStatus()
-
-        if authorizationStatus == .notDetermined {
-            _ = try? await notificationCenter.requestAuthorization(
-                options: authorizationOptions
-            )
-            await refreshAuthorizationStatus()
-        }
+        let status = await MHNotificationOrchestrator.requestAuthorizationIfNeeded(
+            center: notificationCenter,
+            options: authorizationOptions
+        )
+        authorizationStatus = status
 
         guard isAuthorizationGranted else {
             return
@@ -102,12 +106,6 @@ extension NotificationService: UNUserNotificationCenterDelegate {
 }
 
 private extension NotificationService {
-    struct ScheduledSuggestionRequest {
-        let request: UNNotificationRequest
-        let stableIdentifier: String
-        let hasAttachment: Bool
-    }
-
     var isAuthorizationGranted: Bool {
         switch authorizationStatus {
         case .authorized,
@@ -159,43 +157,35 @@ private extension NotificationService {
     }
 
     func registerNotificationCategories() {
-        let browseRecipesAction = UNNotificationAction(
-            identifier: NotificationConstants.browseRecipesActionIdentifier,
-            title: "Browse Recipes",
-            options: [.foreground]
+        MHNotificationOrchestrator.registerCategories(
+            [
+                NotificationConstants.suggestionCategoryDescriptor
+            ],
+            center: notificationCenter
         )
-        let suggestionCategory = UNNotificationCategory(
-            identifier: NotificationConstants.suggestionCategoryIdentifier,
-            actions: [browseRecipesAction],
-            intentIdentifiers: []
-        )
-        notificationCenter.setNotificationCategories([suggestionCategory])
     }
 
     func syncSuggestions(requestAuthorizationIfNeeded: Bool) async {
         if !CooklePreferences.bool(for: .isDailyRecipeSuggestionNotificationOn) {
-            await removeSuggestionRequests()
+            await replaceManagedSuggestionRequests(with: [])
             attachmentStore.removeAllAttachments()
             await refreshAuthorizationStatus()
             return
         }
 
-        await refreshAuthorizationStatus()
-
-        if requestAuthorizationIfNeeded, authorizationStatus == .notDetermined {
-            _ = try? await notificationCenter.requestAuthorization(
-                options: authorizationOptions
-            )
-            await refreshAuthorizationStatus()
-        }
+        let status = await MHNotificationOrchestrator.requestAuthorizationIfNeeded(
+            center: notificationCenter,
+            options: authorizationOptions,
+            requestIfNotDetermined: requestAuthorizationIfNeeded
+        )
+        authorizationStatus = status
 
         guard isAuthorizationGranted else {
-            await removeSuggestionRequests()
+            await replaceManagedSuggestionRequests(with: [])
             attachmentStore.removeAllAttachments()
             return
         }
 
-        await removeSuggestionRequests()
         let scheduledRequests = buildDailySuggestionRequests()
         attachmentStore.pruneAttachments(
             keepingStableIdentifiers: Set(
@@ -207,27 +197,27 @@ private extension NotificationService {
                 }
             )
         )
-        for scheduledRequest in scheduledRequests {
-            try? await notificationCenter.add(scheduledRequest.request)
-        }
+        await replaceManagedSuggestionRequests(
+            with: scheduledRequests.map(\.request)
+        )
     }
 
-    func removeSuggestionRequests() async {
-        let pendingRequests = await notificationCenter.pendingNotificationRequests()
-        let suggestionIdentifiers = pendingRequests.compactMap { request in
-            if request.identifier.hasPrefix(NotificationConstants.suggestionIdentifierPrefix)
-                || request.identifier == NotificationConstants.testSuggestionIdentifier {
-                return request.identifier
-            }
-            return nil
+    func replaceManagedSuggestionRequests(
+        with requests: [UNNotificationRequest]
+    ) async {
+        let isManagedIdentifier: @Sendable (String) -> Bool = { identifier in
+            identifier.hasPrefix(NotificationConstants.suggestionIdentifierPrefix)
+                || identifier == NotificationConstants.testSuggestionIdentifier
         }
-        guard suggestionIdentifiers.isNotEmpty else {
-            return
-        }
-        notificationCenter.removePendingNotificationRequests(withIdentifiers: suggestionIdentifiers)
+
+        _ = await MHNotificationOrchestrator.replaceManagedPendingRequests(
+            center: notificationCenter,
+            requests: requests,
+            isManagedIdentifier: isManagedIdentifier
+        )
     }
 
-    func buildDailySuggestionRequests(daysAhead: Int = 14) -> [ScheduledSuggestionRequest] {
+    private func buildDailySuggestionRequests(daysAhead: Int = 14) -> [ScheduledSuggestionRequest] {
         guard let recipes = try? modelContainer.mainContext.fetch(.recipes(.all)),
               recipes.isNotEmpty else {
             return []
@@ -272,27 +262,26 @@ private extension NotificationService {
     }
 
     nonisolated func routeURL(for response: UNNotificationResponse) -> URL? {
-        switch response.actionIdentifier {
-        case NotificationConstants.browseRecipesActionIdentifier:
-            return CookleDeepLinkURLBuilder.preferredRecipeURL()
-        case UNNotificationDefaultActionIdentifier:
-            return routeURL(
-                from: response.notification.request.content.userInfo
-            ) ?? CookleDeepLinkURLBuilder.preferredRecipeURL()
-        case UNNotificationDismissActionIdentifier:
-            return nil
-        default:
-            return nil
-        }
-    }
+        let userInfo = response.notification.request.content.userInfo
 
-    nonisolated func routeURL(from userInfo: [AnyHashable: Any]) -> URL? {
-        guard let routeURLString = userInfo[
-            NotificationConstants.routeURLUserInfoKey
-        ] as? String else {
-            return nil
+        if response.actionIdentifier == NotificationConstants.browseRecipesActionIdentifier,
+           userInfo[NotificationConstants.actionRouteURLsUserInfoKey] == nil {
+            return CookleDeepLinkURLBuilder.preferredRecipeURL()
         }
-        return .init(string: routeURLString)
+
+        if let routeURL = MHNotificationOrchestrator.resolveRouteURL(
+            userInfo: userInfo,
+            actionIdentifier: response.actionIdentifier,
+            codec: NotificationConstants.payloadCodec
+        ) {
+            return routeURL
+        }
+
+        if response.actionIdentifier == UNNotificationDefaultActionIdentifier {
+            return CookleDeepLinkURLBuilder.preferredRecipeURL()
+        }
+
+        return nil
     }
 
     func stableIdentifier(for recipe: Recipe) -> String {

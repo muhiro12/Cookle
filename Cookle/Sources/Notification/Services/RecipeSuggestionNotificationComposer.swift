@@ -1,4 +1,5 @@
 import Foundation
+import MHPlatform
 import UserNotifications
 
 struct RecipeSuggestionNotificationComposer {
@@ -80,11 +81,23 @@ private extension RecipeSuggestionNotificationComposer {
             ? "recipe"
             : "recipe:\(input.stableIdentifier)"
         content.relevanceScore = input.relevanceScore
-        content.userInfo = [
-            NotificationConstants.routeURLUserInfoKey: input.routeURL.absoluteString,
-            NotificationConstants.contentKindUserInfoKey: NotificationConstants.recipeSuggestionContentKind,
-            NotificationConstants.stableIdentifierUserInfoKey: input.stableIdentifier
-        ]
+        content.userInfo = NotificationConstants.payloadCodec.encode(
+            .init(
+                routes: .init(
+                    defaultRouteURL: input.routeURL,
+                    actionRouteURLs: [
+                        NotificationConstants.browseRecipesActionIdentifier:
+                            CookleDeepLinkURLBuilder.preferredRecipeURL()
+                    ]
+                ),
+                metadata: [
+                    NotificationConstants.contentKindUserInfoKey:
+                        NotificationConstants.recipeSuggestionContentKind,
+                    NotificationConstants.stableIdentifierUserInfoKey:
+                        input.stableIdentifier
+                ]
+            )
+        )
         if let attachment = input.attachment {
             content.attachments = [attachment]
         }
