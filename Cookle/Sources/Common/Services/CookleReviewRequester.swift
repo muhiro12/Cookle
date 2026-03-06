@@ -1,8 +1,3 @@
 import MHPlatform
 
-@MainActor
-final class CookleReviewRequester {
-    func requestIfNeeded() async {
-        _ = await MainReviewService.requestIfNeeded()
-    }
-}
+typealias CookleReviewRequester = @MainActor @Sendable () async -> MHReviewRequestOutcome

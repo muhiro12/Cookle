@@ -654,15 +654,15 @@
 			package = AD3909A62DC4E81D0052749F /* XCRemoteSwiftPackageReference "StoreKitWrapper" */;
 			productName = StoreKitWrapper;
 		};
-		AD7F5C102F5B3186008D91F3 /* MHPlatform */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AD7F5C0F2F5B3186008D91F3 /* XCLocalSwiftPackageReference "../MHPlatform" */;
-			productName = MHPlatform;
-		};
 		AD3909AA2DC4E8300052749F /* SwiftUtilities */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = AD3909A92DC4E8300052749F /* XCRemoteSwiftPackageReference "SwiftUtilities" */;
 			productName = SwiftUtilities;
+		};
+		AD7F5C102F5B3186008D91F3 /* MHPlatform */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD7F5C0F2F5B3186008D91F3 /* XCLocalSwiftPackageReference "../MHPlatform" */;
+			productName = MHPlatform;
 		};
 		ADF13D6F2E8233A7002572CD /* CookleLibrary */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -5,14 +5,14 @@ import SwiftData
 @Observable
 final class RecipeActionService {
     private let notificationService: NotificationService
-    private let reviewRequester: CookleReviewRequester
+    private let requestReviewIfNeeded: CookleReviewRequester
 
     init(
         notificationService: NotificationService,
-        reviewRequester: CookleReviewRequester = .init()
+        requestReviewIfNeeded: @escaping CookleReviewRequester = MainReviewService.requestIfNeeded
     ) {
         self.notificationService = notificationService
-        self.reviewRequester = reviewRequester
+        self.requestReviewIfNeeded = requestReviewIfNeeded
     }
 
     func create(
@@ -153,7 +153,7 @@ private extension RecipeActionService {
         }
 
         if effects.contains(.reviewPromptEligible) {
-            await reviewRequester.requestIfNeeded()
+            _ = await requestReviewIfNeeded()
         }
     }
 }
