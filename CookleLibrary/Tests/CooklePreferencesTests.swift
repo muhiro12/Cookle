@@ -2,7 +2,7 @@
 import Foundation
 import Testing
 
-@Suite("CooklePreferences")
+@Suite(.serialized)
 struct CooklePreferencesTests {
     @Test("Stores and retrieves boolean preferences")
     func boolRoundTrip() {
