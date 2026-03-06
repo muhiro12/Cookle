@@ -6,7 +6,7 @@ import PackageDescription
 let kPackage = Package(
     name: "CookleLibrary",
     platforms: [
-        .iOS(.v17)
+        .iOS(.v18)
     ],
     products: [
         .library(
