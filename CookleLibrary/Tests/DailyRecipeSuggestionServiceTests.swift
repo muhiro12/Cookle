@@ -76,4 +76,37 @@ struct DailyRecipeSuggestionServiceTests {
             }
         }
     }
+
+    @Test
+    func buildSuggestions_preserves_existing_identifier_format_without_zero_padding() {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(secondsFromGMT: .zero) ?? .current
+        guard let now = calendar.date(
+            from: .init(
+                year: 2_026,
+                month: 1,
+                day: 1,
+                hour: 10,
+                minute: 0
+            )
+        ) else {
+            Issue.record("Failed to build test date")
+            return
+        }
+        let suggestions = DailyRecipeSuggestionService.buildSuggestions(
+            candidates: [
+                .init(name: "Alpha", stableIdentifier: "recipe-alpha")
+            ],
+            hour: DailySuggestionTimePolicy.defaultHour,
+            minute: DailySuggestionTimePolicy.minimumTimeComponent,
+            now: now,
+            calendar: calendar,
+            daysAhead: 3
+        )
+
+        #expect(suggestions.count == 3)
+        #expect(suggestions[0].identifier == "daily-recipe-suggestion-2026-1-1")
+        #expect(suggestions[1].identifier == "daily-recipe-suggestion-2026-1-2")
+        #expect(suggestions[2].identifier == "daily-recipe-suggestion-2026-1-3")
+    }
 }
