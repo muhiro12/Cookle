@@ -1,19 +1,45 @@
 import Foundation
+import MHPlatform
 import SwiftData
 
 @MainActor
 enum MainRouteService {
-    static func applyPendingIntentRouteIfNeeded(
-        state: inout MainNavigationState,
+    private static let routeCoordinator: MHRouteCoordinator<CookleRoute, CookleRoute> = .init(
+        executor: .init(
+            resolve: { route in
+                route
+            },
+            apply: { _ in
+                // Route application stays app-specific.
+            }
+        ),
+        isDuplicate: ==
+    )
+
+    static func activateRouteExecution(
+        state: MainNavigationState,
         context: ModelContext,
         isRegularWidth: Bool
-    ) throws {
+    ) async throws -> MainNavigationState {
+        await routeCoordinator.setReadiness(true)
+        return try await applyPendingRouteIfNeeded(
+            state: state,
+            context: context,
+            isRegularWidth: isRegularWidth
+        )
+    }
+
+    static func applyPendingIntentRouteIfNeeded(
+        state: MainNavigationState,
+        context: ModelContext,
+        isRegularWidth: Bool
+    ) async throws -> MainNavigationState {
         guard let intentRouteURL = CookleIntentRouteStore.consume() else {
-            return
+            return state
         }
-        try handleIncomingURL(
+        return try await handleIncomingURL(
             intentRouteURL,
-            state: &state,
+            state: state,
             context: context,
             isRegularWidth: isRegularWidth
         )
@@ -21,16 +47,16 @@ enum MainRouteService {
 
     static func handleIncomingURL(
         _ url: URL,
-        state: inout MainNavigationState,
+        state: MainNavigationState,
         context: ModelContext,
         isRegularWidth: Bool
-    ) throws {
+    ) async throws -> MainNavigationState {
         guard let route = CookleRouteParser.parse(url: url) else {
-            return
+            return state
         }
-        state.pendingRoute = route
-        try applyPendingRouteIfNeeded(
-            state: &state,
+        return try await submit(
+            route,
+            state: state,
             context: context,
             isRegularWidth: isRegularWidth
         )
@@ -38,24 +64,74 @@ enum MainRouteService {
 }
 
 private extension MainRouteService {
-    static func applyPendingRouteIfNeeded(
-        state: inout MainNavigationState,
+    static func submit(
+        _ route: CookleRoute,
+        state: MainNavigationState,
         context: ModelContext,
         isRegularWidth: Bool
-    ) throws {
-        guard let pendingRoute = state.pendingRoute else {
-            return
+    ) async throws -> MainNavigationState {
+        let executionOutcome = try await routeCoordinator.submit(route)
+        return try apply(
+            executionOutcome,
+            state: state,
+            context: context,
+            isRegularWidth: isRegularWidth
+        )
+    }
+
+    static func applyPendingRouteIfNeeded(
+        state: MainNavigationState,
+        context: ModelContext,
+        isRegularWidth: Bool
+    ) async throws -> MainNavigationState {
+        guard let executionOutcome = try await routeCoordinator.applyPendingIfReady() else {
+            return state
         }
-        state.pendingRoute = nil
+        return try apply(
+            executionOutcome,
+            state: state,
+            context: context,
+            isRegularWidth: isRegularWidth
+        )
+    }
+
+    static func apply(
+        _ executionOutcome: MHRouteExecutionOutcome<CookleRoute>,
+        state: MainNavigationState,
+        context: ModelContext,
+        isRegularWidth: Bool
+    ) throws -> MainNavigationState {
+        switch executionOutcome {
+        case .applied(let route):
+            return try apply(
+                route: route,
+                state: state,
+                context: context,
+                isRegularWidth: isRegularWidth
+            )
+        case .queued,
+             .deduplicated:
+            return state
+        }
+    }
+
+    static func apply(
+        route: CookleRoute,
+        state: MainNavigationState,
+        context: ModelContext,
+        isRegularWidth: Bool
+    ) throws -> MainNavigationState {
         let outcome = try CookleRouteExecutor.execute(
-            route: pendingRoute,
+            route: route,
             context: context
         )
+        var state = state
         applyRouteOutcome(
             outcome,
             state: &state,
             isRegularWidth: isRegularWidth
         )
+        return state
     }
 
     static func applyRouteOutcome(

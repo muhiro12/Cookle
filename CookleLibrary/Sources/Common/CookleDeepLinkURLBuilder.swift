@@ -9,15 +9,17 @@ public enum CookleDeepLinkURLBuilder {
 
     /// Returns the preferred shareable URL for the supplied route.
     public static func preferredURL(for route: CookleRoute) -> URL {
-        if let universalLinkURL = routeURL(for: route) {
-            return universalLinkURL
+        if let preferredURL = legacyCompatibleURL(
+            route: route,
+            builtURL: CookleDeepLinkCodec.shared.preferredURL(for: route)
+        ) {
+            return preferredURL
         }
-        if let customSchemeURL = CookleRouteURLBuilder.customSchemeURL(for: route) {
-            return customSchemeURL
-        }
-        if let homeCustomSchemeURL =
-            CookleRouteURLBuilder.customSchemeURL(for: .home) {
-            return homeCustomSchemeURL
+        if let homeURL = legacyCompatibleURL(
+            route: .home,
+            builtURL: CookleDeepLinkCodec.shared.preferredURL(for: .home)
+        ) {
+            return homeURL
         }
         return URL(
             string: "\(CookleRouteURLDefaults.customScheme)://home"
@@ -94,5 +96,19 @@ public enum CookleDeepLinkURLBuilder {
     /// Returns the preferred search URL for the supplied query text.
     public static func preferredSearchURL(query: String?) -> URL {
         preferredURL(for: .search(query: query))
+    }
+
+    private static func legacyCompatibleURL(
+        route: CookleRoute,
+        builtURL: URL?
+    ) -> URL? {
+        guard let builtURL else {
+            return nil
+        }
+        guard route.deepLinkDescriptor.queryItems.isEmpty,
+              builtURL.absoluteString.hasSuffix("?") == false else {
+            return builtURL
+        }
+        return URL(string: builtURL.absoluteString + "?")
     }
 }

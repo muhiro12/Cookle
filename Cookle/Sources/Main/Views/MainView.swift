@@ -50,8 +50,7 @@ struct MainView: View {
         .task {
             try? await configurationService.load()
             isUpdateAlertPresented = configurationService.isUpdateRequired()
-            applyPendingIntentRouteIfNeededIfPossible()
-            applyPendingRouteInboxIfNeededIfPossible()
+            await synchronizePendingRoutesIfPossible()
         }
         .onChange(of: scenePhase) {
             guard scenePhase == .active else {
@@ -62,20 +61,27 @@ struct MainView: View {
                 isUpdateAlertPresented = configurationService.isUpdateRequired()
             }
             requestReviewIfNeeded()
-            applyPendingIntentRouteIfNeededIfPossible()
-            applyPendingRouteInboxIfNeededIfPossible()
+            Task {
+                await synchronizePendingRoutesIfPossible()
+            }
         }
         .onChange(of: routeInbox.pendingURL) {
-            applyPendingRouteInboxIfNeededIfPossible()
+            Task {
+                await applyPendingRouteInboxIfNeededIfPossible()
+            }
         }
         .onOpenURL { deepLinkURL in
-            handleIncomingURLIfPossible(deepLinkURL)
+            Task {
+                await handleIncomingURLIfPossible(deepLinkURL)
+            }
         }
         .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
             guard let webpageURL = userActivity.webpageURL else {
                 return
             }
-            handleIncomingURLIfPossible(webpageURL)
+            Task {
+                await handleIncomingURLIfPossible(webpageURL)
+            }
         }
         .sheet(
             isPresented: $navigationState.isCompactSettingsPresented,
@@ -97,10 +103,16 @@ private extension MainView {
         horizontalSizeClass == .regular
     }
 
-    func applyPendingIntentRouteIfNeededIfPossible() {
+    func synchronizePendingRoutesIfPossible() async {
+        await activateRouteExecutionIfPossible()
+        await applyPendingIntentRouteIfNeededIfPossible()
+        await applyPendingRouteInboxIfNeededIfPossible()
+    }
+
+    func activateRouteExecutionIfPossible() async {
         do {
-            try MainRouteService.applyPendingIntentRouteIfNeeded(
-                state: &navigationState,
+            navigationState = try await MainRouteService.activateRouteExecution(
+                state: navigationState,
                 context: context,
                 isRegularWidth: isRegularWidth
             )
@@ -109,18 +121,30 @@ private extension MainView {
         }
     }
 
-    func applyPendingRouteInboxIfNeededIfPossible() {
+    func applyPendingIntentRouteIfNeededIfPossible() async {
+        do {
+            navigationState = try await MainRouteService.applyPendingIntentRouteIfNeeded(
+                state: navigationState,
+                context: context,
+                isRegularWidth: isRegularWidth
+            )
+        } catch {
+            assertionFailure(error.localizedDescription)
+        }
+    }
+
+    func applyPendingRouteInboxIfNeededIfPossible() async {
         guard let routeURL = routeInbox.consumePendingURL() else {
             return
         }
-        handleIncomingURLIfPossible(routeURL)
+        await handleIncomingURLIfPossible(routeURL)
     }
 
-    func handleIncomingURLIfPossible(_ url: URL) {
+    func handleIncomingURLIfPossible(_ url: URL) async {
         do {
-            try MainRouteService.handleIncomingURL(
+            navigationState = try await MainRouteService.handleIncomingURL(
                 url,
-                state: &navigationState,
+                state: navigationState,
                 context: context,
                 isRegularWidth: isRegularWidth
             )

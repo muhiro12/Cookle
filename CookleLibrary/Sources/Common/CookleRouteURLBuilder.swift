@@ -2,8 +2,6 @@ import Foundation
 
 /// Builds shareable URLs from app routes.
 public enum CookleRouteURLBuilder {
-    private static let minimumHostAndPathSegmentCount = Int("2") ?? .zero
-
     /// Default custom URL scheme used by the app.
     public static let customScheme = CookleRouteURLDefaults.customScheme
     /// Default host used for universal links.
@@ -16,18 +14,13 @@ public enum CookleRouteURLBuilder {
     public static func customSchemeURL(
         for route: CookleRoute
     ) -> URL? {
-        let pathSegments = routePathSegments(route)
-        var urlComponents = URLComponents()
-        urlComponents.scheme = customScheme
-        urlComponents.host = pathSegments.first
-        if pathSegments.count >= minimumHostAndPathSegmentCount {
-            urlComponents.path =
-                "/" + pathSegments.dropFirst().joined(separator: "/")
-        } else {
-            urlComponents.path = .empty
-        }
-        urlComponents.queryItems = routeQueryItems(route)
-        return urlComponents.url
+        legacyCompatibleURL(
+            route: route,
+            builtURL: CookleDeepLinkCodec.shared.url(
+                for: route,
+                transport: .customScheme
+            )
+        )
     }
 
     /// Builds a universal-link URL for the supplied route.
@@ -36,85 +29,30 @@ public enum CookleRouteURLBuilder {
         host: String = defaultUniversalLinkHost,
         appPathPrefix: String = defaultUniversalLinkPathPrefix
     ) -> URL? {
-        var urlComponents = URLComponents()
-        urlComponents.scheme = "https"
-        urlComponents.host = host
-
-        var allPathSegments = [String]()
-        if appPathPrefix.isNotEmpty {
-            allPathSegments.append(appPathPrefix)
-        }
-        allPathSegments.append(contentsOf: routePathSegments(route))
-        urlComponents.path = "/" + allPathSegments.joined(separator: "/")
-        urlComponents.queryItems = routeQueryItems(route)
-        return urlComponents.url
-    }
-}
-
-private extension CookleRouteURLBuilder {
-    static func routePathSegments(_ route: CookleRoute) -> [String] {
-        switch route {
-        case .home:
-            return ["home"]
-        case .diary:
-            return ["diary"]
-        case let .diaryDate(year, month, day):
-            return [
-                "diary",
-                String(
-                    format: "%04d-%02d-%02d",
-                    year,
-                    month,
-                    day
-                )
-            ]
-        case .recipe,
-             .recipeDetail:
-            return ["recipe"]
-        case .search:
-            return ["search"]
-        case .settings:
-            return ["settings"]
-        case .settingsSubscription:
-            return ["settings", "subscription"]
-        case .settingsLicense:
-            return ["settings", "license"]
-        }
+        let codec = CookleDeepLinkCodec.make(
+            host: host,
+            appPathPrefix: appPathPrefix
+        )
+        return legacyCompatibleURL(
+            route: route,
+            builtURL: codec.url(
+                for: route,
+                transport: .universalLink
+            )
+        )
     }
 
-    static func routeQueryItems(
-        _ route: CookleRoute
-    ) -> [URLQueryItem] {
-        switch route {
-        case let .recipeDetail(recipeID):
-            guard recipeID.isNotEmpty else {
-                return []
-            }
-            return [
-                .init(
-                    name: "id",
-                    value: recipeID
-                )
-            ]
-        case let .search(query):
-            guard let query,
-                  query.isNotEmpty else {
-                return []
-            }
-            return [
-                .init(
-                    name: "q",
-                    value: query
-                )
-            ]
-        case .home,
-             .diary,
-             .diaryDate,
-             .recipe,
-             .settings,
-             .settingsSubscription,
-             .settingsLicense:
-            return []
+    private static func legacyCompatibleURL(
+        route: CookleRoute,
+        builtURL: URL?
+    ) -> URL? {
+        guard let builtURL else {
+            return nil
         }
+        guard route.deepLinkDescriptor.queryItems.isEmpty,
+              builtURL.absoluteString.hasSuffix("?") == false else {
+            return builtURL
+        }
+        return URL(string: builtURL.absoluteString + "?")
     }
 }

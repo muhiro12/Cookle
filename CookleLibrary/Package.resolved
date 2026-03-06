@@ -1,6 +1,60 @@
 {
-  "originHash" : "28686a56445593ef0fcfc36c60968a211797b043d640ebe1886c4f64b22fa9bb",
+  "originHash" : "e194b1c7089e38c9622da4642817b4f08f4a4aad481f8a03b300e75db8beed64",
   "pins" : [
+    {
+      "identity" : "googlemobileadswrapper",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/muhiro12/GoogleMobileAdsWrapper.git",
+      "state" : {
+        "revision" : "c42c42a6e79bab474f0c9b80be5c7fd56197b0ba",
+        "version" : "1.3.0"
+      }
+    },
+    {
+      "identity" : "licenselist",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/cybozu/LicenseList.git",
+      "state" : {
+        "revision" : "56f1b5724138e4d9f60453b555edc80e43805503",
+        "version" : "2.2.0"
+      }
+    },
+    {
+      "identity" : "mhplatform",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/muhiro12/MHPlatform.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "6e3ced0eb9bb45296735e516a42fbda00cf5e635"
+      }
+    },
+    {
+      "identity" : "storekitwrapper",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/muhiro12/StoreKitWrapper.git",
+      "state" : {
+        "revision" : "c43d9cd7f68eb66d63f6b258af48c9825c1f0d00",
+        "version" : "1.2.0"
+      }
+    },
+    {
+      "identity" : "swift-package-manager-google-mobile-ads",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/googleads/swift-package-manager-google-mobile-ads.git",
+      "state" : {
+        "revision" : "1239c23464503053c17d37ee5daa70de3455e9c8",
+        "version" : "12.14.0"
+      }
+    },
+    {
+      "identity" : "swift-package-manager-google-user-messaging-platform",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/googleads/swift-package-manager-google-user-messaging-platform.git",
+      "state" : {
+        "revision" : "13b248eaa73b7826f0efb1bcf455e251d65ecb1b",
+        "version" : "3.1.0"
+      }
+    },
     {
       "identity" : "swiftutilities",
       "kind" : "remoteSourceControl",
