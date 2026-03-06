@@ -105,7 +105,7 @@ extension NotificationService: UNUserNotificationCenterDelegate {
                 source: #fileID
             )
             notificationLogger.info("notification settings route requested")
-            routeInbox.store(settingsURL)
+            await routeInbox.store(settingsURL)
         }
     }
 }
@@ -261,9 +261,7 @@ private extension NotificationService {
         guard let routeURL = routeURL(for: response) else {
             return
         }
-        await MainActor.run {
-            routeInbox.store(routeURL)
-        }
+        await routeInbox.store(routeURL)
     }
 
     nonisolated func routeURL(for response: UNNotificationResponse) -> URL? {

@@ -134,7 +134,7 @@ private extension MainView {
     }
 
     func applyPendingRouteInboxIfNeededIfPossible() async {
-        guard let routeURL = routeInbox.consumePendingURL() else {
+        guard let routeURL = await routeInbox.consumePendingURL() else {
             return
         }
         await handleIncomingURLIfPossible(routeURL)
