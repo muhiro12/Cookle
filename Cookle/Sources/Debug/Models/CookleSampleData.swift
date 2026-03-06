@@ -1,13 +1,11 @@
-import GoogleMobileAdsWrapper
-import StoreKitWrapper
+import MHPlatform
 import SwiftData
 import SwiftUI
 
 struct CookleSampleData: PreviewModifier {
     struct Context {
         let modelContainer: ModelContainer
-        let store: Store
-        let googleMobileAdsController: GoogleMobileAdsController
+        let appRuntime: MHAppRuntime
         let routeInbox: MainRouteInbox
         let notificationService: NotificationService
         let tipController: CookleTipController
@@ -25,8 +23,7 @@ struct CookleSampleData: PreviewModifier {
     func body(content: Content, context: Context) -> some View {
         content
             .modelContainer(context.modelContainer)
-            .environment(context.store)
-            .environment(context.googleMobileAdsController)
+            .environment(context.appRuntime)
             .environment(context.routeInbox)
             .environment(context.notificationService)
             .environment(context.tipController)

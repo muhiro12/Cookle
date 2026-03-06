@@ -1,13 +1,13 @@
-import StoreKitWrapper
+import MHPlatform
 import SwiftUI
 
 struct StoreListView: View {
-    @Environment(Store.self)
-    private var store
+    @Environment(MHAppRuntime.self)
+    private var appRuntime
 
     var body: some View {
         List {
-            store.buildSubscriptionSection()
+            appRuntime.subscriptionSectionView()
         }
         .navigationTitle(Text("Subscription"))
     }

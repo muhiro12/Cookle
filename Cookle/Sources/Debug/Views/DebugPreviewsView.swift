@@ -5,16 +5,16 @@
 //  Created by Hiromu Nakano on 9/17/24.
 //
 
-import StoreKitWrapper
+import MHPlatform
 import SwiftUI
 
 struct DebugPreviewsView: View {
-    @Environment(Store.self)
-    private var store
+    @Environment(MHAppRuntime.self)
+    private var appRuntime
 
     var body: some View {
         List {
-            store.buildSubscriptionSection()
+            appRuntime.subscriptionSectionView()
             AdvertisementSection(.medium)
             AdvertisementSection(.small)
             ShortcutsLinkSection()

@@ -1,5 +1,4 @@
-import GoogleMobileAdsWrapper
-import StoreKitWrapper
+import MHPlatform
 import SwiftData
 
 enum CookleSampleDataContext {
@@ -26,11 +25,21 @@ enum CookleSampleDataContext {
             )
             previewStore.prepare(modelContainer.mainContext)
             let services = makeServices(modelContainer: modelContainer)
+            let appRuntime = MainActor.assumeIsolated {
+                MHAppRuntime(
+                    configuration: .init(
+                        subscriptionProductIDs: [Secret.productID],
+                        subscriptionGroupID: Secret.groupID,
+                        nativeAdUnitID: Secret.adUnitIDDev,
+                        preferencesSuiteName: CookleSharedPreferences.appGroupIdentifier,
+                        showsLicenses: true
+                    )
+                )
+            }
 
             return .init(
                 modelContainer: modelContainer,
-                store: .init(),
-                googleMobileAdsController: .init(adUnitID: Secret.adUnitIDDev),
+                appRuntime: appRuntime,
                 routeInbox: services.routeInbox,
                 notificationService: services.notificationService,
                 tipController: services.tipController,

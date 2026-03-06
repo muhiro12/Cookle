@@ -6,18 +6,13 @@
 //
 
 import AppIntents
-import GoogleMobileAdsWrapper
-import LicenseListWrapper
 import MHPlatform
-import StoreKitWrapper
 import SwiftData
 import SwiftUI
 import TipKit
 
 @main
 struct CookleApp: App {
-    @AppStorage(.isSubscribeOn)
-    private var isSubscribeOn
     @AppStorage(.isICloudOn)
     private var isICloudOn
     @AppStorage(.isDebugOn)
@@ -25,9 +20,8 @@ struct CookleApp: App {
     @AppStorage(.lastLaunchedAppVersion)
     private var lastLaunchedAppVersion
 
-    private let sharedGoogleMobileAdsController: GoogleMobileAdsController
     private let sharedModelContainer: ModelContainer
-    private let sharedStore: Store
+    private let sharedAppRuntime: MHAppRuntime
     private let sharedConfigurationService: ConfigurationService
     private let sharedRouteInbox: MainRouteInbox
     private let sharedNotificationService: NotificationService
@@ -43,8 +37,7 @@ struct CookleApp: App {
             ContentView()
                 .id(isICloudOn)
                 .modelContainer(sharedModelContainer)
-                .environment(sharedGoogleMobileAdsController)
-                .environment(sharedStore)
+                .environment(sharedAppRuntime)
                 .environment(sharedConfigurationService)
                 .environment(sharedRouteInbox)
                 .environment(sharedNotificationService)
@@ -70,11 +63,7 @@ struct CookleApp: App {
             cloudKitDatabase: cloudKitDatabase
         )
 
-        sharedGoogleMobileAdsController = .init(
-            adUnitID: Self.adUnitID
-        )
-
-        sharedStore = .init()
+        sharedAppRuntime = Self.makeAppRuntime()
         sharedConfigurationService = .init()
         sharedRouteInbox = .init()
         sharedNotificationService = .init(
@@ -110,6 +99,19 @@ private extension CookleApp {
         #endif
     }
 
+    @MainActor
+    static func makeAppRuntime() -> MHAppRuntime {
+        .init(
+            configuration: .init(
+                subscriptionProductIDs: [Secret.productID],
+                subscriptionGroupID: Secret.groupID,
+                nativeAdUnitID: adUnitID,
+                preferencesSuiteName: CookleSharedPreferences.appGroupIdentifier,
+                showsLicenses: true
+            )
+        )
+    }
+
     static func makeStartupLogger() -> MHLogger {
         let policy = MHLogPolicy.default
         let store = MHLogStore(
@@ -142,18 +144,7 @@ private extension CookleApp {
         isDebugOn = true
         #endif
 
-        sharedGoogleMobileAdsController.start()
-        sharedStore.open(
-            groupID: Secret.groupID,
-            productIDs: [Secret.productID]
-        ) { products in
-            isSubscribeOn = products.contains { product in
-                product.id == Secret.productID
-            }
-            if !isSubscribeOn {
-                isICloudOn = false
-            }
-        }
+        sharedAppRuntime.startIfNeeded()
     }
 
     func registerAppIntentDependencies() {
