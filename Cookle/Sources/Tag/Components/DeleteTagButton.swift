@@ -19,7 +19,7 @@ struct DeleteTagButton<T: Tag>: View {
         Button(role: .destructive) {
             if let action {
                 action()
-            } else if tag is Ingredient, tag.recipes.isNotEmpty {
+            } else if tag is Ingredient, tag.recipes.orEmpty.isNotEmpty {
                 isAlertPresented = true
             } else {
                 isConfirmationPresented = true

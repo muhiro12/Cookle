@@ -26,7 +26,7 @@ struct TagFormView<T: Tag>: View {
                 Text("Value")
             }
             Section {
-                ForEach(tag.recipes) { recipe in
+                ForEach(tag.recipes.orEmpty) { recipe in
                     Text(recipe.name)
                 }
             } header: {

@@ -17,7 +17,7 @@ nonisolated public final class Category: Tag {
 
     /// Recipes linked to this category.
     @Relationship(inverse: \Recipe.categories)
-    public private(set) var recipes = [Recipe]()
+    public private(set) var recipes = [Recipe]?.some(.empty)
 
     /// Creation timestamp.
     public private(set) var createdTimestamp = Date.now

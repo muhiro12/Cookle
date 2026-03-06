@@ -37,7 +37,7 @@ private extension DebugDetailView {
                 .toolbar {
                     ToolbarItem {
                         Menu("Objects") {
-                            ForEach(ingredient.objects, id: \.persistentModelID) { object in
+                            ForEach(ingredient.objects.orEmpty, id: \.persistentModelID) { object in
                                 Text(object.amount)
                             }
                         }

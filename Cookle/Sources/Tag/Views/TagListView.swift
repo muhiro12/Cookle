@@ -29,7 +29,7 @@ struct TagListView<T: Tag>: View {
                     .hidden(
                         searchText.isNotEmpty
                             && !tag.value.normalizedContains(searchText)
-                            || tag.recipes.isEmpty
+                            || tag.recipes.orEmpty.isEmpty
                     )
                 }
                 .searchable(text: $searchText)

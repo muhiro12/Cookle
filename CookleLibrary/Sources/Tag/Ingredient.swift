@@ -17,10 +17,11 @@ nonisolated public final class Ingredient: Tag {
 
     /// Ingredient objects that carry amounts and order.
     @Relationship(deleteRule: .cascade, inverse: \IngredientObject.ingredient)
-    public private(set) var objects = [IngredientObject]()
+    public private(set) var objects = [IngredientObject]?.some(.empty)
+
     /// Recipes linked to this ingredient.
     @Relationship(inverse: \Recipe.ingredients)
-    public private(set) var recipes = [Recipe]()
+    public private(set) var recipes = [Recipe]?.some(.empty)
 
     /// Creation timestamp.
     public private(set) var createdTimestamp = Date.now
