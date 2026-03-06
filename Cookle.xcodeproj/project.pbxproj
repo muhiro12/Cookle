@@ -15,6 +15,7 @@
 		AD3909A52DC4E80A0052749F /* LicenseListWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD3909A42DC4E80A0052749F /* LicenseListWrapper */; };
 		AD3909A82DC4E81D0052749F /* StoreKitWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD3909A72DC4E81D0052749F /* StoreKitWrapper */; };
 		AD3909AB2DC4E8300052749F /* SwiftUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = AD3909AA2DC4E8300052749F /* SwiftUtilities */; };
+		AD7F5C112F5B3186008D91F3 /* MHPlatform in Frameworks */ = {isa = PBXBuildFile; productRef = AD7F5C102F5B3186008D91F3 /* MHPlatform */; };
 		ADF13D702E8233A7002572CD /* CookleLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = ADF13D6F2E8233A7002572CD /* CookleLibrary */; };
 /* End PBXBuildFile section */
 
@@ -88,6 +89,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD3909A22DC4E7F90052749F /* GoogleMobileAdsWrapper in Frameworks */,
+				AD7F5C112F5B3186008D91F3 /* MHPlatform in Frameworks */,
 				AD3909AB2DC4E8300052749F /* SwiftUtilities in Frameworks */,
 				ADF13D702E8233A7002572CD /* CookleLibrary in Frameworks */,
 				AD3909A82DC4E81D0052749F /* StoreKitWrapper in Frameworks */,
@@ -174,6 +176,7 @@
 			packageProductDependencies = (
 				AD3909A12DC4E7F90052749F /* GoogleMobileAdsWrapper */,
 				AD3909A42DC4E80A0052749F /* LicenseListWrapper */,
+				AD7F5C102F5B3186008D91F3 /* MHPlatform */,
 				AD3909A72DC4E81D0052749F /* StoreKitWrapper */,
 				AD3909AA2DC4E8300052749F /* SwiftUtilities */,
 				ADF13D6F2E8233A7002572CD /* CookleLibrary */,
@@ -218,6 +221,7 @@
 				AD3909A32DC4E80A0052749F /* XCRemoteSwiftPackageReference "LicenseListWrapper" */,
 				AD3909A62DC4E81D0052749F /* XCRemoteSwiftPackageReference "StoreKitWrapper" */,
 				AD3909A92DC4E8300052749F /* XCRemoteSwiftPackageReference "SwiftUtilities" */,
+				AD7F5C0F2F5B3186008D91F3 /* XCLocalSwiftPackageReference "../MHPlatform" */,
 				ADF13D6E2E8233A7002572CD /* XCLocalSwiftPackageReference "CookleLibrary" */,
 			);
 			productRefGroup = AD8C8E692BFABEE200872BF2 /* Products */;
@@ -585,6 +589,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
+		AD7F5C0F2F5B3186008D91F3 /* XCLocalSwiftPackageReference "../MHPlatform" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MHPlatform;
+		};
 		ADF13D6E2E8233A7002572CD /* XCLocalSwiftPackageReference "CookleLibrary" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = CookleLibrary;
@@ -645,6 +653,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AD3909A62DC4E81D0052749F /* XCRemoteSwiftPackageReference "StoreKitWrapper" */;
 			productName = StoreKitWrapper;
+		};
+		AD7F5C102F5B3186008D91F3 /* MHPlatform */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD7F5C0F2F5B3186008D91F3 /* XCLocalSwiftPackageReference "../MHPlatform" */;
+			productName = MHPlatform;
 		};
 		AD3909AA2DC4E8300052749F /* SwiftUtilities */ = {
 			isa = XCSwiftPackageProductDependency;

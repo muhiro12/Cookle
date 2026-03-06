@@ -8,6 +8,7 @@
 import AppIntents
 import GoogleMobileAdsWrapper
 import LicenseListWrapper
+import MHPlatform
 import StoreKitWrapper
 import SwiftData
 import SwiftUI
@@ -35,6 +36,7 @@ struct CookleApp: App {
     private let sharedDiaryActionService: DiaryActionService
     private let sharedTagActionService: TagActionService
     private let sharedSettingsActionService: SettingsActionService
+    private let startupLogger = Self.makeStartupLogger()
 
     var body: some Scene {
         WindowGroup {
@@ -59,6 +61,7 @@ struct CookleApp: App {
 
     @MainActor
     init() {
+        startupLogger.notice("app startup began")
         let cloudKitDatabase: ModelConfiguration.CloudKitDatabase = CooklePreferences.bool(for: .isICloudOn)
             ? .automatic
             : .none
@@ -87,12 +90,14 @@ struct CookleApp: App {
         sharedSettingsActionService = .init(
             notificationService: sharedNotificationService
         )
+        startupLogger.notice("startup dependencies ready")
 
         CookleShortcuts.updateAppShortcutParameters()
 
         registerAppIntentDependencies()
         configureTipController()
         updateLastLaunchedVersion()
+        startupLogger.notice("startup wiring finished")
     }
 }
 
@@ -103,6 +108,21 @@ private extension CookleApp {
         #else
         Secret.adUnitID
         #endif
+    }
+
+    static func makeStartupLogger() -> MHLogger {
+        let policy = MHLogPolicy.default
+        let store = MHLogStore(
+            policy: policy,
+            sinks: [MHOSLogSink()]
+        )
+
+        return MHLogger(
+            #fileID,
+            store: store,
+            category: "AppStartup",
+            policy: policy
+        )
     }
 
     static func makeModelContainer(
