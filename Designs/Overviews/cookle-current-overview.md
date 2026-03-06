@@ -1,6 +1,6 @@
 # Cookle Product and Architecture Overview
 
-Implementation snapshot based on the repository state on March 5, 2026.
+Implementation snapshot based on the repository state on March 6, 2026.
 
 ## Purpose
 
@@ -17,7 +17,7 @@ focus is personal cooking organization:
 
 ## Product Snapshot
 
-- Minimum deployment target: iOS 17.0
+- Minimum deployment target: iOS 18.0
 - Core stack: SwiftUI, SwiftData, App Intents
 - Shared package: `CookleLibrary`
 - Main app target: `Cookle`
