@@ -15,14 +15,21 @@ final class NotificationAttachmentStore {
         for recipe: Recipe,
         stableIdentifier: String
     ) -> UNNotificationAttachment? {
-        guard let photo = primaryPhoto(for: recipe),
-              let data = compressedJPEGData(from: photo.data) else {
-            return nil
-        }
-
         do {
             try ensureDirectoryExists()
             let fileURL = attachmentFileURL(for: stableIdentifier)
+            if let cachedAttachment = existingAttachmentIfUpToDate(
+                fileURL: fileURL,
+                recipeModifiedTimestamp: recipe.modifiedTimestamp,
+                stableIdentifier: stableIdentifier
+            ) {
+                return cachedAttachment
+            }
+            guard let photo = primaryPhoto(for: recipe),
+                  let data = compressedJPEGData(from: photo.data) else {
+                try removeItemIfExists(at: fileURL)
+                return nil
+            }
             try data.write(to: fileURL, options: .atomic)
             return try .init(
                 identifier: stableIdentifier,
@@ -136,5 +143,33 @@ private extension NotificationAttachmentStore {
             return "_"
         })
         return sanitized.isEmpty ? "recipe" : sanitized
+    }
+
+    func existingAttachmentIfUpToDate(
+        fileURL: URL,
+        recipeModifiedTimestamp: Date,
+        stableIdentifier: String
+    ) -> UNNotificationAttachment? {
+        guard fileManager.fileExists(atPath: fileURL.path) else {
+            return nil
+        }
+        let resourceValues = try? fileURL.resourceValues(
+            forKeys: [.contentModificationDateKey]
+        )
+        if let contentModificationDate = resourceValues?.contentModificationDate,
+           contentModificationDate >= recipeModifiedTimestamp {
+            return try? .init(
+                identifier: stableIdentifier,
+                url: fileURL
+            )
+        }
+        return nil
+    }
+
+    func removeItemIfExists(at fileURL: URL) throws {
+        guard fileManager.fileExists(atPath: fileURL.path) else {
+            return
+        }
+        try fileManager.removeItem(at: fileURL)
     }
 }

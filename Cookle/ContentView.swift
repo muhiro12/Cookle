@@ -12,6 +12,7 @@ struct ContentView: View {
     private var scenePhase
     @Environment(NotificationService.self)
     private var notificationService
+    @State private var hasSkippedInitialActiveNotificationSync = false
 
     var body: some View {
         MainView()
@@ -23,6 +24,10 @@ struct ContentView: View {
             }
             .onChange(of: scenePhase) {
                 guard scenePhase == .active else {
+                    return
+                }
+                guard hasSkippedInitialActiveNotificationSync else {
+                    hasSkippedInitialActiveNotificationSync = true
                     return
                 }
                 Task {

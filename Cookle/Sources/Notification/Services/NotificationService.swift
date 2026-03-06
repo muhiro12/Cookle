@@ -105,6 +105,7 @@ private extension NotificationService {
     struct ScheduledSuggestionRequest {
         let request: UNNotificationRequest
         let stableIdentifier: String
+        let hasAttachment: Bool
     }
 
     var isAuthorizationGranted: Bool {
@@ -198,7 +199,12 @@ private extension NotificationService {
         let scheduledRequests = buildDailySuggestionRequests()
         attachmentStore.pruneAttachments(
             keepingStableIdentifiers: Set(
-                scheduledRequests.map(\.stableIdentifier)
+                scheduledRequests.compactMap { scheduledRequest in
+                    if scheduledRequest.hasAttachment {
+                        return scheduledRequest.stableIdentifier
+                    }
+                    return nil
+                }
             )
         )
         for scheduledRequest in scheduledRequests {
@@ -240,16 +246,18 @@ private extension NotificationService {
         )
 
         return suggestions.map { suggestion in
-            ScheduledSuggestionRequest(
+            let content = suggestionContent(
+                for: suggestion,
+                recipesByStableIdentifier: recipesByStableIdentifier
+            )
+            return ScheduledSuggestionRequest(
                 request: UNNotificationRequest(
                     identifier: suggestion.identifier,
-                    content: suggestionContent(
-                        for: suggestion,
-                        recipesByStableIdentifier: recipesByStableIdentifier
-                    ),
+                    content: content,
                     trigger: suggestionTrigger(for: suggestion.notifyDate)
                 ),
-                stableIdentifier: suggestion.stableIdentifier
+                stableIdentifier: suggestion.stableIdentifier,
+                hasAttachment: content.attachments.isEmpty == false
             )
         }
     }

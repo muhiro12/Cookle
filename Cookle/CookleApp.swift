@@ -52,7 +52,7 @@ struct CookleApp: App {
                 .environment(sharedTagActionService)
                 .environment(sharedSettingsActionService)
                 .task {
-                    await performStartupTasks()
+                    performStartupTasks()
                 }
         }
     }
@@ -117,7 +117,7 @@ private extension CookleApp {
         }
     }
 
-    func performStartupTasks() async {
+    func performStartupTasks() {
         #if DEBUG
         isDebugOn = true
         #endif
@@ -134,8 +134,6 @@ private extension CookleApp {
                 isICloudOn = false
             }
         }
-
-        await sharedNotificationService.synchronizeScheduledSuggestions()
     }
 
     func registerAppIntentDependencies() {
