@@ -15,8 +15,6 @@ struct MainView: View {
     private var horizontalSizeClass
     @Environment(\.modelContext)
     private var context
-    @Environment(\.requestReview)
-    private var requestReview
     @Environment(ConfigurationService.self)
     private var configurationService
     @Environment(MainRouteInbox.self)
@@ -132,12 +130,8 @@ private extension MainView {
     }
 
     func requestReviewIfNeeded() {
-        guard MainReviewService.shouldRequestReview() else {
-            return
-        }
         Task {
-            try? await Task.sleep(for: MainReviewService.requestDelay)
-            requestReview()
+            _ = await MainReviewService.requestIfNeeded()
         }
     }
 }
