@@ -52,8 +52,10 @@ enum MainRouteService {
         isRegularWidth: Bool
     ) async throws -> MainNavigationState {
         guard let route = CookleRouteParser.parse(url: url) else {
+            routeLogger.info("ignored deep-link URL because parsing failed")
             return state
         }
+        routeLogger.info("accepted deep-link URL for route handling")
         return try await submit(
             route,
             state: state,
@@ -64,6 +66,13 @@ enum MainRouteService {
 }
 
 private extension MainRouteService {
+    static var routeLogger: MHLogger {
+        CookleApp.logger(
+            category: "RouteExecution",
+            source: #fileID
+        )
+    }
+
     static func submit(
         _ route: CookleRoute,
         state: MainNavigationState,
@@ -71,7 +80,7 @@ private extension MainRouteService {
         isRegularWidth: Bool
     ) async throws -> MainNavigationState {
         var nextState = state
-        _ = try await routeCoordinator.submit(route) { resolvedRoute in
+        let outcome = try await routeCoordinator.submit(route) { resolvedRoute in
             nextState = try apply(
                 route: resolvedRoute,
                 state: nextState,
@@ -79,6 +88,7 @@ private extension MainRouteService {
                 isRegularWidth: isRegularWidth
             )
         }
+        logExecutionOutcome(outcome)
         return nextState
     }
 
@@ -88,16 +98,17 @@ private extension MainRouteService {
         isRegularWidth: Bool
     ) async throws -> MainNavigationState {
         var nextState = state
-        guard try await routeCoordinator.applyPendingIfReady(applyOnMainActor: { resolvedRoute in
+        guard let outcome = try await routeCoordinator.applyPendingIfReady(applyOnMainActor: { resolvedRoute in
             nextState = try apply(
                 route: resolvedRoute,
                 state: nextState,
                 context: context,
                 isRegularWidth: isRegularWidth
             )
-        }) != nil else {
+        }) else {
             return state
         }
+        logExecutionOutcome(outcome)
         return nextState
     }
 
@@ -183,6 +194,19 @@ private extension MainRouteService {
         } else {
             state.compactSettingsSelection = destination
             state.isCompactSettingsPresented = true
+        }
+    }
+
+    static func logExecutionOutcome(
+        _ outcome: MHRouteExecutionOutcome<CookleRoute>
+    ) {
+        switch outcome {
+        case .applied:
+            routeLogger.notice("route applied")
+        case .queued:
+            routeLogger.info("route queued until execution becomes ready")
+        case .deduplicated:
+            routeLogger.info("route deduplicated against pending route")
         }
     }
 }

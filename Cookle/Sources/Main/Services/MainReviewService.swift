@@ -16,8 +16,9 @@ enum MainReviewService {
 
     @MainActor
     static func requestIfNeeded() async -> MHReviewRequestOutcome {
-        await MHReviewRequester.requestIfNeeded(
-            policy: reviewPolicy
+        await CookleApp.requestReviewIfNeeded(
+            policy: reviewPolicy,
+            source: #fileID
         )
     }
 }

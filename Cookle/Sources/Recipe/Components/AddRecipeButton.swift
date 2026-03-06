@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2024/04/13.
 //
 
+import MHPlatform
 import SwiftUI
 
 struct AddRecipeButton: View {
@@ -14,7 +15,11 @@ struct AddRecipeButton: View {
 
     var body: some View {
         Button {
-            Logger(#file).info("AddRecipeButton tapped")
+            let logger = CookleApp.logger(
+                category: "UIAction",
+                source: #fileID
+            )
+            logger.info("add recipe button tapped")
             if let action {
                 action()
             } else {

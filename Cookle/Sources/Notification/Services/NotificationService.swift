@@ -100,6 +100,11 @@ extension NotificationService: UNUserNotificationCenterDelegate {
                                             openSettingsFor _: UNNotification?) {
         let settingsURL = CookleDeepLinkURLBuilder.preferredURL(for: .settings)
         Task { @MainActor in
+            let notificationLogger = CookleApp.logger(
+                category: "NotificationRoute",
+                source: #fileID
+            )
+            notificationLogger.info("notification settings route requested")
             routeInbox.store(settingsURL)
         }
     }
@@ -263,9 +268,14 @@ private extension NotificationService {
 
     nonisolated func routeURL(for response: UNNotificationResponse) -> URL? {
         let userInfo = response.notification.request.content.userInfo
+        let notificationLogger = CookleApp.logger(
+            category: "NotificationRoute",
+            source: #fileID
+        )
 
         if response.actionIdentifier == NotificationConstants.browseRecipesActionIdentifier,
            userInfo[NotificationConstants.actionRouteURLsUserInfoKey] == nil {
+            notificationLogger.notice("notification route resolved via browse fallback")
             return CookleDeepLinkURLBuilder.preferredRecipeURL()
         }
 
@@ -274,13 +284,16 @@ private extension NotificationService {
             actionIdentifier: response.actionIdentifier,
             codec: NotificationConstants.payloadCodec
         ) {
+            notificationLogger.info("notification route resolved")
             return routeURL
         }
 
         if response.actionIdentifier == UNNotificationDefaultActionIdentifier {
+            notificationLogger.info("notification route resolved via default fallback")
             return CookleDeepLinkURLBuilder.preferredRecipeURL()
         }
 
+        notificationLogger.info("notification route resolution returned no route")
         return nil
     }
 

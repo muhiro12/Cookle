@@ -30,7 +30,7 @@ struct CookleApp: App {
     private let sharedDiaryActionService: DiaryActionService
     private let sharedTagActionService: TagActionService
     private let sharedSettingsActionService: SettingsActionService
-    private let startupLogger = Self.makeStartupLogger()
+    private let startupLogger = Self.logger(category: "AppStartup")
 
     var body: some Scene {
         WindowGroup {
@@ -112,21 +112,6 @@ private extension CookleApp {
         )
     }
 
-    static func makeStartupLogger() -> MHLogger {
-        let policy = MHLogPolicy.default
-        let store = MHLogStore(
-            policy: policy,
-            sinks: [MHOSLogSink()]
-        )
-
-        return MHLogger(
-            #fileID,
-            store: store,
-            category: "AppStartup",
-            policy: policy
-        )
-    }
-
     static func makeModelContainer(
         cloudKitDatabase: ModelConfiguration.CloudKitDatabase
     ) -> ModelContainer {
@@ -172,6 +157,64 @@ private extension CookleApp {
     func updateLastLaunchedVersion() {
         if let currentAppVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
             lastLaunchedAppVersion = currentAppVersion
+        }
+    }
+}
+
+extension CookleApp {
+    static let logPolicy = MHLogPolicy.default
+    static let logStore = MHLogStore(
+        policy: logPolicy,
+        sinks: [MHOSLogSink()]
+    )
+
+    static func logger(
+        category: String,
+        source: String = #fileID
+    ) -> MHLogger {
+        .init(
+            source,
+            store: logStore,
+            category: category,
+            policy: logPolicy
+        )
+    }
+
+    @discardableResult
+    static func requestReviewIfNeeded(
+        policy: MHReviewPolicy,
+        source: String = #fileID
+    ) async -> MHReviewRequestOutcome {
+        let outcome = await MHReviewRequester.requestIfNeeded(policy: policy)
+        logReviewOutcome(
+            outcome,
+            source: source
+        )
+        return outcome
+    }
+}
+
+private extension CookleApp {
+    static func logReviewOutcome(
+        _ outcome: MHReviewRequestOutcome,
+        source: String
+    ) {
+        let logger = logger(
+            category: "ReviewFlow",
+            source: source
+        )
+
+        switch outcome {
+        case .requested:
+            logger.notice("review request invoked")
+        case .skippedInvalidLotteryRange:
+            logger.warning("review request skipped because the lottery range was invalid")
+        case .skippedNoForegroundScene:
+            logger.info("review request skipped because no foreground scene was available")
+        case .unsupportedPlatform:
+            logger.info("review request skipped because the platform is unsupported")
+        case .skippedByPolicy:
+            break
         }
     }
 }
