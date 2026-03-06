@@ -24,40 +24,40 @@ Workflow Service Rule in `Cookle`.
 ## Evidence Paths
 
 - Recipes:
-  - `/Users/Hiromu/Repositories/Cookle/CookleLibrary/Sources/Recipe/RecipeService.swift`
-  - `/Users/Hiromu/Repositories/Cookle/CookleLibrary/Sources/Recipe/RecipeFormService.swift`
-  - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Recipe/Services/RecipeActionService.swift`
+  - `CookleLibrary/Sources/Recipe/RecipeService.swift`
+  - `CookleLibrary/Sources/Recipe/RecipeFormService.swift`
+  - `Cookle/Sources/Recipe/Services/RecipeActionService.swift`
 - Diaries:
-  - `/Users/Hiromu/Repositories/Cookle/CookleLibrary/Sources/Diary/DiaryService.swift`
-  - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Diary/Services/DiaryActionService.swift`
-  - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Diary/Intents/UpdateDiaryIntent.swift`
+  - `CookleLibrary/Sources/Diary/DiaryService.swift`
+  - `Cookle/Sources/Diary/Services/DiaryActionService.swift`
+  - `Cookle/Sources/Diary/Intents/UpdateDiaryIntent.swift`
 - Photos:
-  - `/Users/Hiromu/Repositories/Cookle/CookleLibrary/Sources/Photo/Photo.swift`
-  - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Notification/Services/NotificationAttachmentStore.swift`
-  - `/Users/Hiromu/Repositories/Cookle/Widgets/Sources/Recipe/Providers/RecipeProvider.swift`
+  - `CookleLibrary/Sources/Photo/Photo.swift`
+  - `Cookle/Sources/Notification/Services/NotificationAttachmentStore.swift`
+  - `Widgets/Sources/Recipe/Providers/RecipeProvider.swift`
 - Search:
-  - `/Users/Hiromu/Repositories/Cookle/CookleLibrary/Sources/Recipe/RecipePredicate.swift`
-  - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Search/Views/SearchView.swift`
+  - `CookleLibrary/Sources/Recipe/RecipePredicate.swift`
+  - `Cookle/Sources/Search/Views/SearchView.swift`
 - Tags:
-  - `/Users/Hiromu/Repositories/Cookle/CookleLibrary/Sources/Tag/TagService.swift`
-  - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Tag/Intents/TagIntentSupport.swift`
+  - `CookleLibrary/Sources/Tag/TagService.swift`
+  - `Cookle/Sources/Tag/Intents/TagIntentSupport.swift`
 - Routes:
-  - `/Users/Hiromu/Repositories/Cookle/CookleLibrary/Sources/Common/CookleRouteParser.swift`
-  - `/Users/Hiromu/Repositories/Cookle/CookleLibrary/Sources/Common/CookleRouteExecutor.swift`
-  - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Main/Services/MainRouteService.swift`
+  - `CookleLibrary/Sources/Common/CookleRouteParser.swift`
+  - `CookleLibrary/Sources/Common/CookleRouteExecutor.swift`
+  - `Cookle/Sources/Main/Services/MainRouteService.swift`
 - Notifications:
-  - `/Users/Hiromu/Repositories/Cookle/CookleLibrary/Sources/Recipe/DailyRecipeSuggestionService.swift`
-  - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Notification/Services/NotificationService.swift`
-  - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Settings/Views/SettingsSidebarView.swift`
+  - `CookleLibrary/Sources/Recipe/DailyRecipeSuggestionService.swift`
+  - `Cookle/Sources/Notification/Services/NotificationService.swift`
+  - `Cookle/Sources/Settings/Views/SettingsSidebarView.swift`
 - Widgets:
-  - `/Users/Hiromu/Repositories/Cookle/Widgets/Sources/Recipe/Providers/RecipeProvider.swift`
-  - `/Users/Hiromu/Repositories/Cookle/Widgets/Sources/Diary/Providers/DiaryProvider.swift`
+  - `Widgets/Sources/Recipe/Providers/RecipeProvider.swift`
+  - `Widgets/Sources/Diary/Providers/DiaryProvider.swift`
 - Intents:
-  - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Recipe/Intents/CreateRecipeIntent.swift`
-  - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Diary/Intents/DeleteDiaryIntent.swift`
+  - `Cookle/Sources/Recipe/Intents/CreateRecipeIntent.swift`
+  - `Cookle/Sources/Diary/Intents/DeleteDiaryIntent.swift`
 - Migrations:
-  - `/Users/Hiromu/Repositories/Cookle/CookleLibrary/Sources/Common/DatabaseMigrator.swift`
-  - `/Users/Hiromu/Repositories/Cookle/CookleLibrary/Sources/Common/ModelContainerFactory.swift`
+  - `CookleLibrary/Sources/Common/DatabaseMigrator.swift`
+  - `CookleLibrary/Sources/Common/ModelContainerFactory.swift`
 
 ## Top Gaps (Ranked)
 
@@ -72,9 +72,9 @@ services.
      - Canonical parsing moved into `RecipeFormService` text-input API.
      - Intents forward boundary input only.
    - Files:
-     - `/Users/Hiromu/Repositories/Cookle/CookleLibrary/Sources/Recipe/RecipeFormService.swift`
-     - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Recipe/Intents/CreateRecipeIntent.swift`
-     - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Recipe/Intents/UpdateRecipeIntent.swift`
+     - `CookleLibrary/Sources/Recipe/RecipeFormService.swift`
+     - `Cookle/Sources/Recipe/Intents/CreateRecipeIntent.swift`
+     - `Cookle/Sources/Recipe/Intents/UpdateRecipeIntent.swift`
 
 2. Stable recipe identifier codec duplicated across targets
    - Before:
@@ -83,11 +83,11 @@ services.
    - After:
      - Shared codec added in `CookleLibrary` and reused by all adapters.
    - Files:
-     - `/Users/Hiromu/Repositories/Cookle/CookleLibrary/Sources/Common/RecipeStableIdentifierCodec.swift`
-     - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Recipe/Models/RecipeEntity.swift`
-     - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Recipe/Models/RecipeEntityQuery.swift`
-     - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Notification/Services/NotificationService.swift`
-     - `/Users/Hiromu/Repositories/Cookle/Widgets/Sources/Recipe/Providers/RecipeProvider.swift`
+     - `CookleLibrary/Sources/Common/RecipeStableIdentifierCodec.swift`
+     - `Cookle/Sources/Recipe/Models/RecipeEntity.swift`
+     - `Cookle/Sources/Recipe/Models/RecipeEntityQuery.swift`
+     - `Cookle/Sources/Notification/Services/NotificationService.swift`
+     - `Widgets/Sources/Recipe/Providers/RecipeProvider.swift`
 
 3. Suggestion-time policy duplicated in app
    - Before:
@@ -97,9 +97,9 @@ services.
      - Shared `DailySuggestionTimePolicy` defines canonical normalization and
        conversion.
    - Files:
-     - `/Users/Hiromu/Repositories/Cookle/CookleLibrary/Sources/Common/DailySuggestionTimePolicy.swift`
-     - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Notification/Services/NotificationService.swift`
-     - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Settings/Views/SettingsSidebarView.swift`
+     - `CookleLibrary/Sources/Common/DailySuggestionTimePolicy.swift`
+     - `Cookle/Sources/Notification/Services/NotificationService.swift`
+     - `Cookle/Sources/Settings/Views/SettingsSidebarView.swift`
 
 4. Last-opened recipe recording mixed in view code
    - Before:
@@ -108,9 +108,9 @@ services.
      - Canonical record persistence moved to `RecipeService`.
      - Workflow service owns side effects.
    - Files:
-     - `/Users/Hiromu/Repositories/Cookle/CookleLibrary/Sources/Recipe/RecipeService.swift`
-     - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Recipe/Services/RecipeActionService.swift`
-     - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Recipe/Views/RecipeView.swift`
+     - `CookleLibrary/Sources/Recipe/RecipeService.swift`
+     - `Cookle/Sources/Recipe/Services/RecipeActionService.swift`
+     - `Cookle/Sources/Recipe/Views/RecipeView.swift`
 
 5. Diary Intents owned mutation-target branching
    - Before:
@@ -120,9 +120,9 @@ services.
      - Workflow API (`DiaryActionService`) resolves target and returns outcome.
      - Intents stay at boundary responsibility.
    - Files:
-     - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Diary/Services/DiaryActionService.swift`
-     - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Diary/Intents/UpdateDiaryIntent.swift`
-     - `/Users/Hiromu/Repositories/Cookle/Cookle/Sources/Diary/Intents/DeleteDiaryIntent.swift`
+     - `Cookle/Sources/Diary/Services/DiaryActionService.swift`
+     - `Cookle/Sources/Diary/Intents/UpdateDiaryIntent.swift`
+     - `Cookle/Sources/Diary/Intents/DeleteDiaryIntent.swift`
 
 ## Workflow Mutation Contract
 
