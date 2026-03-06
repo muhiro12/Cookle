@@ -1,3 +1,4 @@
+import MHPlatform
 import Observation
 import SwiftData
 
@@ -11,9 +12,31 @@ final class SettingsActionService {
     }
 
     func deleteAllData(context: ModelContext) async throws {
-        try DataResetService.deleteAll(context: context)
-        CookleWidgetReloader.reloadTodayDiaryWidget()
-        CookleWidgetReloader.reloadRecipeWidgets()
-        await notificationService.synchronizeScheduledSuggestions()
+        let outcome = await MHDestructiveResetService.run(
+            steps: [
+                .init(name: "deleteAllData") {
+                    try await MainActor.run {
+                        try DataResetService.deleteAll(context: context)
+                    }
+                },
+                .init(name: "reloadTodayDiaryWidget") {
+                    await MainActor.run {
+                        CookleWidgetReloader.reloadTodayDiaryWidget()
+                    }
+                },
+                .init(name: "reloadRecipeWidgets") {
+                    await MainActor.run {
+                        CookleWidgetReloader.reloadRecipeWidgets()
+                    }
+                },
+                .init(name: "synchronizeScheduledSuggestions") { [self] in
+                    await notificationService.synchronizeScheduledSuggestions()
+                }
+            ]
+        )
+
+        if case let .failed(error, _, _) = outcome {
+            throw error
+        }
     }
 }

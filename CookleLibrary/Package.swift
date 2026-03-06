@@ -41,6 +41,10 @@ let kPackage = Package(
                 .product(
                     name: "MHPreferences",
                     package: "MHPlatform"
+                ),
+                .product(
+                    name: "MHPersistenceMaintenance",
+                    package: "MHPlatform"
                 )
             ]
         ),
