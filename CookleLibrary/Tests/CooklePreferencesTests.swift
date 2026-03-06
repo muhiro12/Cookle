@@ -87,4 +87,24 @@ struct CooklePreferencesTests {
         CooklePreferences.set(15, for: key)
         #expect(CooklePreferences.int(for: key, default: 30) == 15)
     }
+
+    @Test("Tracks whether integer preferences are explicitly stored")
+    func intContainsValue() {
+        let key = IntPreferenceKey.dailyRecipeSuggestionHour
+        let defaults = UserDefaults.standard
+        let originalValue = defaults.object(forKey: key.rawValue)
+        defer {
+            if let originalValue {
+                defaults.set(originalValue, forKey: key.rawValue)
+            } else {
+                defaults.removeObject(forKey: key.rawValue)
+            }
+        }
+
+        defaults.removeObject(forKey: key.rawValue)
+        #expect(CooklePreferences.contains(key) == false)
+
+        CooklePreferences.set(18, for: key)
+        #expect(CooklePreferences.contains(key))
+    }
 }

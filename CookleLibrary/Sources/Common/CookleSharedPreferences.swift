@@ -1,4 +1,5 @@
 import Foundation
+import MHPreferences
 
 /// Shared preferences stored in the app-group container.
 public enum CookleSharedPreferences {
@@ -12,17 +13,20 @@ public enum CookleSharedPreferences {
         return .standard
     }
 
+    private static var store: MHPreferenceStore {
+        .init(userDefaults: userDefaults)
+    }
+
     /// Reads a shared string preference.
     public static func string(for key: StringPreferenceKey) -> String? {
-        userDefaults.string(forKey: key.rawValue)
+        store.string(for: key.preferenceKey)
     }
 
     /// Stores or removes a shared string preference.
     public static func set(_ value: String?, for key: StringPreferenceKey) {
-        if let value {
-            userDefaults.set(value, forKey: key.rawValue)
-        } else {
-            userDefaults.removeObject(forKey: key.rawValue)
-        }
+        store.set(
+            value,
+            for: key.preferenceKey
+        )
     }
 }

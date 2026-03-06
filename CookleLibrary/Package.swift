@@ -37,6 +37,10 @@ let kPackage = Package(
                 .product(
                     name: "MHDeepLinking",
                     package: "MHPlatform"
+                ),
+                .product(
+                    name: "MHPreferences",
+                    package: "MHPlatform"
                 )
             ]
         ),

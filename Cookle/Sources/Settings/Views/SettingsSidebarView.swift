@@ -233,10 +233,10 @@ private extension SettingsSidebarView {
     }
 
     func normalizeSuggestionTimeDefaultsIfNeeded() {
-        if UserDefaults.standard.object(forKey: IntPreferenceKey.dailyRecipeSuggestionHour.rawValue) == nil {
+        if CooklePreferences.contains(.dailyRecipeSuggestionHour) == false {
             dailyRecipeSuggestionHour = DailySuggestionTimePolicy.defaultHour
         }
-        if UserDefaults.standard.object(forKey: IntPreferenceKey.dailyRecipeSuggestionMinute.rawValue) == nil {
+        if CooklePreferences.contains(.dailyRecipeSuggestionMinute) == false {
             dailyRecipeSuggestionMinute = DailySuggestionTimePolicy.minimumTimeComponent
         }
     }
