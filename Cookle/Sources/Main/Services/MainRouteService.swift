@@ -70,13 +70,16 @@ private extension MainRouteService {
         context: ModelContext,
         isRegularWidth: Bool
     ) async throws -> MainNavigationState {
-        let executionOutcome = try await routeCoordinator.submit(route)
-        return try apply(
-            executionOutcome,
-            state: state,
-            context: context,
-            isRegularWidth: isRegularWidth
-        )
+        var nextState = state
+        _ = try await routeCoordinator.submit(route) { resolvedRoute in
+            nextState = try apply(
+                route: resolvedRoute,
+                state: nextState,
+                context: context,
+                isRegularWidth: isRegularWidth
+            )
+        }
+        return nextState
     }
 
     static func applyPendingRouteIfNeeded(
@@ -84,35 +87,18 @@ private extension MainRouteService {
         context: ModelContext,
         isRegularWidth: Bool
     ) async throws -> MainNavigationState {
-        guard let executionOutcome = try await routeCoordinator.applyPendingIfReady() else {
-            return state
-        }
-        return try apply(
-            executionOutcome,
-            state: state,
-            context: context,
-            isRegularWidth: isRegularWidth
-        )
-    }
-
-    static func apply(
-        _ executionOutcome: MHRouteExecutionOutcome<CookleRoute>,
-        state: MainNavigationState,
-        context: ModelContext,
-        isRegularWidth: Bool
-    ) throws -> MainNavigationState {
-        switch executionOutcome {
-        case .applied(let route):
-            return try apply(
-                route: route,
-                state: state,
+        var nextState = state
+        guard try await routeCoordinator.applyPendingIfReady(applyOnMainActor: { resolvedRoute in
+            nextState = try apply(
+                route: resolvedRoute,
+                state: nextState,
                 context: context,
                 isRegularWidth: isRegularWidth
             )
-        case .queued,
-             .deduplicated:
+        }) != nil else {
             return state
         }
+        return nextState
     }
 
     static func apply(
