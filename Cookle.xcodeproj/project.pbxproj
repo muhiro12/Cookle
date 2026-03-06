@@ -221,7 +221,7 @@
 				AD3909A32DC4E80A0052749F /* XCRemoteSwiftPackageReference "LicenseListWrapper" */,
 				AD3909A62DC4E81D0052749F /* XCRemoteSwiftPackageReference "StoreKitWrapper" */,
 				AD3909A92DC4E8300052749F /* XCRemoteSwiftPackageReference "SwiftUtilities" */,
-				AD7F5C0F2F5B3186008D91F3 /* XCLocalSwiftPackageReference "../MHPlatform" */,
+				AD7F5C0F2F5B3186008D91F3 /* XCRemoteSwiftPackageReference "MHPlatform" */,
 				ADF13D6E2E8233A7002572CD /* XCLocalSwiftPackageReference "CookleLibrary" */,
 			);
 			productRefGroup = AD8C8E692BFABEE200872BF2 /* Products */;
@@ -589,10 +589,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		AD7F5C0F2F5B3186008D91F3 /* XCLocalSwiftPackageReference "../MHPlatform" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../MHPlatform;
-		};
 		ADF13D6E2E8233A7002572CD /* XCLocalSwiftPackageReference "CookleLibrary" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = CookleLibrary;
@@ -600,6 +596,14 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		AD7F5C0F2F5B3186008D91F3 /* XCRemoteSwiftPackageReference "MHPlatform" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/muhiro12/MHPlatform.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		AD3909A02DC4E7F90052749F /* XCRemoteSwiftPackageReference "GoogleMobileAdsWrapper" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/muhiro12/GoogleMobileAdsWrapper.git";
@@ -661,7 +665,7 @@
 		};
 		AD7F5C102F5B3186008D91F3 /* MHPlatform */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = AD7F5C0F2F5B3186008D91F3 /* XCLocalSwiftPackageReference "../MHPlatform" */;
+			package = AD7F5C0F2F5B3186008D91F3 /* XCRemoteSwiftPackageReference "MHPlatform" */;
 			productName = MHPlatform;
 		};
 		ADF13D6F2E8233A7002572CD /* CookleLibrary */ = {
