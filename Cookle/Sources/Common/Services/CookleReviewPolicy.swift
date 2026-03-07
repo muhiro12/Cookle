@@ -1,24 +1,15 @@
-import Foundation
 import MHPlatform
 
-enum MainReviewService {
+enum CookleReviewPolicy {
     private enum Constants {
         static let lotteryMaxExclusive = 10
         static let requestDelaySeconds = 2
     }
 
-    static var reviewPolicy: MHReviewPolicy {
+    static var request: MHReviewPolicy {
         .init(
             lotteryMaxExclusive: Constants.lotteryMaxExclusive,
             requestDelay: .seconds(Constants.requestDelaySeconds)
-        )
-    }
-
-    @MainActor
-    static func requestIfNeeded() async -> MHReviewRequestOutcome {
-        await CookleApp.requestReviewIfNeeded(
-            policy: reviewPolicy,
-            source: #fileID
         )
     }
 }

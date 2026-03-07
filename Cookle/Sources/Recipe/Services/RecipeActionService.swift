@@ -10,7 +10,15 @@ final class RecipeActionService {
 
     init(
         notificationService: NotificationService,
-        requestReviewIfNeeded: @escaping CookleReviewRequester = MainReviewService.requestIfNeeded
+        requestReviewIfNeeded: @escaping CookleMutationWorkflow.ReviewRequester = {
+            await MHReviewRequester.requestIfNeeded(
+                policy: CookleReviewPolicy.request,
+                logger: CookleApp.logger(
+                    category: "ReviewFlow",
+                    source: #fileID
+                )
+            )
+        }
     ) {
         self.effectAdapter = CookleMutationWorkflow.effectAdapter(
             synchronizeNotifications: {

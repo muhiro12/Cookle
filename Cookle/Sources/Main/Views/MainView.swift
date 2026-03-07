@@ -104,6 +104,13 @@ private extension MainView {
         horizontalSizeClass == .regular
     }
 
+    var reviewLogger: MHLogger {
+        CookleApp.logger(
+            category: "ReviewFlow",
+            source: #fileID
+        )
+    }
+
     func synchronizePendingRoutesIfPossible() async {
         await activateRouteExecutionIfPossible()
         await applyPendingIntentRouteIfNeededIfPossible()
@@ -156,7 +163,10 @@ private extension MainView {
 
     func requestReviewIfNeeded() {
         Task {
-            _ = await MainReviewService.requestIfNeeded()
+            _ = await MHReviewRequester.requestIfNeeded(
+                policy: CookleReviewPolicy.request,
+                logger: reviewLogger
+            )
         }
     }
 }
