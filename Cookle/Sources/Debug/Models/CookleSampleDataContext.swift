@@ -3,7 +3,7 @@ import SwiftData
 
 enum CookleSampleDataContext {
     struct Services {
-        let routeInbox: MainRouteInbox
+        let routeInbox: MHObservableDeepLinkInbox
         let notificationService: NotificationService
         let tipController: CookleTipController
         let configurationService: ConfigurationService
@@ -58,7 +58,7 @@ enum CookleSampleDataContext {
         MainActor.assumeIsolated {
             let tipController = CookleTipController()
             try? tipController.configureIfNeeded()
-            let routeInbox = MainRouteInbox()
+            let routeInbox = MHObservableDeepLinkInbox()
             let notificationService = NotificationService(
                 modelContainer: modelContainer,
                 routeInbox: routeInbox

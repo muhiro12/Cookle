@@ -12,7 +12,7 @@ final class NotificationService: NSObject {
     }
 
     private let modelContainer: ModelContainer
-    private let routeInbox: MainRouteInbox
+    private let routeInbox: MHObservableDeepLinkInbox
     private let notificationCenter = UNUserNotificationCenter.current()
     private let calendar = Calendar.current
     private let attachmentStore: NotificationAttachmentStore
@@ -22,7 +22,7 @@ final class NotificationService: NSObject {
 
     init(
         modelContainer: ModelContainer,
-        routeInbox: MainRouteInbox
+        routeInbox: MHObservableDeepLinkInbox
     ) {
         self.modelContainer = modelContainer
         self.routeInbox = routeInbox
@@ -105,7 +105,7 @@ extension NotificationService: UNUserNotificationCenterDelegate {
                 source: #fileID
             )
             notificationLogger.info("notification settings route requested")
-            await routeInbox.store(settingsURL)
+            await routeInbox.ingest(settingsURL)
         }
     }
 }
@@ -261,7 +261,7 @@ private extension NotificationService {
         guard let routeURL = routeURL(for: response) else {
             return
         }
-        await routeInbox.store(routeURL)
+        await routeInbox.ingest(routeURL)
     }
 
     nonisolated func routeURL(for response: UNNotificationResponse) -> URL? {

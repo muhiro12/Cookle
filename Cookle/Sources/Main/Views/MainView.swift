@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2024/05/27.
 //
 
+import MHPlatform
 import SwiftData
 import SwiftUI
 
@@ -17,7 +18,7 @@ struct MainView: View {
     private var context
     @Environment(ConfigurationService.self)
     private var configurationService
-    @Environment(MainRouteInbox.self)
+    @Environment(MHObservableDeepLinkInbox.self)
     private var routeInbox
 
     @State private var isUpdateAlertPresented = false
@@ -134,7 +135,7 @@ private extension MainView {
     }
 
     func applyPendingRouteInboxIfNeededIfPossible() async {
-        guard let routeURL = await routeInbox.consumePendingURL() else {
+        guard let routeURL = await routeInbox.consumeLatest() else {
             return
         }
         await handleIncomingURLIfPossible(routeURL)

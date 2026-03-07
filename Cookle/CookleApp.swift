@@ -23,7 +23,7 @@ struct CookleApp: App {
     private let sharedModelContainer: ModelContainer
     private let sharedAppRuntime: MHAppRuntime
     private let sharedConfigurationService: ConfigurationService
-    private let sharedRouteInbox: MainRouteInbox
+    private let sharedRouteInbox: MHObservableDeepLinkInbox
     private let sharedNotificationService: NotificationService
     private let sharedTipController: CookleTipController
     private let sharedRecipeActionService: RecipeActionService

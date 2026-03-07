@@ -3,17 +3,10 @@ import MHPlatform
 
 enum CookleIntentRouteStore {
     private static let pendingDeepLinkURLKey = "pendingCookleIntentDeepLinkURL"
-    private static var deepLinkStore: MHDeepLinkStore? {
-        guard let userDefaults = UserDefaults(
-            suiteName: CookleSharedPreferences.appGroupIdentifier
-        ) else {
-            return nil
-        }
-        return .init(
-            userDefaults: userDefaults,
-            key: pendingDeepLinkURLKey
-        )
-    }
+    private static let deepLinkStore = MHDeepLinkStore(
+        suiteName: CookleSharedPreferences.appGroupIdentifier,
+        key: pendingDeepLinkURLKey
+    )
 
     static func store(_ url: URL) {
         deepLinkStore?.ingest(url)

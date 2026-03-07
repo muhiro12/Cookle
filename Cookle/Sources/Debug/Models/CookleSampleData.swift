@@ -6,7 +6,7 @@ struct CookleSampleData: PreviewModifier {
     struct Context {
         let modelContainer: ModelContainer
         let appRuntime: MHAppRuntime
-        let routeInbox: MainRouteInbox
+        let routeInbox: MHObservableDeepLinkInbox
         let notificationService: NotificationService
         let tipController: CookleTipController
         let configurationService: ConfigurationService
