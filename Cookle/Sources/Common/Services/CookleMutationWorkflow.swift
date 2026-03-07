@@ -79,37 +79,35 @@ enum CookleMutationWorkflow {
         operation: @escaping @MainActor @Sendable () throws -> MutationEffect,
         adapter: MHMutationAdapter<MutationEffect>
     ) async throws -> MutationEffect {
-        let mutation = MHMutation.mainActor(name: name) {
-            do {
-                return try operation()
-            } catch is CancellationError {
-                throw CancellationError()
-            } catch {
-                throw ExecutionError.operation(error.localizedDescription)
-            }
-        }
-
-        let outcome = await MHMutationRunner.run(
-            mutation: mutation,
-            adapter: adapter
+        try await MHMutationWorkflow.runThrowing(
+            name: name,
+            operation: operation,
+            adapter: adapter,
+            mapFailure: executionError(from:),
+            operationErrorDescription: operationErrorDescription
         )
+    }
 
-        switch outcome {
-        case .succeeded(let effects, _, _):
-            return effects
-        case .failed(let failure, _, _, _):
-            switch failure {
-            case .operation(let description):
-                throw ExecutionError.operation(description)
-            case let .step(name, description):
-                throw ExecutionError.step(
-                    name: name,
-                    description: description
-                )
-            }
-        case .cancelled:
-            throw CancellationError()
+    nonisolated
+    private static func executionError(
+        from failure: MHMutationFailure
+    ) -> ExecutionError {
+        switch failure {
+        case .operation(let description):
+            return .operation(description)
+        case let .step(name, description):
+            return .step(
+                name: name,
+                description: description
+            )
         }
+    }
+
+    nonisolated
+    private static func operationErrorDescription(
+        _ error: any Error
+    ) -> String {
+        error.localizedDescription
     }
 
     private static func mutationSteps(
