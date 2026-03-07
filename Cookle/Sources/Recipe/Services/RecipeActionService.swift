@@ -1,19 +1,23 @@
 import Foundation
+import MHPlatform
 import Observation
 import SwiftData
 
 @MainActor
 @Observable
 final class RecipeActionService {
-    private let notificationService: NotificationService
-    private let requestReviewIfNeeded: CookleReviewRequester
+    private let effectAdapter: MHMutationAdapter<MutationEffect>
 
     init(
         notificationService: NotificationService,
         requestReviewIfNeeded: @escaping CookleReviewRequester = MainReviewService.requestIfNeeded
     ) {
-        self.notificationService = notificationService
-        self.requestReviewIfNeeded = requestReviewIfNeeded
+        self.effectAdapter = CookleMutationWorkflow.effectAdapter(
+            synchronizeNotifications: {
+                await notificationService.synchronizeScheduledSuggestions()
+            },
+            requestReviewIfNeeded: requestReviewIfNeeded
+        )
     }
 
     func create(
@@ -21,14 +25,26 @@ final class RecipeActionService {
         draft: RecipeFormDraft,
         requestReview: Bool = true
     ) async -> MutationOutcome<Recipe> {
-        let recipe = RecipeFormService.create(
-            context: context,
-            draft: draft
+        let recipeStore = CookleMutationWorkflow.ValueStore<Recipe>()
+        let effects = await CookleMutationWorkflow.run(
+            name: "createRecipe",
+            operation: {
+                let recipe = RecipeFormService.create(
+                    context: context,
+                    draft: draft
+                )
+                recipeStore.value = recipe
+                return self.recipeMutationEffects(
+                    requestReview: requestReview
+                )
+            },
+            adapter: effectAdapter
         )
-        let effects = recipeMutationEffects(
-            requestReview: requestReview
-        )
-        await applyEffects(effects)
+
+        guard let recipe = recipeStore.value else {
+            preconditionFailure("Recipe result was not captured.")
+        }
+
         return .init(
             value: recipe,
             effects: effects
@@ -41,15 +57,20 @@ final class RecipeActionService {
         draft: RecipeFormDraft,
         requestReview: Bool = true
     ) async -> MutationOutcome<Void> {
-        RecipeFormService.update(
-            context: context,
-            recipe: recipe,
-            draft: draft
+        let effects = await CookleMutationWorkflow.run(
+            name: "updateRecipe",
+            operation: {
+                RecipeFormService.update(
+                    context: context,
+                    recipe: recipe,
+                    draft: draft
+                )
+                return self.recipeMutationEffects(
+                    requestReview: requestReview
+                )
+            },
+            adapter: effectAdapter
         )
-        let effects = recipeMutationEffects(
-            requestReview: requestReview
-        )
-        await applyEffects(effects)
         return .init(
             value: (),
             effects: effects
@@ -60,14 +81,19 @@ final class RecipeActionService {
         context: ModelContext,
         recipe: Recipe
     ) async -> MutationOutcome<Void> {
-        RecipeService.delete(
-            context: context,
-            recipe: recipe
+        let effects = await CookleMutationWorkflow.run(
+            name: "deleteRecipe",
+            operation: {
+                RecipeService.delete(
+                    context: context,
+                    recipe: recipe
+                )
+                return self.recipeMutationEffects(
+                    requestReview: false
+                )
+            },
+            adapter: effectAdapter
         )
-        let effects = recipeMutationEffects(
-            requestReview: false
-        )
-        await applyEffects(effects)
         return .init(
             value: (),
             effects: effects
@@ -114,11 +140,16 @@ final class RecipeActionService {
     func recordOpenedRecipe(
         _ recipe: Recipe
     ) async -> MutationOutcome<Void> {
-        RecipeService.recordLastOpenedRecipe(recipe)
-        let effects: MutationEffect = [
-            .recipeDataChanged
-        ]
-        await applyEffects(effects)
+        let effects = await CookleMutationWorkflow.run(
+            name: "recordOpenedRecipe",
+            operation: {
+                RecipeService.recordLastOpenedRecipe(recipe)
+                return [
+                    .recipeDataChanged
+                ]
+            },
+            adapter: effectAdapter
+        )
         return .init(
             value: (),
             effects: effects
@@ -140,21 +171,5 @@ private extension RecipeActionService {
         }
 
         return effects
-    }
-
-    func applyEffects(
-        _ effects: MutationEffect
-    ) async {
-        if effects.contains(.recipeDataChanged) {
-            CookleWidgetReloader.reloadRecipeWidgets()
-        }
-
-        if effects.contains(.notificationPlanChanged) {
-            await notificationService.synchronizeScheduledSuggestions()
-        }
-
-        if effects.contains(.reviewPromptEligible) {
-            _ = await requestReviewIfNeeded()
-        }
     }
 }

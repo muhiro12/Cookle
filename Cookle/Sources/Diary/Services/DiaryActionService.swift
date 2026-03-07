@@ -1,4 +1,5 @@
 import Foundation
+import MHPlatform
 import Observation
 import SwiftData
 
@@ -12,23 +13,41 @@ final class DiaryActionService {
         let note: String
     }
 
+    private let effectAdapter: MHMutationAdapter<MutationEffect>
+
+    init() {
+        effectAdapter = CookleMutationWorkflow.effectAdapter()
+    }
+
     func create(
         context: ModelContext,
         date: Date,
         input: FormInput
-    ) -> MutationOutcome<Diary> {
-        let diary = DiaryService.create(
-            context: context,
-            date: date,
-            breakfasts: input.breakfasts,
-            lunches: input.lunches,
-            dinners: input.dinners,
-            note: input.note
+    ) async -> MutationOutcome<Diary> {
+        let diaryStore = CookleMutationWorkflow.ValueStore<Diary>()
+        let effects = await CookleMutationWorkflow.run(
+            name: "createDiary",
+            operation: {
+                let diary = DiaryService.create(
+                    context: context,
+                    date: date,
+                    breakfasts: input.breakfasts,
+                    lunches: input.lunches,
+                    dinners: input.dinners,
+                    note: input.note
+                )
+                diaryStore.value = diary
+                return [
+                    .diaryDataChanged
+                ]
+            },
+            adapter: effectAdapter
         )
-        let effects: MutationEffect = [
-            .diaryDataChanged
-        ]
-        applyEffects(effects)
+
+        guard let diary = diaryStore.value else {
+            preconditionFailure("Diary result was not captured.")
+        }
+
         return .init(
             value: diary,
             effects: effects
@@ -40,20 +59,25 @@ final class DiaryActionService {
         diary: Diary,
         date: Date,
         input: FormInput
-    ) -> MutationOutcome<Void> {
-        DiaryService.update(
-            context: context,
-            diary: diary,
-            date: date,
-            breakfasts: input.breakfasts,
-            lunches: input.lunches,
-            dinners: input.dinners,
-            note: input.note
+    ) async -> MutationOutcome<Void> {
+        let effects = await CookleMutationWorkflow.run(
+            name: "updateDiary",
+            operation: {
+                DiaryService.update(
+                    context: context,
+                    diary: diary,
+                    date: date,
+                    breakfasts: input.breakfasts,
+                    lunches: input.lunches,
+                    dinners: input.dinners,
+                    note: input.note
+                )
+                return [
+                    .diaryDataChanged
+                ]
+            },
+            adapter: effectAdapter
         )
-        let effects: MutationEffect = [
-            .diaryDataChanged
-        ]
-        applyEffects(effects)
         return .init(
             value: (),
             effects: effects
@@ -89,17 +113,29 @@ final class DiaryActionService {
         date: Date,
         recipe: Recipe,
         type: DiaryObjectType
-    ) throws -> MutationOutcome<Diary> {
-        let diary = try DiaryService.add(
-            context: context,
-            date: date,
-            recipe: recipe,
-            type: type
+    ) async throws -> MutationOutcome<Diary> {
+        let diaryStore = CookleMutationWorkflow.ValueStore<Diary>()
+        let effects = try await CookleMutationWorkflow.runThrowing(
+            name: "addRecipeToDiary",
+            operation: {
+                let diary = try DiaryService.add(
+                    context: context,
+                    date: date,
+                    recipe: recipe,
+                    type: type
+                )
+                diaryStore.value = diary
+                return [
+                    .diaryDataChanged
+                ]
+            },
+            adapter: effectAdapter
         )
-        let effects: MutationEffect = [
-            .diaryDataChanged
-        ]
-        applyEffects(effects)
+
+        guard let diary = diaryStore.value else {
+            preconditionFailure("Diary result was not captured.")
+        }
+
         return .init(
             value: diary,
             effects: effects
@@ -109,15 +145,20 @@ final class DiaryActionService {
     func delete(
         context: ModelContext,
         diary: Diary
-    ) -> MutationOutcome<Void> {
-        DiaryService.delete(
-            context: context,
-            diary: diary
+    ) async -> MutationOutcome<Void> {
+        let effects = await CookleMutationWorkflow.run(
+            name: "deleteDiary",
+            operation: {
+                DiaryService.delete(
+                    context: context,
+                    diary: diary
+                )
+                return [
+                    .diaryDataChanged
+                ]
+            },
+            adapter: effectAdapter
         )
-        let effects: MutationEffect = [
-            .diaryDataChanged
-        ]
-        applyEffects(effects)
         return .init(
             value: (),
             effects: effects
@@ -143,15 +184,5 @@ final class DiaryActionService {
             value: true,
             effects: mutationOutcome.effects
         )
-    }
-}
-
-private extension DiaryActionService {
-    func applyEffects(
-        _ effects: MutationEffect
-    ) {
-        if effects.contains(.diaryDataChanged) {
-            CookleWidgetReloader.reloadTodayDiaryWidget()
-        }
     }
 }
