@@ -4,14 +4,10 @@ import SwiftData
 
 @MainActor
 enum MainRouteService {
-    private static let routeCoordinator: MHRouteCoordinator<CookleRoute, CookleRoute> = .init(
-        executor: .init(
-            resolve: { route in
-                route
-            },
-            apply: { _ in
-                // Route application stays app-specific.
-            }
+    private static let routeLifecycle = MHRouteLifecycle<CookleRoute>(
+        logger: CookleApp.logger(
+            category: "RouteExecution",
+            source: #fileID
         ),
         isDuplicate: ==
     )
@@ -21,7 +17,7 @@ enum MainRouteService {
         context: ModelContext,
         isRegularWidth: Bool
     ) async throws -> MainNavigationState {
-        await routeCoordinator.setReadiness(true)
+        await routeLifecycle.setReadiness(true)
         return try await applyPendingRouteIfNeeded(
             state: state,
             context: context,
@@ -51,64 +47,42 @@ enum MainRouteService {
         context: ModelContext,
         isRegularWidth: Bool
     ) async throws -> MainNavigationState {
-        guard let route = CookleRouteParser.parse(url: url) else {
-            routeLogger.info("ignored deep-link URL because parsing failed")
-            return state
-        }
-        routeLogger.info("accepted deep-link URL for route handling")
-        return try await submit(
-            route,
-            state: state,
-            context: context,
-            isRegularWidth: isRegularWidth
+        var nextState = state
+        _ = try await routeLifecycle.submit(
+            url,
+            parse: { routeURL in
+                CookleRouteParser.parse(url: routeURL)
+            },
+            applyOnMainActor: { resolvedRoute in
+                nextState = try apply(
+                    route: resolvedRoute,
+                    state: nextState,
+                    context: context,
+                    isRegularWidth: isRegularWidth
+                )
+            }
         )
+        return nextState
     }
 }
 
 private extension MainRouteService {
-    static var routeLogger: MHLogger {
-        CookleApp.logger(
-            category: "RouteExecution",
-            source: #fileID
-        )
-    }
-
-    static func submit(
-        _ route: CookleRoute,
-        state: MainNavigationState,
-        context: ModelContext,
-        isRegularWidth: Bool
-    ) async throws -> MainNavigationState {
-        var nextState = state
-        let outcome = try await routeCoordinator.submit(route) { resolvedRoute in
-            nextState = try apply(
-                route: resolvedRoute,
-                state: nextState,
-                context: context,
-                isRegularWidth: isRegularWidth
-            )
-        }
-        logExecutionOutcome(outcome)
-        return nextState
-    }
-
     static func applyPendingRouteIfNeeded(
         state: MainNavigationState,
         context: ModelContext,
         isRegularWidth: Bool
     ) async throws -> MainNavigationState {
         var nextState = state
-        guard let outcome = try await routeCoordinator.applyPendingIfReady(applyOnMainActor: { resolvedRoute in
+        guard try await routeLifecycle.applyPendingIfReady(applyOnMainActor: { resolvedRoute in
             nextState = try apply(
                 route: resolvedRoute,
                 state: nextState,
                 context: context,
                 isRegularWidth: isRegularWidth
             )
-        }) else {
+        }) != nil else {
             return state
         }
-        logExecutionOutcome(outcome)
         return nextState
     }
 
@@ -194,19 +168,6 @@ private extension MainRouteService {
         } else {
             state.compactSettingsSelection = destination
             state.isCompactSettingsPresented = true
-        }
-    }
-
-    static func logExecutionOutcome(
-        _ outcome: MHRouteExecutionOutcome<CookleRoute>
-    ) {
-        switch outcome {
-        case .applied:
-            routeLogger.notice("route applied")
-        case .queued:
-            routeLogger.info("route queued until execution becomes ready")
-        case .deduplicated:
-            routeLogger.info("route deduplicated against pending route")
         }
     }
 }
