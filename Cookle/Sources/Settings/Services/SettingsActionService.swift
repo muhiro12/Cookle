@@ -12,7 +12,7 @@ final class SettingsActionService {
     }
 
     func deleteAllData(context: ModelContext) async throws {
-        let outcome = await MHDestructiveResetService.run(
+        _ = try await MHDestructiveResetService.runThrowing(
             steps: [
                 .init(name: "deleteAllData") {
                     try await MainActor.run {
@@ -34,9 +34,5 @@ final class SettingsActionService {
                 }
             ]
         )
-
-        if case let .failed(error, _, _) = outcome {
-            throw error
-        }
     }
 }
