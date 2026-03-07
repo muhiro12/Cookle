@@ -142,10 +142,16 @@ private extension MainView {
     }
 
     func applyPendingRouteInboxIfNeededIfPossible() async {
-        guard let routeURL = await routeInbox.consumeLatest() else {
-            return
+        do {
+            navigationState = try await MainRouteService.applyPendingRouteIfNeeded(
+                from: routeInbox,
+                state: navigationState,
+                context: context,
+                isRegularWidth: isRegularWidth
+            )
+        } catch {
+            assertionFailure(error.localizedDescription)
         }
-        await handleIncomingURLIfPossible(routeURL)
     }
 
     func handleIncomingURLIfPossible(_ url: URL) async {

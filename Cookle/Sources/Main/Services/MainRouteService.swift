@@ -17,12 +17,42 @@ enum MainRouteService {
         context: ModelContext,
         isRegularWidth: Bool
     ) async throws -> MainNavigationState {
-        await routeLifecycle.setReadiness(true)
-        return try await applyPendingRouteIfNeeded(
-            state: state,
-            context: context,
-            isRegularWidth: isRegularWidth
-        )
+        var nextState = state
+        _ = try await routeLifecycle.activate { resolvedRoute in
+            nextState = try apply(
+                route: resolvedRoute,
+                state: nextState,
+                context: context,
+                isRegularWidth: isRegularWidth
+            )
+        }
+        return nextState
+    }
+
+    static func applyPendingRouteIfNeeded(
+        from source: some MHDeepLinkURLSource,
+        state: MainNavigationState,
+        context: ModelContext,
+        isRegularWidth: Bool
+    ) async throws -> MainNavigationState {
+        var nextState = state
+        guard try await routeLifecycle.submitLatest(
+            from: source,
+            parse: { routeURL in
+                CookleRouteParser.parse(url: routeURL)
+            },
+            applyOnMainActor: { resolvedRoute in
+                nextState = try apply(
+                    route: resolvedRoute,
+                    state: nextState,
+                    context: context,
+                    isRegularWidth: isRegularWidth
+                )
+            }
+        ) != nil else {
+            return state
+        }
+        return nextState
     }
 
     static func applyPendingIntentRouteIfNeeded(
@@ -30,11 +60,11 @@ enum MainRouteService {
         context: ModelContext,
         isRegularWidth: Bool
     ) async throws -> MainNavigationState {
-        guard let intentRouteURL = CookleIntentRouteStore.consume() else {
+        guard let intentRouteSource = CookleIntentRouteStore.source else {
             return state
         }
-        return try await handleIncomingURL(
-            intentRouteURL,
+        return try await applyPendingRouteIfNeeded(
+            from: intentRouteSource,
             state: state,
             context: context,
             isRegularWidth: isRegularWidth
@@ -67,25 +97,6 @@ enum MainRouteService {
 }
 
 private extension MainRouteService {
-    static func applyPendingRouteIfNeeded(
-        state: MainNavigationState,
-        context: ModelContext,
-        isRegularWidth: Bool
-    ) async throws -> MainNavigationState {
-        var nextState = state
-        guard try await routeLifecycle.applyPendingIfReady(applyOnMainActor: { resolvedRoute in
-            nextState = try apply(
-                route: resolvedRoute,
-                state: nextState,
-                context: context,
-                isRegularWidth: isRegularWidth
-            )
-        }) != nil else {
-            return state
-        }
-        return nextState
-    }
-
     static func apply(
         route: CookleRoute,
         state: MainNavigationState,
