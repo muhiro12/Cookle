@@ -8,30 +8,30 @@
 import Foundation
 import SwiftData
 
-/// Ingredient item with amount and order, linked to a recipe.
+/// Persisted ingredient row that keeps a recipe's chosen tag, amount text, and order.
 @Model
 nonisolated public final class IngredientObject: SubObject {
-    /// Linked ingredient tag.
+    /// Ingredient tag referenced by this row.
     @Relationship public private(set) var ingredient = Ingredient?.none
-    /// Human-readable amount (e.g. "2", "200g").
+    /// Free-form amount text shown beside the ingredient label.
     public private(set) var amount = String.empty
-    /// Display order within the list.
+    /// Position of this row within the recipe's ingredient list.
     public private(set) var order = Int.zero
 
-    /// Owning recipe (inverse relation).
+    /// Recipe that owns this ingredient row.
     @Relationship(inverse: \Recipe.ingredientObjects)
     public private(set) var recipe = Recipe?.none
 
-    /// Creation timestamp.
+    /// Timestamp captured when the row is first inserted.
     public private(set) var createdTimestamp = Date.now
-    /// Last modification timestamp.
+    /// Timestamp initialized with the row for recency-based queries.
     public private(set) var modifiedTimestamp = Date.now
 
     private init(ingredient: Ingredient) {
         self.ingredient = ingredient
     }
 
-    /// Creates and inserts a new ingredient object for the given value.
+    /// Inserts an ingredient row and reuses or creates the referenced ingredient tag.
     public static func create(
         context: ModelContext,
         ingredient: String,

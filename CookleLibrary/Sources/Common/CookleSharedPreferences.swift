@@ -1,9 +1,9 @@
 import Foundation
 import MHPreferences
 
-/// Shared preferences stored in the app-group container.
+/// Shared preference accessors backed by the app-group `UserDefaults` suite.
 public enum CookleSharedPreferences {
-    /// App-group identifier shared between the app and extensions.
+    /// App-group suite name used by the app and its extensions.
     public static let appGroupIdentifier: String = "group.com.muhiro12.Cookle"
 
     private static var userDefaults: UserDefaults {
@@ -17,12 +17,12 @@ public enum CookleSharedPreferences {
         .init(userDefaults: userDefaults)
     }
 
-    /// Reads a shared string preference.
+    /// Returns the shared string value visible to both the app and extensions.
     public static func string(for key: StringPreferenceKey) -> String? {
         store.string(for: key.preferenceKey)
     }
 
-    /// Stores or removes a shared string preference.
+    /// Persists or removes a shared string value in the app-group container.
     public static func set(_ value: String?, for key: StringPreferenceKey) {
         store.set(
             value,

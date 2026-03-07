@@ -1,17 +1,17 @@
-/// Describes the navigation target produced by `CookleRouteExecutor`.
+/// Navigation intents that adapters present after resolving a `CookleRoute`.
 public enum CookleRouteOutcome {
-    /// Shows the home screen.
+    /// Opens the default home experience without focusing a specific record.
     case home
-    /// Shows the diary flow, optionally focusing an existing diary.
+    /// Opens the diary flow and optionally focuses a resolved diary.
     case diary(diary: Diary?)
-    /// Shows the recipe flow, optionally focusing an existing recipe.
+    /// Opens the recipe flow and optionally focuses a resolved recipe.
     case recipe(recipe: Recipe?)
-    /// Shows the search screen with an optional query.
+    /// Opens search with an optional prefilled query.
     case search(query: String?)
-    /// Shows the settings root screen.
+    /// Opens the settings root screen.
     case settings
-    /// Shows the subscription settings screen.
+    /// Opens the subscription section inside settings.
     case settingsSubscription
-    /// Shows the license settings screen.
+    /// Opens the license section inside settings.
     case settingsLicense
 }

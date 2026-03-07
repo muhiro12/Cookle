@@ -8,14 +8,14 @@
 import Foundation
 import SwiftData
 
-/// Predicates describing how to filter `DiaryObject` records.
+/// Query cases used to build SwiftData predicates for meal-row fetches.
 public enum DiaryObjectPredicate {
-    /// Matches every diary object.
+    /// Includes every meal row in the fetch.
     case all
-    /// Matches no diary objects.
+    /// Excludes every meal row from the fetch.
     case none // swiftlint:disable:this discouraged_none_name
 
-    /// Concrete SwiftData predicate for this case.
+    /// SwiftData predicate that preserves the semantics of the selected query case.
     public var value: Predicate<DiaryObject> {
         switch self {
         case .all:
@@ -27,7 +27,7 @@ public enum DiaryObjectPredicate {
 }
 
 public extension FetchDescriptor where T == DiaryObject {
-    /// Builds a fetch descriptor for diary-object queries.
+    /// Builds a meal-row fetch descriptor sorted by most recently modified first.
     static func diaryObjects(_ predicate: DiaryObjectPredicate, order: SortOrder = .reverse) -> FetchDescriptor {
         .init(
             predicate: predicate.value,

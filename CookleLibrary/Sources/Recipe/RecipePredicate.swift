@@ -8,22 +8,22 @@
 import Foundation
 import SwiftData
 
-/// Predicates describing how to filter `Recipe` records.
+/// Query cases used to build SwiftData predicates for recipe fetches.
 nonisolated public enum RecipePredicate {
-    /// Matches every recipe.
+    /// Includes every recipe in the fetch.
     case all
-    /// Matches no recipes.
+    /// Excludes every recipe from the fetch.
     case none // swiftlint:disable:this discouraged_none_name
-    /// Matches the recipe with the supplied persistent identifier.
+    /// Includes only the recipe with the supplied persistent identifier.
     case idIs(Recipe.ID)
-    /// Matches recipes whose name contains the supplied text.
+    /// Includes recipes whose name contains the supplied text or its kana-normalized forms.
     case nameContains(String)
-    /// Name OR ingredient OR category matches. For short text (<3), tags use equality; otherwise contains.
+    /// Includes recipes whose name, ingredient labels, or category labels match the supplied search text.
     case anyTextMatches(String)
 
     private static let shortTextThreshold = Int("3") ?? .zero
 
-    /// Concrete SwiftData predicate for this case.
+    /// SwiftData predicate that preserves the semantics of the selected query case.
     public var value: Predicate<Recipe> {
         switch self {
         case .all:
@@ -63,9 +63,9 @@ nonisolated public enum RecipePredicate {
     }
 }
 
-/// Convenience descriptors for `Recipe` queries.
+/// Fetch descriptor helpers for recipe queries sorted by recipe name.
 public extension FetchDescriptor where T == Recipe {
-    /// Builds a fetch descriptor for recipe queries.
+    /// Builds a recipe fetch descriptor using the supplied predicate and name sort order.
     static func recipes(_ predicate: RecipePredicate, order: SortOrder = .forward) -> FetchDescriptor {
         .init(
             predicate: predicate.value,

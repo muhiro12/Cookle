@@ -9,30 +9,30 @@ import Foundation
 import SwiftData
 import SwiftUI
 
-/// Ingredient tag model.
+/// Persisted ingredient tag reused across recipe forms, search, and filtering.
 @Model
 nonisolated public final class Ingredient: Tag {
-    /// Ingredient display value.
+    /// Canonical ingredient label shown in recipe forms and search results.
     public private(set) var value = String.empty
 
-    /// Ingredient objects that carry amounts and order.
+    /// Recipe rows that attach amounts and ordering metadata to this ingredient.
     @Relationship(deleteRule: .cascade, inverse: \IngredientObject.ingredient)
     public private(set) var objects = [IngredientObject]?.some(.empty)
 
-    /// Recipes linked to this ingredient.
+    /// Recipes that currently reference this ingredient.
     @Relationship(inverse: \Recipe.ingredients)
     public private(set) var recipes = [Recipe]?.some(.empty)
 
-    /// Creation timestamp.
+    /// Timestamp captured when the ingredient is first inserted.
     public private(set) var createdTimestamp = Date.now
-    /// Last modification timestamp.
+    /// Timestamp refreshed whenever the ingredient label changes.
     public private(set) var modifiedTimestamp = Date.now
 
     private init() {
         // SwiftData-managed initializer.
     }
 
-    /// Creates (or returns) an ingredient with the given value.
+    /// Returns an existing ingredient for `value`, or inserts a new one when needed.
     public static func create(context: ModelContext, value: String) -> Self {
         if let existingIngredient = try? context.fetchFirst(.ingredients(.valueIs(value))),
            let ingredient = existingIngredient as? Self {
@@ -45,7 +45,7 @@ nonisolated public final class Ingredient: Tag {
         return ingredient
     }
 
-    /// Updates the ingredient value.
+    /// Replaces the stored ingredient label and refreshes `modifiedTimestamp`.
     public func update(value: String) {
         self.value = value
         self.modifiedTimestamp = .now
@@ -53,12 +53,12 @@ nonisolated public final class Ingredient: Tag {
 }
 
 public extension Ingredient {
-    /// Localized title used in UI.
+    /// Localized section title shown anywhere ingredient collections are presented.
     static var title: LocalizedStringKey {
         "Ingredients"
     }
 
-    /// Convenience descriptor with explicit order.
+    /// Builds an ingredient fetch descriptor with an explicit sort order.
     static func descriptor(
         _ predicate: TagPredicate<Ingredient>,
         order: SortOrder
@@ -66,7 +66,7 @@ public extension Ingredient {
         .ingredients(predicate, order: order)
     }
 
-    /// Convenience descriptor with default order.
+    /// Builds an ingredient fetch descriptor using the default sort order.
     static func descriptor(
         _ predicate: TagPredicate<Ingredient>
     ) -> FetchDescriptor<Ingredient> {

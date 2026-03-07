@@ -1,10 +1,10 @@
 import SwiftData
 
-/// Shared tag workflows used by app targets and intents.
+/// Tag workflows shared by the app, widgets, and App Intents.
 @preconcurrency
 @MainActor
 public enum TagService {
-    /// Renames an ingredient tag.
+    /// Renames an ingredient after trimming whitespace and validating non-empty input.
     public static func rename(
         context _: ModelContext,
         ingredient: Ingredient,
@@ -14,7 +14,7 @@ public enum TagService {
         ingredient.update(value: normalizedValue)
     }
 
-    /// Renames a category tag.
+    /// Renames a category after trimming whitespace and validating non-empty input.
     public static func rename(
         context _: ModelContext,
         category: Category,
@@ -24,7 +24,7 @@ public enum TagService {
         category.update(value: normalizedValue)
     }
 
-    /// Deletes an ingredient when it is not referenced by recipes.
+    /// Deletes an ingredient only when no recipe still references it.
     public static func delete(
         context: ModelContext,
         ingredient: Ingredient
@@ -35,7 +35,7 @@ public enum TagService {
         context.delete(ingredient)
     }
 
-    /// Deletes a category.
+    /// Deletes the supplied category from the current model context.
     public static func delete(
         context: ModelContext,
         category: Category

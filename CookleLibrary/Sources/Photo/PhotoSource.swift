@@ -7,17 +7,17 @@
 
 import Foundation
 
-/// Source where a photo was obtained.
+/// Origin of a photo asset stored with a recipe.
 nonisolated public enum PhotoSource: String, Sendable {
     case photosPicker = "zW8rLxK4"
     case imagePlayground = "Xe1Vt9bQ"
 }
 
 public extension PhotoSource {
-    /// Default photo source used when none is specified.
+    /// Fallback source used when persisted data is missing or cannot be decoded.
     static let defaultValue = PhotoSource.photosPicker
 
-    /// Human-friendly source name for UI.
+    /// User-facing label shown when presenting the asset origin.
     var description: String {
         switch self {
         case .photosPicker:

@@ -8,14 +8,14 @@
 import Foundation
 import SwiftData
 
-/// Predicates describing how to filter `PhotoObject` records.
+/// Query cases used to build SwiftData predicates for recipe photo-row fetches.
 public enum PhotoObjectPredicate {
-    /// Matches every photo object.
+    /// Includes every recipe photo row in the fetch.
     case all
-    /// Matches no photo objects.
+    /// Excludes every recipe photo row from the fetch.
     case none // swiftlint:disable:this discouraged_none_name
 
-    /// Concrete SwiftData predicate for this case.
+    /// SwiftData predicate that preserves the semantics of the selected query case.
     public var value: Foundation.Predicate<PhotoObject> {
         switch self {
         case .all:
@@ -27,7 +27,7 @@ public enum PhotoObjectPredicate {
 }
 
 public extension FetchDescriptor where T == PhotoObject {
-    /// Builds a fetch descriptor for photo-object queries.
+    /// Builds a recipe photo-row fetch descriptor sorted by most recently modified first.
     static func photoObjects(_ predicate: PhotoObjectPredicate, order: SortOrder = .reverse) -> FetchDescriptor {
         .init(
             predicate: predicate.value,

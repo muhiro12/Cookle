@@ -8,31 +8,31 @@
 import Foundation
 import SwiftData
 
-/// Photo binary data and associations.
+/// Persisted photo asset that can be shared across recipe photo rows.
 @Model
 nonisolated public final class Photo {
-    /// Raw image bytes.
+    /// Binary image data stored for the asset.
     public private(set) var data = Data.empty
-    /// Encoded source identifier (see `PhotoSource`).
+    /// Persisted source identifier used to recover a typed `PhotoSource`.
     public private(set) var sourceID = PhotoSource.defaultValue.rawValue
 
-    /// Photo objects linked to recipes.
+    /// Recipe photo rows that reference this asset.
     @Relationship(deleteRule: .cascade, inverse: \PhotoObject.photo)
     public private(set) var objects = [PhotoObject]?.some(.empty)
-    /// Recipes using this photo.
+    /// Recipes that currently reference this asset.
     @Relationship(inverse: \Recipe.photos)
     public private(set) var recipes = [Recipe]?.some(.empty)
 
-    /// Creation timestamp.
+    /// Timestamp captured when the asset is first inserted.
     public private(set) var createdTimestamp = Date.now
-    /// Last modification timestamp.
+    /// Timestamp retained for recency-based queries on photo assets.
     public private(set) var modifiedTimestamp = Date.now
 
     private init() {
         // SwiftData-managed initializer.
     }
 
-    /// Creates (or returns) a photo for the given data.
+    /// Returns an existing asset for matching binary data, or inserts a new one and stores its source.
     public static func create(context: ModelContext, photoData: PhotoData) -> Photo {
         let photo = (try? context.fetchFirst(.photos(.dataIs(photoData.data)))) ?? .init()
         context.insert(photo)
@@ -43,12 +43,12 @@ nonisolated public final class Photo {
 }
 
 public extension Photo {
-    /// Comma-separated recipe names that reference this photo.
+    /// Comma-separated recipe names that currently reference this asset.
     var title: String {
         recipes.orEmpty.map(\.name).joined(separator: ", ")
     }
 
-    /// Strongly typed photo source.
+    /// Typed photo source derived from `sourceID`, with a safe default for unknown values.
     var source: PhotoSource {
         .init(rawValue: sourceID) ?? .defaultValue
     }

@@ -1,18 +1,18 @@
 import Foundation
 import MHPreferences
 
-/// Thin wrapper around `UserDefaults` for app preferences.
+/// App-local preference accessors backed by standard `UserDefaults`.
 public enum CooklePreferences {
     private static var store: MHPreferenceStore {
         .init(userDefaults: .standard)
     }
 
-    /// Reads a boolean preference value.
+    /// Returns the stored boolean value for the supplied app-local setting.
     public static func bool(for key: BoolPreferenceKey) -> Bool {
         store.bool(for: key.preferenceKey)
     }
 
-    /// Writes a boolean preference value.
+    /// Persists a boolean value for the supplied app-local setting.
     public static func set(_ value: Bool, for key: BoolPreferenceKey) {
         store.set(
             value,
@@ -20,12 +20,12 @@ public enum CooklePreferences {
         )
     }
 
-    /// Reads a string preference value.
+    /// Returns the stored string value for the supplied app-local setting.
     public static func string(for key: StringPreferenceKey) -> String? {
         store.string(for: key.preferenceKey)
     }
 
-    /// Writes a string preference value (removes the key on `nil`).
+    /// Persists a string value for the supplied app-local setting, removing it when `nil`.
     public static func set(_ value: String?, for key: StringPreferenceKey) {
         store.set(
             value,
@@ -33,19 +33,19 @@ public enum CooklePreferences {
         )
     }
 
-    /// Reads an integer preference value.
+    /// Returns the stored integer value using the key's built-in default when unset.
     public static func int(for key: IntPreferenceKey) -> Int {
         store.int(for: key.preferenceKey())
     }
 
-    /// Reads an integer preference value, falling back when unset.
+    /// Returns the stored integer value, or `defaultValue` when the key has no stored value.
     public static func int(for key: IntPreferenceKey, default defaultValue: Int) -> Int {
         store.int(
             for: key.preferenceKey(default: defaultValue)
         )
     }
 
-    /// Writes an integer preference value.
+    /// Persists an integer value for the supplied app-local setting.
     public static func set(_ value: Int, for key: IntPreferenceKey) {
         store.set(
             value,
@@ -53,7 +53,7 @@ public enum CooklePreferences {
         )
     }
 
-    /// Returns whether an integer preference has a stored value.
+    /// Returns whether the supplied integer setting has an explicit stored value.
     public static func contains(_ key: IntPreferenceKey) -> Bool {
         store.contains(key.preferenceKey())
     }

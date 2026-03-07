@@ -9,27 +9,27 @@ import Foundation
 import SwiftData
 import SwiftUI
 
-/// Common contract for tag-like models (e.g. `Ingredient`, `Category`).
+/// Shared contract for persisted tags that recipes use for filtering and labeling.
 nonisolated public protocol Tag: PersistentModel {
-    /// Localized title used in UI.
+    /// Localized section title used when presenting this tag type in the UI.
     static var title: LocalizedStringKey { get }
 
-    /// Display value of the tag.
+    /// Canonical text value users select, edit, and search against.
     var value: String { get }
-    /// Recipes associated with this tag.
+    /// Recipes that currently reference this tag.
     var recipes: [Recipe]? { get } // swiftlint:disable:this discouraged_optional_collection
-    /// Creation timestamp.
+    /// Timestamp captured when the tag record is first inserted.
     var createdTimestamp: Date { get }
-    /// Last modification timestamp.
+    /// Timestamp refreshed whenever the stored tag value changes.
     var modifiedTimestamp: Date { get }
 
-    /// Creates (or returns) a tag with the given value.
+    /// Returns an existing tag for `value`, or inserts a new record when none exists.
     static func create(context: ModelContext, value: String) -> Self
-    /// Convenience descriptor using a predicate and explicit order.
+    /// Builds a fetch descriptor for this tag type using the caller's sort order.
     static func descriptor(_ predicate: TagPredicate<Self>, order: SortOrder) -> FetchDescriptor<Self>
-    /// Convenience descriptor using a predicate with default order.
+    /// Builds a fetch descriptor for this tag type using the default sort order.
     static func descriptor(_ predicate: TagPredicate<Self>) -> FetchDescriptor<Self>
 
-    /// Updates the tag's value.
+    /// Replaces the stored tag value and refreshes `modifiedTimestamp`.
     func update(value: String)
 }

@@ -5,13 +5,13 @@
 //  Created by Hiromu Nakano on 9/30/24.
 //
 
-/// Ordered sub-entity used inside composite models.
+/// Contract for child models that participate in an ordered parent-owned collection.
 nonisolated public protocol SubObject: Comparable {
     var order: Int { get }
 }
 
 public extension SubObject {
-    /// Orders two sub-objects by their `order` value.
+    /// Sorts sub-objects by their stored display order.
     static func < (lhs: Self, rhs: Self) -> Bool {
         lhs.order < rhs.order
     }

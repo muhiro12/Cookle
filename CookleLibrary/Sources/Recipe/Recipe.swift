@@ -8,42 +8,42 @@
 import Foundation
 import SwiftData
 
-/// Persistent recipe entity.
+/// Persisted recipe aggregate with ordered child rows and diary backlinks.
 @Model
 nonisolated public final class Recipe {
-    /// Human-readable recipe name.
+    /// Display name shown anywhere the recipe is listed or shared.
     public private(set) var name = String.empty
-    /// Linked photos (flattened).
+    /// Flattened photo relation derived from `photoObjects` for quick lookup.
     @Relationship public private(set) var photos = [Photo]?.some(.empty)
-    /// Photo objects preserving order/metadata.
+    /// Ordered photo rows that preserve per-photo metadata.
     @Relationship(deleteRule: .cascade)
     public private(set) var photoObjects = [PhotoObject]?.some(.empty)
-    /// Number of servings.
+    /// Intended serving count for the recipe.
     public private(set) var servingSize = Int.zero
-    /// Cooking time in minutes.
+    /// Expected cooking time in minutes.
     public private(set) var cookingTime = Int.zero
-    /// Linked ingredient tags.
+    /// Flattened ingredient relation derived from `ingredientObjects`.
     @Relationship public private(set) var ingredients = [Ingredient]?.some(.empty)
-    /// Ingredient objects with amount and order.
+    /// Ordered ingredient rows that preserve amount text and display order.
     @Relationship(deleteRule: .cascade)
     public private(set) var ingredientObjects = [IngredientObject]?.some(.empty)
-    /// Ordered cooking steps.
+    /// Cooking instructions in display order.
     public private(set) var steps = [String].empty
-    /// Linked category tags.
+    /// Category tags used to browse and filter the recipe.
     @Relationship public private(set) var categories = [Category]?.some(.empty)
-    /// Optional free-form note.
+    /// Optional free-form note attached to the recipe.
     public private(set) var note = String.empty
 
-    /// Diaries referencing this recipe.
+    /// Diaries that currently surface this recipe in their flattened relation.
     @Relationship(inverse: \Diary.recipes)
     public private(set) var diaries = [Diary]?.some(.empty)
-    /// Diary objects referencing this recipe.
+    /// Diary rows that currently point at this recipe.
     @Relationship(deleteRule: .cascade, inverse: \DiaryObject.recipe)
     public private(set) var diaryObjects = [DiaryObject]?.some(.empty)
 
-    /// Creation timestamp.
+    /// Timestamp captured when the recipe is first inserted.
     public private(set) var createdTimestamp = Date.now
-    /// Last modification timestamp.
+    /// Timestamp refreshed whenever editable recipe content changes.
     public private(set) var modifiedTimestamp = Date.now
 
     private init() {
@@ -51,7 +51,7 @@ nonisolated public final class Recipe {
     }
 
     // swiftlint:disable function_parameter_count
-    /// Creates and inserts a new recipe.
+    /// Inserts a recipe and derives its flattened photo and ingredient relations from the supplied child rows.
     /// - Parameters:
     ///   - context: Model context to insert into.
     ///   - name: Recipe name.
@@ -89,7 +89,7 @@ nonisolated public final class Recipe {
     // swiftlint:enable function_parameter_count
 
     // swiftlint:disable function_parameter_count
-    /// Updates the recipe fields and refreshes the modification timestamp.
+    /// Replaces editable recipe content, rebuilds derived relations, and refreshes `modifiedTimestamp`.
     public func update(name: String,
                        photos: [PhotoObject],
                        servingSize: Int,

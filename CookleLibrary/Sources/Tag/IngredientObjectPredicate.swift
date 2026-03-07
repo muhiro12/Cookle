@@ -8,14 +8,14 @@
 import Foundation
 import SwiftData
 
-/// Predicates describing how to filter `IngredientObject` records.
+/// Query cases used to build SwiftData predicates for ingredient-row fetches.
 public enum IngredientObjectPredicate {
-    /// Matches every ingredient object.
+    /// Includes every ingredient row in the fetch.
     case all
-    /// Matches no ingredient objects.
+    /// Excludes every ingredient row from the fetch.
     case none // swiftlint:disable:this discouraged_none_name
 
-    /// Concrete SwiftData predicate for this case.
+    /// SwiftData predicate that preserves the semantics of the selected query case.
     public var value: Foundation.Predicate<IngredientObject> {
         switch self {
         case .all:
@@ -27,7 +27,7 @@ public enum IngredientObjectPredicate {
 }
 
 public extension FetchDescriptor where T == IngredientObject {
-    /// Builds a fetch descriptor for ingredient-object queries.
+    /// Builds an ingredient-row fetch descriptor sorted by most recently modified first.
     static func ingredientObjects(
         _ predicate: IngredientObjectPredicate,
         order _: SortOrder = .reverse

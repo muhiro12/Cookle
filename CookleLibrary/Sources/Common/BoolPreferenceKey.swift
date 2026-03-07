@@ -1,7 +1,7 @@
 import Foundation
 import MHPreferences
 
-/// Boolean preference keys.
+/// Stable storage keys for boolean settings persisted in app-local preferences.
 public enum BoolPreferenceKey: String {
     case isSubscribeOn = "qWeRty12"
     case isICloudOn = "AO9Yo1cC"

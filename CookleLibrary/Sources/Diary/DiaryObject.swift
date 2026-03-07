@@ -8,23 +8,23 @@
 import Foundation
 import SwiftData
 
-/// Meal item linking a recipe to a diary with type and order.
+/// Persisted meal row that places a recipe into a diary section and order slot.
 @Model
 nonisolated public final class DiaryObject: SubObject {
-    /// Linked recipe.
+    /// Recipe shown by this meal row.
     @Relationship public private(set) var recipe = Recipe?.none
-    /// Meal type (breakfast/lunch/dinner).
+    /// Meal section this row belongs to.
     public private(set) var type = DiaryObjectType?.none
-    /// Display order within its section.
+    /// Position of the row within the selected meal section.
     public private(set) var order = Int.zero
 
-    /// Owning diary (inverse relation).
+    /// Diary that owns this meal row.
     @Relationship(inverse: \Diary.objects)
     public private(set) var diary = Diary?.none
 
-    /// Creation timestamp.
+    /// Timestamp captured when the meal row is first inserted.
     public private(set) var createdTimestamp = Date.now
-    /// Last modification timestamp.
+    /// Timestamp initialized with the row for recency-based queries.
     public private(set) var modifiedTimestamp = Date.now
 
     private init(recipe: Recipe, type: DiaryObjectType) {
@@ -32,7 +32,7 @@ nonisolated public final class DiaryObject: SubObject {
         self.type = type
     }
 
-    /// Creates and inserts a meal item for a recipe.
+    /// Inserts a meal row for a recipe in the supplied section and order.
     public static func create(context: ModelContext, recipe: Recipe, type: DiaryObjectType, order: Int) -> DiaryObject {
         let object = DiaryObject(recipe: recipe, type: type)
         context.insert(object)

@@ -8,18 +8,18 @@
 import Foundation
 import SwiftData
 
-/// Predicates describing how to filter `Photo` records.
+/// Query cases used to build SwiftData predicates for photo-asset fetches.
 nonisolated public enum PhotoPredicate {
-    /// Matches every photo.
+    /// Includes every photo asset in the fetch.
     case all
-    /// Matches no photos.
+    /// Excludes every photo asset from the fetch.
     case none // swiftlint:disable:this discouraged_none_name
-    /// Matches photos created from the supplied source.
+    /// Includes only photo assets created from the supplied source.
     case sourceIs(PhotoSource)
-    /// Matches photos whose binary data equals the supplied payload.
+    /// Includes only photo assets whose binary data matches the supplied payload.
     case dataIs(Data)
 
-    /// Concrete SwiftData predicate for this case.
+    /// SwiftData predicate that preserves the semantics of the selected query case.
     public var value: Foundation.Predicate<Photo> {
         switch self {
         case .all:
@@ -39,9 +39,9 @@ nonisolated public enum PhotoPredicate {
     }
 }
 
-/// Convenience descriptors for `Photo` queries.
+/// Fetch descriptor helpers for photo-asset queries sorted by recency.
 public extension FetchDescriptor where T == Photo {
-    /// Builds a fetch descriptor for photo queries.
+    /// Builds a photo-asset fetch descriptor using the supplied predicate and recency order.
     static func photos(_ predicate: PhotoPredicate, order: SortOrder = .reverse) -> FetchDescriptor {
         .init(
             predicate: predicate.value,

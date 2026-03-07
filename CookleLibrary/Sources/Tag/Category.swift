@@ -9,26 +9,26 @@ import Foundation
 import SwiftData
 import SwiftUI
 
-/// Category tag model.
+/// Persisted category tag used to group and filter recipes.
 @Model
 nonisolated public final class Category: Tag {
-    /// Category display value.
+    /// Canonical category label shown in forms, filters, and recipe detail.
     public private(set) var value = String.empty
 
-    /// Recipes linked to this category.
+    /// Recipes currently assigned to this category.
     @Relationship(inverse: \Recipe.categories)
     public private(set) var recipes = [Recipe]?.some(.empty)
 
-    /// Creation timestamp.
+    /// Timestamp captured when the category is first inserted.
     public private(set) var createdTimestamp = Date.now
-    /// Last modification timestamp.
+    /// Timestamp refreshed whenever the category label changes.
     public private(set) var modifiedTimestamp = Date.now
 
     private init() {
         // SwiftData-managed initializer.
     }
 
-    /// Creates (or returns) a category with the given value.
+    /// Returns an existing category for `value`, or inserts a new one when needed.
     public static func create(context: ModelContext, value: String) -> Self {
         if let existingCategory = try? context.fetchFirst(.categories(.valueIs(value))),
            let category = existingCategory as? Self {
@@ -41,7 +41,7 @@ nonisolated public final class Category: Tag {
         return category
     }
 
-    /// Updates the category value.
+    /// Replaces the stored category label and refreshes `modifiedTimestamp`.
     public func update(value: String) {
         self.value = value
         self.modifiedTimestamp = .now
@@ -49,12 +49,12 @@ nonisolated public final class Category: Tag {
 }
 
 public extension Category {
-    /// Localized title used in UI.
+    /// Localized section title shown anywhere category collections are presented.
     static var title: LocalizedStringKey {
         "Categories"
     }
 
-    /// Convenience descriptor with explicit order.
+    /// Builds a category fetch descriptor with an explicit sort order.
     static func descriptor(
         _ predicate: TagPredicate<Category>,
         order: SortOrder
@@ -62,7 +62,7 @@ public extension Category {
         .categories(predicate, order: order)
     }
 
-    /// Convenience descriptor with default order.
+    /// Builds a category fetch descriptor using the default sort order.
     static func descriptor(
         _ predicate: TagPredicate<Category>
     ) -> FetchDescriptor<Category> {

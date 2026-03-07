@@ -1,12 +1,12 @@
 import Foundation
 import SwiftData
 
-/// Deprecated wrapper around `RecipeService.search(context:text:)`.
+/// Deprecated search entrypoint kept for callers that have not migrated to `RecipeService`.
 @preconcurrency
 @MainActor
 @available(*, deprecated, message: "Use RecipeService.search(context:text:) instead")
 public enum SearchService {
-    /// Searches recipes using the canonical recipe search service.
+    /// Forwards legacy search callers to `RecipeService.search(context:text:)`.
     /// - Parameters:
     ///   - context: Model context to query.
     ///   - text: Search text.

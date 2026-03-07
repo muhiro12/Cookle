@@ -1,9 +1,9 @@
 import Foundation
 
-/// Widget kind identifiers shared with WidgetKit.
+/// WidgetKit kind identifiers used to register and reload Cookle widgets.
 public enum CookleWidgetKind {
-    /// Widget kind identifier for the diary widget.
+    /// Kind string for the diary widget extension.
     public static let diary: String = "com.muhiro12.Cookle.Widgets.Diary"
-    /// Widget kind identifier for the recipe widget.
+    /// Kind string for the recipe widget extension.
     public static let recipe: String = "com.muhiro12.Cookle.Widgets.Recipe"
 }

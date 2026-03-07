@@ -8,29 +8,29 @@
 import Foundation
 import SwiftData
 
-/// Persistent diary entity representing meals for a single day.
+/// Persisted day-level meal log that groups recipes and notes for one calendar date.
 @Model
 nonisolated public final class Diary {
-    /// Target calendar date for this diary.
+    /// Calendar date represented by this diary entry.
     public private(set) var date = Date.now
-    /// Meal items (breakfast/lunch/dinner) with order information.
+    /// Meal rows stored for the day, including section and display order.
     @Relationship(deleteRule: .cascade)
     public private(set) var objects = [DiaryObject]?.some(.empty)
-    /// Flattened recipes derived from `objects`.
+    /// Flattened recipe relation maintained from `objects` for quick lookup.
     @Relationship public private(set) var recipes = [Recipe]?.some(.empty)
-    /// Free-form note for the day.
+    /// Free-form note attached to the day.
     public private(set) var note = String.empty
 
-    /// Creation timestamp.
+    /// Timestamp captured when the diary is first inserted.
     public private(set) var createdTimestamp = Date.now
-    /// Last modification timestamp.
+    /// Timestamp refreshed whenever the diary date, rows, or note changes.
     public private(set) var modifiedTimestamp = Date.now
 
     private init() {
         // SwiftData-managed initializer.
     }
 
-    /// Creates and inserts a diary with given objects and note.
+    /// Inserts a diary and snapshots the supplied meal rows and derived recipe links.
     public static func create(context: ModelContext,
                               date: Date,
                               objects: [DiaryObject],
@@ -44,7 +44,7 @@ nonisolated public final class Diary {
         return diary
     }
 
-    /// Updates the diary content and bumps the modification timestamp.
+    /// Replaces the stored date, meal rows, and note, then refreshes `modifiedTimestamp`.
     public func update(date: Date,
                        objects: [DiaryObject],
                        note: String) {

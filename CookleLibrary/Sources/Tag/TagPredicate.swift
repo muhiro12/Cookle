@@ -8,18 +8,18 @@
 import Foundation
 import SwiftData
 
-/// Predicates describing how to filter tag models.
+/// Query cases used to build SwiftData predicates for tag fetches.
 nonisolated public enum TagPredicate<T: Tag> {
-    /// Matches every tag.
+    /// Includes every tag record in the fetch.
     case all
-    /// Matches no tags.
+    /// Excludes every tag record from the fetch.
     case none // swiftlint:disable:this discouraged_none_name
-    /// Matches tags whose value exactly equals the supplied text.
+    /// Includes only tags whose stored value exactly equals the supplied text.
     case valueIs(String)
-    /// Matches tags whose value contains the supplied text.
+    /// Includes tags whose value contains the supplied text or its kana-normalized forms.
     case valueContains(String)
 
-    /// Concrete SwiftData predicate for this case.
+    /// SwiftData predicate that preserves the semantics of the selected query case.
     public var value: Predicate<T> {
         switch self {
         case .all:
@@ -42,9 +42,9 @@ nonisolated public enum TagPredicate<T: Tag> {
     }
 }
 
-/// Convenience descriptors for tag queries.
+/// Fetch descriptor helpers for ingredient tag queries sorted by display value.
 public extension FetchDescriptor where T == Ingredient {
-    /// Builds a fetch descriptor for ingredient queries.
+    /// Builds an ingredient fetch descriptor using the supplied predicate and sort order.
     static func ingredients(_ predicate: TagPredicate<T>, order: SortOrder = .forward) -> FetchDescriptor {
         .init(
             predicate: predicate.value,
@@ -56,7 +56,7 @@ public extension FetchDescriptor where T == Ingredient {
 }
 
 public extension FetchDescriptor where T == Category {
-    /// Builds a fetch descriptor for category queries.
+    /// Builds a category fetch descriptor using the supplied predicate and sort order.
     static func categories(_ predicate: TagPredicate<T>, order: SortOrder = .forward) -> FetchDescriptor {
         .init(
             predicate: predicate.value,
