@@ -23,7 +23,7 @@ let kPackage = Package(
         ),
         .package(
             url: "https://github.com/muhiro12/MHPlatform.git",
-            branch: "codex/shared-mutation-workflow"
+            branch: "main"
         )
     ],
     targets: [
