@@ -105,7 +105,7 @@ extension NotificationService: UNUserNotificationCenterDelegate {
                 source: #fileID
             )
             notificationLogger.info("notification settings route requested")
-            await routeInbox.ingest(settingsURL)
+            await routeInbox.replacePendingURL(settingsURL)
         }
     }
 }
@@ -159,6 +159,21 @@ private extension NotificationService {
             .sound,
             .providesAppNotificationSettings
         ]
+    }
+
+    nonisolated static func fallbackRouteURL(
+        _: MHNotificationPayload?,
+        response: MHNotificationResponseContext
+    ) -> URL? {
+        if response.actionIdentifier == NotificationConstants.browseRecipesActionIdentifier {
+            return CookleDeepLinkURLBuilder.preferredRecipeURL()
+        }
+
+        if response.actionIdentifier == UNNotificationDefaultActionIdentifier {
+            return CookleDeepLinkURLBuilder.preferredRecipeURL()
+        }
+
+        return nil
     }
 
     func registerNotificationCategories() {
@@ -258,41 +273,35 @@ private extension NotificationService {
     }
 
     nonisolated func handleNotificationResponse(_ response: UNNotificationResponse) async {
-        guard let routeURL = routeURL(for: response) else {
-            return
-        }
-        await routeInbox.ingest(routeURL)
-    }
-
-    nonisolated func routeURL(for response: UNNotificationResponse) -> URL? {
-        let userInfo = response.notification.request.content.userInfo
         let notificationLogger = CookleApp.logger(
             category: "NotificationRoute",
             source: #fileID
         )
+        let payload = NotificationConstants.payloadCodec.decode(
+            response.notification.request.content.userInfo
+        )
+        let outcome = await MHNotificationOrchestrator.deliverRouteURL(
+            payload: payload,
+            response: .init(
+                actionIdentifier: response.actionIdentifier
+            ),
+            deliver: routeInbox.replacePendingURL,
+            fallbackRouteURL: Self.fallbackRouteURL
+        )
 
-        if response.actionIdentifier == NotificationConstants.browseRecipesActionIdentifier,
-           userInfo[NotificationConstants.actionRouteURLsUserInfoKey] == nil {
-            notificationLogger.notice("notification route resolved via browse fallback")
-            return CookleDeepLinkURLBuilder.preferredRecipeURL()
-        }
-
-        if let routeURL = MHNotificationOrchestrator.resolveRouteURL(
-            userInfo: userInfo,
-            actionIdentifier: response.actionIdentifier,
-            codec: NotificationConstants.payloadCodec
-        ) {
+        switch outcome.source {
+        case .payload:
             notificationLogger.info("notification route resolved")
-            return routeURL
-        }
-
-        if response.actionIdentifier == UNNotificationDefaultActionIdentifier {
+        case .fallback where response.actionIdentifier
+                == NotificationConstants.browseRecipesActionIdentifier:
+            notificationLogger.notice("notification route resolved via browse fallback")
+        case .fallback where response.actionIdentifier == UNNotificationDefaultActionIdentifier:
             notificationLogger.info("notification route resolved via default fallback")
-            return CookleDeepLinkURLBuilder.preferredRecipeURL()
+        case .fallback:
+            notificationLogger.info("notification route resolved via fallback")
+        case .noRoute:
+            notificationLogger.info("notification route resolution returned no route")
         }
-
-        notificationLogger.info("notification route resolution returned no route")
-        return nil
     }
 
     func stableIdentifier(for recipe: Recipe) -> String {

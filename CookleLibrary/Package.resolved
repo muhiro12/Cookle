@@ -34,7 +34,7 @@
       "location" : "https://github.com/muhiro12/MHPlatform.git",
       "state" : {
         "branch" : "main",
-        "revision" : "fd3a00bf9227d00d986f95201d9511ac9cb8c5ca"
+        "revision" : "dcd54ece13ea31fe9742a8c8f0482a2f8cecdd12"
       }
     },
     {
@@ -67,7 +67,7 @@
     {
       "identity" : "swiftutilities",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/muhiro12/SwiftUtilities.git",
+      "location" : "https://github.com/muhiro12/SwiftUtilities",
       "state" : {
         "revision" : "1e7e633caa979d8dafea34701dd48c8aa1b5e0ac",
         "version" : "1.31.0"
