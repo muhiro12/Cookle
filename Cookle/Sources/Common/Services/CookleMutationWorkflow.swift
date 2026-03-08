@@ -56,7 +56,8 @@ enum CookleMutationWorkflow {
         try await MHMutationWorkflow.runThrowing(
             name: name,
             operation: operation,
-            adapter: adapter
+            adapter: adapter,
+            projection: .identity
         )
     }
 
@@ -87,12 +88,23 @@ enum CookleMutationWorkflow {
         adapter: MHMutationAdapter<MutationEffect>,
         afterSuccess: @escaping @MainActor @Sendable (Value) -> MutationEffect
     ) async throws -> MutationOutcome<Value> {
-        let value = try await MHMutationWorkflow.runThrowing(
+        @MainActor
+        func identityProjection(
+            _ operationValue: Value
+        ) -> Value {
+            operationValue
+        }
+
+        let projection = MHMutationProjectionStrategy<Value, MutationEffect, Value>.closures(
+            afterSuccess: afterSuccess,
+            returning: identityProjection
+        )
+        let value: Value = try await MHMutationWorkflow.runThrowing(
             name: name,
             operation: operation,
             adapter: adapter,
-            afterSuccess: afterSuccess
-        ) { $0 }
+            projection: projection
+        )
         return .init(
             value: value,
             effects: afterSuccess(value)

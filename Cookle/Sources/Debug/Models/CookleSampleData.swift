@@ -2,7 +2,7 @@ import MHPlatform
 import SwiftUI
 
 struct CookleSampleData: PreviewModifier {
-    typealias Context = CookleAppContext
+    typealias Context = CookleAppAssembly
 
     static func makeSharedContext() -> Context {
         CookleSampleDataContext.makeSharedContext()
@@ -10,6 +10,7 @@ struct CookleSampleData: PreviewModifier {
 
     func body(content: Content, context: Context) -> some View {
         content
-            .cookleAppContext(context)
+            .cookleAppDependencies(context.dependencies)
+            .environment(context.bootstrap.runtime)
     }
 }

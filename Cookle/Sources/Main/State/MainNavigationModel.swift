@@ -1,6 +1,9 @@
-import Foundation
+import Observation
+import UIKit
 
-struct MainNavigationState {
+@MainActor
+@Observable
+final class MainNavigationModel {
     var selectedTab = MainTab.diary
     var selectedDiary: Diary?
     var selectedDiaryRecipe: Recipe?
@@ -10,4 +13,5 @@ struct MainNavigationState {
     var incomingSettingsSelection: SettingsContent?
     var compactSettingsSelection: SettingsContent?
     var isCompactSettingsPresented = false
+    var isRegularWidth = UIDevice.current.userInterfaceIdiom == .pad
 }

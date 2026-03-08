@@ -4,141 +4,119 @@ import SwiftData
 
 @MainActor
 enum MainRouteService {
-    private static let routeLifecycle = MHRouteLifecycle<CookleRoute>(
-        logger: CookleApp.logger(
-            category: "RouteExecution",
-            source: #fileID
-        ),
-        isDuplicate: ==
-    )
-
-    static func activateRouteExecution(
-        state: MainNavigationState,
-        context: ModelContext,
-        isRegularWidth: Bool
-    ) async throws -> MainNavigationState {
-        var nextState = state
-        _ = try await routeLifecycle.activate { resolvedRoute in
-            nextState = try apply(
+    static func makeRoutePipeline(
+        navigationModel: MainNavigationModel,
+        modelContext: ModelContext
+    ) -> MHAppRoutePipeline<CookleRoute> {
+        let applyOnMainActor: MHAppRoutePipeline<CookleRoute>.RouteApplier = { resolvedRoute in
+            try apply(
                 route: resolvedRoute,
-                state: nextState,
-                context: context,
-                isRegularWidth: isRegularWidth
+                navigationModel: navigationModel,
+                context: modelContext
             )
         }
-        return nextState
-    }
 
-    static func applyPendingRouteIfNeeded(
-        from sources: MHDeepLinkSourceChain,
-        state: MainNavigationState,
-        context: ModelContext,
-        isRegularWidth: Bool
-    ) async throws -> MainNavigationState {
-        var nextState = state
-        guard try await routeLifecycle.submitLatest(
-            from: sources,
+        return .init(
+            routeLifecycle: .init(
+                logger: CookleApp.logger(
+                    category: "RouteExecution",
+                    source: #fileID
+                ),
+                isDuplicate: ==
+            ),
             parse: { routeURL in
                 CookleRouteParser.parse(url: routeURL)
             },
-            applyOnMainActor: { resolvedRoute in
-                nextState = try apply(
-                    route: resolvedRoute,
-                    state: nextState,
-                    context: context,
-                    isRegularWidth: isRegularWidth
-                )
-            }
-        ) != nil else {
-            return state
-        }
-        return nextState
+            pendingSources: pendingSources,
+            applyOnMainActor: applyOnMainActor
+        )
     }
 }
 
 private extension MainRouteService {
+    static var pendingSources: [any MHDeepLinkURLSource] {
+        var sources = [any MHDeepLinkURLSource]()
+
+        if let intentRouteSource = CookleIntentRouteStore.source {
+            sources.append(intentRouteSource)
+        }
+
+        return sources
+    }
+
     static func apply(
         route: CookleRoute,
-        state: MainNavigationState,
-        context: ModelContext,
-        isRegularWidth: Bool
-    ) throws -> MainNavigationState {
+        navigationModel: MainNavigationModel,
+        context: ModelContext
+    ) throws {
         let outcome = try CookleRouteExecutor.execute(
             route: route,
             context: context
         )
-        var state = state
         applyRouteOutcome(
             outcome,
-            state: &state,
-            isRegularWidth: isRegularWidth
+            navigationModel: navigationModel
         )
-        return state
     }
 
     static func applyRouteOutcome(
         _ outcome: CookleRouteOutcome,
-        state: inout MainNavigationState,
-        isRegularWidth: Bool
+        navigationModel: MainNavigationModel
     ) {
         if !outcome.isSettingsRoute {
-            state.isCompactSettingsPresented = false
-            state.compactSettingsSelection = nil
+            navigationModel.isCompactSettingsPresented = false
+            navigationModel.compactSettingsSelection = nil
         }
 
         switch outcome {
         case .home:
-            state.selectedTab = .diary
-            state.selectedDiary = nil
-            state.selectedDiaryRecipe = nil
-            state.selectedRecipe = nil
-            state.selectedSearchRecipe = nil
-            state.incomingSearchQuery = nil
+            navigationModel.selectedTab = .diary
+            navigationModel.selectedDiary = nil
+            navigationModel.selectedDiaryRecipe = nil
+            navigationModel.selectedRecipe = nil
+            navigationModel.selectedSearchRecipe = nil
+            navigationModel.incomingSearchQuery = nil
         case .diary(let diary):
-            state.selectedTab = .diary
-            state.selectedDiary = diary
-            state.selectedDiaryRecipe = nil
+            navigationModel.selectedTab = .diary
+            navigationModel.selectedDiary = diary
+            navigationModel.selectedDiaryRecipe = nil
         case .recipe(let recipe):
-            state.selectedTab = .recipe
-            state.selectedRecipe = recipe
+            navigationModel.selectedTab = .recipe
+            navigationModel.selectedRecipe = recipe
         case .search(let query):
-            state.selectedTab = .search
-            state.selectedSearchRecipe = nil
-            state.incomingSearchQuery = query
+            navigationModel.selectedTab = .search
+            navigationModel.selectedSearchRecipe = nil
+            navigationModel.incomingSearchQuery = query
         case .settings:
             applySettingsRoute(
                 destination: nil,
-                state: &state,
-                isRegularWidth: isRegularWidth
+                navigationModel: navigationModel
             )
         case .settingsSubscription:
             applySettingsRoute(
                 destination: .subscription,
-                state: &state,
-                isRegularWidth: isRegularWidth
+                navigationModel: navigationModel
             )
         case .settingsLicense:
             applySettingsRoute(
                 destination: .license,
-                state: &state,
-                isRegularWidth: isRegularWidth
+                navigationModel: navigationModel
             )
         }
     }
 
     static func applySettingsRoute(
         destination: SettingsContent?,
-        state: inout MainNavigationState,
-        isRegularWidth: Bool
+        navigationModel: MainNavigationModel
     ) {
-        if isRegularWidth {
-            state.isCompactSettingsPresented = false
-            state.compactSettingsSelection = nil
-            state.selectedTab = .settings
-            state.incomingSettingsSelection = destination
+        if navigationModel.isRegularWidth {
+            navigationModel.isCompactSettingsPresented = false
+            navigationModel.compactSettingsSelection = nil
+            navigationModel.selectedTab = .settings
+            navigationModel.incomingSettingsSelection = destination
         } else {
-            state.compactSettingsSelection = destination
-            state.isCompactSettingsPresented = true
+            navigationModel.compactSettingsSelection = destination
+            navigationModel.isCompactSettingsPresented = true
         }
     }
 }

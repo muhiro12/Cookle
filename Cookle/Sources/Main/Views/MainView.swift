@@ -1,40 +1,27 @@
 import MHPlatform
-import SwiftData
 import SwiftUI
 
 struct MainView: View {
     @Environment(\.horizontalSizeClass)
     private var horizontalSizeClass
-    @Environment(\.modelContext)
-    private var context
-    @Environment(MHAppRuntime.self)
-    private var appRuntime
     @Environment(ConfigurationService.self)
     private var configurationService
-    @Environment(NotificationService.self)
-    private var notificationService
-    @Environment(MHObservableDeepLinkInbox.self)
-    private var routeInbox
-
-    @AppStorage(.isSubscribeOn)
-    private var isSubscribeOn
-    @AppStorage(.isICloudOn)
-    private var isICloudOn
-
-    @State private var isUpdateAlertPresented = false
-    @State private var navigationState = MainNavigationState()
+    @Environment(MainNavigationModel.self)
+    private var navigationModel
 
     var body: some View {
+        @Bindable var navigationModel = navigationModel
+
         MainTabView(
-            selection: $navigationState.selectedTab,
-            diarySelection: $navigationState.selectedDiary,
-            diaryRecipeSelection: $navigationState.selectedDiaryRecipe,
-            recipeSelection: $navigationState.selectedRecipe,
-            searchSelection: $navigationState.selectedSearchRecipe,
-            incomingSearchQuery: $navigationState.incomingSearchQuery,
-            incomingSettingsSelection: $navigationState.incomingSettingsSelection
+            selection: $navigationModel.selectedTab,
+            diarySelection: $navigationModel.selectedDiary,
+            diaryRecipeSelection: $navigationModel.selectedDiaryRecipe,
+            recipeSelection: $navigationModel.selectedRecipe,
+            searchSelection: $navigationModel.selectedSearchRecipe,
+            incomingSearchQuery: $navigationModel.incomingSearchQuery,
+            incomingSettingsSelection: $navigationModel.incomingSettingsSelection
         )
-        .alert(Text("Update Required"), isPresented: $isUpdateAlertPresented) {
+        .alert(Text("Update Required"), isPresented: isUpdateRequiredBinding) {
             Button {
                 guard let appStoreURL = URL(
                     string: "https://apps.apple.com/app/id6483363226"
@@ -48,39 +35,20 @@ struct MainView: View {
         } message: {
             Text("Please update Cookle to the latest version to continue using it.")
         }
-        .mhAppRuntimeLifecycle(
-            runtime: appRuntime,
-            plan: runtimeLifecyclePlan
-        )
-        .onChange(of: appRuntime.premiumStatus) {
-            syncSubscriptionStateIfNeeded()
+        .onAppear {
+            navigationModel.isRegularWidth = isRegularWidth
         }
-        .onChange(of: routeInbox.pendingURL) {
-            Task {
-                await synchronizePendingRoutesIfPossible()
-            }
-        }
-        .onOpenURL { deepLinkURL in
-            Task {
-                await routeInbox.ingest(deepLinkURL)
-            }
-        }
-        .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
-            guard let webpageURL = userActivity.webpageURL else {
-                return
-            }
-            Task {
-                await routeInbox.ingest(webpageURL)
-            }
+        .onChange(of: horizontalSizeClass) {
+            navigationModel.isRegularWidth = isRegularWidth
         }
         .sheet(
-            isPresented: $navigationState.isCompactSettingsPresented,
+            isPresented: $navigationModel.isCompactSettingsPresented,
             onDismiss: {
-                navigationState.compactSettingsSelection = nil
+                navigationModel.compactSettingsSelection = nil
             },
             content: {
                 SettingsNavigationView(
-                    incomingSelection: $navigationState.compactSettingsSelection
+                    incomingSelection: $navigationModel.compactSettingsSelection
                 )
             }
         )
@@ -93,98 +61,15 @@ private extension MainView {
         horizontalSizeClass == .regular
     }
 
-    var runtimeLifecyclePlan: MHAppRuntimeLifecyclePlan {
+    var isUpdateRequiredBinding: Binding<Bool> {
         .init(
-            startupTasks: [
-                .init(name: "syncSubscriptionState") {
-                    syncSubscriptionStateIfNeeded()
-                },
-                .init(name: "loadConfiguration") {
-                    await refreshConfigurationState()
-                },
-                .init(name: "synchronizeNotifications") {
-                    await notificationService.synchronizeScheduledSuggestions()
-                },
-                .init(name: "applyPendingRoutes") {
-                    await synchronizePendingRoutesIfPossible()
-                }
-            ],
-            activeTasks: [
-                .init(name: "syncSubscriptionState") {
-                    syncSubscriptionStateIfNeeded()
-                },
-                .init(name: "loadConfiguration") {
-                    await refreshConfigurationState()
-                },
-                .init(name: "synchronizeNotifications") {
-                    await notificationService.synchronizeScheduledSuggestions()
-                },
-                .init(name: "applyPendingRoutes") {
-                    await synchronizePendingRoutesIfPossible()
-                }
-            ],
-            skipFirstActivePhase: true
+            get: {
+                configurationService.isUpdateRequired()
+            },
+            set: { _ in
+                // Update-required presentation is controlled by remote configuration.
+            }
         )
-    }
-
-    var pendingRouteSources: MHDeepLinkSourceChain {
-        var sources = [any MHDeepLinkURLSource]()
-
-        if let intentRouteSource = CookleIntentRouteStore.source {
-            sources.append(intentRouteSource)
-        }
-
-        sources.append(routeInbox)
-        return .init(sources)
-    }
-
-    func synchronizePendingRoutesIfPossible() async {
-        await activateRouteExecutionIfPossible()
-        await applyPendingRoutesIfPossible()
-    }
-
-    func activateRouteExecutionIfPossible() async {
-        do {
-            navigationState = try await MainRouteService.activateRouteExecution(
-                state: navigationState,
-                context: context,
-                isRegularWidth: isRegularWidth
-            )
-        } catch {
-            assertionFailure(error.localizedDescription)
-        }
-    }
-
-    func applyPendingRoutesIfPossible() async {
-        do {
-            navigationState = try await MainRouteService.applyPendingRouteIfNeeded(
-                from: pendingRouteSources,
-                state: navigationState,
-                context: context,
-                isRegularWidth: isRegularWidth
-            )
-        } catch {
-            assertionFailure(error.localizedDescription)
-        }
-    }
-
-    func refreshConfigurationState() async {
-        try? await configurationService.load()
-        await MainActor.run {
-            isUpdateAlertPresented = configurationService.isUpdateRequired()
-        }
-    }
-
-    func syncSubscriptionStateIfNeeded() {
-        switch appRuntime.premiumStatus {
-        case .unknown:
-            return
-        case .inactive:
-            isSubscribeOn = false
-            isICloudOn = false
-        case .active:
-            isSubscribeOn = true
-        }
     }
 }
 
