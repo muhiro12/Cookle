@@ -31,8 +31,8 @@ nonisolated public enum TagPredicate<T: Tag> {
                 tag.value == value
             }
         case .valueContains(let value):
-            let hiragana = value.applyingTransform(.hiraganaToKatakana, reverse: true).orEmpty
-            let katakana = value.applyingTransform(.hiraganaToKatakana, reverse: false).orEmpty
+            let hiragana = Self.hiragana(for: value)
+            let katakana = Self.katakana(for: value)
             return #Predicate<T> { tag in
                 tag.value.localizedStandardContains(value)
                     || tag.value.localizedStandardContains(hiragana)
@@ -45,9 +45,12 @@ nonisolated public enum TagPredicate<T: Tag> {
 /// Fetch descriptor helpers for ingredient tag queries sorted by display value.
 public extension FetchDescriptor where T == Ingredient {
     /// Builds an ingredient fetch descriptor using the supplied predicate and sort order.
-    static func ingredients(_ predicate: TagPredicate<T>, order: SortOrder = .forward) -> FetchDescriptor {
+    static func ingredients(
+        _ predicate: TagPredicate<Ingredient>,
+        order: SortOrder = .forward
+    ) -> FetchDescriptor<Ingredient> {
         .init(
-            predicate: predicate.value,
+            predicate: predicate.ingredientValue,
             sortBy: [
                 .init(\.value, order: order)
             ]
@@ -57,12 +60,71 @@ public extension FetchDescriptor where T == Ingredient {
 
 public extension FetchDescriptor where T == Category {
     /// Builds a category fetch descriptor using the supplied predicate and sort order.
-    static func categories(_ predicate: TagPredicate<T>, order: SortOrder = .forward) -> FetchDescriptor {
+    static func categories(
+        _ predicate: TagPredicate<Category>,
+        order: SortOrder = .forward
+    ) -> FetchDescriptor<Category> {
         .init(
-            predicate: predicate.value,
+            predicate: predicate.categoryValue,
             sortBy: [
                 .init(\.value, order: order)
             ]
         )
+    }
+}
+
+private extension TagPredicate {
+    static func hiragana(for value: String) -> String {
+        value.applyingTransform(.hiraganaToKatakana, reverse: true).orEmpty
+    }
+
+    static func katakana(for value: String) -> String {
+        value.applyingTransform(.hiraganaToKatakana, reverse: false).orEmpty
+    }
+}
+
+private extension TagPredicate where T == Ingredient {
+    var ingredientValue: Predicate<Ingredient> {
+        switch self {
+        case .all:
+            return .true
+        case .none:
+            return .false
+        case .valueIs(let value):
+            return #Predicate<Ingredient> { ingredient in
+                ingredient.value == value
+            }
+        case .valueContains(let value):
+            let hiragana = Self.hiragana(for: value)
+            let katakana = Self.katakana(for: value)
+            return #Predicate<Ingredient> { ingredient in
+                ingredient.value.localizedStandardContains(value)
+                    || ingredient.value.localizedStandardContains(hiragana)
+                    || ingredient.value.localizedStandardContains(katakana)
+            }
+        }
+    }
+}
+
+private extension TagPredicate where T == Category {
+    var categoryValue: Predicate<Category> {
+        switch self {
+        case .all:
+            return .true
+        case .none:
+            return .false
+        case .valueIs(let value):
+            return #Predicate<Category> { category in
+                category.value == value
+            }
+        case .valueContains(let value):
+            let hiragana = Self.hiragana(for: value)
+            let katakana = Self.katakana(for: value)
+            return #Predicate<Category> { category in
+                category.value.localizedStandardContains(value)
+                    || category.value.localizedStandardContains(hiragana)
+                    || category.value.localizedStandardContains(katakana)
+            }
+        }
     }
 }
