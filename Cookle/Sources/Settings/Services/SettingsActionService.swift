@@ -22,12 +22,12 @@ final class SettingsActionService {
         await notificationService.applySuggestionSettings()
     }
 
-    func deleteAllData(context: ModelContext) async throws {
+    func deleteAllData(modelContainer: ModelContainer) async throws {
         _ = try await MHDestructiveResetService.runThrowing(
             steps: [
                 .init(name: "deleteAllData") {
                     try await MainActor.run {
-                        try DataResetService.deleteAll(context: context)
+                        try DataResetService.deleteAll(context: modelContainer.mainContext)
                     }
                 },
                 .init(name: "reloadTodayDiaryWidget") {

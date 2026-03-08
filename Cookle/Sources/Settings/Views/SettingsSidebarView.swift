@@ -60,7 +60,7 @@ struct SettingsSidebarView: View {
                     Task {
                         do {
                             try await settingsActionService.deleteAllData(
-                                context: context
+                                modelContainer: context.container
                             )
                         } catch {
                             assertionFailure(error.localizedDescription)

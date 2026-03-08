@@ -16,6 +16,7 @@ final class TagActionService {
         )
     }
 
+    @discardableResult
     func rename(
         context: ModelContext,
         ingredient: Ingredient,
@@ -32,6 +33,7 @@ final class TagActionService {
         }
     }
 
+    @discardableResult
     func rename(
         context: ModelContext,
         category: Category,
@@ -48,6 +50,7 @@ final class TagActionService {
         }
     }
 
+    @discardableResult
     func delete(
         context: ModelContext,
         ingredient: Ingredient
@@ -62,6 +65,7 @@ final class TagActionService {
         }
     }
 
+    @discardableResult
     func delete(
         context: ModelContext,
         category: Category
@@ -76,6 +80,7 @@ final class TagActionService {
         }
     }
 
+    @discardableResult
     func rename<T: Tag>(
         context: ModelContext,
         tag: T,
@@ -100,6 +105,7 @@ final class TagActionService {
         preconditionFailure("Unsupported tag type: \(T.self)")
     }
 
+    @discardableResult
     func delete<T: Tag>(
         context: ModelContext,
         tag: T
