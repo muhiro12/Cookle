@@ -107,13 +107,16 @@ private extension CookleAppAssembly {
         navigationModel: MainNavigationModel,
         services: CookleAppServices
     ) -> CookleAppDependencies {
-        .init(
+        let reviewFlow = makeReviewFlow()
+
+        return .init(
             modelContainer: modelContainer,
             configurationService: services.configurationService,
             notificationService: services.notificationService,
             tipController: services.tipController,
             recipeActionService: RecipeActionService(
-                notificationService: services.notificationService
+                notificationService: services.notificationService,
+                reviewFlow: reviewFlow
             ),
             diaryActionService: DiaryActionService(),
             tagActionService: TagActionService(
@@ -123,6 +126,16 @@ private extension CookleAppAssembly {
                 notificationService: services.notificationService
             ),
             navigationModel: navigationModel
+        )
+    }
+
+    static func makeReviewFlow() -> MHReviewFlow {
+        .init(
+            policy: CookleReviewPolicy.request,
+            logger: CookleApp.logger(
+                category: "ReviewFlow",
+                source: #fileID
+            )
         )
     }
 

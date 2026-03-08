@@ -8,10 +8,10 @@ final class TagActionService {
     private let effectAdapter: MHMutationAdapter<MutationEffect>
 
     init(notificationService: NotificationService) {
-        let synchronizeNotifications: CookleMutationWorkflow.NotificationSynchronizer = {
+        let synchronizeNotifications: CookleMutationEffectAdapter.NotificationSynchronizer = {
             await notificationService.synchronizeScheduledSuggestions()
         }
-        effectAdapter = CookleMutationWorkflow.effectAdapter(
+        effectAdapter = CookleMutationEffectAdapter.make(
             synchronizeNotifications: synchronizeNotifications
         )
     }
@@ -22,15 +22,26 @@ final class TagActionService {
         ingredient: Ingredient,
         value: String
     ) async throws -> MutationOutcome<Void> {
-        try await run(
-            name: "renameIngredient"
-        ) {
-            try TagService.rename(
-                context: context,
-                ingredient: ingredient,
-                value: value
-            )
-        }
+        let effects = tagMutationEffects
+        let projection = MHMutationProjectionStrategy<Void, MutationEffect, Void>.fixedAdapterValue(
+            effects
+        )
+        let _: Void = try await MHMutationWorkflow.runThrowing(
+            name: "renameIngredient",
+            operation: {
+                try TagService.rename(
+                    context: context,
+                    ingredient: ingredient,
+                    value: value
+                )
+            },
+            adapter: effectAdapter,
+            projection: projection
+        )
+        return .init(
+            value: (),
+            effects: effects
+        )
     }
 
     @discardableResult
@@ -39,15 +50,26 @@ final class TagActionService {
         category: Category,
         value: String
     ) async throws -> MutationOutcome<Void> {
-        try await run(
-            name: "renameCategory"
-        ) {
-            try TagService.rename(
-                context: context,
-                category: category,
-                value: value
-            )
-        }
+        let effects = tagMutationEffects
+        let projection = MHMutationProjectionStrategy<Void, MutationEffect, Void>.fixedAdapterValue(
+            effects
+        )
+        let _: Void = try await MHMutationWorkflow.runThrowing(
+            name: "renameCategory",
+            operation: {
+                try TagService.rename(
+                    context: context,
+                    category: category,
+                    value: value
+                )
+            },
+            adapter: effectAdapter,
+            projection: projection
+        )
+        return .init(
+            value: (),
+            effects: effects
+        )
     }
 
     @discardableResult
@@ -55,14 +77,25 @@ final class TagActionService {
         context: ModelContext,
         ingredient: Ingredient
     ) async throws -> MutationOutcome<Void> {
-        try await run(
-            name: "deleteIngredient"
-        ) {
-            try TagService.delete(
-                context: context,
-                ingredient: ingredient
-            )
-        }
+        let effects = tagMutationEffects
+        let projection = MHMutationProjectionStrategy<Void, MutationEffect, Void>.fixedAdapterValue(
+            effects
+        )
+        let _: Void = try await MHMutationWorkflow.runThrowing(
+            name: "deleteIngredient",
+            operation: {
+                try TagService.delete(
+                    context: context,
+                    ingredient: ingredient
+                )
+            },
+            adapter: effectAdapter,
+            projection: projection
+        )
+        return .init(
+            value: (),
+            effects: effects
+        )
     }
 
     @discardableResult
@@ -70,14 +103,25 @@ final class TagActionService {
         context: ModelContext,
         category: Category
     ) async throws -> MutationOutcome<Void> {
-        try await run(
-            name: "deleteCategory"
-        ) {
-            TagService.delete(
-                context: context,
-                category: category
-            )
-        }
+        let effects = tagMutationEffects
+        let projection = MHMutationProjectionStrategy<Void, MutationEffect, Void>.fixedAdapterValue(
+            effects
+        )
+        let _: Void = try await MHMutationWorkflow.runThrowing(
+            name: "deleteCategory",
+            operation: {
+                TagService.delete(
+                    context: context,
+                    category: category
+                )
+            },
+            adapter: effectAdapter,
+            projection: projection
+        )
+        return .init(
+            value: (),
+            effects: effects
+        )
     }
 
     @discardableResult
@@ -129,21 +173,7 @@ final class TagActionService {
 }
 
 private extension TagActionService {
-    func run(
-        name: String,
-        operation: @escaping @MainActor @Sendable () throws -> Void
-    ) async throws -> MutationOutcome<Void> {
-        try await CookleMutationWorkflow.runThrowing(
-            name: name,
-            operation: operation,
-            adapter: effectAdapter,
-            afterSuccess: tagMutationEffects(for:)
-        )
-    }
-
-    func tagMutationEffects(
-        for _: Void
-    ) -> MutationEffect {
+    var tagMutationEffects: MutationEffect {
         [
             .notificationPlanChanged
         ]

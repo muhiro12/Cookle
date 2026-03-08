@@ -10,21 +10,13 @@ final class RecipeActionService {
 
     init(
         notificationService: NotificationService,
-        requestReviewIfNeeded: @escaping CookleMutationWorkflow.ReviewRequester = {
-            await MHReviewRequester.requestIfNeeded(
-                policy: CookleReviewPolicy.request,
-                logger: CookleApp.logger(
-                    category: "ReviewFlow",
-                    source: #fileID
-                )
-            )
-        }
+        reviewFlow: MHReviewFlow
     ) {
-        self.effectAdapter = CookleMutationWorkflow.effectAdapter(
+        self.effectAdapter = CookleMutationEffectAdapter.make(
             synchronizeNotifications: {
                 await notificationService.synchronizeScheduledSuggestions()
             },
-            requestReviewIfNeeded: requestReviewIfNeeded
+            reviewFlow: reviewFlow
         )
     }
 
@@ -36,27 +28,39 @@ final class RecipeActionService {
         let effects = recipeMutationEffects(
             requestReview: requestReview
         )
-        let afterSuccess: @MainActor @Sendable (PersistentIdentifier) -> MutationEffect = { _ in
-            effects
+        let projection =
+            MHMutationProjectionStrategy<
+                PersistentIdentifier,
+                MutationEffect,
+                PersistentIdentifier
+            >
+            .fixedAdapterValue(effects)
+
+        do {
+            let persistentIdentifier = try await MHMutationWorkflow.runThrowing(
+                name: "createRecipe",
+                operation: {
+                    RecipeFormService.create(
+                        context: context,
+                        draft: draft
+                    ).persistentModelID
+                },
+                adapter: effectAdapter,
+                projection: projection
+            )
+            return .init(
+                value: recipe(
+                    for: persistentIdentifier,
+                    context: context
+                ),
+                effects: effects
+            )
+        } catch {
+            unexpectedFailure(
+                error,
+                name: "createRecipe"
+            )
         }
-        let mutationOutcome = await CookleMutationWorkflow.run(
-            name: "createRecipe",
-            operation: {
-                RecipeFormService.create(
-                    context: context,
-                    draft: draft
-                ).persistentModelID
-            },
-            adapter: effectAdapter,
-            afterSuccess: afterSuccess
-        )
-        return .init(
-            value: recipe(
-                for: mutationOutcome.value,
-                context: context
-            ),
-            effects: mutationOutcome.effects
-        )
     }
 
     func update(
@@ -68,21 +72,33 @@ final class RecipeActionService {
         let effects = recipeMutationEffects(
             requestReview: requestReview
         )
-        let afterSuccess: @MainActor @Sendable () -> MutationEffect = {
+        let projection = MHMutationProjectionStrategy<Void, MutationEffect, Void>.fixedAdapterValue(
             effects
-        }
-        return await CookleMutationWorkflow.run(
-            name: "updateRecipe",
-            operation: {
-                RecipeFormService.update(
-                    context: context,
-                    recipe: recipe,
-                    draft: draft
-                )
-            },
-            adapter: effectAdapter,
-            afterSuccess: afterSuccess
         )
+
+        do {
+            let _: Void = try await MHMutationWorkflow.runThrowing(
+                name: "updateRecipe",
+                operation: {
+                    RecipeFormService.update(
+                        context: context,
+                        recipe: recipe,
+                        draft: draft
+                    )
+                },
+                adapter: effectAdapter,
+                projection: projection
+            )
+            return .init(
+                value: (),
+                effects: effects
+            )
+        } catch {
+            unexpectedFailure(
+                error,
+                name: "updateRecipe"
+            )
+        }
     }
 
     func delete(
@@ -92,20 +108,32 @@ final class RecipeActionService {
         let effects = recipeMutationEffects(
             requestReview: false
         )
-        let afterSuccess: @MainActor @Sendable () -> MutationEffect = {
+        let projection = MHMutationProjectionStrategy<Void, MutationEffect, Void>.fixedAdapterValue(
             effects
-        }
-        return await CookleMutationWorkflow.run(
-            name: "deleteRecipe",
-            operation: {
-                RecipeService.delete(
-                    context: context,
-                    recipe: recipe
-                )
-            },
-            adapter: effectAdapter,
-            afterSuccess: afterSuccess
         )
+
+        do {
+            let _: Void = try await MHMutationWorkflow.runThrowing(
+                name: "deleteRecipe",
+                operation: {
+                    RecipeService.delete(
+                        context: context,
+                        recipe: recipe
+                    )
+                },
+                adapter: effectAdapter,
+                projection: projection
+            )
+            return .init(
+                value: (),
+                effects: effects
+            )
+        } catch {
+            unexpectedFailure(
+                error,
+                name: "deleteRecipe"
+            )
+        }
     }
 
     func replaceGeneratedPhoto(
@@ -148,23 +176,44 @@ final class RecipeActionService {
     func recordOpenedRecipe(
         _ recipe: Recipe
     ) async -> MutationOutcome<Void> {
-        let afterSuccess: @MainActor @Sendable () -> MutationEffect = {
-            [
-                .recipeDataChanged
-            ]
-        }
-        return await CookleMutationWorkflow.run(
-            name: "recordOpenedRecipe",
-            operation: {
-                RecipeService.recordLastOpenedRecipe(recipe)
-            },
-            adapter: effectAdapter,
-            afterSuccess: afterSuccess
+        let effects: MutationEffect = [
+            .recipeDataChanged
+        ]
+        let projection = MHMutationProjectionStrategy<Void, MutationEffect, Void>.fixedAdapterValue(
+            effects
         )
+
+        do {
+            let _: Void = try await MHMutationWorkflow.runThrowing(
+                name: "recordOpenedRecipe",
+                operation: {
+                    RecipeService.recordLastOpenedRecipe(recipe)
+                },
+                adapter: effectAdapter,
+                projection: projection
+            )
+            return .init(
+                value: (),
+                effects: effects
+            )
+        } catch {
+            unexpectedFailure(
+                error,
+                name: "recordOpenedRecipe"
+            )
+        }
     }
 }
 
 private extension RecipeActionService {
+    func unexpectedFailure(
+        _ error: any Error,
+        name: String
+    ) -> Never {
+        assertionFailure(error.localizedDescription)
+        preconditionFailure("Mutation unexpectedly failed: \(name)")
+    }
+
     func recipe(
         for persistentIdentifier: PersistentIdentifier,
         context: ModelContext

@@ -16,7 +16,7 @@ final class DiaryActionService {
     private let effectAdapter: MHMutationAdapter<MutationEffect>
 
     init() {
-        effectAdapter = CookleMutationWorkflow.effectAdapter()
+        effectAdapter = CookleMutationEffectAdapter.make()
     }
 
     func create(
@@ -24,28 +24,44 @@ final class DiaryActionService {
         date: Date,
         input: FormInput
     ) async -> MutationOutcome<Diary> {
-        let mutationOutcome = await CookleMutationWorkflow.run(
-            name: "createDiary",
-            operation: {
-                DiaryService.create(
-                    context: context,
-                    date: date,
-                    breakfasts: input.breakfasts,
-                    lunches: input.lunches,
-                    dinners: input.dinners,
-                    note: input.note
-                ).persistentModelID
-            },
-            adapter: effectAdapter,
-            afterSuccess: diaryMutationEffects(for:)
-        )
-        return .init(
-            value: diary(
-                for: mutationOutcome.value,
-                context: context
-            ),
-            effects: mutationOutcome.effects
-        )
+        let effects = diaryMutationEffects
+        let projection =
+            MHMutationProjectionStrategy<
+                PersistentIdentifier,
+                MutationEffect,
+                PersistentIdentifier
+            >
+            .fixedAdapterValue(effects)
+
+        do {
+            let persistentIdentifier = try await MHMutationWorkflow.runThrowing(
+                name: "createDiary",
+                operation: {
+                    DiaryService.create(
+                        context: context,
+                        date: date,
+                        breakfasts: input.breakfasts,
+                        lunches: input.lunches,
+                        dinners: input.dinners,
+                        note: input.note
+                    ).persistentModelID
+                },
+                adapter: effectAdapter,
+                projection: projection
+            )
+            return .init(
+                value: diary(
+                    for: persistentIdentifier,
+                    context: context
+                ),
+                effects: effects
+            )
+        } catch {
+            unexpectedFailure(
+                error,
+                name: "createDiary"
+            )
+        }
     }
 
     func update(
@@ -54,22 +70,38 @@ final class DiaryActionService {
         date: Date,
         input: FormInput
     ) async -> MutationOutcome<Void> {
-        await CookleMutationWorkflow.run(
-            name: "updateDiary",
-            operation: {
-                DiaryService.update(
-                    context: context,
-                    diary: diary,
-                    date: date,
-                    breakfasts: input.breakfasts,
-                    lunches: input.lunches,
-                    dinners: input.dinners,
-                    note: input.note
-                )
-            },
-            adapter: effectAdapter,
-            afterSuccess: diaryMutationEffects(for:)
+        let effects = diaryMutationEffects
+        let projection = MHMutationProjectionStrategy<Void, MutationEffect, Void>.fixedAdapterValue(
+            effects
         )
+
+        do {
+            let _: Void = try await MHMutationWorkflow.runThrowing(
+                name: "updateDiary",
+                operation: {
+                    DiaryService.update(
+                        context: context,
+                        diary: diary,
+                        date: date,
+                        breakfasts: input.breakfasts,
+                        lunches: input.lunches,
+                        dinners: input.dinners,
+                        note: input.note
+                    )
+                },
+                adapter: effectAdapter,
+                projection: projection
+            )
+            return .init(
+                value: (),
+                effects: effects
+            )
+        } catch {
+            unexpectedFailure(
+                error,
+                name: "updateDiary"
+            )
+        }
     }
 
     func update(
@@ -102,7 +134,15 @@ final class DiaryActionService {
         recipe: Recipe,
         type: DiaryObjectType
     ) async throws -> MutationOutcome<Diary> {
-        let mutationOutcome = try await CookleMutationWorkflow.runThrowing(
+        let effects = diaryMutationEffects
+        let projection =
+            MHMutationProjectionStrategy<
+                PersistentIdentifier,
+                MutationEffect,
+                PersistentIdentifier
+            >
+            .fixedAdapterValue(effects)
+        let persistentIdentifier = try await MHMutationWorkflow.runThrowing(
             name: "addRecipeToDiary",
             operation: {
                 try DiaryService.add(
@@ -113,14 +153,14 @@ final class DiaryActionService {
                 ).persistentModelID
             },
             adapter: effectAdapter,
-            afterSuccess: diaryMutationEffects(for:)
+            projection: projection
         )
         return .init(
             value: diary(
-                for: mutationOutcome.value,
+                for: persistentIdentifier,
                 context: context
             ),
-            effects: mutationOutcome.effects
+            effects: effects
         )
     }
 
@@ -128,17 +168,33 @@ final class DiaryActionService {
         context: ModelContext,
         diary: Diary
     ) async -> MutationOutcome<Void> {
-        await CookleMutationWorkflow.run(
-            name: "deleteDiary",
-            operation: {
-                DiaryService.delete(
-                    context: context,
-                    diary: diary
-                )
-            },
-            adapter: effectAdapter,
-            afterSuccess: diaryMutationEffects(for:)
+        let effects = diaryMutationEffects
+        let projection = MHMutationProjectionStrategy<Void, MutationEffect, Void>.fixedAdapterValue(
+            effects
         )
+
+        do {
+            let _: Void = try await MHMutationWorkflow.runThrowing(
+                name: "deleteDiary",
+                operation: {
+                    DiaryService.delete(
+                        context: context,
+                        diary: diary
+                    )
+                },
+                adapter: effectAdapter,
+                projection: projection
+            )
+            return .init(
+                value: (),
+                effects: effects
+            )
+        } catch {
+            unexpectedFailure(
+                error,
+                name: "deleteDiary"
+            )
+        }
     }
 
     func delete(
@@ -164,20 +220,18 @@ final class DiaryActionService {
 }
 
 private extension DiaryActionService {
-    func diaryMutationEffects(
-        for _: PersistentIdentifier
-    ) -> MutationEffect {
+    var diaryMutationEffects: MutationEffect {
         [
             .diaryDataChanged
         ]
     }
 
-    func diaryMutationEffects(
-        for _: Void
-    ) -> MutationEffect {
-        [
-            .diaryDataChanged
-        ]
+    func unexpectedFailure(
+        _ error: any Error,
+        name: String
+    ) -> Never {
+        assertionFailure(error.localizedDescription)
+        preconditionFailure("Mutation unexpectedly failed: \(name)")
     }
 
     func diary(
