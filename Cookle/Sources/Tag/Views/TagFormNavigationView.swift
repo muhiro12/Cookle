@@ -1,3 +1,4 @@
+import SwiftData
 import SwiftUI
 
 struct TagFormNavigationView<T: Tag>: View {
@@ -8,6 +9,8 @@ struct TagFormNavigationView<T: Tag>: View {
     }
 }
 
-#Preview {
+#Preview(traits: .modifier(CookleSampleData())) {
+    @Previewable @Query var categories: [Category]
     TagFormNavigationView<Category>()
+        .environment(categories[0])
 }

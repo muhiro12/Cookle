@@ -49,7 +49,6 @@ private extension AdvertisementSection.Size {
     }
 }
 
-@available(iOS 18.0, *)
 #Preview(traits: .modifier(CookleSampleData())) {
     List {
         AdvertisementSection(.medium)

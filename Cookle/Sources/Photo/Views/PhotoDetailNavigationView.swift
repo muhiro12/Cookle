@@ -17,7 +17,6 @@ struct PhotoDetailNavigationView: View {
     }
 }
 
-@available(iOS 18.0, *)
 #Preview(traits: .modifier(CookleSampleData())) {
     @Previewable @Query var photos: [Photo]
     PhotoDetailNavigationView(photos: photos)

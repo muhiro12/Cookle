@@ -13,16 +13,13 @@ enum CookleSampleDataContext {
         let settingsActionService: SettingsActionService
     }
 
-    static let previewStore = CooklePreviewStore()
-
-    static let sharedContext: CookleSampleData.Context = makeSharedContext()
-
     static func makeSharedContext() -> CookleSampleData.Context {
         do {
             let modelContainer = try ModelContainer(
                 for: Recipe.self,
                 configurations: .init(isStoredInMemoryOnly: true)
             )
+            let previewStore = CooklePreviewStore()
             previewStore.prepare(modelContainer.mainContext)
             let services = makeServices(modelContainer: modelContainer)
             let appRuntime = MainActor.assumeIsolated {

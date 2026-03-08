@@ -80,7 +80,6 @@ struct TagFormView<T: Tag>: View {
     }
 }
 
-@available(iOS 18.0, *)
 #Preview(traits: .modifier(CookleSampleData())) {
     @Previewable @Query var categories: [Category]
     TagFormNavigationView<Category>()

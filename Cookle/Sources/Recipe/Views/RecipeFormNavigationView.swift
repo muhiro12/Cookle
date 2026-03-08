@@ -14,6 +14,6 @@ struct RecipeFormNavigationView: View {
     }
 }
 
-#Preview {
+#Preview(traits: .modifier(CookleSampleData())) {
     RecipeFormNavigationView(type: .create)
 }

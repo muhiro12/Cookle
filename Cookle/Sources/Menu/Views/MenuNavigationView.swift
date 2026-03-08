@@ -66,7 +66,6 @@ struct MenuNavigationView: View {
     }
 }
 
-@available(iOS 18.0, *)
 #Preview(traits: .modifier(CookleSampleData())) {
     MenuNavigationView()
 }

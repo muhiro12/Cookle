@@ -257,7 +257,6 @@ private extension SettingsSidebarView {
     }
 }
 
-@available(iOS 18.0, *)
 #Preview(traits: .modifier(CookleSampleData())) {
     NavigationStack {
         SettingsSidebarView()

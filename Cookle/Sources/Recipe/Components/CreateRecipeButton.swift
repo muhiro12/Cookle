@@ -139,7 +139,7 @@ struct CreateRecipeButton: View {
     }
 }
 
-#Preview {
+#Preview(traits: .modifier(CookleSampleData())) {
     CreateRecipeButton(
         name: .empty,
         photos: .empty,

@@ -58,7 +58,6 @@ private extension DebugContentView {
     }
 }
 
-@available(iOS 18.0, *)
 #Preview(traits: .modifier(CookleSampleData())) {
     DebugContentView<Recipe>()
 }

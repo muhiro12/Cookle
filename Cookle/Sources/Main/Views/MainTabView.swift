@@ -110,7 +110,6 @@ private extension MainTabView {
     }
 }
 
-@available(iOS 18.0, *)
 #Preview(traits: .modifier(CookleSampleData())) {
     MainTabView(selection: .constant(.diary))
 }

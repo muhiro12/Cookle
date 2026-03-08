@@ -65,7 +65,6 @@ private extension ContentView {
     }
 }
 
-@available(iOS 18.0, *)
 #Preview(traits: .modifier(CookleSampleData())) {
     ContentView()
 }

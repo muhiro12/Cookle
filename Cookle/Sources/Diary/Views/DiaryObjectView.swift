@@ -41,7 +41,6 @@ struct DiaryObjectView: View {
     }
 }
 
-@available(iOS 18.0, *)
 #Preview(traits: .modifier(CookleSampleData())) {
     @Previewable @Query var diaryObjects: [DiaryObject]
     DiaryObjectView()

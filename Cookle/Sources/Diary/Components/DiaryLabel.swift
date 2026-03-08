@@ -93,7 +93,6 @@ struct DiaryLabel: View {
     }
 }
 
-@available(iOS 18.0, *)
 #Preview(traits: .modifier(CookleSampleData())) {
     @Previewable @Query var diaries: [Diary]
     List {

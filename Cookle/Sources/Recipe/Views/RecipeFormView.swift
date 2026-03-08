@@ -205,11 +205,10 @@ struct RecipeFormView: View {
     }
 }
 
-#Preview {
+#Preview(traits: .modifier(CookleSampleData())) {
     RecipeFormNavigationView(type: .create)
 }
 
-@available(iOS 18.0, *)
 #Preview(traits: .modifier(CookleSampleData())) {
     @Previewable @Query var recipes: [Recipe]
     RecipeFormNavigationView(type: .edit)

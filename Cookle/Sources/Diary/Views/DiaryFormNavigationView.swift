@@ -8,6 +8,6 @@ struct DiaryFormNavigationView: View {
     }
 }
 
-#Preview {
+#Preview(traits: .modifier(CookleSampleData())) {
     DiaryFormNavigationView()
 }

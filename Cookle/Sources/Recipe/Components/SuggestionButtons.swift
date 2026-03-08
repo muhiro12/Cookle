@@ -32,7 +32,6 @@ struct SuggestionButtons<T: Tag>: View {
     }
 }
 
-@available(iOS 18.0, *)
 #Preview(traits: .modifier(CookleSampleData())) {
     SuggestionButtons<Category>(input: .constant("A"))
 }

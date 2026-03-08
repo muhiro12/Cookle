@@ -62,7 +62,6 @@ struct PhotoObjectView: View {
     }
 }
 
-@available(iOS 18.0, *)
 #Preview(traits: .modifier(CookleSampleData())) {
     @Previewable @Query var photoObjects: [PhotoObject]
     PhotoObjectView()

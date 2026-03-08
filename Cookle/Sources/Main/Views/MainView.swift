@@ -177,7 +177,6 @@ private extension MainView {
     }
 }
 
-@available(iOS 18.0, *)
 #Preview(traits: .modifier(CookleSampleData())) {
     MainView()
 }

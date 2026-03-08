@@ -34,7 +34,6 @@ struct RecipeStepsSection: View {
     }
 }
 
-@available(iOS 18.0, *)
 #Preview(traits: .modifier(CookleSampleData())) {
     @Previewable @Query var recipes: [Recipe]
     List {

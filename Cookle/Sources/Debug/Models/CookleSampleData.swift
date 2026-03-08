@@ -17,7 +17,7 @@ struct CookleSampleData: PreviewModifier {
     }
 
     static func makeSharedContext() -> Context {
-        CookleSampleDataContext.sharedContext
+        CookleSampleDataContext.makeSharedContext()
     }
 
     func body(content: Content, context: Context) -> some View {

@@ -167,7 +167,6 @@ struct RecipeFormPhotosSection: View {
     }
 }
 
-@available(iOS 18.0, *)
 #Preview(traits: .modifier(CookleSampleData())) {
     @Previewable @Query var photos: [Photo]
     Form {

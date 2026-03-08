@@ -72,7 +72,6 @@ struct DeleteTagButton<T: Tag>: View {
     }
 }
 
-@available(iOS 18.0, *)
 #Preview(traits: .modifier(CookleSampleData())) {
     @Previewable @Query var categories: [Category]
     DeleteTagButton<Category>()
