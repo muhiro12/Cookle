@@ -1,6 +1,6 @@
 import MHPlatform
 import Observation
-import SwiftData
+@preconcurrency import SwiftData
 
 @MainActor
 @Observable
@@ -9,6 +9,17 @@ final class SettingsActionService {
 
     init(notificationService: NotificationService) {
         self.notificationService = notificationService
+    }
+
+    func prepareNotificationSettings() async {
+        normalizeNotificationDefaultsIfNeeded()
+        await notificationService.refreshAuthorizationStatus()
+        await notificationService.synchronizeScheduledSuggestions()
+    }
+
+    func applyNotificationSettings() async {
+        normalizeNotificationDefaultsIfNeeded()
+        await notificationService.applySuggestionSettings()
     }
 
     func deleteAllData(context: ModelContext) async throws {
@@ -34,5 +45,23 @@ final class SettingsActionService {
                 }
             ]
         )
+    }
+}
+
+private extension SettingsActionService {
+    func normalizeNotificationDefaultsIfNeeded() {
+        if CooklePreferences.contains(.dailyRecipeSuggestionHour) == false {
+            CooklePreferences.set(
+                DailySuggestionTimePolicy.defaultHour,
+                for: .dailyRecipeSuggestionHour
+            )
+        }
+
+        if CooklePreferences.contains(.dailyRecipeSuggestionMinute) == false {
+            CooklePreferences.set(
+                DailySuggestionTimePolicy.minimumTimeComponent,
+                for: .dailyRecipeSuggestionMinute
+            )
+        }
     }
 }

@@ -33,29 +33,29 @@ final class RecipeActionService {
         draft: RecipeFormDraft,
         requestReview: Bool = true
     ) async -> MutationOutcome<Recipe> {
-        let recipeStore = CookleMutationWorkflow.ValueStore<Recipe>()
-        let effects = await CookleMutationWorkflow.run(
+        let effects = recipeMutationEffects(
+            requestReview: requestReview
+        )
+        let afterSuccess: @MainActor @Sendable (PersistentIdentifier) -> MutationEffect = { _ in
+            effects
+        }
+        let mutationOutcome = await CookleMutationWorkflow.run(
             name: "createRecipe",
             operation: {
-                let recipe = RecipeFormService.create(
+                RecipeFormService.create(
                     context: context,
                     draft: draft
-                )
-                recipeStore.value = recipe
-                return self.recipeMutationEffects(
-                    requestReview: requestReview
-                )
+                ).persistentModelID
             },
-            adapter: effectAdapter
+            adapter: effectAdapter,
+            afterSuccess: afterSuccess
         )
-
-        guard let recipe = recipeStore.value else {
-            preconditionFailure("Recipe result was not captured.")
-        }
-
         return .init(
-            value: recipe,
-            effects: effects
+            value: recipe(
+                for: mutationOutcome.value,
+                context: context
+            ),
+            effects: mutationOutcome.effects
         )
     }
 
@@ -65,7 +65,13 @@ final class RecipeActionService {
         draft: RecipeFormDraft,
         requestReview: Bool = true
     ) async -> MutationOutcome<Void> {
-        let effects = await CookleMutationWorkflow.run(
+        let effects = recipeMutationEffects(
+            requestReview: requestReview
+        )
+        let afterSuccess: @MainActor @Sendable () -> MutationEffect = {
+            effects
+        }
+        return await CookleMutationWorkflow.run(
             name: "updateRecipe",
             operation: {
                 RecipeFormService.update(
@@ -73,15 +79,9 @@ final class RecipeActionService {
                     recipe: recipe,
                     draft: draft
                 )
-                return self.recipeMutationEffects(
-                    requestReview: requestReview
-                )
             },
-            adapter: effectAdapter
-        )
-        return .init(
-            value: (),
-            effects: effects
+            adapter: effectAdapter,
+            afterSuccess: afterSuccess
         )
     }
 
@@ -89,22 +89,22 @@ final class RecipeActionService {
         context: ModelContext,
         recipe: Recipe
     ) async -> MutationOutcome<Void> {
-        let effects = await CookleMutationWorkflow.run(
+        let effects = recipeMutationEffects(
+            requestReview: false
+        )
+        let afterSuccess: @MainActor @Sendable () -> MutationEffect = {
+            effects
+        }
+        return await CookleMutationWorkflow.run(
             name: "deleteRecipe",
             operation: {
                 RecipeService.delete(
                     context: context,
                     recipe: recipe
                 )
-                return self.recipeMutationEffects(
-                    requestReview: false
-                )
             },
-            adapter: effectAdapter
-        )
-        return .init(
-            value: (),
-            effects: effects
+            adapter: effectAdapter,
+            afterSuccess: afterSuccess
         )
     }
 
@@ -148,24 +148,35 @@ final class RecipeActionService {
     func recordOpenedRecipe(
         _ recipe: Recipe
     ) async -> MutationOutcome<Void> {
-        let effects = await CookleMutationWorkflow.run(
+        let afterSuccess: @MainActor @Sendable () -> MutationEffect = {
+            [
+                .recipeDataChanged
+            ]
+        }
+        return await CookleMutationWorkflow.run(
             name: "recordOpenedRecipe",
             operation: {
                 RecipeService.recordLastOpenedRecipe(recipe)
-                return [
-                    .recipeDataChanged
-                ]
             },
-            adapter: effectAdapter
-        )
-        return .init(
-            value: (),
-            effects: effects
+            adapter: effectAdapter,
+            afterSuccess: afterSuccess
         )
     }
 }
 
 private extension RecipeActionService {
+    func recipe(
+        for persistentIdentifier: PersistentIdentifier,
+        context: ModelContext
+    ) -> Recipe {
+        guard let recipe = context.model(
+            for: persistentIdentifier
+        ) as? Recipe else {
+            preconditionFailure("Recipe result was not resolved.")
+        }
+        return recipe
+    }
+
     func recipeMutationEffects(
         requestReview: Bool
     ) -> MutationEffect {

@@ -47,6 +47,8 @@ It owns:
 
 - SwiftUI views
 - App Intents
+- app bootstrap context and environment wiring
+- runtime lifecycle planning
 - workflow services that orchestrate app-only follow-up
 - notifications, widget reloads, review prompts, and app-only routing
 
@@ -72,6 +74,8 @@ User-facing command flows in the app should go through workflow services such as
 `SettingsActionService`.
 
 These services wrap shared mutations and then run app-only side effects.
+Review prompts should be attached to successful user-facing workflows rather
+than generic app foreground transitions.
 
 ### Canonical search
 
@@ -85,6 +89,8 @@ views, intents, and widgets.
 - shared domain behavior is reusable across targets
 - App Intents expose existing workflows instead of creating a parallel system
 - app-only side effects have a single home
+- startup and foreground refresh logic can be explained through shared runtime
+  lifecycle plans instead of scattered handlers
 - the architecture is easier to explain and maintain
 - future targets can add their own adapters without changing the shared core
 

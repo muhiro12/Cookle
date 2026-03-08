@@ -2,18 +2,7 @@ import MHPlatform
 import SwiftData
 
 enum CookleSampleDataContext {
-    struct Services {
-        let routeInbox: MHObservableDeepLinkInbox
-        let notificationService: NotificationService
-        let tipController: CookleTipController
-        let configurationService: ConfigurationService
-        let recipeActionService: RecipeActionService
-        let diaryActionService: DiaryActionService
-        let tagActionService: TagActionService
-        let settingsActionService: SettingsActionService
-    }
-
-    static func makeSharedContext() -> CookleSampleData.Context {
+    static func makeSharedContext() -> CookleAppContext {
         do {
             let modelContainer = try ModelContainer(
                 for: Recipe.self,
@@ -21,55 +10,13 @@ enum CookleSampleDataContext {
             )
             let previewStore = CooklePreviewStore()
             previewStore.prepare(modelContainer.mainContext)
-            let services = makeServices(modelContainer: modelContainer)
-            let appRuntime = MainActor.assumeIsolated {
-                MHAppRuntime(
-                    configuration: .init(
-                        subscriptionProductIDs: [Secret.productID],
-                        subscriptionGroupID: Secret.groupID,
-                        nativeAdUnitID: Secret.adUnitIDDev,
-                        preferencesSuiteName: CookleSharedPreferences.appGroupIdentifier,
-                        showsLicenses: true
-                    )
+            return MainActor.assumeIsolated {
+                CookleAppContext.preview(
+                    modelContainer: modelContainer
                 )
             }
-
-            return .init(
-                modelContainer: modelContainer,
-                appRuntime: appRuntime,
-                routeInbox: services.routeInbox,
-                notificationService: services.notificationService,
-                tipController: services.tipController,
-                configurationService: services.configurationService,
-                recipeActionService: services.recipeActionService,
-                diaryActionService: services.diaryActionService,
-                tagActionService: services.tagActionService,
-                settingsActionService: services.settingsActionService
-            )
         } catch {
             fatalError("Failed to create shared Cookle sample data context: \(error.localizedDescription)")
-        }
-    }
-
-    static func makeServices(modelContainer: ModelContainer) -> Services {
-        MainActor.assumeIsolated {
-            let tipController = CookleTipController()
-            try? tipController.configureIfNeeded()
-            let routeInbox = MHObservableDeepLinkInbox()
-            let notificationService = NotificationService(
-                modelContainer: modelContainer,
-                routeInbox: routeInbox
-            )
-            return .init(
-                routeInbox: routeInbox,
-                notificationService: notificationService,
-                tipController: tipController,
-                configurationService: .init(),
-                recipeActionService: .init(notificationService: notificationService),
-                diaryActionService: .init(),
-                tagActionService: .init(),
-                settingsActionService: .init(notificationService: notificationService)
-            )
         }
     }
 }

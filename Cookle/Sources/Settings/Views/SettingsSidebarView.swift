@@ -78,26 +78,18 @@ struct SettingsSidebarView: View {
                 Text("Are you sure you want to delete all data?")
             }
             .task {
-                normalizeSuggestionTimeDefaultsIfNeeded()
-                await notificationService.refreshAuthorizationStatus()
-                await notificationService.synchronizeScheduledSuggestions()
+                await settingsActionService.prepareNotificationSettings()
                 refreshTipEligibility()
             }
             .onChange(of: isDailyRecipeSuggestionNotificationOn) {
                 refreshTipEligibility()
-                Task {
-                    await notificationService.applySuggestionSettings()
-                }
+                applyNotificationSettings()
             }
             .onChange(of: dailyRecipeSuggestionHour) {
-                Task {
-                    await notificationService.applySuggestionSettings()
-                }
+                applyNotificationSettings()
             }
             .onChange(of: dailyRecipeSuggestionMinute) {
-                Task {
-                    await notificationService.applySuggestionSettings()
-                }
+                applyNotificationSettings()
             }
             .onChange(of: isSubscribeOn) {
                 refreshTipEligibility()
@@ -232,12 +224,9 @@ private extension SettingsSidebarView {
         }
     }
 
-    func normalizeSuggestionTimeDefaultsIfNeeded() {
-        if CooklePreferences.contains(.dailyRecipeSuggestionHour) == false {
-            dailyRecipeSuggestionHour = DailySuggestionTimePolicy.defaultHour
-        }
-        if CooklePreferences.contains(.dailyRecipeSuggestionMinute) == false {
-            dailyRecipeSuggestionMinute = DailySuggestionTimePolicy.minimumTimeComponent
+    func applyNotificationSettings() {
+        Task {
+            await settingsActionService.applyNotificationSettings()
         }
     }
 

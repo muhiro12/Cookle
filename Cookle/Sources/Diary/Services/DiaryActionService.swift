@@ -24,33 +24,27 @@ final class DiaryActionService {
         date: Date,
         input: FormInput
     ) async -> MutationOutcome<Diary> {
-        let diaryStore = CookleMutationWorkflow.ValueStore<Diary>()
-        let effects = await CookleMutationWorkflow.run(
+        let mutationOutcome = await CookleMutationWorkflow.run(
             name: "createDiary",
             operation: {
-                let diary = DiaryService.create(
+                DiaryService.create(
                     context: context,
                     date: date,
                     breakfasts: input.breakfasts,
                     lunches: input.lunches,
                     dinners: input.dinners,
                     note: input.note
-                )
-                diaryStore.value = diary
-                return [
-                    .diaryDataChanged
-                ]
+                ).persistentModelID
             },
-            adapter: effectAdapter
+            adapter: effectAdapter,
+            afterSuccess: diaryMutationEffects(for:)
         )
-
-        guard let diary = diaryStore.value else {
-            preconditionFailure("Diary result was not captured.")
-        }
-
         return .init(
-            value: diary,
-            effects: effects
+            value: diary(
+                for: mutationOutcome.value,
+                context: context
+            ),
+            effects: mutationOutcome.effects
         )
     }
 
@@ -60,7 +54,7 @@ final class DiaryActionService {
         date: Date,
         input: FormInput
     ) async -> MutationOutcome<Void> {
-        let effects = await CookleMutationWorkflow.run(
+        await CookleMutationWorkflow.run(
             name: "updateDiary",
             operation: {
                 DiaryService.update(
@@ -72,15 +66,9 @@ final class DiaryActionService {
                     dinners: input.dinners,
                     note: input.note
                 )
-                return [
-                    .diaryDataChanged
-                ]
             },
-            adapter: effectAdapter
-        )
-        return .init(
-            value: (),
-            effects: effects
+            adapter: effectAdapter,
+            afterSuccess: diaryMutationEffects(for:)
         )
     }
 
@@ -114,31 +102,25 @@ final class DiaryActionService {
         recipe: Recipe,
         type: DiaryObjectType
     ) async throws -> MutationOutcome<Diary> {
-        let diaryStore = CookleMutationWorkflow.ValueStore<Diary>()
-        let effects = try await CookleMutationWorkflow.runThrowing(
+        let mutationOutcome = try await CookleMutationWorkflow.runThrowing(
             name: "addRecipeToDiary",
             operation: {
-                let diary = try DiaryService.add(
+                try DiaryService.add(
                     context: context,
                     date: date,
                     recipe: recipe,
                     type: type
-                )
-                diaryStore.value = diary
-                return [
-                    .diaryDataChanged
-                ]
+                ).persistentModelID
             },
-            adapter: effectAdapter
+            adapter: effectAdapter,
+            afterSuccess: diaryMutationEffects(for:)
         )
-
-        guard let diary = diaryStore.value else {
-            preconditionFailure("Diary result was not captured.")
-        }
-
         return .init(
-            value: diary,
-            effects: effects
+            value: diary(
+                for: mutationOutcome.value,
+                context: context
+            ),
+            effects: mutationOutcome.effects
         )
     }
 
@@ -146,22 +128,16 @@ final class DiaryActionService {
         context: ModelContext,
         diary: Diary
     ) async -> MutationOutcome<Void> {
-        let effects = await CookleMutationWorkflow.run(
+        await CookleMutationWorkflow.run(
             name: "deleteDiary",
             operation: {
                 DiaryService.delete(
                     context: context,
                     diary: diary
                 )
-                return [
-                    .diaryDataChanged
-                ]
             },
-            adapter: effectAdapter
-        )
-        return .init(
-            value: (),
-            effects: effects
+            adapter: effectAdapter,
+            afterSuccess: diaryMutationEffects(for:)
         )
     }
 
@@ -184,5 +160,35 @@ final class DiaryActionService {
             value: true,
             effects: mutationOutcome.effects
         )
+    }
+}
+
+private extension DiaryActionService {
+    func diaryMutationEffects(
+        for _: PersistentIdentifier
+    ) -> MutationEffect {
+        [
+            .diaryDataChanged
+        ]
+    }
+
+    func diaryMutationEffects(
+        for _: Void
+    ) -> MutationEffect {
+        [
+            .diaryDataChanged
+        ]
+    }
+
+    func diary(
+        for persistentIdentifier: PersistentIdentifier,
+        context: ModelContext
+    ) -> Diary {
+        guard let diary = context.model(
+            for: persistentIdentifier
+        ) as? Diary else {
+            preconditionFailure("Diary result was not resolved.")
+        }
+        return diary
     }
 }

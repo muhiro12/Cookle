@@ -9,7 +9,6 @@ import AppIntents
 import MHPlatform
 import SwiftData
 import SwiftUI
-import TipKit
 
 @main
 struct CookleApp: App {
@@ -20,35 +19,14 @@ struct CookleApp: App {
     @AppStorage(.lastLaunchedAppVersion)
     private var lastLaunchedAppVersion
 
-    private let sharedModelContainer: ModelContainer
-    private let sharedAppRuntime: MHAppRuntime
-    private let sharedConfigurationService: ConfigurationService
-    private let sharedRouteInbox: MHObservableDeepLinkInbox
-    private let sharedNotificationService: NotificationService
-    private let sharedTipController: CookleTipController
-    private let sharedRecipeActionService: RecipeActionService
-    private let sharedDiaryActionService: DiaryActionService
-    private let sharedTagActionService: TagActionService
-    private let sharedSettingsActionService: SettingsActionService
+    private let sharedContext: CookleAppContext
     private let startupLogger = Self.logger(category: "AppStartup")
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .id(isICloudOn)
-                .modelContainer(sharedModelContainer)
-                .environment(sharedAppRuntime)
-                .environment(sharedConfigurationService)
-                .environment(sharedRouteInbox)
-                .environment(sharedNotificationService)
-                .environment(sharedTipController)
-                .environment(sharedRecipeActionService)
-                .environment(sharedDiaryActionService)
-                .environment(sharedTagActionService)
-                .environment(sharedSettingsActionService)
-                .task {
-                    performStartupTasks()
-                }
+                .cookleAppContext(sharedContext)
         }
     }
 
@@ -59,64 +37,30 @@ struct CookleApp: App {
             ? .automatic
             : .none
 
-        sharedModelContainer = Self.makeModelContainer(
+        sharedContext = Self.makeContext(
             cloudKitDatabase: cloudKitDatabase
         )
-
-        sharedAppRuntime = Self.makeAppRuntime()
-        sharedConfigurationService = .init()
-        sharedRouteInbox = .init()
-        sharedNotificationService = .init(
-            modelContainer: sharedModelContainer,
-            routeInbox: sharedRouteInbox
-        )
-        sharedTipController = .init()
-        sharedRecipeActionService = .init(
-            notificationService: sharedNotificationService
-        )
-        sharedDiaryActionService = .init()
-        sharedTagActionService = .init()
-        sharedSettingsActionService = .init(
-            notificationService: sharedNotificationService
-        )
         startupLogger.notice("startup dependencies ready")
+
+        #if DEBUG
+        isDebugOn = true
+        #endif
 
         CookleShortcuts.updateAppShortcutParameters()
 
         registerAppIntentDependencies()
-        configureTipController()
         updateLastLaunchedVersion()
         startupLogger.notice("startup wiring finished")
     }
 }
 
 private extension CookleApp {
-    static var adUnitID: String {
-        #if DEBUG
-        Secret.adUnitIDDev
-        #else
-        Secret.adUnitID
-        #endif
-    }
-
     @MainActor
-    static func makeAppRuntime() -> MHAppRuntime {
-        .init(
-            configuration: .init(
-                subscriptionProductIDs: [Secret.productID],
-                subscriptionGroupID: Secret.groupID,
-                nativeAdUnitID: adUnitID,
-                preferencesSuiteName: CookleSharedPreferences.appGroupIdentifier,
-                showsLicenses: true
-            )
-        )
-    }
-
-    static func makeModelContainer(
+    static func makeContext(
         cloudKitDatabase: ModelConfiguration.CloudKitDatabase
-    ) -> ModelContainer {
+    ) -> CookleAppContext {
         do {
-            return try ModelContainerFactory.appContainer(
+            return try CookleAppContext.live(
                 cloudKitDatabase: cloudKitDatabase
             )
         } catch {
@@ -124,34 +68,18 @@ private extension CookleApp {
         }
     }
 
-    func performStartupTasks() {
-        #if DEBUG
-        isDebugOn = true
-        #endif
-
-        sharedAppRuntime.startIfNeeded()
-    }
-
     func registerAppIntentDependencies() {
         // Provide dependencies for AppIntents entity queries.
-        let modelContainerForDependency = sharedModelContainer
+        let modelContainerForDependency = sharedContext.modelContainer
         AppDependencyManager.shared.add { modelContainerForDependency }
-        let recipeActionServiceForDependency = sharedRecipeActionService
+        let recipeActionServiceForDependency = sharedContext.recipeActionService
         AppDependencyManager.shared.add { recipeActionServiceForDependency }
-        let diaryActionServiceForDependency = sharedDiaryActionService
+        let diaryActionServiceForDependency = sharedContext.diaryActionService
         AppDependencyManager.shared.add { diaryActionServiceForDependency }
-        let tagActionServiceForDependency = sharedTagActionService
+        let tagActionServiceForDependency = sharedContext.tagActionService
         AppDependencyManager.shared.add { tagActionServiceForDependency }
-        let settingsActionServiceForDependency = sharedSettingsActionService
+        let settingsActionServiceForDependency = sharedContext.settingsActionService
         AppDependencyManager.shared.add { settingsActionServiceForDependency }
-    }
-
-    func configureTipController() {
-        do {
-            try sharedTipController.configureIfNeeded()
-        } catch {
-            assertionFailure(error.localizedDescription)
-        }
     }
 
     func updateLastLaunchedVersion() {

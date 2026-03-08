@@ -30,14 +30,14 @@ enum MainRouteService {
     }
 
     static func applyPendingRouteIfNeeded(
-        from source: some MHDeepLinkURLSource,
+        from sources: MHDeepLinkSourceChain,
         state: MainNavigationState,
         context: ModelContext,
         isRegularWidth: Bool
     ) async throws -> MainNavigationState {
         var nextState = state
         guard try await routeLifecycle.submitLatest(
-            from: source,
+            from: sources,
             parse: { routeURL in
                 CookleRouteParser.parse(url: routeURL)
             },
@@ -52,46 +52,6 @@ enum MainRouteService {
         ) != nil else {
             return state
         }
-        return nextState
-    }
-
-    static func applyPendingIntentRouteIfNeeded(
-        state: MainNavigationState,
-        context: ModelContext,
-        isRegularWidth: Bool
-    ) async throws -> MainNavigationState {
-        guard let intentRouteSource = CookleIntentRouteStore.source else {
-            return state
-        }
-        return try await applyPendingRouteIfNeeded(
-            from: intentRouteSource,
-            state: state,
-            context: context,
-            isRegularWidth: isRegularWidth
-        )
-    }
-
-    static func handleIncomingURL(
-        _ url: URL,
-        state: MainNavigationState,
-        context: ModelContext,
-        isRegularWidth: Bool
-    ) async throws -> MainNavigationState {
-        var nextState = state
-        _ = try await routeLifecycle.submit(
-            url,
-            parse: { routeURL in
-                CookleRouteParser.parse(url: routeURL)
-            },
-            applyOnMainActor: { resolvedRoute in
-                nextState = try apply(
-                    route: resolvedRoute,
-                    state: nextState,
-                    context: context,
-                    isRegularWidth: isRegularWidth
-                )
-            }
-        )
         return nextState
     }
 }

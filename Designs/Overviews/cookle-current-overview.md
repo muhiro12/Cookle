@@ -1,6 +1,6 @@
 # Cookle Product and Architecture Overview
 
-Implementation snapshot based on the repository state on March 6, 2026.
+Implementation snapshot based on the repository state on March 8, 2026.
 
 ## Purpose
 
@@ -36,7 +36,8 @@ Cookle uses adaptive tab navigation.
 - `Debug` is available only when debug mode is enabled and the layout is
   regular width.
 - Deep links, widgets, notifications, and App Intents all feed the same route
-  system, so navigation behavior is shared across entry points.
+  system through an ordered source chain, so navigation behavior is shared
+  across entry points.
 
 ## Functional Scope
 
@@ -147,6 +148,8 @@ Cookle uses adaptive tab navigation.
 - Rename tags from the tag detail flow or App Intents.
 - Delete categories freely.
 - Prevent deletion of ingredients that are still used by recipes.
+- Rebuild scheduled recipe suggestion notifications after tag mutations so
+  notification content stays aligned with ingredient metadata.
 
 ### Settings and Product Controls
 
@@ -173,8 +176,8 @@ Cookle uses adaptive tab navigation.
 - Attach a compressed preview image when the recipe has a photo.
 - Deep link notification taps into the recipe detail screen when possible.
 - Provide a foreground notification action to browse recipes.
-- Keep notification schedules in sync after recipe mutations and settings
-  changes.
+- Keep notification schedules in sync after recipe mutations, tag mutations,
+  settings changes, and launch/foreground refreshes.
 
 ### Widgets
 
@@ -230,8 +233,8 @@ Cookle uses adaptive tab navigation.
   - `settings/subscription`
   - `settings/license`
 - The same route parser and executor are used by:
-  - app `onOpenURL`
-  - universal links
+  - app `onOpenURL` and universal links, which first ingest into the shared
+    route inbox
   - widgets
   - notification taps
   - App Intent route handoff
@@ -245,8 +248,9 @@ Cookle uses adaptive tab navigation.
 - Premium users do not see those ad sections.
 - The app fetches remote configuration from GitHub and can force users to
   update before continuing.
-- Remote configuration is checked on initial load and when the app becomes
-  active.
+- A shared runtime lifecycle plan refreshes subscription state, remote
+  configuration, notification schedules, and pending routes during initial load
+  and foreground transitions.
 
 ### Debug and Preview Support
 
@@ -258,8 +262,8 @@ Cookle uses adaptive tab navigation.
   - raw model browsing for diaries, recipes, photos, ingredients, categories,
     and sub-objects
   - direct deletion of model records from the debug content browser
-- Preview helpers seed an in-memory SwiftData store and inject app environment
-  services for SwiftUI previews.
+- Preview helpers seed an in-memory SwiftData store and reuse the same app
+  context wiring pattern as the live app before injecting environment services.
 
 ## Data Model
 
@@ -307,6 +311,7 @@ large custom abstraction layers.
 
 - SwiftUI screens
 - App Intents
+- app bootstrap context and runtime lifecycle plans
 - workflow orchestration services
 - notifications
 - review prompting
@@ -327,6 +332,16 @@ Current workflow services are:
 
 Their role is to call shared domain services first, then run app-only side
 effects such as widget reloads, notification sync, or review prompts.
+
+Current workflow-specific follow-up policies include:
+
+- `RecipeActionService` owns review prompting and recipe/widget/notification
+  follow-up after successful recipe mutations.
+- `DiaryActionService` owns diary widget follow-up after successful diary
+  mutations.
+- `TagActionService` owns notification refresh after successful tag mutations.
+- `SettingsActionService` owns notification-setting normalization/application
+  and destructive reset orchestration.
 
 ### App Intent Rule
 

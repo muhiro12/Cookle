@@ -1,17 +1,12 @@
 import Foundation
 import MHPlatform
 
-@MainActor
 enum CookleMutationWorkflow {
     typealias NotificationSynchronizer = @MainActor @Sendable () async -> Void
     typealias ReviewRequester = @MainActor @Sendable () async -> MHReviewRequestOutcome
     typealias WidgetReloader = @MainActor @Sendable () -> Void
 
-    final class ValueStore<Value> {
-        var value: Value?
-    }
-
-    static func effectAdapter(
+    nonisolated static func effectAdapter(
         reloadRecipeWidgets: @escaping WidgetReloader = {
             CookleWidgetReloader.reloadRecipeWidgets()
         },
@@ -65,7 +60,46 @@ enum CookleMutationWorkflow {
         )
     }
 
-    private static func mutationSteps(
+    static func run<Value: Sendable>(
+        name: String,
+        operation: @escaping @MainActor @Sendable () -> Value,
+        adapter: MHMutationAdapter<MutationEffect>,
+        afterSuccess: @escaping @MainActor @Sendable (Value) -> MutationEffect
+    ) async -> MutationOutcome<Value> {
+        do {
+            return try await runThrowing(
+                name: name,
+                operation: {
+                    operation()
+                },
+                adapter: adapter,
+                afterSuccess: afterSuccess
+            )
+        } catch {
+            assertionFailure(error.localizedDescription)
+            preconditionFailure("Mutation unexpectedly failed: \(name)")
+        }
+    }
+
+    static func runThrowing<Value: Sendable>(
+        name: String,
+        operation: @escaping @MainActor @Sendable () throws -> Value,
+        adapter: MHMutationAdapter<MutationEffect>,
+        afterSuccess: @escaping @MainActor @Sendable (Value) -> MutationEffect
+    ) async throws -> MutationOutcome<Value> {
+        let value = try await MHMutationWorkflow.runThrowing(
+            name: name,
+            operation: operation,
+            adapter: adapter,
+            afterSuccess: afterSuccess
+        ) { $0 }
+        return .init(
+            value: value,
+            effects: afterSuccess(value)
+        )
+    }
+
+    nonisolated private static func mutationSteps(
         for effects: MutationEffect,
         reloadRecipeWidgets: @escaping WidgetReloader,
         reloadDiaryWidgets: @escaping WidgetReloader,

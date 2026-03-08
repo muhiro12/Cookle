@@ -1,25 +1,25 @@
-//
-//  MainView.swift
-//
-//
-//  Created by Hiromu Nakano on 2024/05/27.
-//
-
 import MHPlatform
 import SwiftData
 import SwiftUI
 
 struct MainView: View {
-    @Environment(\.scenePhase)
-    private var scenePhase
     @Environment(\.horizontalSizeClass)
     private var horizontalSizeClass
     @Environment(\.modelContext)
     private var context
+    @Environment(MHAppRuntime.self)
+    private var appRuntime
     @Environment(ConfigurationService.self)
     private var configurationService
+    @Environment(NotificationService.self)
+    private var notificationService
     @Environment(MHObservableDeepLinkInbox.self)
     private var routeInbox
+
+    @AppStorage(.isSubscribeOn)
+    private var isSubscribeOn
+    @AppStorage(.isICloudOn)
+    private var isICloudOn
 
     @State private var isUpdateAlertPresented = false
     @State private var navigationState = MainNavigationState()
@@ -48,32 +48,21 @@ struct MainView: View {
         } message: {
             Text("Please update Cookle to the latest version to continue using it.")
         }
-        .task {
-            try? await configurationService.load()
-            isUpdateAlertPresented = configurationService.isUpdateRequired()
-            await synchronizePendingRoutesIfPossible()
+        .mhAppRuntimeLifecycle(
+            runtime: appRuntime,
+            plan: runtimeLifecyclePlan
+        )
+        .onChange(of: appRuntime.premiumStatus) {
+            syncSubscriptionStateIfNeeded()
         }
-        .onChange(of: scenePhase) {
-            guard scenePhase == .active else {
-                return
-            }
-            Task {
-                try? await configurationService.load()
-                isUpdateAlertPresented = configurationService.isUpdateRequired()
-            }
-            requestReviewIfNeeded()
+        .onChange(of: routeInbox.pendingURL) {
             Task {
                 await synchronizePendingRoutesIfPossible()
             }
         }
-        .onChange(of: routeInbox.pendingURL) {
-            Task {
-                await applyPendingRouteInboxIfNeededIfPossible()
-            }
-        }
         .onOpenURL { deepLinkURL in
             Task {
-                await handleIncomingURLIfPossible(deepLinkURL)
+                await routeInbox.ingest(deepLinkURL)
             }
         }
         .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
@@ -81,7 +70,7 @@ struct MainView: View {
                 return
             }
             Task {
-                await handleIncomingURLIfPossible(webpageURL)
+                await routeInbox.ingest(webpageURL)
             }
         }
         .sheet(
@@ -104,17 +93,54 @@ private extension MainView {
         horizontalSizeClass == .regular
     }
 
-    var reviewLogger: MHLogger {
-        CookleApp.logger(
-            category: "ReviewFlow",
-            source: #fileID
+    var runtimeLifecyclePlan: MHAppRuntimeLifecyclePlan {
+        .init(
+            startupTasks: [
+                .init(name: "syncSubscriptionState") {
+                    syncSubscriptionStateIfNeeded()
+                },
+                .init(name: "loadConfiguration") {
+                    await refreshConfigurationState()
+                },
+                .init(name: "synchronizeNotifications") {
+                    await notificationService.synchronizeScheduledSuggestions()
+                },
+                .init(name: "applyPendingRoutes") {
+                    await synchronizePendingRoutesIfPossible()
+                }
+            ],
+            activeTasks: [
+                .init(name: "syncSubscriptionState") {
+                    syncSubscriptionStateIfNeeded()
+                },
+                .init(name: "loadConfiguration") {
+                    await refreshConfigurationState()
+                },
+                .init(name: "synchronizeNotifications") {
+                    await notificationService.synchronizeScheduledSuggestions()
+                },
+                .init(name: "applyPendingRoutes") {
+                    await synchronizePendingRoutesIfPossible()
+                }
+            ],
+            skipFirstActivePhase: true
         )
+    }
+
+    var pendingRouteSources: MHDeepLinkSourceChain {
+        var sources = [any MHDeepLinkURLSource]()
+
+        if let intentRouteSource = CookleIntentRouteStore.source {
+            sources.append(intentRouteSource)
+        }
+
+        sources.append(routeInbox)
+        return .init(sources)
     }
 
     func synchronizePendingRoutesIfPossible() async {
         await activateRouteExecutionIfPossible()
-        await applyPendingIntentRouteIfNeededIfPossible()
-        await applyPendingRouteInboxIfNeededIfPossible()
+        await applyPendingRoutesIfPossible()
     }
 
     func activateRouteExecutionIfPossible() async {
@@ -129,22 +155,10 @@ private extension MainView {
         }
     }
 
-    func applyPendingIntentRouteIfNeededIfPossible() async {
-        do {
-            navigationState = try await MainRouteService.applyPendingIntentRouteIfNeeded(
-                state: navigationState,
-                context: context,
-                isRegularWidth: isRegularWidth
-            )
-        } catch {
-            assertionFailure(error.localizedDescription)
-        }
-    }
-
-    func applyPendingRouteInboxIfNeededIfPossible() async {
+    func applyPendingRoutesIfPossible() async {
         do {
             navigationState = try await MainRouteService.applyPendingRouteIfNeeded(
-                from: routeInbox,
+                from: pendingRouteSources,
                 state: navigationState,
                 context: context,
                 isRegularWidth: isRegularWidth
@@ -154,25 +168,22 @@ private extension MainView {
         }
     }
 
-    func handleIncomingURLIfPossible(_ url: URL) async {
-        do {
-            navigationState = try await MainRouteService.handleIncomingURL(
-                url,
-                state: navigationState,
-                context: context,
-                isRegularWidth: isRegularWidth
-            )
-        } catch {
-            assertionFailure(error.localizedDescription)
+    func refreshConfigurationState() async {
+        try? await configurationService.load()
+        await MainActor.run {
+            isUpdateAlertPresented = configurationService.isUpdateRequired()
         }
     }
 
-    func requestReviewIfNeeded() {
-        Task {
-            _ = await MHReviewRequester.requestIfNeeded(
-                policy: CookleReviewPolicy.request,
-                logger: reviewLogger
-            )
+    func syncSubscriptionStateIfNeeded() {
+        switch appRuntime.premiumStatus {
+        case .unknown:
+            return
+        case .inactive:
+            isSubscribeOn = false
+            isICloudOn = false
+        case .active:
+            isSubscribeOn = true
         }
     }
 }

@@ -49,6 +49,8 @@ The `Cookle` app target owns adapters and orchestration.
 Put these concerns in `Cookle`:
 
 - SwiftUI screens and local presentation state
+- app bootstrap context and environment wiring
+- runtime lifecycle plans for launch and foreground refresh
 - App Intents
 - workflow services such as `RecipeActionService`, `DiaryActionService`,
   `TagActionService`, and `SettingsActionService`
@@ -59,6 +61,10 @@ Put these concerns in `Cookle`:
 
 Workflow services are the bridge between shared mutations and app-only side
 effects.
+
+The root app view may compose app-level lifecycle plans, but success-triggered
+follow-up work such as review prompting should still originate from workflow
+services instead of generic foreground handlers.
 
 ### 3. Other target adapters: `Widgets` and future targets
 
@@ -107,6 +113,7 @@ Views should not own:
 - direct model deletion for user-facing flows
 - direct model updates for user-facing flows
 - cross-target side effects
+- default-setting normalization or notification rescheduling logic
 - duplicated validation rules
 - canonical search behavior
 
@@ -130,6 +137,10 @@ Use these questions when adding new code:
   model mutation from views or App Intents.
 - Route parsing and route execution stay shared so app, widgets, and App
   Intents use the same navigation vocabulary.
+- Route ingestion should flow through a single ordered deep-link source chain so
+  notifications, universal links, and App Intents do not diverge.
+- Review prompting should be attached to successful user-facing workflows rather
+  than app foreground events.
 
 ## Anti-patterns
 

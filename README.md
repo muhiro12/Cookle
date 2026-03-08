@@ -39,6 +39,8 @@ repository contains the full iOS project together with its shared Swift package.
   services, predicates, migrations, and utilities used by the app and intents.
 - `Widgets/` – home-screen widget extension target built on top of
   `CookleLibrary`.
+- `MHPlatform` – shared app-runtime, deep-link, mutation, logging, review, and
+  persistence-maintenance primitives consumed through Swift Package Manager.
 - `Designs/Architecture/` – current architecture rules and placement guidance.
 - `Designs/Decisions/` – architecture decision records that capture why major
   design choices were made.
@@ -51,13 +53,16 @@ repository contains the full iOS project together with its shared Swift package.
 ## Technology stack
 
 - Swift 6 toolchain with Xcode 26.3 project settings and a minimum deployment
-  target of iOS 17.0.
+  target of iOS 18.0.
 - SwiftUI for all user interfaces, including adaptive tab navigation and preview
   infrastructure.
 - SwiftData for persistence, schema migrations, and model container previews
   shared between the app and App Intents.
 - AppIntents for Shortcuts support and automation workflows built on top of
   SwiftData entities.
+- MHPlatform for app runtime lifecycle planning, ordered deep-link source
+  chaining, mutation follow-up orchestration, review prompting, and destructive
+  reset handling.
 - StoreKit, Google Mobile Ads, License List, and SwiftUtilities delivered
   through lightweight wrapper packages and Swift Package Manager.
 
@@ -76,12 +81,16 @@ Primary records:
 - The `Cookle` app target owns workflow services such as
   `RecipeActionService`, `DiaryActionService`, `TagActionService`, and
   `SettingsActionService` that add app-only side effects after shared mutations.
+- The root app context centralizes model-container and environment-object
+  wiring for the live app and SwiftUI previews.
+- App startup and foreground refreshes are driven through
+  `MHAppRuntimeLifecyclePlan` instead of ad-hoc `scenePhase` handlers.
 - SwiftUI views and App Intents call those workflow services for commands
   instead of mutating models directly.
 - `RecipeService.search` is the canonical recipe search API used by views,
   intents, and widgets.
 - Route parsing and execution stay shared so deep links, widgets, and intents
-  speak the same navigation language.
+  speak the same navigation language through a single ordered source chain.
 
 ## Data model overview
 
@@ -148,8 +157,11 @@ Universal Links require Apple App Site Association (AASA) deployment for
   controls while guarding destructive actions behind confirmation dialogs.
 - Remote configuration is loaded from GitHub to determine whether the current
   build must force an update before the main UI is shown.
-- Google Mobile Ads native placements are embedded through the shared controller
-  so ad units can be refreshed from a single place.
+- Root lifecycle tasks refresh subscription state, remote configuration,
+  notification schedules, and pending routes during launch and foreground
+  re-entry.
+- Google Mobile Ads native placements are embedded through the shared runtime so
+  ad units can be refreshed from a single place.
 
 ## Getting started
 

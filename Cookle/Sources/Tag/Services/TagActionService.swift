@@ -1,74 +1,100 @@
+import MHPlatform
 import Observation
 import SwiftData
 
 @MainActor
 @Observable
 final class TagActionService {
+    private let effectAdapter: MHMutationAdapter<MutationEffect>
+
+    init(notificationService: NotificationService) {
+        let synchronizeNotifications: CookleMutationWorkflow.NotificationSynchronizer = {
+            await notificationService.synchronizeScheduledSuggestions()
+        }
+        effectAdapter = CookleMutationWorkflow.effectAdapter(
+            synchronizeNotifications: synchronizeNotifications
+        )
+    }
+
     func rename(
         context: ModelContext,
         ingredient: Ingredient,
         value: String
-    ) throws {
-        try TagService.rename(
-            context: context,
-            ingredient: ingredient,
-            value: value
-        )
+    ) async throws -> MutationOutcome<Void> {
+        try await run(
+            name: "renameIngredient"
+        ) {
+            try TagService.rename(
+                context: context,
+                ingredient: ingredient,
+                value: value
+            )
+        }
     }
 
     func rename(
         context: ModelContext,
         category: Category,
         value: String
-    ) throws {
-        try TagService.rename(
-            context: context,
-            category: category,
-            value: value
-        )
+    ) async throws -> MutationOutcome<Void> {
+        try await run(
+            name: "renameCategory"
+        ) {
+            try TagService.rename(
+                context: context,
+                category: category,
+                value: value
+            )
+        }
     }
 
     func delete(
         context: ModelContext,
         ingredient: Ingredient
-    ) throws {
-        try TagService.delete(
-            context: context,
-            ingredient: ingredient
-        )
+    ) async throws -> MutationOutcome<Void> {
+        try await run(
+            name: "deleteIngredient"
+        ) {
+            try TagService.delete(
+                context: context,
+                ingredient: ingredient
+            )
+        }
     }
 
     func delete(
         context: ModelContext,
         category: Category
-    ) throws {
-        try TagService.delete(
-            context: context,
-            category: category
-        )
+    ) async throws -> MutationOutcome<Void> {
+        try await run(
+            name: "deleteCategory"
+        ) {
+            TagService.delete(
+                context: context,
+                category: category
+            )
+        }
     }
 
     func rename<T: Tag>(
         context: ModelContext,
         tag: T,
         value: String
-    ) async throws {
+    ) async throws -> MutationOutcome<Void> {
         if let ingredient = tag as? Ingredient {
-            try await rename(
+            return try await rename(
                 context: context,
                 ingredient: ingredient,
                 value: value
             )
-            return
         }
 
         if let category = tag as? Category {
-            try await rename(
+            return try await rename(
                 context: context,
                 category: category,
                 value: value
             )
-            return
         }
 
         preconditionFailure("Unsupported tag type: \(T.self)")
@@ -77,23 +103,43 @@ final class TagActionService {
     func delete<T: Tag>(
         context: ModelContext,
         tag: T
-    ) async throws {
+    ) async throws -> MutationOutcome<Void> {
         if let ingredient = tag as? Ingredient {
-            try await delete(
+            return try await delete(
                 context: context,
                 ingredient: ingredient
             )
-            return
         }
 
         if let category = tag as? Category {
-            try await delete(
+            return try await delete(
                 context: context,
                 category: category
             )
-            return
         }
 
         preconditionFailure("Unsupported tag type: \(T.self)")
+    }
+}
+
+private extension TagActionService {
+    func run(
+        name: String,
+        operation: @escaping @MainActor @Sendable () throws -> Void
+    ) async throws -> MutationOutcome<Void> {
+        try await CookleMutationWorkflow.runThrowing(
+            name: name,
+            operation: operation,
+            adapter: effectAdapter,
+            afterSuccess: tagMutationEffects(for:)
+        )
+    }
+
+    func tagMutationEffects(
+        for _: Void
+    ) -> MutationEffect {
+        [
+            .notificationPlanChanged
+        ]
     }
 }
