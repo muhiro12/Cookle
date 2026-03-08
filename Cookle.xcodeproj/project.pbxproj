@@ -596,14 +596,6 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		AD7F5C0F2F5B3186008D91F3 /* XCRemoteSwiftPackageReference "MHPlatform" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/muhiro12/MHPlatform.git";
-			requirement = {
-				branch = "main";
-				kind = branch;
-			};
-		};
 		AD3909A02DC4E7F90052749F /* XCRemoteSwiftPackageReference "GoogleMobileAdsWrapper" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/muhiro12/GoogleMobileAdsWrapper.git";
@@ -634,6 +626,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.0.0;
+			};
+		};
+		AD7F5C0F2F5B3186008D91F3 /* XCRemoteSwiftPackageReference "MHPlatform" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/muhiro12/MHPlatform.git";
+			requirement = {
+				branch = main;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
