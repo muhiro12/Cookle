@@ -1,5 +1,7 @@
 import Foundation
-import MHPlatform
+import MHAppRuntimeCore
+import MHDeepLinking
+import MHRouteExecution
 import SwiftData
 
 @MainActor

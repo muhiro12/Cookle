@@ -5,7 +5,6 @@
 //  Created by Hiromu Nakano on 2024/04/13.
 //
 
-import MHPlatform
 import SwiftUI
 
 struct AddRecipeButton: View {

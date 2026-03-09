@@ -15,7 +15,15 @@
 		AD3909A52DC4E80A0052749F /* LicenseListWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD3909A42DC4E80A0052749F /* LicenseListWrapper */; };
 		AD3909A82DC4E81D0052749F /* StoreKitWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD3909A72DC4E81D0052749F /* StoreKitWrapper */; };
 		AD3909AB2DC4E8300052749F /* SwiftUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = AD3909AA2DC4E8300052749F /* SwiftUtilities */; };
-		AD7F5C112F5B3186008D91F3 /* MHPlatform in Frameworks */ = {isa = PBXBuildFile; productRef = AD7F5C102F5B3186008D91F3 /* MHPlatform */; };
+		AD7F5C112F5B3186008D91F3 /* MHAppRuntimeCore in Frameworks */ = {isa = PBXBuildFile; productRef = AD7F5C102F5B3186008D91F3 /* MHAppRuntimeCore */; };
+		AD7F5C132F5B3186008D91F3 /* MHDeepLinking in Frameworks */ = {isa = PBXBuildFile; productRef = AD7F5C122F5B3186008D91F3 /* MHDeepLinking */; };
+		AD7F5C152F5B3186008D91F3 /* MHLogging in Frameworks */ = {isa = PBXBuildFile; productRef = AD7F5C142F5B3186008D91F3 /* MHLogging */; };
+		AD7F5C172F5B3186008D91F3 /* MHMutationFlow in Frameworks */ = {isa = PBXBuildFile; productRef = AD7F5C162F5B3186008D91F3 /* MHMutationFlow */; };
+		AD7F5C192F5B3186008D91F3 /* MHPersistenceMaintenance in Frameworks */ = {isa = PBXBuildFile; productRef = AD7F5C182F5B3186008D91F3 /* MHPersistenceMaintenance */; };
+		AD7F5C1B2F5B3186008D91F3 /* MHNotificationPayloads in Frameworks */ = {isa = PBXBuildFile; productRef = AD7F5C1A2F5B3186008D91F3 /* MHNotificationPayloads */; };
+		AD7F5C1D2F5B3186008D91F3 /* MHPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = AD7F5C1C2F5B3186008D91F3 /* MHPreferences */; };
+		AD7F5C1F2F5B3186008D91F3 /* MHReviewPolicy in Frameworks */ = {isa = PBXBuildFile; productRef = AD7F5C1E2F5B3186008D91F3 /* MHReviewPolicy */; };
+		AD7F5C212F5B3186008D91F3 /* MHRouteExecution in Frameworks */ = {isa = PBXBuildFile; productRef = AD7F5C202F5B3186008D91F3 /* MHRouteExecution */; };
 		ADF13D702E8233A7002572CD /* CookleLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = ADF13D6F2E8233A7002572CD /* CookleLibrary */; };
 /* End PBXBuildFile section */
 
@@ -89,7 +97,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD3909A22DC4E7F90052749F /* GoogleMobileAdsWrapper in Frameworks */,
-				AD7F5C112F5B3186008D91F3 /* MHPlatform in Frameworks */,
+				AD7F5C112F5B3186008D91F3 /* MHAppRuntimeCore in Frameworks */,
+				AD7F5C132F5B3186008D91F3 /* MHDeepLinking in Frameworks */,
+				AD7F5C152F5B3186008D91F3 /* MHLogging in Frameworks */,
+				AD7F5C172F5B3186008D91F3 /* MHMutationFlow in Frameworks */,
+				AD7F5C192F5B3186008D91F3 /* MHPersistenceMaintenance in Frameworks */,
+				AD7F5C1B2F5B3186008D91F3 /* MHNotificationPayloads in Frameworks */,
+				AD7F5C1D2F5B3186008D91F3 /* MHPreferences in Frameworks */,
+				AD7F5C1F2F5B3186008D91F3 /* MHReviewPolicy in Frameworks */,
+				AD7F5C212F5B3186008D91F3 /* MHRouteExecution in Frameworks */,
 				AD3909AB2DC4E8300052749F /* SwiftUtilities in Frameworks */,
 				ADF13D702E8233A7002572CD /* CookleLibrary in Frameworks */,
 				AD3909A82DC4E81D0052749F /* StoreKitWrapper in Frameworks */,
@@ -176,7 +192,15 @@
 			packageProductDependencies = (
 				AD3909A12DC4E7F90052749F /* GoogleMobileAdsWrapper */,
 				AD3909A42DC4E80A0052749F /* LicenseListWrapper */,
-				AD7F5C102F5B3186008D91F3 /* MHPlatform */,
+				AD7F5C102F5B3186008D91F3 /* MHAppRuntimeCore */,
+				AD7F5C122F5B3186008D91F3 /* MHDeepLinking */,
+				AD7F5C142F5B3186008D91F3 /* MHLogging */,
+				AD7F5C162F5B3186008D91F3 /* MHMutationFlow */,
+				AD7F5C182F5B3186008D91F3 /* MHPersistenceMaintenance */,
+				AD7F5C1A2F5B3186008D91F3 /* MHNotificationPayloads */,
+				AD7F5C1C2F5B3186008D91F3 /* MHPreferences */,
+				AD7F5C1E2F5B3186008D91F3 /* MHReviewPolicy */,
+				AD7F5C202F5B3186008D91F3 /* MHRouteExecution */,
 				AD3909A72DC4E81D0052749F /* StoreKitWrapper */,
 				AD3909AA2DC4E8300052749F /* SwiftUtilities */,
 				ADF13D6F2E8233A7002572CD /* CookleLibrary */,
@@ -663,10 +687,50 @@
 			package = AD3909A92DC4E8300052749F /* XCRemoteSwiftPackageReference "SwiftUtilities" */;
 			productName = SwiftUtilities;
 		};
-		AD7F5C102F5B3186008D91F3 /* MHPlatform */ = {
+		AD7F5C102F5B3186008D91F3 /* MHAppRuntimeCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = AD7F5C0F2F5B3186008D91F3 /* XCRemoteSwiftPackageReference "MHPlatform" */;
-			productName = MHPlatform;
+			productName = MHAppRuntimeCore;
+		};
+		AD7F5C122F5B3186008D91F3 /* MHDeepLinking */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD7F5C0F2F5B3186008D91F3 /* XCRemoteSwiftPackageReference "MHPlatform" */;
+			productName = MHDeepLinking;
+		};
+		AD7F5C142F5B3186008D91F3 /* MHLogging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD7F5C0F2F5B3186008D91F3 /* XCRemoteSwiftPackageReference "MHPlatform" */;
+			productName = MHLogging;
+		};
+		AD7F5C162F5B3186008D91F3 /* MHMutationFlow */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD7F5C0F2F5B3186008D91F3 /* XCRemoteSwiftPackageReference "MHPlatform" */;
+			productName = MHMutationFlow;
+		};
+		AD7F5C182F5B3186008D91F3 /* MHPersistenceMaintenance */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD7F5C0F2F5B3186008D91F3 /* XCRemoteSwiftPackageReference "MHPlatform" */;
+			productName = MHPersistenceMaintenance;
+		};
+		AD7F5C1A2F5B3186008D91F3 /* MHNotificationPayloads */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD7F5C0F2F5B3186008D91F3 /* XCRemoteSwiftPackageReference "MHPlatform" */;
+			productName = MHNotificationPayloads;
+		};
+		AD7F5C1C2F5B3186008D91F3 /* MHPreferences */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD7F5C0F2F5B3186008D91F3 /* XCRemoteSwiftPackageReference "MHPlatform" */;
+			productName = MHPreferences;
+		};
+		AD7F5C1E2F5B3186008D91F3 /* MHReviewPolicy */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD7F5C0F2F5B3186008D91F3 /* XCRemoteSwiftPackageReference "MHPlatform" */;
+			productName = MHReviewPolicy;
+		};
+		AD7F5C202F5B3186008D91F3 /* MHRouteExecution */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD7F5C0F2F5B3186008D91F3 /* XCRemoteSwiftPackageReference "MHPlatform" */;
+			productName = MHRouteExecution;
 		};
 		ADF13D6F2E8233A7002572CD /* CookleLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
