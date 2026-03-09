@@ -278,15 +278,20 @@ private extension NotificationService {
             category: "NotificationRoute",
             source: #fileID
         )
-        let outcome = MHNotificationOrchestrator.routeDeliveryOutcome(
-            userInfo: response.notification.request.content.userInfo,
-            actionIdentifier: response.actionIdentifier,
-            codec: NotificationConstants.payloadCodec,
-            fallbackRouteURL: Self.fallbackRouteURL
+        let payload = NotificationConstants.payloadCodec.decode(
+            response.notification.request.content.userInfo
         )
+        let responseContext = MHNotificationResponseContext(
+            actionIdentifier: response.actionIdentifier
+        )
+        let routeDestination = await MainActor.run {
+            routeInbox
+        }
         let deliveredOutcome = await MHNotificationOrchestrator.deliverRouteURL(
-            outcome,
-            deliver: routeInbox.replacePendingURL
+            payload: payload,
+            response: responseContext,
+            destination: routeDestination,
+            fallbackRouteURL: Self.fallbackRouteURL
         )
 
         switch deliveredOutcome.source {
