@@ -28,13 +28,6 @@ final class RecipeActionService {
         let effects = recipeMutationEffects(
             requestReview: requestReview
         )
-        let projection =
-            MHMutationProjectionStrategy<
-                PersistentIdentifier,
-                MutationEffect,
-                PersistentIdentifier
-            >
-            .fixedAdapterValue(effects)
 
         do {
             let persistentIdentifier = try await MHMutationWorkflow.runThrowing(
@@ -46,7 +39,7 @@ final class RecipeActionService {
                     ).persistentModelID
                 },
                 adapter: effectAdapter,
-                projection: projection
+                adapterValue: effects
             )
             return .init(
                 value: recipe(
@@ -72,9 +65,6 @@ final class RecipeActionService {
         let effects = recipeMutationEffects(
             requestReview: requestReview
         )
-        let projection = MHMutationProjectionStrategy<Void, MutationEffect, Void>.fixedAdapterValue(
-            effects
-        )
 
         do {
             let _: Void = try await MHMutationWorkflow.runThrowing(
@@ -87,7 +77,7 @@ final class RecipeActionService {
                     )
                 },
                 adapter: effectAdapter,
-                projection: projection
+                adapterValue: effects
             )
             return .init(
                 value: (),
@@ -108,9 +98,6 @@ final class RecipeActionService {
         let effects = recipeMutationEffects(
             requestReview: false
         )
-        let projection = MHMutationProjectionStrategy<Void, MutationEffect, Void>.fixedAdapterValue(
-            effects
-        )
 
         do {
             let _: Void = try await MHMutationWorkflow.runThrowing(
@@ -122,7 +109,7 @@ final class RecipeActionService {
                     )
                 },
                 adapter: effectAdapter,
-                projection: projection
+                adapterValue: effects
             )
             return .init(
                 value: (),
@@ -179,9 +166,6 @@ final class RecipeActionService {
         let effects: MutationEffect = [
             .recipeDataChanged
         ]
-        let projection = MHMutationProjectionStrategy<Void, MutationEffect, Void>.fixedAdapterValue(
-            effects
-        )
 
         do {
             let _: Void = try await MHMutationWorkflow.runThrowing(
@@ -190,7 +174,7 @@ final class RecipeActionService {
                     RecipeService.recordLastOpenedRecipe(recipe)
                 },
                 adapter: effectAdapter,
-                projection: projection
+                adapterValue: effects
             )
             return .init(
                 value: (),

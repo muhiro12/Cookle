@@ -25,13 +25,6 @@ final class DiaryActionService {
         input: FormInput
     ) async -> MutationOutcome<Diary> {
         let effects = diaryMutationEffects
-        let projection =
-            MHMutationProjectionStrategy<
-                PersistentIdentifier,
-                MutationEffect,
-                PersistentIdentifier
-            >
-            .fixedAdapterValue(effects)
 
         do {
             let persistentIdentifier = try await MHMutationWorkflow.runThrowing(
@@ -47,7 +40,7 @@ final class DiaryActionService {
                     ).persistentModelID
                 },
                 adapter: effectAdapter,
-                projection: projection
+                adapterValue: effects
             )
             return .init(
                 value: diary(
@@ -71,9 +64,6 @@ final class DiaryActionService {
         input: FormInput
     ) async -> MutationOutcome<Void> {
         let effects = diaryMutationEffects
-        let projection = MHMutationProjectionStrategy<Void, MutationEffect, Void>.fixedAdapterValue(
-            effects
-        )
 
         do {
             let _: Void = try await MHMutationWorkflow.runThrowing(
@@ -90,7 +80,7 @@ final class DiaryActionService {
                     )
                 },
                 adapter: effectAdapter,
-                projection: projection
+                adapterValue: effects
             )
             return .init(
                 value: (),
@@ -135,13 +125,6 @@ final class DiaryActionService {
         type: DiaryObjectType
     ) async throws -> MutationOutcome<Diary> {
         let effects = diaryMutationEffects
-        let projection =
-            MHMutationProjectionStrategy<
-                PersistentIdentifier,
-                MutationEffect,
-                PersistentIdentifier
-            >
-            .fixedAdapterValue(effects)
         let persistentIdentifier = try await MHMutationWorkflow.runThrowing(
             name: "addRecipeToDiary",
             operation: {
@@ -153,7 +136,7 @@ final class DiaryActionService {
                 ).persistentModelID
             },
             adapter: effectAdapter,
-            projection: projection
+            adapterValue: effects
         )
         return .init(
             value: diary(
@@ -169,9 +152,6 @@ final class DiaryActionService {
         diary: Diary
     ) async -> MutationOutcome<Void> {
         let effects = diaryMutationEffects
-        let projection = MHMutationProjectionStrategy<Void, MutationEffect, Void>.fixedAdapterValue(
-            effects
-        )
 
         do {
             let _: Void = try await MHMutationWorkflow.runThrowing(
@@ -183,7 +163,7 @@ final class DiaryActionService {
                     )
                 },
                 adapter: effectAdapter,
-                projection: projection
+                adapterValue: effects
             )
             return .init(
                 value: (),

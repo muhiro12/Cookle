@@ -335,8 +335,10 @@ Current workflow services are:
 Their role is to call shared domain services first, then run app-only side
 effects such as widget reloads, notification sync, or review prompts.
 
-They currently express mutation follow-up through `MHMutationProjectionStrategy`
-and attach recipe review prompting through `MHReviewFlow`.
+They currently express mutation follow-up through
+`MHMutationWorkflow.runThrowing(..., adapterValue:)` and
+`MHMutationProjectionStrategy`, and attach recipe review prompting through
+`MHReviewFlow`.
 
 Current workflow-specific follow-up policies include:
 

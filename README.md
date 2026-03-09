@@ -91,8 +91,9 @@ Primary records:
   intents, and widgets.
 - Route parsing and execution stay shared so deep links, widgets, and intents
   speak the same navigation language through a single `MHAppRoutePipeline`.
-- Mutation follow-up uses `MHMutationProjectionStrategy` and `MHReviewFlow`
-  instead of app-local wrapper layers around successful mutations.
+- Mutation follow-up uses `MHMutationWorkflow.runThrowing(..., adapterValue:)`,
+  `MHMutationProjectionStrategy`, and `MHReviewFlow` instead of app-local
+  wrapper layers around successful mutations.
 
 ## Data model overview
 
