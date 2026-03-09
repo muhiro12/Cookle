@@ -5,9 +5,9 @@
 //  Created by Hiromu Nakano on 2024/04/11.
 //
 
-import StoreKit
 import SwiftData
 import SwiftUI
+import TipKit
 
 struct RecipeFormView: View {
     @Environment(\.dismiss)
@@ -32,8 +32,12 @@ struct RecipeFormView: View {
 
     @State private var editMode = EditMode.inactive
     @State private var isDebugAlertPresented = false
+    @State private var isInferRecipeFromTextTipEligible = false
+    @State private var isImagePlaygroundTipEligible = false
 
     private let type: RecipeFormType
+    private let inferRecipeFromTextTip = InferRecipeFromTextTip()
+    private let imagePlaygroundTip = ImagePlaygroundTip()
 
     var body: some View {
         Form {
@@ -66,12 +70,24 @@ struct RecipeFormView: View {
         .task {
             applyRecipeIfNeeded()
         }
+        .task {
+            await observeInferRecipeFromTextTipEligibility()
+        }
+        .task {
+            await observeImagePlaygroundTipEligibility()
+        }
     }
 
     @ViewBuilder var formSections: some View {
         RecipeFormNameSection($name)
             .hidden(editMode == .active)
-        RecipeFormPhotosSection($photos)
+        RecipeFormPhotosSection(
+            $photos,
+            addPhotoTip: currentRecipeFormTip(
+                for: imagePlaygroundTip,
+                isEligible: shouldShowImagePlaygroundTip
+            )
+        )
         if #available(iOS 26.0, *) {
             RecipeFormInferSection(
                 name: $name,
@@ -80,7 +96,11 @@ struct RecipeFormView: View {
                 ingredients: $ingredients,
                 steps: $steps,
                 categories: $categories,
-                note: $note
+                note: $note,
+                tip: currentRecipeFormTip(
+                    for: inferRecipeFromTextTip,
+                    isEligible: shouldShowInferRecipeFromTextTip
+                )
             )
         }
         RecipeFormServingSizeSection($servingSize)
@@ -202,6 +222,95 @@ struct RecipeFormView: View {
         steps = model.steps + [.empty]
         categories = (model.categories?.map(\.value) ?? .empty) + [.empty]
         note = model.note
+    }
+}
+
+private extension RecipeFormView {
+    var isCreateFlow: Bool {
+        switch type {
+        case .create:
+            true
+        case .duplicate,
+             .edit:
+            false
+        }
+    }
+
+    var isRecipeDraftNearlyEmpty: Bool {
+        name.isEmpty
+            && photos.isEmpty
+            && servingSize.isEmpty
+            && cookingTime.isEmpty
+            && note.isEmpty
+            && ingredients.allSatisfy { ingredient in
+                ingredient.ingredient.isEmpty && ingredient.amount.isEmpty
+            }
+            && steps.allSatisfy(\.isEmpty)
+            && categories.allSatisfy(\.isEmpty)
+    }
+
+    var shouldShowInferRecipeFromTextTip: Bool {
+        guard #available(iOS 26.0, *) else {
+            return false
+        }
+        guard isCreateFlow else {
+            return false
+        }
+
+        return isRecipeDraftNearlyEmpty && isInferRecipeFromTextTipEligible
+    }
+
+    var shouldShowImagePlaygroundTip: Bool {
+        guard isCreateFlow else {
+            return false
+        }
+
+        return CookleImagePlayground.isSupported
+            && photos.isEmpty
+            && isImagePlaygroundTipEligible
+            && shouldShowInferRecipeFromTextTip == false
+    }
+
+    func currentRecipeFormTip<T: Tip>(
+        for tip: T,
+        isEligible: Bool
+    ) -> (any Tip)? {
+        guard isEligible else {
+            return nil
+        }
+
+        if shouldShowInferRecipeFromTextTip {
+            return inferRecipeFromTextTip.id == tip.id ? tip : nil
+        }
+        if shouldShowImagePlaygroundTip {
+            return imagePlaygroundTip.id == tip.id ? tip : nil
+        }
+
+        return nil
+    }
+
+    func observeInferRecipeFromTextTipEligibility() async {
+        await MainActor.run {
+            isInferRecipeFromTextTipEligible = inferRecipeFromTextTip.shouldDisplay
+        }
+
+        for await shouldDisplay in inferRecipeFromTextTip.shouldDisplayUpdates {
+            await MainActor.run {
+                isInferRecipeFromTextTipEligible = shouldDisplay
+            }
+        }
+    }
+
+    func observeImagePlaygroundTipEligibility() async {
+        await MainActor.run {
+            isImagePlaygroundTipEligible = imagePlaygroundTip.shouldDisplay
+        }
+
+        for await shouldDisplay in imagePlaygroundTip.shouldDisplayUpdates {
+            await MainActor.run {
+                isImagePlaygroundTipEligible = shouldDisplay
+            }
+        }
     }
 }
 

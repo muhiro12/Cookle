@@ -1,17 +1,17 @@
 import SwiftUI
 import TipKit
 
-struct DailySuggestionTip: Tip {
+struct InferRecipeFromTextTip: Tip {
     var title: Text {
-        Text("Turn on daily suggestions")
+        Text("Paste recipe text")
     }
 
     var message: Text? {
-        Text("Get one recipe suggestion at your chosen time.")
+        Text("Extract a draft from copied ingredients and steps.")
     }
 
     var image: Image? {
-        Image(systemName: "bell.badge")
+        Image(systemName: "text.quote")
     }
 
     var options: [any TipOption] {

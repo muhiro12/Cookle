@@ -3,11 +3,11 @@ import TipKit
 
 struct AddRecipeTip: Tip {
     var title: Text {
-        Text("Add your first recipe")
+        Text("Save a recipe")
     }
 
     var message: Text? {
-        Text("Save ingredients, steps, photos, and notes in one place.")
+        Text("Keep ingredients, steps, photos, and notes together.")
     }
 
     var image: Image? {

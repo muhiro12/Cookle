@@ -16,6 +16,8 @@ struct DiaryListView: View {
 
     @Environment(\.isPresented)
     private var isPresented
+    @Environment(MainNavigationModel.self)
+    private var navigationModel
 
     @AppStorage(.isSubscribeOn)
     private var isSubscribeOn
@@ -80,11 +82,27 @@ struct DiaryListView: View {
     var emptyStateView: some View {
         VStack(spacing: Layout.emptyStateSpacing) {
             if recipes.isEmpty {
-                TipView(startWithRecipesTip)
+                Button {
+                    navigationModel.selectedTab = .recipe
+                } label: {
+                    Label {
+                        Text("Open Recipes")
+                    } icon: {
+                        Image(systemName: "book.pages")
+                            .accessibilityHidden(true)
+                    }
+                }
+                .popoverTip(
+                    startWithRecipesTip,
+                    arrowEdge: .top
+                )
             } else {
-                TipView(addDiaryTip)
+                AddDiaryButton()
+                    .popoverTip(
+                        addDiaryTip,
+                        arrowEdge: .top
+                    )
             }
-            AddDiaryButton()
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)

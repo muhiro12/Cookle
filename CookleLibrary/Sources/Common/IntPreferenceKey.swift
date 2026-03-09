@@ -5,6 +5,7 @@ import MHPreferences
 public enum IntPreferenceKey: String, MHIntPreferenceKeyRepresentable {
     case dailyRecipeSuggestionHour = "r5Vn8Kt1"
     case dailyRecipeSuggestionMinute = "u7Bx3Jd6"
+    case tipExperienceVersion = "t7Px9Nb4"
 
     public func preferenceKey(default defaultValue: Int = .zero) -> MHIntPreferenceKey {
         .init(

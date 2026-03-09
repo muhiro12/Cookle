@@ -3,11 +3,11 @@ import TipKit
 
 struct SubscriptionTip: Tip {
     var title: Text {
-        Text("Explore Premium")
+        Text("Enable Premium features")
     }
 
     var message: Text? {
-        Text("Open Subscription to unlock iCloud sync and remove ads across the app.")
+        Text("Open Subscription to turn on iCloud sync and hide ads.")
     }
 
     var image: Image? {

@@ -3,11 +3,11 @@ import TipKit
 
 struct RecipeDetailTip: Tip {
     var title: Text {
-        Text("Open a recipe")
+        Text("Open any recipe")
     }
 
     var message: Text? {
-        Text("Select a recipe to review ingredients, steps, photos, and related diaries.")
+        Text("Review ingredients, steps, photos, and linked diaries.")
     }
 
     var image: Image? {

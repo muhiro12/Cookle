@@ -3,11 +3,11 @@ import TipKit
 
 struct AddDiaryTip: Tip {
     var title: Text {
-        Text("Plan meals with diaries")
+        Text("Add your first diary")
     }
 
     var message: Text? {
-        Text("Pick saved recipes for breakfast, lunch, and dinner to keep a daily meal log.")
+        Text("Pick saved recipes for breakfast, lunch, and dinner.")
     }
 
     var image: Image? {

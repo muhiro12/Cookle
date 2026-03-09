@@ -39,9 +39,11 @@ struct SettingsSidebarView: View {
     @State private var isAlertPresented = false
     @State private var isDailySuggestionTipEligible = false
     @State private var isSubscriptionTipEligible = false
+    @State private var isShortcutsTipEligible = false
 
     private let dailySuggestionTip = DailySuggestionTip()
     private let subscriptionTip = SubscriptionTip()
+    private let shortcutsTip = ShortcutsTip()
 
     var body: some View {
         settingsList
@@ -81,6 +83,15 @@ struct SettingsSidebarView: View {
                 await settingsActionService.prepareNotificationSettings()
                 refreshTipEligibility()
             }
+            .task {
+                await observeDailySuggestionTipEligibility()
+            }
+            .task {
+                await observeSubscriptionTipEligibility()
+            }
+            .task {
+                await observeShortcutsTipEligibility()
+            }
             .onChange(of: isDailyRecipeSuggestionNotificationOn) {
                 refreshTipEligibility()
                 applyNotificationSettings()
@@ -106,18 +117,27 @@ struct SettingsSidebarView: View {
             notificationSection
             manageSection
             generalSection
-            ShortcutsLinkSection()
+            ShortcutsLinkSection(
+                tip: currentSettingsTip(
+                    for: shortcutsTip,
+                    isEligible: shouldShowShortcutsTip
+                )
+            )
         }
     }
 
     var subscriptionSection: some View {
         Section {
-            if shouldShowSubscriptionTip {
-                TipView(subscriptionTip)
-            }
             NavigationLink(value: SettingsContent.subscription) {
                 Text("Subscription")
             }
+            .popoverTip(
+                currentSettingsTip(
+                    for: subscriptionTip,
+                    isEligible: shouldShowSubscriptionTip
+                ),
+                arrowEdge: .top
+            )
             .accessibilityAddTraits(.isButton)
             .simultaneousGesture(
                 TapGesture().onEnded {
@@ -139,10 +159,14 @@ struct SettingsSidebarView: View {
 
     var notificationSection: some View {
         Section("Recipe Suggestion Notifications") {
-            if shouldShowDailySuggestionTip {
-                TipView(dailySuggestionTip)
-            }
             Toggle("Daily recipe suggestions", isOn: $isDailyRecipeSuggestionNotificationOn)
+                .popoverTip(
+                    currentSettingsTip(
+                        for: dailySuggestionTip,
+                        isEligible: shouldShowDailySuggestionTip
+                    ),
+                    arrowEdge: .top
+                )
             if isDailyRecipeSuggestionNotificationOn {
                 DatePicker(
                     "Notify time",
@@ -203,7 +227,15 @@ private extension SettingsSidebarView {
     }
 
     var shouldShowSubscriptionTip: Bool {
-        isSubscribeOn == false && shouldShowDailySuggestionTip == false && isSubscriptionTipEligible
+        isSubscribeOn == false
+            && shouldShowDailySuggestionTip == false
+            && isSubscriptionTipEligible
+    }
+
+    var shouldShowShortcutsTip: Bool {
+        shouldShowDailySuggestionTip == false
+            && shouldShowSubscriptionTip == false
+            && isShortcutsTipEligible
     }
 
     var dailySuggestionTime: Binding<Date> {
@@ -243,6 +275,64 @@ private extension SettingsSidebarView {
     func refreshTipEligibility() {
         isDailySuggestionTipEligible = dailySuggestionTip.shouldDisplay
         isSubscriptionTipEligible = subscriptionTip.shouldDisplay
+        isShortcutsTipEligible = shortcutsTip.shouldDisplay
+    }
+
+    func currentSettingsTip<T: Tip>(
+        for tip: T,
+        isEligible: Bool
+    ) -> (any Tip)? {
+        guard isEligible else {
+            return nil
+        }
+
+        if shouldShowDailySuggestionTip {
+            return dailySuggestionTip.id == tip.id ? tip : nil
+        }
+        if shouldShowSubscriptionTip {
+            return subscriptionTip.id == tip.id ? tip : nil
+        }
+        if shouldShowShortcutsTip {
+            return shortcutsTip.id == tip.id ? tip : nil
+        }
+
+        return nil
+    }
+
+    func observeDailySuggestionTipEligibility() async {
+        await MainActor.run {
+            isDailySuggestionTipEligible = dailySuggestionTip.shouldDisplay
+        }
+
+        for await shouldDisplay in dailySuggestionTip.shouldDisplayUpdates {
+            await MainActor.run {
+                isDailySuggestionTipEligible = shouldDisplay
+            }
+        }
+    }
+
+    func observeSubscriptionTipEligibility() async {
+        await MainActor.run {
+            isSubscriptionTipEligible = subscriptionTip.shouldDisplay
+        }
+
+        for await shouldDisplay in subscriptionTip.shouldDisplayUpdates {
+            await MainActor.run {
+                isSubscriptionTipEligible = shouldDisplay
+            }
+        }
+    }
+
+    func observeShortcutsTipEligibility() async {
+        await MainActor.run {
+            isShortcutsTipEligible = shortcutsTip.shouldDisplay
+        }
+
+        for await shouldDisplay in shortcutsTip.shouldDisplayUpdates {
+            await MainActor.run {
+                isShortcutsTipEligible = shouldDisplay
+            }
+        }
     }
 }
 

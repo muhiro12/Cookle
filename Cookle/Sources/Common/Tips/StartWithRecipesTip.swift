@@ -3,11 +3,11 @@ import TipKit
 
 struct StartWithRecipesTip: Tip {
     var title: Text {
-        Text("Start in Recipes")
+        Text("Open Recipes first")
     }
 
     var message: Text? {
-        Text("Save a recipe first, then come back here to plan breakfast, lunch, and dinner.")
+        Text("Save a recipe, then come back here to plan meals.")
     }
 
     var image: Image? {

@@ -8,6 +8,7 @@
 import PhotosUI
 import SwiftData
 import SwiftUI
+import TipKit
 
 struct RecipeFormPhotosSection: View {
     private enum Layout {
@@ -21,6 +22,8 @@ struct RecipeFormPhotosSection: View {
     private var editMode
 
     @Binding private var photos: [PhotoData]
+
+    private let addPhotoTip: (any Tip)?
 
     @State private var photosPickerItems = [PhotosPickerItem]()
     @State private var isPhotosPickerPresented = false
@@ -120,6 +123,10 @@ struct RecipeFormPhotosSection: View {
                 Image(systemName: "photo.badge.plus")
                     .accessibilityLabel(Text("Add Photo"))
             }
+            .popoverTip(
+                addPhotoTip,
+                arrowEdge: .top
+            )
         } else {
             Button {
                 isPhotosPickerPresented = true
@@ -130,8 +137,12 @@ struct RecipeFormPhotosSection: View {
         }
     }
 
-    init(_ photos: Binding<[PhotoData]>) {
+    init(
+        _ photos: Binding<[PhotoData]>,
+        addPhotoTip: (any Tip)? = nil
+    ) {
         _photos = photos
+        self.addPhotoTip = addPhotoTip
     }
 
     @ViewBuilder

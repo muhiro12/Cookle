@@ -153,7 +153,38 @@
       }
     },
     "Add Photo" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Photo"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir foto"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter une photo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "写真を追加"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加照片"
+          }
+        }
+      }
     },
     "Add Recipe" : {
       "localizations" : {
@@ -219,40 +250,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "将食谱添加到今日日记"
-          }
-        }
-      }
-    },
-    "Add your first recipe" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add your first recipe"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anade tu primera receta"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ajoutez votre premiere recette"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "最初のレシピを追加"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "添加你的第一道食谱"
           }
         }
       }
@@ -499,7 +496,38 @@
       }
     },
     "Boil water in a large pot and add salt.\nCook the spaghetti until al dente.\nIn a separate pan, cook the pancetta until crispy.\nBeat the eggs in a bowl and mix with grated Parmesan cheese.\nDrain the spaghetti and mix with pancetta and the egg mixture.\nSeason with black pepper and serve immediately." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Boil water in a large pot and add salt.\nCook the spaghetti until al dente.\nIn a separate pan, cook the pancetta until crispy.\nBeat the eggs in a bowl and mix with grated Parmesan cheese.\nDrain the spaghetti and mix with pancetta and the egg mixture.\nSeason with black pepper and serve immediately."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hierve agua en una olla grande y añade sal.\nCocina el espagueti hasta que quede al dente.\nEn una sartén aparte, cocina la panceta hasta que quede crujiente.\nBate los huevos en un bol y mézclalos con queso parmesano rallado.\nEscurre el espagueti y mézclalo con la panceta y la mezcla de huevo.\nSazona con pimienta negra y sirve de inmediato."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Faites bouillir de l’eau dans une grande casserole et ajoutez du sel.\nFaites cuire les spaghettis jusqu’à ce qu’ils soient al dente.\nDans une poêle séparée, faites cuire la pancetta jusqu’à ce qu’elle soit croustillante.\nBattez les œufs dans un bol et mélangez-les avec du parmesan râpé.\nÉgouttez les spaghettis et mélangez-les avec la pancetta et le mélange d’œufs.\nAssaisonnez avec du poivre noir et servez immédiatement."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "大きな鍋に水を沸かし、塩を加えます。\nスパゲッティをアルデンテになるまでゆでます。\n別のフライパンでパンチェッタがカリッとするまで炒めます。\nボウルで卵を溶き、おろしたパルメザンチーズと混ぜます。\nスパゲッティの湯を切り、パンチェッタと卵液を混ぜ合わせます。\n黒こしょうを振ってすぐにいただきます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在大锅中烧开水并加入盐。\n将意大利面煮至有嚼劲。\n另起一口平底锅，将意式培根煎至酥脆。\n把鸡蛋打入碗中，与磨碎的帕玛森芝士搅拌均匀。\n沥干意大利面后，与意式培根和蛋液混合。\n撒上黑胡椒并立即食用。"
+          }
+        }
+      }
     },
     "Breakfast" : {
       "localizations" : {
@@ -2133,74 +2161,6 @@
         }
       }
     },
-    "Enable daily suggestions" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enable daily suggestions"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activa las sugerencias diarias"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activez les suggestions quotidiennes"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "毎日の提案を有効にする"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "启用每日推荐"
-          }
-        }
-      }
-    },
-    "Explore Premium" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Explore Premium"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Explora Premium"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Decouvrez Premium"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Premium をチェック"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "了解高级版"
-          }
-        }
-      }
-    },
     "Hide All Tips For Testing" : {
       "localizations" : {
         "en" : {
@@ -2339,7 +2299,38 @@
       "shouldTranslate" : false
     },
     "Import Text" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import Text"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar texto"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importer le texte"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "テキストを取り込む"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入文本"
+          }
+        }
+      }
     },
     "Infer From Text" : {
       "localizations" : {
@@ -3259,40 +3250,6 @@
         }
       }
     },
-    "Open a recipe" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open a recipe"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abre una receta"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ouvrez une recette"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピを開く"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "打开食谱"
-          }
-        }
-      }
-    },
     "Open App Store" : {
       "localizations" : {
         "en" : {
@@ -3464,7 +3421,38 @@
       }
     },
     "Open Photo" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Photo"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir foto"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir la photo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "写真を開く"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开照片"
+          }
+        }
+      }
     },
     "Open Recipe" : {
       "localizations" : {
@@ -3598,40 +3586,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "打开订阅设置"
-          }
-        }
-      }
-    },
-    "Open Subscription to unlock iCloud sync and remove ads across the app." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open Subscription to unlock iCloud sync and remove ads across the app."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abre Suscripcion para desbloquear la sincronizacion con iCloud y eliminar los anuncios de toda la app."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ouvrez Abonnement pour activer la synchronisation iCloud et supprimer les publicites dans toute l’app."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "サブスクリプションを開くと、iCloud 同期が使えるようになり、アプリ全体の広告を非表示にできます。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "打开订阅即可解锁 iCloud 同步，并移除整个应用中的广告。"
           }
         }
       }
@@ -3802,74 +3756,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "照片"
-          }
-        }
-      }
-    },
-    "Pick saved recipes for breakfast, lunch, and dinner to keep a daily meal log." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pick saved recipes for breakfast, lunch, and dinner to keep a daily meal log."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Elige recetas guardadas para el desayuno, el almuerzo y la cena y manten un registro diario de comidas."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choisissez des recettes enregistrees pour le petit-dejeuner, le dejeuner et le diner afin de tenir un journal quotidien des repas."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "保存したレシピを朝食・昼食・夕食に割り当てて、毎日の食事記録を残しましょう。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "为早餐、午餐和晚餐选择已保存的食谱，记录每日餐食。"
-          }
-        }
-      }
-    },
-    "Plan meals with diaries" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Plan meals with diaries"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Planifica comidas con diarios"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Planifiez les repas avec les journaux"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "日記で献立を管理"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "用日记规划餐食"
           }
         }
       }
@@ -4079,7 +3965,38 @@
       }
     },
     "Recipe Photo" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recipe Photo"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Foto de la receta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Photo de la recette"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピの写真"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "食谱照片"
+          }
+        }
+      }
     },
     "Recipe Suggestion" : {
       "localizations" : {
@@ -4421,74 +4338,6 @@
         }
       }
     },
-    "Save a recipe first, then come back here to plan breakfast, lunch, and dinner." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Save a recipe first, then come back here to plan breakfast, lunch, and dinner."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Guarda primero una receta y luego vuelve aqui para planificar el desayuno, el almuerzo y la cena."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enregistrez d’abord une recette, puis revenez ici pour planifier le petit-dejeuner, le dejeuner et le diner."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "まずレシピを保存してから、ここに戻って朝食・昼食・夕食を計画しましょう。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "先保存一道食谱，然后再回到这里规划早餐、午餐和晚餐。"
-          }
-        }
-      }
-    },
-    "Save ingredients, steps, photos, and notes in one place." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Save ingredients, steps, photos, and notes in one place."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Guarda ingredientes, pasos, fotos y notas en un solo lugar."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enregistrez les ingredients, les etapes, les photos et les notes au meme endroit."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "材料、手順、写真、メモを一か所に保存できます。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在同一个地方保存食材、步骤、照片和备注。"
-          }
-        }
-      }
-    },
     "Search" : {
       "localizations" : {
         "en" : {
@@ -4625,42 +4474,39 @@
         }
       }
     },
-    "Select a recipe to review ingredients, steps, photos, and related diaries." : {
+    "Selected Photo" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Select a recipe to review ingredients, steps, photos, and related diaries."
+            "value" : "Selected Photo"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Selecciona una receta para revisar ingredientes, pasos, fotos y los diarios relacionados."
+            "value" : "Foto seleccionada"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Selectionnez une recette pour consulter les ingredients, les etapes, les photos et les journaux associes."
+            "value" : "Photo sélectionnée"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "レシピを選んで、材料、手順、写真、関連する日記を確認しましょう。"
+            "value" : "選択した写真"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "选择一道食谱以查看食材、步骤、照片和相关日记。"
+            "value" : "已选照片"
           }
         }
       }
-    },
-    "Selected Photo" : {
-
     },
     "Send test notification" : {
       "localizations" : {
@@ -5071,7 +4917,38 @@
       }
     },
     "Spaghetti\n200g\nEggs\n2\nParmesan cheese\n50g\nPancetta\n100g\nBlack pepper\nto taste\nSalt\nto taste" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spaghetti\n200g\nEggs\n2\nParmesan cheese\n50g\nPancetta\n100g\nBlack pepper\nto taste\nSalt\nto taste"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espagueti\n200g\nHuevos\n2\nQueso parmesano\n50g\nPanceta\n100g\nPimienta negra\nal gusto\nSal\nal gusto"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spaghetti\n200g\nŒufs\n2\nParmesan\n50g\nPancetta\n100g\nPoivre noir\nselon le goût\nSel\nselon le goût"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スパゲッティ\n200g\n卵\n2個\nパルメザンチーズ\n50g\nパンチェッタ\n100g\n黒こしょう\n適量\n塩\n適量"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "意大利面\n200g\n鸡蛋\n2个\n帕玛森芝士\n50g\n意式培根\n100g\n黑胡椒\n适量\n盐\n适量"
+          }
+        }
+      }
     },
     "Spaghetti Carbonara" : {
       "localizations" : {
@@ -5108,38 +4985,35 @@
       }
     },
     "Spaghetti Carbonara for 2 people.\nIngredients: Spaghetti 200g, Eggs 2, Pancetta 100g.\nCook spaghetti. Fry pancetta. Mix eggs and cheese. Combine all." : {
-
-    },
-    "Start in Recipes" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Start in Recipes"
+            "value" : "Spaghetti Carbonara for 2 people.\nIngredients: Spaghetti 200g, Eggs 2, Pancetta 100g.\nCook spaghetti. Fry pancetta. Mix eggs and cheese. Combine all."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Empieza en Recetas"
+            "value" : "Espagueti a la carbonara para 2 personas.\nIngredientes: Espagueti 200g, Huevos 2, Panceta 100g.\nCuece la pasta. Fríe la panceta. Mezcla los huevos y el queso. Combina todo."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Commencez par Recettes"
+            "value" : "Spaghetti carbonara pour 2 personnes.\nIngrédients : Spaghetti 200g, Œufs 2, Pancetta 100g.\nFaites cuire les pâtes. Faites revenir la pancetta. Mélangez les œufs et le fromage. Assemblez le tout."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "まずはレシピから"
+            "value" : "2人分のスパゲッティ・カルボナーラ。\n材料: スパゲッティ 200g、卵 2個、パンチェッタ 100g。\nパスタをゆでる。パンチェッタを炒める。卵とチーズを混ぜる。すべてを合わせる。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "先从食谱开始"
+            "value" : "2人份培根蛋面。\n食材：意大利面 200g、鸡蛋 2个、意式培根 100g。\n煮意大利面。煎意式培根。混合鸡蛋和奶酪。把所有材料拌匀。"
           }
         }
       }
@@ -5242,40 +5116,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "TipKit"
-          }
-        }
-      }
-    },
-    "Turn this on to receive one recipe suggestion at your chosen time each day." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Turn this on to receive one recipe suggestion at your chosen time each day."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activa esto para recibir una sugerencia de receta cada dia a la hora que elijas."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activez ceci pour recevoir chaque jour une suggestion de recette a l’heure de votre choix."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "これをオンにすると、毎日選んだ時間にレシピ提案を1件受け取れます。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "打开后，你会在每天选定的时间收到一条食谱推荐。"
           }
         }
       }

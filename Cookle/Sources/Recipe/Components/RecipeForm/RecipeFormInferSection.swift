@@ -1,4 +1,5 @@
 import SwiftUI
+import TipKit
 
 @available(iOS 26.0, *)
 struct RecipeFormInferSection: View {
@@ -9,6 +10,8 @@ struct RecipeFormInferSection: View {
     @Binding private var steps: [String]
     @Binding private var categories: [String]
     @Binding private var note: String
+
+    private let tip: (any Tip)?
 
     var body: some View {
         Section {
@@ -22,6 +25,10 @@ struct RecipeFormInferSection: View {
                 note: $note
             )
             .frame(maxWidth: .infinity)
+            .popoverTip(
+                tip,
+                arrowEdge: .top
+            )
         } header: {
             Text("Infer From Text")
         }
@@ -33,7 +40,8 @@ struct RecipeFormInferSection: View {
          ingredients: Binding<[RecipeFormIngredient]>,
          steps: Binding<[String]>,
          categories: Binding<[String]>,
-         note: Binding<String>) {
+         note: Binding<String>,
+         tip: (any Tip)? = nil) {
         _name = name
         _servingSize = servingSize
         _cookingTime = cookingTime
@@ -41,5 +49,6 @@ struct RecipeFormInferSection: View {
         _steps = steps
         _categories = categories
         _note = note
+        self.tip = tip
     }
 }

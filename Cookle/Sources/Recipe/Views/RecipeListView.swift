@@ -23,22 +23,26 @@ struct RecipeListView: View {
         Group {
             if recipes.isNotEmpty {
                 List(selection: $recipe) {
-                    TipView(recipeDetailTip)
-
-                    ForEach(recipes) { recipe in
+                    ForEach(filteredRecipes) { recipe in
                         NavigationLink(value: recipe) {
                             RecipeLabel()
                                 .labelStyle(.titleAndLargeIcon)
                                 .environment(recipe)
                         }
-                        .hidden(searchText.isNotEmpty && !recipe.name.normalizedContains(searchText))
+                        .popoverTip(
+                            currentListTip(for: recipe),
+                            arrowEdge: .top
+                        )
                     }
                 }
                 .searchable(text: $searchText)
             } else {
                 VStack(spacing: Layout.emptyStateSpacing) {
-                    TipView(addRecipeTip)
                     AddRecipeButton()
+                        .popoverTip(
+                            addRecipeTip,
+                            arrowEdge: .top
+                        )
                 }
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -59,6 +63,29 @@ struct RecipeListView: View {
     init(selection: Binding<Recipe?> = .constant(nil), descriptor: FetchDescriptor<Recipe> = .recipes(.all)) {
         _recipe = selection
         _recipes = .init(descriptor)
+    }
+}
+
+private extension RecipeListView {
+    var filteredRecipes: [Recipe] {
+        guard searchText.isNotEmpty else {
+            return recipes
+        }
+
+        return recipes.filter { recipe in
+            recipe.name.normalizedContains(searchText)
+        }
+    }
+
+    func currentListTip(
+        for recipe: Recipe
+    ) -> (any Tip)? {
+        guard searchText.isEmpty,
+              filteredRecipes.first?.id == recipe.id else {
+            return nil
+        }
+
+        return recipeDetailTip
     }
 }
 

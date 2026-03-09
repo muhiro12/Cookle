@@ -1,17 +1,17 @@
 import SwiftUI
 import TipKit
 
-struct DailySuggestionTip: Tip {
+struct ShortcutsTip: Tip {
     var title: Text {
-        Text("Turn on daily suggestions")
+        Text("Try Shortcuts")
     }
 
     var message: Text? {
-        Text("Get one recipe suggestion at your chosen time.")
+        Text("Use Siri or Shortcuts to open recipes and settings faster.")
     }
 
     var image: Image? {
-        Image(systemName: "bell.badge")
+        Image(systemName: "waveform")
     }
 
     var options: [any TipOption] {
