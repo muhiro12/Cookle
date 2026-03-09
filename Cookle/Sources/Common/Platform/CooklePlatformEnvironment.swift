@@ -19,6 +19,24 @@ extension View {
     func cooklePlatformEnvironment(
         _ environment: CooklePlatformEnvironment
     ) -> some View {
+        cookleSharedEnvironment(
+            environment
+        )
+        .mhAppRuntimeBootstrap(environment.runtimeBootstrap)
+    }
+
+    func cooklePreviewPlatformEnvironment(
+        _ environment: CooklePlatformEnvironment
+    ) -> some View {
+        cookleSharedEnvironment(
+            environment
+        )
+        .mhAppRuntimeEnvironment(environment.runtimeBootstrap)
+    }
+
+    private func cookleSharedEnvironment(
+        _ environment: CooklePlatformEnvironment
+    ) -> some View {
         self
             .modelContainer(environment.modelContainer)
             .environment(environment.remoteConfigurationService)
@@ -29,6 +47,5 @@ extension View {
             .environment(environment.tagActionService)
             .environment(environment.settingsActionService)
             .environment(environment.navigationModel)
-            .mhAppRuntimeBootstrap(environment.runtimeBootstrap)
     }
 }

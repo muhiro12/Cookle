@@ -9,6 +9,6 @@ struct CookleSampleData: PreviewModifier {
 
     func body(content: Content, context: Context) -> some View {
         content
-            .cooklePlatformEnvironment(context)
+            .cooklePreviewPlatformEnvironment(context)
     }
 }
