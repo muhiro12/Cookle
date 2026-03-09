@@ -1,3 +1,4 @@
+import MHAppRuntimeCore
 import SwiftUI
 
 struct MainView: View {
@@ -7,6 +8,8 @@ struct MainView: View {
     private var remoteConfigurationService
     @Environment(MainNavigationModel.self)
     private var navigationModel
+    @Environment(MHAppRoutePipeline<CookleRoute>.self)
+    private var routePipeline
 
     var body: some View {
         @Bindable var navigationModel = navigationModel
@@ -36,9 +39,13 @@ struct MainView: View {
         }
         .onAppear {
             navigationModel.isRegularWidth = isRegularWidth
+            handleRouteParseFailureIfNeeded()
         }
         .onChange(of: horizontalSizeClass) {
             navigationModel.isRegularWidth = isRegularWidth
+        }
+        .onChange(of: routePipeline.lastParseFailureURL) {
+            handleRouteParseFailureIfNeeded()
         }
         .sheet(
             isPresented: $navigationModel.isCompactSettingsPresented,
@@ -69,6 +76,24 @@ private extension MainView {
                 // Update-required presentation is controlled by remote configuration.
             }
         )
+    }
+
+    func handleRouteParseFailureIfNeeded() {
+        guard let invalidURL = routePipeline.lastParseFailureURL else {
+            return
+        }
+
+        let routeLogger = CookleApp.logger(
+            category: "RouteParseFailure",
+            source: #fileID
+        )
+        routeLogger.warning(
+            "deep-link route parse failed",
+            metadata: [
+                "url": invalidURL.absoluteString
+            ]
+        )
+        routePipeline.clearLastParseFailure()
     }
 }
 

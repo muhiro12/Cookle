@@ -124,6 +124,7 @@ private extension CooklePlatformEnvironmentFactory {
                 notificationService: services.notificationService
             ),
             navigationModel: navigationModel,
+            routePipeline: services.routePipeline,
             runtimeBootstrap: runtimeBootstrap
         )
     }

@@ -12,6 +12,7 @@ struct CooklePlatformEnvironment {
     let tagActionService: TagActionService
     let settingsActionService: SettingsActionService
     let navigationModel: MainNavigationModel
+    let routePipeline: MHAppRoutePipeline<CookleRoute>
     let runtimeBootstrap: MHAppRuntimeBootstrap
 }
 
@@ -47,5 +48,6 @@ extension View {
             .environment(environment.tagActionService)
             .environment(environment.settingsActionService)
             .environment(environment.navigationModel)
+            .environment(environment.routePipeline)
     }
 }
