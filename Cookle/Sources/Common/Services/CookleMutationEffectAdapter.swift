@@ -17,63 +17,42 @@ enum CookleMutationEffectAdapter {
         },
         reviewFlow: MHReviewFlow? = nil
     ) -> MHMutationAdapter<MutationEffect> {
-        .init { effects in
-            mutationSteps(
-                for: effects,
-                reloadRecipeWidgets: reloadRecipeWidgets,
-                reloadDiaryWidgets: reloadDiaryWidgets,
-                synchronizeNotifications: synchronizeNotifications,
-                reviewFlow: reviewFlow
-            )
-        }
-    }
-}
-
-private extension CookleMutationEffectAdapter {
-    nonisolated static func mutationSteps(
-        for effects: MutationEffect,
-        reloadRecipeWidgets: @escaping WidgetReloader,
-        reloadDiaryWidgets: @escaping WidgetReloader,
-        synchronizeNotifications: @escaping NotificationSynchronizer,
-        reviewFlow: MHReviewFlow?
-    ) -> [MHMutationStep] {
-        var steps = [MHMutationStep]()
-
-        if effects.contains(.recipeDataChanged) {
-            steps.append(
-                .mainActor(
+        let baseAdapter: MHMutationAdapter<MutationEffect> = .build { effects in
+            if effects.contains(.recipeDataChanged) {
+                MHMutationStep.mainActor(
                     name: "reloadRecipeWidgets",
                     action: reloadRecipeWidgets
                 )
-            )
-        }
+            }
 
-        if effects.contains(.diaryDataChanged) {
-            steps.append(
-                .mainActor(
+            if effects.contains(.diaryDataChanged) {
+                MHMutationStep.mainActor(
                     name: "reloadDiaryWidgets",
                     action: reloadDiaryWidgets
                 )
-            )
-        }
+            }
 
-        if effects.contains(.notificationPlanChanged) {
-            steps.append(
-                .mainActor(name: "synchronizeNotifications") {
+            if effects.contains(.notificationPlanChanged) {
+                MHMutationStep.mainActor(
+                    name: "synchronizeNotifications"
+                ) {
                     await synchronizeNotifications()
                 }
-            )
+            }
         }
 
-        if effects.contains(.reviewPromptEligible),
-           let reviewFlow {
-            steps.append(
+        guard let reviewFlow else {
+            return baseAdapter
+        }
+
+        let reviewAdapter: MHMutationAdapter<MutationEffect> = .build { effects in
+            if effects.contains(.reviewPromptEligible) {
                 reviewFlow.step(
                     name: "requestReviewIfNeeded"
                 )
-            )
+            }
         }
 
-        return steps
+        return baseAdapter.appending(reviewAdapter)
     }
 }
