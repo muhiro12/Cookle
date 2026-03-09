@@ -47,7 +47,7 @@ It owns:
 
 - SwiftUI views
 - App Intents
-- app bootstrap context and environment wiring
+- app assembly, runtime bootstrap, and environment wiring
 - runtime lifecycle planning
 - workflow services that orchestrate app-only follow-up
 - notifications, widget reloads, review prompts, and app-only routing

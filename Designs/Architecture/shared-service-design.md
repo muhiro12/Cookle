@@ -38,7 +38,7 @@ Do not put these concerns in `CookleLibrary`:
 - `WidgetCenter` reloads
 - local notifications and scheduling
 - review prompts
-- app-only route inbox coordination
+- app-only route pipeline orchestration
 - sheet dismissal, focus control, or other transient UI state
 - `openURL` or other target-owned side effects
 
@@ -49,7 +49,7 @@ The `Cookle` app target owns adapters and orchestration.
 Put these concerns in `Cookle`:
 
 - SwiftUI screens and local presentation state
-- app bootstrap context and environment wiring
+- app assembly, runtime bootstrap, and environment wiring
 - runtime lifecycle plans for launch and foreground refresh
 - App Intents
 - workflow services such as `RecipeActionService`, `DiaryActionService`,
@@ -62,9 +62,10 @@ Put these concerns in `Cookle`:
 Workflow services are the bridge between shared mutations and app-only side
 effects.
 
-The root app view may compose app-level lifecycle plans, but success-triggered
-follow-up work such as review prompting should still originate from workflow
-services instead of generic foreground handlers.
+The root app assembly should prefer `MHAppRuntimeBootstrap` and
+`MHAppRoutePipeline` over hand-written route-drain orchestration, but
+success-triggered follow-up work such as review prompting should still
+originate from workflow services instead of generic foreground handlers.
 
 ### 3. Other target adapters: `Widgets` and future targets
 
@@ -137,7 +138,7 @@ Use these questions when adding new code:
   model mutation from views or App Intents.
 - Route parsing and route execution stay shared so app, widgets, and App
   Intents use the same navigation vocabulary.
-- Route ingestion should flow through a single ordered deep-link source chain so
+- Route ingestion should flow through a single `MHAppRoutePipeline` so
   notifications, universal links, and App Intents do not diverge.
 - Review prompting should be attached to successful user-facing workflows rather
   than app foreground events.

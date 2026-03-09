@@ -60,9 +60,8 @@ repository contains the full iOS project together with its shared Swift package.
   shared between the app and App Intents.
 - AppIntents for Shortcuts support and automation workflows built on top of
   SwiftData entities.
-- MHPlatform for app runtime lifecycle planning, ordered deep-link source
-  chaining, mutation follow-up orchestration, review prompting, and destructive
-  reset handling.
+- MHPlatform for app runtime bootstrap, route-pipeline integration, mutation
+  projection strategies, review flows, and destructive reset handling.
 - StoreKit, Google Mobile Ads, License List, and SwiftUtilities delivered
   through lightweight wrapper packages and Swift Package Manager.
 
@@ -81,16 +80,19 @@ Primary records:
 - The `Cookle` app target owns workflow services such as
   `RecipeActionService`, `DiaryActionService`, `TagActionService`, and
   `SettingsActionService` that add app-only side effects after shared mutations.
-- The root app context centralizes model-container and environment-object
-  wiring for the live app and SwiftUI previews.
+- The root app assembly centralizes model-container wiring, runtime bootstrap,
+  and dependency injection for the live app and SwiftUI previews.
 - App startup and foreground refreshes are driven through
-  `MHAppRuntimeLifecyclePlan` instead of ad-hoc `scenePhase` handlers.
+  `MHAppRuntimeBootstrap` and `MHAppRuntimeLifecyclePlan` instead of ad-hoc
+  `scenePhase` handlers.
 - SwiftUI views and App Intents call those workflow services for commands
   instead of mutating models directly.
 - `RecipeService.search` is the canonical recipe search API used by views,
   intents, and widgets.
 - Route parsing and execution stay shared so deep links, widgets, and intents
-  speak the same navigation language through a single ordered source chain.
+  speak the same navigation language through a single `MHAppRoutePipeline`.
+- Mutation follow-up uses `MHMutationProjectionStrategy` and `MHReviewFlow`
+  instead of app-local wrapper layers around successful mutations.
 
 ## Data model overview
 
@@ -170,7 +172,7 @@ Universal Links require Apple App Site Association (AASA) deployment for
    control and injected in CI through `SECRETS_BASE64`.
 3. Open `Cookle.xcodeproj` in Xcode 26.3 or later and select the **Cookle**
    scheme.
-4. Build and run on an iOS 17 simulator or device.
+4. Build and run on an iOS 18 simulator or device.
 
 ### Secret.swift template
 

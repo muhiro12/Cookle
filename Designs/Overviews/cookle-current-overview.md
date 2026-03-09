@@ -1,6 +1,6 @@
 # Cookle Product and Architecture Overview
 
-Implementation snapshot based on the repository state on March 8, 2026.
+Implementation snapshot based on the repository state on March 9, 2026.
 
 ## Purpose
 
@@ -36,8 +36,8 @@ Cookle uses adaptive tab navigation.
 - `Debug` is available only when debug mode is enabled and the layout is
   regular width.
 - Deep links, widgets, notifications, and App Intents all feed the same route
-  system through an ordered source chain, so navigation behavior is shared
-  across entry points.
+  system through `MHAppRoutePipeline`, so navigation behavior is shared across
+  entry points.
 
 ## Functional Scope
 
@@ -233,8 +233,9 @@ Cookle uses adaptive tab navigation.
   - `settings/subscription`
   - `settings/license`
 - The same route parser and executor are used by:
-  - app `onOpenURL` and universal links, which first ingest into the shared
-    route inbox
+  - `MHAppRoutePipeline`, which wires app `onOpenURL`, universal links,
+    pending notification routes, and App Intent route handoff into one route
+    drain path
   - widgets
   - notification taps
   - App Intent route handoff
@@ -263,7 +264,8 @@ Cookle uses adaptive tab navigation.
     and sub-objects
   - direct deletion of model records from the debug content browser
 - Preview helpers seed an in-memory SwiftData store and reuse the same app
-  context wiring pattern as the live app before injecting environment services.
+  assembly builder as the live app, injecting shared dependencies and runtime
+  state without running the full lifecycle bootstrap.
 
 ## Data Model
 
@@ -311,12 +313,12 @@ large custom abstraction layers.
 
 - SwiftUI screens
 - App Intents
-- app bootstrap context and runtime lifecycle plans
+- app assembly, runtime bootstrap, and runtime lifecycle plans
 - workflow orchestration services
 - notifications
 - review prompting
 - widget reload coordination
-- app-only route inbox handling
+- app-owned route pipeline semantics and navigation application
 - local presentation state
 
 ### Workflow Service Rule
@@ -332,6 +334,9 @@ Current workflow services are:
 
 Their role is to call shared domain services first, then run app-only side
 effects such as widget reloads, notification sync, or review prompts.
+
+They currently express mutation follow-up through `MHMutationProjectionStrategy`
+and attach recipe review prompting through `MHReviewFlow`.
 
 Current workflow-specific follow-up policies include:
 
