@@ -33,8 +33,8 @@ repository contains the full iOS project together with its shared Swift package.
 
 ## Project structure
 
-- `Cookle/` – main SwiftUI application target with screens, intents,
-  configuration, and wrapper integrations.
+- `Cookle/` – main SwiftUI application target with feature-based sources,
+  platform wiring, remote-configuration adapters, and target configuration.
 - `CookleLibrary/` – shared Swift package that exposes SwiftData models,
   services, predicates, migrations, and utilities used by the app and intents.
 - `Widgets/` – home-screen widget extension target built on top of
@@ -80,8 +80,9 @@ Primary records:
 - The `Cookle` app target owns workflow services such as
   `RecipeActionService`, `DiaryActionService`, `TagActionService`, and
   `SettingsActionService` that add app-only side effects after shared mutations.
-- The root app assembly centralizes model-container wiring, runtime bootstrap,
-  and dependency injection for the live app and SwiftUI previews.
+- The root platform environment factory centralizes model-container wiring,
+  runtime bootstrap, and environment injection for the live app and SwiftUI
+  previews.
 - App startup and foreground refreshes are driven through
   `MHAppRuntimeBootstrap` and `MHAppRuntimeLifecyclePlan` instead of ad-hoc
   `scenePhase` handlers.

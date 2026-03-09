@@ -2,17 +2,14 @@ import MHPlatform
 import SwiftData
 
 @MainActor
-struct CookleAppAssembly {
-    let dependencies: CookleAppDependencies
-    let bootstrap: MHAppRuntimeBootstrap
-
+enum CooklePlatformEnvironmentFactory {
     static func live(
         cloudKitDatabase: ModelConfiguration.CloudKitDatabase
-    ) throws -> Self {
+    ) throws -> CooklePlatformEnvironment {
         let modelContainer = try ModelContainerFactory.appContainer(
             cloudKitDatabase: cloudKitDatabase
         )
-        return make(
+        return makeEnvironment(
             modelContainer: modelContainer,
             nativeAdUnitID: liveAdUnitID
         )
@@ -20,15 +17,15 @@ struct CookleAppAssembly {
 
     static func preview(
         modelContainer: ModelContainer
-    ) -> Self {
-        make(
+    ) -> CooklePlatformEnvironment {
+        makeEnvironment(
             modelContainer: modelContainer,
             nativeAdUnitID: Secret.adUnitIDDev
         )
     }
 }
 
-private extension CookleAppAssembly {
+private extension CooklePlatformEnvironmentFactory {
     static var liveAdUnitID: String {
         #if DEBUG
         Secret.adUnitIDDev
@@ -37,47 +34,40 @@ private extension CookleAppAssembly {
         #endif
     }
 
-    static func make(
+    static func makeEnvironment(
         modelContainer: ModelContainer,
         nativeAdUnitID: String
-    ) -> Self {
+    ) -> CooklePlatformEnvironment {
         let navigationModel = MainNavigationModel()
         let services = makeServices(
             modelContainer: modelContainer,
             navigationModel: navigationModel
-        )
-        let dependencies = makeDependencies(
-            modelContainer: modelContainer,
-            navigationModel: navigationModel,
-            services: services
         )
         let runtime = MHAppRuntime(
             configuration: makeRuntimeConfiguration(
                 nativeAdUnitID: nativeAdUnitID
             )
         )
-        let lifecyclePlan = makeLifecyclePlan(
+        let runtimeBootstrap = makeRuntimeBootstrap(
             runtime: runtime,
-            configurationService: services.configurationService,
+            remoteConfigurationService: services.remoteConfigurationService,
             notificationService: services.notificationService,
             routePipeline: services.routePipeline
         )
 
-        return .init(
-            dependencies: dependencies,
-            bootstrap: .init(
-                runtime: runtime,
-                lifecyclePlan: lifecyclePlan,
-                routePipeline: services.routePipeline
-            )
+        return makeEnvironment(
+            modelContainer: modelContainer,
+            navigationModel: navigationModel,
+            services: services,
+            runtimeBootstrap: runtimeBootstrap
         )
     }
 
     static func makeServices(
         modelContainer: ModelContainer,
         navigationModel: MainNavigationModel
-    ) -> CookleAppServices {
-        let configurationService = ConfigurationService()
+    ) -> CooklePlatformServices {
+        let remoteConfigurationService = RemoteConfigurationService()
         let routePipeline = MainRouteService.makeRoutePipeline(
             navigationModel: navigationModel,
             modelContext: modelContainer.mainContext
@@ -95,23 +85,24 @@ private extension CookleAppAssembly {
         }
 
         return .init(
-            configurationService: configurationService,
+            remoteConfigurationService: remoteConfigurationService,
             notificationService: notificationService,
             tipController: tipController,
             routePipeline: routePipeline
         )
     }
 
-    static func makeDependencies(
+    static func makeEnvironment(
         modelContainer: ModelContainer,
         navigationModel: MainNavigationModel,
-        services: CookleAppServices
-    ) -> CookleAppDependencies {
+        services: CooklePlatformServices,
+        runtimeBootstrap: MHAppRuntimeBootstrap
+    ) -> CooklePlatformEnvironment {
         let reviewFlow = makeReviewFlow()
 
         return .init(
             modelContainer: modelContainer,
-            configurationService: services.configurationService,
+            remoteConfigurationService: services.remoteConfigurationService,
             notificationService: services.notificationService,
             tipController: services.tipController,
             recipeActionService: RecipeActionService(
@@ -125,7 +116,8 @@ private extension CookleAppAssembly {
             settingsActionService: SettingsActionService(
                 notificationService: services.notificationService
             ),
-            navigationModel: navigationModel
+            navigationModel: navigationModel,
+            runtimeBootstrap: runtimeBootstrap
         )
     }
 
@@ -151,30 +143,34 @@ private extension CookleAppAssembly {
         )
     }
 
-    static func makeLifecyclePlan<Route: Sendable>(
+    static func makeRuntimeBootstrap<Route: Sendable>(
         runtime: MHAppRuntime,
-        configurationService: ConfigurationService,
+        remoteConfigurationService: RemoteConfigurationService,
         notificationService: NotificationService,
         routePipeline: MHAppRoutePipeline<Route>
-    ) -> MHAppRuntimeLifecyclePlan {
+    ) -> MHAppRuntimeBootstrap {
         .init(
-            commonTasks: [
-                .init(name: "syncSubscriptionState") {
-                    syncSubscriptionStateIfNeeded(
-                        runtime: runtime
+            runtime: runtime,
+            lifecyclePlan: .init(
+                commonTasks: [
+                    .init(name: "syncSubscriptionState") {
+                        syncSubscriptionStateIfNeeded(
+                            runtime: runtime
+                        )
+                    },
+                    .init(name: "loadRemoteConfiguration") {
+                        try? await remoteConfigurationService.load()
+                    },
+                    .init(name: "synchronizeNotifications") {
+                        await notificationService.synchronizeScheduledSuggestions()
+                    },
+                    routePipeline.task(
+                        name: "synchronizePendingRoutes"
                     )
-                },
-                .init(name: "loadConfiguration") {
-                    try? await configurationService.load()
-                },
-                .init(name: "synchronizeNotifications") {
-                    await notificationService.synchronizeScheduledSuggestions()
-                },
-                routePipeline.task(
-                    name: "synchronizePendingRoutes"
-                )
-            ],
-            skipFirstActivePhase: true
+                ],
+                skipFirstActivePhase: true
+            ),
+            routePipeline: routePipeline
         )
     }
 

@@ -12,5 +12,7 @@ struct LicenseView: View {
 }
 
 #Preview(traits: .modifier(CookleSampleData())) {
-    LicenseView()
+    NavigationStack {
+        LicenseView()
+    }
 }

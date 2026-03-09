@@ -4,8 +4,8 @@ import SwiftUI
 struct MainView: View {
     @Environment(\.horizontalSizeClass)
     private var horizontalSizeClass
-    @Environment(ConfigurationService.self)
-    private var configurationService
+    @Environment(RemoteConfigurationService.self)
+    private var remoteConfigurationService
     @Environment(MainNavigationModel.self)
     private var navigationModel
 
@@ -64,7 +64,7 @@ private extension MainView {
     var isUpdateRequiredBinding: Binding<Bool> {
         .init(
             get: {
-                configurationService.isUpdateRequired()
+                remoteConfigurationService.isUpdateRequired()
             },
             set: { _ in
                 // Update-required presentation is controlled by remote configuration.

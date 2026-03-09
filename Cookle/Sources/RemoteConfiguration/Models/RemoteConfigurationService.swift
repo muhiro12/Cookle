@@ -1,5 +1,5 @@
 //
-//  ConfigurationService.swift
+//  RemoteConfigurationService.swift
 //  Cookle
 //
 //  Created by Codex on 2025/06/17.
@@ -9,24 +9,29 @@ import Foundation
 import SwiftUI
 
 @Observable
-final class ConfigurationService {
-    private(set) var configuration: Configuration?
+final class RemoteConfigurationService {
+    private(set) var remoteConfiguration: RemoteConfiguration?
 
     private let decoder = JSONDecoder()
 
     func load() async throws {
-        guard let configurationURL = URL(
+        guard let remoteConfigurationURL = URL(
             string: "https://raw.githubusercontent.com/muhiro12/Cookle/main/.config.json"
         ) else {
             throw URLError(.badURL)
         }
-        let data = try await URLSession.shared.data(from: configurationURL).0
-        configuration = try decoder.decode(Configuration.self, from: data)
+        let data = try await URLSession.shared.data(
+            from: remoteConfigurationURL
+        ).0
+        remoteConfiguration = try decoder.decode(
+            RemoteConfiguration.self,
+            from: data
+        )
     }
 
     func isUpdateRequired() -> Bool {
         guard let current = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
-              let required = configuration?.requiredVersion,
+              let required = remoteConfiguration?.requiredVersion,
               Bundle.main.bundleIdentifier?.contains("playgrounds") == false else {
             return false
         }

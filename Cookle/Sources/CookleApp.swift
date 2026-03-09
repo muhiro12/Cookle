@@ -19,15 +19,14 @@ struct CookleApp: App {
     @AppStorage(.lastLaunchedAppVersion)
     private var lastLaunchedAppVersion
 
-    private let sharedAssembly: CookleAppAssembly
+    private let platformEnvironment: CooklePlatformEnvironment
     private let startupLogger = Self.logger(category: "AppStartup")
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .id(isICloudOn)
-                .cookleAppDependencies(sharedAssembly.dependencies)
-                .mhAppRuntimeBootstrap(sharedAssembly.bootstrap)
+                .cooklePlatformEnvironment(platformEnvironment)
         }
     }
 
@@ -38,7 +37,7 @@ struct CookleApp: App {
             ? .automatic
             : .none
 
-        sharedAssembly = Self.makeAssembly(
+        platformEnvironment = Self.makePlatformEnvironment(
             cloudKitDatabase: cloudKitDatabase
         )
         startupLogger.notice("startup dependencies ready")
@@ -57,11 +56,11 @@ struct CookleApp: App {
 
 private extension CookleApp {
     @MainActor
-    static func makeAssembly(
+    static func makePlatformEnvironment(
         cloudKitDatabase: ModelConfiguration.CloudKitDatabase
-    ) -> CookleAppAssembly {
+    ) -> CooklePlatformEnvironment {
         do {
-            return try CookleAppAssembly.live(
+            return try CooklePlatformEnvironmentFactory.live(
                 cloudKitDatabase: cloudKitDatabase
             )
         } catch {
@@ -71,15 +70,15 @@ private extension CookleApp {
 
     func registerAppIntentDependencies() {
         // Provide dependencies for AppIntents entity queries.
-        let modelContainerForDependency = sharedAssembly.dependencies.modelContainer
+        let modelContainerForDependency = platformEnvironment.modelContainer
         AppDependencyManager.shared.add { modelContainerForDependency }
-        let recipeActionServiceForDependency = sharedAssembly.dependencies.recipeActionService
+        let recipeActionServiceForDependency = platformEnvironment.recipeActionService
         AppDependencyManager.shared.add { recipeActionServiceForDependency }
-        let diaryActionServiceForDependency = sharedAssembly.dependencies.diaryActionService
+        let diaryActionServiceForDependency = platformEnvironment.diaryActionService
         AppDependencyManager.shared.add { diaryActionServiceForDependency }
-        let tagActionServiceForDependency = sharedAssembly.dependencies.tagActionService
+        let tagActionServiceForDependency = platformEnvironment.tagActionService
         AppDependencyManager.shared.add { tagActionServiceForDependency }
-        let settingsActionServiceForDependency = sharedAssembly.dependencies.settingsActionService
+        let settingsActionServiceForDependency = platformEnvironment.settingsActionService
         AppDependencyManager.shared.add { settingsActionServiceForDependency }
     }
 

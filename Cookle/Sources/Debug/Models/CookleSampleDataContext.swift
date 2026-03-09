@@ -1,7 +1,7 @@
 import SwiftData
 
 enum CookleSampleDataContext {
-    static func makeSharedContext() -> CookleAppAssembly {
+    static func makeSharedContext() -> CooklePlatformEnvironment {
         do {
             let modelContainer = try ModelContainer(
                 for: Recipe.self,
@@ -10,7 +10,7 @@ enum CookleSampleDataContext {
             let previewStore = CooklePreviewStore()
             previewStore.prepare(modelContainer.mainContext)
             return MainActor.assumeIsolated {
-                CookleAppAssembly.preview(
+                CooklePlatformEnvironmentFactory.preview(
                     modelContainer: modelContainer
                 )
             }

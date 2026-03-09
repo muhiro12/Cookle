@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct CookleSampleData: PreviewModifier {
-    typealias Context = CookleAppAssembly
+    typealias Context = CooklePlatformEnvironment
 
     static func makeSharedContext() -> Context {
         CookleSampleDataContext.makeSharedContext()
@@ -9,7 +9,6 @@ struct CookleSampleData: PreviewModifier {
 
     func body(content: Content, context: Context) -> some View {
         content
-            .cookleAppDependencies(context.dependencies)
-            .environment(context.bootstrap.runtime)
+            .cooklePlatformEnvironment(context)
     }
 }

@@ -263,9 +263,9 @@ Cookle uses adaptive tab navigation.
   - raw model browsing for diaries, recipes, photos, ingredients, categories,
     and sub-objects
   - direct deletion of model records from the debug content browser
-- Preview helpers seed an in-memory SwiftData store and reuse the same app
-  assembly builder as the live app, injecting shared dependencies and runtime
-  state without running the full lifecycle bootstrap.
+- Preview helpers seed an in-memory SwiftData store and reuse the same platform
+  environment factory used by the live app, injecting shared dependencies and
+  runtime state without running the full lifecycle bootstrap.
 
 ## Data Model
 
@@ -313,7 +313,7 @@ large custom abstraction layers.
 
 - SwiftUI screens
 - App Intents
-- app assembly, runtime bootstrap, and runtime lifecycle plans
+- platform environment factory, runtime bootstrap, and runtime lifecycle plans
 - workflow orchestration services
 - notifications
 - review prompting
