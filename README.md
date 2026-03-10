@@ -72,6 +72,7 @@ shared package so multiple targets can call the same workflows.
 
 Primary records:
 
+- [Architecture guide](Designs/Architecture/ARCHITECTURE_GUIDE.md)
 - [Shared service design](Designs/Architecture/shared-service-design.md)
 - [ADR 0001](Designs/Decisions/0001-adopt-shared-services-and-workflow-adapters.md)
 

@@ -1,8 +1,13 @@
 # Shared Service Design
 
 This document is the current source of truth for how shared logic is organized
-in Cookle. It records the stable placement rules. Historical decisions and
-tradeoffs live in [`Designs/Decisions/`](../Decisions/).
+in Cookle. It records the stable placement rules.
+
+For the shorter boundary summary, start with
+[`ARCHITECTURE_GUIDE.md`](./ARCHITECTURE_GUIDE.md).
+
+Historical decisions and tradeoffs live in
+[`Designs/Decisions/`](../Decisions/).
 
 ## Goal
 
