@@ -1,8 +1,6 @@
 import GoogleMobileAdsWrapper
 import LicenseListWrapper
-import MHAppRuntimeCore
-import MHPreferences
-import MHReviewPolicy
+import MHPlatform
 import StoreKitWrapper
 import SwiftData
 import SwiftUI

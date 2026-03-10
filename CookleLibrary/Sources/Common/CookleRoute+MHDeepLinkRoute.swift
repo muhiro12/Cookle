@@ -1,5 +1,5 @@
 import Foundation
-import MHDeepLinking
+import MHPlatform
 
 extension CookleRoute: MHDeepLinkRoute {
     private static let dateComponentCount = 3

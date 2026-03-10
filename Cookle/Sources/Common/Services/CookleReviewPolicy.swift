@@ -1,4 +1,4 @@
-import MHReviewPolicy
+import MHPlatform
 
 enum CookleReviewPolicy {
     private enum Constants {

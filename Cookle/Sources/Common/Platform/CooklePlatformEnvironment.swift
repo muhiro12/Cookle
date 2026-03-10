@@ -1,4 +1,4 @@
-import MHAppRuntimeCore
+import MHPlatform
 import SwiftData
 import SwiftUI
 

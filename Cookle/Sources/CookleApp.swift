@@ -5,7 +5,7 @@
 //  Created by Hiromu Nakano on 2024/05/20.
 //
 
-import MHLogging
+import MHPlatform
 import SwiftUI
 
 @main

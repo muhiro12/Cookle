@@ -1,4 +1,4 @@
-import MHAppRuntimeCore
+import MHPlatform
 
 struct CooklePlatformServices {
     let remoteConfigurationService: RemoteConfigurationService

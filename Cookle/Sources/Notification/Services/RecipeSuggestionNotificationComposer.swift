@@ -1,5 +1,5 @@
 import Foundation
-import MHNotificationPayloads
+import MHPlatform
 import UserNotifications
 
 struct RecipeSuggestionNotificationComposer {

@@ -1,5 +1,5 @@
 import Foundation
-import MHDeepLinking
+import MHPlatform
 
 enum CookleIntentRouteStore {
     private static let pendingDeepLinkURLKey = "pendingCookleIntentDeepLinkURL"

@@ -1,5 +1,5 @@
 import Foundation
-import MHPreferences
+import MHPlatform
 
 /// Stable storage keys for integer settings persisted in app-local preferences.
 public enum IntPreferenceKey: String, MHIntPreferenceKeyRepresentable {

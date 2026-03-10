@@ -1,5 +1,5 @@
 import Foundation
-import MHNotificationPayloads
+import MHPlatform
 
 enum NotificationConstants {
     nonisolated static let suggestionIdentifierPrefix = "daily-recipe-suggestion-"

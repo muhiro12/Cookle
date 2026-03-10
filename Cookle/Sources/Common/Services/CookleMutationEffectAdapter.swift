@@ -1,5 +1,4 @@
-import MHMutationFlow
-import MHReviewPolicy
+import MHPlatform
 
 enum CookleMutationEffectAdapter {
     typealias NotificationSynchronizer = @MainActor @Sendable () async -> Void

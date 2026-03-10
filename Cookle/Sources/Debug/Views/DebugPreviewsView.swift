@@ -5,7 +5,7 @@
 //  Created by Hiromu Nakano on 9/17/24.
 //
 
-import MHAppRuntimeCore
+import MHPlatform
 import SwiftUI
 
 struct DebugPreviewsView: View {

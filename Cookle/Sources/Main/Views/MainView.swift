@@ -1,4 +1,4 @@
-import MHAppRuntimeCore
+import MHPlatform
 import SwiftUI
 
 struct MainView: View {

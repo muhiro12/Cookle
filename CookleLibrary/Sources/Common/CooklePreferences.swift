@@ -1,5 +1,5 @@
 import Foundation
-import MHPreferences
+import MHPlatform
 
 /// App-local preference accessors backed by standard `UserDefaults`.
 public enum CooklePreferences {

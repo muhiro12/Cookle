@@ -1,5 +1,4 @@
-import MHDeepLinking
-@preconcurrency import MHNotificationPayloads
+@preconcurrency import MHPlatform
 import Observation
 import SwiftData
 import UserNotifications

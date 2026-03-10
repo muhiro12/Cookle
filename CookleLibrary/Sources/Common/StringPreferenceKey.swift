@@ -1,5 +1,5 @@
 import Foundation
-import MHPreferences
+import MHPlatform
 
 /// Stable storage keys for string values persisted in app-local preferences.
 public enum StringPreferenceKey: String, MHStringPreferenceKeyRepresentable {
