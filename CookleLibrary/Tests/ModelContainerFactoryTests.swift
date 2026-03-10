@@ -3,7 +3,6 @@ import Foundation
 import SwiftData
 import Testing
 
-@MainActor
 struct ModelContainerFactoryTests {
     @Test
     func validateMigratedDataBeforeDeletingLegacyIfNeeded_passes_when_counts_match() throws {
@@ -22,8 +21,8 @@ struct ModelContainerFactoryTests {
             url: legacyURL,
             cloudKitDatabase: .none
         )
-        try seed(context: currentContainer.mainContext)
-        try seed(context: legacyContainer.mainContext)
+        try seed(context: .init(currentContainer))
+        try seed(context: .init(legacyContainer))
 
         try ModelContainerFactory.validateMigratedDataBeforeDeletingLegacyIfNeeded(
             currentContainer: currentContainer,
@@ -50,7 +49,7 @@ struct ModelContainerFactoryTests {
             url: legacyURL,
             cloudKitDatabase: .none
         )
-        try seed(context: legacyContainer.mainContext)
+        try seed(context: .init(legacyContainer))
 
         do {
             try ModelContainerFactory.validateMigratedDataBeforeDeletingLegacyIfNeeded(
@@ -81,7 +80,7 @@ struct ModelContainerFactoryTests {
             url: currentURL,
             cloudKitDatabase: .none
         )
-        try seed(context: currentContainer.mainContext)
+        try seed(context: .init(currentContainer))
 
         try ModelContainerFactory.validateMigratedDataBeforeDeletingLegacyIfNeeded(
             currentContainer: currentContainer,

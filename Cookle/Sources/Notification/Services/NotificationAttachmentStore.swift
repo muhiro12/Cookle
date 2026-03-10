@@ -1,8 +1,7 @@
 import Foundation
 import UIKit
-import UserNotifications
 
-final class NotificationAttachmentStore {
+nonisolated final class NotificationAttachmentStore {
     private let fileManager: FileManager
     private let directoryURL: URL
 
@@ -11,30 +10,27 @@ final class NotificationAttachmentStore {
         self.directoryURL = Self.makeDirectoryURL(fileManager: fileManager)
     }
 
-    func attachment(
-        for recipe: Recipe,
-        stableIdentifier: String
-    ) -> UNNotificationAttachment? {
+    func prepareAttachmentFileURL(
+        for snapshot: NotificationRecipeSnapshot
+    ) -> URL? {
         do {
             try ensureDirectoryExists()
-            let fileURL = attachmentFileURL(for: stableIdentifier)
-            if let cachedAttachment = existingAttachmentIfUpToDate(
+            let fileURL = attachmentFileURL(
+                for: snapshot.stableIdentifier
+            )
+            if let cachedFileURL = existingAttachmentFileURLIfUpToDate(
                 fileURL: fileURL,
-                recipeModifiedTimestamp: recipe.modifiedTimestamp,
-                stableIdentifier: stableIdentifier
+                recipeModifiedTimestamp: snapshot.modifiedTimestamp
             ) {
-                return cachedAttachment
+                return cachedFileURL
             }
-            guard let photo = primaryPhoto(for: recipe),
-                  let data = compressedJPEGData(from: photo.data) else {
+            guard let photoData = snapshot.primaryPhotoData,
+                  let data = compressedJPEGData(from: photoData) else {
                 try removeItemIfExists(at: fileURL)
                 return nil
             }
             try data.write(to: fileURL, options: .atomic)
-            return try .init(
-                identifier: stableIdentifier,
-                url: fileURL
-            )
+            return fileURL
         } catch {
             assertionFailure(error.localizedDescription)
             return nil
@@ -78,7 +74,7 @@ final class NotificationAttachmentStore {
     }
 }
 
-private extension NotificationAttachmentStore {
+nonisolated private extension NotificationAttachmentStore {
     static func makeDirectoryURL(fileManager: FileManager) -> URL {
         let baseDirectoryURL: URL
         if let appGroupURL = fileManager.containerURL(
@@ -102,13 +98,6 @@ private extension NotificationAttachmentStore {
             at: directoryURL,
             withIntermediateDirectories: true
         )
-    }
-
-    func primaryPhoto(for recipe: Recipe) -> Photo? {
-        if let photo = recipe.photoObjects?.min()?.photo {
-            return photo
-        }
-        return recipe.photos?.first
     }
 
     func compressedJPEGData(from data: Data) -> Data? {
@@ -145,11 +134,10 @@ private extension NotificationAttachmentStore {
         return sanitized.isEmpty ? "recipe" : sanitized
     }
 
-    func existingAttachmentIfUpToDate(
+    func existingAttachmentFileURLIfUpToDate(
         fileURL: URL,
-        recipeModifiedTimestamp: Date,
-        stableIdentifier: String
-    ) -> UNNotificationAttachment? {
+        recipeModifiedTimestamp: Date
+    ) -> URL? {
         guard fileManager.fileExists(atPath: fileURL.path) else {
             return nil
         }
@@ -158,10 +146,7 @@ private extension NotificationAttachmentStore {
         )
         if let contentModificationDate = resourceValues?.contentModificationDate,
            contentModificationDate >= recipeModifiedTimestamp {
-            return try? .init(
-                identifier: stableIdentifier,
-                url: fileURL
-            )
+            return fileURL
         }
         return nil
     }

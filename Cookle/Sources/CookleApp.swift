@@ -5,9 +5,7 @@
 //  Created by Hiromu Nakano on 2024/05/20.
 //
 
-import AppIntents
 import MHLogging
-import SwiftData
 import SwiftUI
 
 @main
@@ -19,67 +17,35 @@ struct CookleApp: App {
     @AppStorage(.lastLaunchedAppVersion)
     private var lastLaunchedAppVersion
 
-    private let platformEnvironment: CooklePlatformEnvironment
-    private let startupLogger = Self.logger(category: "AppStartup")
+    @State private var bootstrapModel = CookleAppBootstrapModel()
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .id(isICloudOn)
-                .cooklePlatformEnvironment(platformEnvironment)
+            Group {
+                if let platformEnvironment = bootstrapModel.platformEnvironment {
+                    ContentView()
+                        .id(isICloudOn)
+                        .cooklePlatformEnvironment(platformEnvironment)
+                } else {
+                    CookleStartupView(
+                        failureMessage: bootstrapModel.failureMessage
+                    )
+                }
+            }
+            .task(id: isICloudOn) {
+                await bootstrapModel.loadEnvironment(
+                    isICloudOn: isICloudOn
+                )
+            }
         }
     }
 
-    @MainActor
     init() {
-        startupLogger.notice("app startup began")
-        let cloudKitDatabase: ModelConfiguration.CloudKitDatabase = CooklePreferences.bool(for: .isICloudOn)
-            ? .automatic
-            : .none
-
-        platformEnvironment = Self.makePlatformEnvironment(
-            cloudKitDatabase: cloudKitDatabase
-        )
-        startupLogger.notice("startup dependencies ready")
-
         #if DEBUG
         isDebugOn = true
         #endif
 
-        CookleShortcuts.updateAppShortcutParameters()
-
-        registerAppIntentDependencies()
         updateLastLaunchedVersion()
-        startupLogger.notice("startup wiring finished")
-    }
-}
-
-private extension CookleApp {
-    @MainActor
-    static func makePlatformEnvironment(
-        cloudKitDatabase: ModelConfiguration.CloudKitDatabase
-    ) -> CooklePlatformEnvironment {
-        do {
-            return try CooklePlatformEnvironmentFactory.live(
-                cloudKitDatabase: cloudKitDatabase
-            )
-        } catch {
-            fatalError("Failed to prepare data store: \(error.localizedDescription)")
-        }
-    }
-
-    func registerAppIntentDependencies() {
-        // Provide dependencies for AppIntents entity queries.
-        let modelContainerForDependency = platformEnvironment.modelContainer
-        AppDependencyManager.shared.add { modelContainerForDependency }
-        let recipeActionServiceForDependency = platformEnvironment.recipeActionService
-        AppDependencyManager.shared.add { recipeActionServiceForDependency }
-        let diaryActionServiceForDependency = platformEnvironment.diaryActionService
-        AppDependencyManager.shared.add { diaryActionServiceForDependency }
-        let tagActionServiceForDependency = platformEnvironment.tagActionService
-        AppDependencyManager.shared.add { tagActionServiceForDependency }
-        let settingsActionServiceForDependency = platformEnvironment.settingsActionService
-        AppDependencyManager.shared.add { settingsActionServiceForDependency }
     }
 
     func updateLastLaunchedVersion() {

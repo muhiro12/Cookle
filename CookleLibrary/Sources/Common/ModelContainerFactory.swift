@@ -1,8 +1,20 @@
 import Foundation
+import OSLog
 import SwiftData
 
 /// Builds model containers and contexts used by Cookle.
 public enum ModelContainerFactory {
+    private enum MeasurementConstants {
+        static let millisecondsPerSecond = TimeInterval(
+            Int("1000") ?? .zero
+        )
+    }
+
+    private static let logger = Logger(
+        subsystem: "CookleLibrary",
+        category: "ModelContainerFactory"
+    )
+
     /// Returns the shared model container configuration.
     public static func shared() throws -> ModelContainer {
         try makeModelContainer()
@@ -10,10 +22,10 @@ public enum ModelContainerFactory {
 
     /// Creates the model container used by the main app and validates migrated data.
     @preconcurrency
-    @MainActor
     public static func appContainer(
         cloudKitDatabase: ModelConfiguration.CloudKitDatabase
     ) throws -> ModelContainer {
+        let storePreparationStartedAt = Date.timeIntervalSinceReferenceDate
         try DatabaseMigrator.migrateStoreFilesIfNeeded()
         let currentContainer = try makeModelContainer(
             cloudKitDatabase: cloudKitDatabase
@@ -23,6 +35,9 @@ public enum ModelContainerFactory {
             cloudKitDatabase: cloudKitDatabase
         )
         try DatabaseMigrator.removeLegacyStoreFilesIfNeeded()
+        logger.notice(
+            "store prep finished in \(durationMilliseconds(since: storePreparationStartedAt)) ms"
+        )
         return currentContainer
     }
 
@@ -54,7 +69,6 @@ public enum ModelContainerFactory {
         )
     }
 
-    @MainActor
     static func validateMigratedDataBeforeDeletingLegacyIfNeeded(
         currentContainer: ModelContainer,
         cloudKitDatabase: ModelConfiguration.CloudKitDatabase,
@@ -62,6 +76,7 @@ public enum ModelContainerFactory {
         currentURL: URL = Database.url,
         fileManager: FileManager = .default
     ) throws {
+        let validationStartedAt = Date.timeIntervalSinceReferenceDate
         guard legacyURL != currentURL else {
             return
         }
@@ -73,8 +88,12 @@ public enum ModelContainerFactory {
             url: legacyURL,
             cloudKitDatabase: cloudKitDatabase
         )
-        let legacyObjectCounts = try objectCounts(in: legacyContainer.mainContext)
-        let currentObjectCounts = try objectCounts(in: currentContainer.mainContext)
+        let legacyObjectCounts = try objectCounts(
+            in: .init(legacyContainer)
+        )
+        let currentObjectCounts = try objectCounts(
+            in: .init(currentContainer)
+        )
         guard currentObjectCounts.hasMatchingRecipeAndDiaryCounts(
             as: legacyObjectCounts
         ) else {
@@ -83,9 +102,11 @@ public enum ModelContainerFactory {
                 currentObjectCounts: currentObjectCounts
             )
         }
+        logger.notice(
+            "migration validation finished in \(durationMilliseconds(since: validationStartedAt)) ms"
+        )
     }
 
-    @MainActor
     private static func objectCounts(in context: ModelContext) throws -> MigrationObjectCounts {
         try .init(
             recipeCount: count(in: context, Recipe.self),
@@ -96,12 +117,22 @@ public enum ModelContainerFactory {
         )
     }
 
-    @MainActor
     private static func count<Model: PersistentModel>(
         in context: ModelContext,
         _: Model.Type
     ) throws -> Int {
         let fetchDescriptor: FetchDescriptor<Model> = .init()
         return try context.fetchCount(fetchDescriptor)
+    }
+
+    private static func durationMilliseconds(
+        since startedAt: TimeInterval
+    ) -> Int {
+        Int(
+            (
+                Date.timeIntervalSinceReferenceDate
+                    - startedAt
+            ) * MeasurementConstants.millisecondsPerSecond
+        )
     }
 }

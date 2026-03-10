@@ -9,13 +9,18 @@ import SwiftUI
 
 @MainActor
 enum CooklePlatformEnvironmentFactory {
-    static func live(
+    nonisolated static func prepareLiveModelContainer(
         cloudKitDatabase: ModelConfiguration.CloudKitDatabase
-    ) throws -> CooklePlatformEnvironment {
-        let modelContainer = try ModelContainerFactory.appContainer(
+    ) throws -> ModelContainer {
+        try ModelContainerFactory.appContainer(
             cloudKitDatabase: cloudKitDatabase
         )
-        return makeEnvironment(
+    }
+
+    static func makeLiveEnvironment(
+        modelContainer: ModelContainer
+    ) -> CooklePlatformEnvironment {
+        makeEnvironment(
             modelContainer: modelContainer,
             nativeAdUnitID: liveAdUnitID
         )
@@ -207,7 +212,7 @@ private extension CooklePlatformEnvironmentFactory {
                         try? await remoteConfigurationService.load()
                     },
                     .init(name: "synchronizeNotifications") {
-                        await notificationService.synchronizeScheduledSuggestions()
+                        notificationService.scheduleLifecycleSynchronization()
                     },
                     routePipeline.task(
                         name: "synchronizePendingRoutes"

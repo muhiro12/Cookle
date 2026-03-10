@@ -1,23 +1,32 @@
 import MHDeepLinking
 @preconcurrency import MHNotificationPayloads
+import Observation
 import SwiftData
-import SwiftUI
 import UserNotifications
 
 @Observable
 final class NotificationService: NSObject {
-    private struct ScheduledSuggestionRequest {
-        let request: UNNotificationRequest
-        let stableIdentifier: String
-        let hasAttachment: Bool
+    private enum SyncConstants {
+        static let millisecondsPerSecond = TimeInterval(
+            Int("1000") ?? .zero
+        )
+        static let testSuggestionDelay = TimeInterval(
+            Int("1") ?? .zero
+        )
     }
 
-    private let modelContainer: ModelContainer
     private let routeInbox: MHObservableDeepLinkInbox
     private let notificationCenter = UNUserNotificationCenter.current()
     private let calendar = Calendar.current
-    private let attachmentStore: NotificationAttachmentStore
-    private let composer: RecipeSuggestionNotificationComposer
+    private let composer = RecipeSuggestionNotificationComposer()
+    private let syncWorker: NotificationSyncWorker
+    private let syncLogger = CookleApp.logger(
+        category: "NotificationSync",
+        source: #fileID
+    )
+
+    @MainActor private var lifecycleSynchronizationTask: Task<Void, Never>?
+    @MainActor private var isLifecycleSynchronizationPending = false
 
     private(set) var authorizationStatus: UNAuthorizationStatus = .notDetermined
 
@@ -25,14 +34,28 @@ final class NotificationService: NSObject {
         modelContainer: ModelContainer,
         routeInbox: MHObservableDeepLinkInbox
     ) {
-        self.modelContainer = modelContainer
         self.routeInbox = routeInbox
-        let attachmentStore = NotificationAttachmentStore()
-        self.attachmentStore = attachmentStore
-        self.composer = .init(attachmentStore: attachmentStore)
+        self.syncWorker = .init(
+            modelContainer: modelContainer
+        )
         super.init()
         notificationCenter.delegate = self
         registerNotificationCategories()
+    }
+
+    @MainActor
+    func scheduleLifecycleSynchronization() {
+        isLifecycleSynchronizationPending = true
+        guard lifecycleSynchronizationTask == nil else {
+            return
+        }
+
+        lifecycleSynchronizationTask = Task { [weak self] in
+            guard let self else {
+                return
+            }
+            await runLifecycleSynchronizationLoop()
+        }
     }
 
     func synchronizeScheduledSuggestions() async {
@@ -61,19 +84,27 @@ final class NotificationService: NSObject {
             return
         }
 
-        let recipe = try? RecipeService.randomRecipe(
-            context: modelContainer.mainContext
-        )
-        let content = recipe.map { resolvedRecipe in
+        let snapshot = await syncWorker.randomRecipeSnapshot()
+        let attachmentFileURL: URL? = if let snapshot {
+            await syncWorker.prepareAttachmentFileURL(
+                for: snapshot
+            )
+        } else {
+            nil
+        }
+        let content = snapshot.map { resolvedSnapshot in
             composer.content(
-                for: resolvedRecipe,
-                stableIdentifier: stableIdentifier(for: resolvedRecipe)
+                for: resolvedSnapshot,
+                attachmentFileURL: attachmentFileURL
             )
         } ?? composer.fallbackContent(
             recipeName: String(localized: "Recipe")
         )
 
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        let trigger = UNTimeIntervalNotificationTrigger(
+            timeInterval: SyncConstants.testSuggestionDelay,
+            repeats: false
+        )
         let request = UNNotificationRequest(
             identifier: NotificationConstants.testSuggestionIdentifier,
             content: content,
@@ -189,7 +220,7 @@ private extension NotificationService {
     func syncSuggestions(requestAuthorizationIfNeeded: Bool) async {
         if !CooklePreferences.bool(for: .isDailyRecipeSuggestionNotificationOn) {
             await replaceManagedSuggestionRequests(with: [])
-            attachmentStore.removeAllAttachments()
+            await syncWorker.removeAllAttachments()
             await refreshAuthorizationStatus()
             return
         }
@@ -203,23 +234,20 @@ private extension NotificationService {
 
         guard isAuthorizationGranted else {
             await replaceManagedSuggestionRequests(with: [])
-            attachmentStore.removeAllAttachments()
+            await syncWorker.removeAllAttachments()
             return
         }
 
-        let scheduledRequests = buildDailySuggestionRequests()
-        attachmentStore.pruneAttachments(
-            keepingStableIdentifiers: Set(
-                scheduledRequests.compactMap { scheduledRequest in
-                    if scheduledRequest.hasAttachment {
-                        return scheduledRequest.stableIdentifier
-                    }
-                    return nil
-                }
-            )
+        let plan = await syncWorker.buildPlan(
+            hour: notificationHour,
+            minute: notificationMinute
         )
+        let requestApplyStartedAt = Date.timeIntervalSinceReferenceDate
         await replaceManagedSuggestionRequests(
-            with: scheduledRequests.map(\.request)
+            with: plan.preparedRequests.map(suggestionRequest)
+        )
+        syncLogger.notice(
+            "request apply finished in \(durationMilliseconds(since: requestApplyStartedAt)) ms"
         )
     }
 
@@ -236,41 +264,6 @@ private extension NotificationService {
             requests: requests,
             isManagedIdentifier: isManagedIdentifier
         )
-    }
-
-    private func buildDailySuggestionRequests(daysAhead: Int = 14) -> [ScheduledSuggestionRequest] {
-        guard let recipes = try? modelContainer.mainContext.fetch(.recipes(.all)),
-              recipes.isNotEmpty else {
-            return []
-        }
-
-        let recipesByStableIdentifier = recipeMapByStableIdentifier(from: recipes)
-        let candidates = suggestionCandidates(from: recipes)
-        let suggestions = DailyRecipeSuggestionService.buildSuggestions(
-            candidates: candidates,
-            hour: notificationHour,
-            minute: notificationMinute,
-            now: .now,
-            calendar: calendar,
-            daysAhead: daysAhead,
-            identifierPrefix: NotificationConstants.suggestionIdentifierPrefix
-        )
-
-        return suggestions.map { suggestion in
-            let content = suggestionContent(
-                for: suggestion,
-                recipesByStableIdentifier: recipesByStableIdentifier
-            )
-            return ScheduledSuggestionRequest(
-                request: UNNotificationRequest(
-                    identifier: suggestion.identifier,
-                    content: content,
-                    trigger: suggestionTrigger(for: suggestion.notifyDate)
-                ),
-                stableIdentifier: suggestion.stableIdentifier,
-                hasAttachment: content.attachments.isEmpty == false
-            )
-        }
     }
 
     nonisolated func handleNotificationResponse(_ response: UNNotificationResponse) async {
@@ -309,45 +302,28 @@ private extension NotificationService {
         }
     }
 
-    func stableIdentifier(for recipe: Recipe) -> String {
-        RecipeStableIdentifierCodec.stableIdentifier(
-            for: recipe
-        )
-    }
-
-    func recipeMapByStableIdentifier(from recipes: [Recipe]) -> [String: Recipe] {
-        Dictionary(
-            uniqueKeysWithValues: recipes.map { recipe in
-                (
-                    stableIdentifier(for: recipe),
-                    recipe
-                )
-            }
-        )
-    }
-
-    func suggestionCandidates(from recipes: [Recipe]) -> [DailyRecipeSuggestionCandidate] {
-        recipes.map { recipe in
-            .init(
-                name: recipe.name,
-                stableIdentifier: stableIdentifier(for: recipe)
+    func suggestionRequest(
+        _ preparedRequest: NotificationSyncWorker.PreparedSuggestionRequest
+    ) -> UNNotificationRequest {
+        let content: UNMutableNotificationContent
+        if let snapshot = preparedRequest.snapshot {
+            content = composer.content(
+                for: snapshot,
+                attachmentFileURL: preparedRequest.attachmentFileURL
+            )
+        } else {
+            content = composer.fallbackContent(
+                recipeName: preparedRequest.suggestion.recipeName,
+                stableIdentifier: preparedRequest.suggestion.stableIdentifier
             )
         }
-    }
 
-    func suggestionContent(
-        for suggestion: DailyRecipeSuggestion,
-        recipesByStableIdentifier: [String: Recipe]
-    ) -> UNMutableNotificationContent {
-        if let recipe = recipesByStableIdentifier[suggestion.stableIdentifier] {
-            return composer.content(
-                for: recipe,
-                stableIdentifier: suggestion.stableIdentifier
+        return .init(
+            identifier: preparedRequest.suggestion.identifier,
+            content: content,
+            trigger: suggestionTrigger(
+                for: preparedRequest.suggestion.notifyDate
             )
-        }
-        return composer.fallbackContent(
-            recipeName: suggestion.recipeName,
-            stableIdentifier: suggestion.stableIdentifier
         )
     }
 
@@ -359,6 +335,27 @@ private extension NotificationService {
         return .init(
             dateMatching: dateComponents,
             repeats: false
+        )
+    }
+
+    @MainActor
+    func runLifecycleSynchronizationLoop() async {
+        while isLifecycleSynchronizationPending {
+            isLifecycleSynchronizationPending = false
+            await synchronizeScheduledSuggestions()
+        }
+
+        lifecycleSynchronizationTask = nil
+    }
+
+    func durationMilliseconds(
+        since startedAt: TimeInterval
+    ) -> Int {
+        Int(
+            (
+                Date.timeIntervalSinceReferenceDate
+                    - startedAt
+            ) * SyncConstants.millisecondsPerSecond
         )
     }
 }

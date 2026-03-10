@@ -8,32 +8,20 @@ struct RecipeSuggestionNotificationComposer {
         static let fallback = Double("0.6") ?? .zero
     }
 
-    private let attachmentStore: NotificationAttachmentStore
-
-    init(attachmentStore: NotificationAttachmentStore) {
-        self.attachmentStore = attachmentStore
-    }
-
     func content(
-        for recipe: Recipe,
-        stableIdentifier: String
+        for snapshot: NotificationRecipeSnapshot,
+        attachmentFileURL: URL?
     ) -> UNMutableNotificationContent {
-        let recipeName = recipeTitle(for: recipe)
-        let hasPhoto = recipe.photoObjects?.min()?.photo != nil
-            || recipe.photos?.isEmpty == false
-        let attachment = attachmentStore.attachment(
-            for: recipe,
-            stableIdentifier: stableIdentifier
-        )
+        let recipeName = recipeTitle(for: snapshot)
         return makeContent(
             .init(
                 title: recipeName,
-                subtitle: subtitle(for: recipe),
-                body: body(for: recipe, recipeName: recipeName),
-                routeURL: routeURL(for: stableIdentifier),
-                stableIdentifier: stableIdentifier,
-                relevanceScore: hasPhoto ? RelevanceScore.withPhoto : RelevanceScore.fallback,
-                attachment: attachment
+                subtitle: subtitle(for: snapshot),
+                body: body(for: snapshot, recipeName: recipeName),
+                routeURL: routeURL(for: snapshot.stableIdentifier),
+                stableIdentifier: snapshot.stableIdentifier,
+                relevanceScore: snapshot.hasPhoto ? RelevanceScore.withPhoto : RelevanceScore.fallback,
+                attachmentFileURL: attachmentFileURL
             )
         )
     }
@@ -51,7 +39,7 @@ struct RecipeSuggestionNotificationComposer {
                 routeURL: routeURL(for: resolvedStableIdentifier),
                 stableIdentifier: resolvedStableIdentifier,
                 relevanceScore: RelevanceScore.fallback,
-                attachment: nil
+                attachmentFileURL: nil
             )
         )
     }
@@ -65,7 +53,7 @@ private extension RecipeSuggestionNotificationComposer {
         let routeURL: URL
         let stableIdentifier: String
         let relevanceScore: Double
-        let attachment: UNNotificationAttachment?
+        let attachmentFileURL: URL?
     }
 
     func makeContent(_ input: ContentInput) -> UNMutableNotificationContent {
@@ -98,7 +86,11 @@ private extension RecipeSuggestionNotificationComposer {
                 ]
             )
         )
-        if let attachment = input.attachment {
+        if let attachmentFileURL = input.attachmentFileURL,
+           let attachment = try? UNNotificationAttachment(
+            identifier: input.stableIdentifier,
+            url: attachmentFileURL
+           ) {
             content.attachments = [attachment]
         }
         return content
@@ -113,41 +105,42 @@ private extension RecipeSuggestionNotificationComposer {
         )
     }
 
-    func recipeTitle(for recipe: Recipe) -> String {
-        let trimmedName = recipe.name.trimmingCharacters(
+    func recipeTitle(for snapshot: NotificationRecipeSnapshot) -> String {
+        let trimmedName = snapshot.name.trimmingCharacters(
             in: .whitespacesAndNewlines
         )
         return trimmedName.isNotEmpty ? trimmedName : String(localized: "Recipe")
     }
 
-    func body(for recipe: Recipe, recipeName: String) -> String {
+    func body(
+        for snapshot: NotificationRecipeSnapshot,
+        recipeName: String
+    ) -> String {
         RecipeBlurbService.makeBlurb(
             request: .init(
-                steps: recipe.steps,
-                ingredients: recipe.ingredientObjects?.sorted().compactMap { object in
-                    object.ingredient?.value
-                } ?? [],
-                note: recipe.note
+                steps: snapshot.steps,
+                ingredients: snapshot.ingredientNames,
+                note: snapshot.note
             )
         ) ?? String(localized: "How about making \(recipeName) today?")
     }
 
-    func subtitle(for recipe: Recipe) -> String {
+    func subtitle(for snapshot: NotificationRecipeSnapshot) -> String {
         var segments = [String]()
 
-        if recipe.cookingTime > 0 {
-            segments.append("\(recipe.cookingTime) min")
+        if snapshot.cookingTime > 0 {
+            segments.append("\(snapshot.cookingTime) min")
         }
 
-        if recipe.servingSize > 0 {
-            if recipe.servingSize == 1 {
+        if snapshot.servingSize > 0 {
+            if snapshot.servingSize == 1 {
                 segments.append("1 serving")
             } else {
-                segments.append("\(recipe.servingSize) \(String(localized: "servings"))")
+                segments.append("\(snapshot.servingSize) \(String(localized: "servings"))")
             }
         }
 
-        let ingredientCount = recipe.ingredientObjects?.count ?? .zero
+        let ingredientCount = snapshot.ingredientCount
         if ingredientCount > 0 {
             if ingredientCount == 1 {
                 segments.append("1 ingredient")
