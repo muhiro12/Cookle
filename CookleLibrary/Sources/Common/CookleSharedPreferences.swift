@@ -1,5 +1,5 @@
 import Foundation
-import MHPlatform
+import MHPlatformCore
 
 /// Shared preference accessors backed by the app-group `UserDefaults` suite.
 public enum CookleSharedPreferences {

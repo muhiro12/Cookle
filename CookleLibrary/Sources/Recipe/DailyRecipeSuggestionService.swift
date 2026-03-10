@@ -1,5 +1,5 @@
 import Foundation
-import MHPlatform
+import MHPlatformCore
 
 /// Planner for recipe suggestion notification schedules.
 public enum DailyRecipeSuggestionService {

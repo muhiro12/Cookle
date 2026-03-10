@@ -1,5 +1,5 @@
 {
-  "originHash" : "73c253b69ce75a7c7f0ab63eeeeeb6af28567925f2dfdf8a5748b8551d1a220f",
+  "originHash" : "40b269e3b651060a13a59e727731e31debdc6db6d6fd311cebaeed878d8b3877",
   "pins" : [
     {
       "identity" : "googlemobileadswrapper",
@@ -34,7 +34,7 @@
       "location" : "https://github.com/muhiro12/MHPlatform.git",
       "state" : {
         "branch" : "main",
-        "revision" : "47d717710364bac0966d5935c0b73005ea85013a"
+        "revision" : "8a6a193c9d4b83dd1fbb6a612c4f76937d90f941"
       }
     },
     {
@@ -67,7 +67,7 @@
     {
       "identity" : "swiftutilities",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/muhiro12/SwiftUtilities.git",
+      "location" : "https://github.com/muhiro12/SwiftUtilities",
       "state" : {
         "revision" : "1e7e633caa979d8dafea34701dd48c8aa1b5e0ac",
         "version" : "1.31.0"

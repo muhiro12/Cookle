@@ -1,5 +1,5 @@
 import Foundation
-import MHPlatform
+import MHPlatformCore
 
 /// Stable storage keys for boolean settings persisted in app-local preferences.
 public enum BoolPreferenceKey: String, MHBoolPreferenceKeyRepresentable {

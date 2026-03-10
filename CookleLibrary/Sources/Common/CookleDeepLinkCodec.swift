@@ -1,4 +1,4 @@
-import MHPlatform
+import MHPlatformCore
 
 enum CookleDeepLinkCodec {
     static let shared = make()

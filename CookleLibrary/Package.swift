@@ -35,7 +35,7 @@ let kPackage = Package(
                     package: "SwiftUtilities"
                 ),
                 .product(
-                    name: "MHPlatform",
+                    name: "MHPlatformCore",
                     package: "MHPlatform"
                 )
             ]
