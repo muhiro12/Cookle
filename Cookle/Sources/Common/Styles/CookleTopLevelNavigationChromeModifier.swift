@@ -1,6 +1,6 @@
 import SwiftUI
 
-private struct CookleTopLevelNavigationChromeModifier: ViewModifier {
+struct CookleTopLevelNavigationChromeModifier: ViewModifier {
     let title: LocalizedStringKey
     let keyboardDismissMode: ScrollDismissesKeyboardMode?
 

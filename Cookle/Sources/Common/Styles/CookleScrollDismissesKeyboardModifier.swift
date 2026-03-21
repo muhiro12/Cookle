@@ -1,6 +1,6 @@
 import SwiftUI
 
-private struct CookleScrollDismissesKeyboardModifier: ViewModifier {
+struct CookleScrollDismissesKeyboardModifier: ViewModifier {
     let keyboardDismissMode: ScrollDismissesKeyboardMode?
 
     func body(content: Content) -> some View {
