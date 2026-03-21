@@ -185,7 +185,7 @@ struct DiaryServiceTests {
             note: "Diary"
         )
 
-        try DiaryService.delete(
+        DiaryService.delete(
             context: context,
             diary: diary
         )

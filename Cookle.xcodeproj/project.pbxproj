@@ -11,9 +11,6 @@
 		AD277E732E8449CC00B4AC19 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD277E722E8449CC00B4AC19 /* SwiftUI.framework */; };
 		AD277E842E8449CD00B4AC19 /* Widgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AD277E6F2E8449CC00B4AC19 /* Widgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		AD2781342E844E0400B4AC19 /* CookleLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AD2781332E844E0400B4AC19 /* CookleLibrary */; };
-		AD3909A22DC4E7F90052749F /* GoogleMobileAdsWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD3909A12DC4E7F90052749F /* GoogleMobileAdsWrapper */; };
-		AD3909A52DC4E80A0052749F /* LicenseListWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD3909A42DC4E80A0052749F /* LicenseListWrapper */; };
-		AD3909A82DC4E81D0052749F /* StoreKitWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD3909A72DC4E81D0052749F /* StoreKitWrapper */; };
 		AD3909AB2DC4E8300052749F /* SwiftUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = AD3909AA2DC4E8300052749F /* SwiftUtilities */; };
 		AD7F5C0E2F5B3186008D91F3 /* MHPlatform in Frameworks */ = {isa = PBXBuildFile; productRef = AD7F5C0D2F5B3186008D91F3 /* MHPlatform */; };
 		ADF13D702E8233A7002572CD /* CookleLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = ADF13D6F2E8233A7002572CD /* CookleLibrary */; };
@@ -88,12 +85,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AD3909A22DC4E7F90052749F /* GoogleMobileAdsWrapper in Frameworks */,
 				AD7F5C0E2F5B3186008D91F3 /* MHPlatform in Frameworks */,
 				AD3909AB2DC4E8300052749F /* SwiftUtilities in Frameworks */,
 				ADF13D702E8233A7002572CD /* CookleLibrary in Frameworks */,
-				AD3909A82DC4E81D0052749F /* StoreKitWrapper in Frameworks */,
-				AD3909A52DC4E80A0052749F /* LicenseListWrapper in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -174,10 +168,7 @@
 			);
 			name = Cookle;
 			packageProductDependencies = (
-				AD3909A12DC4E7F90052749F /* GoogleMobileAdsWrapper */,
-				AD3909A42DC4E80A0052749F /* LicenseListWrapper */,
 				AD7F5C0D2F5B3186008D91F3 /* MHPlatform */,
-				AD3909A72DC4E81D0052749F /* StoreKitWrapper */,
 				AD3909AA2DC4E8300052749F /* SwiftUtilities */,
 				ADF13D6F2E8233A7002572CD /* CookleLibrary */,
 			);
@@ -217,9 +208,6 @@
 			);
 			mainGroup = AD8C8E5F2BFABEE200872BF2;
 			packageReferences = (
-				AD3909A02DC4E7F90052749F /* XCRemoteSwiftPackageReference "GoogleMobileAdsWrapper" */,
-				AD3909A32DC4E80A0052749F /* XCRemoteSwiftPackageReference "LicenseListWrapper" */,
-				AD3909A62DC4E81D0052749F /* XCRemoteSwiftPackageReference "StoreKitWrapper" */,
 				AD3909A92DC4E8300052749F /* XCRemoteSwiftPackageReference "SwiftUtilities" */,
 				AD7F5C0F2F5B3186008D91F3 /* XCRemoteSwiftPackageReference "MHPlatform" */,
 				ADF13D6E2E8233A7002572CD /* XCLocalSwiftPackageReference "CookleLibrary" */,
@@ -596,30 +584,6 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		AD3909A02DC4E7F90052749F /* XCRemoteSwiftPackageReference "GoogleMobileAdsWrapper" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/muhiro12/GoogleMobileAdsWrapper.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-		AD3909A32DC4E80A0052749F /* XCRemoteSwiftPackageReference "LicenseListWrapper" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/muhiro12/LicenseListWrapper.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-		AD3909A62DC4E81D0052749F /* XCRemoteSwiftPackageReference "StoreKitWrapper" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/muhiro12/StoreKitWrapper.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 		AD3909A92DC4E8300052749F /* XCRemoteSwiftPackageReference "SwiftUtilities" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/muhiro12/SwiftUtilities.git";
@@ -642,21 +606,6 @@
 		AD2781332E844E0400B4AC19 /* CookleLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CookleLibrary;
-		};
-		AD3909A12DC4E7F90052749F /* GoogleMobileAdsWrapper */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AD3909A02DC4E7F90052749F /* XCRemoteSwiftPackageReference "GoogleMobileAdsWrapper" */;
-			productName = GoogleMobileAdsWrapper;
-		};
-		AD3909A42DC4E80A0052749F /* LicenseListWrapper */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AD3909A32DC4E80A0052749F /* XCRemoteSwiftPackageReference "LicenseListWrapper" */;
-			productName = LicenseListWrapper;
-		};
-		AD3909A72DC4E81D0052749F /* StoreKitWrapper */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AD3909A62DC4E81D0052749F /* XCRemoteSwiftPackageReference "StoreKitWrapper" */;
-			productName = StoreKitWrapper;
 		};
 		AD3909AA2DC4E8300052749F /* SwiftUtilities */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -25,7 +25,7 @@ repository contains the full iOS project together with its shared Swift package.
 - Image Playground integration (iOS 18.1+) to generate dish photos from recipe
   content.
 - Google Mobile Ads monetization and StoreKit-based subscriptions configured
-  through lightweight wrapper packages.
+  through MHPlatform runtime defaults.
 - Remote configuration fetch that can require users to update before continuing,
   keeping deployed binaries aligned with server rules.
 - Developer utilities including a debug tab, menu launcher, and preview helpers
@@ -62,8 +62,8 @@ repository contains the full iOS project together with its shared Swift package.
   SwiftData entities.
 - MHPlatform for app runtime bootstrap, route-pipeline integration, mutation
   projection strategies, review flows, and destructive reset handling.
-- StoreKit, Google Mobile Ads, License List, and SwiftUtilities delivered
-  through lightweight wrapper packages and Swift Package Manager.
+- SwiftUtilities plus MHPlatform-managed StoreKit, Google Mobile Ads, and
+  license presentation delivered through Swift Package Manager.
 
 ## Architecture rules
 
@@ -81,9 +81,9 @@ Primary records:
 - The `Cookle` app target owns workflow services such as
   `RecipeActionService`, `DiaryActionService`, `TagActionService`, and
   `SettingsActionService` that add app-only side effects after shared mutations.
-- The root platform environment factory centralizes model-container wiring,
-  runtime bootstrap, and environment injection for the live app and SwiftUI
-  previews.
+- The root `CookleAppAssembly` centralizes model-container wiring, app service
+  graph assembly, runtime bootstrap, and environment injection for the live app
+  and SwiftUI previews.
 - App startup and foreground refreshes are driven through
   `MHAppRuntimeBootstrap` and `MHAppRuntimeLifecyclePlan` instead of ad-hoc
   `scenePhase` handlers.

@@ -254,6 +254,9 @@
         }
       }
     },
+    "Add your first diary" : {
+
+    },
     "Added to today's diary" : {
       "localizations" : {
         "en" : {
@@ -2161,6 +2164,18 @@
         }
       }
     },
+    "Enable Premium features" : {
+
+    },
+    "Extract a draft from copied ingredients and steps." : {
+
+    },
+    "Generate a dish image" : {
+
+    },
+    "Get one recipe suggestion at your chosen time." : {
+
+    },
     "Hide All Tips For Testing" : {
       "localizations" : {
         "en" : {
@@ -2604,6 +2619,9 @@
         }
       }
     },
+    "Keep ingredients, steps, photos, and notes together." : {
+
+    },
     "Later" : {
       "localizations" : {
         "en" : {
@@ -2671,6 +2689,9 @@
           }
         }
       }
+    },
+    "Loading Cookle" : {
+
     },
     "Lunch" : {
       "localizations" : {
@@ -3250,6 +3271,9 @@
         }
       }
     },
+    "Open any recipe" : {
+
+    },
     "Open App Store" : {
       "localizations" : {
         "en" : {
@@ -3522,6 +3546,9 @@
         }
       }
     },
+    "Open Recipes first" : {
+
+    },
     "Open Settings" : {
       "localizations" : {
         "en" : {
@@ -3590,6 +3617,9 @@
         }
       }
     },
+    "Open Subscription to turn on iCloud sync and hide ads." : {
+
+    },
     "Order" : {
       "localizations" : {
         "en" : {
@@ -3623,6 +3653,9 @@
           }
         }
       }
+    },
+    "Paste recipe text" : {
+
     },
     "Photo" : {
       "localizations" : {
@@ -3759,6 +3792,9 @@
           }
         }
       }
+    },
+    "Pick saved recipes for breakfast, lunch, and dinner." : {
+
     },
     "Please enter a search term" : {
       "localizations" : {
@@ -4337,6 +4373,15 @@
           }
         }
       }
+    },
+    "Review ingredients, steps, photos, and linked diaries." : {
+
+    },
+    "Save a recipe" : {
+
+    },
+    "Save a recipe, then come back here to plan meals." : {
+
     },
     "Search" : {
       "localizations" : {
@@ -5120,6 +5165,12 @@
         }
       }
     },
+    "Try Shortcuts" : {
+
+    },
+    "Turn on daily suggestions" : {
+
+    },
     "Type" : {
       "localizations" : {
         "en" : {
@@ -5153,6 +5204,9 @@
           }
         }
       }
+    },
+    "Unable to Start Cookle" : {
+
     },
     "Update" : {
       "localizations" : {
@@ -5493,6 +5547,12 @@
           }
         }
       }
+    },
+    "Use Image Playground when you do not have a photo yet." : {
+
+    },
+    "Use Siri or Shortcuts to open recipes and settings faster." : {
+
     },
     "Value" : {
       "localizations" : {

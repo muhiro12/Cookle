@@ -1,6 +1,6 @@
 import MHPlatform
 
-struct CooklePlatformServices {
+struct CookleAppServices {
     let remoteConfigurationService: RemoteConfigurationService
     let notificationService: NotificationService
     let tipController: CookleTipController

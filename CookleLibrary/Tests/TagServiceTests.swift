@@ -197,7 +197,7 @@ struct TagServiceTests {
             value: "Dinner"
         )
 
-        try TagService.delete(
+        TagService.delete(
             context: context,
             category: category
         )

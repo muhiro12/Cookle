@@ -22,10 +22,10 @@ struct CookleApp: App {
     var body: some Scene {
         WindowGroup {
             Group {
-                if let platformEnvironment = bootstrapModel.platformEnvironment {
+                if let appAssembly = bootstrapModel.appAssembly {
                     ContentView()
                         .id(isICloudOn)
-                        .cooklePlatformEnvironment(platformEnvironment)
+                        .cookleAppAssembly(appAssembly)
                 } else {
                     CookleStartupView(
                         failureMessage: bootstrapModel.failureMessage
@@ -33,7 +33,7 @@ struct CookleApp: App {
                 }
             }
             .task(id: isICloudOn) {
-                await bootstrapModel.loadEnvironment(
+                await bootstrapModel.loadAssembly(
                     isICloudOn: isICloudOn
                 )
             }

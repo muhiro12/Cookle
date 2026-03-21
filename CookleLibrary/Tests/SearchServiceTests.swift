@@ -34,7 +34,7 @@ struct SearchServiceTests {
             note: ""
         )
 
-        let result = try SearchService.search(
+        let result = try RecipeService.search(
             context: context,
             text: "Egg"
         )

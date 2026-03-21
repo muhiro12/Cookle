@@ -254,7 +254,7 @@ struct RecipeServiceTests {
             note: ""
         )
 
-        try RecipeService.delete(
+        RecipeService.delete(
             context: context,
             recipe: recipe
         )

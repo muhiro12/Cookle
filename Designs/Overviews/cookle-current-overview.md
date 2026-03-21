@@ -1,6 +1,6 @@
 # Cookle Product and Architecture Overview
 
-Implementation snapshot based on the repository state on March 10, 2026.
+Implementation snapshot based on the repository state on March 21, 2026.
 
 ## Purpose
 
@@ -153,7 +153,8 @@ Cookle uses adaptive tab navigation.
 
 ### Settings and Product Controls
 
-- Subscription screen powered by StoreKit wrapper components.
+- Subscription and license screens are presented through MHPlatform runtime
+  surfaces.
 - iCloud toggle shown only for subscribed users.
 - Daily recipe suggestion notification controls:
   - enable or disable notifications
@@ -263,9 +264,9 @@ Cookle uses adaptive tab navigation.
   - raw model browsing for diaries, recipes, photos, ingredients, categories,
     and sub-objects
   - direct deletion of model records from the debug content browser
-- Preview helpers seed an in-memory SwiftData store and reuse the same platform
-  environment factory used by the live app, injecting shared dependencies and
-  runtime state without running the full lifecycle bootstrap.
+- Preview helpers seed an in-memory SwiftData store and reuse the same
+  `CookleAppAssembly` factory path used by the live app, injecting shared
+  dependencies and runtime state without running the full lifecycle bootstrap.
 
 ## Data Model
 
@@ -313,7 +314,7 @@ large custom abstraction layers.
 
 - SwiftUI screens
 - App Intents
-- platform environment factory, runtime bootstrap, and runtime lifecycle plans
+- app-owned root assembly, runtime bootstrap, and runtime lifecycle plans
 - workflow orchestration services
 - notifications
 - review prompting

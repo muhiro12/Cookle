@@ -54,7 +54,7 @@ The `Cookle` app target owns adapters and orchestration.
 Put these concerns in `Cookle`:
 
 - SwiftUI screens and local presentation state
-- platform environment factory, runtime bootstrap, and environment wiring
+- app-owned root assembly, runtime bootstrap, and environment wiring
 - runtime lifecycle plans for launch and foreground refresh
 - App Intents
 - workflow services such as `RecipeActionService`, `DiaryActionService`,
@@ -67,10 +67,11 @@ Put these concerns in `Cookle`:
 Workflow services are the bridge between shared mutations and app-only side
 effects.
 
-The root platform environment factory should prefer `MHAppRuntimeBootstrap` and
-`MHAppRoutePipeline` over hand-written route-drain orchestration, but
-success-triggered follow-up work such as review prompting should still
-originate from workflow services instead of generic foreground handlers.
+The root app assembly, currently `CookleAppAssembly`, should prefer
+`MHAppRuntimeBootstrap` and `MHAppRoutePipeline` over hand-written route-drain
+orchestration, but success-triggered follow-up work such as review prompting
+should still originate from workflow services instead of generic foreground
+handlers.
 
 ### 3. Other target adapters: `Widgets` and future targets
 

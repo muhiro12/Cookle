@@ -12,15 +12,15 @@ final class CookleAppBootstrapModel {
         )
     }
 
-    private(set) var platformEnvironment: CooklePlatformEnvironment?
+    private(set) var appAssembly: CookleAppAssembly?
     private(set) var failureMessage: String?
 
     private let startupLogger = CookleApp.logger(category: "AppStartup")
 
-    func loadEnvironment(
+    func loadAssembly(
         isICloudOn: Bool
     ) async {
-        platformEnvironment = nil
+        appAssembly = nil
         failureMessage = nil
 
         startupLogger.notice("app startup began")
@@ -35,7 +35,7 @@ final class CookleAppBootstrapModel {
             let modelContainer = try await Task.detached(
                 priority: .userInitiated
             ) {
-                try CooklePlatformEnvironmentFactory.prepareLiveModelContainer(
+                try CookleAppAssemblyFactory.prepareLiveModelContainer(
                     cloudKitDatabase: cloudKitDatabase
                 )
             }.value
@@ -45,7 +45,7 @@ final class CookleAppBootstrapModel {
 
             try Task.checkCancellation()
 
-            let environment = CooklePlatformEnvironmentFactory.makeLiveEnvironment(
+            let assembly = CookleAppAssemblyFactory.makeLiveAssembly(
                 modelContainer: modelContainer
             )
             startupLogger.notice(
@@ -53,11 +53,11 @@ final class CookleAppBootstrapModel {
             )
 
             registerAppIntentDependencies(
-                environment: environment
+                assembly: assembly
             )
             CookleShortcuts.updateAppShortcutParameters()
 
-            platformEnvironment = environment
+            appAssembly = assembly
             startupLogger.notice(
                 "startup wiring finished in \(Self.durationMilliseconds(since: startupStartedAt)) ms"
             )
@@ -83,17 +83,17 @@ private extension CookleAppBootstrapModel {
     }
 
     func registerAppIntentDependencies(
-        environment: CooklePlatformEnvironment
+        assembly: CookleAppAssembly
     ) {
-        let modelContainerForDependency = environment.modelContainer
+        let modelContainerForDependency = assembly.modelContainer
         AppDependencyManager.shared.add { modelContainerForDependency }
-        let recipeActionServiceForDependency = environment.recipeActionService
+        let recipeActionServiceForDependency = assembly.recipeActionService
         AppDependencyManager.shared.add { recipeActionServiceForDependency }
-        let diaryActionServiceForDependency = environment.diaryActionService
+        let diaryActionServiceForDependency = assembly.diaryActionService
         AppDependencyManager.shared.add { diaryActionServiceForDependency }
-        let tagActionServiceForDependency = environment.tagActionService
+        let tagActionServiceForDependency = assembly.tagActionService
         AppDependencyManager.shared.add { tagActionServiceForDependency }
-        let settingsActionServiceForDependency = environment.settingsActionService
+        let settingsActionServiceForDependency = assembly.settingsActionService
         AppDependencyManager.shared.add { settingsActionServiceForDependency }
     }
 }

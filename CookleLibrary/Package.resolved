@@ -1,5 +1,5 @@
 {
-  "originHash" : "40b269e3b651060a13a59e727731e31debdc6db6d6fd311cebaeed878d8b3877",
+  "originHash" : "99feafa3efe74fe595702d5465e24368830fe9c3e0c7c7b8e97a8c815ff18f70",
   "pins" : [
     {
       "identity" : "googlemobileadswrapper",
@@ -20,21 +20,12 @@
       }
     },
     {
-      "identity" : "licenselistwrapper",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/muhiro12/LicenseListWrapper.git",
-      "state" : {
-        "revision" : "d760514bee0ba669db4aed8362d64a64ff17810d",
-        "version" : "1.1.0"
-      }
-    },
-    {
       "identity" : "mhplatform",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/muhiro12/MHPlatform.git",
       "state" : {
         "branch" : "main",
-        "revision" : "8a6a193c9d4b83dd1fbb6a612c4f76937d90f941"
+        "revision" : "e08f395e0db89dc26c8d589f4da7e8c9b8d76c42"
       }
     },
     {
