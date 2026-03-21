@@ -24,51 +24,97 @@ struct PhotoListView: View {
     @Binding private var photo: Photo?
 
     var body: some View {
-        Group {
-            if photos.isNotEmpty {
-                ScrollView {
-                    ForEach([photos, imagePlaygrounds], id: \.first?.source) { photos in
-                        if let photo = photos.first {
-                            VStack {
-                                Text(photo.source.description)
-                                    .font(.headline)
-                                    .foregroundStyle(.secondary)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .padding()
-                                LazyVGrid(columns: [.init(.adaptive(minimum: Layout.photoGridMinimum))]) {
-                                    ForEach(photos) { photo in
-                                        if photo.recipes.isNotEmpty,
-                                           let image = UIImage(data: photo.data) {
-                                            NavigationLink(value: photo) {
-                                                Image(uiImage: image)
-                                                    .resizable()
-                                                    .scaledToFit()
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+        contentView()
+            .cookleTopLevelNavigationChrome("Photos")
+            .toolbar {
+                ToolbarItem {
+                    AddRecipeButton()
                 }
-            } else {
-                AddRecipeButton()
+                ToolbarItem {
+                    CloseButton()
+                        .hidden(!isPresented)
+                }
             }
-        }
-        .navigationTitle(Text("Photos"))
-        .toolbar {
-            ToolbarItem {
-                AddRecipeButton()
-            }
-            ToolbarItem {
-                CloseButton()
-                    .hidden(!isPresented)
-            }
-        }
     }
 
     init(selection: Binding<Photo?> = .constant(nil)) {
         _photo = selection
+    }
+}
+
+private extension PhotoListView {
+    var photoSectionsView: some View {
+        ScrollView {
+            ForEach(groupedPhotos, id: \.source.rawValue) { group in
+                photoSection(for: group)
+            }
+        }
+    }
+
+    var emptyStateView: some View {
+        ContentUnavailableView {
+            Label("No Photos Yet", systemImage: "photo.on.rectangle")
+        } description: {
+            Text("Add recipe photos to browse them here.")
+        } actions: {
+            AddRecipeButton()
+        }
+    }
+
+    var groupedPhotos: [(source: PhotoSource, photos: [Photo])] {
+        [
+            (
+                source: .photosPicker,
+                photos: photos.filter(\.recipes.isNotEmpty)
+            ),
+            (
+                source: .imagePlayground,
+                photos: imagePlaygrounds.filter(\.recipes.isNotEmpty)
+            )
+        ]
+        .filter(\.photos.isNotEmpty)
+    }
+
+    @ViewBuilder
+    func contentView() -> some View {
+        if groupedPhotos.isNotEmpty {
+            photoSectionsView
+        } else {
+            emptyStateView
+        }
+    }
+
+    @ViewBuilder
+    func photoSection(
+        for group: (source: PhotoSource, photos: [Photo])
+    ) -> some View {
+        VStack {
+            Text(group.source.description)
+                .font(.headline)
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding()
+            LazyVGrid(columns: [.init(.adaptive(minimum: Layout.photoGridMinimum))]) {
+                ForEach(group.photos) { photo in
+                    photoButton(for: photo)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    func photoButton(for photo: Photo) -> some View {
+        if let image = UIImage(data: photo.data) {
+            Button {
+                self.photo = photo
+            } label: {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+                    .accessibilityLabel(Text(photo.title))
+            }
+            .buttonStyle(.plain)
+        }
     }
 }
 

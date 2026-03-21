@@ -21,7 +21,7 @@ struct PhotoView: View {
     @State private var isPhotoDetailPresented = false
 
     var body: some View {
-        List(selection: $recipe) {
+        List {
             previewSection
             recipeSection
             createdAtSection
@@ -55,11 +55,15 @@ struct PhotoView: View {
     var recipeSection: some View {
         Section {
             ForEach(photo.recipes.orEmpty) { recipe in
-                NavigationLink(value: recipe) {
+                Button {
+                    self.recipe = recipe
+                } label: {
                     RecipeLabel()
                         .labelStyle(.titleOnly)
                         .environment(recipe)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
+                .buttonStyle(.plain)
             }
         } header: {
             Text("Recipe")

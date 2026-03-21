@@ -3,10 +3,6 @@ import SwiftUI
 import TipKit
 
 struct RecipeListView: View {
-    private enum Layout {
-        static let emptyStateSpacing = CGFloat(Int("16") ?? .zero)
-    }
-
     @Environment(\.isPresented)
     private var isPresented
 
@@ -20,44 +16,17 @@ struct RecipeListView: View {
     private let recipeDetailTip = RecipeDetailTip()
 
     var body: some View {
-        Group {
-            if recipes.isNotEmpty {
-                List(selection: $recipe) {
-                    ForEach(filteredRecipes) { recipe in
-                        NavigationLink(value: recipe) {
-                            RecipeLabel()
-                                .labelStyle(.titleAndLargeIcon)
-                                .environment(recipe)
-                        }
-                        .popoverTip(
-                            currentListTip(for: recipe),
-                            arrowEdge: .top
-                        )
-                    }
-                }
-                .searchable(text: $searchText)
-            } else {
-                VStack(spacing: Layout.emptyStateSpacing) {
+        contentView()
+            .cookleTopLevelNavigationChrome("Recipes")
+            .toolbar {
+                ToolbarItem {
                     AddRecipeButton()
-                        .popoverTip(
-                            addRecipeTip,
-                            arrowEdge: .top
-                        )
                 }
-                .padding()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                ToolbarItem {
+                    CloseButton()
+                        .hidden(!isPresented)
+                }
             }
-        }
-        .navigationTitle(Text("Recipes"))
-        .toolbar {
-            ToolbarItem {
-                AddRecipeButton()
-            }
-            ToolbarItem {
-                CloseButton()
-                    .hidden(!isPresented)
-            }
-        }
     }
 
     init(selection: Binding<Recipe?> = .constant(nil), descriptor: FetchDescriptor<Recipe> = .recipes(.all)) {
@@ -67,6 +36,29 @@ struct RecipeListView: View {
 }
 
 private extension RecipeListView {
+    var recipeListView: some View {
+        List {
+            ForEach(filteredRecipes) { recipe in
+                recipeRow(for: recipe)
+            }
+        }
+        .searchable(text: $searchText)
+    }
+
+    var emptyStateView: some View {
+        ContentUnavailableView {
+            Label("No Recipes Yet", systemImage: "book.pages")
+        } description: {
+            Text("Add a recipe to start building your collection.")
+        } actions: {
+            AddRecipeButton()
+                .popoverTip(
+                    addRecipeTip,
+                    arrowEdge: .top
+                )
+        }
+    }
+
     var filteredRecipes: [Recipe] {
         guard searchText.isNotEmpty else {
             return recipes
@@ -75,6 +67,31 @@ private extension RecipeListView {
         return recipes.filter { recipe in
             recipe.name.normalizedContains(searchText)
         }
+    }
+
+    @ViewBuilder
+    func contentView() -> some View {
+        if recipes.isNotEmpty {
+            recipeListView
+        } else {
+            emptyStateView
+        }
+    }
+
+    func recipeRow(for recipe: Recipe) -> some View {
+        Button {
+            self.recipe = recipe
+        } label: {
+            RecipeLabel()
+                .labelStyle(.titleAndLargeIcon)
+                .environment(recipe)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .buttonStyle(.plain)
+        .popoverTip(
+            currentListTip(for: recipe),
+            arrowEdge: .top
+        )
     }
 
     func currentListTip(

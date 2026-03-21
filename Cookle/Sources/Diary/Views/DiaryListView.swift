@@ -10,10 +10,6 @@ import SwiftUI
 import TipKit
 
 struct DiaryListView: View {
-    private enum Layout {
-        static let emptyStateSpacing = CGFloat(Int("16") ?? .zero)
-    }
-
     @Environment(\.isPresented)
     private var isPresented
     @Environment(MainNavigationModel.self)
@@ -40,7 +36,7 @@ struct DiaryListView: View {
                 emptyStateView
             }
         }
-        .navigationTitle(Text("Diaries"))
+        .cookleTopLevelNavigationChrome("Diaries")
         .toolbar {
             ToolbarItem {
                 AddDiaryButton()
@@ -64,13 +60,17 @@ struct DiaryListView: View {
     }
 
     var diaryList: some View {
-        List(groupedDiaries, id: \.key, selection: $diary) { section in
+        List(groupedDiaries, id: \.key) { section in
             Section(section.key) {
                 ForEach(section.value) { diary in
-                    NavigationLink(value: diary) {
+                    Button {
+                        self.diary = diary
+                    } label: {
                         DiaryLabel()
                             .environment(diary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
+                    .buttonStyle(.plain)
                     .hidden(diary.recipes.orEmpty.isEmpty)
                 }
             }
@@ -80,17 +80,23 @@ struct DiaryListView: View {
     }
 
     var emptyStateView: some View {
-        VStack(spacing: Layout.emptyStateSpacing) {
+        ContentUnavailableView {
+            Label(
+                recipes.isEmpty ? "No Diaries Yet" : "Ready To Add A Diary",
+                systemImage: recipes.isEmpty ? "book.closed" : "fork.knife"
+            )
+        } description: {
+            Text(
+                recipes.isEmpty
+                    ? "Add a recipe before creating your first diary entry."
+                    : "Create a diary entry to record what you cooked."
+            )
+        } actions: {
             if recipes.isEmpty {
                 Button {
                     navigationModel.selectedTab = .recipe
                 } label: {
-                    Label {
-                        Text("Open Recipes")
-                    } icon: {
-                        Image(systemName: "book.pages")
-                            .accessibilityHidden(true)
-                    }
+                    Text("Open Recipes")
                 }
                 .popoverTip(
                     startWithRecipesTip,
@@ -104,8 +110,6 @@ struct DiaryListView: View {
                     )
             }
         }
-        .padding()
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     init(selection: Binding<Diary?> = .constant(nil)) {

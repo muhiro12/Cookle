@@ -1,6 +1,6 @@
 import SwiftUI
 
-enum DebugContent {
+enum DebugContent: Equatable {
     case diary
     case diaryObject
     case recipe

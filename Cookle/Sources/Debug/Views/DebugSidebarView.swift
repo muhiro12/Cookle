@@ -20,7 +20,7 @@ struct DebugSidebarView: View {
 
     var body: some View {
         sidebarList
-            .navigationTitle(Text("Debug"))
+            .cookleTopLevelNavigationChrome("Debug")
             .toolbar {
                 ToolbarItem {
                     CloseButton()
@@ -53,7 +53,7 @@ struct DebugSidebarView: View {
     }
 
     var sidebarList: some View {
-        List(selection: $content) {
+        List {
             appStorageSection
             manageSection
             tipKitSection
@@ -101,9 +101,13 @@ struct DebugSidebarView: View {
 
     var previewSection: some View {
         Section {
-            NavigationLink(value: DebugContent.preview) {
+            Button {
+                content = .preview
+            } label: {
                 Text("Previews")
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
+            .buttonStyle(.plain)
         } header: {
             Text("Preview")
         }
@@ -111,33 +115,28 @@ struct DebugSidebarView: View {
 
     var modelSection: some View {
         Section {
-            NavigationLink(value: DebugContent.diary) {
-                Text("Diaries")
-            }
-            NavigationLink(value: DebugContent.diaryObject) {
-                Text("DiaryObjects")
-            }
-            NavigationLink(value: DebugContent.recipe) {
-                Text("Recipes")
-            }
-            NavigationLink(value: DebugContent.photo) {
-                Text("Photos")
-            }
-            NavigationLink(value: DebugContent.photoObject) {
-                Text("PhotoObjects")
-            }
-            NavigationLink(value: DebugContent.ingredient) {
-                Text("Ingredients")
-            }
-            NavigationLink(value: DebugContent.ingredientObject) {
-                Text("IngredientObjects")
-            }
-            NavigationLink(value: DebugContent.category) {
-                Text("Categories")
+            ForEach(modelDestinations, id: \.title) { destination in
+                sidebarButton(
+                    title: destination.title,
+                    content: destination.content
+                )
             }
         } header: {
             Text("Model")
         }
+    }
+
+    var modelDestinations: [(title: String, content: DebugContent)] {
+        [
+            ("Diaries", .diary),
+            ("DiaryObjects", .diaryObject),
+            ("Recipes", .recipe),
+            ("Photos", .photo),
+            ("PhotoObjects", .photoObject),
+            ("Ingredients", .ingredient),
+            ("IngredientObjects", .ingredientObject),
+            ("Categories", .category)
+        ]
     }
 
     init(selection: Binding<DebugContent?> = .constant(nil)) {
@@ -152,6 +151,19 @@ struct DebugSidebarView: View {
         }
 
         _ = await previewStore.createPreviewDiariesWithRemoteImages(context)
+    }
+
+    func sidebarButton(
+        title: String,
+        content: DebugContent
+    ) -> some View {
+        Button {
+            self.content = content
+        } label: {
+            Text(title)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .buttonStyle(.plain)
     }
 }
 

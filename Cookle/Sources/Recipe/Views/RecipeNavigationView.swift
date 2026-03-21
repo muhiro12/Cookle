@@ -14,17 +14,25 @@ struct RecipeNavigationView: View {
     @Binding private var recipe: Recipe?
 
     var body: some View {
-        NavigationSplitView(columnVisibility: .constant(.all)) {
-            if horizontalSizeClass == .regular {
+        if horizontalSizeClass == .regular {
+            NavigationSplitView(columnVisibility: .constant(.all)) {
                 RecipeListView(selection: $recipe)
-            } else {
+            } detail: {
+                if let recipe {
+                    RecipeView()
+                        .environment(recipe)
+                }
+            }
+        } else {
+            NavigationStack {
                 RecipeListView(selection: $recipe)
                     .listStyle(.insetGrouped)
-            }
-        } detail: {
-            if let recipe {
-                RecipeView()
-                    .environment(recipe)
+                    .navigationDestination(isPresented: $recipe.isPresent()) {
+                        if let recipe {
+                            RecipeView()
+                                .environment(recipe)
+                        }
+                    }
             }
         }
     }

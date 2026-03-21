@@ -15,7 +15,7 @@ struct DiaryView: View {
     @Binding private var recipe: Recipe?
 
     var body: some View {
-        List(selection: $recipe) {
+        List {
             mealSections
             noteSection
             createdAtSection
@@ -36,11 +36,15 @@ struct DiaryView: View {
             if recipes.isNotEmpty {
                 Section {
                     ForEach(recipes) { recipe in
-                        NavigationLink(value: recipe) {
+                        Button {
+                            self.recipe = recipe
+                        } label: {
                             RecipeLabel()
                                 .labelStyle(.titleAndLargeIcon)
                                 .environment(recipe)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                         }
+                        .buttonStyle(.plain)
                     }
                 } header: {
                     Text(type.title)

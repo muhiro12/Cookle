@@ -15,23 +15,30 @@ struct SearchNavigationView: View {
     @Binding private var incomingSearchQuery: String?
 
     var body: some View {
-        NavigationSplitView(columnVisibility: .constant(.all)) {
-            if horizontalSizeClass == .regular {
+        if horizontalSizeClass == .regular {
+            NavigationSplitView(columnVisibility: .constant(.all)) {
                 SearchView(
                     selection: $recipe,
                     incomingSearchQuery: $incomingSearchQuery
                 )
-            } else {
-                SearchView(
-                    selection: $recipe,
-                    incomingSearchQuery: $incomingSearchQuery
-                )
-                .listStyle(.insetGrouped)
+            } detail: {
+                if let recipe {
+                    RecipeView()
+                        .environment(recipe)
+                }
             }
-        } detail: {
-            if let recipe {
-                RecipeView()
-                    .environment(recipe)
+        } else {
+            NavigationStack {
+                SearchView(
+                    selection: $recipe,
+                    incomingSearchQuery: $incomingSearchQuery
+                )
+                .navigationDestination(isPresented: $recipe.isPresent()) {
+                    if let recipe {
+                        RecipeView()
+                            .environment(recipe)
+                    }
+                }
             }
         }
     }

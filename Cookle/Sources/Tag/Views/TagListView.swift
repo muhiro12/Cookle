@@ -21,23 +21,33 @@ struct TagListView<T: Tag>: View {
 
     var body: some View {
         Group {
-            if tags.isNotEmpty {
-                List(tags, selection: $tag) { tag in
-                    NavigationLink(value: tag) {
+            if filteredTags.isNotEmpty {
+                List(filteredTags) { tag in
+                    Button {
+                        self.tag = tag
+                    } label: {
                         Text(tag.value)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .hidden(
-                        searchText.isNotEmpty
-                            && !tag.value.normalizedContains(searchText)
-                            || tag.recipes.orEmpty.isEmpty
-                    )
+                    .buttonStyle(.plain)
                 }
                 .searchable(text: $searchText)
             } else {
-                AddRecipeButton()
+                ContentUnavailableView {
+                    Label {
+                        Text(T.title)
+                    } icon: {
+                        Image(systemName: "tag")
+                            .accessibilityHidden(true)
+                    }
+                } description: {
+                    Text("Tags appear when recipes use them.")
+                } actions: {
+                    AddRecipeButton()
+                }
             }
         }
-        .navigationTitle(T.title)
+        .cookleTopLevelNavigationChrome(T.title)
         .toolbar {
             ToolbarItem {
                 AddRecipeButton()
@@ -51,6 +61,18 @@ struct TagListView<T: Tag>: View {
 
     init(selection: Binding<T?> = .constant(nil)) {
         _tag = selection
+    }
+}
+
+private extension TagListView {
+    var filteredTags: [T] {
+        tags.filter { tag in
+            tag.recipes.orEmpty.isNotEmpty
+                && (
+                    searchText.isEmpty
+                        || tag.value.normalizedContains(searchText)
+                )
+        }
     }
 }
 

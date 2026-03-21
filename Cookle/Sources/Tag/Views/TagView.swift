@@ -15,34 +15,11 @@ struct TagView<T: Tag>: View {
     @Binding private var recipe: Recipe?
 
     var body: some View {
-        List(selection: $recipe) {
-            Section {
-                ForEach(tag.recipes.orEmpty) { recipe in
-                    NavigationLink(value: recipe) {
-                        RecipeLabel()
-                            .labelStyle(.titleAndLargeIcon)
-                            .environment(recipe)
-                    }
-                }
-            } header: {
-                Text("Recipes")
-            }
-            Section {
-                Text(tag.createdTimestamp.formatted(.dateTime.year().month().day()))
-            } header: {
-                Text("Created At")
-            }
-            Section {
-                Text(tag.modifiedTimestamp.formatted(.dateTime.year().month().day()))
-            } header: {
-                Text("Updated At")
-            }
-            Section {
-                EditTagButton<T>()
-                DeleteTagButton<T>()
-            } header: {
-                Spacer()
-            }
+        List {
+            recipeSection
+            createdAtSection
+            updatedAtSection
+            actionSection
         }
         .navigationTitle(tag.value)
         .toolbar {
@@ -54,6 +31,51 @@ struct TagView<T: Tag>: View {
 
     init(selection: Binding<Recipe?> = .constant(nil)) {
         _recipe = selection
+    }
+}
+
+private extension TagView {
+    var recipeSection: some View {
+        Section {
+            ForEach(tag.recipes.orEmpty) { recipe in
+                Button {
+                    self.recipe = recipe
+                } label: {
+                    RecipeLabel()
+                        .labelStyle(.titleAndLargeIcon)
+                        .environment(recipe)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .buttonStyle(.plain)
+            }
+        } header: {
+            Text("Recipes")
+        }
+    }
+
+    var createdAtSection: some View {
+        Section {
+            Text(tag.createdTimestamp.formatted(.dateTime.year().month().day()))
+        } header: {
+            Text("Created At")
+        }
+    }
+
+    var updatedAtSection: some View {
+        Section {
+            Text(tag.modifiedTimestamp.formatted(.dateTime.year().month().day()))
+        } header: {
+            Text("Updated At")
+        }
+    }
+
+    var actionSection: some View {
+        Section {
+            EditTagButton<T>()
+            DeleteTagButton<T>()
+        } header: {
+            Spacer()
+        }
     }
 }
 

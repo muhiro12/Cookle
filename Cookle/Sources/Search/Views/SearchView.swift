@@ -9,12 +9,6 @@ import SwiftData
 import SwiftUI
 
 struct SearchView: View {
-    private enum Layout {
-        static let placeholderOffsetY = CGFloat(
-            -(Double("40") ?? .zero)
-        )
-    }
-
     @Environment(\.modelContext)
     private var context
     @Environment(\.isPresented)
@@ -38,7 +32,10 @@ struct SearchView: View {
             }
         }
         .searchable(text: $searchText, isPresented: $isFocused)
-        .navigationTitle(Text("Search"))
+        .cookleTopLevelNavigationChrome(
+            "Search",
+            keyboardDismissMode: .immediately
+        )
         .toolbar {
             ToolbarItem {
                 CloseButton()
@@ -57,27 +54,33 @@ struct SearchView: View {
     }
 
     var searchResults: some View {
-        List(recipes, selection: $recipe) { recipe in
-            NavigationLink(value: recipe) {
+        List(recipes) { recipe in
+            Button {
+                self.recipe = recipe
+            } label: {
                 RecipeLabel()
                     .labelStyle(.titleAndLargeIcon)
                     .environment(recipe)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
+            .buttonStyle(.plain)
         }
     }
 
     var notFoundPlaceholder: some View {
-        placeholderButton(
-            title: "Not Found",
-            systemImage: "questionmark.square.dashed"
-        )
+        ContentUnavailableView.search(text: searchText)
     }
 
     var searchPromptPlaceholder: some View {
-        placeholderButton(
-            title: "Please enter a search term",
-            systemImage: "rectangle.and.pencil.and.ellipsis"
-        )
+        ContentUnavailableView {
+            Label("Search Recipes", systemImage: "magnifyingglass")
+        } description: {
+            Text("Search by recipe name, ingredient, or category.")
+        } actions: {
+            Button("Start Searching") {
+                isFocused = true
+            }
+        }
     }
 
     init(
@@ -86,24 +89,6 @@ struct SearchView: View {
     ) {
         _recipe = selection
         _incomingSearchQuery = incomingSearchQuery
-    }
-
-    func placeholderButton(
-        title: LocalizedStringKey,
-        systemImage: String
-    ) -> some View {
-        Button {
-            isFocused = true
-        } label: {
-            Label {
-                Text(title)
-            } icon: {
-                Image(systemName: systemImage)
-                    .accessibilityHidden(true)
-            }
-        }
-        .foregroundStyle(.secondary)
-        .offset(y: Layout.placeholderOffsetY)
     }
 }
 

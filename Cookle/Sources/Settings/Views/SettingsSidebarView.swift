@@ -47,7 +47,7 @@ struct SettingsSidebarView: View {
 
     var body: some View {
         settingsList
-            .navigationTitle(Text("Settings"))
+            .cookleTopLevelNavigationChrome("Settings")
             .toolbar {
                 ToolbarItem {
                     CloseButton()
@@ -111,7 +111,7 @@ struct SettingsSidebarView: View {
     }
 
     var settingsList: some View {
-        List(selection: $content) {
+        List {
             subscriptionSection
             iCloudSection
             notificationSection
@@ -128,9 +128,13 @@ struct SettingsSidebarView: View {
 
     var subscriptionSection: some View {
         Section {
-            NavigationLink(value: SettingsContent.subscription) {
+            Button {
+                content = .subscription
+            } label: {
                 Text("Subscription")
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
+            .buttonStyle(.plain)
             .popoverTip(
                 currentSettingsTip(
                     for: subscriptionTip,
@@ -202,9 +206,13 @@ struct SettingsSidebarView: View {
 
     var generalSection: some View {
         Section {
-            NavigationLink(value: SettingsContent.license) {
+            Button {
+                content = .license
+            } label: {
                 Text("Licenses")
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
+            .buttonStyle(.plain)
             Button("Show tips again") {
                 do {
                     try tipController.resetTips()

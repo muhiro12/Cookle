@@ -20,11 +20,13 @@ struct MenuNavigationView: View {
     @AppStorage(.isDebugOn)
     private var isDebugOn
 
-    @State private var tab: MainTab?
+    @State private var selectedTab: MainTab?
 
     private var tabs: [MainTab] {
         MainTab.allCases.filter { tab in
             switch tab {
+            case .menu:
+                false
             case .debug:
                 isDebugOn
             default:
@@ -39,7 +41,7 @@ struct MenuNavigationView: View {
                 LazyVGrid(columns: [.init(.flexible()), .init(.flexible())]) {
                     ForEach(tabs) { tab in
                         Button {
-                            self.tab = tab
+                            selectedTab = tab
                         } label: {
                             tab.label
                                 .lineLimit(1)
@@ -52,16 +54,18 @@ struct MenuNavigationView: View {
                 }
                 .padding()
             }
-            .navigationTitle(Text("Menu"))
+            .cookleTopLevelNavigationChrome("Menu")
             .toolbar {
                 ToolbarItem {
                     CloseButton()
                         .hidden(!isPresented)
                 }
             }
-        }
-        .fullScreenCover(item: $tab) { tab in
-            tab.rootView
+            .navigationDestination(isPresented: $selectedTab.isPresent()) {
+                if let selectedTab {
+                    selectedTab.rootView
+                }
+            }
         }
     }
 }

@@ -10,11 +10,15 @@ struct DebugContentView<Model: PersistentModel>: View {
     @Binding private var detail: Model?
 
     var body: some View {
-        List(selection: $detail) {
+        List {
             ForEach(models) { model in
-                NavigationLink(value: model) {
+                Button {
+                    detail = model
+                } label: {
                     rowLabel(for: model)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
+                .buttonStyle(.plain)
             }
             .onDelete { indexSet in
                 withAnimation {

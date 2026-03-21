@@ -1,17 +1,23 @@
-//
-//  TagNavigationView.swift
-//  Cookle Playgrounds
-//
-//  Created by Hiromu Nakano on 9/13/24.
-//
-
+import SwiftData
 import SwiftUI
 
 struct TagNavigationView<T: Tag>: View {
+    @Environment(\.horizontalSizeClass)
+    private var horizontalSizeClass
+
     @State private var tag: T?
     @State private var recipe: Recipe?
 
     var body: some View {
+        navigationView()
+            .onChange(of: tag?.persistentModelID) {
+                recipe = nil
+            }
+    }
+}
+
+private extension TagNavigationView {
+    var regularNavigationView: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {
             TagListView<T>(selection: $tag)
         } content: {
@@ -24,6 +30,34 @@ struct TagNavigationView<T: Tag>: View {
                 RecipeView()
                     .environment(recipe)
             }
+        }
+    }
+
+    var compactNavigationView: some View {
+        NavigationStack {
+            TagListView<T>(selection: $tag)
+                .listStyle(.insetGrouped)
+                .navigationDestination(isPresented: $tag.isPresent()) {
+                    if let tag {
+                        TagView<T>(selection: $recipe)
+                            .environment(tag)
+                    }
+                }
+                .navigationDestination(isPresented: $recipe.isPresent()) {
+                    if let recipe {
+                        RecipeView()
+                            .environment(recipe)
+                    }
+                }
+        }
+    }
+
+    @ViewBuilder
+    func navigationView() -> some View {
+        if horizontalSizeClass == .regular {
+            regularNavigationView
+        } else {
+            compactNavigationView
         }
     }
 }
