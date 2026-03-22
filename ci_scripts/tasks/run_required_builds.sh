@@ -239,9 +239,9 @@ if $needs_cookle_build; then
     bash "$repository_root/ci_scripts/tasks/check_models_directory_consistency.sh"
 
   run_logged_step \
-    "build_app" \
-    "Build Cookle scheme" \
-    bash "$repository_root/ci_scripts/tasks/build_app.sh"
+    "test_app" \
+    "Test Cookle scheme" \
+    bash "$repository_root/ci_scripts/tasks/test_app.sh"
 fi
 
 if $needs_cookle_library_tests; then
