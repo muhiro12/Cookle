@@ -204,6 +204,7 @@ fi
 needs_cookle_build=false
 needs_cookle_library_tests=false
 widgets_changes_covered_by_app_build=false
+needs_ci_task_validation=false
 
 if grep -Eq '^Cookle/|^Cookle\.xcodeproj/|^Widgets/' <<<"$changed_files"; then
   needs_cookle_build=true
@@ -217,12 +218,20 @@ if grep -Eq '^CookleLibrary/' <<<"$changed_files"; then
   needs_cookle_library_tests=true
 fi
 
+if grep -Eq '^ci_scripts/tasks/(run_required_builds|build_app|test_app|check_models_directory_consistency|check_mhplatform_adoption)\.sh$|^ci_scripts/lib/ci_runs\.sh$' <<<"$changed_files"; then
+  needs_ci_task_validation=true
+fi
+
+if $needs_ci_task_validation; then
+  needs_cookle_build=true
+fi
+
 if ! $needs_cookle_build && ! $needs_cookle_library_tests; then
-  echo "No changes under Cookle/, CookleLibrary/, Widgets/, or Cookle.xcodeproj/."
+  echo "No local changes detected that require validation."
   if $should_run_pre_commit; then
-    run_note="pre-commit completed. No changes under Cookle/, CookleLibrary/, Widgets/, or Cookle.xcodeproj/. Build/test steps were skipped."
+    run_note="pre-commit completed. No local changes detected that require validation. Build/test steps were skipped."
   else
-    run_note="No changes under Cookle/, CookleLibrary/, Widgets/, or Cookle.xcodeproj/. Build/test steps were skipped."
+    run_note="No local changes detected that require validation. Build/test steps were skipped."
   fi
   exit 0
 fi
@@ -234,10 +243,23 @@ fi
 
 if $needs_cookle_build; then
   run_logged_step \
+    "check_mhplatform_adoption" \
+    "Check MHPlatform adoption guardrails" \
+    bash "$repository_root/ci_scripts/tasks/check_mhplatform_adoption.sh"
+
+  run_logged_step \
     "check_models_directory_consistency" \
     "Check Models directory consistency" \
     bash "$repository_root/ci_scripts/tasks/check_models_directory_consistency.sh"
 
+elif $needs_cookle_library_tests; then
+  run_logged_step \
+    "check_mhplatform_adoption" \
+    "Check MHPlatform adoption guardrails" \
+    bash "$repository_root/ci_scripts/tasks/check_mhplatform_adoption.sh"
+fi
+
+if $needs_cookle_build; then
   run_logged_step \
     "test_app" \
     "Test Cookle scheme" \
