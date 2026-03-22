@@ -46,13 +46,37 @@ else
     append_error "MHPlatform must not follow a floating branch in $package_manifest."
   fi
 
-  if ! grep -Eq '^\s*(revision|exact):\s*"' <<<"$manifest_block"; then
-    append_error "MHPlatform must be pinned with revision or exact in $package_manifest."
+  if ! grep -Eq '^\s*"1\.0\.0"\s*\.\.<\s*"2\.0\.0"' <<<"$manifest_block"; then
+    append_error "MHPlatform must use the 1.0.0..<2.0.0 version range in $package_manifest."
   fi
 fi
 
-if grep -Eq '"branch"\s*:' "$package_resolved"; then
-  append_error "MHPlatform resolved state must not contain branch tracking in $package_resolved."
+resolved_pin_block=$(
+  awk '
+    /"identity" : "mhplatform"/ {
+      in_block = 1
+    }
+    in_block {
+      print
+      open_braces += gsub(/\{/, "{")
+      close_braces += gsub(/\}/, "}")
+    }
+    in_block && open_braces > 0 && open_braces == close_braces {
+      exit
+    }
+  ' "$package_resolved"
+)
+
+if [[ -z "$resolved_pin_block" ]]; then
+  append_error "MHPlatform resolved pin was not found in $package_resolved."
+else
+  if grep -Eq '"branch"\s*:' <<<"$resolved_pin_block"; then
+    append_error "MHPlatform resolved state must not contain branch tracking in $package_resolved."
+  fi
+
+  if ! grep -Eq '"version"\s*:\s*"1\.0\.0"' <<<"$resolved_pin_block"; then
+    append_error "MHPlatform resolved state must contain version 1.0.0 in $package_resolved."
+  fi
 fi
 
 remote_package_block=$(
@@ -78,8 +102,12 @@ else
     append_error "MHPlatform must not follow a floating branch in $project_file."
   fi
 
-  if ! grep -Eq 'kind = (revision|exactVersion);' <<<"$remote_package_block"; then
-    append_error "MHPlatform must be pinned to revision or exactVersion in $project_file."
+  if ! grep -Eq 'kind = upToNextMajorVersion;' <<<"$remote_package_block"; then
+    append_error "MHPlatform must use upToNextMajorVersion in $project_file."
+  fi
+
+  if ! grep -Eq 'minimumVersion = 1\.0\.0;' <<<"$remote_package_block"; then
+    append_error "MHPlatform must use minimumVersion 1.0.0 in $project_file."
   fi
 fi
 
