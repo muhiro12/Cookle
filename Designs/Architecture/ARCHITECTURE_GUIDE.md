@@ -22,12 +22,14 @@ Related documents:
 
 - `Cookle` is the only target in this repo that adopts the umbrella
   `MHPlatform` surface.
-- `CookleLibrary` must stay on `MHPlatformCore`.
+- `CookleLibrary` must stay on `MHPlatformCore`, which remains the default
+  shared-package consumer pillar in MHPlatform 1.2.
 - `Widgets` and `CookleTests` must not link or import the `MHPlatform`
   umbrella.
-- This repository intentionally keeps MHPlatform on the `1.0.0..<2.0.0` range,
-  even though upstream MHPlatform 1.1 guidance now prefers exact tag or exact
-  revision pinning.
+- `MHAppRuntime` remains the advanced app-root surface, but Cookle does not use
+  that narrower composition path as its default consumer policy.
+- This repository intentionally keeps MHPlatform on the `1.0.0..<2.0.0` range
+  and checks in a `1.2+` resolved baseline.
 - `MHAppRuntimeBootstrap`, `MHAppRoutePipeline`, `MHMutationWorkflow`, and
   `MHReviewFlow` are the preferred shared shells here, while route meaning,
   notification meaning, review eligibility, and mutation-effect meaning stay

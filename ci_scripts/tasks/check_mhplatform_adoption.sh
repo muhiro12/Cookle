@@ -14,11 +14,13 @@ cd "$repository_root"
 package_manifest="CookleLibrary/Package.swift"
 package_resolved="CookleLibrary/Package.resolved"
 project_file="Cookle.xcodeproj/project.pbxproj"
+readme_file="README.md"
+architecture_guide="Designs/Architecture/ARCHITECTURE_GUIDE.md"
 
-# Cookle intentionally keeps the app target on the MHPlatform umbrella and the
-# shared package on MHPlatformCore. Even though MHPlatform 1.1 documents exact
-# tag or revision pinning upstream, this repository deliberately stays on the
-# 1.0.0..<2.0.0 range and guards that local policy explicitly.
+# Cookle follows the MHPlatform 1.2 consumer pillars by keeping the app target
+# on the default MHPlatform umbrella and the shared package on MHPlatformCore.
+# This repository keeps remote range requirements at 1.0.0..<2.0.0 and checks
+# in a resolved baseline at MHPlatform 1.2+.
 
 declare -a errors=()
 
@@ -79,8 +81,8 @@ else
     append_error "MHPlatform resolved state must not contain branch tracking in $package_resolved."
   fi
 
-  if ! grep -Eq '"version"\s*:\s*"1\.[0-9]+\.[0-9]+"' <<<"$resolved_pin_block"; then
-    append_error "MHPlatform resolved state must contain a 1.x semantic version in $package_resolved."
+  if ! grep -Eq '"version"\s*:\s*"1\.([2-9]|[1-9][0-9]+)\.[0-9]+"' <<<"$resolved_pin_block"; then
+    append_error "MHPlatform resolved state must contain a semantic version in the 1.2.0..<2.0.0 range in $package_resolved."
   fi
 fi
 
@@ -184,6 +186,18 @@ fi
 
 if rg -nP '^\s*(?:@preconcurrency\s+)?import\s+MHPlatform\s*$' Widgets CookleTests >/dev/null; then
   append_error "Widgets and CookleTests must not import the full MHPlatform umbrella."
+fi
+
+if rg -n 'MHAppRuntimeCore' \
+  "$package_manifest" \
+  "$project_file" \
+  "$readme_file" \
+  "$architecture_guide" \
+  Cookle \
+  CookleLibrary \
+  Widgets \
+  CookleTests >/dev/null; then
+  append_error "MHAppRuntimeCore must not remain in Cookle source or policy files after MHPlatform 1.2 adoption."
 fi
 
 if [[ ${#errors[@]} -gt 0 ]]; then

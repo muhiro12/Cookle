@@ -39,9 +39,9 @@ repository contains the full iOS project together with its shared Swift package.
   services, predicates, migrations, and utilities used by the app and intents.
 - `Widgets/` – home-screen widget extension target built on top of
   `CookleLibrary`.
-- `MHPlatform` – shared app-runtime package. The `Cookle` app intentionally
-  adopts the umbrella `MHPlatform` surface, while `CookleLibrary` stays on
-  `MHPlatformCore` for core-safe shared logic.
+- `MHPlatform` – shared app-runtime package family. The `Cookle` app
+  intentionally adopts the default `MHPlatform` umbrella surface, while
+  `CookleLibrary` stays on `MHPlatformCore` for core-safe shared logic.
 - `Designs/Architecture/` – current architecture rules and placement guidance.
 - `Designs/Decisions/` – architecture decision records that capture why major
   design choices were made.
@@ -61,9 +61,10 @@ repository contains the full iOS project together with its shared Swift package.
   shared between the app and App Intents.
 - AppIntents for Shortcuts support and automation workflows built on top of
   SwiftData entities.
-- MHPlatform 1.x with a Cookle-specific consumer split: the app target stays on
-  the `MHPlatform` umbrella, `CookleLibrary` stays on `MHPlatformCore`, and the
-  repo intentionally keeps MHPlatform on the `1.0.0..<2.0.0` range.
+- MHPlatform 1.x using the 1.2 consumer pillars: the `Cookle` app target stays
+  on the default `MHPlatform` umbrella, `CookleLibrary` stays on
+  `MHPlatformCore`, and the repo keeps MHPlatform on the `1.0.0..<2.0.0` range
+  with a checked-in `1.2+` resolved baseline.
 - SwiftUtilities plus MHPlatform-managed StoreKit, Google Mobile Ads, and
   license presentation delivered through Swift Package Manager.
 
@@ -83,6 +84,8 @@ Primary records:
 - MHPlatform consumer boundaries are explicit in this repo: `Cookle` is the
   umbrella-app adopter, `CookleLibrary` stays on `MHPlatformCore`, and
   `Widgets` / `CookleTests` stay off the umbrella.
+- `MHAppRuntime` remains available as an advanced app-root surface, but this
+  repo does not use it as the default adoption path.
 - The `Cookle` app target owns workflow services such as
   `RecipeActionService`, `DiaryActionService`, `TagActionService`, and
   `SettingsActionService` that add app-only side effects after shared mutations.
