@@ -10,6 +10,8 @@ import SwiftUI
 import TipKit
 
 struct RecipeFormView: View {
+    @State private var model: RecipeFormModel
+
     @Environment(\.dismiss)
     private var dismiss
 
@@ -17,29 +19,22 @@ struct RecipeFormView: View {
     private var recipe: Recipe?
     @Environment(\.modelContext)
     private var context
+    @Environment(RecipeActionService.self)
+    private var recipeActionService
 
     @AppStorage(.isDebugOn)
     private var isDebugOn
 
-    @State private var name = ""
-    @State private var photos = [PhotoData]()
-    @State private var servingSize = ""
-    @State private var cookingTime = ""
-    @State private var ingredients = [RecipeFormIngredient]()
-    @State private var steps = [String]()
-    @State private var categories = [String]()
-    @State private var note = ""
-
     @State private var editMode = EditMode.inactive
     @State private var isDebugAlertPresented = false
-    @State private var isInferRecipeFromTextTipEligible = false
-    @State private var isImagePlaygroundTipEligible = false
 
     private let type: RecipeFormType
     private let inferRecipeFromTextTip = InferRecipeFromTextTip()
     private let imagePlaygroundTip = ImagePlaygroundTip()
 
     var body: some View {
+        @Bindable var model = model
+
         Form {
             formSections
         }
@@ -54,6 +49,7 @@ struct RecipeFormView: View {
             isPresented: $isDebugAlertPresented
         ) {
             Button {
+                model.name = .empty
                 isDebugOn = true
                 dismiss()
             } label: {
@@ -67,8 +63,55 @@ struct RecipeFormView: View {
         } message: {
             Text("Are you really going to use DebugMode?")
         }
+        .confirmationDialog(
+            Text("Add a photo?"),
+            isPresented: $model.isPhotoConfirmationPresented
+        ) {
+            Button("Use Image Playground") {
+                model.isImagePlaygroundPresented = true
+            }
+            Button("Later", role: .cancel) {
+                dismiss()
+            }
+        } message: {
+            Text("No image yet. Try Image Playground?")
+        }
+        .alert(
+            Text("Cannot Save Recipe"),
+            isPresented: isErrorPresentedBinding
+        ) {
+            Button("OK", role: .cancel) {
+                model.errorMessage = nil
+            }
+        } message: {
+            Text(model.errorMessage ?? "")
+        }
+        .cookleImagePlayground(
+            isPresented: $model.isImagePlaygroundPresented,
+            recipe: model.savedRecipe
+        ) { data in
+            Task {
+                guard let recipe = model.savedRecipe else {
+                    model.errorMessage = CookleActionError.recipeNotFound.localizedDescription
+                    return
+                }
+
+                do {
+                    _ = try await recipeActionService.replaceGeneratedPhoto(
+                        context: context,
+                        recipe: recipe,
+                        data: data
+                    )
+                    dismiss()
+                } catch {
+                    model.errorMessage = error.localizedDescription
+                }
+            }
+        } onCancellation: {
+            dismiss()
+        }
         .task {
-            applyRecipeIfNeeded()
+            model.applyRecipeIfNeeded(recipe)
         }
         .task {
             await observeInferRecipeFromTextTipEligibility()
@@ -79,38 +122,40 @@ struct RecipeFormView: View {
     }
 
     @ViewBuilder var formSections: some View {
-        RecipeFormNameSection($name)
+        @Bindable var model = model
+
+        RecipeFormNameSection($model.name)
             .hidden(editMode == .active)
         RecipeFormPhotosSection(
-            $photos,
+            $model.photos,
             addPhotoTip: currentRecipeFormTip(
                 for: imagePlaygroundTip,
-                isEligible: shouldShowImagePlaygroundTip
+                isEligible: model.shouldShowImagePlaygroundTip
             )
         )
         if #available(iOS 26.0, *) {
             RecipeFormInferSection(
-                name: $name,
-                servingSize: $servingSize,
-                cookingTime: $cookingTime,
-                ingredients: $ingredients,
-                steps: $steps,
-                categories: $categories,
-                note: $note,
+                name: $model.name,
+                servingSize: $model.servingSize,
+                cookingTime: $model.cookingTime,
+                ingredients: $model.ingredients,
+                steps: $model.steps,
+                categories: $model.categories,
+                note: $model.note,
                 tip: currentRecipeFormTip(
                     for: inferRecipeFromTextTip,
-                    isEligible: shouldShowInferRecipeFromTextTip
+                    isEligible: model.shouldShowInferRecipeFromTextTip
                 )
             )
         }
-        RecipeFormServingSizeSection($servingSize)
+        RecipeFormServingSizeSection($model.servingSize)
             .hidden(editMode == .active)
-        RecipeFormCookingTimeSection($cookingTime)
+        RecipeFormCookingTimeSection($model.cookingTime)
             .hidden(editMode == .active)
-        RecipeFormIngredientsSection($ingredients)
-        RecipeFormStepsSection($steps)
-        RecipeFormCategoriesSection($categories)
-        RecipeFormNoteSection($note)
+        RecipeFormIngredientsSection($model.ingredients)
+        RecipeFormStepsSection($model.steps)
+        RecipeFormCategoriesSection($model.categories)
+        RecipeFormNoteSection($model.note)
             .hidden(editMode == .active)
         Section {
             Button {
@@ -127,8 +172,8 @@ struct RecipeFormView: View {
     @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
             Button {
-                if name == "Enable Debug" {
-                    name = .empty
+                if model.name == "Enable Debug" {
+                    model.name = .empty
                     isDebugAlertPresented = true
                     return
                 }
@@ -154,121 +199,53 @@ struct RecipeFormView: View {
     }
 
     @ToolbarContentBuilder var confirmationToolbarItem: some ToolbarContent {
-        switch type {
-        case .create,
-             .duplicate:
-            ToolbarItem(placement: .confirmationAction) {
-                CreateRecipeButton(
-                    name: name,
-                    photos: photos,
-                    servingSize: servingSize,
-                    cookingTime: cookingTime,
-                    ingredients: ingredients,
-                    steps: steps,
-                    categories: categories,
-                    note: note,
-                    useShortTitle: true
-                )
-                .labelStyle(.titleOnly)
+        ToolbarItem(placement: .confirmationAction) {
+            Button {
+                Task {
+                    let shouldDismiss = await model.save(
+                        context: context,
+                        recipe: recipe,
+                        recipeActionService: recipeActionService
+                    )
+                    if shouldDismiss {
+                        dismiss()
+                    }
+                }
+            } label: {
+                switch type {
+                case .create,
+                     .duplicate:
+                    Text("Create")
+                case .edit:
+                    Text("Update")
+                }
             }
-        case .edit:
-            ToolbarItem(placement: .confirmationAction) {
-                UpdateRecipeButton(
-                    name: name,
-                    photos: photos,
-                    servingSize: servingSize,
-                    cookingTime: cookingTime,
-                    ingredients: ingredients,
-                    steps: steps,
-                    categories: categories,
-                    note: note,
-                    useShortTitle: true
-                )
-                .labelStyle(.titleOnly)
-            }
+            .disabled((try? model.makeDraft()) == nil)
         }
     }
 
     init(type: RecipeFormType) {
         self.type = type
-    }
-
-    func applyRecipeIfNeeded() {
-        guard let model = recipe else {
-            return
-        }
-        name = model.name
-        photos = model.photoObjects?
-            .sorted()
-            .compactMap { photoObject in
-                guard let photo = photoObject.photo else {
-                    return nil
-                }
-                return .init(data: photo.data, source: photo.source)
-            } ?? .empty
-        servingSize = model.servingSize.description
-        cookingTime = model.cookingTime.description
-        ingredients = (model.ingredientObjects?
-                        .sorted()
-                        .compactMap { object in
-                            guard let ingredient = object.ingredient else {
-                                return nil
-                            }
-                            return .init(
-                                ingredient: ingredient.value,
-                                amount: object.amount
-                            )
-                        } ?? .empty) + [.init(ingredient: .empty, amount: .empty)]
-        steps = model.steps + [.empty]
-        categories = (model.categories?.map(\.value) ?? .empty) + [.empty]
-        note = model.note
+        _model = State(
+            initialValue: RecipeFormModel(
+                type: type
+            )
+        )
     }
 }
 
 private extension RecipeFormView {
-    var isCreateFlow: Bool {
-        switch type {
-        case .create:
-            true
-        case .duplicate,
-             .edit:
-            false
-        }
-    }
-
-    var isRecipeDraftNearlyEmpty: Bool {
-        name.isEmpty
-            && photos.isEmpty
-            && servingSize.isEmpty
-            && cookingTime.isEmpty
-            && note.isEmpty
-            && ingredients.allSatisfy { ingredient in
-                ingredient.ingredient.isEmpty && ingredient.amount.isEmpty
+    var isErrorPresentedBinding: Binding<Bool> {
+        .init(
+            get: {
+                model.errorMessage != nil
+            },
+            set: { isPresented in
+                if isPresented == false {
+                    model.errorMessage = nil
+                }
             }
-            && steps.allSatisfy(\.isEmpty)
-            && categories.allSatisfy(\.isEmpty)
-    }
-
-    var shouldShowInferRecipeFromTextTip: Bool {
-        guard #available(iOS 26.0, *) else {
-            return false
-        }
-        guard isCreateFlow else {
-            return false
-        }
-
-        return isRecipeDraftNearlyEmpty && isInferRecipeFromTextTipEligible
-    }
-
-    var shouldShowImagePlaygroundTip: Bool {
-        guard isCreateFlow else {
-            return false
-        }
-
-        return CookleImagePlayground.isSupported
-            && photos.isEmpty
-            && isImagePlaygroundTipEligible
-            && shouldShowInferRecipeFromTextTip == false
+        )
     }
 
     func currentRecipeFormTip<T: Tip>(
@@ -279,10 +256,10 @@ private extension RecipeFormView {
             return nil
         }
 
-        if shouldShowInferRecipeFromTextTip {
+        if model.shouldShowInferRecipeFromTextTip {
             return inferRecipeFromTextTip.id == tip.id ? tip : nil
         }
-        if shouldShowImagePlaygroundTip {
+        if model.shouldShowImagePlaygroundTip {
             return imagePlaygroundTip.id == tip.id ? tip : nil
         }
 
@@ -291,24 +268,32 @@ private extension RecipeFormView {
 
     func observeInferRecipeFromTextTipEligibility() async {
         await MainActor.run {
-            isInferRecipeFromTextTipEligible = inferRecipeFromTextTip.shouldDisplay
+            model.updateInferRecipeFromTextTipEligibility(
+                inferRecipeFromTextTip.shouldDisplay
+            )
         }
 
         for await shouldDisplay in inferRecipeFromTextTip.shouldDisplayUpdates {
             await MainActor.run {
-                isInferRecipeFromTextTipEligible = shouldDisplay
+                model.updateInferRecipeFromTextTipEligibility(
+                    shouldDisplay
+                )
             }
         }
     }
 
     func observeImagePlaygroundTipEligibility() async {
         await MainActor.run {
-            isImagePlaygroundTipEligible = imagePlaygroundTip.shouldDisplay
+            model.updateImagePlaygroundTipEligibility(
+                imagePlaygroundTip.shouldDisplay
+            )
         }
 
         for await shouldDisplay in imagePlaygroundTip.shouldDisplayUpdates {
             await MainActor.run {
-                isImagePlaygroundTipEligible = shouldDisplay
+                model.updateImagePlaygroundTipEligibility(
+                    shouldDisplay
+                )
             }
         }
     }

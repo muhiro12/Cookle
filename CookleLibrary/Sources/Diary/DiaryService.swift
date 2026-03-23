@@ -36,10 +36,25 @@ public enum DiaryService {
         recipe: Recipe,
         type: DiaryObjectType
     ) throws -> Diary {
+        try addWithOutcome(
+            context: context,
+            date: date,
+            recipe: recipe,
+            type: type
+        ).value
+    }
+
+    /// Adds a recipe to a diary and returns follow-up hints.
+    public static func addWithOutcome(
+        context: ModelContext,
+        date: Date,
+        recipe: Recipe,
+        type: DiaryObjectType
+    ) throws -> MutationOutcome<Diary> {
         if let existing = try diary(on: date, context: context) {
             var meals = mealRecipes(from: existing.objects.orEmpty)
             append(recipe: recipe, to: &meals, for: type)
-            Self.update(
+            let outcome = Self.updateWithOutcome(
                 context: context,
                 diary: existing,
                 date: date,
@@ -48,9 +63,12 @@ public enum DiaryService {
                 dinners: meals.dinners,
                 note: existing.note
             )
-            return existing
+            return .init(
+                value: existing,
+                effects: outcome.effects
+            )
         }
-        return createNewDiary(
+        return createNewDiaryOutcome(
             context: context,
             date: date,
             recipe: recipe,
@@ -67,6 +85,25 @@ public enum DiaryService {
         dinners: [Recipe],
         note: String
     ) -> Diary {
+        createWithOutcome(
+            context: context,
+            date: date,
+            breakfasts: breakfasts,
+            lunches: lunches,
+            dinners: dinners,
+            note: note
+        ).value
+    }
+
+    /// Creates a new diary and returns follow-up hints.
+    public static func createWithOutcome(
+        context: ModelContext,
+        date: Date,
+        breakfasts: [Recipe],
+        lunches: [Recipe],
+        dinners: [Recipe],
+        note: String
+    ) -> MutationOutcome<Diary> {
         let objects = zip(breakfasts.indices, breakfasts).map { index, recipe in
             DiaryObject.create(context: context, recipe: recipe, type: .breakfast, order: index + 1)
         } + zip(lunches.indices, lunches).map { index, recipe in
@@ -74,11 +111,15 @@ public enum DiaryService {
         } + zip(dinners.indices, dinners).map { index, recipe in
             DiaryObject.create(context: context, recipe: recipe, type: .dinner, order: index + 1)
         }
-        return Diary.create(
+        let diary = Diary.create(
             context: context,
             date: date,
             objects: objects,
             note: note
+        )
+        return .init(
+            value: diary,
+            effects: diaryMutationEffects
         )
     }
 
@@ -92,6 +133,27 @@ public enum DiaryService {
         dinners: [Recipe],
         note: String
     ) {
+        _ = updateWithOutcome(
+            context: context,
+            diary: diary,
+            date: date,
+            breakfasts: breakfasts,
+            lunches: lunches,
+            dinners: dinners,
+            note: note
+        )
+    }
+
+    /// Updates the specified diary and returns follow-up hints.
+    public static func updateWithOutcome(
+        context: ModelContext,
+        diary: Diary,
+        date: Date,
+        breakfasts: [Recipe],
+        lunches: [Recipe],
+        dinners: [Recipe],
+        note: String
+    ) -> MutationOutcome<Diary> {
         let objects = zip(breakfasts.indices, breakfasts).map { index, recipe in
             DiaryObject.create(context: context, recipe: recipe, type: .breakfast, order: index + 1)
         } + zip(lunches.indices, lunches).map { index, recipe in
@@ -104,6 +166,10 @@ public enum DiaryService {
             objects: objects,
             note: note
         )
+        return .init(
+            value: diary,
+            effects: diaryMutationEffects
+        )
     }
     // swiftlint:enable function_parameter_count
 
@@ -112,7 +178,22 @@ public enum DiaryService {
         context: ModelContext,
         diary: Diary
     ) {
+        _ = deleteWithOutcome(
+            context: context,
+            diary: diary
+        )
+    }
+
+    /// Deletes the supplied diary and returns follow-up hints.
+    public static func deleteWithOutcome(
+        context: ModelContext,
+        diary: Diary
+    ) -> MutationOutcome<Void> {
         context.delete(diary)
+        return .init(
+            value: (),
+            effects: diaryMutationEffects
+        )
     }
 }
 
@@ -121,6 +202,12 @@ private extension DiaryService {
         var breakfasts: [Recipe]
         var lunches: [Recipe]
         var dinners: [Recipe]
+    }
+
+    static var diaryMutationEffects: MutationEffect {
+        [
+            .diaryDataChanged
+        ]
     }
 
     static func mealRecipes(from objects: [DiaryObject]) -> MealRecipes {
@@ -155,15 +242,15 @@ private extension DiaryService {
         }
     }
 
-    static func createNewDiary(
+    static func createNewDiaryOutcome(
         context: ModelContext,
         date: Date,
         recipe: Recipe,
         type: DiaryObjectType
-    ) -> Diary {
+    ) -> MutationOutcome<Diary> {
         switch type {
         case .breakfast:
-            return Self.create(
+            return Self.createWithOutcome(
                 context: context,
                 date: date,
                 breakfasts: [recipe],
@@ -172,7 +259,7 @@ private extension DiaryService {
                 note: ""
             )
         case .lunch:
-            return Self.create(
+            return Self.createWithOutcome(
                 context: context,
                 date: date,
                 breakfasts: [],
@@ -181,7 +268,7 @@ private extension DiaryService {
                 note: ""
             )
         case .dinner:
-            return Self.create(
+            return Self.createWithOutcome(
                 context: context,
                 date: date,
                 breakfasts: [],

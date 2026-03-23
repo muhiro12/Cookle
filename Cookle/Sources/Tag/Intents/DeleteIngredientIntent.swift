@@ -22,17 +22,13 @@ struct DeleteIngredientIntent: AppIntent {
             named: value,
             context: modelContainer.mainContext
         ) else {
-            return .result(dialog: "Ingredient not found")
+            throw TagMutationIntentError.ingredientNotFound
         }
 
-        do {
-            try await tagActionService.delete(
-                context: modelContainer.mainContext,
-                ingredient: ingredient
-            )
-            return .result(dialog: "Deleted ingredient")
-        } catch {
-            return .result(dialog: .init(stringLiteral: error.localizedDescription))
-        }
+        try await tagActionService.delete(
+            context: modelContainer.mainContext,
+            ingredient: ingredient
+        )
+        return .result(dialog: "Deleted ingredient")
     }
 }

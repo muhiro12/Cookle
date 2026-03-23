@@ -47,9 +47,22 @@ struct RecipeView: View {
         }
         .task {
             tipController.donateDidOpenRecipeDetail()
-            _ = await recipeActionService.recordOpenedRecipe(
-                recipe
-            )
+            do {
+                _ = try await recipeActionService.recordOpenedRecipe(
+                    recipe
+                )
+            } catch {
+                let recipeLogger = CookleApp.logger(
+                    category: "RecipeDetail",
+                    source: #fileID
+                )
+                recipeLogger.error(
+                    "failed to record opened recipe",
+                    metadata: [
+                        "error": error.localizedDescription
+                    ]
+                )
+            }
             UIApplication.shared.isIdleTimerDisabled = true
         }
         .onDisappear {

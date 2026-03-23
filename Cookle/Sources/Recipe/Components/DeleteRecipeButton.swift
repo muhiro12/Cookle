@@ -10,6 +10,8 @@ struct DeleteRecipeButton: View {
     private var recipeActionService
 
     @State private var isPresented = false
+    @State private var isErrorPresented = false
+    @State private var errorMessage = ""
 
     private let action: (() -> Void)?
 
@@ -34,10 +36,15 @@ struct DeleteRecipeButton: View {
         ) {
             Button("Delete", role: .destructive) {
                 Task {
-                    _ = await recipeActionService.delete(
-                        context: context,
-                        recipe: recipe
-                    )
+                    do {
+                        _ = try await recipeActionService.delete(
+                            context: context,
+                            recipe: recipe
+                        )
+                    } catch {
+                        errorMessage = error.localizedDescription
+                        isErrorPresented = true
+                    }
                 }
             }
             Button("Cancel", role: .cancel) {
@@ -45,6 +52,16 @@ struct DeleteRecipeButton: View {
             }
         } message: {
             Text("Are you sure you want to delete this item? This action cannot be undone.")
+        }
+        .alert(
+            Text("Cannot Delete Recipe"),
+            isPresented: $isErrorPresented
+        ) {
+            Button("OK", role: .cancel) {
+                // Dismisses the alert.
+            }
+        } message: {
+            Text(errorMessage)
         }
     }
 

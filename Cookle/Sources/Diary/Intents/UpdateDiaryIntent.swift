@@ -44,7 +44,7 @@ struct UpdateDiaryIntent: AppIntent {
         )
 
         guard outcome.value != nil else {
-            return .result(dialog: "Diary not found")
+            throw DiaryMutationIntentError.diaryNotFound
         }
 
         return .result(dialog: "Updated diary")

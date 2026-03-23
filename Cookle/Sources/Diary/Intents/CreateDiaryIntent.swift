@@ -28,9 +28,9 @@ struct CreateDiaryIntent: AppIntent {
     @Dependency private var diaryActionService: DiaryActionService
 
     @MainActor
-    func perform() async -> some IntentResult {
+    func perform() async throws -> some IntentResult {
         let context = modelContainer.mainContext
-        _ = await diaryActionService.create(
+        _ = try await diaryActionService.create(
             context: context,
             date: date,
             input: .init(

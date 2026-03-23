@@ -10,6 +10,8 @@ import TipKit
 import UIKit
 
 struct SettingsSidebarView: View {
+    @State private var model = SettingsScreenModel()
+
     @Environment(\.modelContext)
     private var context
     @Environment(\.isPresented)
@@ -36,16 +38,13 @@ struct SettingsSidebarView: View {
 
     @Binding private var content: SettingsContent?
 
-    @State private var isAlertPresented = false
-    @State private var isDailySuggestionTipEligible = false
-    @State private var isSubscriptionTipEligible = false
-    @State private var isShortcutsTipEligible = false
-
     private let dailySuggestionTip = DailySuggestionTip()
     private let subscriptionTip = SubscriptionTip()
     private let shortcutsTip = ShortcutsTip()
 
     var body: some View {
+        @Bindable var model = model
+
         settingsList
             .cookleTopLevelNavigationChrome("Settings")
             .toolbar {
@@ -56,17 +55,14 @@ struct SettingsSidebarView: View {
             }
             .confirmationDialog(
                 Text("Delete All"),
-                isPresented: $isAlertPresented
+                isPresented: $model.isDeleteAllConfirmationPresented
             ) {
                 Button(role: .destructive) {
                     Task {
-                        do {
-                            try await settingsActionService.deleteAllData(
-                                modelContainer: context.container
-                            )
-                        } catch {
-                            assertionFailure(error.localizedDescription)
-                        }
+                        _ = await model.deleteAllData(
+                            modelContainer: context.container,
+                            settingsActionService: settingsActionService
+                        )
                     }
                 } label: {
                     Text("Delete")
@@ -79,18 +75,36 @@ struct SettingsSidebarView: View {
             } message: {
                 Text("Are you sure you want to delete all data?")
             }
+            .alert(
+                Text("Cannot Complete Settings Action"),
+                isPresented: isErrorPresentedBinding
+            ) {
+                Button("OK", role: .cancel) {
+                    model.errorMessage = nil
+                }
+            } message: {
+                Text(model.errorMessage ?? "")
+            }
             .task {
-                await settingsActionService.prepareNotificationSettings()
+                await model.prepareNotificationSettings(
+                    settingsActionService: settingsActionService
+                )
                 refreshTipEligibility()
             }
             .task {
-                await observeDailySuggestionTipEligibility()
+                await model.observeDailySuggestionTipEligibility(
+                    dailySuggestionTip
+                )
             }
             .task {
-                await observeSubscriptionTipEligibility()
+                await model.observeSubscriptionTipEligibility(
+                    subscriptionTip
+                )
             }
             .task {
-                await observeShortcutsTipEligibility()
+                await model.observeShortcutsTipEligibility(
+                    shortcutsTip
+                )
             }
             .onChange(of: isDailyRecipeSuggestionNotificationOn) {
                 refreshTipEligibility()
@@ -197,7 +211,7 @@ struct SettingsSidebarView: View {
     var manageSection: some View {
         Section {
             Button("Delete All", systemImage: "trash", role: .destructive) {
-                isAlertPresented = true
+                model.isDeleteAllConfirmationPresented = true
             }
         } header: {
             Text("Manage")
@@ -218,7 +232,7 @@ struct SettingsSidebarView: View {
                     try tipController.resetTips()
                     refreshTipEligibility()
                 } catch {
-                    assertionFailure(error.localizedDescription)
+                    model.errorMessage = error.localizedDescription
                 }
             }
         }
@@ -231,19 +245,32 @@ struct SettingsSidebarView: View {
 
 private extension SettingsSidebarView {
     var shouldShowDailySuggestionTip: Bool {
-        isDailyRecipeSuggestionNotificationOn == false && isDailySuggestionTipEligible
+        isDailyRecipeSuggestionNotificationOn == false && model.isDailySuggestionTipEligible
     }
 
     var shouldShowSubscriptionTip: Bool {
         isSubscribeOn == false
             && shouldShowDailySuggestionTip == false
-            && isSubscriptionTipEligible
+            && model.isSubscriptionTipEligible
     }
 
     var shouldShowShortcutsTip: Bool {
         shouldShowDailySuggestionTip == false
             && shouldShowSubscriptionTip == false
-            && isShortcutsTipEligible
+            && model.isShortcutsTipEligible
+    }
+
+    var isErrorPresentedBinding: Binding<Bool> {
+        .init(
+            get: {
+                model.errorMessage != nil
+            },
+            set: { isPresented in
+                if isPresented == false {
+                    model.errorMessage = nil
+                }
+            }
+        )
     }
 
     var dailySuggestionTime: Binding<Date> {
@@ -266,7 +293,9 @@ private extension SettingsSidebarView {
 
     func applyNotificationSettings() {
         Task {
-            await settingsActionService.applyNotificationSettings()
+            await model.applyNotificationSettings(
+                settingsActionService: settingsActionService
+            )
         }
     }
 
@@ -281,9 +310,11 @@ private extension SettingsSidebarView {
     }
 
     func refreshTipEligibility() {
-        isDailySuggestionTipEligible = dailySuggestionTip.shouldDisplay
-        isSubscriptionTipEligible = subscriptionTip.shouldDisplay
-        isShortcutsTipEligible = shortcutsTip.shouldDisplay
+        model.refreshTipEligibility(
+            dailySuggestionTip: dailySuggestionTip,
+            subscriptionTip: subscriptionTip,
+            shortcutsTip: shortcutsTip
+        )
     }
 
     func currentSettingsTip<T: Tip>(
@@ -294,53 +325,17 @@ private extension SettingsSidebarView {
             return nil
         }
 
-        if shouldShowDailySuggestionTip {
-            return dailySuggestionTip.id == tip.id ? tip : nil
-        }
-        if shouldShowSubscriptionTip {
-            return subscriptionTip.id == tip.id ? tip : nil
-        }
-        if shouldShowShortcutsTip {
-            return shortcutsTip.id == tip.id ? tip : nil
-        }
-
-        return nil
-    }
-
-    func observeDailySuggestionTipEligibility() async {
-        await MainActor.run {
-            isDailySuggestionTipEligible = dailySuggestionTip.shouldDisplay
-        }
-
-        for await shouldDisplay in dailySuggestionTip.shouldDisplayUpdates {
-            await MainActor.run {
-                isDailySuggestionTipEligible = shouldDisplay
-            }
-        }
-    }
-
-    func observeSubscriptionTipEligibility() async {
-        await MainActor.run {
-            isSubscriptionTipEligible = subscriptionTip.shouldDisplay
-        }
-
-        for await shouldDisplay in subscriptionTip.shouldDisplayUpdates {
-            await MainActor.run {
-                isSubscriptionTipEligible = shouldDisplay
-            }
-        }
-    }
-
-    func observeShortcutsTipEligibility() async {
-        await MainActor.run {
-            isShortcutsTipEligible = shortcutsTip.shouldDisplay
-        }
-
-        for await shouldDisplay in shortcutsTip.shouldDisplayUpdates {
-            await MainActor.run {
-                isShortcutsTipEligible = shouldDisplay
-            }
-        }
+        return model.currentTip(
+            for: tip,
+            context: .init(
+                dailySuggestionTipID: dailySuggestionTip.id,
+                subscriptionTipID: subscriptionTip.id,
+                shortcutsTipID: shortcutsTip.id,
+                shouldShowDailySuggestionTip: shouldShowDailySuggestionTip,
+                shouldShowSubscriptionTip: shouldShowSubscriptionTip,
+                shouldShowShortcutsTip: shouldShowShortcutsTip
+            )
+        )
     }
 }
 

@@ -6,6 +6,11 @@ import SwiftData
 @MainActor
 @Observable
 final class DiaryActionService {
+    private struct OperationResult<Value> {
+        let value: Value
+        let effects: MutationEffect
+    }
+
     struct FormInput {
         let breakfasts: [Recipe]
         let lunches: [Recipe]
@@ -23,36 +28,17 @@ final class DiaryActionService {
         context: ModelContext,
         date: Date,
         input: FormInput
-    ) async -> MutationOutcome<Diary> {
-        let effects = diaryMutationEffects
-
-        do {
-            let persistentIdentifier = try await MHMutationWorkflow.runThrowing(
-                name: "createDiary",
-                operation: {
-                    DiaryService.create(
-                        context: context,
-                        date: date,
-                        breakfasts: input.breakfasts,
-                        lunches: input.lunches,
-                        dinners: input.dinners,
-                        note: input.note
-                    ).persistentModelID
-                },
-                adapter: effectAdapter,
-                adapterValue: effects
-            )
-            return .init(
-                value: diary(
-                    for: persistentIdentifier,
-                    context: context
-                ),
-                effects: effects
-            )
-        } catch {
-            unexpectedFailure(
-                error,
-                name: "createDiary"
+    ) async throws -> MutationOutcome<Diary> {
+        try await run(
+            name: "createDiary"
+        ) {
+            DiaryService.createWithOutcome(
+                context: context,
+                date: date,
+                breakfasts: input.breakfasts,
+                lunches: input.lunches,
+                dinners: input.dinners,
+                note: input.note
             )
         }
     }
@@ -62,34 +48,18 @@ final class DiaryActionService {
         diary: Diary,
         date: Date,
         input: FormInput
-    ) async -> MutationOutcome<Void> {
-        let effects = diaryMutationEffects
-
-        do {
-            let _: Void = try await MHMutationWorkflow.runThrowing(
-                name: "updateDiary",
-                operation: {
-                    DiaryService.update(
-                        context: context,
-                        diary: diary,
-                        date: date,
-                        breakfasts: input.breakfasts,
-                        lunches: input.lunches,
-                        dinners: input.dinners,
-                        note: input.note
-                    )
-                },
-                adapter: effectAdapter,
-                adapterValue: effects
-            )
-            return .init(
-                value: (),
-                effects: effects
-            )
-        } catch {
-            unexpectedFailure(
-                error,
-                name: "updateDiary"
+    ) async throws -> MutationOutcome<Diary> {
+        try await run(
+            name: "updateDiary"
+        ) {
+            DiaryService.updateWithOutcome(
+                context: context,
+                diary: diary,
+                date: date,
+                breakfasts: input.breakfasts,
+                lunches: input.lunches,
+                dinners: input.dinners,
+                note: input.note
             )
         }
     }
@@ -106,14 +76,14 @@ final class DiaryActionService {
             return .init(value: nil)
         }
 
-        let mutationOutcome = await update(
+        let mutationOutcome = try await update(
             context: context,
             diary: diary,
             date: date,
             input: input
         )
         return .init(
-            value: diary,
+            value: mutationOutcome.value,
             effects: mutationOutcome.effects
         )
     }
@@ -124,55 +94,28 @@ final class DiaryActionService {
         recipe: Recipe,
         type: DiaryObjectType
     ) async throws -> MutationOutcome<Diary> {
-        let effects = diaryMutationEffects
-        let persistentIdentifier = try await MHMutationWorkflow.runThrowing(
-            name: "addRecipeToDiary",
-            operation: {
-                try DiaryService.add(
-                    context: context,
-                    date: date,
-                    recipe: recipe,
-                    type: type
-                ).persistentModelID
-            },
-            adapter: effectAdapter,
-            adapterValue: effects
-        )
-        return .init(
-            value: diary(
-                for: persistentIdentifier,
-                context: context
-            ),
-            effects: effects
-        )
+        try await run(
+            name: "addRecipeToDiary"
+        ) {
+            try DiaryService.addWithOutcome(
+                context: context,
+                date: date,
+                recipe: recipe,
+                type: type
+            )
+        }
     }
 
     func delete(
         context: ModelContext,
         diary: Diary
-    ) async -> MutationOutcome<Void> {
-        let effects = diaryMutationEffects
-
-        do {
-            let _: Void = try await MHMutationWorkflow.runThrowing(
-                name: "deleteDiary",
-                operation: {
-                    DiaryService.delete(
-                        context: context,
-                        diary: diary
-                    )
-                },
-                adapter: effectAdapter,
-                adapterValue: effects
-            )
-            return .init(
-                value: (),
-                effects: effects
-            )
-        } catch {
-            unexpectedFailure(
-                error,
-                name: "deleteDiary"
+    ) async throws -> MutationOutcome<Void> {
+        try await run(
+            name: "deleteDiary"
+        ) {
+            DiaryService.deleteWithOutcome(
+                context: context,
+                diary: diary
             )
         }
     }
@@ -188,7 +131,7 @@ final class DiaryActionService {
             return .init(value: false)
         }
 
-        let mutationOutcome = await delete(
+        let mutationOutcome = try await delete(
             context: context,
             diary: diary
         )
@@ -200,29 +143,32 @@ final class DiaryActionService {
 }
 
 private extension DiaryActionService {
-    var diaryMutationEffects: MutationEffect {
-        [
-            .diaryDataChanged
-        ]
-    }
-
-    func unexpectedFailure(
-        _ error: any Error,
-        name: String
-    ) -> Never {
-        assertionFailure(error.localizedDescription)
-        preconditionFailure("Mutation unexpectedly failed: \(name)")
-    }
-
-    func diary(
-        for persistentIdentifier: PersistentIdentifier,
-        context: ModelContext
-    ) -> Diary {
-        guard let diary = context.model(
-            for: persistentIdentifier
-        ) as? Diary else {
-            preconditionFailure("Diary result was not resolved.")
-        }
-        return diary
+    func run<Value>(
+        name: String,
+        operation: @escaping @MainActor () throws -> MutationOutcome<Value>
+    ) async throws -> MutationOutcome<Value> {
+        let result = try await MHMutationWorkflow.runThrowing(
+            name: name,
+            operation: {
+                let outcome = try operation()
+                return OperationResult(
+                    value: outcome.value,
+                    effects: outcome.effects
+                )
+            },
+            adapter: effectAdapter,
+            projection: .closures(
+                afterSuccess: { result in
+                    result.effects
+                },
+                returning: { result in
+                    result
+                }
+            )
+        )
+        return .init(
+            value: result.value,
+            effects: result.effects
+        )
     }
 }

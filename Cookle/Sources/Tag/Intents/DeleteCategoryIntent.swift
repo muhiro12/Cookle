@@ -22,17 +22,13 @@ struct DeleteCategoryIntent: AppIntent {
             named: value,
             context: modelContainer.mainContext
         ) else {
-            return .result(dialog: "Category not found")
+            throw TagMutationIntentError.categoryNotFound
         }
 
-        do {
-            try await tagActionService.delete(
-                context: modelContainer.mainContext,
-                category: category
-            )
-            return .result(dialog: "Deleted category")
-        } catch {
-            return .result(dialog: .init(stringLiteral: error.localizedDescription))
-        }
+        try await tagActionService.delete(
+            context: modelContainer.mainContext,
+            category: category
+        )
+        return .result(dialog: "Deleted category")
     }
 }

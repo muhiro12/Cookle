@@ -9,6 +9,8 @@ import SwiftData
 import SwiftUI
 
 struct DiaryFormView: View {
+    @State private var model = DiaryFormModel()
+
     @Environment(\.modelContext)
     private var context
     @Environment(\.dismiss)
@@ -19,43 +21,55 @@ struct DiaryFormView: View {
     @Environment(Diary.self)
     private var diary: Diary?
 
-    @State private var date = Date.now
-    @State private var breakfasts = Set<Recipe>()
-    @State private var lunches = Set<Recipe>()
-    @State private var dinners = Set<Recipe>()
-    @State private var note = ""
-
     var body: some View {
+        @Bindable var model = model
+
         Form {
             dateSection
-            mealSection(type: .breakfast, recipes: breakfasts)
-            mealSection(type: .lunch, recipes: lunches)
-            mealSection(type: .dinner, recipes: dinners)
+            mealSection(type: .breakfast, recipes: $model.breakfasts)
+            mealSection(type: .lunch, recipes: $model.lunches)
+            mealSection(type: .dinner, recipes: $model.dinners)
             noteSection
         }
         .navigationDestination(for: DiaryObjectType.self) { type in
             destinationView(for: type)
         }
         .navigationTitle(Text("Diary"))
+        .alert(
+            Text("Cannot Save Diary"),
+            isPresented: isErrorPresentedBinding
+        ) {
+            Button("OK", role: .cancel) {
+                model.errorMessage = nil
+            }
+        } message: {
+            Text(model.errorMessage ?? "")
+        }
         .toolbar {
             toolbarItems
         }
         .interactiveDismissDisabled()
         .task {
-            applyInitialValues()
+            model.applyInitialValues(
+                diary: diary
+            )
         }
     }
 
     var dateSection: some View {
-        Section {
-            DatePicker("Date", selection: $date, displayedComponents: .date)
+        @Bindable var model = model
+
+        return Section {
+            DatePicker("Date", selection: $model.date, displayedComponents: .date)
                 .datePickerStyle(.graphical)
         }
     }
 
     var noteSection: some View {
-        Section {
-            TextField(text: $note, axis: .vertical) {
+        @Bindable var model = model
+
+        return Section {
+            TextField(text: $model.note, axis: .vertical) {
                 Text("Classic spaghetti carbonara and warm beef stew for a comforting end to the day.")
             }
         } header: {
@@ -74,12 +88,23 @@ struct DiaryFormView: View {
         ToolbarItem(placement: .confirmationAction) {
             Button {
                 Task {
-                    await saveDiary()
+                    let shouldDismiss = await model.save(
+                        context: context,
+                        diary: diary,
+                        diaryActionService: diaryActionService
+                    )
+                    if shouldDismiss {
+                        dismiss()
+                    }
                 }
             } label: {
                 Text(diary != nil ? "Update" : "Add")
             }
-            .disabled(breakfasts.isEmpty && lunches.isEmpty && dinners.isEmpty)
+            .disabled(
+                model.breakfasts.isEmpty
+                    && model.lunches.isEmpty
+                    && model.dinners.isEmpty
+            )
         }
     }
 }
@@ -89,25 +114,29 @@ struct DiaryFormView: View {
 }
 
 private extension DiaryFormView {
-    var formInput: DiaryActionService.FormInput {
+    var isErrorPresentedBinding: Binding<Bool> {
         .init(
-            breakfasts: .init(breakfasts),
-            lunches: .init(lunches),
-            dinners: .init(dinners),
-            note: note
+            get: {
+                model.errorMessage != nil
+            },
+            set: { isPresented in
+                if isPresented == false {
+                    model.errorMessage = nil
+                }
+            }
         )
     }
 
     func mealSection(
         type: DiaryObjectType,
-        recipes: Set<Recipe>
+        recipes: Binding<Set<Recipe>>
     ) -> some View {
         Section {
             NavigationLink(value: type) {
                 Text(type.title)
             }
         } footer: {
-            Text(recipes.map(\.name).joined(separator: ", "))
+            Text(recipes.wrappedValue.map(\.name).joined(separator: ", "))
         }
     }
 
@@ -115,48 +144,32 @@ private extension DiaryFormView {
     func destinationView(for type: DiaryObjectType) -> some View {
         switch type {
         case .breakfast:
-            DiaryFormRecipeListView(selection: $breakfasts, type: type)
+            DiaryFormRecipeListView(selection: Binding(
+                get: {
+                    model.breakfasts
+                },
+                set: { newValue in
+                    model.breakfasts = newValue
+                }
+            ), type: type)
         case .lunch:
-            DiaryFormRecipeListView(selection: $lunches, type: type)
+            DiaryFormRecipeListView(selection: Binding(
+                get: {
+                    model.lunches
+                },
+                set: { newValue in
+                    model.lunches = newValue
+                }
+            ), type: type)
         case .dinner:
-            DiaryFormRecipeListView(selection: $dinners, type: type)
+            DiaryFormRecipeListView(selection: Binding(
+                get: {
+                    model.dinners
+                },
+                set: { newValue in
+                    model.dinners = newValue
+                }
+            ), type: type)
         }
-    }
-
-    @MainActor
-    func saveDiary() async {
-        if let diary {
-            _ = await diaryActionService.update(
-                context: context,
-                diary: diary,
-                date: date,
-                input: formInput
-            )
-        } else {
-            _ = await diaryActionService.create(
-                context: context,
-                date: date,
-                input: formInput
-            )
-        }
-        dismiss()
-    }
-
-    func applyInitialValues() {
-        date = diary?.date ?? .now
-        breakfasts = recipes(for: .breakfast)
-        lunches = recipes(for: .lunch)
-        dinners = recipes(for: .dinner)
-        note = diary?.note ?? ""
-    }
-
-    func recipes(for type: DiaryObjectType) -> Set<Recipe> {
-        let recipes = diary?.objects.orEmpty
-            .filter { object in
-                object.type == type
-            }
-            .sorted()
-            .compactMap(\.recipe) ?? []
-        return .init(recipes)
     }
 }

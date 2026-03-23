@@ -12,6 +12,8 @@ struct RecipeLabel: View {
     @State private var isEditPresented = false
     @State private var isDuplicatePresented = false
     @State private var isDeletePresented = false
+    @State private var isErrorPresented = false
+    @State private var errorMessage = ""
 
     var body: some View {
         Label {
@@ -59,10 +61,15 @@ struct RecipeLabel: View {
         ) {
             Button("Delete", role: .destructive) {
                 Task {
-                    _ = await recipeActionService.delete(
-                        context: context,
-                        recipe: recipe
-                    )
+                    do {
+                        _ = try await recipeActionService.delete(
+                            context: context,
+                            recipe: recipe
+                        )
+                    } catch {
+                        errorMessage = error.localizedDescription
+                        isErrorPresented = true
+                    }
                 }
             }
             Button("Cancel", role: .cancel) {
@@ -70,6 +77,16 @@ struct RecipeLabel: View {
             }
         } message: {
             Text("Are you sure you want to delete this item? This action cannot be undone.")
+        }
+        .alert(
+            Text("Cannot Delete Recipe"),
+            isPresented: $isErrorPresented
+        ) {
+            Button("OK", role: .cancel) {
+                // Dismisses the alert.
+            }
+        } message: {
+            Text(errorMessage)
         }
         .sheet(isPresented: $isEditPresented) {
             RecipeFormNavigationView(type: .edit)

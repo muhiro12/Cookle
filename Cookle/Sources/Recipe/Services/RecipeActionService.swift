@@ -6,6 +6,11 @@ import SwiftData
 @MainActor
 @Observable
 final class RecipeActionService {
+    private struct OperationResult<Value> {
+        let value: Value
+        let effects: MutationEffect
+    }
+
     private let effectAdapter: MHMutationAdapter<MutationEffect>
 
     init(
@@ -24,34 +29,14 @@ final class RecipeActionService {
         context: ModelContext,
         draft: RecipeFormDraft,
         requestReview: Bool = true
-    ) async -> MutationOutcome<Recipe> {
-        let effects = recipeMutationEffects(
+    ) async throws -> MutationOutcome<Recipe> {
+        try await run(
+            name: "createRecipe",
             requestReview: requestReview
-        )
-
-        do {
-            let persistentIdentifier = try await MHMutationWorkflow.runThrowing(
-                name: "createRecipe",
-                operation: {
-                    RecipeFormService.create(
-                        context: context,
-                        draft: draft
-                    ).persistentModelID
-                },
-                adapter: effectAdapter,
-                adapterValue: effects
-            )
-            return .init(
-                value: recipe(
-                    for: persistentIdentifier,
-                    context: context
-                ),
-                effects: effects
-            )
-        } catch {
-            unexpectedFailure(
-                error,
-                name: "createRecipe"
+        ) {
+            RecipeFormService.createWithOutcome(
+                context: context,
+                draft: draft
             )
         }
     }
@@ -61,32 +46,15 @@ final class RecipeActionService {
         recipe: Recipe,
         draft: RecipeFormDraft,
         requestReview: Bool = true
-    ) async -> MutationOutcome<Void> {
-        let effects = recipeMutationEffects(
+    ) async throws -> MutationOutcome<Recipe> {
+        try await run(
+            name: "updateRecipe",
             requestReview: requestReview
-        )
-
-        do {
-            let _: Void = try await MHMutationWorkflow.runThrowing(
-                name: "updateRecipe",
-                operation: {
-                    RecipeFormService.update(
-                        context: context,
-                        recipe: recipe,
-                        draft: draft
-                    )
-                },
-                adapter: effectAdapter,
-                adapterValue: effects
-            )
-            return .init(
-                value: (),
-                effects: effects
-            )
-        } catch {
-            unexpectedFailure(
-                error,
-                name: "updateRecipe"
+        ) {
+            RecipeFormService.updateWithOutcome(
+                context: context,
+                recipe: recipe,
+                draft: draft
             )
         }
     }
@@ -94,31 +62,14 @@ final class RecipeActionService {
     func delete(
         context: ModelContext,
         recipe: Recipe
-    ) async -> MutationOutcome<Void> {
-        let effects = recipeMutationEffects(
+    ) async throws -> MutationOutcome<Void> {
+        try await run(
+            name: "deleteRecipe",
             requestReview: false
-        )
-
-        do {
-            let _: Void = try await MHMutationWorkflow.runThrowing(
-                name: "deleteRecipe",
-                operation: {
-                    RecipeService.delete(
-                        context: context,
-                        recipe: recipe
-                    )
-                },
-                adapter: effectAdapter,
-                adapterValue: effects
-            )
-            return .init(
-                value: (),
-                effects: effects
-            )
-        } catch {
-            unexpectedFailure(
-                error,
-                name: "deleteRecipe"
+        ) {
+            RecipeService.deleteWithOutcome(
+                context: context,
+                recipe: recipe
             )
         }
     }
@@ -127,7 +78,7 @@ final class RecipeActionService {
         context: ModelContext,
         recipe: Recipe,
         data: Data
-    ) async -> MutationOutcome<Void> {
+    ) async throws -> MutationOutcome<Recipe> {
         let updatedDraft = RecipeFormDraft(
             name: recipe.name,
             photos: [
@@ -152,7 +103,7 @@ final class RecipeActionService {
             note: recipe.note
         )
 
-        return await update(
+        return try await update(
             context: context,
             recipe: recipe,
             draft: updatedDraft,
@@ -162,61 +113,57 @@ final class RecipeActionService {
 
     func recordOpenedRecipe(
         _ recipe: Recipe
-    ) async -> MutationOutcome<Void> {
-        let effects: MutationEffect = [
-            .recipeDataChanged
-        ]
-
-        do {
-            let _: Void = try await MHMutationWorkflow.runThrowing(
-                name: "recordOpenedRecipe",
-                operation: {
-                    RecipeService.recordLastOpenedRecipe(recipe)
-                },
-                adapter: effectAdapter,
-                adapterValue: effects
-            )
-            return .init(
-                value: (),
-                effects: effects
-            )
-        } catch {
-            unexpectedFailure(
-                error,
-                name: "recordOpenedRecipe"
+    ) async throws -> MutationOutcome<Void> {
+        try await run(
+            name: "recordOpenedRecipe",
+            requestReview: false
+        ) {
+            RecipeService.recordLastOpenedRecipeWithOutcome(
+                recipe
             )
         }
     }
 }
 
 private extension RecipeActionService {
-    func unexpectedFailure(
-        _ error: any Error,
-        name: String
-    ) -> Never {
-        assertionFailure(error.localizedDescription)
-        preconditionFailure("Mutation unexpectedly failed: \(name)")
-    }
-
-    func recipe(
-        for persistentIdentifier: PersistentIdentifier,
-        context: ModelContext
-    ) -> Recipe {
-        guard let recipe = context.model(
-            for: persistentIdentifier
-        ) as? Recipe else {
-            preconditionFailure("Recipe result was not resolved.")
-        }
-        return recipe
+    func run<Value>(
+        name: String,
+        requestReview: Bool,
+        operation: @escaping @MainActor () throws -> MutationOutcome<Value>
+    ) async throws -> MutationOutcome<Value> {
+        let result = try await MHMutationWorkflow.runThrowing(
+            name: name,
+            operation: {
+                    let outcome = try operation()
+                    return OperationResult(
+                        value: outcome.value,
+                        effects: self.recipeMutationEffects(
+                            baseEffects: outcome.effects,
+                            requestReview: requestReview
+                        )
+                )
+            },
+            adapter: effectAdapter,
+            projection: .closures(
+                afterSuccess: { result in
+                    result.effects
+                },
+                returning: { result in
+                    result
+                }
+            )
+        )
+        return .init(
+            value: result.value,
+            effects: result.effects
+        )
     }
 
     func recipeMutationEffects(
+        baseEffects: MutationEffect,
         requestReview: Bool
     ) -> MutationEffect {
-        var effects: MutationEffect = [
-            .recipeDataChanged,
-            .notificationPlanChanged
-        ]
+        var effects = baseEffects
 
         if requestReview {
             effects.insert(.reviewPromptEligible)

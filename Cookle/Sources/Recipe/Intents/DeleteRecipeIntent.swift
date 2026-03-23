@@ -21,10 +21,10 @@ struct DeleteRecipeIntent: AppIntent {
         guard let model = try recipe.model(
             context: modelContainer.mainContext
         ) else {
-            return .result(dialog: "Recipe not found")
+            throw RecipeMutationIntentError.recipeNotFound
         }
 
-        _ = await recipeActionService.delete(
+        _ = try await recipeActionService.delete(
             context: modelContainer.mainContext,
             recipe: model
         )

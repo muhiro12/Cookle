@@ -398,7 +398,7 @@ Views should not own:
 
 ## Operational Notes
 
-- Standard build and test entry point: `bash ci_scripts/tasks/verify.sh`
+- Standard build and test entry point: `bash ci_scripts/tasks/verify_task_completion.sh`
 - Shared package tests cover core reusable behavior such as:
   - search
   - route parsing and URL building

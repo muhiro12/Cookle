@@ -8,10 +8,12 @@ enum MainRouteService {
         navigationModel: MainNavigationModel,
         modelContext: ModelContext
     ) -> MHAppRoutePipeline<CookleRoute> {
+        let navigationRouter = MainNavigationRouter(
+            navigationModel: navigationModel
+        )
         let applyOnMainActor: MHAppRoutePipeline<CookleRoute>.RouteApplier = { resolvedRoute in
-            try apply(
+            try navigationRouter.apply(
                 route: resolvedRoute,
-                navigationModel: navigationModel,
                 context: modelContext
             )
         }
@@ -42,97 +44,5 @@ private extension MainRouteService {
         }
 
         return sources
-    }
-
-    static func apply(
-        route: CookleRoute,
-        navigationModel: MainNavigationModel,
-        context: ModelContext
-    ) throws {
-        let outcome = try CookleRouteExecutor.execute(
-            route: route,
-            context: context
-        )
-        applyRouteOutcome(
-            outcome,
-            navigationModel: navigationModel
-        )
-    }
-
-    static func applyRouteOutcome(
-        _ outcome: CookleRouteOutcome,
-        navigationModel: MainNavigationModel
-    ) {
-        if !outcome.isSettingsRoute {
-            navigationModel.isCompactSettingsPresented = false
-            navigationModel.compactSettingsSelection = nil
-        }
-
-        switch outcome {
-        case .home:
-            navigationModel.selectedTab = .diary
-            navigationModel.selectedDiary = nil
-            navigationModel.selectedDiaryRecipe = nil
-            navigationModel.selectedRecipe = nil
-            navigationModel.selectedSearchRecipe = nil
-            navigationModel.incomingSearchQuery = nil
-        case .diary(let diary):
-            navigationModel.selectedTab = .diary
-            navigationModel.selectedDiary = diary
-            navigationModel.selectedDiaryRecipe = nil
-        case .recipe(let recipe):
-            navigationModel.selectedTab = .recipe
-            navigationModel.selectedRecipe = recipe
-        case .search(let query):
-            navigationModel.selectedTab = .search
-            navigationModel.selectedSearchRecipe = nil
-            navigationModel.incomingSearchQuery = query
-        case .settings:
-            applySettingsRoute(
-                destination: nil,
-                navigationModel: navigationModel
-            )
-        case .settingsSubscription:
-            applySettingsRoute(
-                destination: .subscription,
-                navigationModel: navigationModel
-            )
-        case .settingsLicense:
-            applySettingsRoute(
-                destination: .license,
-                navigationModel: navigationModel
-            )
-        }
-    }
-
-    static func applySettingsRoute(
-        destination: SettingsContent?,
-        navigationModel: MainNavigationModel
-    ) {
-        if navigationModel.isRegularWidth {
-            navigationModel.isCompactSettingsPresented = false
-            navigationModel.compactSettingsSelection = nil
-            navigationModel.selectedTab = .settings
-            navigationModel.incomingSettingsSelection = destination
-        } else {
-            navigationModel.compactSettingsSelection = destination
-            navigationModel.isCompactSettingsPresented = true
-        }
-    }
-}
-
-private extension CookleRouteOutcome {
-    var isSettingsRoute: Bool {
-        switch self {
-        case .settings,
-             .settingsSubscription,
-             .settingsLicense:
-            return true
-        case .home,
-             .diary,
-             .recipe,
-             .search:
-            return false
-        }
     }
 }

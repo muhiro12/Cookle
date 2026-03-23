@@ -5,6 +5,11 @@ import SwiftData
 @MainActor
 @Observable
 final class TagActionService {
+    private struct OperationResult<Value> {
+        let value: Value
+        let effects: MutationEffect
+    }
+
     private let effectAdapter: MHMutationAdapter<MutationEffect>
 
     init(notificationService: NotificationService) {
@@ -22,23 +27,15 @@ final class TagActionService {
         ingredient: Ingredient,
         value: String
     ) async throws -> MutationOutcome<Void> {
-        let effects = tagMutationEffects
-        let _: Void = try await MHMutationWorkflow.runThrowing(
-            name: "renameIngredient",
-            operation: {
-                try TagService.rename(
-                    context: context,
-                    ingredient: ingredient,
-                    value: value
-                )
-            },
-            adapter: effectAdapter,
-            adapterValue: effects
-        )
-        return .init(
-            value: (),
-            effects: effects
-        )
+        try await run(
+            name: "renameIngredient"
+        ) {
+            try TagService.renameWithOutcome(
+                context: context,
+                ingredient: ingredient,
+                value: value
+            )
+        }
     }
 
     @discardableResult
@@ -47,23 +44,15 @@ final class TagActionService {
         category: Category,
         value: String
     ) async throws -> MutationOutcome<Void> {
-        let effects = tagMutationEffects
-        let _: Void = try await MHMutationWorkflow.runThrowing(
-            name: "renameCategory",
-            operation: {
-                try TagService.rename(
-                    context: context,
-                    category: category,
-                    value: value
-                )
-            },
-            adapter: effectAdapter,
-            adapterValue: effects
-        )
-        return .init(
-            value: (),
-            effects: effects
-        )
+        try await run(
+            name: "renameCategory"
+        ) {
+            try TagService.renameWithOutcome(
+                context: context,
+                category: category,
+                value: value
+            )
+        }
     }
 
     @discardableResult
@@ -71,22 +60,14 @@ final class TagActionService {
         context: ModelContext,
         ingredient: Ingredient
     ) async throws -> MutationOutcome<Void> {
-        let effects = tagMutationEffects
-        let _: Void = try await MHMutationWorkflow.runThrowing(
-            name: "deleteIngredient",
-            operation: {
-                try TagService.delete(
-                    context: context,
-                    ingredient: ingredient
-                )
-            },
-            adapter: effectAdapter,
-            adapterValue: effects
-        )
-        return .init(
-            value: (),
-            effects: effects
-        )
+        try await run(
+            name: "deleteIngredient"
+        ) {
+            try TagService.deleteWithOutcome(
+                context: context,
+                ingredient: ingredient
+            )
+        }
     }
 
     @discardableResult
@@ -94,22 +75,14 @@ final class TagActionService {
         context: ModelContext,
         category: Category
     ) async throws -> MutationOutcome<Void> {
-        let effects = tagMutationEffects
-        let _: Void = try await MHMutationWorkflow.runThrowing(
-            name: "deleteCategory",
-            operation: {
-                TagService.delete(
-                    context: context,
-                    category: category
-                )
-            },
-            adapter: effectAdapter,
-            adapterValue: effects
-        )
-        return .init(
-            value: (),
-            effects: effects
-        )
+        try await run(
+            name: "deleteCategory"
+        ) {
+            TagService.deleteWithOutcome(
+                context: context,
+                category: category
+            )
+        }
     }
 
     @discardableResult
@@ -134,7 +107,9 @@ final class TagActionService {
             )
         }
 
-        preconditionFailure("Unsupported tag type: \(T.self)")
+        throw CookleActionError.unsupportedTagType(
+            String(describing: T.self)
+        )
     }
 
     @discardableResult
@@ -156,14 +131,39 @@ final class TagActionService {
             )
         }
 
-        preconditionFailure("Unsupported tag type: \(T.self)")
+        throw CookleActionError.unsupportedTagType(
+            String(describing: T.self)
+        )
     }
 }
 
 private extension TagActionService {
-    var tagMutationEffects: MutationEffect {
-        [
-            .notificationPlanChanged
-        ]
+    func run<Value>(
+        name: String,
+        operation: @escaping @MainActor () throws -> MutationOutcome<Value>
+    ) async throws -> MutationOutcome<Value> {
+        let result = try await MHMutationWorkflow.runThrowing(
+            name: name,
+            operation: {
+                let outcome = try operation()
+                return OperationResult(
+                    value: outcome.value,
+                    effects: outcome.effects
+                )
+            },
+            adapter: effectAdapter,
+            projection: .closures(
+                afterSuccess: { result in
+                    result.effects
+                },
+                returning: { result in
+                    result
+                }
+            )
+        )
+        return .init(
+            value: result.value,
+            effects: result.effects
+        )
     }
 }

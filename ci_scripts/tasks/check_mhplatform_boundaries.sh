@@ -201,11 +201,11 @@ if rg -n 'MHAppRuntimeCore' \
 fi
 
 if [[ ${#errors[@]} -gt 0 ]]; then
-  printf 'Cookle MHPlatform consumer-boundary guardrail failures:\n' >&2
+  printf 'Cookle MHPlatform boundary guardrail failures:\n' >&2
   for error_message in "${errors[@]}"; do
     printf ' - %s\n' "$error_message" >&2
   done
   exit 1
 fi
 
-echo "Cookle MHPlatform consumer-boundary guardrails passed."
+echo "Cookle MHPlatform boundary guardrails passed."

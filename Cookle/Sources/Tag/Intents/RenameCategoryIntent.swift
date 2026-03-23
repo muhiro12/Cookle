@@ -20,18 +20,14 @@ struct RenameCategoryIntent: AppIntent {
             named: currentValue,
             context: modelContainer.mainContext
         ) else {
-            return .result(dialog: "Category not found")
+            throw TagMutationIntentError.categoryNotFound
         }
 
-        do {
-            try await tagActionService.rename(
-                context: modelContainer.mainContext,
-                category: category,
-                value: newValue
-            )
-            return .result(dialog: "Renamed category")
-        } catch {
-            return .result(dialog: .init(stringLiteral: error.localizedDescription))
-        }
+        try await tagActionService.rename(
+            context: modelContainer.mainContext,
+            category: category,
+            value: newValue
+        )
+        return .result(dialog: "Renamed category")
     }
 }

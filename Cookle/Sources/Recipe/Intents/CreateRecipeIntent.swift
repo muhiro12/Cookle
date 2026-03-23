@@ -35,7 +35,7 @@ struct CreateRecipeIntent: AppIntent {
             categoriesText: categoriesText,
             note: note
         )
-        let outcome = await recipeActionService.create(
+        let outcome = try await recipeActionService.create(
             context: modelContainer.mainContext,
             draft: draft,
             requestReview: false

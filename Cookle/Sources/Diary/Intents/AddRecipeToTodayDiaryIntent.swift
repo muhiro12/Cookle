@@ -17,7 +17,7 @@ struct AddRecipeToTodayDiaryIntent: AppIntent {
     func perform() async throws -> some IntentResult {
         let context = modelContainer.mainContext
         guard let model = try recipe.model(context: context) else {
-            return .result(dialog: "Recipe not found")
+            throw RecipeMutationIntentError.recipeNotFound
         }
         _ = try await diaryActionService.add(
             context: context,

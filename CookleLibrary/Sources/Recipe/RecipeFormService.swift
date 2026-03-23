@@ -70,7 +70,18 @@ public enum RecipeFormService {
         context: ModelContext,
         draft: RecipeFormDraft
     ) -> Recipe {
-        Recipe.create(
+        createWithOutcome(
+            context: context,
+            draft: draft
+        ).value
+    }
+
+    /// Creates a new recipe from a validated draft and returns follow-up hints.
+    public static func createWithOutcome(
+        context: ModelContext,
+        draft: RecipeFormDraft
+    ) -> MutationOutcome<Recipe> {
+        let recipe = Recipe.create(
             context: context,
             name: draft.name,
             photos: zip(
@@ -105,6 +116,10 @@ public enum RecipeFormService {
             },
             note: draft.note
         )
+        return .init(
+            value: recipe,
+            effects: recipeMutationEffects
+        )
     }
 
     /// Updates an existing recipe from a validated draft.
@@ -113,6 +128,19 @@ public enum RecipeFormService {
         recipe: Recipe,
         draft: RecipeFormDraft
     ) {
+        _ = updateWithOutcome(
+            context: context,
+            recipe: recipe,
+            draft: draft
+        )
+    }
+
+    /// Updates an existing recipe from a validated draft and returns follow-up hints.
+    public static func updateWithOutcome(
+        context: ModelContext,
+        recipe: Recipe,
+        draft: RecipeFormDraft
+    ) -> MutationOutcome<Recipe> {
         recipe.update(
             name: draft.name,
             photos: zip(
@@ -147,6 +175,10 @@ public enum RecipeFormService {
             },
             note: draft.note
         )
+        return .init(
+            value: recipe,
+            effects: recipeMutationEffects
+        )
     }
 }
 
@@ -154,6 +186,13 @@ private extension RecipeFormService {
     enum NumberField {
         case servingSize
         case cookingTime
+    }
+
+    static var recipeMutationEffects: MutationEffect {
+        [
+            .recipeDataChanged,
+            .notificationPlanChanged
+        ]
     }
 
     static func number(

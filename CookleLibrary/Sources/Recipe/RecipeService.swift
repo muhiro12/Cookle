@@ -58,11 +58,38 @@ public enum RecipeService {
         context: ModelContext,
         recipe: Recipe
     ) {
+        _ = deleteWithOutcome(
+            context: context,
+            recipe: recipe
+        )
+    }
+
+    /// Deletes the supplied recipe and returns follow-up hints.
+    public static func deleteWithOutcome(
+        context: ModelContext,
+        recipe: Recipe
+    ) -> MutationOutcome<Void> {
         context.delete(recipe)
+        return .init(
+            value: (),
+            effects: [
+                .recipeDataChanged,
+                .notificationPlanChanged
+            ]
+        )
     }
 
     /// Stores the current recipe as the last opened target.
     public static func recordLastOpenedRecipe(_ recipe: Recipe) {
+        _ = recordLastOpenedRecipeWithOutcome(
+            recipe
+        )
+    }
+
+    /// Stores the current recipe as the last opened target and returns follow-up hints.
+    public static func recordLastOpenedRecipeWithOutcome(
+        _ recipe: Recipe
+    ) -> MutationOutcome<Void> {
         let encodedRecipeID = RecipeStableIdentifierCodec.encodeIfPossible(
             recipe.id
         )
@@ -73,6 +100,12 @@ public enum RecipeService {
         CooklePreferences.set(
             encodedRecipeID,
             for: .lastOpenedRecipeID
+        )
+        return .init(
+            value: (),
+            effects: [
+                .recipeDataChanged
+            ]
         )
     }
 

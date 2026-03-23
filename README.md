@@ -207,13 +207,13 @@ enum Secret {
 - Use the recommended final gate:
 
   ```bash
-  bash ci_scripts/tasks/verify.sh
+  bash ci_scripts/tasks/verify_task_completion.sh
   ```
 
 - Run required builds/tests based on local changes:
 
   ```bash
-  bash ci_scripts/tasks/run_required_builds.sh
+  bash ci_scripts/tasks/verify_repository_state.sh
   ```
 
 - Run the app build directly:
@@ -235,6 +235,76 @@ enum Secret {
   validation inside automated builds.
 - Provide the same environment variable when running builds on CI providers so
   ads and StoreKit configuration compile correctly.
+
+The repository contract is:
+Direct entrypoints live in `ci_scripts/tasks/`, shared shell helpers live in
+`ci_scripts/lib/`, and `ci_scripts/ci_post_clone.sh` is reserved for external
+post-clone CI setup.
+
+- `bash ci_scripts/tasks/check_environment.sh --profile <format|build|verify>`
+  diagnoses missing local prerequisites before you start a tool-dependent flow.
+- `bash ci_scripts/tasks/format_swift.sh` is the explicit SwiftLint autofix
+  step to run after Swift edits and before the final verification gate.
+- `bash ci_scripts/tasks/verify_task_completion.sh` is the non-destructive
+  verification gate for Codex task completion.
+- `bash ci_scripts/tasks/verify_pre_commit.sh` reruns the same non-destructive
+  verification gate for Git `pre-commit` and manual final rechecks.
+- `bash ci_scripts/tasks/verify_repository_state.sh` checks the current
+  repository state and still writes CI run artifacts.
+
+SwiftLint is resolved from the `SimplyDanny/SwiftLintPlugins` package declared
+in `Cookle.xcodeproj`. The repository scripts do not require a separately
+installed `swiftlint` binary on your `PATH`.
+
+Before running the full verify gate, diagnose the local prerequisites:
+
+```sh
+bash ci_scripts/tasks/check_environment.sh --profile verify
+```
+
+After Swift edits, run the explicit autofix step:
+
+```sh
+bash ci_scripts/tasks/format_swift.sh
+```
+
+Then run the non-destructive full recheck:
+
+```sh
+bash ci_scripts/tasks/verify_task_completion.sh
+```
+
+For release-time verification or a clean-worktree full run, force the standard
+verify entrypoint to execute all required checks:
+
+```sh
+CI_RUN_FORCE_FULL=1 bash ci_scripts/tasks/verify_task_completion.sh
+```
+
+If you only need the final pre-commit recheck shell:
+
+```sh
+bash ci_scripts/tasks/verify_pre_commit.sh
+```
+
+If you prefer to run the SwiftLint steps directly:
+
+```sh
+bash ci_scripts/tasks/format_swift.sh
+bash ci_scripts/tasks/lint_swift.sh
+```
+
+If you only need required builds/tests based on local changes:
+
+```sh
+bash ci_scripts/tasks/verify_repository_state.sh
+```
+
+If you want Git's `pre-commit` hook to enforce the same repository flow, install
+`pre-commit` in your local environment and run `pre-commit install`. The hook
+delegates to `bash ci_scripts/tasks/verify_pre_commit.sh` through the local
+`.pre-commit-config.yaml`, which reruns the same non-destructive verification
+gate used for Codex task completion.
 
 ### Build output layout
 

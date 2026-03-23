@@ -25,7 +25,7 @@ struct DeleteDiaryIntent: AppIntent {
         )
 
         guard outcome.value else {
-            return .result(dialog: "Diary not found")
+            throw DiaryMutationIntentError.diaryNotFound
         }
 
         return .result(dialog: .init(stringLiteral: "Deleted diary for \(formattedDate)"))
