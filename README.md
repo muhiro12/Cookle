@@ -39,8 +39,9 @@ repository contains the full iOS project together with its shared Swift package.
   services, predicates, migrations, and utilities used by the app and intents.
 - `Widgets/` – home-screen widget extension target built on top of
   `CookleLibrary`.
-- `MHPlatform` – shared app-runtime, deep-link, mutation, logging, review, and
-  persistence-maintenance primitives consumed through Swift Package Manager.
+- `MHPlatform` – shared app-runtime package. The `Cookle` app intentionally
+  adopts the umbrella `MHPlatform` surface, while `CookleLibrary` stays on
+  `MHPlatformCore` for core-safe shared logic.
 - `Designs/Architecture/` – current architecture rules and placement guidance.
 - `Designs/Decisions/` – architecture decision records that capture why major
   design choices were made.
@@ -60,8 +61,9 @@ repository contains the full iOS project together with its shared Swift package.
   shared between the app and App Intents.
 - AppIntents for Shortcuts support and automation workflows built on top of
   SwiftData entities.
-- MHPlatform for app runtime bootstrap, route-pipeline integration, mutation
-  projection strategies, review flows, and destructive reset handling.
+- MHPlatform 1.x with a Cookle-specific consumer split: the app target stays on
+  the `MHPlatform` umbrella, `CookleLibrary` stays on `MHPlatformCore`, and the
+  repo intentionally keeps MHPlatform on the `1.0.0..<2.0.0` range.
 - SwiftUtilities plus MHPlatform-managed StoreKit, Google Mobile Ads, and
   license presentation delivered through Swift Package Manager.
 
@@ -78,6 +80,9 @@ Primary records:
 
 - `CookleLibrary` owns shared SwiftData models, predicates, queries,
   validation, mutations, migrations, and route helpers.
+- MHPlatform consumer boundaries are explicit in this repo: `Cookle` is the
+  umbrella-app adopter, `CookleLibrary` stays on `MHPlatformCore`, and
+  `Widgets` / `CookleTests` stay off the umbrella.
 - The `Cookle` app target owns workflow services such as
   `RecipeActionService`, `DiaryActionService`, `TagActionService`, and
   `SettingsActionService` that add app-only side effects after shared mutations.
@@ -96,6 +101,9 @@ Primary records:
 - Mutation follow-up uses `MHMutationWorkflow.runThrowing(..., adapterValue:)`,
   `MHMutationProjectionStrategy`, and `MHReviewFlow` instead of app-local
   wrapper layers around successful mutations.
+- Route meaning, notification copy and delivery meaning, review eligibility,
+  and mutation-effect interpretation remain app-owned even when orchestration
+  uses MHPlatform shells.
 
 ## Data model overview
 

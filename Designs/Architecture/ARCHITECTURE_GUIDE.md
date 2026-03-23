@@ -18,6 +18,21 @@ Related documents:
 | Adapter (`Cookle`, `Widgets`, App Intents) | Parameter parsing, platform API calls, dependency wiring, route intake, widget timelines, follow-up orchestration after shared mutations | Duplicated business branching that should live in `CookleLibrary` |
 | View (SwiftUI) | Focus state, sheets, navigation state, transient view state, display formatting, composition | Direct user-facing mutations, canonical search branching, notification synchronization, review or widget side effects |
 
+## MHPlatform Consumer Policy
+
+- `Cookle` is the only target in this repo that adopts the umbrella
+  `MHPlatform` surface.
+- `CookleLibrary` must stay on `MHPlatformCore`.
+- `Widgets` and `CookleTests` must not link or import the `MHPlatform`
+  umbrella.
+- This repository intentionally keeps MHPlatform on the `1.0.0..<2.0.0` range,
+  even though upstream MHPlatform 1.1 guidance now prefers exact tag or exact
+  revision pinning.
+- `MHAppRuntimeBootstrap`, `MHAppRoutePipeline`, `MHMutationWorkflow`, and
+  `MHReviewFlow` are the preferred shared shells here, while route meaning,
+  notification meaning, review eligibility, and mutation-effect meaning stay
+  app-owned in Cookle adapters.
+
 ## View Rules
 
 Allowed in views:
