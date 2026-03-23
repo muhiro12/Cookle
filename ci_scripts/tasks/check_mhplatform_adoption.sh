@@ -74,8 +74,8 @@ else
     append_error "MHPlatform resolved state must not contain branch tracking in $package_resolved."
   fi
 
-  if ! grep -Eq '"version"\s*:\s*"1\.0\.0"' <<<"$resolved_pin_block"; then
-    append_error "MHPlatform resolved state must contain version 1.0.0 in $package_resolved."
+  if ! grep -Eq '"version"\s*:\s*"1\.[0-9]+\.[0-9]+"' <<<"$resolved_pin_block"; then
+    append_error "MHPlatform resolved state must contain a 1.x semantic version in $package_resolved."
   fi
 fi
 

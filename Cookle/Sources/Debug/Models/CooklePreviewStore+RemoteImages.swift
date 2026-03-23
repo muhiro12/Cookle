@@ -40,7 +40,7 @@ extension CooklePreviewStore {
 
     func photoDataFromSystemImage(named systemImageName: String) -> Data {
         let tintColor: UIColor = .init(
-            .init(uiColor: .tintColor).adjusted(by: systemImageName.hashValue)
+            .init(uiColor: .tintColor).adjusted(by: .init(systemImageName.hashValue))
         )
         if let imageData = UIImage(systemName: systemImageName)?
             .withTintColor(tintColor)
