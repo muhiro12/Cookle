@@ -89,6 +89,30 @@ final class RecipeActionService {
         }
     }
 
+    func removePhoto(
+        context: ModelContext,
+        recipe: Recipe,
+        photoObject: PhotoObject
+    ) async throws -> MutationOutcome<Void> {
+        try await run(
+            name: "removeRecipePhoto",
+            requestReview: false
+        ) {
+            RecipePhotoMutation.remove(
+                context: context,
+                recipe: recipe,
+                photoObject: photoObject
+            )
+            return .init(
+                value: (),
+                effects: [
+                    .recipeDataChanged,
+                    .notificationPlanChanged
+                ]
+            )
+        }
+    }
+
     func replaceGeneratedPhoto(
         context: ModelContext,
         recipe: Recipe,
