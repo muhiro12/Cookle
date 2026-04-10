@@ -7,14 +7,42 @@ import SwiftData
 final class RecipeFormModel {
     let type: RecipeFormType
 
-    var name = ""
+    var name = "" {
+        didSet {
+            persistSnapshotIfNeeded()
+        }
+    }
     var photos = [PhotoData]()
-    var servingSize = ""
-    var cookingTime = ""
-    var ingredients = [RecipeFormIngredient]()
-    var steps = [String]()
-    var categories = [String]()
-    var note = ""
+    var servingSize = "" {
+        didSet {
+            persistSnapshotIfNeeded()
+        }
+    }
+    var cookingTime = "" {
+        didSet {
+            persistSnapshotIfNeeded()
+        }
+    }
+    var ingredients = [RecipeFormIngredient]() {
+        didSet {
+            persistSnapshotIfNeeded()
+        }
+    }
+    var steps = [String]() {
+        didSet {
+            persistSnapshotIfNeeded()
+        }
+    }
+    var categories = [String]() {
+        didSet {
+            persistSnapshotIfNeeded()
+        }
+    }
+    var note = "" {
+        didSet {
+            persistSnapshotIfNeeded()
+        }
+    }
 
     var errorMessage: String?
     var savedRecipe: Recipe?
@@ -22,8 +50,12 @@ final class RecipeFormModel {
     var isImagePlaygroundPresented = false
     var isInferRecipeFromTextTipEligible = false
     var isImagePlaygroundTipEligible = false
+    var hasRestorableSnapshot = false
 
+    private let snapshotStore: FormSnapshotStore<RecipeFormSnapshot>
     private var hasAppliedRecipe = false
+    private var isSnapshotPersistenceEnabled = false
+    private var snapshotKey: String?
 
     var isCreateFlow: Bool {
         switch type {
@@ -70,8 +102,19 @@ final class RecipeFormModel {
             && shouldShowInferRecipeFromTextTip == false
     }
 
-    init(type: RecipeFormType) {
+    var restorePolicy: FormSnapshotRestorePolicy {
+        .init(
+            hasSnapshot: hasRestorableSnapshot,
+            isCurrentInputNearlyEmpty: isRecipeDraftNearlyEmpty
+        )
+    }
+
+    init(
+        type: RecipeFormType,
+        snapshotStore: FormSnapshotStore<RecipeFormSnapshot> = .init()
+    ) {
         self.type = type
+        self.snapshotStore = snapshotStore
     }
 
     func applyRecipeIfNeeded(
@@ -179,11 +222,14 @@ final class RecipeFormModel {
                 savedRecipe = createdRecipe
                 if createdRecipe.photos?.isEmpty == true,
                    CookleImagePlayground.isSupported {
+                    clearSnapshot()
                     isPhotoConfirmationPresented = true
                     return false
                 }
+                clearSnapshot()
                 return true
             case .updated:
+                clearSnapshot()
                 return true
             }
         } catch {
@@ -195,5 +241,103 @@ final class RecipeFormModel {
             errorMessage = error.localizedDescription
             return false
         }
+    }
+}
+
+extension RecipeFormModel {
+    func activateSnapshotPersistence(
+        recipe: Recipe?
+    ) {
+        snapshotKey = RecipeFormSnapshot.key(
+            for: type,
+            recipe: recipe
+        )
+        isSnapshotPersistenceEnabled = true
+        refreshSnapshotAvailability()
+    }
+
+    func restoreSnapshot() {
+        guard let snapshotKey,
+              let snapshot = snapshotStore.snapshot(
+                for: snapshotKey
+              ) else {
+            refreshSnapshotAvailability()
+            return
+        }
+
+        performWithoutSnapshotPersistence {
+            name = snapshot.name
+            servingSize = snapshot.servingSize
+            cookingTime = snapshot.cookingTime
+            ingredients = RecipeFormPlaceholderRows.normalizedIngredients(
+                snapshot.formIngredients
+            )
+            steps = RecipeFormPlaceholderRows.normalizedStrings(
+                snapshot.steps
+            )
+            categories = RecipeFormPlaceholderRows.normalizedStrings(
+                snapshot.categories
+            )
+            note = snapshot.note
+        }
+        refreshSnapshotAvailability()
+    }
+}
+
+private extension RecipeFormModel {
+    var snapshot: RecipeFormSnapshot {
+        .init(
+            name: name,
+            servingSize: servingSize,
+            cookingTime: cookingTime,
+            ingredients: ingredients,
+            steps: steps,
+            categories: categories,
+            note: note
+        )
+    }
+
+    func persistSnapshotIfNeeded() {
+        guard isSnapshotPersistenceEnabled,
+              let snapshotKey else {
+            return
+        }
+
+        snapshotStore.saveSnapshot(
+            snapshot,
+            for: snapshotKey
+        )
+        refreshSnapshotAvailability()
+    }
+
+    func clearSnapshot() {
+        guard let snapshotKey else {
+            return
+        }
+
+        snapshotStore.removeSnapshot(
+            for: snapshotKey
+        )
+        refreshSnapshotAvailability()
+    }
+
+    func refreshSnapshotAvailability() {
+        guard let snapshotKey else {
+            hasRestorableSnapshot = false
+            return
+        }
+
+        hasRestorableSnapshot = snapshotStore.hasSnapshot(
+            for: snapshotKey
+        )
+    }
+
+    func performWithoutSnapshotPersistence(
+        _ updates: () -> Void
+    ) {
+        let wasEnabled = isSnapshotPersistenceEnabled
+        isSnapshotPersistenceEnabled = false
+        updates()
+        isSnapshotPersistenceEnabled = wasEnabled
     }
 }
