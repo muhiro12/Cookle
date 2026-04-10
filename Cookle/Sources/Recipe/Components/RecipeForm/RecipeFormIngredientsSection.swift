@@ -51,16 +51,14 @@ struct RecipeFormIngredientsSection: View {
             }
         }
         .onChange(of: ingredients.map(\.ingredient)) {
-            ingredients.removeAll { ingredient in
-                ingredient.ingredient.isEmpty && ingredient.amount.isEmpty
-            }
-            ingredients.append(.init(ingredient: .empty, amount: .empty))
+            ingredients = RecipeFormPlaceholderRows.normalizedIngredients(
+                ingredients
+            )
         }
         .onChange(of: ingredients.map(\.amount)) {
-            ingredients.removeAll { ingredient in
-                ingredient.ingredient.isEmpty && ingredient.amount.isEmpty
-            }
-            ingredients.append(.init(ingredient: .empty, amount: .empty))
+            ingredients = RecipeFormPlaceholderRows.normalizedIngredients(
+                ingredients
+            )
         }
     }
 

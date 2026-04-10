@@ -34,10 +34,9 @@ struct RecipeFormCategoriesSection: View {
             Text("Categories")
         }
         .onChange(of: categories) {
-            categories.removeAll { category in
-                category.isEmpty
-            }
-            categories.append(.empty)
+            categories = RecipeFormPlaceholderRows.normalizedStrings(
+                categories
+            )
         }
     }
 
