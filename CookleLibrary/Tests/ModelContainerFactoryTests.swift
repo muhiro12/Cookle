@@ -61,7 +61,44 @@ struct ModelContainerFactoryTests {
             Issue.record("Expected migration validation mismatch error.")
         } catch let error as MigrationValidationError {
             switch error {
-            case .recipeAndDiaryCountMismatch:
+            case .persistedEntityCountMismatch:
+                break
+            }
+        }
+    }
+
+    @Test
+    func validateMigratedDataBeforeDeletingLegacyIfNeeded_throws_when_only_tag_and_photo_counts_do_not_match() throws {
+        let sandbox = try makeSandboxDirectory()
+        defer {
+            try? FileManager.default.removeItem(at: sandbox)
+        }
+        let currentURL = sandbox.appendingPathComponent("current.sqlite")
+        let legacyURL = sandbox.appendingPathComponent("legacy.sqlite")
+
+        let currentContainer = try ModelContainerFactory.makeModelContainer(
+            url: currentURL,
+            cloudKitDatabase: .none
+        )
+        let legacyContainer = try ModelContainerFactory.makeModelContainer(
+            url: legacyURL,
+            cloudKitDatabase: .none
+        )
+        try seed(context: .init(currentContainer))
+        try seed(context: .init(legacyContainer))
+        try seedOnlyTagAndPhotoData(context: .init(legacyContainer))
+
+        do {
+            try ModelContainerFactory.validateMigratedDataBeforeDeletingLegacyIfNeeded(
+                currentContainer: currentContainer,
+                cloudKitDatabase: .none,
+                legacyURL: legacyURL,
+                currentURL: currentURL
+            )
+            Issue.record("Expected migration validation mismatch error.")
+        } catch let error as MigrationValidationError {
+            switch error {
+            case .persistedEntityCountMismatch:
                 break
             }
         }
@@ -129,6 +166,25 @@ private extension ModelContainerFactoryTests {
                 )
             ],
             note: ""
+        )
+        try context.save()
+    }
+
+    func seedOnlyTagAndPhotoData(context: ModelContext) throws {
+        _ = Category.create(
+            context: context,
+            value: "Category"
+        )
+        _ = Ingredient.create(
+            context: context,
+            value: "Ingredient"
+        )
+        _ = Photo.create(
+            context: context,
+            photoData: .init(
+                data: .init("photo".utf8),
+                source: .photosPicker
+            )
         )
         try context.save()
     }

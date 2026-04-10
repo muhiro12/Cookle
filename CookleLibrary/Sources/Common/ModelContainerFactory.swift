@@ -26,12 +26,23 @@ public enum ModelContainerFactory {
         cloudKitDatabase: ModelConfiguration.CloudKitDatabase
     ) throws -> ModelContainer {
         let storePreparationStartedAt = Date.timeIntervalSinceReferenceDate
-        try DatabaseMigrator.migrateStoreFilesIfNeeded()
+        try DatabaseMigrator.migrateStoreFilesIfNeeded(
+            fileManager: .default,
+            legacyURL: Database.legacyURL,
+            currentURL: Database.url
+        ) { currentStoreURL, _ in
+            let currentContainer = try makeModelContainer(
+                url: currentStoreURL,
+                cloudKitDatabase: cloudKitDatabase
+            )
+            try validateMigratedDataBeforeDeletingLegacyIfNeeded(
+                currentContainer: currentContainer,
+                cloudKitDatabase: cloudKitDatabase,
+                legacyURL: Database.legacyURL,
+                currentURL: currentStoreURL
+            )
+        }
         let currentContainer = try makeModelContainer(
-            cloudKitDatabase: cloudKitDatabase
-        )
-        try validateMigratedDataBeforeDeletingLegacyIfNeeded(
-            currentContainer: currentContainer,
             cloudKitDatabase: cloudKitDatabase
         )
         try DatabaseMigrator.removeLegacyStoreFilesIfNeeded()
@@ -94,10 +105,10 @@ public enum ModelContainerFactory {
         let currentObjectCounts = try objectCounts(
             in: .init(currentContainer)
         )
-        guard currentObjectCounts.hasMatchingRecipeAndDiaryCounts(
+        guard currentObjectCounts.hasMatchingPersistedEntityCounts(
             as: legacyObjectCounts
         ) else {
-            throw MigrationValidationError.recipeAndDiaryCountMismatch(
+            throw MigrationValidationError.persistedEntityCountMismatch(
                 legacyObjectCounts: legacyObjectCounts,
                 currentObjectCounts: currentObjectCounts
             )

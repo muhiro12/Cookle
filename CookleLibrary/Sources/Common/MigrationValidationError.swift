@@ -1,14 +1,14 @@
 import Foundation
 
 enum MigrationValidationError: Equatable, LocalizedError {
-    case recipeAndDiaryCountMismatch(
+    case persistedEntityCountMismatch(
             legacyObjectCounts: MigrationObjectCounts,
             currentObjectCounts: MigrationObjectCounts
          )
 
     var errorDescription: String? {
         switch self {
-        case let .recipeAndDiaryCountMismatch(
+        case let .persistedEntityCountMismatch(
             legacyObjectCounts,
             currentObjectCounts
         ):

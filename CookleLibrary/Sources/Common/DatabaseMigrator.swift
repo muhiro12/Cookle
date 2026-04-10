@@ -24,7 +24,13 @@ public enum DatabaseMigrator {
     static func migrateStoreFilesIfNeeded(
         fileManager: FileManager,
         legacyURL: URL,
-        currentURL: URL
+        currentURL: URL,
+        validateMigration: @Sendable (
+            _ currentStoreURL: URL,
+            _ copiedFileNames: [String]
+        ) throws -> Void = { _, _ in
+            // Intentionally empty.
+        }
     ) throws {
         let plan = MHStoreMigrationPlan(
             legacyStoreURL: legacyURL,
@@ -32,7 +38,8 @@ public enum DatabaseMigrator {
         )
         _ = try MHStoreMigrator.migrateIfNeeded(
             plan: plan,
-            fileManager: fileManager
+            fileManager: fileManager,
+            validateMigration: validateMigration
         )
     }
 

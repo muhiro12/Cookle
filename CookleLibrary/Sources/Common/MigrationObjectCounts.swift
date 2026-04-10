@@ -15,8 +15,9 @@ struct MigrationObjectCounts: Equatable {
         ].joined(separator: ", ")
     }
 
-    nonisolated func hasMatchingRecipeAndDiaryCounts(as legacyObjectCounts: Self) -> Bool {
-        recipeCount == legacyObjectCounts.recipeCount
-            && diaryCount == legacyObjectCounts.diaryCount
+    nonisolated func hasMatchingPersistedEntityCounts(
+        as legacyObjectCounts: Self
+    ) -> Bool {
+        self == legacyObjectCounts
     }
 }
