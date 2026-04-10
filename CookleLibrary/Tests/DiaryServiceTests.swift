@@ -8,6 +8,23 @@ struct DiaryServiceTests {
     let context: ModelContext = makeTestContext()
 
     @Test
+    func create_creates_note_only_diary() throws {
+        let diary = DiaryService.create(
+            context: context,
+            date: .now,
+            breakfasts: [],
+            lunches: [],
+            dinners: [],
+            note: "Quick note"
+        )
+
+        let diaries = try context.fetch(.diaries(.all))
+        #expect(diaries.first === diary)
+        #expect(diary.objects.orEmpty.isEmpty)
+        #expect(diary.note == "Quick note")
+    }
+
+    @Test
     func create_creates_diary_with_breakfast_recipe() throws {
         let pancake = Recipe.create(
             context: context,
@@ -64,6 +81,43 @@ struct DiaryServiceTests {
 
         #expect(diary.note == "Updated")
         #expect(diary.objects?.first?.recipe === pancake)
+    }
+
+    @Test
+    func update_allows_note_only_diary_and_clears_meals() {
+        let pancake = Recipe.create(
+            context: context,
+            name: "Pancakes",
+            photos: [],
+            servingSize: 1,
+            cookingTime: 10,
+            ingredients: [],
+            steps: [],
+            categories: [],
+            note: ""
+        )
+        let diary = DiaryService.create(
+            context: context,
+            date: .now,
+            breakfasts: [pancake],
+            lunches: [],
+            dinners: [],
+            note: ""
+        )
+
+        DiaryService.update(
+            context: context,
+            diary: diary,
+            date: diary.date,
+            breakfasts: [],
+            lunches: [],
+            dinners: [],
+            note: "Only note"
+        )
+
+        #expect(diary.objects.orEmpty.isEmpty)
+        #expect(diary.recipes.orEmpty.isEmpty)
+        #expect(diary.note == "Only note")
     }
 
     @Test

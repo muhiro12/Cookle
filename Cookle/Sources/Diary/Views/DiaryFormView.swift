@@ -100,11 +100,7 @@ struct DiaryFormView: View {
             } label: {
                 Text(diary != nil ? "Update" : "Add")
             }
-            .disabled(
-                model.breakfasts.isEmpty
-                    && model.lunches.isEmpty
-                    && model.dinners.isEmpty
-            )
+            .disabled(model.canSave == false)
         }
     }
 }

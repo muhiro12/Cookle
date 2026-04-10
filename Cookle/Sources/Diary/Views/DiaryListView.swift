@@ -71,7 +71,6 @@ struct DiaryListView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     .buttonStyle(.plain)
-                    .hidden(diary.recipes.orEmpty.isEmpty)
                 }
             }
             AdvertisementSection(.small)

@@ -44,10 +44,13 @@ struct DiaryLabel: View {
                         }
                     }
                 }
-                Text(diary.recipes.orEmpty.map(\.name).joined(separator: ", "))
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(Layout.titleLineLimit)
+                Text(DiaryListSummary.text(
+                    recipeNames: diary.recipes.orEmpty.map(\.name),
+                    note: diary.note
+                ))
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .lineLimit(Layout.titleLineLimit)
             }
         } icon: {
             VStack {

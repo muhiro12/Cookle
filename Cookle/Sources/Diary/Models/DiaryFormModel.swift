@@ -14,6 +14,15 @@ final class DiaryFormModel {
 
     private var hasAppliedInitialValues = false
 
+    var canSave: Bool {
+        breakfasts.isEmpty == false
+            || lunches.isEmpty == false
+            || dinners.isEmpty == false
+            || note
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .isNotEmpty
+    }
+
     var formInput: DiaryActionService.FormInput {
         .init(
             breakfasts: .init(breakfasts),

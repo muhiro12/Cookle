@@ -6,6 +6,22 @@ import Testing
 @MainActor
 struct DiaryFormModelTests {
     @Test
+    func canSave_allows_note_only_entry() {
+        let model = DiaryFormModel()
+        model.note = "  Wrote a quick note.  "
+
+        #expect(model.canSave)
+    }
+
+    @Test
+    func canSave_rejects_whitespace_only_note_without_meals() {
+        let model = DiaryFormModel()
+        model.note = " \n "
+
+        #expect(model.canSave == false)
+    }
+
+    @Test
     func applyInitialValues_populatesMealsAndDoesNotReapply() throws {
         let context = try makeCookleTestContext()
         let breakfast = Recipe.create(
