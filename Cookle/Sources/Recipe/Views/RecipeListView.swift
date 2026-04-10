@@ -13,7 +13,6 @@ struct RecipeListView: View {
     @State private var searchText = ""
 
     private let addRecipeTip = AddRecipeTip()
-    private let recipeDetailTip = RecipeDetailTip()
 
     var body: some View {
         contentView()
@@ -52,7 +51,7 @@ private extension RecipeListView {
             Text("Add a recipe to start building your collection.")
         } actions: {
             AddRecipeButton()
-                .popoverTip(
+                .cooklePopoverTip(
                     addRecipeTip,
                     arrowEdge: .top
                 )
@@ -88,21 +87,6 @@ private extension RecipeListView {
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .buttonStyle(.plain)
-        .popoverTip(
-            currentListTip(for: recipe),
-            arrowEdge: .top
-        )
-    }
-
-    func currentListTip(
-        for recipe: Recipe
-    ) -> (any Tip)? {
-        guard searchText.isEmpty,
-              filteredRecipes.first?.id == recipe.id else {
-            return nil
-        }
-
-        return recipeDetailTip
     }
 }
 

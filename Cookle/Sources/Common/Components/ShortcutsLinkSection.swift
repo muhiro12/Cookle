@@ -10,7 +10,7 @@ struct ShortcutsLinkSection: View {
             ShortcutsLink()
                 .shortcutsLinkStyle(.automaticOutline)
                 .frame(maxWidth: .infinity)
-                .popoverTip(
+                .cooklePopoverTip(
                     tip,
                     arrowEdge: .top
                 )

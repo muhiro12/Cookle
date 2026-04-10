@@ -97,13 +97,13 @@ struct DiaryListView: View {
                 } label: {
                     Text("Open Recipes")
                 }
-                .popoverTip(
+                .cooklePopoverTip(
                     startWithRecipesTip,
                     arrowEdge: .top
                 )
             } else {
                 AddDiaryButton()
-                    .popoverTip(
+                    .cooklePopoverTip(
                         addDiaryTip,
                         arrowEdge: .top
                     )

@@ -123,7 +123,7 @@ struct RecipeFormPhotosSection: View {
                 Image(systemName: "photo.badge.plus")
                     .accessibilityLabel(Text("Add Photo"))
             }
-            .popoverTip(
+            .cooklePopoverTip(
                 addPhotoTip,
                 arrowEdge: .top
             )
