@@ -1,3 +1,4 @@
+import MHPlatform
 import Observation
 import SwiftData
 
@@ -99,16 +100,16 @@ final class RecipeFormModel {
         servingSize = recipe.servingSize.description
         cookingTime = recipe.cookingTime.description
         ingredients = (recipe.ingredientObjects?
-            .sorted()
-            .compactMap { object in
-                guard let ingredient = object.ingredient else {
-                    return nil
-                }
-                return .init(
-                    ingredient: ingredient.value,
-                    amount: object.amount
-                )
-            } ?? .empty) + [.init(ingredient: .empty, amount: .empty)]
+                        .sorted()
+                        .compactMap { object in
+                            guard let ingredient = object.ingredient else {
+                                return nil
+                            }
+                            return .init(
+                                ingredient: ingredient.value,
+                                amount: object.amount
+                            )
+                        } ?? .empty) + [.init(ingredient: .empty, amount: .empty)]
         steps = recipe.steps + [.empty]
         categories = (recipe.categories?.map(\.value) ?? .empty) + [.empty]
         note = recipe.note
@@ -142,16 +143,31 @@ final class RecipeFormModel {
     func save(
         context: ModelContext,
         recipe: Recipe?,
-        recipeActionService: RecipeActionService
+        recipeActionService: RecipeActionService,
+        draftLogger: MHLogger
     ) async -> Bool {
+        let draftSummary = RecipeDraftLogging.formSummary(
+            type: type,
+            ingredients: ingredients,
+            steps: steps,
+            categories: categories,
+            note: note
+        )
+
         do {
             errorMessage = nil
+            let draft = try makeDraft()
+            RecipeDraftLogging.logSuccess(
+                logger: draftLogger,
+                summary: draftSummary,
+                draft: draft
+            )
             let result = try await RecipeFormSaveCoordinator.save(
                 context: context,
                 request: .init(
                     type: type,
                     recipe: recipe,
-                    draft: try makeDraft(),
+                    draft: draft,
                     requestReview: photos.isNotEmpty
                         || CookleImagePlayground.isSupported == false
                 ),
@@ -171,6 +187,11 @@ final class RecipeFormModel {
                 return true
             }
         } catch {
+            RecipeDraftLogging.logFailure(
+                logger: draftLogger,
+                summary: draftSummary,
+                error: error
+            )
             errorMessage = error.localizedDescription
             return false
         }

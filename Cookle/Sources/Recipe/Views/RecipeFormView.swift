@@ -21,6 +21,8 @@ struct RecipeFormView: View {
     private var context
     @Environment(RecipeActionService.self)
     private var recipeActionService
+    @Environment(CookleAppLogging.self)
+    private var logging
 
     @AppStorage(.isDebugOn)
     private var isDebugOn
@@ -205,7 +207,11 @@ struct RecipeFormView: View {
                     let shouldDismiss = await model.save(
                         context: context,
                         recipe: recipe,
-                        recipeActionService: recipeActionService
+                        recipeActionService: recipeActionService,
+                        draftLogger: logging.logger(
+                            category: "RecipeDraft",
+                            source: #fileID
+                        )
                     )
                     if shouldDismiss {
                         dismiss()

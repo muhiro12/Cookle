@@ -1,4 +1,5 @@
 import Foundation
+import MHPlatform
 @preconcurrency import SwiftData
 
 actor NotificationSyncWorker {
@@ -21,17 +22,16 @@ actor NotificationSyncWorker {
     private let modelContainer: ModelContainer
     private let calendar: Calendar
     private let attachmentStore: NotificationAttachmentStore
-    private let logger = CookleApp.logger(
-        category: "NotificationSync",
-        source: #fileID
-    )
+    private let logger: MHLogger
 
     init(
         modelContainer: ModelContainer,
+        logger: MHLogger,
         calendar: Calendar = .current,
         attachmentStore: NotificationAttachmentStore = .init()
     ) {
         self.modelContainer = modelContainer
+        self.logger = logger
         self.calendar = calendar
         self.attachmentStore = attachmentStore
     }
@@ -103,7 +103,13 @@ private extension NotificationSyncWorker {
         }
         let snapshots = recipes.map(NotificationRecipeSnapshot.make(recipe:))
         logger.notice(
-            "notification snapshot fetch finished in \(durationMilliseconds(since: snapshotFetchStartedAt)) ms"
+            "notification snapshot fetch finished",
+            metadata: [
+                "duration_ms": durationMilliseconds(
+                    since: snapshotFetchStartedAt
+                ).description,
+                "snapshot_count": snapshots.count.description
+            ]
         )
         return snapshots
     }
@@ -139,7 +145,16 @@ private extension NotificationSyncWorker {
             )
         }
         logger.notice(
-            "attachment build finished in \(durationMilliseconds(since: attachmentBuildStartedAt)) ms"
+            "notification attachment build finished",
+            metadata: [
+                "duration_ms": durationMilliseconds(
+                    since: attachmentBuildStartedAt
+                ).description,
+                "suggestion_count": suggestions.count.description,
+                "attachment_count": preparedRequests.compactMap(
+                    \.attachmentFileURL
+                ).count.description
+            ]
         )
         return preparedRequests
     }

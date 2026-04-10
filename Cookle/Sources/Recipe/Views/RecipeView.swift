@@ -15,6 +15,8 @@ struct RecipeView: View {
     private var tipController
     @Environment(RecipeActionService.self)
     private var recipeActionService
+    @Environment(CookleAppLogging.self)
+    private var logging
 
     @AppStorage(.isSubscribeOn)
     private var isSubscribeOn
@@ -52,7 +54,7 @@ struct RecipeView: View {
                     recipe
                 )
             } catch {
-                let recipeLogger = CookleApp.logger(
+                let recipeLogger = logging.logger(
                     category: "RecipeDetail",
                     source: #fileID
                 )

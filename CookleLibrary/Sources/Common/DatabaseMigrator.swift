@@ -4,7 +4,8 @@ import MHPlatformCore
 /// Migrates persisted store files between legacy and current locations.
 public enum DatabaseMigrator {
     /// Copies legacy store files into the current location when required.
-    public static func migrateStoreFilesIfNeeded() throws {
+    @discardableResult
+    public static func migrateStoreFilesIfNeeded() throws -> MHStoreMigrationOutcome {
         try migrateStoreFilesIfNeeded(
             fileManager: .default,
             legacyURL: Database.legacyURL,
@@ -13,7 +14,8 @@ public enum DatabaseMigrator {
     }
 
     /// Removes legacy store files after a successful migration.
-    public static func removeLegacyStoreFilesIfNeeded() throws {
+    @discardableResult
+    public static func removeLegacyStoreFilesIfNeeded() throws -> MHStoreLegacyCleanupOutcome {
         try removeLegacyStoreFilesIfNeeded(
             fileManager: .default,
             legacyURL: Database.legacyURL,
@@ -21,6 +23,7 @@ public enum DatabaseMigrator {
         )
     }
 
+    @discardableResult
     static func migrateStoreFilesIfNeeded(
         fileManager: FileManager,
         legacyURL: URL,
@@ -31,28 +34,29 @@ public enum DatabaseMigrator {
         ) throws -> Void = { _, _ in
             // Intentionally empty.
         }
-    ) throws {
+    ) throws -> MHStoreMigrationOutcome {
         let plan = MHStoreMigrationPlan(
             legacyStoreURL: legacyURL,
             currentStoreURL: currentURL
         )
-        _ = try MHStoreMigrator.migrateIfNeeded(
+        return try MHStoreMigrator.migrateIfNeeded(
             plan: plan,
             fileManager: fileManager,
             validateMigration: validateMigration
         )
     }
 
+    @discardableResult
     static func removeLegacyStoreFilesIfNeeded(
         fileManager: FileManager,
         legacyURL: URL,
         currentURL: URL
-    ) throws {
+    ) throws -> MHStoreLegacyCleanupOutcome {
         let plan = MHStoreMigrationPlan(
             legacyStoreURL: legacyURL,
             currentStoreURL: currentURL
         )
-        _ = try MHStoreMigrator.removeLegacyStoreFilesIfNeeded(
+        return try MHStoreMigrator.removeLegacyStoreFilesIfNeeded(
             plan: plan,
             fileManager: fileManager
         )

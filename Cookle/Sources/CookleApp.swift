@@ -5,7 +5,6 @@
 //  Created by Hiromu Nakano on 2024/05/20.
 //
 
-import MHPlatform
 import SwiftUI
 
 @main
@@ -52,19 +51,5 @@ struct CookleApp: App {
         if let currentAppVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
             lastLaunchedAppVersion = currentAppVersion
         }
-    }
-}
-
-extension CookleApp {
-    nonisolated static let loggerFactory = MHLoggerFactory.osLogDefault
-
-    nonisolated static func logger(
-        category: String,
-        source: String = #fileID
-    ) -> MHLogger {
-        loggerFactory.logger(
-            category: category,
-            source: source
-        )
     }
 }

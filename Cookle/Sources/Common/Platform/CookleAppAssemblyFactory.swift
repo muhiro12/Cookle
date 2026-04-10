@@ -4,19 +4,23 @@ import SwiftData
 @MainActor
 enum CookleAppAssemblyFactory {
     nonisolated static func prepareLiveModelContainer(
-        cloudKitDatabase: ModelConfiguration.CloudKitDatabase
+        cloudKitDatabase: ModelConfiguration.CloudKitDatabase,
+        logger: MHLogger
     ) throws -> ModelContainer {
         try ModelContainerFactory.appContainer(
-            cloudKitDatabase: cloudKitDatabase
+            cloudKitDatabase: cloudKitDatabase,
+            logger: logger
         )
     }
 
     static func makeLiveAssembly(
-        modelContainer: ModelContainer
+        modelContainer: ModelContainer,
+        logging: CookleAppLogging
     ) -> CookleAppAssembly {
         makeAssembly(
             modelContainer: modelContainer,
-            nativeAdUnitID: liveAdUnitID
+            nativeAdUnitID: liveAdUnitID,
+            logging: logging
         )
     }
 
@@ -25,7 +29,8 @@ enum CookleAppAssemblyFactory {
     ) -> CookleAppAssembly {
         makeAssembly(
             modelContainer: modelContainer,
-            nativeAdUnitID: Secret.adUnitIDDev
+            nativeAdUnitID: Secret.adUnitIDDev,
+            logging: .preview()
         )
     }
 }
@@ -41,12 +46,14 @@ private extension CookleAppAssemblyFactory {
 
     static func makeAssembly(
         modelContainer: ModelContainer,
-        nativeAdUnitID: String
+        nativeAdUnitID: String,
+        logging: CookleAppLogging
     ) -> CookleAppAssembly {
         let navigationModel = MainNavigationModel()
         let services = makeServiceGraph(
             modelContainer: modelContainer,
-            navigationModel: navigationModel
+            navigationModel: navigationModel,
+            logging: logging
         )
         let runtimeConfiguration = makeRuntimeConfiguration(
             nativeAdUnitID: nativeAdUnitID
@@ -62,7 +69,9 @@ private extension CookleAppAssemblyFactory {
                 routePipeline: services.routePipeline
             )
         }
-        let reviewFlow = makeReviewFlow()
+        let reviewFlow = makeReviewFlow(
+            logging: logging
+        )
 
         return .init(
             modelContainer: modelContainer,
@@ -70,7 +79,11 @@ private extension CookleAppAssemblyFactory {
             services: services,
             recipeActionService: RecipeActionService(
                 notificationService: services.notificationService,
-                reviewFlow: reviewFlow
+                reviewFlow: reviewFlow,
+                saveLogger: logging.logger(
+                    category: "RecipeSave",
+                    source: #fileID
+                )
             ),
             diaryActionService: DiaryActionService(),
             tagActionService: TagActionService(
@@ -85,16 +98,29 @@ private extension CookleAppAssemblyFactory {
 
     static func makeServiceGraph(
         modelContainer: ModelContainer,
-        navigationModel: MainNavigationModel
+        navigationModel: MainNavigationModel,
+        logging: CookleAppLogging
     ) -> CookleAppServices {
         let remoteConfigurationService = RemoteConfigurationService()
         let routePipeline = MainRouteService.makeRoutePipeline(
             navigationModel: navigationModel,
-            modelContext: modelContainer.mainContext
+            modelContext: modelContainer.mainContext,
+            logger: logging.logger(
+                category: "RouteExecution",
+                source: #fileID
+            )
         )
         let notificationService = NotificationService(
             modelContainer: modelContainer,
-            routeInbox: routePipeline.inbox
+            routeInbox: routePipeline.inbox,
+            syncLogger: logging.logger(
+                category: "NotificationSync",
+                source: #fileID
+            ),
+            routeLogger: logging.logger(
+                category: "NotificationRoute",
+                source: #fileID
+            )
         )
         let tipController = CookleTipController()
 
@@ -105,6 +131,7 @@ private extension CookleAppAssemblyFactory {
         }
 
         return .init(
+            logging: logging,
             remoteConfigurationService: remoteConfigurationService,
             notificationService: notificationService,
             tipController: tipController,
@@ -112,10 +139,12 @@ private extension CookleAppAssemblyFactory {
         )
     }
 
-    static func makeReviewFlow() -> MHReviewFlow {
+    static func makeReviewFlow(
+        logging: CookleAppLogging
+    ) -> MHReviewFlow {
         .init(
             policy: CookleReviewPolicy.request,
-            logger: CookleApp.logger(
+            logger: logging.logger(
                 category: "ReviewFlow",
                 source: #fileID
             )

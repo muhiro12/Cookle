@@ -58,6 +58,7 @@ extension View {
     ) -> some View {
         self
             .modelContainer(assembly.modelContainer)
+            .environment(assembly.services.logging)
             .environment(assembly.services.remoteConfigurationService)
             .environment(assembly.services.notificationService)
             .environment(assembly.services.tipController)

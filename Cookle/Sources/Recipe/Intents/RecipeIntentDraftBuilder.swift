@@ -1,4 +1,5 @@
 import Foundation
+import MHPlatform
 
 enum RecipeIntentDraftBuilder {
     struct Input {
@@ -12,16 +13,41 @@ enum RecipeIntentDraftBuilder {
     }
 
     static func makeDraft(
-        input: Input
+        input: Input,
+        source: RecipeDraftLogging.Source,
+        logger: MHLogger
     ) throws -> RecipeFormDraft {
-        try RecipeFormService.makeDraft(
-            name: input.name,
-            servingSize: input.servingSize,
-            cookingTime: input.cookingTime,
+        let summary = RecipeDraftLogging.intentSummary(
+            source: source,
             ingredientsText: input.ingredientsText,
             stepsText: input.stepsText,
             categoriesText: input.categoriesText,
             note: input.note
         )
+
+        do {
+            let draft = try RecipeFormService.makeDraft(
+                name: input.name,
+                servingSize: input.servingSize,
+                cookingTime: input.cookingTime,
+                ingredientsText: input.ingredientsText,
+                stepsText: input.stepsText,
+                categoriesText: input.categoriesText,
+                note: input.note
+            )
+            RecipeDraftLogging.logSuccess(
+                logger: logger,
+                summary: summary,
+                draft: draft
+            )
+            return draft
+        } catch {
+            RecipeDraftLogging.logFailure(
+                logger: logger,
+                summary: summary,
+                error: error
+            )
+            throw error
+        }
     }
 }

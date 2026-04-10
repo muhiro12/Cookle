@@ -5,12 +5,15 @@
 //  Created by Hiromu Nakano on 2024/04/15.
 //
 
+import MHPlatform
 import SwiftData
 import SwiftUI
 
 struct DebugNavigationView: View {
     @Environment(\.horizontalSizeClass)
     private var horizontalSizeClass
+    @Environment(CookleAppLogging.self)
+    private var logging
 
     @State private var content: DebugContent?
 
@@ -50,6 +53,24 @@ struct DebugNavigationView: View {
 }
 
 private extension DebugNavigationView {
+    var modelContent: DebugContent? {
+        switch content {
+        case .diary,
+             .diaryObject,
+             .recipe,
+             .photo,
+             .photoObject,
+             .ingredient,
+             .ingredientObject,
+             .category:
+            content
+        case .logs,
+             .preview,
+             .none:
+            nil
+        }
+    }
+
     @ViewBuilder
     func regularDetailView() -> some View {
         if let diary {
@@ -85,7 +106,32 @@ private extension DebugNavigationView {
     func regularContentView(
         for content: DebugContent?
     ) -> some View {
+        if let modelContent {
+            regularModelContentView(
+                for: modelContent
+            )
+        } else {
+            switch content {
+            case .logs:
+                MHLogConsoleView(logging: logging.bootstrap)
+            case .preview:
+                DebugPreviewsView()
+            case .none:
+                EmptyView()
+            case .some:
+                EmptyView()
+            }
+        }
+    }
+
+    @ViewBuilder
+    func regularModelContentView(
+        for content: DebugContent
+    ) -> some View {
         switch content {
+        case .logs,
+             .preview:
+            EmptyView()
         case .diary:
             DebugContentView(selection: $diary)
         case .diaryObject:
@@ -102,10 +148,6 @@ private extension DebugNavigationView {
             DebugContentView(selection: $ingredientObject)
         case .category:
             DebugContentView(selection: $category)
-        case .preview:
-            DebugPreviewsView()
-        case .none:
-            EmptyView()
         }
     }
 
@@ -113,7 +155,32 @@ private extension DebugNavigationView {
     func compactContentView(
         for content: DebugContent?
     ) -> some View {
+        if let modelContent {
+            compactModelContentView(
+                for: modelContent
+            )
+        } else {
+            switch content {
+            case .logs:
+                MHLogConsoleView(logging: logging.bootstrap)
+            case .preview:
+                DebugPreviewsView()
+            case .none:
+                EmptyView()
+            case .some:
+                EmptyView()
+            }
+        }
+    }
+
+    @ViewBuilder
+    func compactModelContentView(
+        for content: DebugContent
+    ) -> some View {
         switch content {
+        case .logs,
+             .preview:
+            EmptyView()
         case .diary:
             compactModelContentView(selection: $diary)
         case .diaryObject:
@@ -130,10 +197,6 @@ private extension DebugNavigationView {
             compactModelContentView(selection: $ingredientObject)
         case .category:
             compactModelContentView(selection: $category)
-        case .preview:
-            DebugPreviewsView()
-        case .none:
-            EmptyView()
         }
     }
 

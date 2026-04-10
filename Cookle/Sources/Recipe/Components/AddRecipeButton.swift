@@ -10,11 +10,14 @@ import SwiftUI
 struct AddRecipeButton: View {
     @State private var isPresented = false
 
+    @Environment(CookleAppLogging.self)
+    private var logging
+
     private let action: (() -> Void)?
 
     var body: some View {
         Button {
-            let logger = CookleApp.logger(
+            let logger = logging.logger(
                 category: "UIAction",
                 source: #fileID
             )
@@ -44,4 +47,5 @@ struct AddRecipeButton: View {
 
 #Preview {
     AddRecipeButton()
+        .environment(CookleAppLogging.preview())
 }

@@ -10,9 +10,14 @@ struct CookleRoutePipelineSmokeTests {
     func searchDeepLinkUpdatesNavigationState() async throws {
         let context = try makeCookleTestContext()
         let navigationModel = MainNavigationModel()
+        let logging = CookleAppLogging.preview()
         let routePipeline = MainRouteService.makeRoutePipeline(
             navigationModel: navigationModel,
-            modelContext: context
+            modelContext: context,
+            logger: logging.logger(
+                category: "RouteExecution",
+                source: #fileID
+            )
         )
 
         await routePipeline.inbox.ingest(
@@ -31,9 +36,14 @@ struct CookleRoutePipelineSmokeTests {
     func invalidDeepLinkRecordsParseFailure() async throws {
         let context = try makeCookleTestContext()
         let navigationModel = MainNavigationModel()
+        let logging = CookleAppLogging.preview()
         let routePipeline = MainRouteService.makeRoutePipeline(
             navigationModel: navigationModel,
-            modelContext: context
+            modelContext: context,
+            logger: logging.logger(
+                category: "RouteExecution",
+                source: #fileID
+            )
         )
         let invalidURL = try #require(
             URL(string: "cookle://unsupported")

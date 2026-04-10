@@ -55,6 +55,7 @@ struct DebugSidebarView: View {
     var sidebarList: some View {
         List {
             appStorageSection
+            diagnosticsSection
             manageSection
             tipKitSection
             previewSection
@@ -78,6 +79,19 @@ struct DebugSidebarView: View {
             .disabled(isCreatingPreviewDiaries)
         } header: {
             Text("Manage")
+        }
+    }
+
+    var diagnosticsSection: some View {
+        Section {
+            ForEach(diagnosticDestinations, id: \.title) { destination in
+                sidebarButton(
+                    title: destination.title,
+                    content: destination.content
+                )
+            }
+        } header: {
+            Text("Diagnostics")
         }
     }
 
@@ -136,6 +150,12 @@ struct DebugSidebarView: View {
             ("Ingredients", .ingredient),
             ("IngredientObjects", .ingredientObject),
             ("Categories", .category)
+        ]
+    }
+
+    var diagnosticDestinations: [(title: String, content: DebugContent)] {
+        [
+            ("Logs", .logs)
         ]
     }
 

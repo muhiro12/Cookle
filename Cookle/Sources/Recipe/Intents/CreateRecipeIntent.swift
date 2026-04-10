@@ -22,18 +22,26 @@ struct CreateRecipeIntent: AppIntent {
     private var note: String
 
     @Dependency private var modelContainer: ModelContainer
+    @Dependency private var logging: CookleAppLogging
     @Dependency private var recipeActionService: RecipeActionService
 
     @MainActor
     func perform() async throws -> some IntentResult & ReturnsValue<RecipeEntity> {
-        let draft = try RecipeFormService.makeDraft(
-            name: name,
-            servingSize: servingSize,
-            cookingTime: cookingTime,
-            ingredientsText: ingredientsText,
-            stepsText: stepsText,
-            categoriesText: categoriesText,
-            note: note
+        let draft = try RecipeIntentDraftBuilder.makeDraft(
+            input: .init(
+                name: name,
+                servingSize: servingSize,
+                cookingTime: cookingTime,
+                ingredientsText: ingredientsText,
+                stepsText: stepsText,
+                categoriesText: categoriesText,
+                note: note
+            ),
+            source: .intentCreate,
+            logger: logging.logger(
+                category: "RecipeDraft",
+                source: #fileID
+            )
         )
         let outcome = try await recipeActionService.create(
             context: modelContainer.mainContext,

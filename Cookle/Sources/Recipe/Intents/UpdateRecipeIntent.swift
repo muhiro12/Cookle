@@ -24,6 +24,7 @@ struct UpdateRecipeIntent: AppIntent {
     private var note: String
 
     @Dependency private var modelContainer: ModelContainer
+    @Dependency private var logging: CookleAppLogging
     @Dependency private var recipeActionService: RecipeActionService
 
     @MainActor
@@ -34,14 +35,21 @@ struct UpdateRecipeIntent: AppIntent {
             throw RecipeMutationIntentError.recipeNotFound
         }
 
-        let draft = try RecipeFormService.makeDraft(
-            name: name,
-            servingSize: servingSize,
-            cookingTime: cookingTime,
-            ingredientsText: ingredientsText,
-            stepsText: stepsText,
-            categoriesText: categoriesText,
-            note: note
+        let draft = try RecipeIntentDraftBuilder.makeDraft(
+            input: .init(
+                name: name,
+                servingSize: servingSize,
+                cookingTime: cookingTime,
+                ingredientsText: ingredientsText,
+                stepsText: stepsText,
+                categoriesText: categoriesText,
+                note: note
+            ),
+            source: .intentUpdate,
+            logger: logging.logger(
+                category: "RecipeDraft",
+                source: #fileID
+            )
         )
 
         _ = try await recipeActionService.update(

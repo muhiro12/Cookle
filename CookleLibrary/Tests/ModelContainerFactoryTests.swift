@@ -1,5 +1,6 @@
 @testable import CookleLibrary
 import Foundation
+import MHPlatformCore
 import SwiftData
 import Testing
 
@@ -125,6 +126,50 @@ struct ModelContainerFactoryTests {
             legacyURL: legacyURL,
             currentURL: currentURL
         )
+    }
+
+    @MainActor
+    @Test
+    func validateMigratedDataBeforeDeletingLegacyIfNeeded_accepts_logger_and_records_summary() async throws {
+        let sandbox = try makeSandboxDirectory()
+        defer {
+            try? FileManager.default.removeItem(at: sandbox)
+        }
+        let currentURL = sandbox.appendingPathComponent("current.sqlite")
+        let legacyURL = sandbox.appendingPathComponent("legacy.sqlite")
+        let logging = MHLoggingBootstrap(
+            captureLevel: .info,
+            subsystem: "tests.cookle"
+        )
+
+        let currentContainer = try ModelContainerFactory.makeModelContainer(
+            url: currentURL,
+            cloudKitDatabase: .none
+        )
+        let legacyContainer = try ModelContainerFactory.makeModelContainer(
+            url: legacyURL,
+            cloudKitDatabase: .none
+        )
+        try seed(context: .init(currentContainer))
+        try seed(context: .init(legacyContainer))
+
+        try ModelContainerFactory.validateMigratedDataBeforeDeletingLegacyIfNeeded(
+            currentContainer: currentContainer,
+            cloudKitDatabase: .none,
+            legacyURL: legacyURL,
+            currentURL: currentURL,
+            logger: logging.logger(
+                category: "StoreMigration",
+                source: #fileID
+            )
+        )
+
+        let events = await logging.events(
+            in: .current
+        )
+        #expect(events.contains { event in
+            event.message == "store migration validation finished"
+        })
     }
 }
 

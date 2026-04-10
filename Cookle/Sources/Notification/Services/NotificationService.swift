@@ -14,28 +14,31 @@ final class NotificationService: NSObject {
         )
     }
 
-    private let routeInbox: MHObservableDeepLinkInbox
-    private let notificationCenter = UNUserNotificationCenter.current()
-    private let calendar = Calendar.current
-    private let composer = RecipeSuggestionNotificationComposer()
-    private let syncWorker: NotificationSyncWorker
-    private let syncLogger = CookleApp.logger(
-        category: "NotificationSync",
-        source: #fileID
-    )
+    let routeInbox: MHObservableDeepLinkInbox
+    let notificationCenter = UNUserNotificationCenter.current()
+    let calendar = Calendar.current
+    let composer = RecipeSuggestionNotificationComposer()
+    let syncWorker: NotificationSyncWorker
+    let syncLogger: MHLogger
+    let routeLogger: MHLogger
 
     @MainActor private var lifecycleSynchronizationTask: Task<Void, Never>?
     @MainActor private var isLifecycleSynchronizationPending = false
 
-    private(set) var authorizationStatus: UNAuthorizationStatus = .notDetermined
+    var authorizationStatus: UNAuthorizationStatus = .notDetermined
 
     init(
         modelContainer: ModelContainer,
-        routeInbox: MHObservableDeepLinkInbox
+        routeInbox: MHObservableDeepLinkInbox,
+        syncLogger: MHLogger,
+        routeLogger: MHLogger
     ) {
         self.routeInbox = routeInbox
+        self.syncLogger = syncLogger
+        self.routeLogger = routeLogger
         self.syncWorker = .init(
-            modelContainer: modelContainer
+            modelContainer: modelContainer,
+            logger: syncLogger
         )
         super.init()
         notificationCenter.delegate = self
@@ -131,17 +134,18 @@ extension NotificationService: UNUserNotificationCenterDelegate {
                                             openSettingsFor _: UNNotification?) {
         let settingsURL = CookleDeepLinkURLBuilder.preferredURL(for: .settings)
         Task { @MainActor in
-            let notificationLogger = CookleApp.logger(
-                category: "NotificationRoute",
-                source: #fileID
+            routeLogger.info(
+                "notification settings route requested",
+                metadata: [
+                    "route_url": settingsURL.absoluteString
+                ]
             )
-            notificationLogger.info("notification settings route requested")
             await routeInbox.replacePendingURL(settingsURL)
         }
     }
 }
 
-private extension NotificationService {
+extension NotificationService {
     var isAuthorizationGranted: Bool {
         switch authorizationStatus {
         case .authorized,
@@ -217,10 +221,7 @@ private extension NotificationService {
     }
 
     func syncSuggestions(requestAuthorizationIfNeeded: Bool) async {
-        if !CooklePreferences.bool(for: .isDailyRecipeSuggestionNotificationOn) {
-            await replaceManagedSuggestionRequests(with: [])
-            await syncWorker.removeAllAttachments()
-            await refreshAuthorizationStatus()
+        if await handleDisabledSuggestionSyncIfNeeded() {
             return
         }
 
@@ -229,11 +230,14 @@ private extension NotificationService {
             options: authorizationOptions,
             requestIfNotDetermined: requestAuthorizationIfNeeded
         )
-        authorizationStatus = status
+        logAuthorizationRefresh(
+            status: status,
+            requestAuthorizationIfNeeded: requestAuthorizationIfNeeded
+        )
 
-        guard isAuthorizationGranted else {
-            await replaceManagedSuggestionRequests(with: [])
-            await syncWorker.removeAllAttachments()
+        if await handleUnauthorizedStatusIfNeeded(
+            status: status
+        ) {
             return
         }
 
@@ -241,13 +245,8 @@ private extension NotificationService {
             hour: notificationHour,
             minute: notificationMinute
         )
-        let requestApplyStartedAt = Date.timeIntervalSinceReferenceDate
-        await replaceManagedSuggestionRequests(
-            with: plan.preparedRequests.map(suggestionRequest)
-        )
-        syncLogger.notice(
-            "request apply finished in \(durationMilliseconds(since: requestApplyStartedAt)) ms"
-        )
+        logPlanBuilt(plan)
+        await applyPlan(plan)
     }
 
     func replaceManagedSuggestionRequests(
@@ -266,39 +265,13 @@ private extension NotificationService {
     }
 
     nonisolated func handleNotificationResponse(_ response: UNNotificationResponse) async {
-        let notificationLogger = CookleApp.logger(
-            category: "NotificationRoute",
-            source: #fileID
+        let deliveredOutcome = await deliverRoute(
+            for: response
         )
-        let payload = NotificationConstants.payloadCodec.decode(
-            response.notification.request.content.userInfo
+        logRouteDeliveryOutcome(
+            deliveredOutcome,
+            response: response
         )
-        let responseContext = MHNotificationResponseContext(
-            actionIdentifier: response.actionIdentifier
-        )
-        let routeDestination = await MainActor.run {
-            routeInbox
-        }
-        let deliveredOutcome = await MHNotificationOrchestrator.deliverRouteURL(
-            payload: payload,
-            response: responseContext,
-            destination: routeDestination,
-            fallbackRouteURL: Self.fallbackRouteURL
-        )
-
-        switch deliveredOutcome.source {
-        case .payload:
-            notificationLogger.info("notification route resolved")
-        case .fallback where response.actionIdentifier
-                == NotificationConstants.browseRecipesActionIdentifier:
-            notificationLogger.notice("notification route resolved via browse fallback")
-        case .fallback where response.actionIdentifier == UNNotificationDefaultActionIdentifier:
-            notificationLogger.info("notification route resolved via default fallback")
-        case .fallback:
-            notificationLogger.info("notification route resolved via fallback")
-        case .noRoute:
-            notificationLogger.info("notification route resolution returned no route")
-        }
     }
 
     func suggestionRequest(

@@ -12,10 +12,12 @@ final class RecipeActionService {
     }
 
     private let effectAdapter: MHMutationAdapter<MutationEffect>
+    private let saveLogger: MHLogger
 
     init(
         notificationService: NotificationService,
-        reviewFlow: MHReviewFlow
+        reviewFlow: MHReviewFlow,
+        saveLogger: MHLogger
     ) {
         self.effectAdapter = CookleMutationEffectAdapter.make(
             synchronizeNotifications: {
@@ -23,6 +25,7 @@ final class RecipeActionService {
             },
             reviewFlow: reviewFlow
         )
+        self.saveLogger = saveLogger
     }
 
     func create(
@@ -30,9 +33,15 @@ final class RecipeActionService {
         draft: RecipeFormDraft,
         requestReview: Bool = true
     ) async throws -> MutationOutcome<Recipe> {
-        try await run(
+        let summary = RecipeSaveLogging.makeSummary(
+            operation: "create",
+            context: context,
+            draft: draft
+        )
+        return try await run(
             name: "createRecipe",
-            requestReview: requestReview
+            requestReview: requestReview,
+            saveSummary: summary
         ) {
             RecipeFormService.createWithOutcome(
                 context: context,
@@ -47,9 +56,15 @@ final class RecipeActionService {
         draft: RecipeFormDraft,
         requestReview: Bool = true
     ) async throws -> MutationOutcome<Recipe> {
-        try await run(
+        let summary = RecipeSaveLogging.makeSummary(
+            operation: "update",
+            context: context,
+            draft: draft
+        )
+        return try await run(
             name: "updateRecipe",
-            requestReview: requestReview
+            requestReview: requestReview,
+            saveSummary: summary
         ) {
             RecipeFormService.updateWithOutcome(
                 context: context,
@@ -129,11 +144,13 @@ private extension RecipeActionService {
     func run<Value>(
         name: String,
         requestReview: Bool,
+        saveSummary: RecipeSaveLogging.Summary? = nil,
         operation: @escaping @MainActor () throws -> MutationOutcome<Value>
     ) async throws -> MutationOutcome<Value> {
-        let result = try await MHMutationWorkflow.runThrowing(
-            name: name,
-            operation: {
+        do {
+            let result = try await MHMutationWorkflow.runThrowing(
+                name: name,
+                operation: {
                     let outcome = try operation()
                     return OperationResult(
                         value: outcome.value,
@@ -141,22 +158,38 @@ private extension RecipeActionService {
                             baseEffects: outcome.effects,
                             requestReview: requestReview
                         )
-                )
-            },
-            adapter: effectAdapter,
-            projection: .closures(
-                afterSuccess: { result in
-                    result.effects
+                    )
                 },
-                returning: { result in
-                    result
-                }
+                adapter: effectAdapter,
+                projection: .closures(
+                    afterSuccess: { result in
+                        result.effects
+                    },
+                    returning: { result in
+                        result
+                    }
+                )
             )
-        )
-        return .init(
-            value: result.value,
-            effects: result.effects
-        )
+            if let saveSummary {
+                RecipeSaveLogging.logSuccess(
+                    logger: saveLogger,
+                    summary: saveSummary
+                )
+            }
+            return .init(
+                value: result.value,
+                effects: result.effects
+            )
+        } catch {
+            if let saveSummary {
+                RecipeSaveLogging.logFailure(
+                    logger: saveLogger,
+                    summary: saveSummary,
+                    error: error
+                )
+            }
+            throw error
+        }
     }
 
     func recipeMutationEffects(

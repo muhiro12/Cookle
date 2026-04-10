@@ -10,6 +10,8 @@ struct MainView: View {
     private var navigationModel
     @Environment(MHAppRoutePipeline<CookleRoute>.self)
     private var routePipeline
+    @Environment(CookleAppLogging.self)
+    private var logging
 
     var body: some View {
         @Bindable var navigationModel = navigationModel
@@ -83,7 +85,7 @@ private extension MainView {
             return
         }
 
-        let routeLogger = CookleApp.logger(
+        let routeLogger = logging.logger(
             category: "RouteParseFailure",
             source: #fileID
         )

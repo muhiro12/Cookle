@@ -6,7 +6,8 @@ import SwiftData
 enum MainRouteService {
     static func makeRoutePipeline(
         navigationModel: MainNavigationModel,
-        modelContext: ModelContext
+        modelContext: ModelContext,
+        logger: MHLogger
     ) -> MHAppRoutePipeline<CookleRoute> {
         let navigationRouter = MainNavigationRouter(
             navigationModel: navigationModel
@@ -20,10 +21,7 @@ enum MainRouteService {
 
         return .init(
             routeLifecycle: .init(
-                logger: CookleApp.logger(
-                    category: "RouteExecution",
-                    source: #fileID
-                ),
+                logger: logger,
                 isDuplicate: ==
             ),
             parse: { routeURL in
