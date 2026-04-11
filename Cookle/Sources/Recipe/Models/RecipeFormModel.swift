@@ -129,17 +129,12 @@ final class RecipeFormModel {
 
         hasAppliedRecipe = true
         name = recipe.name
-        photos = recipe.photoObjects?
-            .sorted()
-            .compactMap { photoObject in
-                guard let photo = photoObject.photo else {
-                    return nil
-                }
-                return .init(
-                    data: photo.data,
-                    source: photo.source
-                )
-            } ?? .empty
+        photos = recipe.orderedPhotos.map { photo in
+            .init(
+                data: photo.data,
+                source: photo.source
+            )
+        }
         servingSize = recipe.servingSize.description
         cookingTime = recipe.cookingTime.description
         ingredients = (recipe.ingredientObjects?

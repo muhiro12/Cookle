@@ -159,11 +159,14 @@ struct RecipeFormPhotosSection: View {
     }
 
     func applySelectedPhotoItems() {
-        photos = recipe?.photos?.map { photo in
-            .init(data: photo.data, source: .photosPicker)
-        } ?? .empty
+        guard photosPickerItems.isNotEmpty else {
+            return
+        }
+
+        let selectedItems = photosPickerItems
+        photosPickerItems = []
         Task {
-            for item in photosPickerItems {
+            for item in selectedItems {
                 guard let data = try? await item.loadTransferable(type: Data.self) else {
                     continue
                 }

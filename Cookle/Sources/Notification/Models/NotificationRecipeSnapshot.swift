@@ -46,9 +46,6 @@ nonisolated extension NotificationRecipeSnapshot {
     private static func primaryPhotoData(
         recipe: Recipe
     ) -> Data? {
-        if let photoData = recipe.photoObjects?.min()?.photo?.data {
-            return photoData
-        }
-        return recipe.photos?.first?.data
+        recipe.primaryPhotoData
     }
 }

@@ -30,7 +30,7 @@ struct ShowLastOpenedRecipeIntent: AppIntent {
         }
         return .result(dialog: .init(stringLiteral: recipe.name)) {
             VStack(alignment: .leading) {
-                if let photo = recipe.photoObjects?.min()?.photo,
+                if let photo = recipe.primaryPhoto,
                    let image = UIImage(data: photo.data) {
                     Image(uiImage: image)
                         .resizable()

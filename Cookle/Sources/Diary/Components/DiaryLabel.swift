@@ -32,9 +32,7 @@ struct DiaryLabel: View {
             VStack(alignment: .leading) {
                 LazyVGrid(columns: [.init(.adaptive(minimum: Layout.photoGridMinimum))], alignment: .leading) {
                     ForEach(
-                        diary.recipes.orEmpty.compactMap { recipe in
-                            recipe.photoObjects.orEmpty.min()?.photo
-                        }
+                        diary.recipes.orEmpty.compactMap(\.primaryPhoto)
                     ) { photo in
                         if let image = UIImage(data: photo.data) {
                             Image(uiImage: image)

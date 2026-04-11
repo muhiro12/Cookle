@@ -14,7 +14,7 @@ struct SearchResultView: View {
             VStack(alignment: .leading) {
                 Text(recipe.name)
                     .font(.headline)
-                if let photo = recipe.photoObjects?.min()?.photo,
+                if let photo = recipe.primaryPhoto,
                    let image = UIImage(data: photo.data) {
                     Image(uiImage: image)
                         .resizable()

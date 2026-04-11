@@ -29,13 +29,21 @@ struct RecipePhotosSection: View {
     @State private var errorMessage = ""
 
     var body: some View {
-        if let photoObjects = recipe.photoObjects,
-           photoObjects.isNotEmpty {
+        let orderedPhotoObjects = recipe.orderedPhotoObjects
+        let orderedPhotos = recipe.orderedPhotos
+
+        if orderedPhotos.isNotEmpty {
             Section {
                 ScrollView(.horizontal) {
                     LazyHStack {
-                        ForEach(photoObjects.sorted()) { photoObject in
-                            photoTile(for: photoObject)
+                        if orderedPhotoObjects.isNotEmpty {
+                            ForEach(orderedPhotoObjects) { photoObject in
+                                photoTile(for: photoObject)
+                            }
+                        } else {
+                            ForEach(orderedPhotos) { photo in
+                                photoTile(for: photo)
+                            }
                         }
                     }
                     .scrollTargetLayout()
@@ -46,7 +54,7 @@ struct RecipePhotosSection: View {
             }
             .fullScreenCover(item: $selectedPhoto) { photo in
                 PhotoDetailNavigationView(
-                    photos: photoObjects.sorted().compactMap(\.photo),
+                    photos: orderedPhotos,
                     initialValue: photo
                 )
             }
@@ -146,6 +154,22 @@ private extension RecipePhotosSection {
                 }
                 .accessibilityLabel(Text("Photo Actions"))
                 .padding(Layout.actionButtonPadding)
+            }
+        }
+    }
+
+    @ViewBuilder
+    func photoTile(for photo: Photo) -> some View {
+        if let image = UIImage(data: photo.data) {
+            Button {
+                selectedPhoto = photo
+            } label: {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+                    .accessibilityLabel(Text("Open Photo"))
+                    .frame(height: Layout.photoHeight)
+                    .clipShape(.rect(cornerRadius: Layout.photoCornerRadius))
             }
         }
     }
