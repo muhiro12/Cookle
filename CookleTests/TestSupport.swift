@@ -1,4 +1,5 @@
 import CookleLibrary
+import Foundation
 import SwiftData
 
 @MainActor
@@ -30,4 +31,15 @@ func makeCookleTestContainer() throws -> ModelContainer {
         for: schema,
         configurations: [configuration]
     )
+}
+
+func makeTestUserDefaults() -> UserDefaults {
+    let suiteName = "CookleTests.\(UUID().uuidString)"
+    let userDefaults = UserDefaults(
+        suiteName: suiteName
+    ) ?? .standard
+    userDefaults.removePersistentDomain(
+        forName: suiteName
+    )
+    return userDefaults
 }

@@ -10,6 +10,7 @@ import SwiftUI
 
 struct DiaryFormView: View {
     @State private var model = DiaryFormModel()
+    @State private var isRestoreDraftConfirmationPresented = false
 
     @Environment(\.modelContext)
     private var context
@@ -49,8 +50,26 @@ struct DiaryFormView: View {
             toolbarItems
         }
         .interactiveDismissDisabled()
+        .confirmationDialog(
+            Text("Restore Draft"),
+            isPresented: $isRestoreDraftConfirmationPresented
+        ) {
+            Button("Restore Draft", role: .destructive) {
+                model.restoreSnapshot(
+                    context: context
+                )
+            }
+            Button("Cancel", role: .cancel) {
+                // Dismisses the confirmation dialog.
+            }
+        } message: {
+            Text("Replace the current form input with the saved draft?")
+        }
         .task {
             model.applyInitialValues(
+                diary: diary
+            )
+            model.activateSnapshotPersistence(
                 diary: diary
             )
         }
@@ -85,6 +104,13 @@ struct DiaryFormView: View {
                 Text("Cancel")
             }
         }
+        if model.restorePolicy.isRestoreAvailable {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Restore Draft") {
+                    restoreDraft()
+                }
+            }
+        }
         ToolbarItem(placement: .confirmationAction) {
             Button {
                 Task {
@@ -100,11 +126,7 @@ struct DiaryFormView: View {
             } label: {
                 Text(diary != nil ? "Update" : "Add")
             }
-            .disabled(
-                model.breakfasts.isEmpty
-                    && model.lunches.isEmpty
-                    && model.dinners.isEmpty
-            )
+            .disabled(model.canSave == false)
         }
     }
 }
@@ -171,5 +193,16 @@ private extension DiaryFormView {
                 }
             ), type: type)
         }
+    }
+
+    func restoreDraft() {
+        if model.restorePolicy.requiresOverwriteConfirmation {
+            isRestoreDraftConfirmationPresented = true
+            return
+        }
+
+        model.restoreSnapshot(
+            context: context
+        )
     }
 }

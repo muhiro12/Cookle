@@ -44,10 +44,9 @@ struct RecipeFormStepsSection: View {
             }
         }
         .onChange(of: steps) {
-            steps.removeAll { step in
-                step.isEmpty
-            }
-            steps.append(.empty)
+            steps = RecipeFormPlaceholderRows.normalizedStrings(
+                steps
+            )
         }
     }
 

@@ -36,6 +36,8 @@ struct RecipeView: View {
             RecipeCreatedAtSection()
             RecipeUpdatedAtSection()
             Section {
+                ShareRecipeLinkButton()
+                AddRecipeToTodayDiaryButton()
                 EditRecipeButton()
                 DuplicateRecipeButton()
                 DeleteRecipeButton()

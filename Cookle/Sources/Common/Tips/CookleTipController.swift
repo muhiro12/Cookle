@@ -1,9 +1,14 @@
+import Foundation
 import TipKit
 
 @MainActor
 @Observable
 final class CookleTipController {
-    private static let currentTipExperienceVersion = 1
+    private static let currentTipExperienceVersion = 2
+
+    static var shouldSuppressPopoverTips: Bool {
+        ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
+    }
 
     private(set) var isConfigured = false
 
@@ -14,7 +19,7 @@ final class CookleTipController {
 
         let didMigrateTipExperience = try migrateTipExperienceIfNeeded()
         try Tips.configure([
-            .displayFrequency(.immediate),
+            .displayFrequency(.daily),
             .datastoreLocation(.applicationDefault)
         ])
 

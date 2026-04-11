@@ -71,7 +71,6 @@ struct DiaryListView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     .buttonStyle(.plain)
-                    .hidden(diary.recipes.orEmpty.isEmpty)
                 }
             }
             AdvertisementSection(.small)
@@ -98,13 +97,13 @@ struct DiaryListView: View {
                 } label: {
                     Text("Open Recipes")
                 }
-                .popoverTip(
+                .cooklePopoverTip(
                     startWithRecipesTip,
                     arrowEdge: .top
                 )
             } else {
                 AddDiaryButton()
-                    .popoverTip(
+                    .cooklePopoverTip(
                         addDiaryTip,
                         arrowEdge: .top
                     )

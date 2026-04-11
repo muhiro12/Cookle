@@ -149,7 +149,7 @@ struct SettingsSidebarView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             .buttonStyle(.plain)
-            .popoverTip(
+            .cooklePopoverTip(
                 currentSettingsTip(
                     for: subscriptionTip,
                     isEligible: shouldShowSubscriptionTip
@@ -178,7 +178,7 @@ struct SettingsSidebarView: View {
     var notificationSection: some View {
         Section("Recipe Suggestion Notifications") {
             Toggle("Daily recipe suggestions", isOn: $isDailyRecipeSuggestionNotificationOn)
-                .popoverTip(
+                .cooklePopoverTip(
                     currentSettingsTip(
                         for: dailySuggestionTip,
                         isEligible: shouldShowDailySuggestionTip

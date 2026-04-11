@@ -29,6 +29,7 @@ struct RecipeFormView: View {
 
     @State private var editMode = EditMode.inactive
     @State private var isDebugAlertPresented = false
+    @State private var isRestoreDraftConfirmationPresented = false
 
     private let type: RecipeFormType
     private let inferRecipeFromTextTip = InferRecipeFromTextTip()
@@ -78,6 +79,19 @@ struct RecipeFormView: View {
         } message: {
             Text("No image yet. Try Image Playground?")
         }
+        .confirmationDialog(
+            Text("Restore Draft"),
+            isPresented: $isRestoreDraftConfirmationPresented
+        ) {
+            Button("Restore Draft", role: .destructive) {
+                model.restoreSnapshot()
+            }
+            Button("Cancel", role: .cancel) {
+                // Dismisses the confirmation dialog.
+            }
+        } message: {
+            Text("Replace the current form input with the saved draft?")
+        }
         .alert(
             Text("Cannot Save Recipe"),
             isPresented: isErrorPresentedBinding
@@ -114,6 +128,9 @@ struct RecipeFormView: View {
         }
         .task {
             model.applyRecipeIfNeeded(recipe)
+            model.activateSnapshotPersistence(
+                recipe: recipe
+            )
         }
         .task {
             await observeInferRecipeFromTextTipEligibility()
@@ -196,7 +213,18 @@ struct RecipeFormView: View {
                 }
             }
         default:
+            restoreToolbarItem
             confirmationToolbarItem
+        }
+    }
+
+    @ToolbarContentBuilder var restoreToolbarItem: some ToolbarContent {
+        if model.restorePolicy.isRestoreAvailable {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Restore Draft") {
+                    restoreDraft()
+                }
+            }
         }
     }
 
@@ -302,6 +330,15 @@ private extension RecipeFormView {
                 )
             }
         }
+    }
+
+    func restoreDraft() {
+        if model.restorePolicy.requiresOverwriteConfirmation {
+            isRestoreDraftConfirmationPresented = true
+            return
+        }
+
+        model.restoreSnapshot()
     }
 }
 
