@@ -1,5 +1,5 @@
-struct RecipeFormSnapshot: Codable, Equatable {
-    struct Ingredient: Codable, Equatable {
+nonisolated struct RecipeFormSnapshot: Codable, Equatable, Sendable {
+    nonisolated struct Ingredient: Codable, Equatable, Sendable {
         let ingredient: String
         let amount: String
         var formIngredient: RecipeFormIngredient {
@@ -91,7 +91,7 @@ struct RecipeFormSnapshot: Codable, Equatable {
     }
 }
 
-private extension RecipeFormSnapshot {
+nonisolated private extension RecipeFormSnapshot {
     static func snapshotIdentifier(
         for recipe: Recipe
     ) -> String {

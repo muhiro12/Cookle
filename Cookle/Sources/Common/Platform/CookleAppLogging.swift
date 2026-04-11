@@ -8,8 +8,8 @@ import Observation
 final class CookleAppLogging {
     private enum Constants {
         static let subsystem = "com.muhiro12.Cookle"
-        static let snapshotKey = MHCodablePreferenceKey<[MHLogEvent]>(
-            storageKey: "cookle.logging.last-session"
+        static let snapshotKey = CodablePreferenceKey.loggingLastSession.preferenceKey(
+            [MHLogEvent].self
         )
     }
 
@@ -28,9 +28,7 @@ final class CookleAppLogging {
                 subsystem: Constants.subsystem,
                 snapshotKey: Constants.snapshotKey,
                 snapshotStore: .init(
-                    userDefaults: UserDefaults(
-                        suiteName: CookleSharedPreferences.appGroupIdentifier
-                    ) ?? .standard
+                    userDefaults: .shared
                 )
             )
         )

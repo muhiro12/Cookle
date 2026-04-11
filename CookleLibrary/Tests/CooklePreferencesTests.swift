@@ -7,7 +7,7 @@ struct CooklePreferencesTests {
     @Test("Stores and retrieves boolean preferences")
     func boolRoundTrip() {
         let key = BoolPreferenceKey.isDebugOn
-        let defaults = UserDefaults.standard
+        let defaults = UserDefaults.shared
         let originalValue = defaults.object(forKey: key.rawValue)
         defer {
             if let originalValue {
@@ -27,7 +27,7 @@ struct CooklePreferencesTests {
     @Test("Stores and retrieves string preferences")
     func stringRoundTrip() {
         let key = StringPreferenceKey.lastOpenedRecipeID
-        let defaults = UserDefaults.standard
+        let defaults = UserDefaults.shared
         let originalValue = defaults.object(forKey: key.rawValue)
         defer {
             if let originalValue {
@@ -51,7 +51,7 @@ struct CooklePreferencesTests {
     @Test("Stores and retrieves integer preferences")
     func intRoundTrip() {
         let key = IntPreferenceKey.dailyRecipeSuggestionHour
-        let defaults = UserDefaults.standard
+        let defaults = UserDefaults.shared
         let originalValue = defaults.object(forKey: key.rawValue)
         defer {
             if let originalValue {
@@ -71,7 +71,7 @@ struct CooklePreferencesTests {
     @Test("Returns default integer value when preference is not set")
     func intDefaultValue() {
         let key = IntPreferenceKey.dailyRecipeSuggestionMinute
-        let defaults = UserDefaults.standard
+        let defaults = UserDefaults.shared
         let originalValue = defaults.object(forKey: key.rawValue)
         defer {
             if let originalValue {
@@ -91,7 +91,7 @@ struct CooklePreferencesTests {
     @Test("Tracks whether integer preferences are explicitly stored")
     func intContainsValue() {
         let key = IntPreferenceKey.dailyRecipeSuggestionHour
-        let defaults = UserDefaults.standard
+        let defaults = UserDefaults.shared
         let originalValue = defaults.object(forKey: key.rawValue)
         defer {
             if let originalValue {

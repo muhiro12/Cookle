@@ -4,7 +4,7 @@ extension AppStorage {
     /// Creates a boolean app-storage binding for the given storage key.
     init(
         _ key: BoolPreferenceKey,
-        store: UserDefaults = .standard
+        store: UserDefaults = .shared
     ) where Value == Bool {
         self.init(
             key.preferenceKey,
@@ -15,7 +15,7 @@ extension AppStorage {
     /// Creates an integer app-storage binding for the given storage key.
     init(
         _ key: IntPreferenceKey,
-        store: UserDefaults = .standard
+        store: UserDefaults = .shared
     ) where Value == Int {
         self.init(
             key.preferenceKey(default: .zero),
@@ -26,7 +26,7 @@ extension AppStorage {
     /// Creates a string app-storage binding for the given storage key.
     init(
         _ key: StringPreferenceKey,
-        store: UserDefaults = .standard
+        store: UserDefaults = .shared
     ) where Value == String {
         self.init(
             key.preferenceKey,

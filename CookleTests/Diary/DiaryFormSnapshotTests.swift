@@ -8,6 +8,89 @@ import Testing
 @MainActor
 struct DiaryFormSnapshotTests {
     @Test
+    func saveSnapshot_storesCodableData() {
+        let userDefaults = makeTestUserDefaults()
+        let snapshotStore: FormSnapshotStore<DiaryFormSnapshot> = .init(
+            userDefaults: userDefaults
+        )
+        let snapshotKey = DiaryFormSnapshot.key(
+            for: nil
+        )
+        let snapshot = DiaryFormSnapshot(
+            date: .now,
+            breakfastRecipeIDs: [],
+            lunchRecipeIDs: [],
+            dinnerRecipeIDs: [],
+            note: "Stored as data"
+        )
+
+        snapshotStore.saveSnapshot(
+            snapshot,
+            for: snapshotKey
+        )
+
+        let storedValue = userDefaults.object(
+            forKey: snapshotStorageKey(
+                snapshotKey
+            )
+        )
+        #expect(storedValue is Data)
+    }
+
+    @Test
+    func restoreSnapshot_migratesLegacyStringPayloadToData() throws {
+        let context = try makeCookleTestContext()
+        let userDefaults = makeTestUserDefaults()
+        let snapshotStore: FormSnapshotStore<DiaryFormSnapshot> = .init(
+            userDefaults: userDefaults
+        )
+        let snapshotKey = DiaryFormSnapshot.key(
+            for: nil
+        )
+        let snapshot = DiaryFormSnapshot(
+            date: .now,
+            breakfastRecipeIDs: [],
+            lunchRecipeIDs: [],
+            dinnerRecipeIDs: [],
+            note: "Legacy payload"
+        )
+        let model = DiaryFormModel(
+            snapshotStore: snapshotStore
+        )
+        let legacyValue = try #require(
+            String(
+                data: JSONEncoder().encode(snapshot),
+                encoding: .utf8
+            )
+        )
+
+        userDefaults.set(
+            legacyValue,
+            forKey: snapshotStorageKey(
+                snapshotKey
+            )
+        )
+
+        model.applyInitialValues(
+            diary: nil
+        )
+        model.activateSnapshotPersistence(
+            diary: nil
+        )
+        model.restoreSnapshot(
+            context: context
+        )
+
+        #expect(model.note == "Legacy payload")
+        let storedValue = userDefaults.object(
+            forKey: snapshotStorageKey(
+                snapshotKey
+            )
+        )
+        #expect(storedValue is Data)
+    }
+
+    @Test
     func restoreSnapshot_roundTripsDateNoteAndMeals() throws {
         let context = try makeCookleTestContext()
         let breakfast = makeRecipe(
@@ -178,5 +261,14 @@ private extension DiaryFormSnapshotTests {
             categories: [],
             note: ""
         )
+    }
+
+    func snapshotStorageKey(
+        _ key: String
+    ) -> String {
+        CodablePreferenceNamespace.formSnapshot.preferenceKey(
+            name: key,
+            DiaryFormSnapshot.self
+        ).storageKey
     }
 }

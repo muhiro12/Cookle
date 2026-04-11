@@ -1,10 +1,10 @@
 import Foundation
 import MHPlatformCore
 
-/// App-local preference accessors backed by standard `UserDefaults`.
+/// Preference accessors backed by the shared app-group `UserDefaults` suite.
 public enum CooklePreferences {
     private static var store: MHPreferenceStore {
-        .init(userDefaults: .standard)
+        .init(userDefaults: .shared)
     }
 
     /// Returns the stored boolean value for the supplied app-local setting.

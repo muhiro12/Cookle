@@ -2,7 +2,7 @@ import Foundation
 import MHPlatform
 
 enum CookleIntentRouteStore {
-    private static let pendingDeepLinkURLKey = "pendingCookleIntentDeepLinkURL"
+    private static let pendingDeepLinkURLKey = StringPreferenceKey.pendingIntentDeepLinkURL.preferenceKey.storageKey
     private static let deepLinkStore = MHDeepLinkStore(
         suiteName: CookleSharedPreferences.appGroupIdentifier,
         key: pendingDeepLinkURLKey

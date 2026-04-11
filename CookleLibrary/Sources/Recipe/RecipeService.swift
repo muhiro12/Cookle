@@ -14,7 +14,6 @@ public enum RecipeService {
     public static func lastOpenedRecipe(
         context: ModelContext,
         lastOpenedRecipeID: String? = CookleSharedPreferences.string(for: .lastOpenedRecipeID)
-            ?? CooklePreferences.string(for: .lastOpenedRecipeID)
     ) throws -> Recipe? {
         guard let lastOpenedRecipeID else {
             return nil
@@ -94,10 +93,6 @@ public enum RecipeService {
             recipe.id
         )
         CookleSharedPreferences.set(
-            encodedRecipeID,
-            for: .lastOpenedRecipeID
-        )
-        CooklePreferences.set(
             encodedRecipeID,
             for: .lastOpenedRecipeID
         )

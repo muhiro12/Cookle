@@ -1,45 +1,56 @@
 import Foundation
+import MHPlatform
 
-struct FormSnapshotStore<Snapshot: Codable> {
+struct FormSnapshotStore<Snapshot: Codable & Sendable> {
+    private let store: MHPreferenceStore
     private let userDefaults: UserDefaults
     private let decoder = JSONDecoder()
-    private let encoder = JSONEncoder()
 
     init(
         userDefaults: UserDefaults = .standard
     ) {
+        store = .init(userDefaults: userDefaults)
         self.userDefaults = userDefaults
     }
 
     func snapshot(
         for key: String
     ) -> Snapshot? {
-        let storageKey = storageKey(
+        let preferenceKey = preferenceKey(
             for: key
         )
-        guard let storedValue = userDefaults.string(
-            forKey: storageKey
-        ) else {
-            return nil
+        if let snapshot = store.codable(
+            for: preferenceKey
+        ) {
+            return snapshot
         }
-        guard let data = storedValue.data(
-            using: .utf8
+
+        guard let storedValue = userDefaults.object(
+            forKey: preferenceKey.storageKey
         ) else {
-            userDefaults.removeObject(
-                forKey: storageKey
-            )
             return nil
         }
 
+        guard let legacyValue = storedValue as? String else {
+            store.remove(preferenceKey)
+            return nil
+        }
+
+        let data = Data(
+            legacyValue.utf8
+        )
         do {
-            return try decoder.decode(
+            let snapshot = try decoder.decode(
                 Snapshot.self,
                 from: data
             )
-        } catch {
-            userDefaults.removeObject(
-                forKey: storageKey
+            store.setCodable(
+                snapshot,
+                for: preferenceKey
             )
+            return snapshot
+        } catch {
+            store.remove(preferenceKey)
             return nil
         }
     }
@@ -54,19 +65,9 @@ struct FormSnapshotStore<Snapshot: Codable> {
         _ snapshot: Snapshot,
         for key: String
     ) {
-        guard let data = try? encoder.encode(
-            snapshot
-        ),
-        let value = String(
-            data: data,
-            encoding: .utf8
-        ) else {
-            return
-        }
-
-        userDefaults.set(
-            value,
-            forKey: storageKey(
+        store.setCodable(
+            snapshot,
+            for: preferenceKey(
                 for: key
             )
         )
@@ -75,8 +76,8 @@ struct FormSnapshotStore<Snapshot: Codable> {
     func removeSnapshot(
         for key: String
     ) {
-        userDefaults.removeObject(
-            forKey: storageKey(
+        store.remove(
+            preferenceKey(
                 for: key
             )
         )
@@ -84,9 +85,12 @@ struct FormSnapshotStore<Snapshot: Codable> {
 }
 
 private extension FormSnapshotStore {
-    func storageKey(
+    func preferenceKey(
         for key: String
-    ) -> String {
-        "cookle.formSnapshot.\(key)"
+    ) -> MHCodablePreferenceKey<Snapshot> {
+        CodablePreferenceNamespace.formSnapshot.preferenceKey(
+            name: key,
+            Snapshot.self
+        )
     }
 }

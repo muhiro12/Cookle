@@ -1,6 +1,6 @@
 import Foundation
 
-struct DiaryFormSnapshot: Codable, Equatable {
+nonisolated struct DiaryFormSnapshot: Codable, Equatable, Sendable {
     let date: Date
     let breakfastRecipeIDs: [String]
     let lunchRecipeIDs: [String]

@@ -4,13 +4,10 @@ import MHPlatformCore
 /// Shared preference accessors backed by the app-group `UserDefaults` suite.
 public enum CookleSharedPreferences {
     /// App-group suite name used by the app and its extensions.
-    public static let appGroupIdentifier: String = "group.com.muhiro12.Cookle"
+    public static let appGroupIdentifier = UserDefaults.appGroupIdentifier
 
     private static var userDefaults: UserDefaults {
-        if let sharedUserDefaults = UserDefaults(suiteName: appGroupIdentifier) {
-            return sharedUserDefaults
-        }
-        return .standard
+        .shared
     }
 
     private static var store: MHPreferenceStore {
