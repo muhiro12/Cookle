@@ -10,12 +10,12 @@ import SwiftData
 import SwiftUI
 
 struct DebugNavigationView: View {
-    @Environment(\.horizontalSizeClass)
-    private var horizontalSizeClass
     @Environment(CookleAppLogging.self)
     private var logging
 
     @State private var content: DebugContent?
+    @State private var preferredCompactColumn = NavigationSplitViewColumn.sidebar
+    @State private var hasAppliedInitialCompactColumn = false
 
     @State private var diary: Diary?
     @State private var diaryObject: DiaryObject?
@@ -27,27 +27,25 @@ struct DebugNavigationView: View {
     @State private var photoObject: PhotoObject?
 
     var body: some View {
-        Group {
-            if horizontalSizeClass == .regular {
-                NavigationSplitView(columnVisibility: .constant(.all)) {
-                    DebugSidebarView(selection: $content)
-                } content: {
-                    regularContentView(for: content)
-                } detail: {
-                    regularDetailView()
-                }
-            } else {
-                NavigationStack {
-                    DebugSidebarView(selection: $content)
-                        .listStyle(.insetGrouped)
-                        .navigationDestination(isPresented: $content.isPresent()) {
-                            compactContentView(for: content)
-                        }
-                }
-            }
+        NavigationSplitView(
+            columnVisibility: .constant(.all),
+            preferredCompactColumn: $preferredCompactColumn
+        ) {
+            DebugSidebarView(selection: $content)
+        } content: {
+            contentView(for: content)
+        } detail: {
+            detailView()
+        }
+        .task {
+            applyInitialCompactColumnIfNeeded()
         }
         .onChange(of: content) {
             clearDetailSelections()
+            syncPreferredCompactColumn()
+        }
+        .onChange(of: hasDetailSelection) {
+            syncPreferredCompactColumn()
         }
     }
 }
@@ -71,8 +69,19 @@ private extension DebugNavigationView {
         }
     }
 
+    var hasDetailSelection: Bool {
+        diary != nil ||
+            diaryObject != nil ||
+            recipe != nil ||
+            ingredient != nil ||
+            ingredientObject != nil ||
+            category != nil ||
+            photo != nil ||
+            photoObject != nil
+    }
+
     @ViewBuilder
-    func regularDetailView() -> some View {
+    func detailView() -> some View {
         if let diary {
             DebugDetailView<Diary>()
                 .environment(diary)
@@ -103,11 +112,11 @@ private extension DebugNavigationView {
     }
 
     @ViewBuilder
-    func regularContentView(
+    func contentView(
         for content: DebugContent?
     ) -> some View {
         if let modelContent {
-            regularModelContentView(
+            modelContentView(
                 for: modelContent
             )
         } else {
@@ -125,7 +134,7 @@ private extension DebugNavigationView {
     }
 
     @ViewBuilder
-    func regularModelContentView(
+    func modelContentView(
         for content: DebugContent
     ) -> some View {
         switch content {
@@ -151,67 +160,6 @@ private extension DebugNavigationView {
         }
     }
 
-    @ViewBuilder
-    func compactContentView(
-        for content: DebugContent?
-    ) -> some View {
-        if let modelContent {
-            compactModelContentView(
-                for: modelContent
-            )
-        } else {
-            switch content {
-            case .logs:
-                MHLogConsoleView(logging: logging.bootstrap)
-            case .preview:
-                DebugPreviewsView()
-            case .none:
-                EmptyView()
-            case .some:
-                EmptyView()
-            }
-        }
-    }
-
-    @ViewBuilder
-    func compactModelContentView(
-        for content: DebugContent
-    ) -> some View {
-        switch content {
-        case .logs,
-             .preview:
-            EmptyView()
-        case .diary:
-            compactModelContentView(selection: $diary)
-        case .diaryObject:
-            compactModelContentView(selection: $diaryObject)
-        case .recipe:
-            compactModelContentView(selection: $recipe)
-        case .photo:
-            compactModelContentView(selection: $photo)
-        case .photoObject:
-            compactModelContentView(selection: $photoObject)
-        case .ingredient:
-            compactModelContentView(selection: $ingredient)
-        case .ingredientObject:
-            compactModelContentView(selection: $ingredientObject)
-        case .category:
-            compactModelContentView(selection: $category)
-        }
-    }
-
-    func compactModelContentView<Model: PersistentModel>(
-        selection: Binding<Model?>
-    ) -> some View {
-        DebugContentView(selection: selection)
-            .navigationDestination(isPresented: selection.isPresent()) {
-                if let model = selection.wrappedValue {
-                    DebugDetailView<Model>()
-                        .environment(model)
-                }
-            }
-    }
-
     func clearDetailSelections() {
         diary = nil
         diaryObject = nil
@@ -221,6 +169,22 @@ private extension DebugNavigationView {
         category = nil
         photo = nil
         photoObject = nil
+    }
+
+    func applyInitialCompactColumnIfNeeded() {
+        guard !hasAppliedInitialCompactColumn else {
+            return
+        }
+
+        hasAppliedInitialCompactColumn = true
+        syncPreferredCompactColumn()
+    }
+
+    func syncPreferredCompactColumn() {
+        preferredCompactColumn = CompactSplitColumnPolicy.threeColumn(
+            hasContentSelection: content != nil,
+            hasDetailSelection: hasDetailSelection
+        )
     }
 }
 

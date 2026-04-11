@@ -2,23 +2,16 @@ import SwiftData
 import SwiftUI
 
 struct PhotoNavigationView: View {
-    @Environment(\.horizontalSizeClass)
-    private var horizontalSizeClass
-
     @State private var photo: Photo?
     @State private var recipe: Recipe?
+    @State private var preferredCompactColumn = NavigationSplitViewColumn.sidebar
+    @State private var hasAppliedInitialCompactColumn = false
 
     var body: some View {
-        navigationView()
-            .onChange(of: photo?.persistentModelID) {
-                recipe = nil
-            }
-    }
-}
-
-private extension PhotoNavigationView {
-    var regularNavigationView: some View {
-        NavigationSplitView(columnVisibility: .constant(.all)) {
+        NavigationSplitView(
+            columnVisibility: .constant(.all),
+            preferredCompactColumn: $preferredCompactColumn
+        ) {
             PhotoListView(selection: $photo)
         } content: {
             if let photo {
@@ -31,38 +24,34 @@ private extension PhotoNavigationView {
                     .environment(recipe)
             }
         }
-    }
-
-    var compactNavigationView: some View {
-        NavigationStack {
-            PhotoListView(selection: $photo)
-                .navigationDestination(isPresented: $photo.isPresent()) {
-                    compactContentView()
-                }
+        .task {
+            applyInitialCompactColumnIfNeeded()
+        }
+        .onChange(of: photo?.persistentModelID) {
+            recipe = nil
+            syncPreferredCompactColumn()
+        }
+        .onChange(of: recipe?.persistentModelID) {
+            syncPreferredCompactColumn()
         }
     }
+}
 
-    @ViewBuilder
-    func compactContentView() -> some View {
-        if let photo {
-            PhotoView(selection: $recipe)
-                .environment(photo)
-                .navigationDestination(isPresented: $recipe.isPresent()) {
-                    if let recipe {
-                        RecipeView()
-                            .environment(recipe)
-                    }
-                }
+private extension PhotoNavigationView {
+    func applyInitialCompactColumnIfNeeded() {
+        guard !hasAppliedInitialCompactColumn else {
+            return
         }
+
+        hasAppliedInitialCompactColumn = true
+        syncPreferredCompactColumn()
     }
 
-    @ViewBuilder
-    func navigationView() -> some View {
-        if horizontalSizeClass == .regular {
-            regularNavigationView
-        } else {
-            compactNavigationView
-        }
+    func syncPreferredCompactColumn() {
+        preferredCompactColumn = CompactSplitColumnPolicy.threeColumn(
+            hasContentSelection: photo != nil,
+            hasDetailSelection: recipe != nil
+        )
     }
 }
 

@@ -2,23 +2,16 @@ import SwiftData
 import SwiftUI
 
 struct TagNavigationView<T: Tag>: View {
-    @Environment(\.horizontalSizeClass)
-    private var horizontalSizeClass
-
     @State private var tag: T?
     @State private var recipe: Recipe?
+    @State private var preferredCompactColumn = NavigationSplitViewColumn.sidebar
+    @State private var hasAppliedInitialCompactColumn = false
 
     var body: some View {
-        navigationView()
-            .onChange(of: tag?.persistentModelID) {
-                recipe = nil
-            }
-    }
-}
-
-private extension TagNavigationView {
-    var regularNavigationView: some View {
-        NavigationSplitView(columnVisibility: .constant(.all)) {
+        NavigationSplitView(
+            columnVisibility: .constant(.all),
+            preferredCompactColumn: $preferredCompactColumn
+        ) {
             TagListView<T>(selection: $tag)
         } content: {
             if let tag {
@@ -31,39 +24,34 @@ private extension TagNavigationView {
                     .environment(recipe)
             }
         }
-    }
-
-    var compactNavigationView: some View {
-        NavigationStack {
-            TagListView<T>(selection: $tag)
-                .listStyle(.insetGrouped)
-                .navigationDestination(isPresented: $tag.isPresent()) {
-                    compactContentView()
-                }
+        .task {
+            applyInitialCompactColumnIfNeeded()
+        }
+        .onChange(of: tag?.persistentModelID) {
+            recipe = nil
+            syncPreferredCompactColumn()
+        }
+        .onChange(of: recipe?.persistentModelID) {
+            syncPreferredCompactColumn()
         }
     }
+}
 
-    @ViewBuilder
-    func compactContentView() -> some View {
-        if let tag {
-            TagView<T>(selection: $recipe)
-                .environment(tag)
-                .navigationDestination(isPresented: $recipe.isPresent()) {
-                    if let recipe {
-                        RecipeView()
-                            .environment(recipe)
-                    }
-                }
+private extension TagNavigationView {
+    func applyInitialCompactColumnIfNeeded() {
+        guard !hasAppliedInitialCompactColumn else {
+            return
         }
+
+        hasAppliedInitialCompactColumn = true
+        syncPreferredCompactColumn()
     }
 
-    @ViewBuilder
-    func navigationView() -> some View {
-        if horizontalSizeClass == .regular {
-            regularNavigationView
-        } else {
-            compactNavigationView
-        }
+    func syncPreferredCompactColumn() {
+        preferredCompactColumn = CompactSplitColumnPolicy.threeColumn(
+            hasContentSelection: tag != nil,
+            hasDetailSelection: recipe != nil
+        )
     }
 }
 

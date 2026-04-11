@@ -1,36 +1,30 @@
 import SwiftUI
 
 struct SettingsNavigationView: View {
-    @Environment(\.horizontalSizeClass)
-    private var horizontalSizeClass
-
     @Binding private var incomingSelection: SettingsContent?
 
     @State private var selection: SettingsContent?
+    @State private var preferredCompactColumn = NavigationSplitViewColumn.sidebar
+    @State private var hasAppliedInitialCompactColumn = false
 
     var body: some View {
-        Group {
-            if horizontalSizeClass == .regular {
-                NavigationSplitView(columnVisibility: .constant(.all)) {
-                    SettingsSidebarView(selection: $selection)
-                } detail: {
-                    detailView(for: selection)
-                }
-            } else {
-                NavigationStack {
-                    SettingsSidebarView(selection: $selection)
-                        .listStyle(.insetGrouped)
-                        .navigationDestination(isPresented: $selection.isPresent()) {
-                            detailView(for: selection)
-                        }
-                }
-            }
+        NavigationSplitView(
+            columnVisibility: .constant(.all),
+            preferredCompactColumn: $preferredCompactColumn
+        ) {
+            SettingsSidebarView(selection: $selection)
+        } detail: {
+            detailView(for: selection)
         }
         .task {
+            applyInitialCompactColumnIfNeeded()
             applyIncomingSelectionIfNeeded()
         }
         .onChange(of: incomingSelection) {
             applyIncomingSelectionIfNeeded()
+        }
+        .onChange(of: selection) {
+            syncPreferredCompactColumn()
         }
     }
 
@@ -42,6 +36,15 @@ struct SettingsNavigationView: View {
 }
 
 private extension SettingsNavigationView {
+    func applyInitialCompactColumnIfNeeded() {
+        guard !hasAppliedInitialCompactColumn else {
+            return
+        }
+
+        hasAppliedInitialCompactColumn = true
+        syncPreferredCompactColumn()
+    }
+
     @ViewBuilder
     func detailView(for selection: SettingsContent?) -> some View {
         switch selection {
@@ -58,8 +61,16 @@ private extension SettingsNavigationView {
         guard let incomingSelection else {
             return
         }
+
         selection = incomingSelection
         self.incomingSelection = nil
+        syncPreferredCompactColumn()
+    }
+
+    func syncPreferredCompactColumn() {
+        preferredCompactColumn = CompactSplitColumnPolicy.twoColumn(
+            hasDetailSelection: selection != nil
+        )
     }
 }
 

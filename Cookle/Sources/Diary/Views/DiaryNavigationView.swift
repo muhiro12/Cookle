@@ -2,31 +2,16 @@ import SwiftData
 import SwiftUI
 
 struct DiaryNavigationView: View {
-    @Environment(\.horizontalSizeClass)
-    private var horizontalSizeClass
-
     @Binding private var diary: Diary?
     @Binding private var recipe: Recipe?
+    @State private var preferredCompactColumn = NavigationSplitViewColumn.sidebar
+    @State private var hasAppliedInitialCompactColumn = false
 
     var body: some View {
-        navigationView()
-            .onChange(of: diary?.persistentModelID) {
-                recipe = nil
-            }
-    }
-
-    init(
-        selection: Binding<Diary?> = .constant(nil),
-        recipeSelection: Binding<Recipe?> = .constant(nil)
-    ) {
-        _diary = selection
-        _recipe = recipeSelection
-    }
-}
-
-private extension DiaryNavigationView {
-    var regularNavigationView: some View {
-        NavigationSplitView(columnVisibility: .constant(.all)) {
+        NavigationSplitView(
+            columnVisibility: .constant(.all),
+            preferredCompactColumn: $preferredCompactColumn
+        ) {
             DiaryListView(selection: $diary)
         } content: {
             if let diary {
@@ -39,39 +24,42 @@ private extension DiaryNavigationView {
                     .environment(recipe)
             }
         }
-    }
-
-    var compactNavigationView: some View {
-        NavigationStack {
-            DiaryListView(selection: $diary)
-                .listStyle(.insetGrouped)
-                .navigationDestination(isPresented: $diary.isPresent()) {
-                    compactContentView()
-                }
+        .task {
+            applyInitialCompactColumnIfNeeded()
+        }
+        .onChange(of: diary?.persistentModelID) {
+            recipe = nil
+            syncPreferredCompactColumn()
+        }
+        .onChange(of: recipe?.persistentModelID) {
+            syncPreferredCompactColumn()
         }
     }
 
-    @ViewBuilder
-    func compactContentView() -> some View {
-        if let diary {
-            DiaryView(selection: $recipe)
-                .environment(diary)
-                .navigationDestination(isPresented: $recipe.isPresent()) {
-                    if let recipe {
-                        RecipeView()
-                            .environment(recipe)
-                    }
-                }
+    init(
+        selection: Binding<Diary?> = .constant(nil),
+        recipeSelection: Binding<Recipe?> = .constant(nil)
+    ) {
+        _diary = selection
+        _recipe = recipeSelection
+    }
+}
+
+private extension DiaryNavigationView {
+    func applyInitialCompactColumnIfNeeded() {
+        guard !hasAppliedInitialCompactColumn else {
+            return
         }
+
+        hasAppliedInitialCompactColumn = true
+        syncPreferredCompactColumn()
     }
 
-    @ViewBuilder
-    func navigationView() -> some View {
-        if horizontalSizeClass == .regular {
-            regularNavigationView
-        } else {
-            compactNavigationView
-        }
+    func syncPreferredCompactColumn() {
+        preferredCompactColumn = CompactSplitColumnPolicy.threeColumn(
+            hasContentSelection: diary != nil,
+            hasDetailSelection: recipe != nil
+        )
     }
 }
 

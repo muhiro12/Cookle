@@ -8,38 +8,35 @@
 import SwiftUI
 
 struct SearchNavigationView: View {
-    @Environment(\.horizontalSizeClass)
-    private var horizontalSizeClass
-
     @Binding private var recipe: Recipe?
     @Binding private var incomingSearchQuery: String?
+    @State private var preferredCompactColumn = NavigationSplitViewColumn.sidebar
+    @State private var hasAppliedInitialCompactColumn = false
 
     var body: some View {
-        if horizontalSizeClass == .regular {
-            NavigationSplitView(columnVisibility: .constant(.all)) {
-                SearchView(
-                    selection: $recipe,
-                    incomingSearchQuery: $incomingSearchQuery
-                )
-            } detail: {
-                if let recipe {
-                    RecipeView()
-                        .environment(recipe)
-                }
+        NavigationSplitView(
+            columnVisibility: .constant(.all),
+            preferredCompactColumn: $preferredCompactColumn
+        ) {
+            SearchView(
+                selection: $recipe,
+                incomingSearchQuery: $incomingSearchQuery
+            )
+        } detail: {
+            if let recipe {
+                RecipeView()
+                    .environment(recipe)
             }
-        } else {
-            NavigationStack {
-                SearchView(
-                    selection: $recipe,
-                    incomingSearchQuery: $incomingSearchQuery
-                )
-                .navigationDestination(isPresented: $recipe.isPresent()) {
-                    if let recipe {
-                        RecipeView()
-                            .environment(recipe)
-                    }
-                }
-            }
+        }
+        .task {
+            applyInitialCompactColumnIfNeeded()
+            applyIncomingSearchQueryIfNeeded()
+        }
+        .onChange(of: recipe?.persistentModelID) {
+            syncPreferredCompactColumn()
+        }
+        .onChange(of: incomingSearchQuery) {
+            applyIncomingSearchQueryIfNeeded()
         }
     }
 
@@ -49,6 +46,31 @@ struct SearchNavigationView: View {
     ) {
         _recipe = selection
         _incomingSearchQuery = incomingSearchQuery
+    }
+}
+
+private extension SearchNavigationView {
+    func applyInitialCompactColumnIfNeeded() {
+        guard !hasAppliedInitialCompactColumn else {
+            return
+        }
+
+        hasAppliedInitialCompactColumn = true
+        syncPreferredCompactColumn()
+    }
+
+    func applyIncomingSearchQueryIfNeeded() {
+        guard incomingSearchQuery != nil else {
+            return
+        }
+
+        syncPreferredCompactColumn()
+    }
+
+    func syncPreferredCompactColumn() {
+        preferredCompactColumn = CompactSplitColumnPolicy.twoColumn(
+            hasDetailSelection: recipe != nil
+        )
     }
 }
 
