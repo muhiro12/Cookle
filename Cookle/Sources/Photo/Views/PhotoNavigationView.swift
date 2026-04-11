@@ -37,11 +37,16 @@ private extension PhotoNavigationView {
         NavigationStack {
             PhotoListView(selection: $photo)
                 .navigationDestination(isPresented: $photo.isPresent()) {
-                    if let photo {
-                        PhotoView(selection: $recipe)
-                            .environment(photo)
-                    }
+                    compactContentView()
                 }
+        }
+    }
+
+    @ViewBuilder
+    func compactContentView() -> some View {
+        if let photo {
+            PhotoView(selection: $recipe)
+                .environment(photo)
                 .navigationDestination(isPresented: $recipe.isPresent()) {
                     if let recipe {
                         RecipeView()

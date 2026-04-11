@@ -46,11 +46,16 @@ private extension DiaryNavigationView {
             DiaryListView(selection: $diary)
                 .listStyle(.insetGrouped)
                 .navigationDestination(isPresented: $diary.isPresent()) {
-                    if let diary {
-                        DiaryView(selection: $recipe)
-                            .environment(diary)
-                    }
+                    compactContentView()
                 }
+        }
+    }
+
+    @ViewBuilder
+    func compactContentView() -> some View {
+        if let diary {
+            DiaryView(selection: $recipe)
+                .environment(diary)
                 .navigationDestination(isPresented: $recipe.isPresent()) {
                     if let recipe {
                         RecipeView()

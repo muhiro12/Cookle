@@ -38,11 +38,16 @@ private extension TagNavigationView {
             TagListView<T>(selection: $tag)
                 .listStyle(.insetGrouped)
                 .navigationDestination(isPresented: $tag.isPresent()) {
-                    if let tag {
-                        TagView<T>(selection: $recipe)
-                            .environment(tag)
-                    }
+                    compactContentView()
                 }
+        }
+    }
+
+    @ViewBuilder
+    func compactContentView() -> some View {
+        if let tag {
+            TagView<T>(selection: $recipe)
+                .environment(tag)
                 .navigationDestination(isPresented: $recipe.isPresent()) {
                     if let recipe {
                         RecipeView()
