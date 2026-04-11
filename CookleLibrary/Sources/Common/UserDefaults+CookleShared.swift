@@ -11,13 +11,13 @@ public extension UserDefaults {
         let userDefaults = UserDefaults(
             suiteName: appGroupIdentifier
         ) ?? .standard
+        migrateMissingLegacyPreferenceValues(
+            to: userDefaults,
+            from: .standard
+        )
         if userDefaults.bool(
             for: .hasMigratedLegacyPreferences
         ) == false {
-            migrateLegacyPreferenceValuesIfNeeded(
-                to: userDefaults,
-                from: .standard
-            )
             userDefaults.set(true, for: .hasMigratedLegacyPreferences)
         }
         return userDefaults
@@ -25,7 +25,7 @@ public extension UserDefaults {
 }
 
 private extension UserDefaults {
-    static func migrateLegacyPreferenceValuesIfNeeded(
+    static func migrateMissingLegacyPreferenceValues(
         to sharedUserDefaults: UserDefaults,
         from legacyUserDefaults: UserDefaults
     ) {

@@ -1,7 +1,7 @@
 import MHPlatformCore
 
 /// Stable namespaces for dynamic `Codable` preference keys.
-public enum CodablePreferenceNamespace: String {
+public enum CodablePreferenceNamespace: String, Sendable {
     case formSnapshot = "cookle.formSnapshot"
 
     public func preferenceKey<Value: Codable & Sendable>(
@@ -9,8 +9,7 @@ public enum CodablePreferenceNamespace: String {
         _: Value.Type = Value.self
     ) -> MHCodablePreferenceKey<Value> {
         .init(
-            namespace: rawValue,
-            name: name
+            storageKey: "\(rawValue).\(name)"
         )
     }
 }

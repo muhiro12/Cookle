@@ -1,7 +1,7 @@
 import MHPlatformCore
 
 /// Stable storage keys for integer settings persisted in preferences.
-public enum IntPreferenceKey: String, CaseIterable, MHIntPreferenceKeyRepresentable {
+public enum IntPreferenceKey: String, CaseIterable, Sendable, MHIntPreferenceKeyRepresentable {
     case dailyRecipeSuggestionHour = "r5Vn8Kt1"
     case dailyRecipeSuggestionMinute = "u7Bx3Jd6"
     case tipExperienceVersion = "t7Px9Nb4"

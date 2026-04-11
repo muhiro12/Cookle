@@ -173,7 +173,7 @@ public enum ModelContainerFactory {
     }
 
     private static func logMigrationOutcome(
-        _ outcome: MHStoreMigrationOutcome,
+        _ outcome: DatabaseMigrator.MigrationOutcome,
         logger: MHLogger?
     ) {
         guard let logger else {
@@ -205,7 +205,7 @@ public enum ModelContainerFactory {
     }
 
     private static func logCleanupOutcome(
-        _ outcome: MHStoreLegacyCleanupOutcome,
+        _ outcome: DatabaseMigrator.LegacyCleanupOutcome,
         logger: MHLogger?
     ) {
         guard let logger else {
@@ -233,13 +233,15 @@ public enum ModelContainerFactory {
     }
 
     private static func skipReasonValue(
-        _ reason: MHStoreMigrationSkipReason
+        _ reason: DatabaseMigrator.MigrationSkipReason
     ) -> String {
         switch reason {
         case .sameLocation:
             "same_location"
         case .missingLegacyStore:
             "missing_legacy_store"
+        case .missingCurrentStore:
+            "missing_current_store"
         }
     }
 }

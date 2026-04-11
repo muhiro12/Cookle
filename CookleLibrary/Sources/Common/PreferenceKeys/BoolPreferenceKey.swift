@@ -1,7 +1,7 @@
 import MHPlatformCore
 
 /// Stable storage keys for boolean settings persisted in preferences.
-public enum BoolPreferenceKey: String, CaseIterable, MHBoolPreferenceKeyRepresentable {
+public enum BoolPreferenceKey: String, CaseIterable, Sendable, MHBoolPreferenceKeyRepresentable {
     case isSubscribeOn = "qWeRty12"
     case isICloudOn = "AO9Yo1cC"
     case isDebugOn = "hd3fAy3G"

@@ -35,12 +35,6 @@ enum MainRouteService {
 
 private extension MainRouteService {
     static var pendingSources: [any MHDeepLinkURLSource] {
-        var sources = [any MHDeepLinkURLSource]()
-
-        if let intentRouteSource = CookleIntentRouteStore.source {
-            sources.append(intentRouteSource)
-        }
-
-        return sources
+        [CookleIntentRouteStore.source]
     }
 }
