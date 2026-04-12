@@ -1,3 +1,6 @@
+import Foundation
+import MHPlatform
+
 nonisolated struct RecipeFormSnapshot: Codable, Equatable, Sendable {
     nonisolated struct Ingredient: Codable, Equatable, Sendable {
         let ingredient: String
@@ -26,6 +29,12 @@ nonisolated struct RecipeFormSnapshot: Codable, Equatable, Sendable {
             )
         }
     }
+
+    static let preferenceDescriptor = CodablePreferenceNamespace.formSnapshot.preferenceDescriptor(
+        name: "recipe",
+        defaultSelection: .standard,
+        Self.self
+    )
 
     let name: String
     let servingSize: String
@@ -69,34 +78,14 @@ nonisolated struct RecipeFormSnapshot: Codable, Equatable, Sendable {
         self.categories = categories
         self.note = note
     }
-
-    static func key(
-        for type: RecipeFormType,
-        recipe: Recipe?
-    ) -> String? {
-        switch type {
-        case .create:
-            return "recipe.create"
-        case .edit:
-            guard let recipe else {
-                return nil
-            }
-            return "recipe.edit.\(snapshotIdentifier(for: recipe))"
-        case .duplicate:
-            guard let recipe else {
-                return nil
-            }
-            return "recipe.duplicate.\(snapshotIdentifier(for: recipe))"
-        }
-    }
 }
-
-nonisolated private extension RecipeFormSnapshot {
-    static func snapshotIdentifier(
-        for recipe: Recipe
-    ) -> String {
-        String(
-            describing: recipe.persistentModelID
+extension FormSnapshotStore where Snapshot == RecipeFormSnapshot {
+    init(
+        userDefaults: UserDefaults = .standard
+    ) {
+        self.init(
+            descriptor: RecipeFormSnapshot.preferenceDescriptor,
+            userDefaults: userDefaults
         )
     }
 }

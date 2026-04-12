@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 9/17/24.
 //
 
+import MHPlatform
 import SwiftUI
 import TipKit
 import UIKit
@@ -25,15 +26,15 @@ struct SettingsSidebarView: View {
     @Environment(SettingsActionService.self)
     private var settingsActionService
 
-    @AppStorage(.isSubscribeOn)
+    @AppStorage(BoolPreferenceKey.isSubscribeOn)
     private var isSubscribeOn
-    @AppStorage(.isICloudOn)
+    @AppStorage(BoolPreferenceKey.isICloudOn)
     private var isICloudOn
-    @AppStorage(.isDailyRecipeSuggestionNotificationOn)
+    @AppStorage(BoolPreferenceKey.isDailyRecipeSuggestionNotificationOn)
     private var isDailyRecipeSuggestionNotificationOn
-    @AppStorage(.dailyRecipeSuggestionHour)
+    @AppStorage(IntPreferenceKey.dailyRecipeSuggestionHour)
     private var dailyRecipeSuggestionHour
-    @AppStorage(.dailyRecipeSuggestionMinute)
+    @AppStorage(IntPreferenceKey.dailyRecipeSuggestionMinute)
     private var dailyRecipeSuggestionMinute
 
     @Binding private var content: SettingsContent?

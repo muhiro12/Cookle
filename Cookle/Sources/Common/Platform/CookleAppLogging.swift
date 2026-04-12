@@ -6,17 +6,24 @@ import Observation
 @MainActor
 @Observable
 final class CookleAppLogging {
-    private enum Constants {
-        static let subsystem = "com.muhiro12.Cookle"
-        static let snapshotStorageKeys = MHLogSnapshotStorageKeys(
-            current: .init(
-                storageKey: "\(CodablePreferenceKey.loggingLastSession.rawValue).current-session"
+    private static let subsystem = "com.muhiro12.Cookle"
+    private static let snapshotStore = MHPreferenceStore(
+        userDefaults: .standard
+    )
+    nonisolated static let snapshotStorageDescriptors = MHLogSnapshotStorageDescriptors(
+        current: .init(
+            storageKey: CodablePreferenceKey.loggingLastSession.storageKey(
+                suffix: "current-session"
             ),
-            previous: .init(
-                storageKey: "\(CodablePreferenceKey.loggingLastSession.rawValue).previous-session"
-            )
+            defaultSelection: .standard
+        ),
+        previous: .init(
+            storageKey: CodablePreferenceKey.loggingLastSession.storageKey(
+                suffix: "previous-session"
+            ),
+            defaultSelection: .standard
         )
-    }
+    )
 
     let bootstrap: MHLoggingBootstrap
 
@@ -30,11 +37,9 @@ final class CookleAppLogging {
         .init(
             bootstrap: .init(
                 captureLevel: captureLevel,
-                subsystem: Constants.subsystem,
-                snapshotStorageKeys: Constants.snapshotStorageKeys,
-                snapshotDefaults: .suite(
-                    UserDefaults.appGroupIdentifier
-                )
+                subsystem: subsystem,
+                snapshotStorageDescriptors: snapshotStorageDescriptors,
+                snapshotStore: snapshotStore
             )
         )
     }
@@ -43,7 +48,7 @@ final class CookleAppLogging {
         .init(
             bootstrap: .init(
                 captureLevel: .debug,
-                subsystem: Constants.subsystem
+                subsystem: subsystem
             )
         )
     }

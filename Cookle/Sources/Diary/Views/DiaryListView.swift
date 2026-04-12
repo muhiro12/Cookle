@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2024/05/12.
 //
 
+import MHPlatform
 import SwiftData
 import SwiftUI
 import TipKit
@@ -15,7 +16,7 @@ struct DiaryListView: View {
     @Environment(MainNavigationModel.self)
     private var navigationModel
 
-    @AppStorage(.isSubscribeOn)
+    @AppStorage(BoolPreferenceKey.isSubscribeOn)
     private var isSubscribeOn
 
     @Query(.diaries(.all))

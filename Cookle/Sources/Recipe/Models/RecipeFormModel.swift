@@ -55,7 +55,6 @@ final class RecipeFormModel {
     private let snapshotStore: FormSnapshotStore<RecipeFormSnapshot>
     private var hasAppliedRecipe = false
     private var isSnapshotPersistenceEnabled = false
-    private var snapshotKey: String?
 
     var isCreateFlow: Bool {
         switch type {
@@ -243,19 +242,18 @@ extension RecipeFormModel {
     func activateSnapshotPersistence(
         recipe: Recipe?
     ) {
-        snapshotKey = RecipeFormSnapshot.key(
-            for: type,
-            recipe: recipe
-        )
-        isSnapshotPersistenceEnabled = true
+        isSnapshotPersistenceEnabled = type == .create
+            && recipe == nil
         refreshSnapshotAvailability()
     }
 
     func restoreSnapshot() {
-        guard let snapshotKey,
-              let snapshot = snapshotStore.snapshot(
-                for: snapshotKey
-              ) else {
+        guard isSnapshotPersistenceEnabled else {
+            refreshSnapshotAvailability()
+            return
+        }
+
+        guard let snapshot = snapshotStore.snapshot() else {
             refreshSnapshotAvailability()
             return
         }
@@ -293,38 +291,32 @@ private extension RecipeFormModel {
     }
 
     func persistSnapshotIfNeeded() {
-        guard isSnapshotPersistenceEnabled,
-              let snapshotKey else {
+        guard isSnapshotPersistenceEnabled else {
             return
         }
 
         snapshotStore.saveSnapshot(
-            snapshot,
-            for: snapshotKey
+            snapshot
         )
         refreshSnapshotAvailability()
     }
 
     func clearSnapshot() {
-        guard let snapshotKey else {
+        guard isSnapshotPersistenceEnabled else {
             return
         }
 
-        snapshotStore.removeSnapshot(
-            for: snapshotKey
-        )
+        snapshotStore.removeSnapshot()
         refreshSnapshotAvailability()
     }
 
     func refreshSnapshotAvailability() {
-        guard let snapshotKey else {
+        guard isSnapshotPersistenceEnabled else {
             hasRestorableSnapshot = false
             return
         }
 
-        hasRestorableSnapshot = snapshotStore.hasSnapshot(
-            for: snapshotKey
-        )
+        hasRestorableSnapshot = snapshotStore.hasSnapshot()
     }
 
     func performWithoutSnapshotPersistence(

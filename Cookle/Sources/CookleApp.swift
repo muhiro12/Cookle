@@ -5,15 +5,16 @@
 //  Created by Hiromu Nakano on 2024/05/20.
 //
 
+import MHPlatform
 import SwiftUI
 
 @main
 struct CookleApp: App {
-    @AppStorage(.isICloudOn)
+    @AppStorage(BoolPreferenceKey.isICloudOn)
     private var isICloudOn
-    @AppStorage(.isDebugOn)
+    @AppStorage(BoolPreferenceKey.isDebugOn)
     private var isDebugOn
-    @AppStorage(.lastLaunchedAppVersion)
+    @AppStorage(StringPreferenceKey.lastLaunchedAppVersion)
     private var lastLaunchedAppVersion
 
     @State private var bootstrapModel = CookleAppBootstrapModel()

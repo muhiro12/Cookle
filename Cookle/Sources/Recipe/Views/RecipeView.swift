@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2024/04/09.
 //
 
+import MHPlatform
 import SwiftData
 import SwiftUI
 
@@ -18,7 +19,7 @@ struct RecipeView: View {
     @Environment(CookleAppLogging.self)
     private var logging
 
-    @AppStorage(.isSubscribeOn)
+    @AppStorage(BoolPreferenceKey.isSubscribeOn)
     private var isSubscribeOn
 
     var body: some View {

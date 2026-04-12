@@ -4,9 +4,19 @@ import MHPlatformCore
 public enum CodablePreferenceKey: String, Sendable {
     case loggingLastSession = "cookle.logging.last-session"
 
-    public func preferenceKey<Value: Codable & Sendable>(
+    public func preferenceDescriptor<Value: Codable & Sendable>(
+        defaultSelection: MHUserDefaultsSelection,
         _: Value.Type = Value.self
-    ) -> MHCodablePreferenceKey<Value> {
-        .init(storageKey: rawValue)
+    ) -> MHCodablePreferenceDescriptor<Value> {
+        .init(
+            storageKey: rawValue,
+            defaultSelection: defaultSelection
+        )
+    }
+
+    public func storageKey(
+        suffix: String
+    ) -> String {
+        "\(rawValue).\(suffix)"
     }
 }

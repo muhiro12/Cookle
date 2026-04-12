@@ -5,13 +5,14 @@
 //  Created by Hiromu Nakano on 9/18/24.
 //
 
+import MHPlatform
 import SwiftUI
 
 struct MainTabView: View {
     @Environment(\.horizontalSizeClass)
     private var horizontalSizeClass
 
-    @AppStorage(.isDebugOn)
+    @AppStorage(BoolPreferenceKey.isDebugOn)
     private var isDebugOn
 
     @Binding private var selection: MainTab

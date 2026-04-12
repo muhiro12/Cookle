@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 9/18/24.
 //
 
+import MHPlatform
 import SwiftUI
 
 struct MenuNavigationView: View {
@@ -17,7 +18,7 @@ struct MenuNavigationView: View {
     @Environment(\.isPresented)
     private var isPresented
 
-    @AppStorage(.isDebugOn)
+    @AppStorage(BoolPreferenceKey.isDebugOn)
     private var isDebugOn
 
     @State private var selectedTab: MainTab?

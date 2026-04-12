@@ -37,7 +37,6 @@ final class DiaryFormModel {
     private var hasAppliedInitialValues = false
     private var initialDate = Date.now
     private var isSnapshotPersistenceEnabled = false
-    private var snapshotKey: String?
 
     var canSave: Bool {
         breakfasts.isEmpty == false
@@ -98,20 +97,19 @@ final class DiaryFormModel {
     func activateSnapshotPersistence(
         diary: Diary?
     ) {
-        snapshotKey = DiaryFormSnapshot.key(
-            for: diary
-        )
-        isSnapshotPersistenceEnabled = true
+        isSnapshotPersistenceEnabled = diary == nil
         refreshSnapshotAvailability()
     }
 
     func restoreSnapshot(
         context: ModelContext
     ) {
-        guard let snapshotKey,
-              let snapshot = snapshotStore.snapshot(
-                for: snapshotKey
-              ) else {
+        guard isSnapshotPersistenceEnabled else {
+            refreshSnapshotAvailability()
+            return
+        }
+
+        guard let snapshot = snapshotStore.snapshot() else {
             refreshSnapshotAvailability()
             return
         }
@@ -226,38 +224,32 @@ private extension DiaryFormModel {
     }
 
     func persistSnapshotIfNeeded() {
-        guard isSnapshotPersistenceEnabled,
-              let snapshotKey else {
+        guard isSnapshotPersistenceEnabled else {
             return
         }
 
         snapshotStore.saveSnapshot(
-            snapshot,
-            for: snapshotKey
+            snapshot
         )
         refreshSnapshotAvailability()
     }
 
     func clearSnapshot() {
-        guard let snapshotKey else {
+        guard isSnapshotPersistenceEnabled else {
             return
         }
 
-        snapshotStore.removeSnapshot(
-            for: snapshotKey
-        )
+        snapshotStore.removeSnapshot()
         refreshSnapshotAvailability()
     }
 
     func refreshSnapshotAvailability() {
-        guard let snapshotKey else {
+        guard isSnapshotPersistenceEnabled else {
             hasRestorableSnapshot = false
             return
         }
 
-        hasRestorableSnapshot = snapshotStore.hasSnapshot(
-            for: snapshotKey
-        )
+        hasRestorableSnapshot = snapshotStore.hasSnapshot()
     }
 
     func performWithoutSnapshotPersistence(

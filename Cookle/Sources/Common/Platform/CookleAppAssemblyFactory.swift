@@ -158,9 +158,6 @@ private extension CookleAppAssemblyFactory {
             subscriptionProductIDs: [Secret.productID],
             subscriptionGroupID: Secret.groupID,
             nativeAdUnitID: nativeAdUnitID,
-            preferencesDefaults: .suite(
-                CookleSharedPreferences.appGroupIdentifier
-            ),
             showsLicenses: true
         )
     }

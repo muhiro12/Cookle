@@ -11,16 +11,8 @@ extension RecipeFormSnapshotTests {
         static let cookingTime = 5
     }
 
-    struct FlowModels {
-        let create: RecipeFormModel
-        let edit: RecipeFormModel
-        let duplicate: RecipeFormModel
-    }
-
-    struct SnapshotKeys {
-        let create: String
-        let edit: String
-        let duplicate: String
+    var snapshotStorageKey: String {
+        RecipeFormSnapshot.preferenceDescriptor.storageKey
     }
 
     func makeSnapshotStore(
@@ -28,91 +20,6 @@ extension RecipeFormSnapshotTests {
     ) -> FormSnapshotStore<RecipeFormSnapshot> {
         .init(
             userDefaults: userDefaults
-        )
-    }
-
-    func makeCreateSnapshotKey() throws -> String {
-        try #require(
-            RecipeFormSnapshot.key(
-                for: .create,
-                recipe: nil
-            )
-        )
-    }
-
-    func makeLegacySnapshot() -> RecipeFormSnapshot {
-        .init(
-            name: "Legacy Recipe",
-            servingSize: "2",
-            cookingTime: "10",
-            ingredients: [
-                .init(
-                    ingredient: "Bread",
-                    amount: "2 slices"
-                )
-            ],
-            steps: ["Toast"],
-            categories: ["Breakfast"],
-            note: "Legacy payload"
-        )
-    }
-
-    func seedLegacySnapshot(
-        _ snapshot: RecipeFormSnapshot,
-        key: String,
-        userDefaults: UserDefaults
-    ) throws {
-        let legacyValue = try #require(
-            String(
-                data: JSONEncoder().encode(snapshot),
-                encoding: .utf8
-            )
-        )
-
-        userDefaults.set(
-            legacyValue,
-            forKey: snapshotStorageKey(
-                key
-            )
-        )
-    }
-
-    func makeFlowModels(
-        snapshotStore: FormSnapshotStore<RecipeFormSnapshot>
-    ) -> FlowModels {
-        .init(
-            create: RecipeFormModel(
-                type: .create,
-                snapshotStore: snapshotStore
-            ),
-            edit: RecipeFormModel(
-                type: .edit,
-                snapshotStore: snapshotStore
-            ),
-            duplicate: RecipeFormModel(
-                type: .duplicate,
-                snapshotStore: snapshotStore
-            )
-        )
-    }
-
-    func makeRecipeSnapshotKeys(
-        recipe: Recipe
-    ) throws -> SnapshotKeys {
-        .init(
-            create: try makeCreateSnapshotKey(),
-            edit: try #require(
-                RecipeFormSnapshot.key(
-                    for: .edit,
-                    recipe: recipe
-                )
-            ),
-            duplicate: try #require(
-                RecipeFormSnapshot.key(
-                    for: .duplicate,
-                    recipe: recipe
-                )
-            )
         )
     }
 
@@ -183,14 +90,5 @@ extension RecipeFormSnapshotTests {
             data: Data("photo".utf8),
             source: .photosPicker
         )
-    }
-
-    func snapshotStorageKey(
-        _ key: String
-    ) -> String {
-        CodablePreferenceNamespace.formSnapshot.preferenceKey(
-            name: key,
-            RecipeFormSnapshot.self
-        ).storageKey
     }
 }

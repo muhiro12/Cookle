@@ -1,21 +1,18 @@
 import Foundation
+import MHPlatform
 
 nonisolated struct DiaryFormSnapshot: Codable, Equatable, Sendable {
+    static let preferenceDescriptor = CodablePreferenceNamespace.formSnapshot.preferenceDescriptor(
+        name: "diary",
+        defaultSelection: .standard,
+        Self.self
+    )
+
     let date: Date
     let breakfastRecipeIDs: [String]
     let lunchRecipeIDs: [String]
     let dinnerRecipeIDs: [String]
     let note: String
-
-    static func key(
-        for diary: Diary?
-    ) -> String {
-        guard let diary else {
-            return "diary.create"
-        }
-
-        return "diary.edit.\(String(describing: diary.persistentModelID))"
-    }
 
     func isNearlyEmpty(
         comparedTo referenceDate: Date
@@ -30,5 +27,16 @@ nonisolated struct DiaryFormSnapshot: Codable, Equatable, Sendable {
                 date,
                 inSameDayAs: referenceDate
             )
+    }
+}
+
+extension FormSnapshotStore where Snapshot == DiaryFormSnapshot {
+    init(
+        userDefaults: UserDefaults = .standard
+    ) {
+        self.init(
+            descriptor: DiaryFormSnapshot.preferenceDescriptor,
+            userDefaults: userDefaults
+        )
     }
 }

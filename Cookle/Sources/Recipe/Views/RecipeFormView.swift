@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2024/04/11.
 //
 
+import MHPlatform
 import SwiftData
 import SwiftUI
 import TipKit
@@ -24,7 +25,7 @@ struct RecipeFormView: View {
     @Environment(CookleAppLogging.self)
     private var logging
 
-    @AppStorage(.isDebugOn)
+    @AppStorage(BoolPreferenceKey.isDebugOn)
     private var isDebugOn
 
     @State private var editMode = EditMode.inactive

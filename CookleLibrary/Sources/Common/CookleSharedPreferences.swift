@@ -7,7 +7,9 @@ public enum CookleSharedPreferences {
     public static let appGroupIdentifier = UserDefaults.appGroupIdentifier
 
     private static var userDefaults: UserDefaults {
-        .shared
+        MHUserDefaultsSelection
+            .suite(appGroupIdentifier)
+            .resolveUserDefaults()
     }
 
     private static var store: MHPreferenceStore {
@@ -16,14 +18,14 @@ public enum CookleSharedPreferences {
 
     /// Returns the shared string value visible to both the app and extensions.
     public static func string(for key: StringPreferenceKey) -> String? {
-        store.string(for: key.preferenceKey)
+        store.string(for: key.preferenceDescriptor)
     }
 
     /// Persists or removes a shared string value in the app-group container.
     public static func set(_ value: String?, for key: StringPreferenceKey) {
         store.set(
             value,
-            for: key.preferenceKey
+            for: key.preferenceDescriptor
         )
     }
 }

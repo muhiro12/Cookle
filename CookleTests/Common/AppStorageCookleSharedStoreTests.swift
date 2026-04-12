@@ -1,10 +1,12 @@
 import CookleLibrary
 import Foundation
+import MHPreferences
 import SwiftUI
 import Testing
 
 @testable import Cookle
 
+@MainActor
 @Suite(.serialized)
 struct AppStorageCookleSharedStoreTests {
     private struct BoolHarness {
@@ -135,8 +137,8 @@ struct AppStorageCookleSharedStoreTests {
 
     @Test
     func defaultStoreUsesSharedUserDefaults() {
-        let key = StringPreferenceKey.lastLaunchedAppVersion
-        let sharedDefaults = UserDefaults.shared
+        let key = StringPreferenceKey.lastOpenedRecipeID
+        let sharedDefaults = makeSharedUserDefaults()
         let originalValue = sharedDefaults.object(forKey: key.rawValue)
         defer {
             restoreValue(
@@ -156,9 +158,31 @@ struct AppStorageCookleSharedStoreTests {
     }
 
     @Test
-    func injectedStoreOverridesSharedUserDefaults() {
+    func defaultStoreUsesStandardUserDefaults() {
         let key = StringPreferenceKey.lastLaunchedAppVersion
-        let sharedDefaults = UserDefaults.shared
+        let standardDefaults = UserDefaults.standard
+        let originalValue = standardDefaults.object(forKey: key.rawValue)
+        defer {
+            restoreValue(
+                originalValue,
+                forKey: key.rawValue,
+                in: standardDefaults
+            )
+        }
+
+        standardDefaults.removeObject(forKey: key.rawValue)
+
+        var harness = StringHarness(key: key)
+        #expect(harness.wrappedValue.isEmpty)
+
+        harness.wrappedValue = "3.3"
+        #expect(standardDefaults.string(forKey: key.rawValue) == "3.3")
+    }
+
+    @Test
+    func injectedStoreOverridesDescriptorDefaultSelection() {
+        let key = StringPreferenceKey.lastOpenedRecipeID
+        let sharedDefaults = makeSharedUserDefaults()
         let originalValue = sharedDefaults.object(forKey: key.rawValue)
         defer {
             restoreValue(
@@ -183,6 +207,12 @@ struct AppStorageCookleSharedStoreTests {
 }
 
 private extension AppStorageCookleSharedStoreTests {
+    func makeSharedUserDefaults() -> UserDefaults {
+        UserDefaults(
+            suiteName: UserDefaults.appGroupIdentifier
+        ) ?? .standard
+    }
+
     func restoreValue(
         _ value: Any?,
         forKey key: String,

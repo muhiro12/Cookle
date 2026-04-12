@@ -1,3 +1,4 @@
+import MHPlatform
 import SwiftUI
 import TipKit
 
@@ -9,7 +10,7 @@ struct DebugSidebarView: View {
     @Environment(CookleTipController.self)
     private var tipController
 
-    @AppStorage(.isDebugOn)
+    @AppStorage(BoolPreferenceKey.isDebugOn)
     private var isDebugOn
 
     @Binding private var content: DebugContent?

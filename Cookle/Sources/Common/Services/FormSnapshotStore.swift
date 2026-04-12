@@ -3,94 +3,38 @@ import MHPlatform
 
 struct FormSnapshotStore<Snapshot: Codable & Sendable> {
     private let store: MHPreferenceStore
-    private let userDefaults: UserDefaults
-    private let decoder = JSONDecoder()
+    private let descriptor: MHCodablePreferenceDescriptor<Snapshot>
 
     init(
-        userDefaults: UserDefaults = .standard
+        descriptor: MHCodablePreferenceDescriptor<Snapshot>,
+        userDefaults: UserDefaults? = nil
     ) {
-        store = .init(userDefaults: userDefaults)
-        self.userDefaults = userDefaults
+        if let userDefaults {
+            store = .init(userDefaults: userDefaults)
+        } else {
+            store = .init()
+        }
+        self.descriptor = descriptor
     }
 
-    func snapshot(
-        for key: String
-    ) -> Snapshot? {
-        let preferenceKey = preferenceKey(
-            for: key
-        )
-        if let snapshot = store.codable(
-            for: preferenceKey
-        ) {
-            return snapshot
-        }
-
-        guard let storedValue = userDefaults.object(
-            forKey: preferenceKey.storageKey
-        ) else {
-            return nil
-        }
-
-        guard let legacyValue = storedValue as? String else {
-            store.remove(preferenceKey)
-            return nil
-        }
-
-        let data = Data(
-            legacyValue.utf8
-        )
-        do {
-            let snapshot = try decoder.decode(
-                Snapshot.self,
-                from: data
-            )
-            store.setCodable(
-                snapshot,
-                for: preferenceKey
-            )
-            return snapshot
-        } catch {
-            store.remove(preferenceKey)
-            return nil
-        }
+    func snapshot() -> Snapshot? {
+        store.codable(for: descriptor)
     }
 
-    func hasSnapshot(
-        for key: String
-    ) -> Bool {
-        snapshot(for: key) != nil
+    func hasSnapshot() -> Bool {
+        snapshot() != nil
     }
 
     func saveSnapshot(
-        _ snapshot: Snapshot,
-        for key: String
+        _ snapshot: Snapshot
     ) {
         store.setCodable(
             snapshot,
-            for: preferenceKey(
-                for: key
-            )
+            for: descriptor
         )
     }
 
-    func removeSnapshot(
-        for key: String
-    ) {
-        store.remove(
-            preferenceKey(
-                for: key
-            )
-        )
-    }
-}
-
-private extension FormSnapshotStore {
-    func preferenceKey(
-        for key: String
-    ) -> MHCodablePreferenceKey<Snapshot> {
-        CodablePreferenceNamespace.formSnapshot.preferenceKey(
-            name: key,
-            Snapshot.self
-        )
+    func removeSnapshot() {
+        store.remove(descriptor)
     }
 }

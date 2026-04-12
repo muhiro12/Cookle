@@ -36,6 +36,23 @@ final class CookleAppBootstrapModel {
         startupLogger.notice("app startup began")
 
         let startupStartedAt = Date.timeIntervalSinceReferenceDate
+        let preferenceLifecycleStartedAt = Date.timeIntervalSinceReferenceDate
+        let lifecycleOutcome = await CooklePreferenceLifecycle.run()
+        startupLogger.notice(
+            "preference lifecycle finished in \(Self.durationMilliseconds(since: preferenceLifecycleStartedAt)) ms",
+            metadata: [
+                "migration_outcome": String(
+                    describing: lifecycleOutcome.migrationOutcome
+                ),
+                "removed_key_count": String(
+                    lifecycleOutcome.cleanupReports
+                        .reduce(into: .zero) { count, report in
+                            count += report.report.removedStorageKeys.count
+                        }
+                )
+            ]
+        )
+
         let cloudKitDatabase: ModelConfiguration.CloudKitDatabase = isICloudOn
             ? .automatic
             : .none

@@ -8,16 +8,10 @@ import Testing
 @MainActor
 struct RecipeFormSnapshotTests {
     @Test
-    func saveSnapshot_storesCodableData() throws {
+    func saveSnapshot_storesCodableData() {
         let userDefaults = makeTestUserDefaults()
         let snapshotStore: FormSnapshotStore<RecipeFormSnapshot> = .init(
             userDefaults: userDefaults
-        )
-        let snapshotKey = try #require(
-            RecipeFormSnapshot.key(
-                for: .create,
-                recipe: nil
-            )
         )
         let snapshot = RecipeFormSnapshot(
             name: "Data payload",
@@ -29,48 +23,10 @@ struct RecipeFormSnapshotTests {
             note: ""
         )
 
-        snapshotStore.saveSnapshot(
-            snapshot,
-            for: snapshotKey
-        )
+        snapshotStore.saveSnapshot(snapshot)
 
         let storedValue = userDefaults.object(
-            forKey: snapshotStorageKey(
-                snapshotKey
-            )
-        )
-        #expect(storedValue is Data)
-    }
-
-    @Test
-    func restoreSnapshot_migratesLegacyStringPayloadToData() throws {
-        let userDefaults = makeTestUserDefaults()
-        let snapshotStore = makeSnapshotStore(
-            userDefaults: userDefaults
-        )
-        let snapshotKey = try makeCreateSnapshotKey()
-        let snapshot = makeLegacySnapshot()
-        let model = RecipeFormModel(
-            type: .create,
-            snapshotStore: snapshotStore
-        )
-        try seedLegacySnapshot(
-            snapshot,
-            key: snapshotKey,
-            userDefaults: userDefaults
-        )
-
-        model.activateSnapshotPersistence(
-            recipe: nil
-        )
-        model.restoreSnapshot()
-
-        #expect(model.name == "Legacy Recipe")
-        #expect(model.note == "Legacy payload")
-        let storedValue = userDefaults.object(
-            forKey: snapshotStorageKey(
-                snapshotKey
-            )
+            forKey: snapshotStorageKey
         )
         #expect(storedValue is Data)
     }
@@ -119,30 +75,15 @@ struct RecipeFormSnapshotTests {
         )
         try context.save()
         let snapshotStore = makeSnapshotStore()
-        let snapshotKey = try #require(
-            RecipeFormSnapshot.key(
-                for: .edit,
-                recipe: recipe
-            )
+        let createModel = RecipeFormModel(
+            type: .create,
+            snapshotStore: snapshotStore
         )
-
-        snapshotStore.saveSnapshot(
-            .init(
-                name: "Saved Draft",
-                servingSize: "3",
-                cookingTime: "15",
-                ingredients: [
-                    .init(
-                        ingredient: "Eggs",
-                        amount: "2"
-                    )
-                ],
-                steps: ["Saved step"],
-                categories: ["Brunch"],
-                note: "Saved note"
-            ),
-            for: snapshotKey
+        createModel.activateSnapshotPersistence(
+            recipe: nil
         )
+        createModel.name = "Saved Draft"
+        createModel.note = "Saved note"
 
         let model = RecipeFormModel(
             type: .edit,
@@ -161,9 +102,8 @@ struct RecipeFormSnapshotTests {
 
         model.restoreSnapshot()
 
-        #expect(model.name == "Saved Draft")
-        #expect(model.note == "Saved note")
-        #expect(model.steps == ["Saved step", ""])
+        #expect(model.name == "Base Recipe")
+        #expect(model.note == "Original")
     }
 
     @Test
@@ -178,12 +118,6 @@ struct RecipeFormSnapshotTests {
             type: .create,
             snapshotStore: snapshotStore
         )
-        let snapshotKey = try #require(
-            RecipeFormSnapshot.key(
-                for: .create,
-                recipe: nil
-            )
-        )
 
         model.activateSnapshotPersistence(
             recipe: nil
@@ -192,7 +126,7 @@ struct RecipeFormSnapshotTests {
             model
         )
 
-        #expect(snapshotStore.hasSnapshot(for: snapshotKey))
+        #expect(snapshotStore.hasSnapshot())
 
         let didSave = await model.save(
             context: context,
@@ -205,11 +139,11 @@ struct RecipeFormSnapshotTests {
         )
 
         #expect(didSave)
-        #expect(snapshotStore.hasSnapshot(for: snapshotKey) == false)
+        #expect(snapshotStore.hasSnapshot() == false)
     }
 
     @Test
-    func snapshotKeys_doNotMixCreateEditAndDuplicate() throws {
+    func duplicateFlow_doesNotPersistSnapshot() throws {
         let context = try makeCookleTestContext()
         let recipe = makeRecipe(
             context: context,
@@ -218,36 +152,25 @@ struct RecipeFormSnapshotTests {
         )
         try context.save()
         let snapshotStore = makeSnapshotStore()
-        let flowModels = makeFlowModels(
+        let model = RecipeFormModel(
+            type: .duplicate,
             snapshotStore: snapshotStore
         )
-        let snapshotKeys = try makeRecipeSnapshotKeys(
-            recipe: recipe
-        )
 
-        flowModels.create.activateSnapshotPersistence(
-            recipe: nil
-        )
-        flowModels.create.name = "Create Draft"
-
-        flowModels.edit.applyRecipeIfNeeded(
+        model.applyRecipeIfNeeded(
             recipe
         )
-        flowModels.edit.activateSnapshotPersistence(
+        model.activateSnapshotPersistence(
             recipe: recipe
         )
-        flowModels.edit.name = "Edit Draft"
+        model.name = "Duplicate Draft"
+        model.note = "Should not persist"
 
-        flowModels.duplicate.applyRecipeIfNeeded(
-            recipe
-        )
-        flowModels.duplicate.activateSnapshotPersistence(
-            recipe: recipe
-        )
-        flowModels.duplicate.name = "Duplicate Draft"
+        #expect(snapshotStore.hasSnapshot() == false)
 
-        #expect(snapshotStore.snapshot(for: snapshotKeys.create)?.name == "Create Draft")
-        #expect(snapshotStore.snapshot(for: snapshotKeys.edit)?.name == "Edit Draft")
-        #expect(snapshotStore.snapshot(for: snapshotKeys.duplicate)?.name == "Duplicate Draft")
+        model.restoreSnapshot()
+
+        #expect(model.name == "Duplicate Draft")
+        #expect(model.note == "Should not persist")
     }
 }

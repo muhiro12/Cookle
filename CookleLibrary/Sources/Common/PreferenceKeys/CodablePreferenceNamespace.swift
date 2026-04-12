@@ -4,12 +4,20 @@ import MHPlatformCore
 public enum CodablePreferenceNamespace: String, Sendable {
     case formSnapshot = "cookle.formSnapshot"
 
-    public func preferenceKey<Value: Codable & Sendable>(
+    public func preferenceDescriptor<Value: Codable & Sendable>(
         name: String,
+        defaultSelection: MHUserDefaultsSelection,
         _: Value.Type = Value.self
-    ) -> MHCodablePreferenceKey<Value> {
+    ) -> MHCodablePreferenceDescriptor<Value> {
         .init(
-            storageKey: "\(rawValue).\(name)"
+            storageKey: storageKey(name: name),
+            defaultSelection: defaultSelection
         )
+    }
+
+    public func storageKey(
+        name: String
+    ) -> String {
+        "\(rawValue).\(name)"
     }
 }
