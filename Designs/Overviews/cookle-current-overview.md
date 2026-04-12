@@ -1,6 +1,6 @@
 # Cookle Product and Architecture Overview
 
-Implementation snapshot based on the repository state on March 21, 2026.
+Implementation snapshot based on the repository state on April 12, 2026.
 
 ## Purpose
 
@@ -289,6 +289,78 @@ Important modeling choices:
   recipes.
 - Timestamps are stored on all primary and sub-object records.
 - The migration plan is versioned as schema `1.0.0`.
+
+## Persistence
+
+Cookle currently splits persistence into two roles.
+
+### Authoritative Application Data
+
+`SwiftData` is the source of truth for user-owned cooking data.
+
+- `Recipe`
+- `Diary`
+- `Photo`
+- `Category`
+- `Ingredient`
+- `DiaryObject`
+- `PhotoObject`
+- `IngredientObject`
+
+Those records are the authoritative application state. They are expected to
+survive app restarts, updates, and preference cleanup. Recipe content, diary
+content, photos, tags, and ordered sub-objects belong here rather than in
+`AppStorage` or raw `UserDefaults`.
+
+### Preference-Style State
+
+`AppStorage` is the preferred SwiftUI surface for lightweight preference-style
+state. Outside SwiftUI, the app reaches the same storage through
+descriptor-backed `MHPreferenceStore`, `CooklePreferences`, and
+`CookleSharedPreferences`.
+
+The app currently uses two app-owned `UserDefaults` domains:
+
+- the standard app domain for app-local preference-style state
+- the app-group suite for cross-target state shared with widgets and App
+  Intents
+
+At startup, `CookleAppBootstrapModel` runs `CooklePreferenceLifecycle` before
+model-container preparation. That lifecycle enumerates the current app-owned
+descriptors from `BoolPreferenceKey`, `IntPreferenceKey`,
+`StringPreferenceKey`, `CodablePreferenceKey`, and
+`CookleInternalPreferenceKey`, then removes unknown keys from the standard app
+domain and the shared suite. In other words, the app-owned preference surface
+is intentionally closed: only declared descriptors survive cleanup.
+
+| Key group | Backing domain | Purpose | Safe to lose? | Cleanup target? |
+| --- | --- | --- | --- | --- |
+| `BoolPreferenceKey` | `standard` | UI and product-control flags | Yes | Yes |
+| `IntPreferenceKey` | `standard` | Notification time and tip progress | Yes | Yes |
+| `lastLaunchedAppVersion` | `standard` | App version marker | Yes | Yes |
+| `lastOpenedRecipeID` | shared suite | Cross-target last-opened pointer | Yes | Yes |
+| `pendingIntentDeepLinkURL` | shared suite | Temporary App Intent route handoff | Yes | Yes |
+| `loggingCurrentSession`, `loggingPreviousSession` | `standard` | Diagnostic log snapshots | Yes | Yes |
+| `diaryFormSnapshot`, `recipeFormSnapshot` | `standard` | Create-flow draft snapshots | Yes | Yes |
+| `preferenceLifecycleState` | `standard` | Cleanup bookkeeping state | Yes | Yes |
+
+Recent cleanup intentionally does not rescue several retired keys:
+
+- `pendingCookleIntentDeepLinkURL`, because it was only a temporary route
+  handoff queue
+- `cookle.logging.last-session.current-session` and
+  `cookle.logging.last-session.previous-session`, because they were diagnostic
+  snapshots rather than user data
+- `cookle.formSnapshot.diary` and `cookle.formSnapshot.recipe`, because they
+  were draft-assistance snapshots and the snapshot feature has not shipped yet
+- `cookle.preferences.lifecycle-state`, because it was internal bookkeeping
+  state
+- legacy standard-domain `lastOpenedRecipeID`, because it was only a low-value
+  last-opened pointer and the current owner is the shared suite
+
+This cleanup policy applies only to the app-owned standard domain and the
+app-group shared suite. It does not clean system-owned domains or the SwiftData
+store.
 
 ## Architecture Policy
 
