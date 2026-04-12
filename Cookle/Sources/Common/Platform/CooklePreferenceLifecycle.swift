@@ -3,10 +3,8 @@ import Foundation
 import MHPlatform
 
 enum CooklePreferenceLifecycle {
-    private static let migrationStateDescriptor = MHPreferenceMigrationStateDescriptor(
-        storageKey: "cookle.preferences.lifecycle-state",
-        defaultSelection: .standard
-    )
+    private static let migrationStateDescriptor =
+        CookleInternalPreferenceKey.preferenceLifecycleState.migrationStateDescriptor
 
     static func run(
         standardDomainName: String? = Bundle.main.bundleIdentifier

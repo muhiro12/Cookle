@@ -7,10 +7,6 @@ import Testing
 
 @Suite(.serialized)
 struct CooklePreferenceLifecycleTests {
-    private enum TestValues {
-        static let dailyRecipeSuggestionHour = 18
-    }
-
     @Test
     func run_keepsCurrentKeys_and_removes_stale_standard_and_shared_keys() async throws {
         let context = try makeLifecycleContext()
@@ -69,6 +65,16 @@ private extension CooklePreferenceLifecycleTests {
         let sharedSnapshot: [String: Any]
     }
 
+    enum TestValues {
+        static let dailyRecipeSuggestionHour = 18
+        static let oldDiarySnapshotStorageKey = "cookle.formSnapshot.diary"
+        static let oldRecipeSnapshotStorageKey = "cookle.formSnapshot.recipe"
+        static let oldLoggingCurrentStorageKey = "cookle.logging.last-session.current-session"
+        static let oldLoggingPreviousStorageKey = "cookle.logging.last-session.previous-session"
+        static let oldPendingIntentDeepLinkStorageKey = "pendingCookleIntentDeepLinkURL"
+        static let oldLifecycleStateStorageKey = "cookle.preferences.lifecycle-state"
+    }
+
     func makeLifecycleContext() throws -> LifecycleContext {
         let standardDomainName = "CooklePreferenceLifecycleTests.standard.\(UUID().uuidString)"
         let standardDefaults = UserDefaults.standard
@@ -111,7 +117,13 @@ private extension CooklePreferenceLifecycleTests {
                 RecipeFormSnapshot.preferenceDescriptor.storageKey: Data("recipe".utf8),
                 CookleAppLogging.snapshotStorageDescriptors.current.storageKey: Data("current".utf8),
                 CookleAppLogging.snapshotStorageDescriptors.previous.storageKey: Data("previous".utf8),
+                CookleInternalPreferenceKey.preferenceLifecycleState.rawValue: Data("state".utf8),
                 StringPreferenceKey.lastOpenedRecipeID.rawValue: "legacy-standard",
+                TestValues.oldDiarySnapshotStorageKey: Data("old-diary".utf8),
+                TestValues.oldRecipeSnapshotStorageKey: Data("old-recipe".utf8),
+                TestValues.oldLoggingCurrentStorageKey: Data("old-current".utf8),
+                TestValues.oldLoggingPreviousStorageKey: Data("old-previous".utf8),
+                TestValues.oldLifecycleStateStorageKey: Data("old-state".utf8),
                 "cookle.standard.stale": "remove"
             ],
             forName: standardDomainName
@@ -119,6 +131,8 @@ private extension CooklePreferenceLifecycleTests {
         sharedDefaults.setPersistentDomain(
             [
                 StringPreferenceKey.lastOpenedRecipeID.rawValue: "current-shared",
+                StringPreferenceKey.pendingIntentDeepLinkURL.rawValue: "current-deep-link",
+                TestValues.oldPendingIntentDeepLinkStorageKey: "legacy-deep-link",
                 BoolPreferenceKey.isDebugOn.rawValue: true,
                 "cookle.shared.stale": "remove"
             ],
@@ -153,7 +167,16 @@ private extension CooklePreferenceLifecycleTests {
             standardDomain[CookleAppLogging.snapshotStorageDescriptors.previous.storageKey] as? Data
                 == Data("previous".utf8)
         )
+        #expect(
+            standardDomain[CookleInternalPreferenceKey.preferenceLifecycleState.rawValue] as? Data
+                == Data("state".utf8)
+        )
         #expect(standardDomain[StringPreferenceKey.lastOpenedRecipeID.rawValue] == nil)
+        #expect(standardDomain[TestValues.oldDiarySnapshotStorageKey] == nil)
+        #expect(standardDomain[TestValues.oldRecipeSnapshotStorageKey] == nil)
+        #expect(standardDomain[TestValues.oldLoggingCurrentStorageKey] == nil)
+        #expect(standardDomain[TestValues.oldLoggingPreviousStorageKey] == nil)
+        #expect(standardDomain[TestValues.oldLifecycleStateStorageKey] == nil)
         #expect(standardDomain["cookle.standard.stale"] == nil)
     }
 
@@ -165,6 +188,7 @@ private extension CooklePreferenceLifecycleTests {
                 == "current-shared"
         )
         #expect(sharedDomain[BoolPreferenceKey.isDebugOn.rawValue] == nil)
+        #expect(sharedDomain[TestValues.oldPendingIntentDeepLinkStorageKey] == nil)
         #expect(sharedDomain["cookle.shared.stale"] == nil)
     }
 
@@ -176,19 +200,25 @@ private extension CooklePreferenceLifecycleTests {
         #expect(
             reports.contains { report in
                 report.domainName == standardDomainName
-                    && report.report.removedStorageKeys == [
+                    && Set(report.report.removedStorageKeys) == Set([
+                        TestValues.oldDiarySnapshotStorageKey,
+                        TestValues.oldLoggingCurrentStorageKey,
+                        TestValues.oldLoggingPreviousStorageKey,
+                        TestValues.oldLifecycleStateStorageKey,
+                        TestValues.oldRecipeSnapshotStorageKey,
                         "cookle.standard.stale",
                         StringPreferenceKey.lastOpenedRecipeID.rawValue
-                    ]
+                    ])
             }
         )
         #expect(
             reports.contains { report in
                 report.domainName == sharedDomainName
-                    && report.report.removedStorageKeys == [
+                    && Set(report.report.removedStorageKeys) == Set([
                         "cookle.shared.stale",
-                        BoolPreferenceKey.isDebugOn.rawValue
-                    ]
+                        BoolPreferenceKey.isDebugOn.rawValue,
+                        TestValues.oldPendingIntentDeepLinkStorageKey
+                    ])
             }
         )
     }

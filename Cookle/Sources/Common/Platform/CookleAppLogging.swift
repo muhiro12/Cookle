@@ -12,15 +12,11 @@ final class CookleAppLogging {
     )
     nonisolated static let snapshotStorageDescriptors = MHLogSnapshotStorageDescriptors(
         current: .init(
-            storageKey: CodablePreferenceKey.loggingLastSession.storageKey(
-                suffix: "current-session"
-            ),
+            storageKey: CodablePreferenceKey.loggingCurrentSession.rawValue,
             defaultSelection: .standard
         ),
         previous: .init(
-            storageKey: CodablePreferenceKey.loggingLastSession.storageKey(
-                suffix: "previous-session"
-            ),
+            storageKey: CodablePreferenceKey.loggingPreviousSession.rawValue,
             defaultSelection: .standard
         )
     )

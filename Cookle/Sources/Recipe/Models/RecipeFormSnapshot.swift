@@ -30,9 +30,7 @@ nonisolated struct RecipeFormSnapshot: Codable, Equatable, Sendable {
         }
     }
 
-    static let preferenceDescriptor = CodablePreferenceNamespace.formSnapshot.preferenceDescriptor(
-        name: "recipe",
-        defaultSelection: .standard,
+    static let preferenceDescriptor = CodablePreferenceKey.recipeFormSnapshot.preferenceDescriptor(
         Self.self
     )
 

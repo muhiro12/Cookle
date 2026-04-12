@@ -5,7 +5,7 @@ import MHPlatformCore
 public enum StringPreferenceKey: String, CaseIterable, Sendable, MHStringPrefDescriptorRepresentable {
     case lastOpenedRecipeID = "zxcXvb12"
     case lastLaunchedAppVersion = "s9Kp4Ld2"
-    case pendingIntentDeepLinkURL = "pendingCookleIntentDeepLinkURL"
+    case pendingIntentDeepLinkURL = "L2nV8qRs"
 
     public var preferenceDescriptor: MHStringPreferenceDescriptor {
         .init(

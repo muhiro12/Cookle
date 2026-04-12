@@ -2,9 +2,7 @@ import Foundation
 import MHPlatform
 
 nonisolated struct DiaryFormSnapshot: Codable, Equatable, Sendable {
-    static let preferenceDescriptor = CodablePreferenceNamespace.formSnapshot.preferenceDescriptor(
-        name: "diary",
-        defaultSelection: .standard,
+    static let preferenceDescriptor = CodablePreferenceKey.diaryFormSnapshot.preferenceDescriptor(
         Self.self
     )
 
