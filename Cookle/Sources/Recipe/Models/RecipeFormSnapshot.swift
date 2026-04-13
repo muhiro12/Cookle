@@ -31,7 +31,7 @@ nonisolated struct RecipeFormSnapshot: Codable, Equatable, Sendable {
     }
 
     static let preferenceDescriptor = MHCodablePreferenceDescriptor<Self>(
-        storageKey: "E8kP5sZa",
+        storageKey: CookleUserDefaultsKeys.Standard.recipeFormSnapshot.rawValue,
         defaultSelection: .standard
     )
 

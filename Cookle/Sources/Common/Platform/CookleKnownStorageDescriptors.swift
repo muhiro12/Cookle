@@ -3,7 +3,7 @@ import MHPlatform
 
 enum CookleKnownStorageDescriptors {
     nonisolated static let preferenceLifecycleState = MHPreferenceMigrationStateDescriptor(
-        storageKey: "N3dR7vXc",
+        storageKey: CookleUserDefaultsKeys.Standard.preferenceMigrationState.rawValue,
         defaultSelection: .standard
     )
 

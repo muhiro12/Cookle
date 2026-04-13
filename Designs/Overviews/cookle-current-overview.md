@@ -329,9 +329,11 @@ At startup, `CookleAppBootstrapModel` runs `CooklePreferenceLifecycle` before
 model-container preparation. That lifecycle enumerates the current app-owned
 descriptors from the `CookleLibrary` `MHPreferenceDescriptors` extension plus
 app-owned snapshot, logging, and lifecycle-state descriptors gathered in
-`CookleKnownStorageDescriptors`, then removes unknown keys from the standard
-app domain and the shared suite. In other words, the app-owned preference
-surface is intentionally closed: only declared descriptors survive cleanup.
+`CookleKnownStorageDescriptors`. The storage-key strings themselves are
+centralized in `CookleUserDefaultsKeys`, and the lifecycle uses the resulting
+descriptor catalog to remove unknown keys from the standard app domain and the
+shared suite. In other words, the app-owned preference surface is intentionally
+closed: only declared descriptors survive cleanup.
 
 | Key group | Backing domain | Purpose | Safe to lose? | Cleanup target? |
 | --- | --- | --- | --- | --- |

@@ -3,7 +3,7 @@ import MHPlatform
 
 nonisolated struct DiaryFormSnapshot: Codable, Equatable, Sendable {
     static let preferenceDescriptor = MHCodablePreferenceDescriptor<Self>(
-        storageKey: "W6yH1nRu",
+        storageKey: CookleUserDefaultsKeys.Standard.diaryFormSnapshot.rawValue,
         defaultSelection: .standard
     )
 

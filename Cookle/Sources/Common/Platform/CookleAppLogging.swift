@@ -9,11 +9,11 @@ final class CookleAppLogging {
     nonisolated private static let subsystem = "com.muhiro12.Cookle"
     nonisolated static let snapshotStorageDescriptors = MHLogSnapshotStorageDescriptors(
         current: .init(
-            storageKey: "J4mK7pXd",
+            storageKey: CookleUserDefaultsKeys.Standard.currentLogSnapshot.rawValue,
             defaultSelection: .standard
         ),
         previous: .init(
-            storageKey: "Q9tB3cLf",
+            storageKey: CookleUserDefaultsKeys.Standard.previousLogSnapshot.rawValue,
             defaultSelection: .standard
         )
     )

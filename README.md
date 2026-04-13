@@ -105,8 +105,8 @@ Primary records:
   `MHMutationProjectionStrategy`, and `MHReviewFlow` instead of app-local
   wrapper layers around successful mutations.
 - App-owned preference persistence extends `MHPreferenceDescriptors`, and the
-  app target keeps a single known-descriptor catalog for lifecycle cleanup and
-  storage audits.
+  repository keeps `CookleUserDefaultsKeys` as the central key catalog plus a
+  single known-descriptor catalog for lifecycle cleanup and storage audits.
 - Route meaning, notification copy and delivery meaning, review eligibility,
   and mutation-effect interpretation remain app-owned even when orchestration
   uses MHPlatform shells.

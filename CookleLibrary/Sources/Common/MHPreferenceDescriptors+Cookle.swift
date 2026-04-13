@@ -1,80 +1,91 @@
 import Foundation
 import MHPlatformCore
 
+/// App-owned preference descriptors used by Cookle targets.
 public extension MHPreferenceDescriptors {
+    /// Subscription entitlement mirror stored in the standard app domain.
     var isSubscribeOn: MHBoolPreferenceDescriptor {
         .init(
-            storageKey: "qWeRty12",
+            storageKey: CookleUserDefaultsKeys.Standard.isSubscribeOn.rawValue,
             defaultSelection: .standard,
             default: false
         )
     }
 
+    /// Current iCloud sync toggle stored in the standard app domain.
     var isICloudOn: MHBoolPreferenceDescriptor {
         .init(
-            storageKey: "AO9Yo1cC",
+            storageKey: CookleUserDefaultsKeys.Standard.isICloudOn.rawValue,
             defaultSelection: .standard,
             default: false
         )
     }
 
+    /// Debug feature toggle stored in the standard app domain.
     var isDebugOn: MHBoolPreferenceDescriptor {
         .init(
-            storageKey: "hd3fAy3G",
+            storageKey: CookleUserDefaultsKeys.Standard.isDebugOn.rawValue,
             defaultSelection: .standard,
             default: false
         )
     }
 
+    /// Daily recipe suggestion notification enablement.
     var isDailyRecipeSuggestionNotificationOn: MHBoolPreferenceDescriptor {
         .init(
-            storageKey: "m9Pq2Ls4",
+            storageKey: CookleUserDefaultsKeys.Standard.isDailyRecipeSuggestionNotificationOn.rawValue,
             defaultSelection: .standard,
             default: false
         )
     }
 
+    /// Preferred hour for daily recipe suggestion notifications.
     var dailyRecipeSuggestionHour: MHIntPreferenceDescriptor {
         .init(
-            storageKey: "r5Vn8Kt1",
+            storageKey: CookleUserDefaultsKeys.Standard.dailyRecipeSuggestionHour.rawValue,
             defaultSelection: .standard,
             default: .zero
         )
     }
 
+    /// Preferred minute for daily recipe suggestion notifications.
     var dailyRecipeSuggestionMinute: MHIntPreferenceDescriptor {
         .init(
-            storageKey: "u7Bx3Jd6",
+            storageKey: CookleUserDefaultsKeys.Standard.dailyRecipeSuggestionMinute.rawValue,
             defaultSelection: .standard,
             default: .zero
         )
     }
 
+    /// TipKit experience version marker.
     var tipExperienceVersion: MHIntPreferenceDescriptor {
         .init(
-            storageKey: "t7Px9Nb4",
+            storageKey: CookleUserDefaultsKeys.Standard.tipExperienceVersion.rawValue,
             defaultSelection: .standard,
             default: .zero
         )
     }
 
+    /// Last opened recipe identifier shared with widgets and intents.
     var lastOpenedRecipeID: MHStringPreferenceDescriptor {
         .init(
-            storageKey: "zxcXvb12",
+            storageKey: CookleUserDefaultsKeys.AppGroup.lastOpenedRecipeID.rawValue,
             defaultSelection: .suite(UserDefaults.appGroupIdentifier)
         )
     }
 
+    /// Last launched app version stored in the standard app domain.
     var lastLaunchedAppVersion: MHStringPreferenceDescriptor {
         .init(
-            storageKey: "s9Kp4Ld2",
+            storageKey: CookleUserDefaultsKeys.Standard.lastLaunchedAppVersion.rawValue,
             defaultSelection: .standard
         )
     }
 
+    /// Pending deep link handoff shared across app targets.
     var pendingIntentDeepLinkURL: MHStringPreferenceDescriptor {
         .init(
-            storageKey: "L2nV8qRs",
+            storageKey: CookleUserDefaultsKeys.AppGroup.pendingIntentDeepLinkURL.rawValue,
             defaultSelection: .suite(UserDefaults.appGroupIdentifier)
         )
     }
