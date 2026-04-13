@@ -108,8 +108,8 @@ When Swift files are edited, agents should run
 `bash ci_scripts/tasks/format_swift.sh` before the final verification gate.
 `bash ci_scripts/tasks/verify_task_completion.sh` is the non-destructive
 verification gate.
-`bash ci_scripts/tasks/verify_pre_commit.sh` reruns the same non-destructive
-verification shell for manual final checks and `.pre-commit-config.yaml`.
+`bash ci_scripts/tasks/verify_pre_push.sh` is the optional local `pre-push`
+hook wrapper for the same non-destructive verification gate.
 SwiftLint is resolved from the `SimplyDanny/SwiftLintPlugins` package declared
 in `Cookle.xcodeproj`, not from a separately installed `swiftlint` binary.
 

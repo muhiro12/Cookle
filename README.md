@@ -247,10 +247,10 @@ post-clone CI setup.
   step to run after Swift edits and before the final verification gate.
 - `bash ci_scripts/tasks/verify_task_completion.sh` is the non-destructive
   verification gate for Codex task completion.
-- `bash ci_scripts/tasks/verify_pre_commit.sh` reruns the same non-destructive
-  verification gate for Git `pre-commit` and manual final rechecks.
 - `bash ci_scripts/tasks/verify_repository_state.sh` checks the current
   repository state and still writes CI run artifacts.
+- `bash ci_scripts/tasks/verify_pre_push.sh` is the optional local `pre-push`
+  hook wrapper for the same non-destructive verification gate.
 
 SwiftLint is resolved from the `SimplyDanny/SwiftLintPlugins` package declared
 in `Cookle.xcodeproj`. The repository scripts do not require a separately
@@ -281,10 +281,10 @@ verify entrypoint to execute all required checks:
 CI_RUN_FORCE_FULL=1 bash ci_scripts/tasks/verify_task_completion.sh
 ```
 
-If you only need the final pre-commit recheck shell:
+If you only need the local `pre-push` wrapper shell:
 
 ```sh
-bash ci_scripts/tasks/verify_pre_commit.sh
+bash ci_scripts/tasks/verify_pre_push.sh
 ```
 
 If you prefer to run the SwiftLint steps directly:
@@ -300,11 +300,18 @@ If you only need required builds/tests based on local changes:
 bash ci_scripts/tasks/verify_repository_state.sh
 ```
 
-If you want Git's `pre-commit` hook to enforce the same repository flow, install
-`pre-commit` in your local environment and run `pre-commit install`. The hook
-delegates to `bash ci_scripts/tasks/verify_pre_commit.sh` through the local
-`.pre-commit-config.yaml`, which reruns the same non-destructive verification
-gate used for Codex task completion.
+If you want an optional Git `pre-push` hook for the same repository flow, add a
+local `.git/hooks/pre-push` script like this:
+
+```sh
+#!/usr/bin/env bash
+set -euo pipefail
+
+repository_root=$(git rev-parse --show-toplevel)
+cd "$repository_root"
+
+exec bash ci_scripts/tasks/verify_pre_push.sh
+```
 
 ### Build output layout
 
