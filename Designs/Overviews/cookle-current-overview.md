@@ -327,19 +327,19 @@ The app currently uses two app-owned `UserDefaults` domains:
 
 At startup, `CookleAppBootstrapModel` runs `CooklePreferenceLifecycle` before
 model-container preparation. That lifecycle enumerates the current app-owned
-descriptors from `BoolPreferenceKey`, `IntPreferenceKey`,
-`StringPreferenceKey`, `CodablePreferenceKey`, and
-`CookleInternalPreferenceKey`, then removes unknown keys from the standard app
-domain and the shared suite. In other words, the app-owned preference surface
-is intentionally closed: only declared descriptors survive cleanup.
+descriptors from the `CookleLibrary` `MHPreferenceDescriptors` extension plus
+app-owned snapshot, logging, and lifecycle-state descriptors gathered in
+`CookleKnownStorageDescriptors`, then removes unknown keys from the standard
+app domain and the shared suite. In other words, the app-owned preference
+surface is intentionally closed: only declared descriptors survive cleanup.
 
 | Key group | Backing domain | Purpose | Safe to lose? | Cleanup target? |
 | --- | --- | --- | --- | --- |
-| `BoolPreferenceKey` | `standard` | UI and product-control flags | Yes | Yes |
-| `IntPreferenceKey` | `standard` | Notification time and tip progress | Yes | Yes |
-| `lastLaunchedAppVersion` | `standard` | App version marker | Yes | Yes |
-| `lastOpenedRecipeID` | shared suite | Cross-target last-opened pointer | Yes | Yes |
-| `pendingIntentDeepLinkURL` | shared suite | Temporary App Intent route handoff | Yes | Yes |
+| `MHPreferenceDescriptors` bool descriptors | `standard` | UI and product-control flags | Yes | Yes |
+| `MHPreferenceDescriptors` int descriptors | `standard` | Notification time and tip progress | Yes | Yes |
+| `MHPreferenceDescriptors.lastLaunchedAppVersion` | `standard` | App version marker | Yes | Yes |
+| `MHPreferenceDescriptors.lastOpenedRecipeID` | shared suite | Cross-target last-opened pointer | Yes | Yes |
+| `MHPreferenceDescriptors.pendingIntentDeepLinkURL` | shared suite | Temporary App Intent route handoff | Yes | Yes |
 | `loggingCurrentSession`, `loggingPreviousSession` | `standard` | Diagnostic log snapshots | Yes | Yes |
 | `diaryFormSnapshot`, `recipeFormSnapshot` | `standard` | Create-flow draft snapshots | Yes | Yes |
 | `preferenceLifecycleState` | `standard` | Cleanup bookkeeping state | Yes | Yes |

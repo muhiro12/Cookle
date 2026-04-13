@@ -1,0 +1,42 @@
+import CookleLibrary
+import MHPlatform
+
+enum CookleKnownStorageDescriptors {
+    nonisolated static let preferenceLifecycleState = MHPreferenceMigrationStateDescriptor(
+        storageKey: "N3dR7vXc",
+        defaultSelection: .standard
+    )
+
+    nonisolated static var primitivePreferences: [any MHStorageDescriptorProtocol] {
+        let descriptors = MHPreferenceDescriptors()
+        return [
+            descriptors.isSubscribeOn,
+            descriptors.isICloudOn,
+            descriptors.isDebugOn,
+            descriptors.isDailyRecipeSuggestionNotificationOn,
+            descriptors.dailyRecipeSuggestionHour,
+            descriptors.dailyRecipeSuggestionMinute,
+            descriptors.tipExperienceVersion,
+            descriptors.lastOpenedRecipeID,
+            descriptors.lastLaunchedAppVersion,
+            descriptors.pendingIntentDeepLinkURL
+        ]
+    }
+
+    nonisolated static var preferenceLifecycleDescriptors: [any MHStorageDescriptorProtocol] {
+        primitivePreferences
+            + [
+                DiaryFormSnapshot.preferenceDescriptor,
+                RecipeFormSnapshot.preferenceDescriptor,
+                CookleAppLogging.snapshotStorageDescriptors.current,
+                CookleAppLogging.snapshotStorageDescriptors.previous
+            ]
+    }
+
+    nonisolated static var all: [any MHStorageDescriptorProtocol] {
+        preferenceLifecycleDescriptors
+            + [
+                preferenceLifecycleState
+            ]
+    }
+}

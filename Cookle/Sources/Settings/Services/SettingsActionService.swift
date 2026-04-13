@@ -42,17 +42,17 @@ final class SettingsActionService {
 
 private extension SettingsActionService {
     func normalizeNotificationDefaultsIfNeeded() {
-        if CooklePreferences.contains(.dailyRecipeSuggestionHour) == false {
+        if CooklePreferences.contains(\.dailyRecipeSuggestionHour) == false {
             CooklePreferences.set(
                 DailySuggestionTimePolicy.defaultHour,
-                for: .dailyRecipeSuggestionHour
+                for: \.dailyRecipeSuggestionHour
             )
         }
 
-        if CooklePreferences.contains(.dailyRecipeSuggestionMinute) == false {
+        if CooklePreferences.contains(\.dailyRecipeSuggestionMinute) == false {
             CooklePreferences.set(
                 DailySuggestionTimePolicy.minimumTimeComponent,
-                for: .dailyRecipeSuggestionMinute
+                for: \.dailyRecipeSuggestionMinute
             )
         }
     }

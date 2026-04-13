@@ -19,7 +19,7 @@ struct RecipeView: View {
     @Environment(CookleAppLogging.self)
     private var logging
 
-    @AppStorage(BoolPreferenceKey.isSubscribeOn)
+    @AppStorage(\.isSubscribeOn)
     private var isSubscribeOn
 
     var body: some View {

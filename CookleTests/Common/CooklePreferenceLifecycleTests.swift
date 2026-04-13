@@ -107,18 +107,19 @@ private extension CooklePreferenceLifecycleTests {
         sharedDefaults: UserDefaults,
         sharedDomainName: String
     ) {
+        let descriptors = MHPreferenceDescriptors()
         standardDefaults.setPersistentDomain(
             [
-                BoolPreferenceKey.isDebugOn.rawValue: true,
-                IntPreferenceKey.dailyRecipeSuggestionHour.rawValue:
+                descriptors.isDebugOn.storageKey: true,
+                descriptors.dailyRecipeSuggestionHour.storageKey:
                     TestValues.dailyRecipeSuggestionHour,
-                StringPreferenceKey.lastLaunchedAppVersion.rawValue: "3.0",
+                descriptors.lastLaunchedAppVersion.storageKey: "3.0",
                 DiaryFormSnapshot.preferenceDescriptor.storageKey: Data("diary".utf8),
                 RecipeFormSnapshot.preferenceDescriptor.storageKey: Data("recipe".utf8),
                 CookleAppLogging.snapshotStorageDescriptors.current.storageKey: Data("current".utf8),
                 CookleAppLogging.snapshotStorageDescriptors.previous.storageKey: Data("previous".utf8),
-                CookleInternalPreferenceKey.preferenceLifecycleState.rawValue: Data("state".utf8),
-                StringPreferenceKey.lastOpenedRecipeID.rawValue: "legacy-standard",
+                CookleKnownStorageDescriptors.preferenceLifecycleState.storageKey: Data("state".utf8),
+                descriptors.lastOpenedRecipeID.storageKey: "legacy-standard",
                 TestValues.oldDiarySnapshotStorageKey: Data("old-diary".utf8),
                 TestValues.oldRecipeSnapshotStorageKey: Data("old-recipe".utf8),
                 TestValues.oldLoggingCurrentStorageKey: Data("old-current".utf8),
@@ -130,10 +131,10 @@ private extension CooklePreferenceLifecycleTests {
         )
         sharedDefaults.setPersistentDomain(
             [
-                StringPreferenceKey.lastOpenedRecipeID.rawValue: "current-shared",
-                StringPreferenceKey.pendingIntentDeepLinkURL.rawValue: "current-deep-link",
+                descriptors.lastOpenedRecipeID.storageKey: "current-shared",
+                descriptors.pendingIntentDeepLinkURL.storageKey: "current-deep-link",
                 TestValues.oldPendingIntentDeepLinkStorageKey: "legacy-deep-link",
-                BoolPreferenceKey.isDebugOn.rawValue: true,
+                descriptors.isDebugOn.storageKey: true,
                 "cookle.shared.stale": "remove"
             ],
             forName: sharedDomainName
@@ -143,13 +144,14 @@ private extension CooklePreferenceLifecycleTests {
     func assertStandardDomain(
         _ standardDomain: [String: Any]
     ) {
-        #expect(standardDomain[BoolPreferenceKey.isDebugOn.rawValue] as? Bool == true)
+        let descriptors = MHPreferenceDescriptors()
+        #expect(standardDomain[descriptors.isDebugOn.storageKey] as? Bool == true)
         #expect(
-            standardDomain[IntPreferenceKey.dailyRecipeSuggestionHour.rawValue] as? Int
+            standardDomain[descriptors.dailyRecipeSuggestionHour.storageKey] as? Int
                 == TestValues.dailyRecipeSuggestionHour
         )
         #expect(
-            standardDomain[StringPreferenceKey.lastLaunchedAppVersion.rawValue] as? String == "3.0"
+            standardDomain[descriptors.lastLaunchedAppVersion.storageKey] as? String == "3.0"
         )
         #expect(
             standardDomain[DiaryFormSnapshot.preferenceDescriptor.storageKey] as? Data
@@ -168,10 +170,10 @@ private extension CooklePreferenceLifecycleTests {
                 == Data("previous".utf8)
         )
         #expect(
-            standardDomain[CookleInternalPreferenceKey.preferenceLifecycleState.rawValue] as? Data
+            standardDomain[CookleKnownStorageDescriptors.preferenceLifecycleState.storageKey] as? Data
                 == Data("state".utf8)
         )
-        #expect(standardDomain[StringPreferenceKey.lastOpenedRecipeID.rawValue] == nil)
+        #expect(standardDomain[descriptors.lastOpenedRecipeID.storageKey] == nil)
         #expect(standardDomain[TestValues.oldDiarySnapshotStorageKey] == nil)
         #expect(standardDomain[TestValues.oldRecipeSnapshotStorageKey] == nil)
         #expect(standardDomain[TestValues.oldLoggingCurrentStorageKey] == nil)
@@ -183,11 +185,12 @@ private extension CooklePreferenceLifecycleTests {
     func assertSharedDomain(
         _ sharedDomain: [String: Any]
     ) {
+        let descriptors = MHPreferenceDescriptors()
         #expect(
-            sharedDomain[StringPreferenceKey.lastOpenedRecipeID.rawValue] as? String
+            sharedDomain[descriptors.lastOpenedRecipeID.storageKey] as? String
                 == "current-shared"
         )
-        #expect(sharedDomain[BoolPreferenceKey.isDebugOn.rawValue] == nil)
+        #expect(sharedDomain[descriptors.isDebugOn.storageKey] == nil)
         #expect(sharedDomain[TestValues.oldPendingIntentDeepLinkStorageKey] == nil)
         #expect(sharedDomain["cookle.shared.stale"] == nil)
     }
@@ -197,6 +200,7 @@ private extension CooklePreferenceLifecycleTests {
         standardDomainName: String,
         sharedDomainName: String
     ) {
+        let descriptors = MHPreferenceDescriptors()
         #expect(
             reports.contains { report in
                 report.domainName == standardDomainName
@@ -207,7 +211,7 @@ private extension CooklePreferenceLifecycleTests {
                         TestValues.oldLifecycleStateStorageKey,
                         TestValues.oldRecipeSnapshotStorageKey,
                         "cookle.standard.stale",
-                        StringPreferenceKey.lastOpenedRecipeID.rawValue
+                        descriptors.lastOpenedRecipeID.storageKey
                     ])
             }
         )
@@ -216,7 +220,7 @@ private extension CooklePreferenceLifecycleTests {
                 report.domainName == sharedDomainName
                     && Set(report.report.removedStorageKeys) == Set([
                         "cookle.shared.stale",
-                        BoolPreferenceKey.isDebugOn.rawValue,
+                        descriptors.isDebugOn.storageKey,
                         TestValues.oldPendingIntentDeepLinkStorageKey
                     ])
             }

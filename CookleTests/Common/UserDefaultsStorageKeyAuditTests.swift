@@ -7,12 +7,7 @@ import Testing
 struct UserDefaultsStorageKeyAuditTests {
     @Test
     func appOwnedStorageKeys_areOpaqueAndUnique() {
-        let storageKeys =
-            BoolPreferenceKey.allCases.map(\.rawValue)
-            + IntPreferenceKey.allCases.map(\.rawValue)
-            + StringPreferenceKey.allCases.map(\.rawValue)
-            + CodablePreferenceKey.allCases.map(\.rawValue)
-            + CookleInternalPreferenceKey.allCases.map(\.rawValue)
+        let storageKeys = CookleKnownStorageDescriptors.all.map(\.storageKey)
 
         #expect(storageKeys.isEmpty == false)
         #expect(Set(storageKeys).count == storageKeys.count)

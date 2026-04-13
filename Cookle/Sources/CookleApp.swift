@@ -10,11 +10,11 @@ import SwiftUI
 
 @main
 struct CookleApp: App {
-    @AppStorage(BoolPreferenceKey.isICloudOn)
+    @AppStorage(\.isICloudOn)
     private var isICloudOn
-    @AppStorage(BoolPreferenceKey.isDebugOn)
+    @AppStorage(\.isDebugOn)
     private var isDebugOn
-    @AppStorage(StringPreferenceKey.lastLaunchedAppVersion)
+    @AppStorage(\.lastLaunchedAppVersion, default: "")
     private var lastLaunchedAppVersion
 
     @State private var bootstrapModel = CookleAppBootstrapModel()

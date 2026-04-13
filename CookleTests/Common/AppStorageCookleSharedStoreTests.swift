@@ -22,16 +22,16 @@ struct AppStorageCookleSharedStoreTests {
         }
 
         init(
-            key: BoolPreferenceKey,
+            keyPath: KeyPath<MHPreferenceDescriptors, MHBoolPreferenceDescriptor>,
             store: UserDefaults? = nil
         ) {
             if let store {
                 _value = AppStorage(
-                    key,
+                    keyPath,
                     store: store
                 )
             } else {
-                _value = AppStorage(key)
+                _value = AppStorage(keyPath)
             }
         }
     }
@@ -49,16 +49,16 @@ struct AppStorageCookleSharedStoreTests {
         }
 
         init(
-            key: IntPreferenceKey,
+            keyPath: KeyPath<MHPreferenceDescriptors, MHIntPreferenceDescriptor>,
             store: UserDefaults? = nil
         ) {
             if let store {
                 _value = AppStorage(
-                    key,
+                    keyPath,
                     store: store
                 )
             } else {
-                _value = AppStorage(key)
+                _value = AppStorage(keyPath)
             }
         }
     }
@@ -76,133 +76,137 @@ struct AppStorageCookleSharedStoreTests {
         }
 
         init(
-            key: StringPreferenceKey,
+            keyPath: KeyPath<MHPreferenceDescriptors, MHStringPreferenceDescriptor>,
             store: UserDefaults? = nil
         ) {
             if let store {
                 _value = AppStorage(
-                    key,
+                    keyPath,
+                    default: "",
                     store: store
                 )
             } else {
-                _value = AppStorage(key)
+                _value = AppStorage(
+                    keyPath,
+                    default: ""
+                )
             }
         }
     }
 
     @Test
     func boolAdapterUsesTypedKeyDefault() {
-        let key = BoolPreferenceKey.isDebugOn
+        let descriptor = MHPreferenceDescriptors().isDebugOn
         let userDefaults = makeTestUserDefaults()
         var harness = BoolHarness(
-            key: key,
+            keyPath: \.isDebugOn,
             store: userDefaults
         )
 
         #expect(harness.wrappedValue == false)
 
         harness.wrappedValue = true
-        #expect(userDefaults.bool(forKey: key.rawValue))
+        #expect(userDefaults.bool(forKey: descriptor.storageKey))
     }
 
     @Test
     func intAdapterUsesTypedKeyDefault() {
-        let key = IntPreferenceKey.dailyRecipeSuggestionHour
+        let descriptor = MHPreferenceDescriptors().dailyRecipeSuggestionHour
         let userDefaults = makeTestUserDefaults()
         var harness = IntHarness(
-            key: key,
+            keyPath: \.dailyRecipeSuggestionHour,
             store: userDefaults
         )
 
         #expect(harness.wrappedValue == .zero)
 
         harness.wrappedValue = 19
-        #expect(userDefaults.integer(forKey: key.rawValue) == 19)
+        #expect(userDefaults.integer(forKey: descriptor.storageKey) == 19)
     }
 
     @Test
     func requiredStringAdapterUsesEmptyDefaultAndRoundTrip() {
-        let key = StringPreferenceKey.lastLaunchedAppVersion
+        let descriptor = MHPreferenceDescriptors().lastLaunchedAppVersion
         let userDefaults = makeTestUserDefaults()
         var harness = StringHarness(
-            key: key,
+            keyPath: \.lastLaunchedAppVersion,
             store: userDefaults
         )
 
         #expect(harness.wrappedValue.isEmpty)
 
         harness.wrappedValue = "3.3"
-        #expect(userDefaults.string(forKey: key.rawValue) == "3.3")
+        #expect(userDefaults.string(forKey: descriptor.storageKey) == "3.3")
     }
 
     @Test
     func defaultStoreUsesSharedUserDefaults() {
-        let key = StringPreferenceKey.lastOpenedRecipeID
+        let descriptor = MHPreferenceDescriptors().lastOpenedRecipeID
         let sharedDefaults = makeSharedUserDefaults()
-        let originalValue = sharedDefaults.object(forKey: key.rawValue)
+        let originalValue = sharedDefaults.object(forKey: descriptor.storageKey)
         defer {
             restoreValue(
                 originalValue,
-                forKey: key.rawValue,
+                forKey: descriptor.storageKey,
                 in: sharedDefaults
             )
         }
 
-        sharedDefaults.removeObject(forKey: key.rawValue)
+        sharedDefaults.removeObject(forKey: descriptor.storageKey)
 
-        var harness = StringHarness(key: key)
+        var harness = StringHarness(keyPath: \.lastOpenedRecipeID)
         #expect(harness.wrappedValue.isEmpty)
 
         harness.wrappedValue = "3.3"
-        #expect(sharedDefaults.string(forKey: key.rawValue) == "3.3")
+        #expect(sharedDefaults.string(forKey: descriptor.storageKey) == "3.3")
     }
 
     @Test
     func defaultStoreUsesStandardUserDefaults() {
-        let key = StringPreferenceKey.lastLaunchedAppVersion
+        let descriptor = MHPreferenceDescriptors().lastLaunchedAppVersion
         let standardDefaults = UserDefaults.standard
-        let originalValue = standardDefaults.object(forKey: key.rawValue)
+        let originalValue = standardDefaults.object(forKey: descriptor.storageKey)
         defer {
             restoreValue(
                 originalValue,
-                forKey: key.rawValue,
+                forKey: descriptor.storageKey,
                 in: standardDefaults
             )
         }
 
-        standardDefaults.removeObject(forKey: key.rawValue)
+        standardDefaults.removeObject(forKey: descriptor.storageKey)
 
-        var harness = StringHarness(key: key)
+        var harness = StringHarness(keyPath: \.lastLaunchedAppVersion)
         #expect(harness.wrappedValue.isEmpty)
 
         harness.wrappedValue = "3.3"
-        #expect(standardDefaults.string(forKey: key.rawValue) == "3.3")
+        #expect(standardDefaults.string(forKey: descriptor.storageKey) == "3.3")
     }
 
     @Test
     func injectedStoreOverridesDescriptorDefaultSelection() {
-        let key = StringPreferenceKey.lastOpenedRecipeID
+        let descriptor = MHPreferenceDescriptors().lastOpenedRecipeID
         let sharedDefaults = makeSharedUserDefaults()
-        let originalValue = sharedDefaults.object(forKey: key.rawValue)
+        let originalValue = sharedDefaults.object(forKey: descriptor.storageKey)
         defer {
             restoreValue(
                 originalValue,
-                forKey: key.rawValue,
+                forKey: descriptor.storageKey,
                 in: sharedDefaults
             )
         }
 
-        sharedDefaults.set("shared-value", forKey: key.rawValue)
+        sharedDefaults.set("shared-value", forKey: descriptor.storageKey)
         let localDefaults = makeTestUserDefaults()
         var harness = StringHarness(
-            key: key,
+            keyPath: \.lastOpenedRecipeID,
             store: localDefaults
         )
 
         harness.wrappedValue = "local-value"
 
-        #expect(localDefaults.string(forKey: key.rawValue) == "local-value")
-        #expect(sharedDefaults.string(forKey: key.rawValue) == "shared-value")
+        #expect(localDefaults.string(forKey: descriptor.storageKey) == "local-value")
+        #expect(sharedDefaults.string(forKey: descriptor.storageKey) == "shared-value")
     }
 }
 

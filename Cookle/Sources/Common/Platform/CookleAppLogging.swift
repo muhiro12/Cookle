@@ -6,17 +6,14 @@ import Observation
 @MainActor
 @Observable
 final class CookleAppLogging {
-    private static let subsystem = "com.muhiro12.Cookle"
-    private static let snapshotStore = MHPreferenceStore(
-        userDefaults: .standard
-    )
+    nonisolated private static let subsystem = "com.muhiro12.Cookle"
     nonisolated static let snapshotStorageDescriptors = MHLogSnapshotStorageDescriptors(
         current: .init(
-            storageKey: CodablePreferenceKey.loggingCurrentSession.rawValue,
+            storageKey: "J4mK7pXd",
             defaultSelection: .standard
         ),
         previous: .init(
-            storageKey: CodablePreferenceKey.loggingPreviousSession.rawValue,
+            storageKey: "Q9tB3cLf",
             defaultSelection: .standard
         )
     )
@@ -30,7 +27,10 @@ final class CookleAppLogging {
     }
 
     static func live() -> CookleAppLogging {
-        .init(
+        let snapshotStore = MHPreferenceStore(
+            userDefaults: .standard
+        )
+        return .init(
             bootstrap: .init(
                 captureLevel: captureLevel,
                 subsystem: subsystem,

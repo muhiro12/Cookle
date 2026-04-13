@@ -2,8 +2,9 @@ import Foundation
 import MHPlatform
 
 nonisolated struct DiaryFormSnapshot: Codable, Equatable, Sendable {
-    static let preferenceDescriptor = CodablePreferenceKey.diaryFormSnapshot.preferenceDescriptor(
-        Self.self
+    static let preferenceDescriptor = MHCodablePreferenceDescriptor<Self>(
+        storageKey: "W6yH1nRu",
+        defaultSelection: .standard
     )
 
     let date: Date

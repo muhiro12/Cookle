@@ -1,5 +1,6 @@
 @testable import CookleLibrary
 import Foundation
+import MHPlatformCore
 import SwiftData
 import Testing
 
@@ -182,7 +183,7 @@ struct RecipeServiceTests {
 extension RecipeServiceTests {
     @Test
     func lastOpenedRecipe_returns_recipe_from_storage() throws {
-        let preferenceKey = StringPreferenceKey.lastOpenedRecipeID.rawValue
+        let preferenceKey = MHPreferenceDescriptors().lastOpenedRecipeID.storageKey
         let sharedDefaults = makeSharedUserDefaults()
         let standardDefaults = UserDefaults.standard
         let originalSharedValue = sharedDefaults.string(
@@ -217,7 +218,7 @@ extension RecipeServiceTests {
 
     @Test
     func recordLastOpenedRecipe_stores_shared_preference() {
-        let preferenceKey = StringPreferenceKey.lastOpenedRecipeID.rawValue
+        let preferenceKey = MHPreferenceDescriptors().lastOpenedRecipeID.storageKey
         let sharedDefaults = makeSharedUserDefaults()
         let standardDefaults = UserDefaults.standard
         let originalSharedValue = sharedDefaults.string(
@@ -251,13 +252,13 @@ extension RecipeServiceTests {
             forKey: preferenceKey
         )
         #expect(sharedStoredIdentifier != nil)
-        #expect(sharedStoredIdentifier == CookleSharedPreferences.string(for: .lastOpenedRecipeID))
+        #expect(sharedStoredIdentifier == CookleSharedPreferences.string(for: \.lastOpenedRecipeID))
         #expect(standardDefaults.string(forKey: preferenceKey) == originalStandardValue)
     }
 
     @Test
     func lastOpenedRecipe_ignores_legacy_standard_only_value() throws {
-        let preferenceKey = StringPreferenceKey.lastOpenedRecipeID.rawValue
+        let preferenceKey = MHPreferenceDescriptors().lastOpenedRecipeID.storageKey
         let sharedDefaults = makeSharedUserDefaults()
         let standardDefaults = UserDefaults.standard
         let originalSharedValue = sharedDefaults.string(
@@ -300,7 +301,7 @@ private func restoreLastOpenedRecipePreference(
     sharedValue: String?,
     standardValue: String?
 ) {
-    let key = StringPreferenceKey.lastOpenedRecipeID.rawValue
+    let key = MHPreferenceDescriptors().lastOpenedRecipeID.storageKey
 
     let sharedDefaults = makeSharedUserDefaults()
     if let sharedValue {

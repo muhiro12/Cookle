@@ -10,7 +10,7 @@ struct DebugSidebarView: View {
     @Environment(CookleTipController.self)
     private var tipController
 
-    @AppStorage(BoolPreferenceKey.isDebugOn)
+    @AppStorage(\.isDebugOn)
     private var isDebugOn
 
     @Binding private var content: DebugContent?

@@ -16,7 +16,7 @@ struct DiaryListView: View {
     @Environment(MainNavigationModel.self)
     private var navigationModel
 
-    @AppStorage(BoolPreferenceKey.isSubscribeOn)
+    @AppStorage(\.isSubscribeOn)
     private var isSubscribeOn
 
     @Query(.diaries(.all))

@@ -58,20 +58,26 @@ private extension CookleAppAssemblyFactory {
         let runtimeConfiguration = makeRuntimeConfiguration(
             nativeAdUnitID: nativeAdUnitID
         )
-        let bootstrap = makeBootstrap(
-            configuration: runtimeConfiguration,
+        var bootstrap: MHAppRuntimeBootstrap?
+        let lifecyclePlan = makeLifecyclePlan(
+            runtimeProvider: {
+                bootstrap?.runtime
+            },
+            remoteConfigurationService: services.remoteConfigurationService,
+            notificationService: services.notificationService,
             routePipeline: services.routePipeline
-        ) { runtimeProvider in
-            makeLifecyclePlan(
-                runtimeProvider: runtimeProvider,
-                remoteConfigurationService: services.remoteConfigurationService,
-                notificationService: services.notificationService,
-                routePipeline: services.routePipeline
-            )
-        }
+        )
+        bootstrap = .init(
+            configuration: runtimeConfiguration,
+            lifecyclePlan: lifecyclePlan,
+            routePipeline: services.routePipeline
+        )
         let reviewFlow = makeReviewFlow(
             logging: logging
         )
+        guard let bootstrap else {
+            fatalError("MHAppRuntimeBootstrap should be initialized before assembly creation completes.")
+        }
 
         return .init(
             modelContainer: modelContainer,
@@ -162,25 +168,6 @@ private extension CookleAppAssemblyFactory {
         )
     }
 
-    static func makeBootstrap<Route: Sendable>(
-        configuration: MHAppConfiguration,
-        routePipeline: MHAppRoutePipeline<Route>,
-        lifecyclePlan: (
-            @escaping @MainActor () -> MHAppRuntime?
-        ) -> MHAppRuntimeLifecyclePlan
-    ) -> MHAppRuntimeBootstrap {
-        let runtime = MHAppRuntime(
-            configuration: configuration
-        )
-        return MHAppRuntimeBootstrap(
-            runtime: runtime,
-            lifecyclePlan: lifecyclePlan {
-                runtime
-            },
-            routePipeline: routePipeline
-        )
-    }
-
     static func makeLifecyclePlan<Route: Sendable>(
         runtimeProvider: @escaping @MainActor () -> MHAppRuntime?,
         remoteConfigurationService: RemoteConfigurationService,
@@ -222,16 +209,16 @@ private extension CookleAppAssemblyFactory {
         case .inactive:
             CooklePreferences.set(
                 false,
-                for: .isSubscribeOn
+                for: \.isSubscribeOn
             )
             CooklePreferences.set(
                 false,
-                for: .isICloudOn
+                for: \.isICloudOn
             )
         case .active:
             CooklePreferences.set(
                 true,
-                for: .isSubscribeOn
+                for: \.isSubscribeOn
             )
         }
     }

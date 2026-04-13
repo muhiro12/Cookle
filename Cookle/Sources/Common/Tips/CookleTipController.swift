@@ -26,7 +26,7 @@ final class CookleTipController {
         if didMigrateTipExperience {
             CooklePreferences.set(
                 Self.currentTipExperienceVersion,
-                for: .tipExperienceVersion
+                for: \.tipExperienceVersion
             )
         }
         isConfigured = true
@@ -52,7 +52,7 @@ final class CookleTipController {
 private extension CookleTipController {
     func migrateTipExperienceIfNeeded() throws -> Bool {
         let storedVersion = CooklePreferences.int(
-            for: .tipExperienceVersion,
+            for: \.tipExperienceVersion,
             default: .zero
         )
         guard storedVersion < Self.currentTipExperienceVersion else {

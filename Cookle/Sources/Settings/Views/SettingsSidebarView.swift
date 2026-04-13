@@ -26,15 +26,15 @@ struct SettingsSidebarView: View {
     @Environment(SettingsActionService.self)
     private var settingsActionService
 
-    @AppStorage(BoolPreferenceKey.isSubscribeOn)
+    @AppStorage(\.isSubscribeOn)
     private var isSubscribeOn
-    @AppStorage(BoolPreferenceKey.isICloudOn)
+    @AppStorage(\.isICloudOn)
     private var isICloudOn
-    @AppStorage(BoolPreferenceKey.isDailyRecipeSuggestionNotificationOn)
+    @AppStorage(\.isDailyRecipeSuggestionNotificationOn)
     private var isDailyRecipeSuggestionNotificationOn
-    @AppStorage(IntPreferenceKey.dailyRecipeSuggestionHour)
+    @AppStorage(\.dailyRecipeSuggestionHour)
     private var dailyRecipeSuggestionHour
-    @AppStorage(IntPreferenceKey.dailyRecipeSuggestionMinute)
+    @AppStorage(\.dailyRecipeSuggestionMinute)
     private var dailyRecipeSuggestionMinute
 
     @Binding private var content: SettingsContent?

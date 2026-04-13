@@ -18,7 +18,7 @@ struct MenuNavigationView: View {
     @Environment(\.isPresented)
     private var isPresented
 
-    @AppStorage(BoolPreferenceKey.isDebugOn)
+    @AppStorage(\.isDebugOn)
     private var isDebugOn
 
     @State private var selectedTab: MainTab?

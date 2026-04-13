@@ -12,7 +12,7 @@ struct MainTabView: View {
     @Environment(\.horizontalSizeClass)
     private var horizontalSizeClass
 
-    @AppStorage(BoolPreferenceKey.isDebugOn)
+    @AppStorage(\.isDebugOn)
     private var isDebugOn
 
     @Binding private var selection: MainTab

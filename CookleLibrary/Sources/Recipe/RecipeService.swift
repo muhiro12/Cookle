@@ -9,11 +9,22 @@ public enum RecipeService {
     /// Returns the last opened recipe stored in preferences, if available.
     /// - Parameters:
     ///   - context: Model context to query.
+    /// - Returns: The matching `Recipe` or `nil` when not found.
+    public static func lastOpenedRecipe(context: ModelContext) throws -> Recipe? {
+        try lastOpenedRecipe(
+            context: context,
+            lastOpenedRecipeID: CookleSharedPreferences.string(for: \.lastOpenedRecipeID)
+        )
+    }
+
+    /// Returns the last opened recipe stored in preferences, if available.
+    /// - Parameters:
+    ///   - context: Model context to query.
     ///   - lastOpenedRecipeID: Optional base64-encoded persistent identifier.
     /// - Returns: The matching `Recipe` or `nil` when not found.
     public static func lastOpenedRecipe(
         context: ModelContext,
-        lastOpenedRecipeID: String? = CookleSharedPreferences.string(for: .lastOpenedRecipeID)
+        lastOpenedRecipeID: String?
     ) throws -> Recipe? {
         guard let lastOpenedRecipeID else {
             return nil
@@ -94,7 +105,7 @@ public enum RecipeService {
         )
         CookleSharedPreferences.set(
             encodedRecipeID,
-            for: .lastOpenedRecipeID
+            for: \.lastOpenedRecipeID
         )
         return .init(
             value: (),

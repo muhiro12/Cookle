@@ -15,7 +15,7 @@ extension NotificationService {
     }
 
     func handleDisabledSuggestionSyncIfNeeded() async -> Bool {
-        guard !CooklePreferences.bool(for: .isDailyRecipeSuggestionNotificationOn) else {
+        guard !CooklePreferences.bool(for: \.isDailyRecipeSuggestionNotificationOn) else {
             return false
         }
 

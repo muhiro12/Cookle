@@ -25,7 +25,7 @@ struct RecipeFormView: View {
     @Environment(CookleAppLogging.self)
     private var logging
 
-    @AppStorage(BoolPreferenceKey.isDebugOn)
+    @AppStorage(\.isDebugOn)
     private var isDebugOn
 
     @State private var editMode = EditMode.inactive

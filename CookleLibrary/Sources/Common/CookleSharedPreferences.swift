@@ -17,15 +17,22 @@ public enum CookleSharedPreferences {
     }
 
     /// Returns the shared string value visible to both the app and extensions.
-    public static func string(for key: StringPreferenceKey) -> String? {
-        store.string(for: key.preferenceDescriptor)
+    public static func string(
+        for keyPath: KeyPath<MHPreferenceDescriptors, MHStringPreferenceDescriptor>
+    ) -> String? {
+        store.string(
+            for: MHPreferenceDescriptors()[keyPath: keyPath]
+        )
     }
 
     /// Persists or removes a shared string value in the app-group container.
-    public static func set(_ value: String?, for key: StringPreferenceKey) {
+    public static func set(
+        _ value: String?,
+        for keyPath: KeyPath<MHPreferenceDescriptors, MHStringPreferenceDescriptor>
+    ) {
         store.set(
             value,
-            for: key.preferenceDescriptor
+            for: MHPreferenceDescriptors()[keyPath: keyPath]
         )
     }
 }

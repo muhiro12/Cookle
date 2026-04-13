@@ -163,11 +163,11 @@ extension NotificationService {
     var notificationHour: Int {
         let suggestionTime = DailySuggestionTimePolicy.normalized(
             hour: CooklePreferences.int(
-                for: .dailyRecipeSuggestionHour,
+                for: \.dailyRecipeSuggestionHour,
                 default: DailySuggestionTimePolicy.defaultHour
             ),
             minute: CooklePreferences.int(
-                for: .dailyRecipeSuggestionMinute,
+                for: \.dailyRecipeSuggestionMinute,
                 default: DailySuggestionTimePolicy.minimumTimeComponent
             )
         )
@@ -177,11 +177,11 @@ extension NotificationService {
     var notificationMinute: Int {
         let suggestionTime = DailySuggestionTimePolicy.normalized(
             hour: CooklePreferences.int(
-                for: .dailyRecipeSuggestionHour,
+                for: \.dailyRecipeSuggestionHour,
                 default: DailySuggestionTimePolicy.defaultHour
             ),
             minute: CooklePreferences.int(
-                for: .dailyRecipeSuggestionMinute,
+                for: \.dailyRecipeSuggestionMinute,
                 default: DailySuggestionTimePolicy.minimumTimeComponent
             )
         )
