@@ -19,7 +19,7 @@ Workflow Service Rule in `Cookle`.
 | notifications | suggestion planning (`DailyRecipeSuggestionService`), route URL builders, recipe blurb generation | `UNUserNotificationCenter` orchestration, authorization flow, attachment persistence | time normalization rules duplicated in app (`NotificationService` and `SettingsSidebarView`) |
 | widgets | shared model/query/mutation and deep-link vocabulary | WidgetKit providers, timeline policy, widget rendering views | stable recipe identifier conversion duplicated in recipe widget provider |
 | intents | shared domain logic consumed via services and workflows | parameter resolution, dialogs, snippet views, open-app behavior | some mutation-target branching and parsing logic leaked into intents |
-| migrations | `CookleMigrationPlan`, `DatabaseMigrator`, `ModelContainerFactory`, migration validation | app startup orchestration and fatal-error handling | no high-impact canonical gap observed |
+| migrations | `CookleMigrationPlan`, `DatabaseMigrator`, `ModelContainerFactory`, MHPlatform-backed store relocation validation | app startup orchestration and fatal-error handling | no high-impact canonical gap observed |
 
 ## Evidence Paths
 

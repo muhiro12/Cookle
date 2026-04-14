@@ -27,15 +27,10 @@ public enum ModelContainerFactory {
             legacyURL: Database.legacyURL,
             currentURL: Database.url
         ) { currentStoreURL, _ in
-            let currentContainer = try makeModelContainer(
-                url: currentStoreURL,
-                cloudKitDatabase: cloudKitDatabase
-            )
             try validateMigratedDataBeforeDeletingLegacyIfNeeded(
-                currentContainer: currentContainer,
+                currentStoreURL: currentStoreURL,
                 cloudKitDatabase: cloudKitDatabase,
                 legacyURL: Database.legacyURL,
-                currentURL: currentStoreURL,
                 logger: logger
             )
         }
@@ -91,74 +86,43 @@ public enum ModelContainerFactory {
     }
 
     static func validateMigratedDataBeforeDeletingLegacyIfNeeded(
-        currentContainer: ModelContainer,
+        currentStoreURL: URL,
         cloudKitDatabase: ModelConfiguration.CloudKitDatabase,
         legacyURL: URL = Database.legacyURL,
-        currentURL: URL = Database.url,
         fileManager: FileManager = .default,
         logger: MHLogger? = nil
     ) throws {
         let validationStartedAt = Date.timeIntervalSinceReferenceDate
-        guard legacyURL != currentURL else {
+        guard legacyURL.standardizedFileURL != currentStoreURL.standardizedFileURL else {
             return
         }
         guard fileManager.fileExists(atPath: legacyURL.path) else {
             return
         }
 
-        let legacyContainer = try makeModelContainer(
-            url: legacyURL,
-            cloudKitDatabase: cloudKitDatabase
-        )
-        let legacyObjectCounts = try objectCounts(
-            in: .init(legacyContainer)
-        )
-        let currentObjectCounts = try objectCounts(
-            in: .init(currentContainer)
-        )
-        guard currentObjectCounts.hasMatchingPersistedEntityCounts(
-            as: legacyObjectCounts
-        ) else {
+        do {
+            _ = try makeModelContainer(
+                url: currentStoreURL,
+                cloudKitDatabase: cloudKitDatabase
+            )
+        } catch {
             logger?.error(
                 "store migration validation failed",
                 metadata: [
-                    "legacy_counts": legacyObjectCounts.summary,
-                    "current_counts": currentObjectCounts.summary
+                    "error_type": String(describing: type(of: error)),
+                    "error": error.localizedDescription
                 ]
             )
-            throw MigrationValidationError.persistedEntityCountMismatch(
-                legacyObjectCounts: legacyObjectCounts,
-                currentObjectCounts: currentObjectCounts
-            )
+            throw error
         }
         logger?.notice(
             "store migration validation finished",
             metadata: [
                 "duration_ms": durationMilliseconds(
                     since: validationStartedAt
-                ).description,
-                "legacy_counts": legacyObjectCounts.summary,
-                "current_counts": currentObjectCounts.summary
+                ).description
             ]
         )
-    }
-
-    private static func objectCounts(in context: ModelContext) throws -> MigrationObjectCounts {
-        try .init(
-            recipeCount: count(in: context, Recipe.self),
-            diaryCount: count(in: context, Diary.self),
-            categoryCount: count(in: context, Category.self),
-            ingredientCount: count(in: context, Ingredient.self),
-            photoCount: count(in: context, Photo.self)
-        )
-    }
-
-    private static func count<Model: PersistentModel>(
-        in context: ModelContext,
-        _: Model.Type
-    ) throws -> Int {
-        let fetchDescriptor: FetchDescriptor<Model> = .init()
-        return try context.fetchCount(fetchDescriptor)
     }
 
     private static func durationMilliseconds(

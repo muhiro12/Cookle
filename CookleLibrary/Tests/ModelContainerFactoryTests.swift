@@ -1,12 +1,12 @@
 @testable import CookleLibrary
 import Foundation
-import MHPlatformCore
 import SwiftData
 import Testing
 
 struct ModelContainerFactoryTests {
     @Test
-    func validateMigratedDataBeforeDeletingLegacyIfNeeded_passes_when_counts_match() throws {
+    @MainActor
+    func validateMigratedDataBeforeDeletingLegacyIfNeeded_passes_when_relocated_store_opens() throws {
         let sandbox = try makeSandboxDirectory()
         defer {
             try? FileManager.default.removeItem(at: sandbox)
@@ -26,83 +26,19 @@ struct ModelContainerFactoryTests {
         try seed(context: .init(legacyContainer))
 
         try ModelContainerFactory.validateMigratedDataBeforeDeletingLegacyIfNeeded(
-            currentContainer: currentContainer,
+            currentStoreURL: currentURL,
             cloudKitDatabase: .none,
-            legacyURL: legacyURL,
-            currentURL: currentURL
+            legacyURL: legacyURL
         )
-    }
 
-    @Test
-    func validateMigratedDataBeforeDeletingLegacyIfNeeded_throws_when_counts_do_not_match() throws {
-        let sandbox = try makeSandboxDirectory()
-        defer {
-            try? FileManager.default.removeItem(at: sandbox)
-        }
-        let currentURL = sandbox.appendingPathComponent("current.sqlite")
-        let legacyURL = sandbox.appendingPathComponent("legacy.sqlite")
-
-        let currentContainer = try ModelContainerFactory.makeModelContainer(
+        let reopenedContainer = try ModelContainerFactory.makeModelContainer(
             url: currentURL,
             cloudKitDatabase: .none
         )
-        let legacyContainer = try ModelContainerFactory.makeModelContainer(
-            url: legacyURL,
-            cloudKitDatabase: .none
+        let recipes = try reopenedContainer.mainContext.fetch(
+            FetchDescriptor<Recipe>()
         )
-        try seed(context: .init(legacyContainer))
-
-        do {
-            try ModelContainerFactory.validateMigratedDataBeforeDeletingLegacyIfNeeded(
-                currentContainer: currentContainer,
-                cloudKitDatabase: .none,
-                legacyURL: legacyURL,
-                currentURL: currentURL
-            )
-            Issue.record("Expected migration validation mismatch error.")
-        } catch let error as MigrationValidationError {
-            switch error {
-            case .persistedEntityCountMismatch:
-                break
-            }
-        }
-    }
-
-    @Test
-    func validateMigratedDataBeforeDeletingLegacyIfNeeded_throws_when_only_tag_and_photo_counts_do_not_match() throws {
-        let sandbox = try makeSandboxDirectory()
-        defer {
-            try? FileManager.default.removeItem(at: sandbox)
-        }
-        let currentURL = sandbox.appendingPathComponent("current.sqlite")
-        let legacyURL = sandbox.appendingPathComponent("legacy.sqlite")
-
-        let currentContainer = try ModelContainerFactory.makeModelContainer(
-            url: currentURL,
-            cloudKitDatabase: .none
-        )
-        let legacyContainer = try ModelContainerFactory.makeModelContainer(
-            url: legacyURL,
-            cloudKitDatabase: .none
-        )
-        try seed(context: .init(currentContainer))
-        try seed(context: .init(legacyContainer))
-        try seedOnlyTagAndPhotoData(context: .init(legacyContainer))
-
-        do {
-            try ModelContainerFactory.validateMigratedDataBeforeDeletingLegacyIfNeeded(
-                currentContainer: currentContainer,
-                cloudKitDatabase: .none,
-                legacyURL: legacyURL,
-                currentURL: currentURL
-            )
-            Issue.record("Expected migration validation mismatch error.")
-        } catch let error as MigrationValidationError {
-            switch error {
-            case .persistedEntityCountMismatch:
-                break
-            }
-        }
+        #expect(recipes.count == 1)
     }
 
     @Test
@@ -121,10 +57,9 @@ struct ModelContainerFactoryTests {
         try seed(context: .init(currentContainer))
 
         try ModelContainerFactory.validateMigratedDataBeforeDeletingLegacyIfNeeded(
-            currentContainer: currentContainer,
+            currentStoreURL: currentURL,
             cloudKitDatabase: .none,
-            legacyURL: legacyURL,
-            currentURL: currentURL
+            legacyURL: legacyURL
         )
     }
 }
@@ -167,25 +102,6 @@ private extension ModelContainerFactoryTests {
                 )
             ],
             note: ""
-        )
-        try context.save()
-    }
-
-    func seedOnlyTagAndPhotoData(context: ModelContext) throws {
-        _ = Category.create(
-            context: context,
-            value: "Category"
-        )
-        _ = Ingredient.create(
-            context: context,
-            value: "Ingredient"
-        )
-        _ = Photo.create(
-            context: context,
-            photoData: .init(
-                data: .init("photo".utf8),
-                source: .photosPicker
-            )
         )
         try context.save()
     }

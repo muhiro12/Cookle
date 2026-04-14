@@ -463,10 +463,10 @@ Views should not own:
 ### Storage and Migration Policy
 
 - The main app builds its model container through `ModelContainerFactory`.
-- Legacy store files are migrated before the current container is used.
-- Migrated data is validated before legacy files are deleted.
-- Validation currently requires recipe and diary object counts to match between
-  legacy and current stores.
+- Legacy store files are relocated through `MHPlatform` persistence maintenance
+  before the current container is used.
+- The relocated store is validated by opening a `ModelContainer` before legacy
+  files are deleted.
 - Shared preferences use an app-group-backed store when cross-target access is
   needed.
 
