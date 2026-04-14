@@ -204,49 +204,19 @@ extension ModelContainerFactory {
             since: context.validationStartedAt
         ).description
 
-        var currentCounts: StoreEntityCounts?
-        do {
-            currentCounts = try countSummary(
-                in: .init(context.currentContainer)
-            )
-            metadata["current_counts"] = currentCounts?.summary
-        } catch {
-            metadata["current_counts_error_type"] = String(
-                describing: type(of: error)
-            )
-            metadata["current_counts_error"] = error.localizedDescription
-        }
-
-        do {
-            let legacyContainer = try makeModelContainer(
-                url: context.legacyURL,
-                cloudKitDatabase: context.cloudKitDatabase
-            )
-            let legacyCounts = try countSummary(
-                in: .init(legacyContainer)
-            )
-            metadata["legacy_counts"] = legacyCounts.summary
-            if let currentCounts {
-                metadata["counts_match"] = (currentCounts == legacyCounts).description
-            }
-        } catch {
-            metadata["legacy_counts_error_type"] = String(
-                describing: type(of: error)
-            )
-            metadata["legacy_counts_error"] = error.localizedDescription
-        }
-
-        let message: String
-        if metadata["counts_match"] == true.description {
-            message = "store migration validation snapshot"
-        } else if metadata["counts_match"] == false.description {
-            message = "store migration validation counts changed"
-        } else {
-            message = "store migration validation snapshot"
-        }
+        let currentCounts = attachCurrentCounts(
+            to: &metadata,
+            currentContainer: context.currentContainer
+        )
+        attachLegacyCounts(
+            to: &metadata,
+            legacyURL: context.legacyURL,
+            cloudKitDatabase: context.cloudKitDatabase,
+            currentCounts: currentCounts
+        )
 
         logger.warning(
-            message,
+            validationSnapshotMessage(metadata: metadata),
             metadata: metadata
         )
     }
@@ -277,9 +247,66 @@ extension ModelContainerFactory {
             newValue
         }
     }
+
+    private static func attachCurrentCounts(
+        to metadata: inout [String: String],
+        currentContainer: ModelContainer
+    ) -> StoreEntityCounts? {
+        do {
+            let currentCounts = try countSummary(
+                in: .init(currentContainer)
+            )
+            metadata["current_counts"] = currentCounts.summary
+            return currentCounts
+        } catch {
+            metadata["current_counts_error_type"] = String(
+                describing: type(of: error)
+            )
+            metadata["current_counts_error"] = error.localizedDescription
+            return nil
+        }
+    }
 }
 
 private extension ModelContainerFactory {
+    static func attachLegacyCounts(
+        to metadata: inout [String: String],
+        legacyURL: URL,
+        cloudKitDatabase: ModelConfiguration.CloudKitDatabase,
+        currentCounts: StoreEntityCounts?
+    ) {
+        do {
+            let legacyContainer = try makeModelContainer(
+                url: legacyURL,
+                cloudKitDatabase: cloudKitDatabase
+            )
+            let legacyCounts = try countSummary(
+                in: .init(legacyContainer)
+            )
+            metadata["legacy_counts"] = legacyCounts.summary
+            if let currentCounts {
+                metadata["counts_match"] = (currentCounts == legacyCounts).description
+            }
+        } catch {
+            metadata["legacy_counts_error_type"] = String(
+                describing: type(of: error)
+            )
+            metadata["legacy_counts_error"] = error.localizedDescription
+        }
+    }
+
+    static func validationSnapshotMessage(
+        metadata: [String: String]
+    ) -> String {
+        if metadata["counts_match"] == true.description {
+            return "store migration validation snapshot"
+        }
+        if metadata["counts_match"] == false.description {
+            return "store migration validation counts changed"
+        }
+        return "store migration validation snapshot"
+    }
+
     static func logRelocationPlanIfNeeded(
         fileManager: FileManager,
         legacyURL: URL,
@@ -353,10 +380,10 @@ private extension ModelContainerFactory {
         let fileNames = (try? fileManager.contentsOfDirectory(
             atPath: directoryURL.path
         ))?
-            .filter { fileName in
-                fileName == baseName || fileName.hasPrefix(baseName + "-")
-            }
-            .sorted() ?? []
+        .filter { fileName in
+            fileName == baseName || fileName.hasPrefix(baseName + "-")
+        }
+        .sorted() ?? []
 
         return .init(
             exists: fileNames.isEmpty == false,
