@@ -1,3 +1,4 @@
+import Foundation
 import SwiftData
 import SwiftUI
 
@@ -9,7 +10,7 @@ struct ShareRecipeLinkButton: View {
         ShareLink(
             item: shareURL,
             subject: Text(recipe.name),
-            message: Text("Use this link to reopen \(recipe.name) in Cookle later.")
+            message: Text(shareMessage)
         ) {
             Label {
                 Text("Share Recipe Link")
@@ -22,6 +23,13 @@ struct ShareRecipeLinkButton: View {
 }
 
 private extension ShareRecipeLinkButton {
+    var shareMessage: String {
+        String.localizedStringWithFormat(
+            String(localized: "recipe.shareLink.message"),
+            recipe.name
+        )
+    }
+
     var shareURL: URL {
         CookleDeepLinkURLBuilder.preferredRecipeDetailURL(
             for: RecipeStableIdentifierCodec.stableIdentifier(

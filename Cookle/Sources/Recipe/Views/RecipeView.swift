@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2024/04/09.
 //
 
+import Foundation
 import MHPlatform
 import SwiftData
 import SwiftUI
@@ -42,6 +43,8 @@ struct RecipeView: View {
                 EditRecipeButton()
                 DuplicateRecipeButton()
                 DeleteRecipeButton()
+            } footer: {
+                Text(shareRecipeLinkFooter)
             }
         }
         .navigationTitle(recipe.name)
@@ -81,5 +84,11 @@ struct RecipeView: View {
     NavigationStack {
         RecipeView()
             .environment(recipes[0])
+    }
+}
+
+private extension RecipeView {
+    var shareRecipeLinkFooter: String {
+        String(localized: "recipe.shareLink.footer")
     }
 }

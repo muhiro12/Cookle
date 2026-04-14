@@ -5936,6 +5936,40 @@
         }
       }
     },
+    "recipe.shareLink.footer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save this link in reminders, calendar events, or notes so you can reopen this recipe in Cookle later. It does not share the recipe details with someone else."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guarda este enlace en recordatorios, eventos del calendario o notas para volver a abrir esta receta en Cookle más tarde. No comparte los detalles de la receta con otra persona."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistrez ce lien dans des rappels, des événements de calendrier ou des notes afin de pouvoir rouvrir cette recette dans Cookle plus tard. Il ne partage pas les détails de la recette avec une autre personne."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このリンクをリマインダー、カレンダー予定、メモなどに保存しておくと、後でこのレシピを Cookle で開き直せます。ほかの人にレシピ内容を共有するものではありません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将此链接保存到提醒事项、日历事件或备忘录中，以便稍后在 Cookle 中重新打开这道食谱。它不会把食谱详情分享给其他人。"
+          }
+        }
+      }
+    },
     "Show All Tips For Testing" : {
       "localizations" : {
         "en" : {
@@ -7092,36 +7126,36 @@
         }
       }
     },
-    "Use this link to reopen %@ in Cookle later." : {
+    "recipe.shareLink.message" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Use this link to reopen %@ in Cookle later."
+            "value" : "Save this link in reminders, calendar events, or notes to reopen %@ in Cookle later."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Usa este enlace para volver a abrir %@ en Cookle más tarde."
+            "value" : "Guarda este enlace en recordatorios, eventos del calendario o notas para volver a abrir %@ en Cookle más tarde."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Utilisez ce lien pour rouvrir %@ dans Cookle plus tard."
+            "value" : "Enregistrez ce lien dans des rappels, des événements de calendrier ou des notes pour rouvrir %@ dans Cookle plus tard."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "このリンクを使うと後で Cookle で %@ を再度開けます。"
+            "value" : "このリンクをリマインダー、カレンダー予定、メモなどに保存しておくと、後で Cookle で %@ を開き直せます。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "使用此链接可稍后在 Cookle 中重新打开 %@。"
+            "value" : "将此链接保存到提醒事项、日历事件或备忘录中，以便稍后在 Cookle 中重新打开 %@。"
           }
         }
       }
