@@ -38,19 +38,10 @@ final class CookleAppBootstrapModel {
         let startupStartedAt = Date.timeIntervalSinceReferenceDate
         let preferenceLifecycleStartedAt = Date.timeIntervalSinceReferenceDate
         let lifecycleOutcome = await CooklePreferenceLifecycle.run()
-        startupLogger.notice(
-            "preference lifecycle finished in \(Self.durationMilliseconds(since: preferenceLifecycleStartedAt)) ms",
-            metadata: [
-                "migration_outcome": String(
-                    describing: lifecycleOutcome.migrationOutcome
-                ),
-                "removed_key_count": String(
-                    lifecycleOutcome.cleanupReports
-                        .reduce(into: .zero) { count, report in
-                            count += report.report.removedStorageKeys.count
-                        }
-                )
-            ]
+        logPreferenceLifecycleOutcome(
+            lifecycleOutcome,
+            startedAt: preferenceLifecycleStartedAt,
+            startupLogger: startupLogger
         )
 
         let cloudKitDatabase: ModelConfiguration.CloudKitDatabase = isICloudOn
@@ -116,6 +107,57 @@ private extension CookleAppBootstrapModel {
             "store prep finished in \(Self.durationMilliseconds(since: storePreparationStartedAt)) ms"
         )
         return modelContainer
+    }
+
+    func logPreferenceLifecycleOutcome(
+        _ lifecycleOutcome: MHPreferenceLifecycleOutcome,
+        startedAt: TimeInterval,
+        startupLogger: MHLogger
+    ) {
+        let removedKeyCount = lifecycleOutcome.cleanupReports
+            .reduce(into: .zero) { count, report in
+                count += report.report.removedStorageKeys.count
+            }
+        var metadata: [String: String] = [
+            "migration_outcome": String(
+                describing: lifecycleOutcome.migrationOutcome
+            ),
+            "removed_key_count": removedKeyCount.description,
+            "cleanup_report_count": lifecycleOutcome.cleanupReports.count.description,
+            "cleanup_domains": lifecycleOutcome.cleanupReports
+                .map(\.domainName)
+                .joined(separator: "|"),
+            "cleanup_removed_key_counts": lifecycleOutcome.cleanupReports
+                .map { report in
+                    "\(report.domainName)=\(report.report.removedStorageKeys.count)"
+                }
+                .joined(separator: "|")
+        ]
+
+        let removedKeys = lifecycleOutcome.cleanupReports
+            .flatMap { report in
+                report.report.removedStorageKeys.map { storageKey in
+                    "\(report.domainName):\(storageKey)"
+                }
+            }
+            .sorted()
+        if removedKeys.isEmpty == false {
+            metadata["removed_keys"] = removedKeys.joined(separator: "|")
+        }
+
+        let message = "preference lifecycle finished in \(Self.durationMilliseconds(since: startedAt)) ms"
+        if removedKeyCount > .zero {
+            startupLogger.warning(
+                message,
+                metadata: metadata
+            )
+            return
+        }
+
+        startupLogger.notice(
+            message,
+            metadata: metadata
+        )
     }
 
     func makeAssembly(

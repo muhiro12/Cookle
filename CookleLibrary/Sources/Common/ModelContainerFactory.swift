@@ -22,28 +22,36 @@ public enum ModelContainerFactory {
         logger: MHLogger? = nil
     ) throws -> ModelContainer {
         let storePreparationStartedAt = Date.timeIntervalSinceReferenceDate
-        let migrationOutcome = try DatabaseMigrator.migrateStoreFilesIfNeeded(
-            fileManager: .default,
-            legacyURL: Database.legacyURL,
-            currentURL: Database.url
-        ) { currentStoreURL, _ in
-            try validateMigratedDataBeforeDeletingLegacyIfNeeded(
-                currentStoreURL: currentStoreURL,
-                cloudKitDatabase: cloudKitDatabase,
-                legacyURL: Database.legacyURL,
-                logger: logger
-            )
-        }
+        let legacyURL = Database.legacyURL
+        let currentURL = Database.url
+        let fileManager: FileManager = .default
+        let migrationOutcome = try prepareStoreFilesIfNeeded(
+            fileManager: fileManager,
+            legacyURL: legacyURL,
+            currentURL: currentURL,
+            cloudKitDatabase: cloudKitDatabase,
+            logger: logger
+        )
         logMigrationOutcome(
             migrationOutcome,
+            fileManager: fileManager,
+            legacyURL: legacyURL,
+            currentURL: currentURL,
             logger: logger
         )
         let currentContainer = try makeModelContainer(
             cloudKitDatabase: cloudKitDatabase
         )
-        let cleanupOutcome = try DatabaseMigrator.removeLegacyStoreFilesIfNeeded()
+        let cleanupOutcome = try cleanupLegacyStoreFilesIfNeeded(
+            fileManager: fileManager,
+            legacyURL: legacyURL,
+            currentURL: currentURL
+        )
         logCleanupOutcome(
             cleanupOutcome,
+            fileManager: fileManager,
+            legacyURL: legacyURL,
+            currentURL: currentURL,
             logger: logger
         )
         logger?.notice(
@@ -101,31 +109,48 @@ public enum ModelContainerFactory {
         }
 
         do {
-            _ = try makeModelContainer(
+            let currentContainer = try makeModelContainer(
                 url: currentStoreURL,
                 cloudKitDatabase: cloudKitDatabase
             )
+            logValidationSnapshot(
+                .init(
+                    currentContainer: currentContainer,
+                    legacyURL: legacyURL,
+                    currentStoreURL: currentStoreURL,
+                    cloudKitDatabase: cloudKitDatabase,
+                    fileManager: fileManager,
+                    validationStartedAt: validationStartedAt
+                ),
+                logger: logger
+            )
         } catch {
+            var metadata = storeStateMetadata(
+                fileManager: fileManager,
+                legacyURL: legacyURL,
+                currentURL: currentStoreURL
+            )
+            metadata["cloudkit_database"] = String(
+                describing: cloudKitDatabase
+            )
             logger?.error(
                 "store migration validation failed",
                 metadata: [
+                    "duration_ms": durationMilliseconds(
+                        since: validationStartedAt
+                    ).description,
                     "error_type": String(describing: type(of: error)),
                     "error": error.localizedDescription
                 ]
+                .merging(metadata) { _, newValue in
+                    newValue
+                }
             )
             throw error
         }
-        logger?.notice(
-            "store migration validation finished",
-            metadata: [
-                "duration_ms": durationMilliseconds(
-                    since: validationStartedAt
-                ).description
-            ]
-        )
     }
 
-    private static func durationMilliseconds(
+    static func durationMilliseconds(
         since startedAt: TimeInterval
     ) -> Int {
         Int(
@@ -134,78 +159,5 @@ public enum ModelContainerFactory {
                     - startedAt
             ) * MeasurementConstants.millisecondsPerSecond
         )
-    }
-
-    private static func logMigrationOutcome(
-        _ outcome: DatabaseMigrator.MigrationOutcome,
-        logger: MHLogger?
-    ) {
-        guard let logger else {
-            return
-        }
-
-        switch outcome {
-        case let .migrated(
-            copiedFileNames: copiedFileNames,
-            removedCurrentFileNames: removedCurrentFileNames
-        ):
-            logger.notice(
-                "store migration copied legacy files",
-                metadata: [
-                    "migration_outcome": "migrated",
-                    "copied_file_names": copiedFileNames.joined(separator: "|"),
-                    "removed_current_file_names": removedCurrentFileNames.joined(separator: "|")
-                ]
-            )
-        case .skipped(let reason):
-            logger.notice(
-                "store migration skipped",
-                metadata: [
-                    "migration_outcome": "skipped",
-                    "skip_reason": skipReasonValue(reason)
-                ]
-            )
-        }
-    }
-
-    private static func logCleanupOutcome(
-        _ outcome: DatabaseMigrator.LegacyCleanupOutcome,
-        logger: MHLogger?
-    ) {
-        guard let logger else {
-            return
-        }
-
-        switch outcome {
-        case .removed(let fileNames):
-            logger.notice(
-                "legacy store cleanup removed files",
-                metadata: [
-                    "cleanup_outcome": "removed",
-                    "removed_file_names": fileNames.joined(separator: "|")
-                ]
-            )
-        case .skipped(let reason):
-            logger.notice(
-                "legacy store cleanup skipped",
-                metadata: [
-                    "cleanup_outcome": "skipped",
-                    "skip_reason": skipReasonValue(reason)
-                ]
-            )
-        }
-    }
-
-    private static func skipReasonValue(
-        _ reason: DatabaseMigrator.MigrationSkipReason
-    ) -> String {
-        switch reason {
-        case .sameLocation:
-            "same_location"
-        case .missingLegacyStore:
-            "missing_legacy_store"
-        case .missingCurrentStore:
-            "missing_current_store"
-        }
     }
 }
