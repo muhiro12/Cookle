@@ -69,7 +69,7 @@ struct DiaryListView: View {
                     } label: {
                         DiaryLabel()
                             .environment(diary)
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .cookleButtonRowContent()
                     }
                     .buttonStyle(.plain)
                 }

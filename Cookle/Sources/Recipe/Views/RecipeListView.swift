@@ -185,6 +185,7 @@ private extension RecipeListView {
                 title: "Category",
                 value: selectedCategory?.value ?? "Any Category"
             )
+            .cookleButtonRowContent()
         }
         .buttonStyle(.plain)
     }
@@ -197,6 +198,7 @@ private extension RecipeListView {
                 title: "Ingredient",
                 value: selectedIngredient?.value ?? "Any Ingredient"
             )
+            .cookleButtonRowContent()
         }
         .buttonStyle(.plain)
     }
@@ -217,7 +219,7 @@ private extension RecipeListView {
             RecipeLabel()
                 .labelStyle(.titleAndLargeIcon)
                 .environment(recipe)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .cookleButtonRowContent()
         }
         .buttonStyle(.plain)
     }

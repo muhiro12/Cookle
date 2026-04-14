@@ -44,7 +44,7 @@ struct PhotoView: View {
                         .scaledToFit()
                         .accessibilityLabel(Text("Open Photo"))
                         .frame(height: Layout.previewImageHeight)
-                        .frame(maxWidth: .infinity)
+                        .cookleButtonRowContent(alignment: .center)
                 }
                 .buttonStyle(.plain)
                 .listRowBackground(EmptyView())
@@ -61,7 +61,7 @@ struct PhotoView: View {
                     RecipeLabel()
                         .labelStyle(.titleOnly)
                         .environment(recipe)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .cookleButtonRowContent()
                 }
                 .buttonStyle(.plain)
             }

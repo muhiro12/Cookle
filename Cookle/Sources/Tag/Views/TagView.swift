@@ -44,7 +44,7 @@ private extension TagView {
                     RecipeLabel()
                         .labelStyle(.titleAndLargeIcon)
                         .environment(recipe)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .cookleButtonRowContent()
                 }
                 .buttonStyle(.plain)
             }

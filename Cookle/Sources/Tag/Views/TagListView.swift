@@ -27,7 +27,7 @@ struct TagListView<T: Tag>: View {
                         self.tag = tag
                     } label: {
                         Text(tag.value)
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .cookleButtonRowContent()
                     }
                     .buttonStyle(.plain)
                 }
