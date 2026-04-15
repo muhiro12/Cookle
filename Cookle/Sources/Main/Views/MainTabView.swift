@@ -28,7 +28,7 @@ struct MainTabView: View {
             switch tab {
             case .diary, .recipe, .photo, .search:
                 true
-            case .ingredient, .category, .settings:
+            case .settings:
                 horizontalSizeClass == .regular
             case .menu:
                 horizontalSizeClass == .compact || !isDebugOn
@@ -102,8 +102,6 @@ private extension MainTabView {
                 incomingSelection: $incomingSettingsSelection
             )
         case .photo,
-             .ingredient,
-             .category,
              .menu,
              .debug:
             tab.rootView

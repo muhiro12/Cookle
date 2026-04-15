@@ -2,8 +2,6 @@ enum MainTab: CaseIterable {
     case diary
     case recipe
     case photo
-    case ingredient
-    case category
     case settings
     case menu
     case debug

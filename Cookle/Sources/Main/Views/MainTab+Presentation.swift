@@ -9,10 +9,6 @@ extension MainTab {
             RecipeNavigationView()
         case .photo:
             PhotoNavigationView()
-        case .ingredient:
-            TagNavigationView<Ingredient>()
-        case .category:
-            TagNavigationView<Category>()
         case .settings:
             SettingsNavigationView()
         case .menu:
@@ -43,18 +39,6 @@ extension MainTab {
                 Text("Photo")
             } icon: {
                 Image(systemName: "photo.stack")
-            }
-        case .ingredient:
-            Label {
-                Text("Ingredient")
-            } icon: {
-                Image(systemName: "refrigerator")
-            }
-        case .category:
-            Label {
-                Text("Category")
-            } icon: {
-                Image(systemName: "frying.pan")
             }
         case .settings:
             Label {

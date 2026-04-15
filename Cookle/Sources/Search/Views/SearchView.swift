@@ -9,6 +9,15 @@ import SwiftData
 import SwiftUI
 
 struct SearchView: View {
+    private enum DiscoverySheet: String, Identifiable {
+        case ingredient
+        case category
+
+        var id: Self {
+            self
+        }
+    }
+
     @Environment(\.modelContext)
     private var context
     @Environment(\.isPresented)
@@ -20,6 +29,7 @@ struct SearchView: View {
     @State private var recipes = [Recipe]()
     @State private var searchText = ""
     @State private var isFocused = false
+    @State private var discoverySheet: DiscoverySheet?
 
     var body: some View {
         Group {
@@ -36,7 +46,26 @@ struct SearchView: View {
             "Search",
             keyboardDismissMode: .immediately
         )
+        .sheet(item: $discoverySheet) { sheet in
+            NavigationStack {
+                switch sheet {
+                case .ingredient:
+                    TagListView<Ingredient>(
+                        selection: ingredientSelectionBinding
+                    )
+                    .listStyle(.insetGrouped)
+                case .category:
+                    TagListView<Category>(
+                        selection: categorySelectionBinding
+                    )
+                    .listStyle(.insetGrouped)
+                }
+            }
+        }
         .toolbar {
+            ToolbarItem {
+                discoveryMenu
+            }
             ToolbarItem {
                 CloseButton()
                     .hidden(!isPresented)
@@ -80,7 +109,55 @@ struct SearchView: View {
             Button("Start Searching") {
                 isFocused = true
             }
+            Button("Ingredient") {
+                discoverySheet = .ingredient
+            }
+            Button("Category") {
+                discoverySheet = .category
+            }
         }
+    }
+
+    var discoveryMenu: some View {
+        Menu {
+            Button("Ingredient") {
+                discoverySheet = .ingredient
+            }
+            Button("Category") {
+                discoverySheet = .category
+            }
+        } label: {
+            Image(systemName: "line.3.horizontal.decrease.circle")
+                .accessibilityLabel("Browse Tags")
+        }
+    }
+
+    var ingredientSelectionBinding: Binding<Ingredient?> {
+        .init(
+            get: {
+                nil
+            },
+            set: { ingredient in
+                guard let ingredient else {
+                    return
+                }
+                applyDiscoveryQuery(ingredient.value)
+            }
+        )
+    }
+
+    var categorySelectionBinding: Binding<Category?> {
+        .init(
+            get: {
+                nil
+            },
+            set: { category in
+                guard let category else {
+                    return
+                }
+                applyDiscoveryQuery(category.value)
+            }
+        )
     }
 
     init(
@@ -100,6 +177,13 @@ private extension SearchView {
         searchText = incomingSearchQuery
         isFocused = true
         self.incomingSearchQuery = nil
+        performSearch()
+    }
+
+    func applyDiscoveryQuery(_ query: String) {
+        searchText = query
+        discoverySheet = nil
+        isFocused = true
         performSearch()
     }
 
