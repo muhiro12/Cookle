@@ -3,15 +3,6 @@ import SwiftUI
 import TipKit
 
 struct RecipeListView: View {
-    private enum FilterSheet: String, Identifiable {
-        case category
-        case ingredient
-
-        var id: Self {
-            self
-        }
-    }
-
     @Environment(\.isPresented)
     private var isPresented
 
@@ -22,10 +13,6 @@ struct RecipeListView: View {
     @State private var searchText = ""
     @State private var sortMode = RecipeBrowseSortMode.alphabetical
     @State private var isAscending = true
-    @State private var selectedCategory: Category?
-    @State private var selectedIngredient: Ingredient?
-    @State private var photosOnly = false
-    @State private var filterSheet: FilterSheet?
 
     private let addRecipeTip = AddRecipeTip()
 
@@ -33,6 +20,11 @@ struct RecipeListView: View {
         contentView()
             .cookleTopLevelNavigationChrome("Recipes")
             .toolbar {
+                if recipes.isNotEmpty {
+                    ToolbarItem {
+                        sortMenu
+                    }
+                }
                 ToolbarItem {
                     AddRecipeButton()
                 }
@@ -52,7 +44,6 @@ struct RecipeListView: View {
 private extension RecipeListView {
     var recipeListView: some View {
         List {
-            browseControlsSection
             if filteredRecipes.isNotEmpty {
                 ForEach(filteredRecipes) { recipe in
                     recipeRow(for: recipe)
@@ -62,22 +53,6 @@ private extension RecipeListView {
             }
         }
         .searchable(text: $searchText)
-        .sheet(item: $filterSheet) { sheet in
-            NavigationStack {
-                switch sheet {
-                case .category:
-                    TagListView<Category>(
-                        selection: categorySelectionBinding
-                    )
-                    .listStyle(.insetGrouped)
-                case .ingredient:
-                    TagListView<Ingredient>(
-                        selection: ingredientSelectionBinding
-                    )
-                    .listStyle(.insetGrouped)
-                }
-            }
-        }
     }
 
     var emptyStateView: some View {
@@ -99,17 +74,14 @@ private extension RecipeListView {
             from: recipes,
             criteria: .init(
                 searchText: searchText,
-                selectedCategory: selectedCategory,
-                selectedIngredient: selectedIngredient,
-                photosOnly: photosOnly,
                 sortMode: sortMode,
                 isAscending: isAscending
             )
         )
     }
 
-    var browseControlsSection: some View {
-        Section("Sort & Filter") {
+    var sortMenu: some View {
+        Menu {
             Picker("Sort", selection: $sortMode) {
                 ForEach(RecipeBrowseSortMode.allCases) { sortMode in
                     Text(sortMode.title)
@@ -119,88 +91,15 @@ private extension RecipeListView {
             .pickerStyle(.menu)
 
             Toggle("Ascending", isOn: $isAscending)
-            Toggle("With Photos Only", isOn: $photosOnly)
-            categoryFilterButton
-            ingredientFilterButton
-
-            if hasActiveFilters {
-                Button("Clear Filters") {
-                    clearFilters()
-                }
-            }
+        } label: {
+            Label("Sort", systemImage: "arrow.up.arrow.down.circle")
         }
     }
 
     var filteredEmptyStateSection: some View {
         Section {
-            if hasActiveFilters {
-                ContentUnavailableView {
-                    Label("No Matching Recipes", systemImage: "line.3.horizontal.decrease.circle")
-                } description: {
-                    Text("Try a different search or clear filters.")
-                } actions: {
-                    Button("Clear Filters") {
-                        clearFilters()
-                    }
-                }
-            } else {
-                ContentUnavailableView.search(text: searchText)
-            }
+            ContentUnavailableView.search(text: searchText)
         }
-    }
-
-    var hasActiveFilters: Bool {
-        selectedCategory != nil || selectedIngredient != nil || photosOnly
-    }
-
-    var categorySelectionBinding: Binding<Category?> {
-        .init(
-            get: {
-                selectedCategory
-            },
-            set: { selectedCategory in
-                self.selectedCategory = selectedCategory
-                filterSheet = nil
-            }
-        )
-    }
-
-    var ingredientSelectionBinding: Binding<Ingredient?> {
-        .init(
-            get: {
-                selectedIngredient
-            },
-            set: { selectedIngredient in
-                self.selectedIngredient = selectedIngredient
-                filterSheet = nil
-            }
-        )
-    }
-
-    var categoryFilterButton: some View {
-        Button {
-            filterSheet = .category
-        } label: {
-            selectionRow(
-                title: "Category",
-                value: selectedCategory?.value ?? "Any Category"
-            )
-            .cookleButtonRowContent()
-        }
-        .buttonStyle(.plain)
-    }
-
-    var ingredientFilterButton: some View {
-        Button {
-            filterSheet = .ingredient
-        } label: {
-            selectionRow(
-                title: "Ingredient",
-                value: selectedIngredient?.value ?? "Any Ingredient"
-            )
-            .cookleButtonRowContent()
-        }
-        .buttonStyle(.plain)
     }
 
     @ViewBuilder
@@ -222,25 +121,6 @@ private extension RecipeListView {
                 .cookleButtonRowContent()
         }
         .buttonStyle(.plain)
-    }
-
-    @ViewBuilder
-    func selectionRow(
-        title: LocalizedStringKey,
-        value: String
-    ) -> some View {
-        HStack {
-            Text(title)
-            Spacer()
-            Text(value)
-                .foregroundStyle(.secondary)
-        }
-    }
-
-    func clearFilters() {
-        selectedCategory = nil
-        selectedIngredient = nil
-        photosOnly = false
     }
 }
 

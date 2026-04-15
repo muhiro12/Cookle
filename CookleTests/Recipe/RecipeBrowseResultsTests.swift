@@ -27,9 +27,6 @@ struct RecipeBrowseResultsTests {
             from: [carrot, banana, apple],
             criteria: .init(
                 searchText: "",
-                selectedCategory: nil,
-                selectedIngredient: nil,
-                photosOnly: false,
                 sortMode: .alphabetical,
                 isAscending: true
             )
@@ -38,9 +35,6 @@ struct RecipeBrowseResultsTests {
             from: [apple, banana, carrot],
             criteria: .init(
                 searchText: "",
-                selectedCategory: nil,
-                selectedIngredient: nil,
-                photosOnly: false,
                 sortMode: .alphabetical,
                 isAscending: false
             )
@@ -72,9 +66,6 @@ struct RecipeBrowseResultsTests {
             from: [third, first, second],
             criteria: .init(
                 searchText: "",
-                selectedCategory: nil,
-                selectedIngredient: nil,
-                photosOnly: false,
                 sortMode: .recentlyCreated,
                 isAscending: true
             )
@@ -83,9 +74,6 @@ struct RecipeBrowseResultsTests {
             from: [first, third, second],
             criteria: .init(
                 searchText: "",
-                selectedCategory: nil,
-                selectedIngredient: nil,
-                photosOnly: false,
                 sortMode: .recentlyCreated,
                 isAscending: false
             )
@@ -127,9 +115,6 @@ struct RecipeBrowseResultsTests {
             from: [twice, thrice, once],
             criteria: .init(
                 searchText: "",
-                selectedCategory: nil,
-                selectedIngredient: nil,
-                photosOnly: false,
                 sortMode: .madeCount,
                 isAscending: true
             )
@@ -138,9 +123,6 @@ struct RecipeBrowseResultsTests {
             from: [once, twice, thrice],
             criteria: .init(
                 searchText: "",
-                selectedCategory: nil,
-                selectedIngredient: nil,
-                photosOnly: false,
                 sortMode: .madeCount,
                 isAscending: false
             )
@@ -148,58 +130,6 @@ struct RecipeBrowseResultsTests {
 
         #expect(ascending.map(\.name) == ["Once", "Twice", "Thrice"])
         #expect(descending.map(\.name) == ["Thrice", "Twice", "Once"])
-    }
-
-    @Test
-    func filters_applyAndSemanticsForCategoryIngredientAndPhotos() throws {
-        let context = try makeCookleTestContext()
-        let dinner = Category.create(
-            context: context,
-            value: "Dinner"
-        )
-        let breakfast = Category.create(
-            context: context,
-            value: "Breakfast"
-        )
-        let egg = Ingredient.create(
-            context: context,
-            value: "Egg"
-        )
-
-        let matchingRecipe = makeRecipe(
-            context: context,
-            name: "Carbonara",
-            categories: [dinner],
-            ingredients: ["Egg"],
-            photoCount: 1
-        )
-        let noPhotoRecipe = makeRecipe(
-            context: context,
-            name: "Omelet",
-            categories: [dinner],
-            ingredients: ["Egg"]
-        )
-        let wrongCategoryRecipe = makeRecipe(
-            context: context,
-            name: "Breakfast Bowl",
-            categories: [breakfast],
-            ingredients: ["Egg"],
-            photoCount: 1
-        )
-
-        let result = RecipeBrowseResults.recipes(
-            from: [matchingRecipe, noPhotoRecipe, wrongCategoryRecipe],
-            criteria: .init(
-                searchText: "",
-                selectedCategory: dinner,
-                selectedIngredient: egg,
-                photosOnly: true,
-                sortMode: .alphabetical,
-                isAscending: true
-            )
-        )
-
-        #expect(result.map(\.name) == ["Carbonara"])
     }
 
     @Test
@@ -220,9 +150,6 @@ struct RecipeBrowseResultsTests {
             from: [ingredientOnlyMatch, nameMatch],
             criteria: .init(
                 searchText: "Apple",
-                selectedCategory: nil,
-                selectedIngredient: nil,
-                photosOnly: false,
                 sortMode: .alphabetical,
                 isAscending: true
             )

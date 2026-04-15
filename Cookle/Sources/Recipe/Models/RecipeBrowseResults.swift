@@ -1,9 +1,6 @@
 enum RecipeBrowseResults {
     struct Criteria {
         let searchText: String
-        let selectedCategory: Category?
-        let selectedIngredient: Ingredient?
-        let photosOnly: Bool
         let sortMode: RecipeBrowseSortMode
         let isAscending: Bool
     }
@@ -17,24 +14,6 @@ enum RecipeBrowseResults {
                 matchesSearch(
                     recipe: recipe,
                     searchText: criteria.searchText
-                )
-            }
-            .filter { recipe in
-                matchesCategory(
-                    recipe: recipe,
-                    selectedCategory: criteria.selectedCategory
-                )
-            }
-            .filter { recipe in
-                matchesIngredient(
-                    recipe: recipe,
-                    selectedIngredient: criteria.selectedIngredient
-                )
-            }
-            .filter { recipe in
-                matchesPhotoRequirement(
-                    recipe: recipe,
-                    photosOnly: criteria.photosOnly
                 )
             }
             .sorted { lhs, rhs in
@@ -54,39 +33,6 @@ private extension RecipeBrowseResults {
         searchText: String
     ) -> Bool {
         searchText.isEmpty || recipe.name.normalizedContains(searchText)
-    }
-
-    static func matchesCategory(
-        recipe: Recipe,
-        selectedCategory: Category?
-    ) -> Bool {
-        guard let selectedCategory else {
-            return true
-        }
-
-        return recipe.categories.orEmpty.contains { category in
-            category.persistentModelID == selectedCategory.persistentModelID
-        }
-    }
-
-    static func matchesIngredient(
-        recipe: Recipe,
-        selectedIngredient: Ingredient?
-    ) -> Bool {
-        guard let selectedIngredient else {
-            return true
-        }
-
-        return recipe.ingredients.orEmpty.contains { ingredient in
-            ingredient.persistentModelID == selectedIngredient.persistentModelID
-        }
-    }
-
-    static func matchesPhotoRequirement(
-        recipe: Recipe,
-        photosOnly: Bool
-    ) -> Bool {
-        photosOnly == false || recipe.photoObjects.orEmpty.isNotEmpty
     }
 
     static func comesBefore(
