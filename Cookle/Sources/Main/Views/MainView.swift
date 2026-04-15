@@ -2,8 +2,6 @@ import MHPlatform
 import SwiftUI
 
 struct MainView: View {
-    @Environment(\.horizontalSizeClass)
-    private var horizontalSizeClass
     @Environment(RemoteConfigurationService.self)
     private var remoteConfigurationService
     @Environment(MainNavigationModel.self)
@@ -40,35 +38,16 @@ struct MainView: View {
             Text("Please update Cookle to the latest version to continue using it.")
         }
         .onAppear {
-            navigationModel.isRegularWidth = isRegularWidth
             handleRouteParseFailureIfNeeded()
-        }
-        .onChange(of: horizontalSizeClass) {
-            navigationModel.isRegularWidth = isRegularWidth
         }
         .onChange(of: routePipeline.lastParseFailureURL) {
             handleRouteParseFailureIfNeeded()
         }
-        .sheet(
-            isPresented: $navigationModel.isCompactSettingsPresented,
-            onDismiss: {
-                navigationModel.compactSettingsSelection = nil
-            },
-            content: {
-                SettingsNavigationView(
-                    incomingSelection: $navigationModel.compactSettingsSelection
-                )
-            }
-        )
     }
 }
 
 @MainActor
 private extension MainView {
-    var isRegularWidth: Bool {
-        horizontalSizeClass == .regular
-    }
-
     var isUpdateRequiredBinding: Binding<Bool> {
         .init(
             get: {

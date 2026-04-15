@@ -6,7 +6,7 @@ import Testing
 @MainActor
 struct MainNavigationRouterTests {
     @Test
-    func apply_searchRoute_resetsCompactSettingsState() throws {
+    func apply_searchRoute_clearsPendingSettingsSelection() throws {
         let context = try makeCookleTestContext()
         let recipe = Recipe.create(
             context: context,
@@ -20,8 +20,7 @@ struct MainNavigationRouterTests {
             note: ""
         )
         let navigationModel = MainNavigationModel()
-        navigationModel.isCompactSettingsPresented = true
-        navigationModel.compactSettingsSelection = .license
+        navigationModel.incomingSettingsSelection = .license
         navigationModel.selectedRecipe = recipe
 
         MainNavigationRouter(
@@ -32,14 +31,12 @@ struct MainNavigationRouterTests {
 
         #expect(navigationModel.selectedTab == .search)
         #expect(navigationModel.incomingSearchQuery == "curry")
-        #expect(navigationModel.isCompactSettingsPresented == false)
-        #expect(navigationModel.compactSettingsSelection == nil)
+        #expect(navigationModel.incomingSettingsSelection == nil)
     }
 
     @Test
-    func apply_settingsRoute_updatesRegularWidthNavigation() {
+    func apply_settingsRoute_selectsSettingsTab() {
         let navigationModel = MainNavigationModel()
-        navigationModel.isRegularWidth = true
 
         MainNavigationRouter(
             navigationModel: navigationModel
@@ -49,14 +46,11 @@ struct MainNavigationRouterTests {
 
         #expect(navigationModel.selectedTab == .settings)
         #expect(navigationModel.incomingSettingsSelection == .subscription)
-        #expect(navigationModel.isCompactSettingsPresented == false)
-        #expect(navigationModel.compactSettingsSelection == nil)
     }
 
     @Test
-    func apply_settingsRoute_presentsCompactSheetOnPhoneWidth() {
+    func apply_settingsRoute_updatesCompactWidthNavigation() {
         let navigationModel = MainNavigationModel()
-        navigationModel.isRegularWidth = false
 
         MainNavigationRouter(
             navigationModel: navigationModel
@@ -64,8 +58,7 @@ struct MainNavigationRouterTests {
             .settingsLicense
         )
 
-        #expect(navigationModel.isCompactSettingsPresented)
-        #expect(navigationModel.compactSettingsSelection == .license)
-        #expect(navigationModel.selectedTab == .diary)
+        #expect(navigationModel.selectedTab == .settings)
+        #expect(navigationModel.incomingSettingsSelection == .license)
     }
 }

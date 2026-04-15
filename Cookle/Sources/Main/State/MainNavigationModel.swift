@@ -1,5 +1,4 @@
 import Observation
-import UIKit
 
 @MainActor
 @Observable
@@ -11,7 +10,4 @@ final class MainNavigationModel {
     var selectedSearchRecipe: Recipe?
     var incomingSearchQuery: String?
     var incomingSettingsSelection: SettingsContent?
-    var compactSettingsSelection: SettingsContent?
-    var isCompactSettingsPresented = false
-    var isRegularWidth = UIDevice.current.userInterfaceIdiom == .pad
 }

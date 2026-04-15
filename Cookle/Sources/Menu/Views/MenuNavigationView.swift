@@ -24,16 +24,10 @@ struct MenuNavigationView: View {
     @State private var selectedTab: MainTab?
 
     private var tabs: [MainTab] {
-        MainTab.allCases.filter { tab in
-            switch tab {
-            case .menu:
-                false
-            case .debug:
-                isDebugOn
-            default:
-                true
-            }
-        }
+        MainTab.displayedTabs(
+            isRegularWidth: true,
+            isDebugOn: isDebugOn
+        )
     }
 
     var body: some View {

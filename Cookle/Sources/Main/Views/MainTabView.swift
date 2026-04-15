@@ -24,18 +24,10 @@ struct MainTabView: View {
     @Binding private var incomingSettingsSelection: SettingsContent?
 
     private var tabs: [MainTab] {
-        MainTab.allCases.filter { tab in
-            switch tab {
-            case .diary, .recipe, .photo, .search:
-                true
-            case .settings:
-                horizontalSizeClass == .regular
-            case .menu:
-                horizontalSizeClass == .compact || !isDebugOn
-            case .debug:
-                horizontalSizeClass == .regular && isDebugOn
-            }
-        }
+        MainTab.displayedTabs(
+            isRegularWidth: horizontalSizeClass == .regular,
+            isDebugOn: isDebugOn
+        )
     }
 
     var body: some View {
@@ -102,7 +94,6 @@ private extension MainTabView {
                 incomingSelection: $incomingSettingsSelection
             )
         case .photo,
-             .menu,
              .debug:
             tab.rootView
         }

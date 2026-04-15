@@ -11,8 +11,6 @@ extension MainTab {
             PhotoNavigationView()
         case .settings:
             SettingsNavigationView()
-        case .menu:
-            MenuNavigationView()
         case .debug:
             DebugNavigationView()
         case .search:
@@ -45,12 +43,6 @@ extension MainTab {
                 Text("Settings")
             } icon: {
                 Image(systemName: "gear")
-            }
-        case .menu:
-            Label {
-                Text("Menu")
-            } icon: {
-                Image(systemName: "list.bullet")
             }
         case .debug:
             Label {

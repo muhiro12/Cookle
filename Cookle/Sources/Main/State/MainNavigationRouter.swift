@@ -23,8 +23,7 @@ final class MainNavigationRouter {
         _ outcome: CookleRouteOutcome
     ) {
         if !outcome.isSettingsRoute {
-            navigationModel.isCompactSettingsPresented = false
-            navigationModel.compactSettingsSelection = nil
+            navigationModel.incomingSettingsSelection = nil
         }
 
         switch outcome {
@@ -66,15 +65,8 @@ private extension MainNavigationRouter {
     func applySettingsRoute(
         destination: SettingsContent?
     ) {
-        if navigationModel.isRegularWidth {
-            navigationModel.isCompactSettingsPresented = false
-            navigationModel.compactSettingsSelection = nil
-            navigationModel.selectedTab = .settings
-            navigationModel.incomingSettingsSelection = destination
-        } else {
-            navigationModel.compactSettingsSelection = destination
-            navigationModel.isCompactSettingsPresented = true
-        }
+        navigationModel.selectedTab = .settings
+        navigationModel.incomingSettingsSelection = destination
     }
 }
 

@@ -3,7 +3,6 @@ enum MainTab: CaseIterable {
     case recipe
     case photo
     case settings
-    case menu
     case debug
     case search
 }
@@ -11,5 +10,26 @@ enum MainTab: CaseIterable {
 extension MainTab: Identifiable {
     var id: String {
         .init(describing: self)
+    }
+}
+
+extension MainTab {
+    static func displayedTabs(
+        isRegularWidth: Bool,
+        isDebugOn: Bool
+    ) -> [MainTab] {
+        var tabs: [MainTab] = [
+            .diary,
+            .recipe,
+            .photo,
+            .settings,
+            .search
+        ]
+
+        if isRegularWidth, isDebugOn {
+            tabs.append(.debug)
+        }
+
+        return tabs
     }
 }
