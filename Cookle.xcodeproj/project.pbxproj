@@ -16,6 +16,7 @@
 		AD9910012FF0000000AAA001 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD9910062FF0000000AAA001 /* XCTest.framework */; };
 		AD9910022FF0000000AAA001 /* CookleLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AD9910102FF0000000AAA001 /* CookleLibrary */; };
 		AD9910122FF0000000AAA001 /* SwiftUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = AD9910112FF0000000AAA001 /* SwiftUtilities */; };
+		ADB8BF9D2F8FE0DF00C59D93 /* MHDesign in Frameworks */ = {isa = PBXBuildFile; productRef = ADB8BF9C2F8FE0DF00C59D93 /* MHDesign */; };
 		ADF13D702E8233A7002572CD /* CookleLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = ADF13D6F2E8233A7002572CD /* CookleLibrary */; };
 /* End PBXBuildFile section */
 
@@ -102,6 +103,7 @@
 				AD7F5C0E2F5B3186008D91F3 /* MHPlatform in Frameworks */,
 				AD3909AB2DC4E8300052749F /* SwiftUtilities in Frameworks */,
 				ADF13D702E8233A7002572CD /* CookleLibrary in Frameworks */,
+				ADB8BF9D2F8FE0DF00C59D93 /* MHDesign in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -198,6 +200,7 @@
 				AD7F5C0D2F5B3186008D91F3 /* MHPlatform */,
 				AD3909AA2DC4E8300052749F /* SwiftUtilities */,
 				ADF13D6F2E8233A7002572CD /* CookleLibrary */,
+				ADB8BF9C2F8FE0DF00C59D93 /* MHDesign */,
 			);
 			productName = Cookle;
 			productReference = AD8C8E682BFABEE200872BF2 /* Cookle.app */;
@@ -263,6 +266,7 @@
 				AD7F5C0F2F5B3186008D91F3 /* XCRemoteSwiftPackageReference "MHPlatform" */,
 				B00000012F7A000100000017 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
 				ADF13D6E2E8233A7002572CD /* XCLocalSwiftPackageReference "CookleLibrary" */,
+				ADB8BF9B2F8FE0DF00C59D93 /* XCRemoteSwiftPackageReference "MHUI" */,
 			);
 			productRefGroup = AD8C8E692BFABEE200872BF2 /* Products */;
 			projectDirPath = "";
@@ -742,6 +746,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		ADB8BF9B2F8FE0DF00C59D93 /* XCRemoteSwiftPackageReference "MHUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/muhiro12/MHUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		B00000012F7A000100000017 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SimplyDanny/SwiftLintPlugins";
@@ -775,6 +787,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AD3909A92DC4E8300052749F /* XCRemoteSwiftPackageReference "SwiftUtilities" */;
 			productName = SwiftUtilities;
+		};
+		ADB8BF9C2F8FE0DF00C59D93 /* MHDesign */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ADB8BF9B2F8FE0DF00C59D93 /* XCRemoteSwiftPackageReference "MHUI" */;
+			productName = MHDesign;
 		};
 		ADF13D6F2E8233A7002572CD /* CookleLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
