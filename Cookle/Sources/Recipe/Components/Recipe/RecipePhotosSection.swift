@@ -9,11 +9,6 @@ import SwiftData
 import SwiftUI
 
 struct RecipePhotosSection: View {
-    private enum Layout {
-        static let photoHeight = CGFloat(Int("240") ?? .zero)
-        static let photoCornerRadius = CGFloat(Int("8") ?? .zero)
-    }
-
     @Environment(Recipe.self)
     private var recipe
 
@@ -71,8 +66,8 @@ private extension RecipePhotosSection {
                     .resizable()
                     .scaledToFit()
                     .accessibilityLabel(Text("Open Photo"))
-                    .frame(height: Layout.photoHeight)
-                    .clipShape(.rect(cornerRadius: Layout.photoCornerRadius))
+                    .frame(height: RecipePreviewLayout.imageHeight)
+                    .clipShape(.rect(cornerRadius: RecipePreviewLayout.imageCornerRadius))
             }
         }
     }

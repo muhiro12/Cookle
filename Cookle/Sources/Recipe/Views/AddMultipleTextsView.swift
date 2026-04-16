@@ -1,14 +1,11 @@
+import MHDesign
 import SwiftUI
 
 struct AddMultipleTextsView: View {
-    private enum Layout {
-        static let placeholderVerticalPadding = CGFloat(Int("8") ?? .zero)
-        static let placeholderHorizontalPadding = CGFloat(Int("6") ?? .zero)
-        static let textEditorCornerRadius = CGFloat(Int("8") ?? .zero)
-    }
-
     @Environment(\.dismiss)
     private var dismiss
+    @Environment(\.mhDesignMetrics)
+    private var designMetrics
 
     @Binding private var texts: [String]
 
@@ -23,15 +20,29 @@ struct AddMultipleTextsView: View {
                 Text(placeholder)
                     .font(.body)
                     .foregroundStyle(.placeholder)
-                    .padding(.vertical, Layout.placeholderVerticalPadding)
-                    .padding(.horizontal, Layout.placeholderHorizontalPadding)
+                    .padding(
+                        .vertical,
+                        RecipeTextEditorLayout.placeholderVerticalPadding(
+                            metrics: designMetrics
+                        )
+                    )
+                    .padding(
+                        .horizontal,
+                        RecipeTextEditorLayout.placeholderHorizontalPadding
+                    )
                     .allowsHitTesting(false)
                     .hidden(text.isNotEmpty)
             }
             .padding()
             .scrollContentBackground(.hidden)
             .background(Color(.secondarySystemGroupedBackground))
-            .clipShape(.rect(cornerRadius: Layout.textEditorCornerRadius))
+            .clipShape(
+                .rect(
+                    cornerRadius: RecipeTextEditorLayout.cornerRadius(
+                        metrics: designMetrics
+                    )
+                )
+            )
             .padding()
             .background(Color(.systemGroupedBackground))
             .navigationTitle(title)

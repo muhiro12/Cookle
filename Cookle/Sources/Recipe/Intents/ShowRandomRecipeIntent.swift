@@ -10,11 +10,6 @@ import SwiftData
 import SwiftUI
 
 struct ShowRandomRecipeIntent: AppIntent {
-    private enum Layout {
-        static let imageHeight = CGFloat(Int("240") ?? .zero)
-        static let imageCornerRadius = CGFloat(Int("8") ?? .zero)
-    }
-
     static var title: LocalizedStringResource {
         .init("Show Random Recipe")
     }
@@ -35,9 +30,9 @@ struct ShowRandomRecipeIntent: AppIntent {
                     Image(uiImage: image)
                         .resizable()
                         .scaledToFit()
-                        .frame(height: Layout.imageHeight)
+                        .frame(height: RecipePreviewLayout.imageHeight)
                         .frame(maxWidth: .infinity)
-                        .clipShape(.rect(cornerRadius: Layout.imageCornerRadius))
+                        .clipShape(.rect(cornerRadius: RecipePreviewLayout.imageCornerRadius))
                 }
                 RecipeIngredientsSection()
                 Divider()

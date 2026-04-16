@@ -10,9 +10,7 @@ import SwiftUI
 
 struct MenuNavigationView: View {
     private enum Layout {
-        static let minimumScaleFactor = CGFloat(
-            Double("0.5") ?? .zero
-        )
+        static let minimumScaleFactor: CGFloat = 0.5
     }
 
     @Environment(\.isPresented)

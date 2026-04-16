@@ -4,8 +4,8 @@ import UserNotifications
 
 struct RecipeSuggestionNotificationComposer {
     private enum RelevanceScore {
-        static let withPhoto = Double("0.8") ?? .zero
-        static let fallback = Double("0.6") ?? .zero
+        static let withPhoto = 0.8
+        static let fallback = 0.6
     }
 
     func content(

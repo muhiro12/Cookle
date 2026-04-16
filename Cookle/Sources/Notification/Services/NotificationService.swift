@@ -6,12 +6,8 @@ import UserNotifications
 @Observable
 final class NotificationService: NSObject {
     private enum SyncConstants {
-        static let millisecondsPerSecond = TimeInterval(
-            Int("1000") ?? .zero
-        )
-        static let testSuggestionDelay = TimeInterval(
-            Int("1") ?? .zero
-        )
+        static let millisecondsPerSecond: TimeInterval = 1_000
+        static let testSuggestionDelay: TimeInterval = 1
     }
 
     let routeInbox: MHObservableDeepLinkInbox

@@ -9,11 +9,6 @@ import SwiftData
 import SwiftUI
 
 struct RecipeStepsSection: View {
-    private enum Layout {
-        static let stepNumberOffset = Int("1") ?? .zero
-        static let indexWidth = CGFloat(Int("24") ?? .zero)
-    }
-
     @Environment(Recipe.self)
     private var recipe
 
@@ -21,9 +16,9 @@ struct RecipeStepsSection: View {
         Section {
             ForEach(Array(recipe.steps.enumerated()), id: \.offset) { values in
                 HStack(alignment: .top) {
-                    Text((values.offset + Layout.stepNumberOffset).description + ".")
+                    Text((values.offset + RecipeStepLayout.stepNumberOffset).description + ".")
                         .foregroundStyle(.secondary)
-                        .frame(width: Layout.indexWidth)
+                        .frame(width: RecipeStepLayout.indexWidth)
                     Text(values.element)
                 }
             }

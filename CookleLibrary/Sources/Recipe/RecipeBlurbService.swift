@@ -3,9 +3,9 @@ import Foundation
 /// Builds short deterministic recipe blurbs from saved recipe content.
 public enum RecipeBlurbService {
     private enum BlurbConstants {
-        static let minimumDetailedStepLength = Int("12") ?? .zero
-        static let ingredientSummaryCount = Int("2") ?? .zero
-        static let ellipsisLength = Int("3") ?? .zero
+        static let minimumDetailedStepLength = 12
+        static let ingredientSummaryCount = 2
+        static let ellipsisLength = 3
     }
 
     /// Returns a concise, deterministic blurb from recipe steps, note, or ingredients.

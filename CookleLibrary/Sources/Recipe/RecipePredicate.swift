@@ -21,7 +21,7 @@ nonisolated public enum RecipePredicate {
     /// Includes recipes whose name, ingredient labels, or category labels match the supplied search text.
     case anyTextMatches(String)
 
-    private static let shortTextThreshold = Int("3") ?? .zero
+    private static let shortTextThreshold = 3
 
     /// SwiftData predicate that preserves the semantics of the selected query case.
     public var value: Predicate<Recipe> {

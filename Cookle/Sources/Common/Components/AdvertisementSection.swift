@@ -5,19 +5,18 @@
 //  Created by Hiromu Nakano on 2022/01/17.
 //
 
+import MHDesign
 import MHPlatform
 import SwiftUI
 
 struct AdvertisementSection {
-    private enum Layout {
-        static let sectionPadding = CGFloat(Int("8") ?? .zero)
-    }
-
     enum Size: String {
         case small = "Small"
         case medium = "Medium"
     }
 
+    @Environment(\.mhDesignMetrics)
+    private var designMetrics
     @Environment(MHAppRuntime.self)
     private var appRuntime
 
@@ -33,7 +32,7 @@ extension AdvertisementSection: View {
         Section {
             appRuntime.nativeAdView(size: size.runtimeSize)
                 .frame(maxWidth: .infinity)
-                .padding(Layout.sectionPadding)
+                .padding(designMetrics.spacing.inline)
         }
     }
 }

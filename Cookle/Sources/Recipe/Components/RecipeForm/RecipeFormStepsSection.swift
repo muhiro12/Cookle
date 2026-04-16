@@ -9,20 +9,15 @@ import SwiftData
 import SwiftUI
 
 struct RecipeFormStepsSection: View {
-    private enum Layout {
-        static let stepNumberOffset = Int("1") ?? .zero
-        static let indexWidth = CGFloat(Int("24") ?? .zero)
-    }
-
     @Binding private var steps: [String]
 
     var body: some View {
         Section {
             ForEach(steps.indices, id: \.self) { index in
                 HStack(alignment: .top) {
-                    Text((index + Layout.stepNumberOffset).description + ".")
+                    Text((index + RecipeStepLayout.stepNumberOffset).description + ".")
                         .foregroundStyle(.secondary)
-                        .frame(width: Layout.indexWidth)
+                        .frame(width: RecipeStepLayout.indexWidth)
                     TextField(text: $steps[index], axis: .vertical) {
                         Text("Boil water in a large pot and add salt.")
                     }

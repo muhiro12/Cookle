@@ -1,18 +1,18 @@
 import AppIntents
+import MHDesign
 import PhotosUI
 import SwiftUI
 
 @available(iOS 26.0, *)
 struct InferRecipeFormView: View {
     private enum Layout {
-        static let placeholderVerticalPadding = CGFloat(Int("8") ?? .zero)
-        static let placeholderHorizontalPadding = CGFloat(Int("6") ?? .zero)
-        static let textEditorCornerRadius = CGFloat(Int("8") ?? .zero)
-        static let loadingOverlayOpacity = Double("0.2") ?? .zero
+        static let loadingOverlayOpacity = 0.2
     }
 
     @Environment(\.dismiss)
     private var dismiss
+    @Environment(\.mhDesignMetrics)
+    private var designMetrics
 
     @Binding private var name: String
     @Binding private var servingSize: String
@@ -43,7 +43,13 @@ struct InferRecipeFormView: View {
             .padding()
             .scrollContentBackground(.hidden)
             .background(Color(.secondarySystemGroupedBackground))
-            .clipShape(.rect(cornerRadius: Layout.textEditorCornerRadius))
+            .clipShape(
+                .rect(
+                    cornerRadius: RecipeTextEditorLayout.cornerRadius(
+                        metrics: designMetrics
+                    )
+                )
+            )
             .padding()
             .background(Color(.systemGroupedBackground))
             .navigationTitle(Text("Recipe Text"))
@@ -68,8 +74,16 @@ struct InferRecipeFormView: View {
         Text(placeholder)
             .font(.body)
             .foregroundStyle(.placeholder)
-            .padding(.vertical, Layout.placeholderVerticalPadding)
-            .padding(.horizontal, Layout.placeholderHorizontalPadding)
+            .padding(
+                .vertical,
+                RecipeTextEditorLayout.placeholderVerticalPadding(
+                    metrics: designMetrics
+                )
+            )
+            .padding(
+                .horizontal,
+                RecipeTextEditorLayout.placeholderHorizontalPadding
+            )
             .allowsHitTesting(false)
             .hidden(text.isNotEmpty)
     }

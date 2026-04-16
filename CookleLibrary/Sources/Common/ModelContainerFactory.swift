@@ -5,9 +5,7 @@ import SwiftData
 /// Builds model containers and contexts used by Cookle.
 public enum ModelContainerFactory {
     private enum MeasurementConstants {
-        static let millisecondsPerSecond = TimeInterval(
-            Int("1000") ?? .zero
-        )
+        static let millisecondsPerSecond: TimeInterval = 1_000
     }
 
     /// Returns the shared model container configuration.

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TitleAndLargeIconLabelStyle: LabelStyle {
     private enum Layout {
-        static let iconWidth = CGFloat(Int("80") ?? .zero)
+        static let iconWidth: CGFloat = 80
     }
 
     func makeBody(configuration: LabelStyleConfiguration) -> some View {

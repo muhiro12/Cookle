@@ -5,7 +5,7 @@ import SwiftData
 @preconcurrency
 @MainActor
 public enum CookleRouteExecutor {
-    private static let noonHour = Int("12") ?? .zero
+    private static let noonHour = 12
 
     /// Resolves a route into the navigation outcome the app should present.
     public static func execute(

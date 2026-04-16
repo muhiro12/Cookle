@@ -10,9 +10,9 @@ import SwiftUI
 
 struct DiaryLabel: View {
     private enum Layout {
-        static let photoGridMinimum = CGFloat(Int("80") ?? .zero)
-        static let titleLineLimit = Int("2") ?? .zero
-        static let iconWidth = CGFloat(Int("28") ?? .zero)
+        static let photoGridMinimum: CGFloat = 80
+        static let titleLineLimit = 2
+        static let iconWidth: CGFloat = 28
     }
 
     @Environment(Diary.self)

@@ -1,3 +1,4 @@
+import MHDesign
 import PhotosUI
 import SwiftData
 import SwiftUI
@@ -5,10 +6,8 @@ import TipKit
 
 struct RecipeFormPhotosSection: View {
     private enum Layout {
-        static let viewModePhotoHeight = CGFloat(Int("120") ?? .zero)
-        static let editModePhotoHeight = CGFloat(Int("80") ?? .zero)
-        static let photoCornerRadius = CGFloat(Int("8") ?? .zero)
-        static let actionButtonPadding = CGFloat(Int("8") ?? .zero)
+        static let viewModePhotoHeight: CGFloat = 120
+        static let editModePhotoHeight: CGFloat = 80
     }
 
     private struct PhotoThumbnailView: View {
@@ -66,6 +65,8 @@ struct RecipeFormPhotosSection: View {
 
     @Environment(Recipe.self)
     private var recipe: Recipe?
+    @Environment(\.mhDesignMetrics)
+    private var designMetrics
     @Environment(\.editMode)
     private var editMode
     @Binding private var photos: [PhotoData]
@@ -271,8 +272,8 @@ private extension RecipeFormPhotosSection {
                 photo: photo,
                 index: index,
                 height: height,
-                cornerRadius: Layout.photoCornerRadius,
-                actionButtonPadding: Layout.actionButtonPadding,
+                cornerRadius: designMetrics.cornerRadius.control,
+                actionButtonPadding: designMetrics.spacing.inline,
                 photoRemovalBehavior: photoRemovalBehavior(
                     for: index
                 ),

@@ -10,7 +10,7 @@ import SwiftUI
 
 struct PhotoListView: View {
     private enum Layout {
-        static let photoGridMinimum = CGFloat(Int("120") ?? .zero)
+        static let photoGridMinimum: CGFloat = 120
     }
 
     @Environment(\.isPresented)

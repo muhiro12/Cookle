@@ -10,7 +10,7 @@ import SwiftUI
 
 struct PhotoView: View {
     private enum Layout {
-        static let previewImageHeight = CGFloat(Int("240") ?? .zero)
+        static let previewImageHeight: CGFloat = 240
     }
 
     @Environment(Photo.self)

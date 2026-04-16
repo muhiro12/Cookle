@@ -2,11 +2,6 @@ import SwiftData
 import SwiftUI
 
 struct SearchResultView: View {
-    private enum Layout {
-        static let imageHeight = CGFloat(Int("240") ?? .zero)
-        static let imageCornerRadius = CGFloat(Int("8") ?? .zero)
-    }
-
     @Query private var recipes: [Recipe]
 
     var body: some View {
@@ -20,9 +15,9 @@ struct SearchResultView: View {
                         .resizable()
                         .scaledToFit()
                         .accessibilityLabel(Text("Recipe Photo"))
-                        .frame(height: Layout.imageHeight)
+                        .frame(height: RecipePreviewLayout.imageHeight)
                         .frame(maxWidth: .infinity)
-                        .clipShape(.rect(cornerRadius: Layout.imageCornerRadius))
+                        .clipShape(.rect(cornerRadius: RecipePreviewLayout.imageCornerRadius))
                 }
                 RecipeIngredientsSection()
                 Divider()

@@ -8,9 +8,7 @@ import SwiftUI
 @Observable
 final class CookleAppBootstrapModel {
     private enum StartupConstants {
-        static let millisecondsPerSecond = TimeInterval(
-            Int("1000") ?? .zero
-        )
+        static let millisecondsPerSecond: TimeInterval = 1_000
     }
 
     private(set) var appAssembly: CookleAppAssembly?

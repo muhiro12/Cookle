@@ -2,8 +2,8 @@ import SwiftUI
 
 struct AddMultipleIngredientsButton: View {
     private enum Constants {
-        static let pairStride = Int("2") ?? .zero
-        static let valueOffset = Int("1") ?? .zero
+        static let pairStride = 2
+        static let valueOffset = 1
     }
 
     @Binding private var data: [RecipeFormIngredient]

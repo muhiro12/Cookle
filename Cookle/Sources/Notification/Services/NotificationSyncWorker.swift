@@ -4,9 +4,7 @@ import MHPlatform
 
 actor NotificationSyncWorker {
     private enum MeasurementConstants {
-        static let millisecondsPerSecond = TimeInterval(
-            Int("1000") ?? .zero
-        )
+        static let millisecondsPerSecond: TimeInterval = 1_000
     }
 
     struct Plan: Sendable {

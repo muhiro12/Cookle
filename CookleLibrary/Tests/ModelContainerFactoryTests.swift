@@ -65,6 +65,10 @@ struct ModelContainerFactoryTests {
 }
 
 private extension ModelContainerFactoryTests {
+    enum TestValues {
+        static let cookingTime = 10
+    }
+
     func makeSandboxDirectory() throws -> URL {
         let sandbox = FileManager.default.temporaryDirectory.appendingPathComponent(
             UUID().uuidString,
@@ -78,13 +82,12 @@ private extension ModelContainerFactoryTests {
     }
 
     func seed(context: ModelContext) throws {
-        let cookingTime = Int("10") ?? .zero
         let recipe = Recipe.create(
             context: context,
             name: "Recipe",
             photos: [],
             servingSize: 1,
-            cookingTime: cookingTime,
+            cookingTime: TestValues.cookingTime,
             ingredients: [],
             steps: [],
             categories: [],
