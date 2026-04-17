@@ -22,6 +22,16 @@ Related documents:
 | Adapter (`Cookle`, `Widgets`, App Intents) | Parameter parsing, platform API calls, dependency wiring, route intake, follow-up orchestration after shared mutations, App Intent result mapping | Re-implementing recipe, diary, tag, or reset mutation rules |
 | View (SwiftUI) | Focus state, sheets, dialogs, navigation state, screen-scoped `@Observable` models, display formatting, view composition | Canonical business validation, mutation rules, notification scheduling, widget reload coordination |
 
+## Testing Boundary
+
+- Keep repository-owned unit tests in `CookleLibrary/Tests`.
+- Do not maintain a separate unit test target for `Cookle` or `Widgets`.
+- App-owned adapters should stay responsibility-thin enough to verify through
+  `Cookle` builds plus `CookleLibrary` test coverage.
+- If an adapter or screen model needs durable coverage, first move the reusable
+  rule into `CookleLibrary` and test it there instead of growing target-local
+  test suites.
+
 ## View Rules
 
 Allowed in views:

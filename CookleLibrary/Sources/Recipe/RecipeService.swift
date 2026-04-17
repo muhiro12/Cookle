@@ -54,13 +54,41 @@ public enum RecipeService {
         return try context.fetch(descriptor).first
     }
 
+    /// Searches and sorts recipes using the repository's canonical browse semantics.
+    /// - Parameters:
+    ///   - context: Model context to query.
+    ///   - criteria: Shared browse criteria including text search and sort mode.
+    /// - Returns: Matching recipes ordered for the caller's browse surface.
+    public static func search(
+        context: ModelContext,
+        criteria: RecipeBrowseCriteria
+    ) throws -> [Recipe] {
+        let predicate: RecipePredicate = if criteria.searchText.isEmpty {
+            .all
+        } else {
+            .anyTextMatches(criteria.searchText)
+        }
+        let recipes = try context.fetch(.recipes(predicate))
+        return sortedRecipes(
+            recipes,
+            criteria: criteria
+        )
+    }
+
     /// Searches recipes by a unified text condition that matches name, ingredients, or categories.
     /// - Parameters:
     ///   - context: Model context to query.
     ///   - text: Search text. Short text (< 3 chars) uses equality for tags; otherwise partial match.
     /// - Returns: Matching recipes ordered by name.
     public static func search(context: ModelContext, text: String) throws -> [Recipe] {
-        try context.fetch(.recipes(.anyTextMatches(text)))
+        try search(
+            context: context,
+            criteria: .init(
+                searchText: text,
+                sortMode: .alphabetical,
+                isAscending: true
+            )
+        )
     }
 
     /// Deletes the supplied recipe from the store.
@@ -80,6 +108,44 @@ public enum RecipeService {
         recipe: Recipe
     ) -> MutationOutcome<Void> {
         context.delete(recipe)
+        return .init(
+            value: (),
+            effects: [
+                .recipeDataChanged,
+                .notificationPlanChanged
+            ]
+        )
+    }
+
+    /// Removes one persisted photo row from a recipe and returns follow-up hints.
+    public static func removePhotoWithOutcome(
+        context: ModelContext,
+        recipe: Recipe,
+        photoObject: PhotoObject
+    ) -> MutationOutcome<Void> {
+        let removedPhoto = photoObject.photo
+        let shouldDeletePhoto = removedPhoto?.objects.orEmpty.count == 1
+        let remainingPhotoObjects = recipe.photoObjects.orEmpty.filter { currentPhotoObject in
+            currentPhotoObject.persistentModelID != photoObject.persistentModelID
+        }
+
+        context.delete(photoObject)
+        recipe.update(
+            name: recipe.name,
+            photos: remainingPhotoObjects,
+            servingSize: recipe.servingSize,
+            cookingTime: recipe.cookingTime,
+            ingredients: recipe.ingredientObjects.orEmpty,
+            steps: recipe.steps,
+            categories: recipe.categories.orEmpty,
+            note: recipe.note
+        )
+
+        if shouldDeletePhoto,
+           let removedPhoto {
+            context.delete(removedPhoto)
+        }
+
         return .init(
             value: (),
             effects: [
@@ -201,5 +267,77 @@ private extension RecipeService {
             .components(separatedBy: CharacterSet.decimalDigits.inverted)
             .joined()
         return Int(digits) ?? .zero
+    }
+}
+
+private extension RecipeService {
+    static func sortedRecipes(
+        _ recipes: [Recipe],
+        criteria: RecipeBrowseCriteria
+    ) -> [Recipe] {
+        recipes.sorted { lhs, rhs in
+            comesBefore(
+                lhs,
+                rhs,
+                sortMode: criteria.sortMode,
+                isAscending: criteria.isAscending
+            )
+        }
+    }
+
+    static func comesBefore(
+        _ lhs: Recipe,
+        _ rhs: Recipe,
+        sortMode: RecipeBrowseSortMode,
+        isAscending: Bool
+    ) -> Bool {
+        switch sortMode {
+        case .alphabetical:
+            return compareNames(
+                lhs.name,
+                rhs.name,
+                ascending: isAscending
+            )
+        case .recentlyCreated:
+            if lhs.createdTimestamp != rhs.createdTimestamp {
+                return isAscending
+                    ? lhs.createdTimestamp < rhs.createdTimestamp
+                    : lhs.createdTimestamp > rhs.createdTimestamp
+            }
+            return compareNames(
+                lhs.name,
+                rhs.name,
+                ascending: true
+            )
+        case .madeCount:
+            let lhsCount = lhs.diaryObjects.orEmpty.count
+            let rhsCount = rhs.diaryObjects.orEmpty.count
+
+            if lhsCount != rhsCount {
+                return isAscending
+                    ? lhsCount < rhsCount
+                    : lhsCount > rhsCount
+            }
+            return compareNames(
+                lhs.name,
+                rhs.name,
+                ascending: true
+            )
+        }
+    }
+
+    static func compareNames(
+        _ lhs: String,
+        _ rhs: String,
+        ascending: Bool
+    ) -> Bool {
+        let comparison = lhs.localizedStandardCompare(rhs)
+        if comparison == .orderedSame {
+            return false
+        }
+        if ascending {
+            return comparison == .orderedAscending
+        }
+        return comparison == .orderedDescending
     }
 }

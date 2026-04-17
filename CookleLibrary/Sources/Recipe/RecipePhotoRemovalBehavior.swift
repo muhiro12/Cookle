@@ -1,8 +1,11 @@
-enum RecipePhotoRemovalBehavior: Equatable {
+import Foundation
+
+/// Canonical persisted-photo removal decisions shared by app surfaces.
+public enum RecipePhotoRemovalBehavior: Equatable, Sendable {
     case detachFromRecipe
     case deletePhoto
 
-    static func persistedPhotoBehavior(
+    public static func persistedPhotoBehavior(
         draftReferenceCount: Int,
         persistedReferenceCountOutsideRecipe: Int
     ) -> Self {

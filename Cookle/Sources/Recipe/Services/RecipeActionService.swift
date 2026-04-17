@@ -98,17 +98,10 @@ final class RecipeActionService {
             name: "removeRecipePhoto",
             requestReview: false
         ) {
-            RecipePhotoMutation.remove(
+            RecipeService.removePhotoWithOutcome(
                 context: context,
                 recipe: recipe,
                 photoObject: photoObject
-            )
-            return .init(
-                value: (),
-                effects: [
-                    .recipeDataChanged,
-                    .notificationPlanChanged
-                ]
             )
         }
     }

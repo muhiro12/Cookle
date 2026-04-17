@@ -38,12 +38,17 @@ operation must work across the iOS app, widgets, and App Intents.
 The following types are the current shared entry points for business
 operations:
 
+- `RecipeBrowseCriteria`
+- `RecipeBrowseSortMode`
 - `RecipeFormDraft`
 - `MutationOutcome`
 - `MutationEffect`
+- `RecipePhotoRemovalBehavior`
+- `RecipeService.search(context:criteria:)`
 - `RecipeFormService.createWithOutcome(context:draft:)`
 - `RecipeFormService.updateWithOutcome(context:recipe:draft:)`
 - `RecipeService.deleteWithOutcome(context:recipe:)`
+- `RecipeService.removePhotoWithOutcome(context:recipe:photoObject:)`
 - `RecipeService.recordLastOpenedRecipeWithOutcome(_:)`
 - `DiaryService.createWithOutcome(context:date:breakfasts:lunches:dinners:note:)`
 - `DiaryService.updateWithOutcome(context:diary:date:breakfasts:lunches:dinners:note:)`
@@ -68,6 +73,13 @@ platform-only side effects in the app target.
    boundary into library models or value types.
 5. If glue code is app-only but reused by multiple app entry points, factor it
    into `Cookle/Sources/Common/Platform` or a dedicated app-side service.
+
+## Test Posture
+
+- Keep repository-owned unit tests in `CookleLibrary/Tests`.
+- Do not add a separate unit test target for `Cookle` or `Widgets`.
+- If an app-side adapter or screen model starts needing durable coverage, first
+  extract the reusable rule into `CookleLibrary` and test it there.
 
 ## Current Examples
 

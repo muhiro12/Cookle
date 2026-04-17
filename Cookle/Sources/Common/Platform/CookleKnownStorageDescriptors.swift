@@ -8,19 +8,7 @@ enum CookleKnownStorageDescriptors {
     )
 
     nonisolated static var primitivePreferences: [any MHStorageDescriptorProtocol] {
-        let descriptors = MHPreferenceDescriptors()
-        return [
-            descriptors.isSubscribeOn,
-            descriptors.isICloudOn,
-            descriptors.isDebugOn,
-            descriptors.isDailyRecipeSuggestionNotificationOn,
-            descriptors.dailyRecipeSuggestionHour,
-            descriptors.dailyRecipeSuggestionMinute,
-            descriptors.tipExperienceVersion,
-            descriptors.lastOpenedRecipeID,
-            descriptors.lastLaunchedAppVersion,
-            descriptors.pendingIntentDeepLinkURL
-        ]
+        CooklePreferenceCatalog.primitiveDescriptors
     }
 
     nonisolated static var preferenceLifecycleDescriptors: [any MHStorageDescriptorProtocol] {

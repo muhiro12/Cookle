@@ -1,15 +1,34 @@
-import CookleLibrary
+@testable import CookleLibrary
 import Foundation
 import SwiftData
 import Testing
 
-@testable import Cookle
-
 @MainActor
-struct RecipePhotoMutationTests {
+@Suite("RecipePhotoRemoval")
+struct RecipePhotoRemovalTests {
     @Test
-    func remove_keepsSharedPhotoAssetWhenAnotherReferenceExists() throws {
-        let context = try makeCookleTestContext()
+    func persistedPhotoBehaviorDeletesOrphanedAsset() {
+        #expect(
+            RecipePhotoRemovalBehavior.persistedPhotoBehavior(
+                draftReferenceCount: 1,
+                persistedReferenceCountOutsideRecipe: 0
+            ) == .deletePhoto
+        )
+    }
+
+    @Test
+    func persistedPhotoBehaviorDetachesSharedAsset() {
+        #expect(
+            RecipePhotoRemovalBehavior.persistedPhotoBehavior(
+                draftReferenceCount: 1,
+                persistedReferenceCountOutsideRecipe: 1
+            ) == .detachFromRecipe
+        )
+    }
+
+    @Test
+    func removePhotoWithOutcome_keepsSharedPhotoAssetWhenAnotherReferenceExists() throws {
+        let context = makeTestContext()
         let sharedPhotoData = makePhotoData("shared")
         let firstRecipe = makeRecipe(
             context: context,
@@ -23,12 +42,13 @@ struct RecipePhotoMutationTests {
         )
         let firstPhotoObject = try #require(firstRecipe.photoObjects?.first)
 
-        RecipePhotoMutation.remove(
+        let outcome = RecipeService.removePhotoWithOutcome(
             context: context,
             recipe: firstRecipe,
             photoObject: firstPhotoObject
         )
 
+        #expect(outcome.effects == [.recipeDataChanged, .notificationPlanChanged])
         #expect((firstRecipe.photoObjects ?? []).isEmpty)
         #expect((firstRecipe.photos ?? []).isEmpty)
         #expect((secondRecipe.photoObjects ?? []).count == 1)
@@ -37,8 +57,8 @@ struct RecipePhotoMutationTests {
     }
 
     @Test
-    func remove_deletesPhotoAssetWhenItBecomesOrphaned() throws {
-        let context = try makeCookleTestContext()
+    func removePhotoWithOutcome_deletesPhotoAssetWhenItBecomesOrphaned() throws {
+        let context = makeTestContext()
         let recipe = makeRecipe(
             context: context,
             name: "Solo",
@@ -46,28 +66,26 @@ struct RecipePhotoMutationTests {
         )
         let photoObject = try #require(recipe.photoObjects?.first)
 
-        RecipePhotoMutation.remove(
+        let outcome = RecipeService.removePhotoWithOutcome(
             context: context,
             recipe: recipe,
             photoObject: photoObject
         )
 
+        #expect(outcome.effects == [.recipeDataChanged, .notificationPlanChanged])
         #expect((recipe.photoObjects ?? []).isEmpty)
         #expect((recipe.photos ?? []).isEmpty)
         #expect(try context.fetch(.photos(.all)).isEmpty)
     }
 }
 
-private extension RecipePhotoMutationTests {
+private extension RecipePhotoRemovalTests {
     func makeRecipe(
         context: ModelContext,
         name: String,
         photos: [PhotoData]
     ) -> Recipe {
-        let defaultServingSize = 1
-        let defaultCookingTime = 10
-
-        return Recipe.create(
+        Recipe.create(
             context: context,
             name: name,
             photos: zip(
@@ -80,8 +98,8 @@ private extension RecipePhotoMutationTests {
                     order: index + 1
                 )
             },
-            servingSize: defaultServingSize,
-            cookingTime: defaultCookingTime,
+            servingSize: 1,
+            cookingTime: 10,
             ingredients: [],
             steps: [],
             categories: [],

@@ -1,38 +1,36 @@
-import CookleLibrary
+@testable import CookleLibrary
 import Foundation
 import SwiftData
 import Testing
 
-@testable import Cookle
-
 @MainActor
-struct RecipeBrowseResultsTests {
+struct RecipeBrowseCriteriaTests {
     @Test
-    func alphabetical_sortsAscendingAndDescending() throws {
-        let context = try makeCookleTestContext()
-        let apple = makeRecipe(
-            context: context,
-            name: "Apple Pie"
-        )
-        let banana = makeRecipe(
-            context: context,
-            name: "Banana Bread"
-        )
-        let carrot = makeRecipe(
+    func search_withAlphabeticalSort_ordersAscendingAndDescending() throws {
+        let context = makeTestContext()
+        _ = makeRecipe(
             context: context,
             name: "Carrot Soup"
         )
+        _ = makeRecipe(
+            context: context,
+            name: "Banana Bread"
+        )
+        _ = makeRecipe(
+            context: context,
+            name: "Apple Pie"
+        )
 
-        let ascending = RecipeBrowseResults.recipes(
-            from: [carrot, banana, apple],
+        let ascending = try RecipeService.search(
+            context: context,
             criteria: .init(
                 searchText: "",
                 sortMode: .alphabetical,
                 isAscending: true
             )
         )
-        let descending = RecipeBrowseResults.recipes(
-            from: [apple, banana, carrot],
+        let descending = try RecipeService.search(
+            context: context,
             criteria: .init(
                 searchText: "",
                 sortMode: .alphabetical,
@@ -45,33 +43,33 @@ struct RecipeBrowseResultsTests {
     }
 
     @Test
-    func recentlyCreated_sortsAscendingAndDescending() throws {
-        let context = try makeCookleTestContext()
-        let first = makeRecipe(
+    func search_withRecentlyCreatedSort_ordersAscendingAndDescending() throws {
+        let context = makeTestContext()
+        _ = makeRecipe(
             context: context,
             name: "First"
         )
         Thread.sleep(forTimeInterval: 0.001)
-        let second = makeRecipe(
+        _ = makeRecipe(
             context: context,
             name: "Second"
         )
         Thread.sleep(forTimeInterval: 0.001)
-        let third = makeRecipe(
+        _ = makeRecipe(
             context: context,
             name: "Third"
         )
 
-        let ascending = RecipeBrowseResults.recipes(
-            from: [third, first, second],
+        let ascending = try RecipeService.search(
+            context: context,
             criteria: .init(
                 searchText: "",
                 sortMode: .recentlyCreated,
                 isAscending: true
             )
         )
-        let descending = RecipeBrowseResults.recipes(
-            from: [first, third, second],
+        let descending = try RecipeService.search(
+            context: context,
             criteria: .init(
                 searchText: "",
                 sortMode: .recentlyCreated,
@@ -84,8 +82,8 @@ struct RecipeBrowseResultsTests {
     }
 
     @Test
-    func madeCount_sortsAscendingAndDescending() throws {
-        let context = try makeCookleTestContext()
+    func search_withMadeCountSort_ordersAscendingAndDescending() throws {
+        let context = makeTestContext()
         let once = makeRecipe(
             context: context,
             name: "Once"
@@ -111,16 +109,16 @@ struct RecipeBrowseResultsTests {
             )
         }
 
-        let ascending = RecipeBrowseResults.recipes(
-            from: [twice, thrice, once],
+        let ascending = try RecipeService.search(
+            context: context,
             criteria: .init(
                 searchText: "",
                 sortMode: .madeCount,
                 isAscending: true
             )
         )
-        let descending = RecipeBrowseResults.recipes(
-            from: [once, twice, thrice],
+        let descending = try RecipeService.search(
+            context: context,
             criteria: .init(
                 searchText: "",
                 sortMode: .madeCount,
@@ -133,43 +131,57 @@ struct RecipeBrowseResultsTests {
     }
 
     @Test
-    func search_matchesRecipeNameOnly() throws {
-        let context = try makeCookleTestContext()
-        let nameMatch = makeRecipe(
+    func search_withCriteria_usesCanonicalAnyTextMatchesSemantics() throws {
+        let context = makeTestContext()
+        let breakfast = Category.create(
+            context: context,
+            value: "Breakfast"
+        )
+        _ = makeRecipe(
             context: context,
             name: "Apple Pie",
             ingredients: ["Flour"]
         )
-        let ingredientOnlyMatch = makeRecipe(
+        _ = makeRecipe(
             context: context,
             name: "Soup",
             ingredients: ["Apple"]
         )
+        _ = makeRecipe(
+            context: context,
+            name: "Toast",
+            categories: [breakfast]
+        )
 
-        let result = RecipeBrowseResults.recipes(
-            from: [ingredientOnlyMatch, nameMatch],
+        let ingredientMatches = try RecipeService.search(
+            context: context,
             criteria: .init(
                 searchText: "Apple",
                 sortMode: .alphabetical,
                 isAscending: true
             )
         )
+        let categoryMatches = try RecipeService.search(
+            context: context,
+            criteria: .init(
+                searchText: "Breakfast",
+                sortMode: .alphabetical,
+                isAscending: true
+            )
+        )
 
-        #expect(result.map(\.name) == ["Apple Pie"])
+        #expect(ingredientMatches.map(\.name) == ["Apple Pie", "Soup"])
+        #expect(categoryMatches.map(\.name) == ["Toast"])
     }
 }
 
-private extension RecipeBrowseResultsTests {
+private extension RecipeBrowseCriteriaTests {
     func makeRecipe(
         context: ModelContext,
         name: String,
         categories: [CookleLibrary.Category] = [],
-        ingredients: [String] = [],
-        photoCount: Int = 0
+        ingredients: [String] = []
     ) -> Recipe {
-        let defaultServingSize = 1
-        let defaultCookingTime = 10
-
         let ingredientObjects = ingredients.enumerated().map { index, ingredient in
             IngredientObject.create(
                 context: context,
@@ -178,23 +190,13 @@ private extension RecipeBrowseResultsTests {
                 order: index + 1
             )
         }
-        let photos = (0..<photoCount).map { index in
-            PhotoObject.create(
-                context: context,
-                photoData: .init(
-                    data: Data("\(name)-\(index)".utf8),
-                    source: .photosPicker
-                ),
-                order: index + 1
-            )
-        }
 
         return Recipe.create(
             context: context,
             name: name,
-            photos: photos,
-            servingSize: defaultServingSize,
-            cookingTime: defaultCookingTime,
+            photos: [],
+            servingSize: 1,
+            cookingTime: 10,
             ingredients: ingredientObjects,
             steps: [],
             categories: categories,

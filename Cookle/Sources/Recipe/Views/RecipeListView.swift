@@ -3,10 +3,13 @@ import SwiftUI
 import TipKit
 
 struct RecipeListView: View {
+    @Environment(\.modelContext)
+    private var context
     @Environment(\.isPresented)
     private var isPresented
 
-    @Query private var recipes: [Recipe]
+    @Query(.recipes(.all))
+    private var allRecipes: [Recipe]
 
     @Binding private var recipe: Recipe?
 
@@ -20,7 +23,7 @@ struct RecipeListView: View {
         contentView()
             .cookleTopLevelNavigationChrome("Recipes")
             .toolbar {
-                if recipes.isNotEmpty {
+                if allRecipes.isNotEmpty {
                     ToolbarItem {
                         sortMenu
                     }
@@ -35,9 +38,8 @@ struct RecipeListView: View {
             }
     }
 
-    init(selection: Binding<Recipe?> = .constant(nil), descriptor: FetchDescriptor<Recipe> = .recipes(.all)) {
+    init(selection: Binding<Recipe?> = .constant(nil)) {
         _recipe = selection
-        _recipes = .init(descriptor)
     }
 }
 
@@ -70,14 +72,18 @@ private extension RecipeListView {
     }
 
     var filteredRecipes: [Recipe] {
-        RecipeBrowseResults.recipes(
-            from: recipes,
-            criteria: .init(
-                searchText: searchText,
-                sortMode: sortMode,
-                isAscending: isAscending
+        do {
+            return try RecipeService.search(
+                context: context,
+                criteria: .init(
+                    searchText: searchText,
+                    sortMode: sortMode,
+                    isAscending: isAscending
+                )
             )
-        )
+        } catch {
+            return []
+        }
     }
 
     var sortMenu: some View {
@@ -104,7 +110,7 @@ private extension RecipeListView {
 
     @ViewBuilder
     func contentView() -> some View {
-        if recipes.isNotEmpty {
+        if allRecipes.isNotEmpty {
             recipeListView
         } else {
             emptyStateView

@@ -1,15 +1,13 @@
-import CookleLibrary
+@testable import CookleLibrary
 import Foundation
 import SwiftData
 import Testing
 
-@testable import Cookle
-
 @MainActor
 struct RecipePhotoDisplayTests {
     @Test
-    func orderedPhotos_preferPhotoObjectOrderOverFlattenedRelationOrder() throws {
-        let context = try makeCookleTestContext()
+    func orderedPhotos_preferPhotoObjectOrderOverFlattenedRelationOrder() {
+        let context = makeTestContext()
         let secondPhotoObject = PhotoObject.create(
             context: context,
             photoData: makePhotoData("second"),
@@ -35,8 +33,8 @@ struct RecipePhotoDisplayTests {
     }
 
     @Test
-    func orderedPhotos_fallBackToFlattenedPhotosWhenPhotoObjectsAreEmpty() throws {
-        let context = try makeCookleTestContext()
+    func orderedPhotos_fallBackToFlattenedPhotosWhenPhotoObjectsAreEmpty() {
+        let context = makeTestContext()
         let fallbackPhotos = [
             Photo.create(
                 context: context,
@@ -52,8 +50,7 @@ struct RecipePhotoDisplayTests {
             RecipePhotoDisplay.orderedPhotos(
                 photoObjects: [],
                 fallbackPhotos: fallbackPhotos
-            )
-            .map(\.data) == [data("first"), data("second")]
+            ).map(\.data) == [data("first"), data("second")]
         )
         #expect(
             RecipePhotoDisplay.primaryPhotoData(
@@ -69,13 +66,12 @@ private extension RecipePhotoDisplayTests {
         context: ModelContext,
         photos: [PhotoObject]
     ) -> Recipe {
-        let cookingTimeMinutes = 10
-        return Recipe.create(
+        Recipe.create(
             context: context,
             name: "Recipe",
             photos: photos,
             servingSize: 1,
-            cookingTime: cookingTimeMinutes,
+            cookingTime: 10,
             ingredients: [],
             steps: [],
             categories: [],

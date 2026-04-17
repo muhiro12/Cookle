@@ -83,9 +83,12 @@ Primary records:
   validation, mutations, migrations, and route helpers.
 - MHPlatform consumer boundaries are explicit in this repo: `Cookle` is the
   umbrella-app adopter, `CookleLibrary` stays on `MHPlatformCore`, and
-  `Widgets` / `CookleTests` stay off the umbrella.
+  `Widgets` stay off the umbrella.
 - `MHAppRuntime` remains available as an advanced app-root surface, but this
   repo does not use it as the default adoption path.
+- Repository-owned unit tests stay concentrated in `CookleLibrary/Tests`.
+- The repository does not maintain a separate `CookleTests` unit test target;
+  app adapters are verified through `Cookle` builds plus shared-library tests.
 - The `Cookle` app target owns workflow services such as
   `RecipeActionService`, `DiaryActionService`, `TagActionService`, and
   `SettingsActionService` that add app-only side effects after shared mutations.
@@ -207,6 +210,10 @@ enum Secret {
 
 ## Testing
 
+- Repository-owned unit tests stay in `CookleLibrary/Tests`.
+- `Cookle`, `Widgets`, and App Intents are verified through app builds plus
+  shared-library tests instead of a separate app unit test target.
+
 - Use the recommended final gate:
 
   ```bash
@@ -301,6 +308,18 @@ If you only need required builds/tests based on local changes:
 
 ```sh
 bash ci_scripts/tasks/verify_repository_state.sh
+```
+
+If you only need the app build:
+
+```sh
+bash ci_scripts/tasks/build_app.sh
+```
+
+If you only need library tests:
+
+```sh
+bash ci_scripts/tasks/test_shared_library.sh
 ```
 
 If you want an optional Git `pre-push` hook for the same repository flow, add a

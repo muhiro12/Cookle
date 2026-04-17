@@ -1,13 +1,14 @@
 import Foundation
 
-enum RecipePhotoDisplay {
-    nonisolated static func orderedPhotoObjects(
+/// Shared photo ordering helpers used by app, notifications, and intents.
+public enum RecipePhotoDisplay {
+    public static func orderedPhotoObjects(
         photoObjects: [PhotoObject]
     ) -> [PhotoObject] {
         photoObjects.sorted()
     }
 
-    nonisolated static func orderedPhotos(
+    public static func orderedPhotos(
         photoObjects: [PhotoObject],
         fallbackPhotos: [Photo]
     ) -> [Photo] {
@@ -20,7 +21,7 @@ enum RecipePhotoDisplay {
         return fallbackPhotos
     }
 
-    nonisolated static func primaryPhoto(
+    public static func primaryPhoto(
         photoObjects: [PhotoObject],
         fallbackPhotos: [Photo]
     ) -> Photo? {
@@ -30,7 +31,7 @@ enum RecipePhotoDisplay {
         ).first
     }
 
-    nonisolated static func primaryPhotoData(
+    public static func primaryPhotoData(
         photoObjects: [PhotoObject],
         fallbackPhotos: [Photo]
     ) -> Data? {
@@ -41,7 +42,7 @@ enum RecipePhotoDisplay {
     }
 }
 
-nonisolated extension Recipe {
+public extension Recipe {
     var orderedPhotoObjects: [PhotoObject] {
         RecipePhotoDisplay.orderedPhotoObjects(
             photoObjects: photoObjects.orEmpty

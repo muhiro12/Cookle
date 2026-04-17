@@ -1,14 +1,6 @@
 import SwiftUI
 
-enum RecipeBrowseSortMode: String, CaseIterable, Identifiable {
-    case alphabetical
-    case recentlyCreated
-    case madeCount
-
-    var id: Self {
-        self
-    }
-
+extension RecipeBrowseSortMode {
     var title: LocalizedStringKey {
         switch self {
         case .alphabetical:

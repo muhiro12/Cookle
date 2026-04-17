@@ -122,11 +122,12 @@ Cookle uses adaptive tab navigation.
 ### Search
 
 - The dedicated search screen uses the canonical shared recipe search service.
+- The recipe list uses the same canonical shared browse/search semantics with
+  shared sort modes.
 - Search matches recipe names, ingredient tags, and category tags.
 - Short queries under three characters use exact equality for tag matching.
 - Longer queries use partial matching for names, ingredients, and categories.
 - Name and tag matching normalize Hiragana and Katakana variants.
-- The recipe list also has a lighter local filter for quick name narrowing.
 
 ### Photo Library
 
@@ -455,6 +456,8 @@ Views should not own:
 ### Canonical Behavior Rules
 
 - `RecipeService.search` is the canonical recipe search implementation.
+- `CookleLibrary` also owns the canonical recipe browse sort semantics and
+  persisted photo ordering/removal rules.
 - Route parsing and route execution are shared so every entry point uses the
   same navigation vocabulary.
 - Target-specific side effects stay out of `CookleLibrary`.
@@ -474,8 +477,13 @@ Views should not own:
 ## Operational Notes
 
 - Standard build and test entry point: `bash ci_scripts/tasks/verify_task_completion.sh`
+- Repository-owned unit tests stay concentrated in `CookleLibrary/Tests`.
+- `Cookle` and `Widgets` are verified through app builds plus shared-library
+  tests, without a separate app unit test target.
 - Shared package tests cover core reusable behavior such as:
   - search
+  - browse sort modes
+  - photo ordering and removal
   - route parsing and URL building
   - preferences
   - migrations

@@ -166,26 +166,8 @@ if grep -Eq '/\* MHPlatform \*/|productName = MHPlatform;' <<<"$widgets_target_b
   append_error "Widgets must not depend on the full MHPlatform umbrella."
 fi
 
-tests_target_block=$(
-  awk '
-    /\/\* CookleTests \*\/ = \{/ {
-      in_block = 1
-    }
-    in_block {
-      print
-    }
-    in_block && /^\t\t};$/ {
-      exit
-    }
-  ' "$project_file"
-)
-
-if grep -Eq '/\* MHPlatform \*/|productName = MHPlatform;' <<<"$tests_target_block"; then
-  append_error "CookleTests must not depend on the full MHPlatform umbrella."
-fi
-
-if rg -nP '^\s*(?:@preconcurrency\s+)?import\s+MHPlatform\s*$' Widgets CookleTests >/dev/null; then
-  append_error "Widgets and CookleTests must not import the full MHPlatform umbrella."
+if rg -nP '^\s*(?:@preconcurrency\s+)?import\s+MHPlatform\s*$' Widgets >/dev/null; then
+  append_error "Widgets must not import the full MHPlatform umbrella."
 fi
 
 if rg -n 'MHAppRuntimeCore' \
@@ -195,8 +177,7 @@ if rg -n 'MHAppRuntimeCore' \
   "$architecture_guide" \
   Cookle \
   CookleLibrary \
-  Widgets \
-  CookleTests >/dev/null; then
+  Widgets >/dev/null; then
   append_error "MHAppRuntimeCore must not remain in Cookle source or policy files after MHPlatform 1.2 adoption."
 fi
 
