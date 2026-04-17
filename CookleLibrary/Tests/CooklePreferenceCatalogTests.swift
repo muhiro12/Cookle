@@ -35,6 +35,7 @@ struct CooklePreferenceCatalogTests {
             descriptors.tipExperienceVersion.storageKey,
             descriptors.lastOpenedRecipeID.storageKey,
             descriptors.lastLaunchedAppVersion.storageKey,
+            descriptors.activeCookingSessionSnapshot.storageKey,
             descriptors.pendingIntentDeepLinkURL.storageKey
         ]
 
@@ -54,6 +55,7 @@ struct CooklePreferenceCatalogTests {
         #expect(descriptors.dailyRecipeSuggestionMinute.defaultSelection == .standard)
         #expect(descriptors.tipExperienceVersion.defaultSelection == .standard)
         #expect(descriptors.lastLaunchedAppVersion.defaultSelection == .standard)
+        #expect(descriptors.activeCookingSessionSnapshot.defaultSelection == .standard)
         #expect(
             descriptors.lastOpenedRecipeID.defaultSelection
                 == .suite(CookleSharedPreferences.appGroupIdentifier)

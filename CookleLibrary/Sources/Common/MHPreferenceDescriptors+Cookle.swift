@@ -82,6 +82,14 @@ public extension MHPreferenceDescriptors {
         )
     }
 
+    /// Active cooking session snapshot stored in the standard app domain.
+    var activeCookingSessionSnapshot: MHStringPreferenceDescriptor {
+        .init(
+            storageKey: CookleUserDefaultsKeys.Standard.activeCookingSessionSnapshot.rawValue,
+            defaultSelection: .standard
+        )
+    }
+
     /// Pending deep link handoff shared across app targets.
     var pendingIntentDeepLinkURL: MHStringPreferenceDescriptor {
         .init(

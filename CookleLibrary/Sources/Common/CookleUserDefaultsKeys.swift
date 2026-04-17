@@ -14,6 +14,7 @@ public enum CookleUserDefaultsKeys {
         case lastLaunchedAppVersion = "s9Kp4Ld2"
         case diaryFormSnapshot = "W6yH1nRu"
         case recipeFormSnapshot = "E8kP5sZa"
+        case activeCookingSessionSnapshot = "R8pL2mQx"
         case preferenceMigrationState = "N3dR7vXc"
         case currentLogSnapshot = "J4mK7pXd"
         case previousLogSnapshot = "Q9tB3cLf"
