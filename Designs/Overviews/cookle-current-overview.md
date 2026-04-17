@@ -29,10 +29,10 @@ focus is personal cooking organization:
 
 Cookle uses adaptive tab navigation.
 
-- Core tabs are `Diary`, `Recipe`, `Photo`, and `Search`.
-- On regular-width layouts, `Ingredient`, `Category`, and `Settings` are shown
-  as dedicated destinations.
-- On compact layouts, secondary destinations are grouped behind `Menu`.
+- Core tabs are `Diary`, `Recipe`, `Photo`, `Settings`, and `Search`.
+- Ingredient and category tag browsing is opened from the search discovery
+  sheet, which leads into the dedicated tag detail flow on both compact and
+  regular-width layouts.
 - `Debug` is available only when debug mode is enabled and the layout is
   regular width.
 - Deep links, widgets, notifications, and App Intents all feed the same route
@@ -143,7 +143,8 @@ Cookle uses adaptive tab navigation.
 - Maintain two tag domains:
   - ingredients
   - categories
-- Browse tags and see which recipes use each tag.
+- Browse tags from the search discovery sheet and see which recipes use each
+  tag.
 - Search tags by text.
 - Rename tags from the tag detail flow or App Intents.
 - Delete categories freely.

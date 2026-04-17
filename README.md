@@ -28,7 +28,7 @@ repository contains the full iOS project together with its shared Swift package.
   through MHPlatform runtime defaults.
 - Remote configuration fetch that can require users to update before continuing,
   keeping deployed binaries aligned with server rules.
-- Developer utilities including a debug tab, menu launcher, and preview helpers
+- Developer utilities including a regular-width debug tab and preview helpers
   that seed SwiftData models for SwiftUI previews.
 
 ## Project structure

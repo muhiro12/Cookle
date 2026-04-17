@@ -47,19 +47,11 @@ struct SearchView: View {
             keyboardDismissMode: .immediately
         )
         .sheet(item: $discoverySheet) { sheet in
-            NavigationStack {
-                switch sheet {
-                case .ingredient:
-                    TagListView<Ingredient>(
-                        selection: ingredientSelectionBinding
-                    )
-                    .listStyle(.insetGrouped)
-                case .category:
-                    TagListView<Category>(
-                        selection: categorySelectionBinding
-                    )
-                    .listStyle(.insetGrouped)
-                }
+            switch sheet {
+            case .ingredient:
+                TagNavigationView<Ingredient>()
+            case .category:
+                TagNavigationView<Category>()
             }
         }
         .toolbar {
@@ -132,34 +124,6 @@ struct SearchView: View {
         }
     }
 
-    var ingredientSelectionBinding: Binding<Ingredient?> {
-        .init(
-            get: {
-                nil
-            },
-            set: { ingredient in
-                guard let ingredient else {
-                    return
-                }
-                applyDiscoveryQuery(ingredient.value)
-            }
-        )
-    }
-
-    var categorySelectionBinding: Binding<Category?> {
-        .init(
-            get: {
-                nil
-            },
-            set: { category in
-                guard let category else {
-                    return
-                }
-                applyDiscoveryQuery(category.value)
-            }
-        )
-    }
-
     init(
         selection: Binding<Recipe?> = .constant(nil),
         incomingSearchQuery: Binding<String?> = .constant(nil)
@@ -177,13 +141,6 @@ private extension SearchView {
         searchText = incomingSearchQuery
         isFocused = true
         self.incomingSearchQuery = nil
-        performSearch()
-    }
-
-    func applyDiscoveryQuery(_ query: String) {
-        searchText = query
-        discoverySheet = nil
-        isFocused = true
         performSearch()
     }
 
