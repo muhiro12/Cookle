@@ -29,11 +29,7 @@ struct InferRecipeFormView: View {
     @State private var isPhotoPickerPresented = false
     @State private var isCameraPickerPresented = false
 
-    private let placeholder: LocalizedStringKey = """
-        Spaghetti Carbonara for 2 people.
-        Ingredients: Spaghetti 200g, Eggs 2, Pancetta 100g.
-        Cook spaghetti. Fry pancetta. Mix eggs and cheese. Combine all.
-        """
+    private let placeholder: LocalizedStringKey = .init("Spaghetti Carbonara for 2 people.\nIngredients: Spaghetti 200g, Eggs 2, Pancetta 100g.\nCook spaghetti. Fry pancetta. Mix eggs and cheese. Combine all.") // swiftlint:disable:this line_length
 
     var body: some View {
         TextEditor(text: $text)

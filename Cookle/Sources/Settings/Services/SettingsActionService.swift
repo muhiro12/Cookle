@@ -12,7 +12,7 @@ final class SettingsActionService {
 
     func prepareNotificationSettings() async {
         normalizeNotificationDefaultsIfNeeded()
-        await notificationService.refreshAuthorizationStatus()
+        await notificationService.requestSettingsAuthorizationIfNeeded()
         await notificationService.synchronizeScheduledSuggestions()
     }
 

@@ -38,20 +38,7 @@ struct AddMultipleIngredientsButton: View {
     }
 
     var ingredientPlaceholder: LocalizedStringKey {
-        """
-        Spaghetti
-        200g
-        Eggs
-        2
-        Parmesan cheese
-        50g
-        Pancetta
-        100g
-        Black pepper
-        to taste
-        Salt
-        to taste
-        """
+        .init("Spaghetti\n200g\nEggs\n2\nParmesan cheese\n50g\nPancetta\n100g\nBlack pepper\nto taste\nSalt\nto taste") // swiftlint:disable:this line_length
     }
 
     init(ingredients: Binding<[RecipeFormIngredient]>) {

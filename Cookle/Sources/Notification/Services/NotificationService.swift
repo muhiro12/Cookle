@@ -64,6 +64,38 @@ final class NotificationService: NSObject {
         await syncSuggestions(requestAuthorizationIfNeeded: true)
     }
 
+    func requestSettingsAuthorizationIfNeeded() async {
+        await refreshAuthorizationStatus()
+
+        guard authorizationStatus == .notDetermined else {
+            return
+        }
+
+        let status = await MHNotificationOrchestrator.requestAuthorizationIfNeeded(
+            center: notificationCenter,
+            options: authorizationOptions,
+            requestIfNotDetermined: true
+        )
+        logAuthorizationRefresh(
+            status: status,
+            requestAuthorizationIfNeeded: true
+        )
+
+        if isAuthorizationGranted(status) {
+            CooklePreferences.set(
+                true,
+                for: \.isDailyRecipeSuggestionNotificationOn
+            )
+            return
+        }
+
+        CooklePreferences.set(
+            false,
+            for: \.isDailyRecipeSuggestionNotificationOn
+        )
+        await clearSuggestionsAndAttachments()
+    }
+
     func refreshAuthorizationStatus() async {
         let settings = await notificationCenter.notificationSettings()
         await MainActor.run {
@@ -143,17 +175,9 @@ extension NotificationService: UNUserNotificationCenterDelegate {
 
 extension NotificationService {
     var isAuthorizationGranted: Bool {
-        switch authorizationStatus {
-        case .authorized,
-             .provisional,
-             .ephemeral:
-            return true
-        case .denied,
-             .notDetermined:
-            return false
-        @unknown default:
-            return false
-        }
+        isAuthorizationGranted(
+            authorizationStatus
+        )
     }
 
     var notificationHour: Int {
@@ -205,6 +229,22 @@ extension NotificationService {
         }
 
         return nil
+    }
+
+    func isAuthorizationGranted(
+        _ status: UNAuthorizationStatus
+    ) -> Bool {
+        switch status {
+        case .authorized,
+             .provisional,
+             .ephemeral:
+            return true
+        case .denied,
+             .notDetermined:
+            return false
+        @unknown default:
+            return false
+        }
     }
 
     func registerNotificationCategories() {

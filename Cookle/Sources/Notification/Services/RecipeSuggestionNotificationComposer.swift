@@ -3,6 +3,10 @@ import MHPlatform
 import UserNotifications
 
 struct RecipeSuggestionNotificationComposer {
+    private enum BodyConstants {
+        static let prominentIngredientCount = 2
+    }
+
     private enum RelevanceScore {
         static let withPhoto = 0.8
         static let fallback = 0.6
@@ -116,13 +120,14 @@ private extension RecipeSuggestionNotificationComposer {
         for snapshot: NotificationRecipeSnapshot,
         recipeName: String
     ) -> String {
-        RecipeBlurbService.makeBlurb(
-            request: .init(
-                steps: snapshot.steps,
-                ingredients: snapshot.ingredientNames,
-                note: snapshot.note
-            )
-        ) ?? String(localized: "How about making \(recipeName) today?")
+        practicalBody(for: snapshot)
+            ?? RecipeBlurbService.makeBlurb(
+                request: .init(
+                    steps: snapshot.steps,
+                    ingredients: snapshot.ingredientNames,
+                    note: snapshot.note
+                )
+            ) ?? String(localized: "How about making \(recipeName) today?")
     }
 
     func subtitle(for snapshot: NotificationRecipeSnapshot) -> String {
@@ -150,5 +155,105 @@ private extension RecipeSuggestionNotificationComposer {
         }
 
         return segments.joined(separator: " | ")
+    }
+
+    func practicalBody(
+        for snapshot: NotificationRecipeSnapshot
+    ) -> String? {
+        let ingredientNames = normalizedIngredientNames(
+            from: snapshot.ingredientNames
+        )
+
+        if snapshot.cookingTime > 0, ingredientNames.isNotEmpty {
+            return String.localizedStringWithFormat(
+                String(
+                    localized: "Ready in %lld min with %lld ingredients."
+                ),
+                Int64(snapshot.cookingTime),
+                Int64(ingredientNames.count)
+            )
+        }
+
+        if snapshot.cookingTime > 0 {
+            return String.localizedStringWithFormat(
+                String(
+                    localized: "Ready in %lld min."
+                ),
+                Int64(snapshot.cookingTime)
+            )
+        }
+
+        return ingredientBody(
+            ingredientNames: ingredientNames
+        )
+    }
+
+    func ingredientBody(
+        ingredientNames: [String]
+    ) -> String? {
+        guard ingredientNames.isNotEmpty else {
+            return nil
+        }
+
+        let prominentIngredientNames = Array(
+            ingredientNames.prefix(
+                BodyConstants.prominentIngredientCount
+            )
+        )
+
+        if prominentIngredientNames.count >= BodyConstants.prominentIngredientCount {
+            let firstIngredient = prominentIngredientNames[0]
+            let secondIngredient = prominentIngredientNames[1]
+
+            if ingredientNames.count > BodyConstants.prominentIngredientCount {
+                return String.localizedStringWithFormat(
+                    String(
+                        localized: "Uses %@, %@, and more."
+                    ),
+                    firstIngredient,
+                    secondIngredient
+                )
+            }
+
+            return String.localizedStringWithFormat(
+                String(
+                    localized: "Uses %@ and %@."
+                ),
+                firstIngredient,
+                secondIngredient
+            )
+        }
+
+        return String.localizedStringWithFormat(
+            String(
+                localized: "Uses %@."
+            ),
+            prominentIngredientNames[0]
+        )
+    }
+
+    func normalizedIngredientNames(
+        from ingredientNames: [String]
+    ) -> [String] {
+        ingredientNames.compactMap { ingredientName in
+            let trimmedIngredientName = ingredientName.trimmingCharacters(
+                in: .whitespacesAndNewlines
+            )
+            guard trimmedIngredientName.isNotEmpty else {
+                return nil
+            }
+            return collapsedWhitespace(
+                in: trimmedIngredientName
+            )
+        }
+    }
+
+    func collapsedWhitespace(
+        in value: String
+    ) -> String {
+        value
+            .components(separatedBy: .whitespacesAndNewlines)
+            .filter(\.isNotEmpty)
+            .joined(separator: " ")
     }
 }

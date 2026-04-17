@@ -458,6 +458,40 @@
         }
       }
     },
+    "Allow notifications to get one recipe suggestion each day at your selected time." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow notifications to get one recipe suggestion each day at your selected time."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permite las notificaciones para recibir una sugerencia de receta cada día a la hora que elijas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autorisez les notifications pour recevoir chaque jour une suggestion de recette à l’heure choisie."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通知を許可すると、選んだ時間に毎日レシピの提案を1件受け取れます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "允许通知后，你可在所选时间每天收到一条食谱推荐。"
+          }
+        }
+      }
+    },
     "Alphabetical" : {
       "localizations" : {
         "en" : {
@@ -729,40 +763,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "在大锅中烧开水并加入盐。"
-          }
-        }
-      }
-    },
-    "Boil water in a large pot and add salt.\nCook the spaghetti until al dente.\nIn a separate pan, cook the pancetta until crispy.\nBeat the eggs in a bowl and mix with grated Parmesan cheese.\nDrain the spaghetti and mix with pancetta and the egg mixture.\nSeason with black pepper and serve immediately." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Boil water in a large pot and add salt.\nCook the spaghetti until al dente.\nIn a separate pan, cook the pancetta until crispy.\nBeat the eggs in a bowl and mix with grated Parmesan cheese.\nDrain the spaghetti and mix with pancetta and the egg mixture.\nSeason with black pepper and serve immediately."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hierve agua en una olla grande y añade sal.\nCocina el espagueti hasta que quede al dente.\nEn una sartén aparte, cocina la panceta hasta que quede crujiente.\nBate los huevos en un bol y mézclalos con queso parmesano rallado.\nEscurre el espagueti y mézclalo con la panceta y la mezcla de huevo.\nSazona con pimienta negra y sirve de inmediato."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Faites bouillir de l’eau dans une grande casserole et ajoutez du sel.\nFaites cuire les spaghettis jusqu’à ce qu’ils soient al dente.\nDans une poêle séparée, faites cuire la pancetta jusqu’à ce qu’elle soit croustillante.\nBattez les œufs dans un bol et mélangez-les avec du parmesan râpé.\nÉgouttez les spaghettis et mélangez-les avec la pancetta et le mélange d’œufs.\nAssaisonnez avec du poivre noir et servez immédiatement."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "大きな鍋に水を沸かし、塩を加えます。\nスパゲッティをアルデンテになるまでゆでます。\n別のフライパンでパンチェッタがカリッとするまで炒めます。\nボウルで卵を溶き、おろしたパルメザンチーズと混ぜます。\nスパゲッティの湯を切り、パンチェッタと卵液を混ぜ合わせます。\n黒こしょうを振ってすぐにいただきます。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在大锅中烧开水并加入盐。\n将意大利面煮至有嚼劲。\n另起一口平底锅，将意式培根煎至酥脆。\n把鸡蛋打入碗中，与磨碎的帕玛森芝士搅拌均匀。\n沥干意大利面后，与意式培根和蛋液混合。\n撒上黑胡椒并立即食用。"
           }
         }
       }
@@ -1783,6 +1783,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "每日食谱推荐"
+          }
+        }
+      }
+    },
+    "Daily recipe suggestions are enabled and will arrive at your selected time." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily recipe suggestions are enabled and will arrive at your selected time."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las sugerencias diarias de recetas están activadas y llegarán a la hora que elijas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les suggestions quotidiennes de recettes sont activées et arriveront à l’heure choisie."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "毎日のレシピ提案は有効で、選んだ時間に届きます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每日食谱推荐已开启，并会在你选择的时间送达。"
           }
         }
       }
@@ -3896,6 +3930,40 @@
         }
       }
     },
+    "Notifications are allowed. Turn on daily recipe suggestions to receive one recipe suggestion each day." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications are allowed. Turn on daily recipe suggestions to receive one recipe suggestion each day."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las notificaciones están permitidas. Activa las sugerencias diarias de recetas para recibir una cada día."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les notifications sont autorisées. Activez les suggestions quotidiennes de recettes pour en recevoir une chaque jour."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通知は許可されています。毎日のレシピ提案をオンにすると、毎日1件受け取れます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通知已获允许。开启每日食谱推荐后，你每天都会收到一条推荐。"
+          }
+        }
+      }
+    },
     "Notifications are disabled in system settings." : {
       "localizations" : {
         "en" : {
@@ -4810,6 +4878,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "预览列表"
+          }
+        }
+      }
+    },
+    "Ready in %lld min with %lld ingredients." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ready in %lld min with %lld ingredients."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lista en %lld min con %lld ingredientes."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prêt en %lld min avec %lld ingrédients."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld分で作れて、材料は%2$lld品です。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld 分钟即可完成，只需 %2$lld 种食材。"
+          }
+        }
+      }
+    },
+    "Ready in %lld min." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ready in %lld min."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lista en %lld min."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prêt en %lld min."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld分で作れます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 分钟即可完成。"
           }
         }
       }
@@ -6208,40 +6344,6 @@
         }
       }
     },
-    "Spaghetti\n200g\nEggs\n2\nParmesan cheese\n50g\nPancetta\n100g\nBlack pepper\nto taste\nSalt\nto taste" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Spaghetti\n200g\nEggs\n2\nParmesan cheese\n50g\nPancetta\n100g\nBlack pepper\nto taste\nSalt\nto taste"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Espagueti\n200g\nHuevos\n2\nQueso parmesano\n50g\nPanceta\n100g\nPimienta negra\nal gusto\nSal\nal gusto"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Spaghetti\n200g\nŒufs\n2\nParmesan\n50g\nPancetta\n100g\nPoivre noir\nselon le goût\nSel\nselon le goût"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "スパゲッティ\n200g\n卵\n2個\nパルメザンチーズ\n50g\nパンチェッタ\n100g\n黒こしょう\n適量\n塩\n適量"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "意大利面\n200g\n鸡蛋\n2个\n帕玛森芝士\n50g\n意式培根\n100g\n黑胡椒\n适量\n盐\n适量"
-          }
-        }
-      }
-    },
     "Spaghetti Carbonara" : {
       "localizations" : {
         "en" : {
@@ -6272,40 +6374,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "培根蛋面"
-          }
-        }
-      }
-    },
-    "Spaghetti Carbonara for 2 people.\nIngredients: Spaghetti 200g, Eggs 2, Pancetta 100g.\nCook spaghetti. Fry pancetta. Mix eggs and cheese. Combine all." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Spaghetti Carbonara for 2 people.\nIngredients: Spaghetti 200g, Eggs 2, Pancetta 100g.\nCook spaghetti. Fry pancetta. Mix eggs and cheese. Combine all."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Espagueti a la carbonara para 2 personas.\nIngredientes: Espagueti 200g, Huevos 2, Panceta 100g.\nCuece la pasta. Fríe la panceta. Mezcla los huevos y el queso. Combina todo."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Spaghetti carbonara pour 2 personnes.\nIngrédients : Spaghetti 200g, Œufs 2, Pancetta 100g.\nFaites cuire les pâtes. Faites revenir la pancetta. Mélangez les œufs et le fromage. Assemblez le tout."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "2人分のスパゲッティ・カルボナーラ。\n材料: スパゲッティ 200g、卵 2個、パンチェッタ 100g。\nパスタをゆでる。パンチェッタを炒める。卵とチーズを混ぜる。すべてを合わせる。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "2人份培根蛋面。\n食材：意大利面 200g、鸡蛋 2个、意式培根 100g。\n煮意大利面。煎意式培根。混合鸡蛋和奶酪。把所有材料拌匀。"
           }
         }
       }
@@ -6986,6 +7054,108 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "使用 Siri 或快捷指令可以更快打开食谱和设置。"
+          }
+        }
+      }
+    },
+    "Uses %@ and %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uses %@ and %@."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usa %@ y %@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilise %@ et %@."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@と%@を使います。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "会用到 %@ 和 %@。"
+          }
+        }
+      }
+    },
+    "Uses %@, %@, and more." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uses %@, %@, and more."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usa %@, %@ y más."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilise %@, %@ et plus encore."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@や%@などを使います。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "会用到 %@、%@ 等食材。"
+          }
+        }
+      }
+    },
+    "Uses %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uses %@."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usa %@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilise %@."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@を使います。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "会用到 %@。"
           }
         }
       }

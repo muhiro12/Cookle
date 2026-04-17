@@ -186,23 +186,25 @@ struct SettingsSidebarView: View {
                     ),
                     arrowEdge: .top
                 )
+            Text(notificationStatusDescription)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            if notificationService.authorizationStatus == .denied {
+                Button("Open Notification Settings") {
+                    openNotificationSettings()
+                }
+            }
             if isDailyRecipeSuggestionNotificationOn {
                 DatePicker(
                     "Notify time",
                     selection: dailySuggestionTime,
                     displayedComponents: .hourAndMinute
                 )
-                Button("Send test notification") {
-                    Task {
-                        await notificationService.sendTestSuggestionNotification()
-                    }
-                }
-                if notificationService.authorizationStatus == .denied {
-                    Text("Notifications are disabled in system settings.")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                    Button("Open Notification Settings") {
-                        openNotificationSettings()
+                if notificationService.authorizationStatus != .denied {
+                    Button("Send test notification") {
+                        Task {
+                            await notificationService.sendTestSuggestionNotification()
+                        }
                     }
                 }
             }
@@ -289,6 +291,33 @@ private extension SettingsSidebarView {
             )
             dailyRecipeSuggestionHour = components.hour
             dailyRecipeSuggestionMinute = components.minute
+        }
+    }
+
+    var notificationStatusDescription: String {
+        switch notificationService.authorizationStatus {
+        case .authorized,
+             .provisional,
+             .ephemeral:
+            if isDailyRecipeSuggestionNotificationOn {
+                return String(
+                    localized: "Daily recipe suggestions are enabled and will arrive at your selected time."
+                )
+            }
+
+            return String(localized: "Notifications are allowed. Turn on daily recipe suggestions to receive one recipe suggestion each day.") // swiftlint:disable:this line_length
+        case .denied:
+            return String(
+                localized: "Notifications are disabled in system settings."
+            )
+        case .notDetermined:
+            return String(
+                localized: "Allow notifications to get one recipe suggestion each day at your selected time."
+            )
+        @unknown default:
+            return String(
+                localized: "Allow notifications to get one recipe suggestion each day at your selected time."
+            )
         }
     }
 
