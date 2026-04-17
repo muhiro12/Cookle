@@ -7,6 +7,7 @@ final class CookleAppAssembly {
     let modelContainer: ModelContainer
     let navigationModel: MainNavigationModel
     let services: CookleAppServices
+    let cookingSessionStore: CookingSessionStore
     let recipeActionService: RecipeActionService
     let diaryActionService: DiaryActionService
     let tagActionService: TagActionService
@@ -17,6 +18,7 @@ final class CookleAppAssembly {
         modelContainer: ModelContainer,
         navigationModel: MainNavigationModel,
         services: CookleAppServices,
+        cookingSessionStore: CookingSessionStore,
         recipeActionService: RecipeActionService,
         diaryActionService: DiaryActionService,
         tagActionService: TagActionService,
@@ -26,6 +28,7 @@ final class CookleAppAssembly {
         self.modelContainer = modelContainer
         self.navigationModel = navigationModel
         self.services = services
+        self.cookingSessionStore = cookingSessionStore
         self.recipeActionService = recipeActionService
         self.diaryActionService = diaryActionService
         self.tagActionService = tagActionService
@@ -66,6 +69,7 @@ extension View {
             .environment(assembly.diaryActionService)
             .environment(assembly.tagActionService)
             .environment(assembly.settingsActionService)
+            .environment(assembly.cookingSessionStore)
             .environment(assembly.navigationModel)
             .environment(assembly.services.routePipeline)
     }

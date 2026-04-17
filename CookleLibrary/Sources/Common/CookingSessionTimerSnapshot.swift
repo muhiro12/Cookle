@@ -1,5 +1,7 @@
 import Foundation
 
+private let kCookingSessionTimerSecondsPerMinute = 60
+
 public struct CookingSessionTimerSnapshot: Codable, Equatable, Sendable {
     public let durationSeconds: Int
     public let startedAt: Date
@@ -10,16 +12,16 @@ public struct CookingSessionTimerSnapshot: Codable, Equatable, Sendable {
         )
     }
 
+    public var durationMinutes: Int {
+        durationSeconds / kCookingSessionTimerSecondsPerMinute
+    }
+
     public init(
         durationSeconds: Int,
         startedAt: Date
     ) {
         self.durationSeconds = max(durationSeconds, .zero)
         self.startedAt = startedAt
-    }
-
-    public var durationMinutes: Int {
-        durationSeconds / TimerConversion.secondsPerMinute
     }
 
     public func remainingSeconds(
@@ -36,8 +38,4 @@ public struct CookingSessionTimerSnapshot: Codable, Equatable, Sendable {
     ) -> Bool {
         date >= endsAt
     }
-}
-
-private enum TimerConversion {
-    static let secondsPerMinute = 60
 }

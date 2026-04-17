@@ -50,13 +50,11 @@ private extension CookleAppAssemblyFactory {
         logging: CookleAppLogging
     ) -> CookleAppAssembly {
         let navigationModel = MainNavigationModel()
+        let cookingSessionStore = CookingSessionStore()
         let services = makeServiceGraph(
             modelContainer: modelContainer,
             navigationModel: navigationModel,
             logging: logging
-        )
-        let runtimeConfiguration = makeRuntimeConfiguration(
-            nativeAdUnitID: nativeAdUnitID
         )
         var bootstrap: MHAppRuntimeBootstrap?
         let lifecyclePlan = makeLifecyclePlan(
@@ -68,12 +66,11 @@ private extension CookleAppAssemblyFactory {
             routePipeline: services.routePipeline
         )
         bootstrap = .init(
-            configuration: runtimeConfiguration,
+            configuration: makeRuntimeConfiguration(
+                nativeAdUnitID: nativeAdUnitID
+            ),
             lifecyclePlan: lifecyclePlan,
             routePipeline: services.routePipeline
-        )
-        let reviewFlow = makeReviewFlow(
-            logging: logging
         )
         guard let bootstrap else {
             fatalError("MHAppRuntimeBootstrap should be initialized before assembly creation completes.")
@@ -83,9 +80,12 @@ private extension CookleAppAssemblyFactory {
             modelContainer: modelContainer,
             navigationModel: navigationModel,
             services: services,
+            cookingSessionStore: cookingSessionStore,
             recipeActionService: RecipeActionService(
                 notificationService: services.notificationService,
-                reviewFlow: reviewFlow,
+                reviewFlow: makeReviewFlow(
+                    logging: logging
+                ),
                 saveLogger: logging.logger(
                     category: "RecipeSave",
                     source: #fileID

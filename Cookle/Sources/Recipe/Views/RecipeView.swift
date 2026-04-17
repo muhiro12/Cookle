@@ -15,6 +15,8 @@ struct RecipeView: View {
     private var recipe
     @Environment(CookleTipController.self)
     private var tipController
+    @Environment(CookingSessionStore.self)
+    private var cookingSessionStore
     @Environment(RecipeActionService.self)
     private var recipeActionService
     @Environment(CookleAppLogging.self)
@@ -22,32 +24,19 @@ struct RecipeView: View {
 
     @AppStorage(\.isSubscribeOn)
     private var isSubscribeOn
+    @State private var isCookingPresented = false
 
     var body: some View {
         List {
-            RecipePhotosSection()
-            RecipeServingSizeSection()
-            RecipeCookingTimeSection()
-            RecipeIngredientsSection()
-            RecipeStepsSection()
-            AdvertisementSection(.medium)
-                .hidden(isSubscribeOn)
-            RecipeCategoriesSection()
-            RecipeNoteSection()
-            RecipeDiariesSection()
-            RecipeCreatedAtSection()
-            RecipeUpdatedAtSection()
-            Section {
-                ShareRecipeLinkButton()
-                AddRecipeToTodayDiaryButton()
-                EditRecipeButton()
-                DuplicateRecipeButton()
-                DeleteRecipeButton()
-            } footer: {
-                Text(shareRecipeLinkFooter)
-            }
+            recipeSections
+            recipeActionSection
         }
         .navigationTitle(recipe.name)
+        .fullScreenCover(isPresented: $isCookingPresented) {
+            NavigationStack {
+                CookingSessionView()
+            }
+        }
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 EditRecipeButton()
@@ -71,10 +60,6 @@ struct RecipeView: View {
                     ]
                 )
             }
-            UIApplication.shared.isIdleTimerDisabled = true
-        }
-        .onDisappear {
-            UIApplication.shared.isIdleTimerDisabled = false
         }
     }
 }
@@ -84,11 +69,79 @@ struct RecipeView: View {
     NavigationStack {
         RecipeView()
             .environment(recipes[0])
+            .environment(
+                CookingSessionStore(
+                    persistsSnapshot: false
+                )
+            )
     }
 }
 
 private extension RecipeView {
+    @ViewBuilder var recipeSections: some View {
+        RecipePhotosSection()
+        RecipeServingSizeSection()
+        RecipeCookingTimeSection()
+        RecipeIngredientsSection()
+        RecipeStepsSection()
+        AdvertisementSection(.medium)
+            .hidden(isSubscribeOn)
+        RecipeCategoriesSection()
+        RecipeNoteSection()
+        RecipeDiariesSection()
+        RecipeCreatedAtSection()
+        RecipeUpdatedAtSection()
+    }
+
+    var recipeActionSection: some View {
+        Section {
+            startCookingButton
+            ShareRecipeLinkButton()
+            AddRecipeToTodayDiaryButton()
+            EditRecipeButton()
+            DuplicateRecipeButton()
+            DeleteRecipeButton()
+        } footer: {
+            Text(shareRecipeLinkFooter)
+        }
+    }
+
+    @ViewBuilder var startCookingButton: some View {
+        if recipe.steps.isNotEmpty {
+            Button {
+                startOrResumeCooking()
+            } label: {
+                Label {
+                    Text(cookingButtonTitle)
+                } icon: {
+                    Image(systemName: "fork.knife.circle")
+                        .accessibilityHidden(true)
+                }
+            }
+        }
+    }
+
+    var cookingButtonTitle: String {
+        cookingSessionStore.isActiveSession(
+            for: recipe
+        )
+        ? String(localized: "Resume Cooking")
+        : String(localized: "Start Cooking")
+    }
+
     var shareRecipeLinkFooter: String {
         String(localized: "recipe.shareLink.footer")
+    }
+
+    func startOrResumeCooking() {
+        if cookingSessionStore.isActiveSession(
+            for: recipe
+        ) == false {
+            cookingSessionStore.startSession(
+                for: recipe
+            )
+        }
+
+        isCookingPresented = true
     }
 }

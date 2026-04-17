@@ -1,10 +1,6 @@
 import Foundation
 
-public enum CookingSessionTimerStatus: Equatable, Sendable {
-    case inactive
-    case running(remainingSeconds: Int)
-    case expired
-}
+private let kCookingSessionMinuteInSeconds = 60
 
 public struct CookingSessionSnapshot: Codable, Equatable, Sendable {
     public let recipeID: String
@@ -103,6 +99,33 @@ public struct CookingSessionSnapshot: Codable, Equatable, Sendable {
         )
     }
 
+    public static func decoded(
+        from value: String
+    ) -> Self? {
+        guard let data = value.data(using: .utf8) else {
+            return nil
+        }
+
+        return try? JSONDecoder().decode(
+            Self.self,
+            from: data
+        )
+    }
+
+    private static func clampedStepIndex(
+        _ stepIndex: Int,
+        stepCount: Int
+    ) -> Int {
+        guard stepCount > .zero else {
+            return .zero
+        }
+
+        return min(
+            max(stepIndex, .zero),
+            stepCount - 1
+        )
+    }
+
     public func settingCurrentStepIndex(
         _ stepIndex: Int,
         updatedAt: Date = .now
@@ -146,7 +169,7 @@ public struct CookingSessionSnapshot: Codable, Equatable, Sendable {
             steps: steps,
             currentStepIndex: currentStepIndex,
             activeTimer: .init(
-                durationSeconds: durationMinutes * CookingSessionTimer.minuteInSeconds,
+                durationSeconds: durationMinutes * kCookingSessionMinuteInSeconds,
                 startedAt: startedAt
             ),
             updatedAt: startedAt,
@@ -248,37 +271,4 @@ public struct CookingSessionSnapshot: Codable, Equatable, Sendable {
             encoding: .utf8
         )
     }
-
-    public static func decoded(
-        from value: String
-    ) -> Self? {
-        guard let data = value.data(using: .utf8) else {
-            return nil
-        }
-
-        return try? JSONDecoder().decode(
-            Self.self,
-            from: data
-        )
-    }
-}
-
-private extension CookingSessionSnapshot {
-    static func clampedStepIndex(
-        _ stepIndex: Int,
-        stepCount: Int
-    ) -> Int {
-        guard stepCount > .zero else {
-            return .zero
-        }
-
-        return min(
-            max(stepIndex, .zero),
-            stepCount - 1
-        )
-    }
-}
-
-private enum CookingSessionTimer {
-    static let minuteInSeconds = 60
 }
