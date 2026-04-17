@@ -2,12 +2,14 @@ import Foundation
 
 /// Shared photo ordering helpers used by app, notifications, and intents.
 public enum RecipePhotoDisplay {
+    /// Returns photo objects sorted by their display order.
     public static func orderedPhotoObjects(
         photoObjects: [PhotoObject]
     ) -> [PhotoObject] {
         photoObjects.sorted()
     }
 
+    /// Returns ordered photos, falling back to flattened photos when needed.
     public static func orderedPhotos(
         photoObjects: [PhotoObject],
         fallbackPhotos: [Photo]
@@ -21,6 +23,7 @@ public enum RecipePhotoDisplay {
         return fallbackPhotos
     }
 
+    /// Returns the first photo in display order.
     public static func primaryPhoto(
         photoObjects: [PhotoObject],
         fallbackPhotos: [Photo]
@@ -31,6 +34,7 @@ public enum RecipePhotoDisplay {
         ).first
     }
 
+    /// Returns the data for the first photo in display order.
     public static func primaryPhotoData(
         photoObjects: [PhotoObject],
         fallbackPhotos: [Photo]
@@ -43,12 +47,14 @@ public enum RecipePhotoDisplay {
 }
 
 public extension Recipe {
+    /// Photo objects sorted by their display order.
     var orderedPhotoObjects: [PhotoObject] {
         RecipePhotoDisplay.orderedPhotoObjects(
             photoObjects: photoObjects.orEmpty
         )
     }
 
+    /// Photos sorted for display, with legacy fallback when needed.
     var orderedPhotos: [Photo] {
         RecipePhotoDisplay.orderedPhotos(
             photoObjects: photoObjects.orEmpty,
@@ -56,6 +62,7 @@ public extension Recipe {
         )
     }
 
+    /// The first photo that should be shown for this recipe.
     var primaryPhoto: Photo? {
         RecipePhotoDisplay.primaryPhoto(
             photoObjects: photoObjects.orEmpty,
@@ -63,6 +70,7 @@ public extension Recipe {
         )
     }
 
+    /// The data for the first photo that should be shown for this recipe.
     var primaryPhotoData: Data? {
         RecipePhotoDisplay.primaryPhotoData(
             photoObjects: photoObjects.orEmpty,
