@@ -12,6 +12,7 @@ import UIKit
 
 struct SettingsSidebarView: View {
     @State private var model = SettingsScreenModel()
+    @State private var isDebugPresented = false
 
     @Environment(\.modelContext)
     private var context
@@ -30,6 +31,8 @@ struct SettingsSidebarView: View {
     private var isSubscribeOn
     @AppStorage(\.isICloudOn)
     private var isICloudOn
+    @AppStorage(\.isDebugOn)
+    private var isDebugOn
     @AppStorage(\.isDailyRecipeSuggestionNotificationOn)
     private var isDailyRecipeSuggestionNotificationOn
     @AppStorage(\.dailyRecipeSuggestionHour)
@@ -122,6 +125,9 @@ struct SettingsSidebarView: View {
             }
             .onAppear {
                 refreshTipEligibility()
+            }
+            .fullScreenCover(isPresented: $isDebugPresented) {
+                DebugNavigationView()
             }
     }
 
@@ -223,6 +229,15 @@ struct SettingsSidebarView: View {
 
     var generalSection: some View {
         Section {
+            if isDebugOn {
+                Button {
+                    isDebugPresented = true
+                } label: {
+                    Text("Debug")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .buttonStyle(.plain)
+            }
             Button {
                 content = .license
             } label: {

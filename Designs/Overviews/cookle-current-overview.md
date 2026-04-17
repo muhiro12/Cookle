@@ -33,8 +33,7 @@ Cookle uses adaptive tab navigation.
 - Ingredient and category tag browsing is opened from the search discovery
   sheet, which leads into the dedicated tag detail flow on both compact and
   regular-width layouts.
-- `Debug` is available only when debug mode is enabled and the layout is
-  regular width.
+- `Debug` is available from `Settings` when debug mode is enabled.
 - Deep links, widgets, notifications, and App Intents all feed the same route
   system through `MHAppRoutePipeline`, so navigation behavior is shared across
   entry points.
@@ -259,6 +258,7 @@ Cookle uses adaptive tab navigation.
 ### Debug and Preview Support
 
 - Debug mode can be enabled through AppStorage.
+- When debug mode is enabled, the debug screen is opened from `Settings`.
 - The debug screen provides:
   - a debug mode toggle
   - TipKit reset and testing helpers

@@ -1,20 +1,13 @@
 //
 //  MainTabView.swift
-//  Cookle Playgrounds
+//  Cookle
 //
 //  Created by Hiromu Nakano on 9/18/24.
 //
 
-import MHPlatform
 import SwiftUI
 
 struct MainTabView: View {
-    @Environment(\.horizontalSizeClass)
-    private var horizontalSizeClass
-
-    @AppStorage(\.isDebugOn)
-    private var isDebugOn
-
     @Binding private var selection: MainTab
     @Binding private var diarySelection: Diary?
     @Binding private var diaryRecipeSelection: Recipe?
@@ -24,10 +17,7 @@ struct MainTabView: View {
     @Binding private var incomingSettingsSelection: SettingsContent?
 
     private var tabs: [MainTab] {
-        MainTab.displayedTabs(
-            isRegularWidth: horizontalSizeClass == .regular,
-            isDebugOn: isDebugOn
-        )
+        MainTab.displayedTabs()
     }
 
     var body: some View {
@@ -93,8 +83,7 @@ private extension MainTabView {
             SettingsNavigationView(
                 incomingSelection: $incomingSettingsSelection
             )
-        case .photo,
-             .debug:
+        case .photo:
             tab.rootView
         }
     }
