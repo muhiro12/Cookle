@@ -835,6 +835,40 @@
         }
       }
     },
+    "Browse Tags" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Browse Tags"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Explorar etiquetas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parcourir les étiquettes"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タグを閲覧"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "浏览标签"
+          }
+        }
+      }
+    },
     "Camera" : {
       "localizations" : {
         "en" : {
@@ -1069,40 +1103,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无法删除食谱"
-          }
-        }
-      }
-    },
-    "Cannot Remove Photo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cannot Remove Photo"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No se puede eliminar la foto"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Impossible de supprimer la photo"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "写真を削除できません"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无法移除照片"
           }
         }
       }
@@ -1409,40 +1409,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "经典的意大利面碳烤和温暖的牛肉炖菜，为一天画上圆满的句号。"
-          }
-        }
-      }
-    },
-    "Clear Filters" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clear Filters"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Borrar filtros"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Effacer les filtres"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "フィルタをクリア"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "清除筛选条件"
           }
         }
       }
@@ -3556,40 +3522,6 @@
         }
       }
     },
-    "Menu" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Menu"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Menú"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Menu"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "メニュー"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "菜单"
-          }
-        }
-      }
-    },
     "minutes" : {
       "localizations" : {
         "en" : {
@@ -3824,40 +3756,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "尚无图像。试试图像实验区？"
-          }
-        }
-      }
-    },
-    "No Matching Recipes" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No Matching Recipes"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No hay recetas coincidentes"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune recette correspondante"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "一致するレシピがありません"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "没有匹配的食谱"
           }
         }
       }
@@ -5154,6 +5052,74 @@
         }
       }
     },
+    "recipe.shareLink.footer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save this link in reminders, calendar events, or notes so you can reopen this recipe in Cookle later. It does not share the recipe details with someone else."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guarda este enlace en recordatorios, eventos del calendario o notas para volver a abrir esta receta en Cookle más tarde. No comparte los detalles de la receta con otra persona."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistrez ce lien dans des rappels, des événements de calendrier ou des notes afin de pouvoir rouvrir cette recette dans Cookle plus tard. Il ne partage pas les détails de la recette avec une autre personne."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このリンクをリマインダー、カレンダー予定、メモなどに保存しておくと、後でこのレシピを Cookle で開き直せます。ほかの人にレシピ内容を共有するものではありません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将此链接保存到提醒事项、日历事件或备忘录中，以便稍后在 Cookle 中重新打开这道食谱。它不会把食谱详情分享给其他人。"
+          }
+        }
+      }
+    },
+    "recipe.shareLink.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save this link in reminders, calendar events, or notes to reopen %@ in Cookle later."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guarda este enlace en recordatorios, eventos del calendario o notas para volver a abrir %@ en Cookle más tarde."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistrez ce lien dans des rappels, des événements de calendrier ou des notes pour rouvrir %@ dans Cookle plus tard."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このリンクをリマインダー、カレンダー予定、メモなどに保存しておくと、後で Cookle で %@ を開き直せます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将此链接保存到提醒事项、日历事件或备忘录中，以便稍后在 Cookle 中重新打开 %@。"
+          }
+        }
+      }
+    },
     "Recipes" : {
       "localizations" : {
         "en" : {
@@ -5936,40 +5902,6 @@
         }
       }
     },
-    "recipe.shareLink.footer" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Save this link in reminders, calendar events, or notes so you can reopen this recipe in Cookle later. It does not share the recipe details with someone else."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Guarda este enlace en recordatorios, eventos del calendario o notas para volver a abrir esta receta en Cookle más tarde. No comparte los detalles de la receta con otra persona."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enregistrez ce lien dans des rappels, des événements de calendrier ou des notes afin de pouvoir rouvrir cette recette dans Cookle plus tard. Il ne partage pas les détails de la recette avec une autre personne."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "このリンクをリマインダー、カレンダー予定、メモなどに保存しておくと、後でこのレシピを Cookle で開き直せます。ほかの人にレシピ内容を共有するものではありません。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "将此链接保存到提醒事项、日历事件或备忘录中，以便稍后在 Cookle 中重新打开这道食谱。它不会把食谱详情分享给其他人。"
-          }
-        }
-      }
-    },
     "Show All Tips For Testing" : {
       "localizations" : {
         "en" : {
@@ -6238,40 +6170,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "排序"
-          }
-        }
-      }
-    },
-    "Sort & Filter" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sort & Filter"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ordenar y filtrar"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Trier et filtrer"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "並び替えとフィルタ"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "排序和筛选"
           }
         }
       }
@@ -6578,40 +6476,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "TipKit"
-          }
-        }
-      }
-    },
-    "Try a different search or clear filters." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Try a different search or clear filters."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prueba una búsqueda diferente o borra los filtros."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Essayez une autre recherche ou effacez les filtres."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "別の検索を試すか、フィルタをクリアしてください。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "请尝试其他搜索词或清除筛选条件。"
           }
         }
       }
@@ -7126,40 +6990,6 @@
         }
       }
     },
-    "recipe.shareLink.message" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Save this link in reminders, calendar events, or notes to reopen %@ in Cookle later."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Guarda este enlace en recordatorios, eventos del calendario o notas para volver a abrir %@ en Cookle más tarde."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enregistrez ce lien dans des rappels, des événements de calendrier ou des notes pour rouvrir %@ dans Cookle plus tard."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "このリンクをリマインダー、カレンダー予定、メモなどに保存しておくと、後で Cookle で %@ を開き直せます。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "将此链接保存到提醒事项、日历事件或备忘录中，以便稍后在 Cookle 中重新打开 %@。"
-          }
-        }
-      }
-    },
     "Value" : {
       "localizations" : {
         "en" : {
@@ -7190,40 +7020,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "值"
-          }
-        }
-      }
-    },
-    "With Photos Only" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "With Photos Only"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Solo con fotos"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Avec photos uniquement"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "写真ありのみ"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "仅显示有照片的项目"
           }
         }
       }
