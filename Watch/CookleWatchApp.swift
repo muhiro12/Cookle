@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct CookleWatchApp: App {
+    @StateObject private var cookingSessionStore = WatchCookingSessionStore()
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(cookingSessionStore)
         }
     }
 }

@@ -8,6 +8,7 @@ final class CookleAppAssembly {
     let navigationModel: MainNavigationModel
     let services: CookleAppServices
     let cookingSessionStore: CookingSessionStore
+    let cookingSessionWatchSyncService: CookingSessionWatchSyncService
     let recipeActionService: RecipeActionService
     let diaryActionService: DiaryActionService
     let tagActionService: TagActionService
@@ -19,6 +20,7 @@ final class CookleAppAssembly {
         navigationModel: MainNavigationModel,
         services: CookleAppServices,
         cookingSessionStore: CookingSessionStore,
+        cookingSessionWatchSyncService: CookingSessionWatchSyncService,
         recipeActionService: RecipeActionService,
         diaryActionService: DiaryActionService,
         tagActionService: TagActionService,
@@ -29,6 +31,7 @@ final class CookleAppAssembly {
         self.navigationModel = navigationModel
         self.services = services
         self.cookingSessionStore = cookingSessionStore
+        self.cookingSessionWatchSyncService = cookingSessionWatchSyncService
         self.recipeActionService = recipeActionService
         self.diaryActionService = diaryActionService
         self.tagActionService = tagActionService

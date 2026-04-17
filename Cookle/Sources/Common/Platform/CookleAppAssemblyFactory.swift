@@ -51,6 +51,9 @@ private extension CookleAppAssemblyFactory {
     ) -> CookleAppAssembly {
         let navigationModel = MainNavigationModel()
         let cookingSessionStore = CookingSessionStore()
+        let cookingSessionWatchSyncService = CookingSessionWatchSyncService(
+            cookingSessionStore: cookingSessionStore
+        )
         let services = makeServiceGraph(
             modelContainer: modelContainer,
             navigationModel: navigationModel,
@@ -81,15 +84,10 @@ private extension CookleAppAssemblyFactory {
             navigationModel: navigationModel,
             services: services,
             cookingSessionStore: cookingSessionStore,
-            recipeActionService: RecipeActionService(
+            cookingSessionWatchSyncService: cookingSessionWatchSyncService,
+            recipeActionService: makeRecipeActionService(
                 notificationService: services.notificationService,
-                reviewFlow: makeReviewFlow(
-                    logging: logging
-                ),
-                saveLogger: logging.logger(
-                    category: "RecipeSave",
-                    source: #fileID
-                )
+                logging: logging
             ),
             diaryActionService: DiaryActionService(),
             tagActionService: TagActionService(
@@ -99,6 +97,22 @@ private extension CookleAppAssemblyFactory {
                 notificationService: services.notificationService
             ),
             bootstrap: bootstrap
+        )
+    }
+
+    static func makeRecipeActionService(
+        notificationService: NotificationService,
+        logging: CookleAppLogging
+    ) -> RecipeActionService {
+        .init(
+            notificationService: notificationService,
+            reviewFlow: makeReviewFlow(
+                logging: logging
+            ),
+            saveLogger: logging.logger(
+                category: "RecipeSave",
+                source: #fileID
+            )
         )
     }
 

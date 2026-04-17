@@ -8,15 +8,22 @@ struct CookingSessionTimerSection: View {
         static let timerValueWeight = Font.Weight.semibold
     }
 
+    private enum TimerValue {
+        static let oneMinute = 1
+        static let fiveMinutes = 5
+        static let tenMinutes = 10
+        static let secondsPerMinute = 60
+    }
+
     @Environment(CookingSessionStore.self)
     private var cookingSessionStore
 
     private let snapshot: CookingSessionSnapshot
 
     private let quickTimerMinutes = [
-        1,
-        5,
-        10
+        TimerValue.oneMinute,
+        TimerValue.fiveMinutes,
+        TimerValue.tenMinutes
     ]
 
     var body: some View {
@@ -65,22 +72,6 @@ private extension CookingSessionTimerSection {
         return combinedOptions.sorted()
     }
 
-    @ViewBuilder
-    func timerContent(
-        at date: Date
-    ) -> some View {
-        switch snapshot.timerStatus(at: date) {
-        case .inactive:
-            idleTimerContent
-        case .running(let remainingSeconds):
-            runningTimerContent(
-                remainingSeconds: remainingSeconds
-            )
-        case .expired:
-            expiredTimerContent
-        }
-    }
-
     var idleTimerContent: some View {
         VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
             if let suggestedTimer {
@@ -113,6 +104,56 @@ private extension CookingSessionTimerSection {
                 minutes: minutes,
                 isSuggested: suggestedTimer?.minutes == minutes
             )
+        }
+    }
+
+    var expiredTimerContent: some View {
+        VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
+            Label("Timer Finished", systemImage: "bell.fill")
+                .font(.headline)
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: Layout.buttonSpacing) {
+                    expiredActionButtons
+                }
+                VStack(spacing: Layout.buttonSpacing) {
+                    expiredActionButtons
+                }
+            }
+        }
+    }
+
+    @ViewBuilder var expiredActionButtons: some View {
+        Button("Repeat") {
+            cookingSessionStore.repeatTimer()
+        }
+        .buttonStyle(.borderedProminent)
+
+        if snapshot.hasNextStep {
+            Button("Next Step") {
+                cookingSessionStore.advanceFromTimerFollowUp()
+            }
+            .buttonStyle(.bordered)
+        }
+
+        Button("Cancel Timer") {
+            cookingSessionStore.cancelTimer()
+        }
+        .buttonStyle(.bordered)
+    }
+
+    @ViewBuilder
+    func timerContent(
+        at date: Date
+    ) -> some View {
+        switch snapshot.timerStatus(at: date) {
+        case .inactive:
+            idleTimerContent
+        case .running(let remainingSeconds):
+            runningTimerContent(
+                remainingSeconds: remainingSeconds
+            )
+        case .expired:
+            expiredTimerContent
         }
     }
 
@@ -172,46 +213,11 @@ private extension CookingSessionTimerSection {
         }
     }
 
-    var expiredTimerContent: some View {
-        VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
-            Label("Timer Finished", systemImage: "bell.fill")
-                .font(.headline)
-            ViewThatFits(in: .horizontal) {
-                HStack(spacing: Layout.buttonSpacing) {
-                    expiredActionButtons
-                }
-                VStack(spacing: Layout.buttonSpacing) {
-                    expiredActionButtons
-                }
-            }
-        }
-    }
-
-    @ViewBuilder
-    var expiredActionButtons: some View {
-        Button("Repeat") {
-            cookingSessionStore.repeatTimer()
-        }
-        .buttonStyle(.borderedProminent)
-
-        if snapshot.hasNextStep {
-            Button("Next Step") {
-                cookingSessionStore.advanceFromTimerFollowUp()
-            }
-            .buttonStyle(.bordered)
-        }
-
-        Button("Cancel Timer") {
-            cookingSessionStore.cancelTimer()
-        }
-        .buttonStyle(.bordered)
-    }
-
     func formattedDuration(
         remainingSeconds: Int
     ) -> String {
-        let minutes = remainingSeconds / 60
-        let seconds = remainingSeconds % 60
+        let minutes = remainingSeconds / TimerValue.secondsPerMinute
+        let seconds = remainingSeconds % TimerValue.secondsPerMinute
         return String(
             format: "%02d:%02d",
             minutes,
@@ -238,10 +244,12 @@ private extension CookingSessionTimerSection {
     )
 
     NavigationStack {
-        CookingSessionTimerSection(
-            snapshot: store.activeSnapshot!
-        )
-        .padding()
-        .environment(store)
+        if let activeSnapshot = store.activeSnapshot {
+            CookingSessionTimerSection(
+                snapshot: activeSnapshot
+            )
+            .padding()
+            .environment(store)
+        }
     }
 }

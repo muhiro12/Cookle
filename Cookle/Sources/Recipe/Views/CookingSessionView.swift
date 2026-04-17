@@ -17,75 +17,89 @@ struct CookingSessionView: View {
     private var dismiss
 
     var body: some View {
-        Group {
-            if let activeSnapshot = cookingSessionStore.activeSnapshot {
-                ScrollView {
-                    VStack(spacing: Layout.contentSpacing) {
-                        progressSection(
-                            snapshot: activeSnapshot
-                        )
-                        stepPager(
-                            snapshot: activeSnapshot
-                        )
-                        sectionContainer {
-                            CookingSessionTimerSection(
-                                snapshot: activeSnapshot
-                            )
-                        }
-                        sectionContainer {
-                            stepNavigationSection(
-                                snapshot: activeSnapshot
-                            )
-                        }
-                        Button(
-                            "End Session",
-                            role: .destructive
-                        ) {
-                            cookingSessionStore.endSession()
-                        }
-                        .buttonStyle(.borderedProminent)
-                    }
-                    .padding(Layout.screenPadding)
+        sessionContent
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    CloseButton()
                 }
-                .background(Color(.systemGroupedBackground))
-                .navigationTitle(activeSnapshot.recipeName)
-            } else {
-                ContentUnavailableView {
-                    Label(
-                        "No Active Cooking Session",
-                        systemImage: "fork.knife"
-                    )
-                } description: {
-                    Text(
-                        "Start cooking from a recipe to see the live step guide here."
-                    )
+            }
+            .onAppear {
+                UIApplication.shared.isIdleTimerDisabled = true
+            }
+            .onDisappear {
+                UIApplication.shared.isIdleTimerDisabled = false
+            }
+            .onChange(of: cookingSessionStore.activeSnapshot?.updatedAt) {
+                guard cookingSessionStore.activeSnapshot == nil else {
+                    return
                 }
-                .navigationTitle("Cooking")
-            }
-        }
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                CloseButton()
-            }
-        }
-        .onAppear {
-            UIApplication.shared.isIdleTimerDisabled = true
-        }
-        .onDisappear {
-            UIApplication.shared.isIdleTimerDisabled = false
-        }
-        .onChange(of: cookingSessionStore.activeSnapshot?.updatedAt) {
-            guard cookingSessionStore.activeSnapshot == nil else {
-                return
-            }
 
-            dismiss()
-        }
+                dismiss()
+            }
     }
 }
 
 private extension CookingSessionView {
+    @ViewBuilder var sessionContent: some View {
+        if let activeSnapshot = cookingSessionStore.activeSnapshot {
+            activeSessionContent(
+                snapshot: activeSnapshot
+            )
+        } else {
+            inactiveSessionContent
+        }
+    }
+
+    var inactiveSessionContent: some View {
+        ContentUnavailableView {
+            Label(
+                "No Active Cooking Session",
+                systemImage: "fork.knife"
+            )
+        } description: {
+            Text(
+                "Start cooking from a recipe to see the live step guide here."
+            )
+        }
+        .navigationTitle("Cooking")
+    }
+
+    func activeSessionContent(
+        snapshot: CookingSessionSnapshot
+    ) -> some View {
+        ScrollView {
+            VStack(spacing: Layout.contentSpacing) {
+                progressSection(
+                    snapshot: snapshot
+                )
+                stepPager(
+                    snapshot: snapshot
+                )
+                sectionContainer {
+                    CookingSessionTimerSection(
+                        snapshot: snapshot
+                    )
+                }
+                sectionContainer {
+                    stepNavigationSection(
+                        snapshot: snapshot
+                    )
+                }
+                Button(
+                    "End Session",
+                    role: .destructive
+                ) {
+                    cookingSessionStore.endSession()
+                }
+                .buttonStyle(.borderedProminent)
+            }
+            .padding(Layout.screenPadding)
+        }
+        .background(Color(.systemGroupedBackground))
+        .navigationTitle(snapshot.recipeName)
+    }
+
     func progressSection(
         snapshot: CookingSessionSnapshot
     ) -> some View {
