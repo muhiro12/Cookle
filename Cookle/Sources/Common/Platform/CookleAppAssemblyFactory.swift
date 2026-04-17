@@ -29,7 +29,7 @@ enum CookleAppAssemblyFactory {
     ) -> CookleAppAssembly {
         makeAssembly(
             modelContainer: modelContainer,
-            nativeAdUnitID: Secret.adUnitIDDev,
+            nativeAdUnitID: CookleMonetizationConfiguration.nativeAdUnitIDDev,
             logging: .preview()
         )
     }
@@ -38,9 +38,9 @@ enum CookleAppAssemblyFactory {
 private extension CookleAppAssemblyFactory {
     static var liveAdUnitID: String {
         #if DEBUG
-        Secret.adUnitIDDev
+        CookleMonetizationConfiguration.nativeAdUnitIDDev
         #else
-        Secret.adUnitID
+        CookleMonetizationConfiguration.nativeAdUnitID
         #endif
     }
 
@@ -161,8 +161,10 @@ private extension CookleAppAssemblyFactory {
         nativeAdUnitID: String
     ) -> MHAppConfiguration {
         .init(
-            subscriptionProductIDs: [Secret.productID],
-            subscriptionGroupID: Secret.groupID,
+            subscriptionProductIDs: [
+                CookleMonetizationConfiguration.subscriptionProductID
+            ],
+            subscriptionGroupID: CookleMonetizationConfiguration.subscriptionGroupID,
             nativeAdUnitID: nativeAdUnitID,
             showsLicenses: true
         )

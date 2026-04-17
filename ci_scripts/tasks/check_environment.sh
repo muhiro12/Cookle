@@ -80,15 +80,8 @@ check_swiftlint_environment() {
 }
 
 check_build_environment() {
-  local secret_path="Cookle/Configurations/Secret.swift"
-
   ensure_command "xcodebuild" "Install Xcode and ensure xcodebuild is available from the command line."
   ensure_command "xcrun" "Install Xcode command line tools and ensure xcrun is available."
-
-  if [[ ! -f "$secret_path" ]]; then
-    record_failure "Missing file: $secret_path"
-    record_next_step "Create $secret_path with your local StoreKit and AdMob values."
-  fi
 }
 
 case "$profile" in

@@ -188,25 +188,13 @@ Universal Links require Apple App Site Association (AASA) deployment for
 ## Getting started
 
 1. Clone the repository and open the workspace directory.
-2. Provide `Cookle/Configurations/Secret.swift`, which is excluded from version
-   control and injected in CI through `SECRETS_BASE64`.
-3. Open `Cookle.xcodeproj` in Xcode 26.3 or later and select the **Cookle**
+2. Open `Cookle.xcodeproj` in Xcode 26.3 or later and select the **Cookle**
    scheme.
-4. Build and run on an iOS 18 simulator or device.
+3. Build and run on an iOS 18 simulator or device.
 
-### Secret.swift template
-
-Create `Cookle/Configurations/Secret.swift` with your own identifiers for ads
-and subscriptions before building:
-
-```swift
-enum Secret {
-    static let adUnitID = "ca-app-pub-xxxxxxxxxxxxxxxx/yyyyyyyyyy"
-    static let adUnitIDDev = "ca-app-pub-xxxxxxxxxxxxxxxx/zzzzzzzzzz"
-    static let groupID = "group.com.example.cookle"
-    static let productID = "com.example.cookle.subscription"
-}
-```
+The monetization identifiers live in
+`Cookle/Sources/Common/Platform/CookleMonetizationConfiguration.swift`. They
+are source-controlled production identifiers, not local-only credentials.
 
 ## Testing
 
@@ -240,11 +228,8 @@ enum Secret {
 
 ## Continuous integration
 
-- `ci_scripts/ci_post_clone.sh` decodes `SECRETS_BASE64` into
-  `Cookle/Configurations/Secret.swift` and adjusts Xcode defaults for plugin
-  validation inside automated builds.
-- Provide the same environment variable when running builds on CI providers so
-  ads and StoreKit configuration compile correctly.
+- `ci_scripts/ci_post_clone.sh` adjusts Xcode defaults for plugin validation
+  inside automated builds.
 
 The repository contract is:
 Direct entrypoints live in `ci_scripts/tasks/`, shared shell helpers live in
