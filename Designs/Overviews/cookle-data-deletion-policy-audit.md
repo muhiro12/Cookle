@@ -276,54 +276,65 @@ Representative evidence:
 
 ## 6) Recommended Deletion Policy
 
-### Option A: Keep `Photo` as a recipe-linked asset and fully harmonize cleanup
+### Working Principle
 
-- Treat `Photo` as a non-independent shared asset that should not survive
-  without recipe reachability.
-- Extend the same orphan cleanup rule to every recipe mutation that can remove
-  the last recipe link:
-  `RecipeService.delete`, `RecipeFormService.update`, and any future bulk
-  replace flow.
-- Delete replaced `PhotoObject`, `IngredientObject`, and `DiaryObject` rows
-  during update so parent-owned rows never persist detached.
-- Keep `Category` free-delete and `Ingredient` deny-delete only if the product
-  meaning is explicitly documented.
-- Advantages:
-  aligns with today's Photos tab, README, and current recipe-linked UX.
-- Costs:
-  still allows implicit asset deletion that a user may not interpret as
-  "delete this data itself."
+- While Cookle is still small and the long-term data model is not yet fully
+  settled, non-Object persisted data should be deleted conservatively.
+  User-important records should not disappear just because the current model
+  shape happens to make them look unused.
+- `DiaryObject`, `PhotoObject`, and `IngredientObject` are explanatory
+  parent-owned rows. They are not durable user-owned records in their own
+  right, so losing the parent should also remove the row.
+- Prefer unlink over delete for non-Object persisted records.
+  Detaching a relation is safer than deleting a record when the product meaning
+  of that record is still evolving.
+- Keep `Delete All` and debug raw deletion as explicit exception paths.
+- Treat ordinary root-model delete flows as case-by-case exceptions.
+  A delete surface can remain if it was deliberately designed and its product
+  meaning is clear, but ad-hoc or accidental delete behavior should be removed.
 
-### Option B: Move `Photo` toward an independent root record
+### Desired Steady-State Policy by Type
 
-- Treat recipe photo removal as unlink-only. Do not delete the `Photo` asset
-  just because the last recipe link is removed.
-- Add a future explicit photo-asset delete command if the product wants real
-  asset deletion.
-- Still delete replaced `PhotoObject`, `IngredientObject`, and `DiaryObject`
-  rows during update so only true root or shared records can orphan.
-- Keep `Ingredient` and `Category` as explicit shared-tag policies, but document
-  why their in-use delete rules differ.
-- Advantages:
-  best matches user-intent clarity and minimizes surprising data loss.
-- Costs:
-  requires future UX for browsing or managing standalone photos if the product
-  keeps those assets.
+- `DiaryObject`, `PhotoObject`, `IngredientObject`:
+  parent-owned rows; they should never persist detached. `[runtime confirmed]`
+- `Photo`, `Category`, `Ingredient`:
+  shared non-Object records; default to keep, even when a link is removed,
+  unless an explicit and clearly intentional delete flow says otherwise.
+- `Recipe`, `Diary`:
+  root records; do not assume they must be removed or preserved globally.
+  Evaluate each existing delete surface by whether it is clearly intentional and
+  product-legible.
+- `Delete All` and debug raw delete:
+  keep as exception mechanisms rather than using them as evidence of ordinary
+  product policy.
+
+### Recommended Implementation Order
+
+- First, fix detached Object cleanup:
+  `RecipeFormService.updateWithOutcome` should remove replaced `PhotoObject` and
+  `IngredientObject`, and `DiaryService.updateWithOutcome` should remove
+  replaced `DiaryObject`. This is the clearest current consistency defect.
+- Second, stop implicit `Photo` asset deletion in
+  `RecipeService.removePhotoWithOutcome` and make the operation unlink-only by
+  default.
+- Third, re-evaluate ordinary delete surfaces for `Recipe` and `Diary`.
+  Keep them only if they are judged to be deliberate, explicit product actions
+  rather than incidental convenience paths.
+- Fourth, re-evaluate the current `Category` and `Ingredient` split and either
+  justify it explicitly or simplify it.
+- Fifth, keep the current audit tests as observation coverage until each policy
+  change lands, then flip only the expectations that intentionally changed.
 
 ### Recommendation
 
-- Recommend Option B. The current repository already tolerates orphan
-  `Ingredient` and `Category` records, and update flows already retain removed
-  `Photo` assets indirectly. That means the safest and most explainable policy
-  is to make `Photo` deletion explicit rather than implicit. `[runtime confirmed]`
-- Regardless of the selected `Photo` direction, update flows should delete
-  replaced `DiaryObject`, `PhotoObject`, and `IngredientObject` rows. Detached
-  parent-owned subobjects are the clearest current consistency defect.
+- Recommend a conservative deletion posture for all non-Object persisted models.
+  Under the current product phase, it is safer to preserve `Photo`, `Category`,
+  `Ingredient`, and possibly `Recipe` / `Diary` than to let them disappear
+  through implicit cleanup. `[runtime confirmed]`
+- Recommend aggressive cleanup only for Object types.
+  Detached `DiaryObject`, `PhotoObject`, and `IngredientObject` rows should be
+  treated as invalid persisted state rather than tolerated leftovers.
   `[runtime confirmed]`
-- Desired steady-state policy by type:
-  - `Recipe`, `Diary`: explicit root deletion only
-  - `DiaryObject`, `PhotoObject`, `IngredientObject`: never persist detached
-  - `Photo`: explicit asset deletion or fully harmonized unlink cleanup, but not
-    the current surface-dependent hybrid
-  - `Ingredient`, `Category`: documented shared-tag policy with an intentional
-    explanation for in-use delete behavior
+- Recommend documenting ordinary delete surfaces separately from storage cleanup.
+  This keeps "the user explicitly deleted something" distinct from "the app
+  silently cleaned up a record because a relationship changed."
