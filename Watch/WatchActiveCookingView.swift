@@ -6,63 +6,90 @@ struct WatchActiveCookingView: View {
         static let sectionSpacing: CGFloat = 8
         static let timerFontSize: CGFloat = 30
         static let stepPagerHeight: CGFloat = 150
+        static let stepPageBackgroundOpacity = 0.2
+        static let stepPageCornerRadius: CGFloat = 16
+    }
+
+    private enum TimerValue {
+        static let oneMinute = 1
+        static let fiveMinutes = 5
+        static let tenMinutes = 10
+        static let refreshIntervalSeconds: TimeInterval = 1
+        static let secondsPerMinute = 60
     }
 
     @EnvironmentObject private var cookingSessionStore: WatchCookingSessionStore
 
     private let quickTimerMinutes = [
-        1,
-        5,
-        10
+        TimerValue.oneMinute,
+        TimerValue.fiveMinutes,
+        TimerValue.tenMinutes
     ]
 
     var body: some View {
-        Group {
-            if let activeSnapshot = cookingSessionStore.activeSnapshot {
-                ScrollView {
-                    VStack(spacing: Layout.contentSpacing) {
-                        progressSection(
-                            snapshot: activeSnapshot
-                        )
-                        stepPager(
-                            snapshot: activeSnapshot
-                        )
-                        timerSection(
-                            snapshot: activeSnapshot
-                        )
-                        stepNavigationSection(
-                            snapshot: activeSnapshot
-                        )
-                        Button(
-                            "End Session",
-                            role: .destructive
-                        ) {
-                            cookingSessionStore.endSession()
-                        }
-                        .buttonStyle(.borderedProminent)
-                    }
-                    .padding()
-                }
-            } else {
-                VStack(spacing: Layout.sectionSpacing) {
-                    Image(systemName: "iphone")
-                        .font(.title2)
-                        .accessibilityHidden(true)
-                    Text("Start on iPhone")
-                        .font(.headline)
-                    Text(
-                        "Begin an active cooking session in Cookle on your iPhone."
-                    )
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                }
-                .padding()
-            }
+        sessionContent()
+            .navigationTitle(
+                cookingSessionStore.activeSnapshot?.recipeName ?? "Cooking"
+            )
+    }
+}
+
+private extension WatchActiveCookingView {
+    @ViewBuilder
+    func sessionContent() -> some View {
+        if let activeSnapshot = cookingSessionStore.activeSnapshot {
+            activeSessionContent(
+                snapshot: activeSnapshot
+            )
+        } else {
+            inactiveSessionContent()
         }
-        .navigationTitle(
-            cookingSessionStore.activeSnapshot?.recipeName ?? "Cooking"
-        )
+    }
+
+    func activeSessionContent(
+        snapshot: WatchCookingSessionSnapshot
+    ) -> some View {
+        ScrollView {
+            VStack(spacing: Layout.contentSpacing) {
+                progressSection(
+                    snapshot: snapshot
+                )
+                stepPager(
+                    snapshot: snapshot
+                )
+                timerSection(
+                    snapshot: snapshot
+                )
+                stepNavigationSection(
+                    snapshot: snapshot
+                )
+                Button(
+                    "End Session",
+                    role: .destructive
+                ) {
+                    cookingSessionStore.endSession()
+                }
+                .buttonStyle(.borderedProminent)
+            }
+            .padding()
+        }
+    }
+
+    func inactiveSessionContent() -> some View {
+        VStack(spacing: Layout.sectionSpacing) {
+            Image(systemName: "iphone")
+                .font(.title2)
+                .accessibilityHidden(true)
+            Text("Start on iPhone")
+                .font(.headline)
+            Text(
+                "Begin an active cooking session in Cookle on your iPhone."
+            )
+            .font(.footnote)
+            .foregroundStyle(.secondary)
+            .multilineTextAlignment(.center)
+        }
+        .padding()
     }
 
     func progressSection(
@@ -130,9 +157,9 @@ struct WatchActiveCookingView: View {
         }
         .padding()
         .background(
-            Color.gray.opacity(0.2),
+            Color.gray.opacity(Layout.stepPageBackgroundOpacity),
             in: RoundedRectangle(
-                cornerRadius: 16,
+                cornerRadius: Layout.stepPageCornerRadius,
                 style: .continuous
             )
         )
@@ -142,21 +169,37 @@ struct WatchActiveCookingView: View {
     func timerSection(
         snapshot: WatchCookingSessionSnapshot
     ) -> some View {
-        TimelineView(.periodic(from: .now, by: 1)) { context in
-            switch snapshot.timerStatus(at: context.date) {
-            case .inactive:
-                idleTimerSection(
-                    snapshot: snapshot
-                )
-            case .running(let remainingSeconds):
-                runningTimerSection(
-                    remainingSeconds: remainingSeconds
-                )
-            case .expired:
-                expiredTimerSection(
-                    snapshot: snapshot
-                )
-            }
+        TimelineView(
+            .periodic(
+                from: .now,
+                by: TimerValue.refreshIntervalSeconds
+            )
+        ) { context in
+            timerContent(
+                snapshot: snapshot,
+                at: context.date
+            )
+        }
+    }
+
+    @ViewBuilder
+    func timerContent(
+        snapshot: WatchCookingSessionSnapshot,
+        at date: Date
+    ) -> some View {
+        switch snapshot.timerStatus(at: date) {
+        case .inactive:
+            idleTimerSection(
+                snapshot: snapshot
+            )
+        case .running(let remainingSeconds):
+            runningTimerSection(
+                remainingSeconds: remainingSeconds
+            )
+        case .expired:
+            expiredTimerSection(
+                snapshot: snapshot
+            )
         }
     }
 
@@ -325,8 +368,8 @@ struct WatchActiveCookingView: View {
     func formattedDuration(
         remainingSeconds: Int
     ) -> String {
-        let minutes = remainingSeconds / 60
-        let seconds = remainingSeconds % 60
+        let minutes = remainingSeconds / TimerValue.secondsPerMinute
+        let seconds = remainingSeconds % TimerValue.secondsPerMinute
         return String(
             format: "%02d:%02d",
             minutes,

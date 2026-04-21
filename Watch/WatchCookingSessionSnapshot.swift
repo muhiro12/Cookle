@@ -1,6 +1,10 @@
 import Foundation
 
 struct WatchCookingSessionSnapshot: Codable, Equatable {
+    private enum TimerValue {
+        static let secondsPerMinute = 60
+    }
+
     enum TimerStatus: Equatable {
         case inactive
         case running(remainingSeconds: Int)
@@ -18,7 +22,7 @@ struct WatchCookingSessionSnapshot: Codable, Equatable {
         }
 
         var durationMinutes: Int {
-            durationSeconds / 60
+            durationSeconds / TimerValue.secondsPerMinute
         }
 
         init(
@@ -52,44 +56,6 @@ struct WatchCookingSessionSnapshot: Codable, Equatable {
     let activeTimer: TimerSnapshot?
     let updatedAt: Date
     let isActive: Bool
-
-    var stepCount: Int {
-        steps.count
-    }
-
-    var currentStep: String? {
-        guard steps.indices.contains(currentStepIndex) else {
-            return nil
-        }
-
-        return steps[currentStepIndex]
-    }
-
-    var currentStepNumber: Int {
-        guard stepCount > .zero else {
-            return .zero
-        }
-
-        return currentStepIndex + 1
-    }
-
-    var hasPreviousStep: Bool {
-        currentStepIndex > .zero
-    }
-
-    var hasNextStep: Bool {
-        currentStepIndex + 1 < stepCount
-    }
-
-    var suggestedTimerMinutes: Int? {
-        guard let currentStep else {
-            return nil
-        }
-
-        return Self.parseSuggestedTimerMinutes(
-            from: currentStep
-        )
-    }
 
     init(
         recipeID: String,
@@ -150,6 +116,46 @@ struct WatchCookingSessionSnapshot: Codable, Equatable {
             )
         )
     }
+}
+
+extension WatchCookingSessionSnapshot {
+    var stepCount: Int {
+        steps.count
+    }
+
+    var currentStep: String? {
+        guard steps.indices.contains(currentStepIndex) else {
+            return nil
+        }
+
+        return steps[currentStepIndex]
+    }
+
+    var currentStepNumber: Int {
+        guard stepCount > .zero else {
+            return .zero
+        }
+
+        return currentStepIndex + 1
+    }
+
+    var hasPreviousStep: Bool {
+        currentStepIndex > .zero
+    }
+
+    var hasNextStep: Bool {
+        currentStepIndex + 1 < stepCount
+    }
+
+    var suggestedTimerMinutes: Int? {
+        guard let currentStep else {
+            return nil
+        }
+
+        return Self.parseSuggestedTimerMinutes(
+            from: currentStep
+        )
+    }
 
     static func decoded(
         from value: String
@@ -163,53 +169,9 @@ struct WatchCookingSessionSnapshot: Codable, Equatable {
             from: data
         )
     }
+}
 
-    private static func clampedStepIndex(
-        _ stepIndex: Int,
-        stepCount: Int
-    ) -> Int {
-        guard stepCount > .zero else {
-            return .zero
-        }
-
-        return min(
-            max(stepIndex, .zero),
-            stepCount - 1
-        )
-    }
-
-    private static func parseSuggestedTimerMinutes(
-        from step: String
-    ) -> Int? {
-        let normalizedStep = (step.applyingTransform(
-            .fullwidthToHalfwidth,
-            reverse: false
-        ) ?? step).lowercased()
-        let minutePattern = #"(\d+)\s*(?:min|mins|minute|minutes|分)"#
-
-        guard let matchedRange = normalizedStep.range(
-            of: minutePattern,
-            options: .regularExpression
-        ) else {
-            return nil
-        }
-
-        let matchedText = String(
-            normalizedStep[matchedRange]
-        )
-        let digits = matchedText
-            .components(
-                separatedBy: CharacterSet.decimalDigits.inverted
-            )
-            .joined()
-        guard let minutes = Int(digits),
-              minutes > .zero else {
-            return nil
-        }
-
-        return minutes
-    }
-
+extension WatchCookingSessionSnapshot {
     func settingCurrentStepIndex(
         _ stepIndex: Int,
         updatedAt: Date = .now
@@ -253,7 +215,7 @@ struct WatchCookingSessionSnapshot: Codable, Equatable {
             steps: steps,
             currentStepIndex: currentStepIndex,
             activeTimer: .init(
-                durationSeconds: durationMinutes * 60,
+                durationSeconds: durationMinutes * TimerValue.secondsPerMinute,
                 startedAt: startedAt
             ),
             updatedAt: startedAt,
@@ -348,5 +310,53 @@ struct WatchCookingSessionSnapshot: Codable, Equatable {
             data: data,
             encoding: .utf8
         )
+    }
+}
+
+private extension WatchCookingSessionSnapshot {
+    static func clampedStepIndex(
+        _ stepIndex: Int,
+        stepCount: Int
+    ) -> Int {
+        guard stepCount > .zero else {
+            return .zero
+        }
+
+        return min(
+            max(stepIndex, .zero),
+            stepCount - 1
+        )
+    }
+
+    static func parseSuggestedTimerMinutes(
+        from step: String
+    ) -> Int? {
+        let normalizedStep = (step.applyingTransform(
+            .fullwidthToHalfwidth,
+            reverse: false
+        ) ?? step).lowercased()
+        let minutePattern = #"(\d+)\s*(?:min|mins|minute|minutes|分)"#
+
+        guard let matchedRange = normalizedStep.range(
+            of: minutePattern,
+            options: .regularExpression
+        ) else {
+            return nil
+        }
+
+        let matchedText = String(
+            normalizedStep[matchedRange]
+        )
+        let digits = matchedText
+            .components(
+                separatedBy: CharacterSet.decimalDigits.inverted
+            )
+            .joined()
+        guard let minutes = Int(digits),
+              minutes > .zero else {
+            return nil
+        }
+
+        return minutes
     }
 }
