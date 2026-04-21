@@ -73,7 +73,7 @@ struct DiaryLabel: View {
             }
         }
         .confirmationDialog(
-            Text("Delete \(diary.date.formatted(.dateTime.year().month().day()))"),
+            Text(DiaryDeleteCopy.title(for: diary)),
             isPresented: $isDeletePresented
         ) {
             Button("Delete", role: .destructive) {
@@ -93,7 +93,7 @@ struct DiaryLabel: View {
                 // Dismisses the confirmation dialog.
             }
         } message: {
-            Text("Are you sure you want to delete this item? This action cannot be undone.")
+            Text(DiaryDeleteCopy.message(for: diary))
         }
         .alert(
             Text("Cannot Delete Diary"),

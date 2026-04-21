@@ -14,20 +14,28 @@ struct DeleteDiaryIntent: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        let formattedDate = date.formatted(.dateTime.year().month().day())
+        guard let diary = try DiaryService.diary(
+            on: date,
+            context: modelContainer.mainContext
+        ) else {
+            throw DiaryMutationIntentError.diaryNotFound
+        }
+
         try await requestDeleteConfirmation(
-            dialog: .init(stringLiteral: "Delete diary for \(formattedDate)?")
+            dialog: .init(
+                stringLiteral: DiaryDeleteCopy.confirmationDialog(for: diary)
+            )
         )
 
         let outcome = try await diaryActionService.delete(
             context: modelContainer.mainContext,
-            on: date
+            diary: diary
         )
 
-        guard outcome.value else {
-            throw DiaryMutationIntentError.diaryNotFound
-        }
-
-        return .result(dialog: .init(stringLiteral: "Deleted diary for \(formattedDate)"))
+        return .result(
+            dialog: .init(
+                stringLiteral: DiaryDeleteCopy.successDialog(for: diary)
+            )
+        )
     }
 }
