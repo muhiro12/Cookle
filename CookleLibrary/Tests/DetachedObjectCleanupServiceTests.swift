@@ -8,38 +8,7 @@ struct DetachedObjectCleanupServiceTests {
     @Test
     func runIfNeeded_deletesDetachedObjectRows_andKeepsSharedRoots() throws {
         let context = makeTestContext()
-        let recipe = Recipe.create(
-            context: context,
-            name: "Cleanup Target",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
-        )
-        _ = PhotoObject.create(
-            context: context,
-            photoData: .init(
-                data: Data("detached-photo".utf8),
-                source: .photosPicker
-            ),
-            order: 1
-        )
-        _ = IngredientObject.create(
-            context: context,
-            ingredient: "Salt",
-            amount: "1 tsp",
-            order: 1
-        )
-        _ = DiaryObject.create(
-            context: context,
-            recipe: recipe,
-            type: .breakfast,
-            order: 1
-        )
-        try context.save()
+        try seedDetachedObjects(for: context)
 
         var isCleanupCompleted = false
         let outcome = try DetachedObjectCleanupService.runIfNeeded(
@@ -52,34 +21,15 @@ struct DetachedObjectCleanupServiceTests {
             }
         )
 
-        let report: DetachedObjectCleanupService.Report
-        switch outcome {
-        case .performed(let performedReport):
-            report = performedReport
-        case .skippedAlreadyCompleted:
-            Issue.record("Cleanup unexpectedly skipped.")
-            return
-        }
-
-        #expect(report.deletedDiaryObjectCount == 1)
-        #expect(report.deletedPhotoObjectCount == 1)
-        #expect(report.deletedIngredientObjectCount == 1)
-        #expect(isCleanupCompleted)
-        #expect(try context.fetchCount(FetchDescriptor<DiaryObject>()) == 0)
-        #expect(try context.fetchCount(FetchDescriptor<PhotoObject>()) == 0)
-        #expect(try context.fetchCount(FetchDescriptor<IngredientObject>()) == 0)
-        #expect(try context.fetchCount(FetchDescriptor<Recipe>()) == 1)
-        let remainingPhoto = try #require(
-            context.fetch(.photos(.all)).first
+        let report = try requirePerformedOutcome(
+            outcome,
+            failureMessage: "Cleanup unexpectedly skipped."
         )
-        let remainingIngredient = try #require(
-            context.fetch(.ingredients(.all)).first
+        try assertDetachedCleanupReport(
+            report,
+            context: context,
+            isCleanupCompleted: isCleanupCompleted
         )
-
-        #expect(try context.fetchCount(FetchDescriptor<Photo>()) == 1)
-        #expect(try context.fetchCount(FetchDescriptor<Ingredient>()) == 1)
-        #expect(remainingPhoto.objects.orEmpty.isEmpty)
-        #expect(remainingIngredient.objects.orEmpty.isEmpty)
     }
 
     @Test
@@ -156,5 +106,94 @@ struct DetachedObjectCleanupServiceTests {
         #expect(firstReport.deletedPhotoObjectCount == 1)
         #expect(secondOutcome == .skippedAlreadyCompleted)
         #expect(try context.fetchCount(FetchDescriptor<PhotoObject>()) == 0)
+    }
+}
+
+private extension DetachedObjectCleanupServiceTests {
+    enum TestValues {
+        static let cookingTimeMinutes = 10
+    }
+
+    enum CleanupTestError: Error {
+        case expectedPerformedOutcome(String)
+    }
+
+    func seedDetachedObjects(
+        for context: ModelContext
+    ) throws {
+        let recipe = Recipe.create(
+            context: context,
+            name: "Cleanup Target",
+            photos: [],
+            servingSize: 1,
+            cookingTime: TestValues.cookingTimeMinutes,
+            ingredients: [],
+            steps: [],
+            categories: [],
+            note: ""
+        )
+        _ = PhotoObject.create(
+            context: context,
+            photoData: .init(
+                data: Data("detached-photo".utf8),
+                source: .photosPicker
+            ),
+            order: 1
+        )
+        _ = IngredientObject.create(
+            context: context,
+            ingredient: "Salt",
+            amount: "1 tsp",
+            order: 1
+        )
+        _ = DiaryObject.create(
+            context: context,
+            recipe: recipe,
+            type: .breakfast,
+            order: 1
+        )
+        try context.save()
+    }
+
+    func requirePerformedOutcome(
+        _ outcome: DetachedObjectCleanupService.Outcome,
+        failureMessage: String
+    ) throws -> DetachedObjectCleanupService.Report {
+        switch outcome {
+        case .performed(let report):
+            return report
+        case .skippedAlreadyCompleted:
+            let error = CleanupTestError.expectedPerformedOutcome(
+                failureMessage
+            )
+            Issue.record(error)
+            throw error
+        }
+    }
+
+    func assertDetachedCleanupReport(
+        _ report: DetachedObjectCleanupService.Report,
+        context: ModelContext,
+        isCleanupCompleted: Bool
+    ) throws {
+        #expect(report.deletedDiaryObjectCount == 1)
+        #expect(report.deletedPhotoObjectCount == 1)
+        #expect(report.deletedIngredientObjectCount == 1)
+        #expect(isCleanupCompleted)
+        #expect(try context.fetchCount(FetchDescriptor<DiaryObject>()) == 0)
+        #expect(try context.fetchCount(FetchDescriptor<PhotoObject>()) == 0)
+        #expect(try context.fetchCount(FetchDescriptor<IngredientObject>()) == 0)
+        #expect(try context.fetchCount(FetchDescriptor<Recipe>()) == 1)
+        let remainingPhoto = try #require(
+            context.fetch(.photos(.all)).first
+        )
+        let remainingIngredient = try #require(
+            context.fetch(.ingredients(.all)).first
+        )
+
+        #expect(try context.fetchCount(FetchDescriptor<Photo>()) == 1)
+        #expect(try context.fetchCount(FetchDescriptor<Ingredient>()) == 1)
+        #expect(remainingPhoto.objects.orEmpty.isEmpty)
+        #expect(remainingIngredient.objects.orEmpty.isEmpty)
     }
 }

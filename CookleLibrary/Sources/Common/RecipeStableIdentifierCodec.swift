@@ -7,7 +7,9 @@ public enum RecipeStableIdentifierCodec {
     public static func encode(
         _ recipeID: Recipe.ID
     ) throws -> String {
-        try recipeID.base64Encoded()
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        return try encoder.encode(recipeID).base64EncodedString()
     }
 
     /// Encodes a persistent recipe identifier into a stable string when possible.

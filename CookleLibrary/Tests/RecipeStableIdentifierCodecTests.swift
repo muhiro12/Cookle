@@ -31,6 +31,30 @@ struct RecipeStableIdentifierCodecTests {
     }
 
     @Test
+    func stableIdentifier_isDeterministic_forTheSameRecipe() {
+        let recipe = Recipe.create(
+            context: context,
+            name: "Stew",
+            photos: [],
+            servingSize: 2,
+            cookingTime: 25,
+            ingredients: [],
+            steps: [],
+            categories: [],
+            note: ""
+        )
+
+        let firstIdentifier = RecipeStableIdentifierCodec.stableIdentifier(
+            for: recipe
+        )
+        let secondIdentifier = RecipeStableIdentifierCodec.stableIdentifier(
+            for: recipe
+        )
+
+        #expect(firstIdentifier == secondIdentifier)
+    }
+
+    @Test
     func recipe_lookup_resolves_existing_recipe() throws {
         let recipe = Recipe.create(
             context: context,

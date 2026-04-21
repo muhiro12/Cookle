@@ -62,21 +62,27 @@ private extension DetachedObjectCleanupService {
     static func cleanupDetachedObjects(
         context: ModelContext
     ) throws -> Report {
-        let detachedDiaryObjects = try context.fetch(
-            FetchDescriptor<DiaryObject>()
-        ).filter { diaryObject in
-            diaryObject.diary == nil
-        }
-        let detachedPhotoObjects = try context.fetch(
-            FetchDescriptor<PhotoObject>()
-        ).filter { photoObject in
-            photoObject.recipe == nil
-        }
-        let detachedIngredientObjects = try context.fetch(
-            FetchDescriptor<IngredientObject>()
-        ).filter { ingredientObject in
-            ingredientObject.recipe == nil
-        }
+        let detachedDiaryObjects =
+            try context.fetch(
+                FetchDescriptor<DiaryObject>()
+            )
+            .filter { diaryObject in
+                diaryObject.diary == nil
+            }
+        let detachedPhotoObjects =
+            try context.fetch(
+                FetchDescriptor<PhotoObject>()
+            )
+            .filter { photoObject in
+                photoObject.recipe == nil
+            }
+        let detachedIngredientObjects =
+            try context.fetch(
+                FetchDescriptor<IngredientObject>()
+            )
+            .filter { ingredientObject in
+                ingredientObject.recipe == nil
+            }
 
         detachedDiaryObjects.forEach(context.delete)
         detachedPhotoObjects.forEach(context.delete)
