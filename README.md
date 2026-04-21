@@ -148,6 +148,8 @@ Cookle exposes several intents so users can automate their workflows.
 - Tag rename intents wrap `TagActionService`. Category delete now uses the same
   shared action flow as the product UI, and ingredient delete now succeeds only
   when the ingredient is unused.
+- Photo delete is exposed only from photo-centric UI, and it discloses how many
+  linked recipe photo rows will be removed before deleting the asset.
 - Settings and navigation intents open the same route-based destinations used by
   deep links and widgets.
 - FoundationModels hooks are stubbed for future recipe inference workflows once

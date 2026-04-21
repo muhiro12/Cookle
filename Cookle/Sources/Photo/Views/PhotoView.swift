@@ -16,6 +16,7 @@ struct PhotoView: View {
     @Environment(Photo.self)
     private var photo
 
+    @Binding private var photoSelection: Photo?
     @Binding private var recipe: Recipe?
 
     @State private var isPhotoDetailPresented = false
@@ -26,6 +27,7 @@ struct PhotoView: View {
             recipeSection
             createdAtSection
             updatedAtSection
+            actionSection
         }
         .navigationTitle(photo.title)
         .fullScreenCover(isPresented: $isPhotoDetailPresented) {
@@ -91,8 +93,22 @@ struct PhotoView: View {
         }
     }
 
-    init(selection: Binding<Recipe?> = .constant(nil)) {
-        _recipe = selection
+    var actionSection: some View {
+        Section {
+            DeletePhotoButton {
+                photoSelection = nil
+            }
+        } header: {
+            Spacer()
+        }
+    }
+
+    init(
+        photoSelection: Binding<Photo?> = .constant(nil),
+        recipeSelection: Binding<Recipe?> = .constant(nil)
+    ) {
+        _photoSelection = photoSelection
+        _recipe = recipeSelection
     }
 }
 

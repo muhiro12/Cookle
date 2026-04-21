@@ -15,8 +15,11 @@ struct PhotoNavigationView: View {
             PhotoListView(selection: $photo)
         } content: {
             if let photo {
-                PhotoView(selection: $recipe)
-                    .environment(photo)
+                PhotoView(
+                    photoSelection: $photo,
+                    recipeSelection: $recipe
+                )
+                .environment(photo)
             }
         } detail: {
             if let recipe {

@@ -162,4 +162,23 @@ struct MutationEffectPropagationTests {
         #expect(outcome.effects.contains(.recipeDataChanged))
         #expect(outcome.effects.contains(.notificationPlanChanged))
     }
+
+    @Test
+    func photoDeletionReturnsRecipeAndNotificationHints() {
+        let photo = Photo.create(
+            context: context,
+            photoData: .init(
+                data: Data("photo-delete".utf8),
+                source: .photosPicker
+            )
+        )
+
+        let outcome = PhotoService.deleteWithOutcome(
+            context: context,
+            photo: photo
+        )
+
+        #expect(outcome.effects.contains(.recipeDataChanged))
+        #expect(outcome.effects.contains(.notificationPlanChanged))
+    }
 }

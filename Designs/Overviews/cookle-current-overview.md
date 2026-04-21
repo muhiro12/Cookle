@@ -141,8 +141,8 @@ Cookle uses adaptive tab navigation.
 - Show a gallery of all stored photos, including photos that are no longer
   linked to recipes.
 - Treat photo unlink and explicit asset delete as separate concepts in the
-  deletion policy, even though ordinary asset delete is not yet exposed in the
-  main UI.
+  deletion policy. Recipe-side removal stays unlink-only, while photo detail
+  can explicitly delete the asset with recipe-row impact confirmation.
 - Separate gallery sections by photo source:
   - Photos
   - Image Playground

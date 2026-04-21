@@ -86,8 +86,9 @@ Representative evidence:
 - Role: shared asset record reused across recipe photo rows and now shown in
   the photo gallery even when unlinked. `[source confirmed]`
 - Explicit delete entrypoints:
-  `DebugContentView`, `DataResetService.deleteAll`. Ordinary recipe photo
-  removal no longer deletes the asset. `[source confirmed]`
+  `PhotoView`, `DebugContentView`, and `DataResetService.deleteAll`. Ordinary
+  recipe photo removal remains unlink-only, while photo detail now exposes
+  explicit asset delete with recipe-row impact confirmation. `[source confirmed]`
 - Cascade source: deleting a `Photo` cascades to `PhotoObject` through
   `Photo.objects`. `[source confirmed]`
 - Automatic cleanup: none for the `Photo` asset itself.
@@ -272,9 +273,6 @@ Representative evidence:
 
 ## 5) Current Implementation Gaps Against the Forward Policy
 
-- `Photo` still has no ordinary explicit asset-delete surface. The current
-  product only supports unlink in normal recipe flows plus the maintenance
-  exception paths. `[source confirmed]`
 - Detached-object maintenance runs only from live app container preparation.
   Preview and in-memory test containers do not invoke it automatically unless a
   test calls the service directly. `[source confirmed]`
@@ -296,8 +294,8 @@ implementation work.
   should describe removal of the diary and its owned `DiaryObject` rows without
   implying deletion of other root records.
 - `Photo` must keep unlink and asset delete as separate actions. Removing a
-  photo from a recipe should stay unlink-only, while any future explicit asset
-  delete must disclose how many recipe photo rows will be affected.
+  photo from a recipe should stay unlink-only, while explicit asset delete
+  should disclose how many recipe photo rows will be affected.
 - `Category` may expose ordinary explicit delete, but the confirmation flow
   should disclose how many recipes will lose that category relation.
 - `Ingredient` should only be deletable when unused. If any recipe still

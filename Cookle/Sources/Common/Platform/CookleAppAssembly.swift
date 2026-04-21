@@ -10,6 +10,7 @@ final class CookleAppAssembly {
     let cookingSessionStore: CookingSessionStore
     let cookingSessionWatchSyncService: CookingSessionWatchSyncService
     let recipeActionService: RecipeActionService
+    let photoActionService: PhotoActionService
     let diaryActionService: DiaryActionService
     let tagActionService: TagActionService
     let settingsActionService: SettingsActionService
@@ -22,6 +23,7 @@ final class CookleAppAssembly {
         cookingSessionStore: CookingSessionStore,
         cookingSessionWatchSyncService: CookingSessionWatchSyncService,
         recipeActionService: RecipeActionService,
+        photoActionService: PhotoActionService,
         diaryActionService: DiaryActionService,
         tagActionService: TagActionService,
         settingsActionService: SettingsActionService,
@@ -33,6 +35,7 @@ final class CookleAppAssembly {
         self.cookingSessionStore = cookingSessionStore
         self.cookingSessionWatchSyncService = cookingSessionWatchSyncService
         self.recipeActionService = recipeActionService
+        self.photoActionService = photoActionService
         self.diaryActionService = diaryActionService
         self.tagActionService = tagActionService
         self.settingsActionService = settingsActionService
@@ -69,6 +72,7 @@ extension View {
             .environment(assembly.services.notificationService)
             .environment(assembly.services.tipController)
             .environment(assembly.recipeActionService)
+            .environment(assembly.photoActionService)
             .environment(assembly.diaryActionService)
             .environment(assembly.tagActionService)
             .environment(assembly.settingsActionService)
