@@ -27,8 +27,8 @@ final class CookingSessionWatchSyncService: NSObject, WCSessionDelegate {
 
     nonisolated func session(
         _ session: WCSession,
-        activationDidCompleteWith activationState: WCSessionActivationState,
-        error: (any Error)?
+        activationDidCompleteWith _: WCSessionActivationState,
+        error _: (any Error)?
     ) {
         let encodedSnapshot = session.receivedApplicationContext[
             "activeCookingSessionSnapshot"
@@ -44,8 +44,9 @@ final class CookingSessionWatchSyncService: NSObject, WCSessionDelegate {
     }
 
     nonisolated func sessionDidBecomeInactive(
-        _ session: WCSession
+        _: WCSession
     ) {
+        // No-op. The iOS app reactivates in `sessionDidDeactivate`.
     }
 
     nonisolated func sessionDidDeactivate(
@@ -55,7 +56,7 @@ final class CookingSessionWatchSyncService: NSObject, WCSessionDelegate {
     }
 
     nonisolated func session(
-        _ session: WCSession,
+        _: WCSession,
         didReceiveApplicationContext applicationContext: [String: Any]
     ) {
         let encodedSnapshot = applicationContext[
@@ -98,7 +99,10 @@ final class CookingSessionWatchSyncService: NSObject, WCSessionDelegate {
     func sendSnapshot(
         _ snapshot: CookingSessionSnapshot?
     ) {
-        guard let session else {
+        guard let session,
+              canSendSnapshot(
+                with: session
+              ) else {
             return
         }
 
@@ -110,9 +114,44 @@ final class CookingSessionWatchSyncService: NSObject, WCSessionDelegate {
                 ]
             )
         } catch {
+            guard isExpectedAvailabilityError(
+                error
+            ) == false else {
+                return
+            }
+
             assertionFailure(
                 error.localizedDescription
             )
+        }
+    }
+}
+
+private extension CookingSessionWatchSyncService {
+    func canSendSnapshot(
+        with session: WCSession
+    ) -> Bool {
+        session.activationState == .activated
+            && session.isPaired
+            && session.isWatchAppInstalled
+    }
+
+    func isExpectedAvailabilityError(
+        _ error: Error
+    ) -> Bool {
+        guard let wcError = error as? WCError else {
+            return false
+        }
+
+        switch wcError.code {
+        case .deliveryFailed,
+             .deviceNotPaired,
+             .notReachable,
+             .sessionNotActivated,
+             .watchAppNotInstalled:
+            return true
+        default:
+            return false
         }
     }
 }

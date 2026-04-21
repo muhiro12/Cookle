@@ -152,8 +152,8 @@ final class WatchCookingSessionStore: NSObject, ObservableObject, WCSessionDeleg
 
     nonisolated func session(
         _ session: WCSession,
-        activationDidCompleteWith activationState: WCSessionActivationState,
-        error: (any Error)?
+        activationDidCompleteWith _: WCSessionActivationState,
+        error _: (any Error)?
     ) {
         let encodedSnapshot = session.receivedApplicationContext[
             "activeCookingSessionSnapshot"
@@ -169,7 +169,7 @@ final class WatchCookingSessionStore: NSObject, ObservableObject, WCSessionDeleg
     }
 
     nonisolated func session(
-        _ session: WCSession,
+        _: WCSession,
         didReceiveApplicationContext applicationContext: [String: Any]
     ) {
         let encodedSnapshot = applicationContext[
@@ -239,7 +239,10 @@ final class WatchCookingSessionStore: NSObject, ObservableObject, WCSessionDeleg
     private func pushSnapshot(
         _ snapshot: WatchCookingSessionSnapshot?
     ) {
-        guard let session else {
+        guard let session,
+              canPushSnapshot(
+                with: session
+              ) else {
             return
         }
 
@@ -251,9 +254,42 @@ final class WatchCookingSessionStore: NSObject, ObservableObject, WCSessionDeleg
                 ]
             )
         } catch {
+            guard isExpectedAvailabilityError(
+                error
+            ) == false else {
+                return
+            }
+
             assertionFailure(
                 error.localizedDescription
             )
+        }
+    }
+}
+
+private extension WatchCookingSessionStore {
+    func canPushSnapshot(
+        with session: WCSession
+    ) -> Bool {
+        session.activationState == .activated
+            && session.isCompanionAppInstalled
+    }
+
+    func isExpectedAvailabilityError(
+        _ error: Error
+    ) -> Bool {
+        guard let wcError = error as? WCError else {
+            return false
+        }
+
+        switch wcError.code {
+        case .deliveryFailed,
+             .notReachable,
+             .sessionNotActivated,
+             .watchAppNotInstalled:
+            return true
+        default:
+            return false
         }
     }
 }
