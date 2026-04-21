@@ -158,4 +158,29 @@ struct TagServiceTests {
 
         #expect(category.value == "Dinner")
     }
+
+    @Test
+    func delete_category_removes_recipe_relation_but_keeps_recipe() throws {
+        _ = makeBreakfastRecipe(
+            name: "Omelette",
+            amount: "2"
+        )
+        let category = try #require(
+            context.fetch(.categories(.valueIs("Breakfast"))).first
+        )
+
+        let outcome = TagService.deleteWithOutcome(
+            context: context,
+            category: category
+        )
+        try context.save()
+
+        #expect(outcome.effects == [.notificationPlanChanged])
+        #expect(try context.fetchCount(FetchDescriptor<Category>()) == 0)
+        #expect(try context.fetchCount(FetchDescriptor<Recipe>()) == 1)
+        let recipe = try #require(
+            context.fetch(.recipes(.all)).first
+        )
+        #expect(recipe.categories.orEmpty.isEmpty)
+    }
 }

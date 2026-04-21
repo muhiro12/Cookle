@@ -158,11 +158,12 @@ Cookle uses adaptive tab navigation.
 - Browse tags from the search discovery sheet and see which recipes use each
   tag.
 - Search tags by text.
+- Keep unused tags visible so conservative retention does not make them
+  unreachable from the product UI.
 - Rename tags from the tag detail flow or App Intents.
-- Do not expose ordinary tag deletion from the main product surfaces today.
-- The forward deletion policy allows future explicit delete for categories with
-  recipe-impact confirmation and allows ingredient delete only when the
-  ingredient is unused.
+- Allow category delete from category-focused surfaces with recipe-impact
+  confirmation.
+- Keep ingredient delete unavailable until the unused-only rule is implemented.
 - Rebuild scheduled recipe suggestion notifications after tag mutations so
   notification content stays aligned with ingredient metadata.
 

@@ -64,6 +64,18 @@ public enum TagService {
         )
     }
 
+    /// Deletes a category and returns follow-up hints.
+    public static func deleteWithOutcome(
+        context: ModelContext,
+        category: Category
+    ) -> MutationOutcome<Void> {
+        context.delete(category)
+        return .init(
+            value: (),
+            effects: tagMutationEffects
+        )
+    }
+
     private static func normalized(_ value: String) throws -> String {
         let normalizedValue = value.trimmingCharacters(
             in: .whitespacesAndNewlines

@@ -82,8 +82,18 @@ private extension TagView {
     var actionSection: some View {
         Section {
             EditTagButton<T>()
+            deleteSectionButton
         } header: {
             Spacer()
+        }
+    }
+
+    @ViewBuilder var deleteSectionButton: some View {
+        if let category = tag as? Category {
+            DeleteCategoryButton {
+                tagSelection = nil
+            }
+            .environment(category)
         }
     }
 }

@@ -81,6 +81,21 @@ final class TagActionService {
             String(describing: T.self)
         )
     }
+
+    @discardableResult
+    func delete(
+        context: ModelContext,
+        category: Category
+    ) async throws -> MutationOutcome<Void> {
+        try await run(
+            name: "deleteCategory"
+        ) {
+            TagService.deleteWithOutcome(
+                context: context,
+                category: category
+            )
+        }
+    }
 }
 
 private extension TagActionService {

@@ -106,9 +106,9 @@ Representative evidence:
 
 - Role: shared tag record for classification and filtering. `[source confirmed]`
 - Explicit delete entrypoints:
-  `DebugContentView`, `DataResetService.deleteAll`. Ordinary tag delete was
-  removed from main UI. `DeleteCategoryIntent` remains only as a
-  non-mutating compatibility shim. `[source confirmed]`
+  `TagView`, `DeleteCategoryIntent`, `DebugContentView`, and
+  `DataResetService.deleteAll`. Ordinary category delete now uses recipe-impact
+  confirmation in both product UI and App Intents. `[source confirmed]`
 - Cascade source: none declared in source. `[source confirmed]`
 - Automatic cleanup: none. `[source confirmed]`
 - Reset / migration / maintenance path:
@@ -247,8 +247,10 @@ Representative evidence:
 - `Photo` is now a conservative shared asset. It remains stored after unlink,
   and the Photos tab presents all stored assets instead of only
   recipe-linked assets. `[runtime confirmed]`
-- `Category` and `Ingredient` are now aligned. Both are shared tags with
-  rename support but no ordinary delete surface. `[source confirmed]`
+- `Category` and `Ingredient` are both shared tags, but their current delete
+  policy differs. `Category` now has ordinary explicit delete with
+  recipe-impact confirmation, while `Ingredient` still has no ordinary delete
+  surface. `[source confirmed]`
 - `DiaryObject`, `PhotoObject`, and `IngredientObject` are now consistently
   parent-owned rows. Root deletion, update flows, and one-time maintenance all
   treat them as disposable when detached. `[runtime confirmed]`
@@ -270,15 +272,12 @@ Representative evidence:
 
 ## 5) Current Implementation Gaps Against the Forward Policy
 
-- `Recipe` and `Diary` already expose ordinary delete surfaces, but their
-  confirmation UX does not yet explain cross-model impact in the way the
-  forward policy expects. `[source confirmed]`
 - `Photo` still has no ordinary explicit asset-delete surface. The current
   product only supports unlink in normal recipe flows plus the maintenance
   exception paths. `[source confirmed]`
-- `Category` and `Ingredient` ordinary delete remain removed from the main UI.
-  `DeleteCategoryIntent` and `DeleteIngredientIntent` still exist only as
-  non-mutating compatibility shims. `[source confirmed]`
+- `Ingredient` still has no ordinary delete surface, and
+  `DeleteIngredientIntent` remains a non-mutating compatibility shim.
+  `[source confirmed]`
 - Detached-object maintenance runs only from live app container preparation.
   Preview and in-memory test containers do not invoke it automatically unless a
   test calls the service directly. `[source confirmed]`
@@ -302,9 +301,8 @@ implementation work.
 - `Photo` must keep unlink and asset delete as separate actions. Removing a
   photo from a recipe should stay unlink-only, while any future explicit asset
   delete must disclose how many recipe photo rows will be affected.
-- `Category` may expose ordinary explicit delete in the future, but the
-  confirmation flow should disclose how many recipes will lose that category
-  relation.
+- `Category` may expose ordinary explicit delete, but the confirmation flow
+  should disclose how many recipes will lose that category relation.
 - `Ingredient` should only be deletable when unused. If any recipe still
   references the ingredient, ordinary delete should be rejected because the
   delete would remove recipe ingredient rows and their amount text.

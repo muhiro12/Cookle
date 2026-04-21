@@ -145,9 +145,9 @@ Cookle exposes several intents so users can automate their workflows.
   random suggestions, with mutations routed through `RecipeActionService`.
 - Diary intents cover create, update, delete, add-to-today, and show flows, and
   use `DiaryActionService` for shared command handling.
-- Tag rename intents wrap `TagActionService`. Delete intents for categories and
-  ingredients currently act as non-mutating compatibility shims while the
-  future delete policy is implemented through dedicated product flows.
+- Tag rename intents wrap `TagActionService`. Category delete now uses the same
+  shared action flow as the product UI, while ingredient delete remains
+  unavailable until the unused-only policy is implemented.
 - Settings and navigation intents open the same route-based destinations used by
   deep links and widgets.
 - FoundationModels hooks are stubbed for future recipe inference workflows once
