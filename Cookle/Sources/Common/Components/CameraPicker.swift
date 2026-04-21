@@ -13,7 +13,9 @@ struct CameraPicker: UIViewControllerRepresentable {
 
     init(
         completionHandler: @escaping CompletionHandler,
-        cancellationHandler: @escaping () -> Void = {}
+        cancellationHandler: @escaping () -> Void = {
+            // Intentionally empty.
+        }
     ) {
         self.completionHandler = completionHandler
         self.cancellationHandler = cancellationHandler
