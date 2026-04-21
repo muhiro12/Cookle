@@ -22,6 +22,8 @@ struct DiaryFormView: View {
     @Environment(Diary.self)
     private var diary: Diary?
 
+    private let prefill: DiaryFormPrefill?
+
     var body: some View {
         @Bindable var model = model
 
@@ -67,7 +69,8 @@ struct DiaryFormView: View {
         }
         .task {
             model.applyInitialValues(
-                diary: diary
+                diary: diary,
+                prefill: prefill
             )
             model.activateSnapshotPersistence(
                 diary: diary
@@ -128,6 +131,12 @@ struct DiaryFormView: View {
             }
             .disabled(model.canSave == false)
         }
+    }
+
+    init(
+        prefill: DiaryFormPrefill? = nil
+    ) {
+        self.prefill = prefill
     }
 }
 

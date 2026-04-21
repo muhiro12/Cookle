@@ -8,7 +8,7 @@
 import SwiftUI
 
 /// Stable meal sections used to organize diary rows and section titles.
-nonisolated public enum DiaryObjectType: CaseIterable, Codable, Identifiable {
+nonisolated public enum DiaryObjectType: CaseIterable, Codable, Identifiable, Sendable {
     case breakfast
     case lunch
     case dinner

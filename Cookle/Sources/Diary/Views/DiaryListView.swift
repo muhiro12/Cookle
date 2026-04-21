@@ -13,8 +13,12 @@ import TipKit
 struct DiaryListView: View {
     @Environment(\.isPresented)
     private var isPresented
+    @Environment(\.modelContext)
+    private var context
     @Environment(MainNavigationModel.self)
     private var navigationModel
+    @Environment(CookleTipController.self)
+    private var tipController
 
     @AppStorage(\.isSubscribeOn)
     private var isSubscribeOn
@@ -25,6 +29,8 @@ struct DiaryListView: View {
     private var recipes: [Recipe]
 
     @Binding private var diary: Diary?
+    @State private var isSuggestedDiaryPresented = false
+    @State private var suggestedDiaryPrefill: DiaryFormPrefill?
 
     private let addDiaryTip = AddDiaryTip()
     private let startWithRecipesTip = StartWithRecipesTip()
@@ -38,6 +44,11 @@ struct DiaryListView: View {
             }
         }
         .cookleTopLevelNavigationChrome("Diaries")
+        .sheet(isPresented: $isSuggestedDiaryPresented) {
+            DiaryFormNavigationView(
+                prefill: suggestedDiaryPrefill
+            )
+        }
         .toolbar {
             ToolbarItem {
                 AddDiaryButton()
@@ -61,21 +72,35 @@ struct DiaryListView: View {
     }
 
     var diaryList: some View {
-        List(groupedDiaries, id: \.key) { section in
-            Section(section.key) {
-                ForEach(section.value) { diary in
-                    Button {
-                        self.diary = diary
-                    } label: {
-                        DiaryLabel()
-                            .environment(diary)
-                            .cookleButtonRowContent()
+        List {
+            if let topSuggestion {
+                Section {
+                    DiaryTopSuggestionButton(
+                        suggestion: topSuggestion
+                    ) {
+                        presentSuggestedDiary(
+                            for: topSuggestion
+                        )
                     }
-                    .buttonStyle(.plain)
                 }
             }
-            AdvertisementSection(.small)
-                .hidden(isSubscribeOn)
+
+            ForEach(groupedDiaries, id: \.key) { section in
+                Section(section.key) {
+                    ForEach(section.value) { diary in
+                        Button {
+                            self.diary = diary
+                        } label: {
+                            DiaryLabel()
+                                .environment(diary)
+                                .cookleButtonRowContent()
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                AdvertisementSection(.small)
+                    .hidden(isSubscribeOn)
+            }
         }
     }
 
@@ -102,6 +127,15 @@ struct DiaryListView: View {
                     startWithRecipesTip,
                     arrowEdge: .top
                 )
+            } else if let topSuggestion {
+                Button {
+                    presentSuggestedDiary(
+                        for: topSuggestion
+                    )
+                } label: {
+                    topSuggestion.actionTitle
+                }
+                AddDiaryButton()
             } else {
                 AddDiaryButton()
                     .cooklePopoverTip(
@@ -120,5 +154,60 @@ struct DiaryListView: View {
 #Preview(traits: .modifier(CookleSampleData())) {
     NavigationStack {
         DiaryListView()
+    }
+}
+
+private extension DiaryListView {
+    var topSuggestion: DiaryTopSuggestion? {
+        do {
+            return try DiaryTopSuggestionService.suggestion(
+                context: context
+            )
+        } catch {
+            return nil
+        }
+    }
+
+    func presentSuggestedDiary(
+        for renderedSuggestion: DiaryTopSuggestion
+    ) {
+        suggestedDiaryPrefill = suggestedPrefill(
+            for: renderedSuggestion
+        )
+        tipController.donateDidOpenDiaryForm()
+        isSuggestedDiaryPresented = true
+    }
+
+    func suggestedPrefill(
+        for renderedSuggestion: DiaryTopSuggestion
+    ) -> DiaryFormPrefill? {
+        do {
+            guard let freshSuggestion = try DiaryTopSuggestionService.suggestion(
+                context: context
+            ) else {
+                return nil
+            }
+
+            guard freshSuggestion == renderedSuggestion else {
+                return nil
+            }
+
+            guard let recipe = try RecipeStableIdentifierCodec.recipe(
+                from: renderedSuggestion.recipeStableIdentifier,
+                context: context
+            ) else {
+                return nil
+            }
+
+            return .init(
+                date: renderedSuggestion.date,
+                breakfasts: renderedSuggestion.mealType == .breakfast ? [recipe] : [],
+                lunches: renderedSuggestion.mealType == .lunch ? [recipe] : [],
+                dinners: renderedSuggestion.mealType == .dinner ? [recipe] : [],
+                note: ""
+            )
+        } catch {
+            return nil
+        }
     }
 }

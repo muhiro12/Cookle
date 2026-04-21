@@ -1,10 +1,20 @@
 import SwiftUI
 
 struct DiaryFormNavigationView: View {
+    private let prefill: DiaryFormPrefill?
+
     var body: some View {
         NavigationStack {
-            DiaryFormView()
+            DiaryFormView(
+                prefill: prefill
+            )
         }
+    }
+
+    init(
+        prefill: DiaryFormPrefill? = nil
+    ) {
+        self.prefill = prefill
     }
 }
 

@@ -70,28 +70,53 @@ final class DiaryFormModel {
     }
 
     func applyInitialValues(
-        diary: Diary?
+        diary: Diary?,
+        prefill: DiaryFormPrefill? = nil
     ) {
         guard hasAppliedInitialValues == false else {
             return
         }
 
         hasAppliedInitialValues = true
-        date = diary?.date ?? .now
-        initialDate = date
-        breakfasts = recipes(
-            for: diary,
-            type: .breakfast
+
+        if let diary {
+            apply(
+                date: diary.date,
+                breakfasts: recipes(
+                    for: diary,
+                    type: .breakfast
+                ),
+                lunches: recipes(
+                    for: diary,
+                    type: .lunch
+                ),
+                dinners: recipes(
+                    for: diary,
+                    type: .dinner
+                ),
+                note: diary.note
+            )
+            return
+        }
+
+        if let prefill {
+            apply(
+                date: prefill.date,
+                breakfasts: prefill.breakfasts,
+                lunches: prefill.lunches,
+                dinners: prefill.dinners,
+                note: prefill.note
+            )
+            return
+        }
+
+        apply(
+            date: .now,
+            breakfasts: [],
+            lunches: [],
+            dinners: [],
+            note: ""
         )
-        lunches = recipes(
-            for: diary,
-            type: .lunch
-        )
-        dinners = recipes(
-            for: diary,
-            type: .dinner
-        )
-        note = diary?.note ?? ""
     }
 
     func activateSnapshotPersistence(
@@ -192,6 +217,21 @@ private extension DiaryFormModel {
             .sorted()
             .compactMap(\.recipe) ?? []
         return .init(recipes)
+    }
+
+    func apply(
+        date: Date,
+        breakfasts: Set<Recipe>,
+        lunches: Set<Recipe>,
+        dinners: Set<Recipe>,
+        note: String
+    ) {
+        self.date = date
+        initialDate = date
+        self.breakfasts = breakfasts
+        self.lunches = lunches
+        self.dinners = dinners
+        self.note = note
     }
 
     func restoredRecipes(

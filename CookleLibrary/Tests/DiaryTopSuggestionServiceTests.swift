@@ -1,0 +1,252 @@
+@testable import CookleLibrary
+import Foundation
+import SwiftData
+import Testing
+
+@MainActor
+@Suite(.serialized)
+struct DiaryTopSuggestionServiceTests {
+    let context: ModelContext = makeTestContext()
+
+    @Test
+    func suggestion_returns_nil_when_today_diary_exists() throws {
+        let calendar = makeCalendar()
+        let today = try #require(
+            calendar.date(
+                from: .init(
+                    year: 2_026,
+                    month: 4,
+                    day: 21,
+                    hour: 12,
+                    minute: 0
+                )
+            )
+        )
+        let recipe = Recipe.create(
+            context: context,
+            name: "Omelette",
+            photos: [],
+            servingSize: 1,
+            cookingTime: 10,
+            ingredients: [],
+            steps: [],
+            categories: [],
+            note: ""
+        )
+        _ = Diary.create(
+            context: context,
+            date: today,
+            objects: [
+                DiaryObject.create(
+                    context: context,
+                    recipe: recipe,
+                    type: .lunch,
+                    order: 1
+                )
+            ],
+            note: ""
+        )
+
+        let result = try DiaryTopSuggestionService.suggestion(
+            context: context,
+            now: today,
+            calendar: calendar,
+            lastOpenedRecipeID: RecipeStableIdentifierCodec.stableIdentifier(
+                for: recipe
+            )
+        )
+
+        #expect(result == nil)
+    }
+
+    @Test
+    func suggestion_returns_nil_when_last_opened_recipe_is_missing() throws {
+        let calendar = makeCalendar()
+        let now = try #require(
+            calendar.date(
+                from: .init(
+                    year: 2_026,
+                    month: 4,
+                    day: 21,
+                    hour: 12,
+                    minute: 0
+                )
+            )
+        )
+
+        let result = try DiaryTopSuggestionService.suggestion(
+            context: context,
+            now: now,
+            calendar: calendar,
+            lastOpenedRecipeID: nil
+        )
+
+        #expect(result == nil)
+    }
+
+    @Test
+    func suggestion_returns_nil_when_last_opened_recipe_was_deleted() throws {
+        let calendar = makeCalendar()
+        let now = try #require(
+            calendar.date(
+                from: .init(
+                    year: 2_026,
+                    month: 4,
+                    day: 21,
+                    hour: 12,
+                    minute: 0
+                )
+            )
+        )
+        let recipe = Recipe.create(
+            context: context,
+            name: "Toast",
+            photos: [],
+            servingSize: 1,
+            cookingTime: 5,
+            ingredients: [],
+            steps: [],
+            categories: [],
+            note: ""
+        )
+        let stableIdentifier = RecipeStableIdentifierCodec.stableIdentifier(
+            for: recipe
+        )
+
+        context.delete(recipe)
+
+        let result = try DiaryTopSuggestionService.suggestion(
+            context: context,
+            now: now,
+            calendar: calendar,
+            lastOpenedRecipeID: stableIdentifier
+        )
+
+        #expect(result == nil)
+    }
+
+    @Test
+    func suggestion_returns_candidate_for_last_opened_recipe() throws {
+        let calendar = makeCalendar()
+        let now = try #require(
+            calendar.date(
+                from: .init(
+                    year: 2_026,
+                    month: 4,
+                    day: 21,
+                    hour: 12,
+                    minute: 0
+                )
+            )
+        )
+        let recipe = Recipe.create(
+            context: context,
+            name: "Spaghetti",
+            photos: [],
+            servingSize: 2,
+            cookingTime: 15,
+            ingredients: [],
+            steps: [],
+            categories: [],
+            note: ""
+        )
+        let stableIdentifier = RecipeStableIdentifierCodec.stableIdentifier(
+            for: recipe
+        )
+
+        let result = try DiaryTopSuggestionService.suggestion(
+            context: context,
+            now: now,
+            calendar: calendar,
+            lastOpenedRecipeID: stableIdentifier
+        )
+
+        #expect(result?.date == calendar.startOfDay(for: now))
+        #expect(result?.recipeName == "Spaghetti")
+        #expect(result?.recipeStableIdentifier == stableIdentifier)
+        #expect(result?.mealType == .lunch)
+    }
+
+    @Test
+    func mealType_uses_expected_boundaries() throws {
+        let calendar = makeCalendar()
+
+        let breakfastDate = try #require(
+            calendar.date(
+                from: .init(
+                    year: 2_026,
+                    month: 4,
+                    day: 21,
+                    hour: 10,
+                    minute: 59
+                )
+            )
+        )
+        let lunchStartDate = try #require(
+            calendar.date(
+                from: .init(
+                    year: 2_026,
+                    month: 4,
+                    day: 21,
+                    hour: 11,
+                    minute: 0
+                )
+            )
+        )
+        let lunchEndDate = try #require(
+            calendar.date(
+                from: .init(
+                    year: 2_026,
+                    month: 4,
+                    day: 21,
+                    hour: 15,
+                    minute: 59
+                )
+            )
+        )
+        let dinnerDate = try #require(
+            calendar.date(
+                from: .init(
+                    year: 2_026,
+                    month: 4,
+                    day: 21,
+                    hour: 16,
+                    minute: 0
+                )
+            )
+        )
+
+        #expect(
+            DiaryTopSuggestionService.mealType(
+                for: breakfastDate,
+                calendar: calendar
+            ) == .breakfast
+        )
+        #expect(
+            DiaryTopSuggestionService.mealType(
+                for: lunchStartDate,
+                calendar: calendar
+            ) == .lunch
+        )
+        #expect(
+            DiaryTopSuggestionService.mealType(
+                for: lunchEndDate,
+                calendar: calendar
+            ) == .lunch
+        )
+        #expect(
+            DiaryTopSuggestionService.mealType(
+                for: dinnerDate,
+                calendar: calendar
+            ) == .dinner
+        )
+    }
+}
+
+private extension DiaryTopSuggestionServiceTests {
+    func makeCalendar() -> Calendar {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(secondsFromGMT: .zero) ?? .current
+        return calendar
+    }
+}
