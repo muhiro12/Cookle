@@ -7,6 +7,11 @@ Implementation snapshot based on the repository state on April 12, 2026.
 This document summarizes Cookle's current user-facing functionality, internal
 product scope, and architecture policy in one place.
 
+Related audits:
+
+- [Cookle Architecture Conformance Audit](cookle-architecture-conformance-audit.md)
+- [Cookle Data Deletion Policy Audit](cookle-data-deletion-policy-audit.md)
+
 Cookle is an iOS recipe manager built with SwiftUI and SwiftData. The product
 focus is personal cooking organization:
 
