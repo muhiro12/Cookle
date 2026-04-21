@@ -3,8 +3,6 @@ import SwiftUI
 import TipKit
 
 struct RecipeListView: View {
-    @Environment(\.modelContext)
-    private var context
     @Environment(\.isPresented)
     private var isPresented
 
@@ -13,7 +11,6 @@ struct RecipeListView: View {
 
     @Binding private var recipe: Recipe?
 
-    @State private var searchText = ""
     @State private var sortMode = RecipeBrowseSortMode.alphabetical
     @State private var isAscending = true
 
@@ -46,15 +43,10 @@ struct RecipeListView: View {
 private extension RecipeListView {
     var recipeListView: some View {
         List {
-            if filteredRecipes.isNotEmpty {
-                ForEach(filteredRecipes) { recipe in
-                    recipeRow(for: recipe)
-                }
-            } else {
-                filteredEmptyStateSection
+            ForEach(sortedRecipes) { recipe in
+                recipeRow(for: recipe)
             }
         }
-        .searchable(text: $searchText)
     }
 
     var emptyStateView: some View {
@@ -71,19 +63,12 @@ private extension RecipeListView {
         }
     }
 
-    var filteredRecipes: [Recipe] {
-        do {
-            return try RecipeService.search(
-                context: context,
-                criteria: .init(
-                    searchText: searchText,
-                    sortMode: sortMode,
-                    isAscending: isAscending
-                )
-            )
-        } catch {
-            return []
-        }
+    var sortedRecipes: [Recipe] {
+        RecipeService.browse(
+            allRecipes,
+            sortMode: sortMode,
+            isAscending: isAscending
+        )
     }
 
     var sortMenu: some View {
@@ -99,12 +84,6 @@ private extension RecipeListView {
             Toggle("Ascending", isOn: $isAscending)
         } label: {
             Label("Sort", systemImage: "arrow.up.arrow.down.circle")
-        }
-    }
-
-    var filteredEmptyStateSection: some View {
-        Section {
-            ContentUnavailableView.search(text: searchText)
         }
     }
 

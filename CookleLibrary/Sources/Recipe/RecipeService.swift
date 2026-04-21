@@ -54,6 +54,27 @@ public enum RecipeService {
         return try context.fetch(descriptor).first
     }
 
+    /// Orders already-loaded recipes using the repository's canonical browse semantics.
+    /// - Parameters:
+    ///   - recipes: In-memory recipes to order for a browse surface.
+    ///   - sortMode: Sort mode to apply.
+    ///   - isAscending: Sort direction.
+    /// - Returns: The ordered recipes.
+    public static func browse(
+        _ recipes: [Recipe],
+        sortMode: RecipeBrowseSortMode,
+        isAscending: Bool
+    ) -> [Recipe] {
+        sortedRecipes(
+            recipes,
+            criteria: .init(
+                searchText: "",
+                sortMode: sortMode,
+                isAscending: isAscending
+            )
+        )
+    }
+
     /// Searches and sorts recipes using the repository's canonical browse semantics.
     /// - Parameters:
     ///   - context: Model context to query.

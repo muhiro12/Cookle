@@ -6,36 +6,36 @@ import Testing
 @MainActor
 struct RecipeBrowseCriteriaTests {
     @Test
-    func search_withAlphabeticalSort_ordersAscendingAndDescending() throws {
+    func browse_withAlphabeticalSort_ordersAscendingAndDescending() {
         let context = makeTestContext()
-        _ = makeRecipe(
+        let carrotSoup = makeRecipe(
             context: context,
             name: "Carrot Soup"
         )
-        _ = makeRecipe(
+        let bananaBread = makeRecipe(
             context: context,
             name: "Banana Bread"
         )
-        _ = makeRecipe(
+        let applePie = makeRecipe(
             context: context,
             name: "Apple Pie"
         )
 
-        let ascending = try RecipeService.search(
-            context: context,
-            criteria: .init(
-                searchText: "",
-                sortMode: .alphabetical,
-                isAscending: true
-            )
+        let recipes = [
+            carrotSoup,
+            bananaBread,
+            applePie
+        ]
+
+        let ascending = RecipeService.browse(
+            recipes,
+            sortMode: .alphabetical,
+            isAscending: true
         )
-        let descending = try RecipeService.search(
-            context: context,
-            criteria: .init(
-                searchText: "",
-                sortMode: .alphabetical,
-                isAscending: false
-            )
+        let descending = RecipeService.browse(
+            recipes,
+            sortMode: .alphabetical,
+            isAscending: false
         )
 
         #expect(ascending.map(\.name) == ["Apple Pie", "Banana Bread", "Carrot Soup"])
@@ -43,38 +43,38 @@ struct RecipeBrowseCriteriaTests {
     }
 
     @Test
-    func search_withRecentlyCreatedSort_ordersAscendingAndDescending() throws {
+    func browse_withRecentlyCreatedSort_ordersAscendingAndDescending() {
         let context = makeTestContext()
-        _ = makeRecipe(
+        let first = makeRecipe(
             context: context,
             name: "First"
         )
         Thread.sleep(forTimeInterval: 0.001)
-        _ = makeRecipe(
+        let second = makeRecipe(
             context: context,
             name: "Second"
         )
         Thread.sleep(forTimeInterval: 0.001)
-        _ = makeRecipe(
+        let third = makeRecipe(
             context: context,
             name: "Third"
         )
 
-        let ascending = try RecipeService.search(
-            context: context,
-            criteria: .init(
-                searchText: "",
-                sortMode: .recentlyCreated,
-                isAscending: true
-            )
+        let recipes = [
+            second,
+            third,
+            first
+        ]
+
+        let ascending = RecipeService.browse(
+            recipes,
+            sortMode: .recentlyCreated,
+            isAscending: true
         )
-        let descending = try RecipeService.search(
-            context: context,
-            criteria: .init(
-                searchText: "",
-                sortMode: .recentlyCreated,
-                isAscending: false
-            )
+        let descending = RecipeService.browse(
+            recipes,
+            sortMode: .recentlyCreated,
+            isAscending: false
         )
 
         #expect(ascending.map(\.name) == ["First", "Second", "Third"])
@@ -82,7 +82,7 @@ struct RecipeBrowseCriteriaTests {
     }
 
     @Test
-    func search_withMadeCountSort_ordersAscendingAndDescending() throws {
+    func browse_withMadeCountSort_ordersAscendingAndDescending() {
         let context = makeTestContext()
         let once = makeRecipe(
             context: context,
@@ -109,21 +109,21 @@ struct RecipeBrowseCriteriaTests {
             )
         }
 
-        let ascending = try RecipeService.search(
-            context: context,
-            criteria: .init(
-                searchText: "",
-                sortMode: .madeCount,
-                isAscending: true
-            )
+        let recipes = [
+            twice,
+            thrice,
+            once
+        ]
+
+        let ascending = RecipeService.browse(
+            recipes,
+            sortMode: .madeCount,
+            isAscending: true
         )
-        let descending = try RecipeService.search(
-            context: context,
-            criteria: .init(
-                searchText: "",
-                sortMode: .madeCount,
-                isAscending: false
-            )
+        let descending = RecipeService.browse(
+            recipes,
+            sortMode: .madeCount,
+            isAscending: false
         )
 
         #expect(ascending.map(\.name) == ["Once", "Twice", "Thrice"])
