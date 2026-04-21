@@ -3,8 +3,14 @@ import SwiftUI
 import TipKit
 
 struct RecipeListView: View {
+    private struct CookingPresentation: Identifiable {
+        let id = UUID()
+    }
+
     @Environment(\.isPresented)
     private var isPresented
+    @Environment(\.modelContext)
+    private var context
 
     @Query(.recipes(.all))
     private var allRecipes: [Recipe]
@@ -13,12 +19,18 @@ struct RecipeListView: View {
 
     @State private var sortMode = RecipeBrowseSortMode.alphabetical
     @State private var isAscending = true
+    @State private var cookingPresentation: CookingPresentation?
 
     private let addRecipeTip = AddRecipeTip()
 
     var body: some View {
         contentView()
             .cookleTopLevelNavigationChrome("Recipes")
+            .fullScreenCover(item: $cookingPresentation) { _ in
+                NavigationStack {
+                    CookingSessionView()
+                }
+            }
             .toolbar {
                 if allRecipes.isNotEmpty {
                     ToolbarItem {
@@ -43,6 +55,16 @@ struct RecipeListView: View {
 private extension RecipeListView {
     var recipeListView: some View {
         List {
+            if let topReturnTarget {
+                Section {
+                    RecipeTopReturnButton(
+                        target: topReturnTarget
+                    ) {
+                        handleTopReturnTap()
+                    }
+                }
+            }
+
             ForEach(sortedRecipes) { recipe in
                 recipeRow(for: recipe)
             }
@@ -69,6 +91,16 @@ private extension RecipeListView {
             sortMode: sortMode,
             isAscending: isAscending
         )
+    }
+
+    var topReturnTarget: RecipeTopReturnTarget? {
+        do {
+            return try RecipeTopReturnTargetService.target(
+                context: context
+            )
+        } catch {
+            return nil
+        }
     }
 
     var sortMenu: some View {
@@ -98,7 +130,9 @@ private extension RecipeListView {
 
     func recipeRow(for recipe: Recipe) -> some View {
         Button {
-            self.recipe = recipe
+            selectRecipeForNavigation(
+                recipe
+            )
         } label: {
             RecipeLabel()
                 .labelStyle(.titleAndLargeIcon)
@@ -106,6 +140,62 @@ private extension RecipeListView {
                 .cookleButtonRowContent()
         }
         .buttonStyle(.plain)
+    }
+
+    func handleTopReturnTap() {
+        do {
+            guard let latestTarget = try RecipeTopReturnTargetService.target(
+                context: context
+            ) else {
+                return
+            }
+
+            switch latestTarget.kind {
+            case .activeCookingSession:
+                if let resolvedRecipe = try resolvedRecipe(
+                    for: latestTarget
+                ) {
+                    selectRecipeForNavigation(
+                        resolvedRecipe
+                    )
+                }
+                cookingPresentation = .init()
+            case .lastOpenedRecipe:
+                guard let resolvedRecipe = try resolvedRecipe(
+                    for: latestTarget
+                ) else {
+                    return
+                }
+                selectRecipeForNavigation(
+                    resolvedRecipe
+                )
+            }
+        } catch {
+            // Ignore stale targets and keep the list stable.
+        }
+    }
+
+    func resolvedRecipe(
+        for target: RecipeTopReturnTarget
+    ) throws -> Recipe? {
+        try RecipeStableIdentifierCodec.recipe(
+            from: target.recipeStableIdentifier,
+            context: context
+        )
+    }
+
+    func selectRecipeForNavigation(
+        _ resolvedRecipe: Recipe
+    ) {
+        guard recipe?.persistentModelID == resolvedRecipe.persistentModelID else {
+            recipe = resolvedRecipe
+            return
+        }
+
+        recipe = nil
+        Task { @MainActor in
+            recipe = resolvedRecipe
+        }
     }
 }
 

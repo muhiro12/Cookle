@@ -1,6 +1,10 @@
 import SwiftUI
 
 struct DiaryTopSuggestionButton: View {
+    private enum Constants {
+        static let detailLineLimit = 2
+    }
+
     let suggestion: DiaryTopSuggestion
     let action: () -> Void
 
@@ -14,7 +18,7 @@ struct DiaryTopSuggestionButton: View {
                     suggestion.detailText
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
-                        .lineLimit(2)
+                        .lineLimit(Constants.detailLineLimit)
                 }
             } icon: {
                 Image(systemName: "sparkles")

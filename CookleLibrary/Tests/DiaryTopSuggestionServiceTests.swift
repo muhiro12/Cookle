@@ -6,6 +6,12 @@ import Testing
 @MainActor
 @Suite(.serialized)
 struct DiaryTopSuggestionServiceTests {
+    private enum TestDate {
+        static let year = 2_026
+        static let month = 4
+        static let day = 21
+    }
+
     let context: ModelContext = makeTestContext()
 
     @Test
@@ -170,50 +176,25 @@ struct DiaryTopSuggestionServiceTests {
     @Test
     func mealType_uses_expected_boundaries() throws {
         let calendar = makeCalendar()
-
-        let breakfastDate = try #require(
-            calendar.date(
-                from: .init(
-                    year: 2_026,
-                    month: 4,
-                    day: 21,
-                    hour: 10,
-                    minute: 59
-                )
-            )
+        let breakfastDate = try makeDate(
+            hour: 10,
+            minute: 59,
+            calendar: calendar
         )
-        let lunchStartDate = try #require(
-            calendar.date(
-                from: .init(
-                    year: 2_026,
-                    month: 4,
-                    day: 21,
-                    hour: 11,
-                    minute: 0
-                )
-            )
+        let lunchStartDate = try makeDate(
+            hour: 11,
+            minute: 0,
+            calendar: calendar
         )
-        let lunchEndDate = try #require(
-            calendar.date(
-                from: .init(
-                    year: 2_026,
-                    month: 4,
-                    day: 21,
-                    hour: 15,
-                    minute: 59
-                )
-            )
+        let lunchEndDate = try makeDate(
+            hour: 15,
+            minute: 59,
+            calendar: calendar
         )
-        let dinnerDate = try #require(
-            calendar.date(
-                from: .init(
-                    year: 2_026,
-                    month: 4,
-                    day: 21,
-                    hour: 16,
-                    minute: 0
-                )
-            )
+        let dinnerDate = try makeDate(
+            hour: 16,
+            minute: 0,
+            calendar: calendar
         )
 
         #expect(
@@ -248,5 +229,23 @@ private extension DiaryTopSuggestionServiceTests {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = TimeZone(secondsFromGMT: .zero) ?? .current
         return calendar
+    }
+
+    func makeDate(
+        hour: Int,
+        minute: Int,
+        calendar: Calendar
+    ) throws -> Date {
+        try #require(
+            calendar.date(
+                from: .init(
+                    year: TestDate.year,
+                    month: TestDate.month,
+                    day: TestDate.day,
+                    hour: hour,
+                    minute: minute
+                )
+            )
+        )
     }
 }

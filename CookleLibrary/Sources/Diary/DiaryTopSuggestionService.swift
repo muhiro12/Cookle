@@ -5,6 +5,12 @@ import SwiftData
 @preconcurrency
 @MainActor
 public enum DiaryTopSuggestionService {
+    private enum MealHourBoundary {
+        static let breakfastEndsAt = 11
+        static let lunchEndsAt = 16
+    }
+
+    /// Returns a top-of-list diary suggestion for today when one can be derived.
     public static func suggestion(
         context: ModelContext,
         now: Date = .now,
@@ -40,6 +46,7 @@ public enum DiaryTopSuggestionService {
         )
     }
 
+    /// Resolves the meal bucket for a given date using the v1 fixed time boundaries.
     public static func mealType(
         for date: Date,
         calendar: Calendar = .current
@@ -50,9 +57,9 @@ public enum DiaryTopSuggestionService {
         )
 
         switch hour {
-        case ..<11:
+        case ..<MealHourBoundary.breakfastEndsAt:
             return .breakfast
-        case ..<16:
+        case ..<MealHourBoundary.lunchEndsAt:
             return .lunch
         default:
             return .dinner
