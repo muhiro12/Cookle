@@ -76,6 +76,22 @@ public enum TagService {
         )
     }
 
+    /// Deletes an unused ingredient and returns follow-up hints.
+    public static func deleteWithOutcome(
+        context: ModelContext,
+        ingredient: Ingredient
+    ) throws -> MutationOutcome<Void> {
+        guard ingredient.recipes.orEmpty.isEmpty else {
+            throw TagServiceError.ingredientInUse(ingredient.value)
+        }
+
+        context.delete(ingredient)
+        return .init(
+            value: (),
+            effects: tagMutationEffects
+        )
+    }
+
     private static func normalized(_ value: String) throws -> String {
         let normalizedValue = value.trimmingCharacters(
             in: .whitespacesAndNewlines

@@ -123,9 +123,9 @@ Representative evidence:
 
 - Role: shared tag record reused by ingredient rows. `[source confirmed]`
 - Explicit delete entrypoints:
-  `DebugContentView`, `DataResetService.deleteAll`. Ordinary tag delete was
-  removed from main UI. `DeleteIngredientIntent` remains only as a
-  non-mutating compatibility shim. `[source confirmed]`
+  `TagView`, `DeleteIngredientIntent`, `DebugContentView`, and
+  `DataResetService.deleteAll`. Ordinary ingredient delete now succeeds only
+  when the ingredient is unused. `[source confirmed]`
 - Cascade source: deleting an `Ingredient` cascades to `IngredientObject`
   through `Ingredient.objects`. `[source confirmed]`
 - Automatic cleanup: none for the `Ingredient` root itself. `[source confirmed]`
@@ -275,9 +275,6 @@ Representative evidence:
 - `Photo` still has no ordinary explicit asset-delete surface. The current
   product only supports unlink in normal recipe flows plus the maintenance
   exception paths. `[source confirmed]`
-- `Ingredient` still has no ordinary delete surface, and
-  `DeleteIngredientIntent` remains a non-mutating compatibility shim.
-  `[source confirmed]`
 - Detached-object maintenance runs only from live app container preparation.
   Preview and in-memory test containers do not invoke it automatically unless a
   test calls the service directly. `[source confirmed]`

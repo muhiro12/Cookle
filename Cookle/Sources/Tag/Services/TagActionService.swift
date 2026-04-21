@@ -96,6 +96,21 @@ final class TagActionService {
             )
         }
     }
+
+    @discardableResult
+    func delete(
+        context: ModelContext,
+        ingredient: Ingredient
+    ) async throws -> MutationOutcome<Void> {
+        try await run(
+            name: "deleteIngredient"
+        ) {
+            try TagService.deleteWithOutcome(
+                context: context,
+                ingredient: ingredient
+            )
+        }
+    }
 }
 
 private extension TagActionService {

@@ -94,6 +94,16 @@ private extension TagView {
                 tagSelection = nil
             }
             .environment(category)
+        } else if let ingredient = tag as? Ingredient {
+            DeleteIngredientButton {
+                tagSelection = nil
+            }
+            .environment(ingredient)
+            if ingredient.recipes.orEmpty.isNotEmpty {
+                Text(IngredientDeleteCopy.inUseMessage(for: ingredient))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
         }
     }
 }

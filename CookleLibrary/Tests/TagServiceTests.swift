@@ -183,4 +183,42 @@ struct TagServiceTests {
         )
         #expect(recipe.categories.orEmpty.isEmpty)
     }
+
+    @Test
+    func delete_unused_ingredient_removes_only_the_root_record() throws {
+        let ingredient = Ingredient.create(
+            context: context,
+            value: "Paprika"
+        )
+
+        let outcome = try TagService.deleteWithOutcome(
+            context: context,
+            ingredient: ingredient
+        )
+        try context.save()
+
+        #expect(outcome.effects == [.notificationPlanChanged])
+        #expect(try context.fetchCount(FetchDescriptor<Ingredient>()) == 0)
+        #expect(try context.fetchCount(FetchDescriptor<IngredientObject>()) == 0)
+    }
+
+    @Test
+    func delete_in_use_ingredient_is_rejected() throws {
+        _ = makeBreakfastRecipe(
+            name: "Omelette",
+            amount: "2"
+        )
+        let ingredient = try #require(
+            context.fetch(.ingredients(.valueIs("Eggs"))).first
+        )
+
+        #expect(throws: TagServiceError.ingredientInUse("Eggs")) {
+            try TagService.deleteWithOutcome(
+                context: context,
+                ingredient: ingredient
+            )
+        }
+        #expect(try context.fetchCount(FetchDescriptor<Ingredient>()) == 1)
+        #expect(try context.fetchCount(FetchDescriptor<IngredientObject>()) == 1)
+    }
 }

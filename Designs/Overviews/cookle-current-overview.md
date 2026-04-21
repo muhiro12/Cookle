@@ -163,7 +163,8 @@ Cookle uses adaptive tab navigation.
 - Rename tags from the tag detail flow or App Intents.
 - Allow category delete from category-focused surfaces with recipe-impact
   confirmation.
-- Keep ingredient delete unavailable until the unused-only rule is implemented.
+- Allow ingredient delete only when the ingredient is unused, and explain the
+  in-use rejection in both UI and App Intents.
 - Rebuild scheduled recipe suggestion notifications after tag mutations so
   notification content stays aligned with ingredient metadata.
 
