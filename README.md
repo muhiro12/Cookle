@@ -79,6 +79,7 @@ Primary records:
 - [Architecture guide](Designs/Architecture/ARCHITECTURE_GUIDE.md)
 - [Shared service design](Designs/Architecture/shared-service-design.md)
 - [ADR 0001](Designs/Decisions/0001-adopt-shared-services-and-workflow-adapters.md)
+- [Deletion policy audit](Designs/Overviews/cookle-data-deletion-policy-audit.md)
 
 - `CookleLibrary` owns shared SwiftData models, predicates, queries,
   validation, mutations, migrations, and route helpers.
@@ -128,6 +129,9 @@ share the same schema.
   recipes using it, enabling shared galleries.
 - `Category` and `Ingredient` models act as tags for recipes, and provide
   predicates for filtering and App Intent queries.
+- `DiaryObject`, `PhotoObject`, and `IngredientObject` are parent-owned
+  structural rows, while `Recipe`, `Diary`, `Photo`, `Category`, and
+  `Ingredient` are the main persisted root or shared records.
 - The schema is versioned through `CookleMigrationPlan`, making room for future
   migrations without data loss.
 
@@ -141,8 +145,9 @@ Cookle exposes several intents so users can automate their workflows.
   random suggestions, with mutations routed through `RecipeActionService`.
 - Diary intents cover create, update, delete, add-to-today, and show flows, and
   use `DiaryActionService` for shared command handling.
-- Tag rename and delete intents wrap `TagActionService`, keeping tag mutations
-  aligned with the app UI.
+- Tag rename intents wrap `TagActionService`. Delete intents for categories and
+  ingredients currently act as non-mutating compatibility shims while the
+  future delete policy is implemented through dedicated product flows.
 - Settings and navigation intents open the same route-based destinations used by
   deep links and widgets.
 - FoundationModels hooks are stubbed for future recipe inference workflows once

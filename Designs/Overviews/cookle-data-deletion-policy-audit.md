@@ -5,7 +5,11 @@ Current as of April 21, 2026.
 ## Purpose
 
 This note records how persisted Cookle data is deleted after the conservative
-deletion-policy refactor. The working rule is:
+deletion-policy refactor. It also acts as the source of truth for future
+deletion work, so it distinguishes between current implementation facts and the
+forward design policy.
+
+The current working rule is:
 
 - keep non-Object persisted records conservatively
 - delete parent-owned Object rows when they lose their parent
@@ -264,30 +268,50 @@ Representative evidence:
 - Root deletion still removes owned child rows through cascade, while shared
   roots remain stored. `[runtime confirmed]`
 
-## 5) Remaining Exceptions and Policy Gaps
+## 5) Current Implementation Gaps Against the Forward Policy
 
-- `Recipe` and `Diary` still expose ordinary delete surfaces as deliberate
-  product exceptions to the conservative keep-default rule. `[source confirmed]`
-- `DebugContentView` still bypasses all ordinary policy checks and can delete
-  any persisted model directly. `[source confirmed]`
-- `DeleteCategoryIntent` and `DeleteIngredientIntent` still exist for shortcut
-  compatibility, but they now return non-mutating rejection dialogs rather than
-  deleting records. `[source confirmed]`
+- `Recipe` and `Diary` already expose ordinary delete surfaces, but their
+  confirmation UX does not yet explain cross-model impact in the way the
+  forward policy expects. `[source confirmed]`
+- `Photo` still has no ordinary explicit asset-delete surface. The current
+  product only supports unlink in normal recipe flows plus the maintenance
+  exception paths. `[source confirmed]`
+- `Category` and `Ingredient` ordinary delete remain removed from the main UI.
+  `DeleteCategoryIntent` and `DeleteIngredientIntent` still exist only as
+  non-mutating compatibility shims. `[source confirmed]`
 - Detached-object maintenance runs only from live app container preparation.
   Preview and in-memory test containers do not invoke it automatically unless a
   test calls the service directly. `[source confirmed]`
-- Cookle still has no ordinary explicit delete for `Photo`. That is intentional
-  in the current product phase and remains a separate future decision.
-  `[source confirmed]`
+- `DebugContentView` still bypasses all ordinary policy checks and can delete
+  any persisted model directly. That remains an intentional maintenance
+  exception. `[source confirmed]`
 
-## 6) Current Working Policy
+## 6) Forward Deletion Design Policy
 
-- Keep `Recipe` and `Diary` ordinary delete as explicit exceptions.
-- Keep non-Object shared records conservatively by default:
-  `Photo`, `Category`, and `Ingredient` should survive unlink operations.
-- Delete parent-owned Object rows aggressively:
-  `DiaryObject`, `PhotoObject`, and `IngredientObject` should not persist once
-  their parent relation is gone.
-- Prefer unlink over delete when mutating shared records.
+This section is the source of truth for future delete-related product and
+implementation work.
+
+- `Recipe` and `Diary` may continue to expose ordinary explicit delete because
+  they are user-authored root records.
+- `Recipe` delete should disclose its cross-model impact. The confirmation flow
+  should explain how many diary meal rows will be removed when the recipe is
+  deleted.
+- `Diary` delete should remain a self-contained delete flow. Its confirmation
+  should describe removal of the diary and its owned `DiaryObject` rows without
+  implying deletion of other root records.
+- `Photo` must keep unlink and asset delete as separate actions. Removing a
+  photo from a recipe should stay unlink-only, while any future explicit asset
+  delete must disclose how many recipe photo rows will be affected.
+- `Category` may expose ordinary explicit delete in the future, but the
+  confirmation flow should disclose how many recipes will lose that category
+  relation.
+- `Ingredient` should only be deletable when unused. If any recipe still
+  references the ingredient, ordinary delete should be rejected because the
+  delete would remove recipe ingredient rows and their amount text.
+- `DiaryObject`, `PhotoObject`, and `IngredientObject` are parent-owned rows.
+  They should not gain ordinary standalone delete surfaces and should continue
+  to be removed only by parent mutation, parent deletion, cascade, or explicit
+  maintenance cleanup.
+- Prefer unlink over delete when mutating shared or reusable persisted records.
 - Keep `Delete All` and debug raw delete as explicit maintenance exceptions,
   not as ordinary product policy.

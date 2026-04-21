@@ -12,6 +12,9 @@ Related audits:
 - [Cookle Architecture Conformance Audit](cookle-architecture-conformance-audit.md)
 - [Cookle Data Deletion Policy Audit](cookle-data-deletion-policy-audit.md)
 
+The deletion-policy audit is also the source of truth for forward delete,
+unlink, and orphan-handling decisions.
+
 Cookle is an iOS recipe manager built with SwiftUI and SwiftData. The product
 focus is personal cooking organization:
 
@@ -137,6 +140,9 @@ Cookle uses adaptive tab navigation.
 
 - Show a gallery of all stored photos, including photos that are no longer
   linked to recipes.
+- Treat photo unlink and explicit asset delete as separate concepts in the
+  deletion policy, even though ordinary asset delete is not yet exposed in the
+  main UI.
 - Separate gallery sections by photo source:
   - Photos
   - Image Playground
@@ -153,7 +159,10 @@ Cookle uses adaptive tab navigation.
   tag.
 - Search tags by text.
 - Rename tags from the tag detail flow or App Intents.
-- Do not expose ordinary tag deletion from the main product surfaces.
+- Do not expose ordinary tag deletion from the main product surfaces today.
+- The forward deletion policy allows future explicit delete for categories with
+  recipe-impact confirmation and allows ingredient delete only when the
+  ingredient is unused.
 - Rebuild scheduled recipe suggestion notifications after tag mutations so
   notification content stays aligned with ingredient metadata.
 
@@ -294,6 +303,9 @@ Important modeling choices:
 - `Diary` owns ordered `DiaryObject` entries for breakfast, lunch, and dinner.
 - `Photo`, `Category`, and `Ingredient` are shared records reused by multiple
   recipes.
+- `DiaryObject`, `PhotoObject`, and `IngredientObject` are treated as
+  parent-owned disposable rows, while root and shared records default to
+  conservative retention unless a delete surface explicitly says otherwise.
 - Timestamps are stored on all primary and sub-object records.
 - The migration plan is versioned as schema `1.0.0`.
 
