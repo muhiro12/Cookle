@@ -111,28 +111,43 @@ final class RecipeActionService {
         recipe: Recipe,
         data: Data
     ) async throws -> MutationOutcome<Recipe> {
-        let updatedDraft = RecipeFormDraft(
-            name: recipe.name,
+        let updatedDraft = recipeDraft(
+            for: recipe,
             photos: [
                 .init(
                     data: data.compressed(),
                     source: .imagePlayground
                 )
-            ],
-            servingSize: recipe.servingSize,
-            cookingTime: recipe.cookingTime,
-            ingredients: recipe.ingredientObjects.orEmpty.sorted().compactMap { object in
-                guard let ingredient = object.ingredient else {
-                    return nil
-                }
-                return .init(
-                    ingredient: ingredient.value,
-                    amount: object.amount
+            ]
+        )
+
+        return try await update(
+            context: context,
+            recipe: recipe,
+            draft: updatedDraft,
+            requestReview: false
+        )
+    }
+
+    func appendPhoto(
+        context: ModelContext,
+        recipe: Recipe,
+        data: Data,
+        source: PhotoSource
+    ) async throws -> MutationOutcome<Recipe> {
+        let updatedDraft = recipeDraft(
+            for: recipe,
+            photos: recipe.orderedPhotos.map { photo in
+                .init(
+                    data: photo.data,
+                    source: photo.source
                 )
-            },
-            steps: recipe.steps,
-            categories: recipe.categories.orEmpty.map(\.value),
-            note: recipe.note
+            } + [
+                .init(
+                    data: data.compressed(),
+                    source: source
+                )
+            ]
         )
 
         return try await update(
@@ -158,6 +173,30 @@ final class RecipeActionService {
 }
 
 private extension RecipeActionService {
+    func recipeDraft(
+        for recipe: Recipe,
+        photos: [PhotoData]
+    ) -> RecipeFormDraft {
+        .init(
+            name: recipe.name,
+            photos: photos,
+            servingSize: recipe.servingSize,
+            cookingTime: recipe.cookingTime,
+            ingredients: recipe.ingredientObjects.orEmpty.sorted().compactMap { object in
+                guard let ingredient = object.ingredient else {
+                    return nil
+                }
+                return .init(
+                    ingredient: ingredient.value,
+                    amount: object.amount
+                )
+            },
+            steps: recipe.steps,
+            categories: recipe.categories.orEmpty.map(\.value),
+            note: recipe.note
+        )
+    }
+
     func run<Value>(
         name: String,
         requestReview: Bool,

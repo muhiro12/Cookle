@@ -172,6 +172,10 @@ struct RecipeTopReturnTargetServiceTests {
 }
 
 private extension RecipeTopReturnTargetServiceTests {
+    enum TestValues {
+        static let cookingTimeMinutes = 10
+    }
+
     func makeRecipe(
         name: String
     ) -> Recipe {
@@ -180,7 +184,7 @@ private extension RecipeTopReturnTargetServiceTests {
             name: name,
             photos: [],
             servingSize: 1,
-            cookingTime: 10,
+            cookingTime: TestValues.cookingTimeMinutes,
             ingredients: [],
             steps: ["Cook"],
             categories: [],

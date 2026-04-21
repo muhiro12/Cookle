@@ -1,9 +1,9 @@
 import Foundation
 import SwiftData
 
+/// Resolves the highest-priority quick-return target for the recipe list.
 @preconcurrency
 @MainActor
-/// Resolves the highest-priority quick-return target for the recipe list.
 public enum RecipeTopReturnTargetService {
     /// Returns the active cooking session target when valid, otherwise the last opened recipe target.
     public static func target(
@@ -19,9 +19,9 @@ public enum RecipeTopReturnTargetService {
 
         guard let lastOpenedRecipeID,
               let recipe = try RecipeService.lastOpenedRecipe(
-            context: context,
-            lastOpenedRecipeID: lastOpenedRecipeID
-        ) else {
+                context: context,
+                lastOpenedRecipeID: lastOpenedRecipeID
+              ) else {
             return nil
         }
 
@@ -39,7 +39,7 @@ private extension RecipeTopReturnTargetService {
     ) -> RecipeTopReturnTarget? {
         guard let activeCookingSessionSnapshot,
               let snapshot = CookingSessionSnapshot.decoded(
-                  from: activeCookingSessionSnapshot
+                from: activeCookingSessionSnapshot
               ),
               snapshot.isActive,
               snapshot.steps.isEmpty == false else {

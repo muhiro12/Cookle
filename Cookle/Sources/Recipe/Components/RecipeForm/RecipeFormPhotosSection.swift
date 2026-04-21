@@ -10,59 +10,6 @@ struct RecipeFormPhotosSection: View {
         static let editModePhotoHeight: CGFloat = 80
     }
 
-    private struct PhotoThumbnailView: View {
-        let photo: PhotoData
-        let index: Int
-        let height: CGFloat
-        let cornerRadius: CGFloat
-        let actionButtonPadding: CGFloat
-        let photoRemovalBehavior: RecipePhotoRemovalBehavior?
-        @Binding var pendingPhotoRemovalIndex: Int?
-        @Binding var isPhotoRemovalDialogPresented: Bool
-
-        var body: some View {
-            if let image = UIImage(data: photo.data) {
-                ZStack(alignment: .topTrailing) {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFit()
-                        .accessibilityLabel(Text("Selected Photo"))
-                        .frame(height: height)
-                        .clipShape(.rect(cornerRadius: cornerRadius))
-                    photoRemovalMenu
-                }
-            }
-        }
-
-        @ViewBuilder var photoRemovalMenu: some View {
-            if let photoRemovalBehavior {
-                Menu {
-                    Button(role: .destructive) {
-                        pendingPhotoRemovalIndex = index
-                        isPhotoRemovalDialogPresented = true
-                    } label: {
-                        Label(
-                            photoRemovalBehavior == .deletePhoto
-                                ? "Delete Photo"
-                                : "Detach from Recipe",
-                            systemImage: photoRemovalBehavior == .deletePhoto
-                                ? "trash"
-                                : "link.badge.minus"
-                        )
-                    }
-                } label: {
-                    Image(systemName: "ellipsis.circle.fill")
-                        .font(.title3)
-                        .foregroundStyle(.primary)
-                        .padding(actionButtonPadding)
-                        .background(.thinMaterial, in: .circle)
-                }
-                .accessibilityLabel(Text("Photo Actions"))
-                .padding(actionButtonPadding)
-            }
-        }
-    }
-
     @Environment(Recipe.self)
     private var recipe: Recipe?
     @Environment(\.mhDesignMetrics)
@@ -73,6 +20,7 @@ struct RecipeFormPhotosSection: View {
     private let addPhotoTip: (any Tip)?
     @State private var photosPickerItems = [PhotosPickerItem]()
     @State private var isPhotosPickerPresented = false
+    @State private var isCameraPresented = false
     @State private var isImagePlaygroundPresented = false
     @State private var pendingPhotoRemovalIndex: Int?
     @State private var isPhotoRemovalDialogPresented = false
@@ -119,6 +67,11 @@ struct RecipeFormPhotosSection: View {
             selectionBehavior: .ordered,
             matching: .images
         )
+        .fullScreenCover(isPresented: $isCameraPresented) {
+            CameraPicker { data in
+                appendCapturedPhoto(data)
+            }
+        }
         .cookleImagePlayground(
             isPresented: $isImagePlaygroundPresented,
             recipe: recipe
@@ -133,16 +86,22 @@ struct RecipeFormPhotosSection: View {
     }
 
     var viewModeContent: some View {
-        ScrollView(.horizontal) {
-            LazyHStack {
-                photoThumbnails(
-                    height: Layout.viewModePhotoHeight
-                )
-                addPhotoControl
+        Group {
+            if photos.isEmpty {
+                addPhotoRow
+            } else {
+                ScrollView(.horizontal) {
+                    LazyHStack {
+                        photoThumbnails(
+                            height: Layout.viewModePhotoHeight
+                        )
+                        addPhotoControl
+                    }
+                    .scrollTargetLayout()
+                }
+                .scrollTargetBehavior(.viewAligned)
             }
-            .scrollTargetLayout()
         }
-        .scrollTargetBehavior(.viewAligned)
     }
 
     var editModeContent: some View {
@@ -163,45 +122,17 @@ struct RecipeFormPhotosSection: View {
         }
     }
 
-    @ViewBuilder var addPhotoControl: some View {
-        if CookleImagePlayground.isSupported {
-            Menu {
-                Button {
-                    isPhotosPickerPresented = true
-                } label: {
-                    Label {
-                        Text("Choose Photo")
-                    } icon: {
-                        Image(systemName: "photo.on.rectangle")
-                            .accessibilityHidden(true)
-                    }
-                }
-                Button {
-                    isImagePlaygroundPresented = true
-                } label: {
-                    Label {
-                        Text("Image Playground")
-                    } icon: {
-                        Image(systemName: "apple.image.playground")
-                            .accessibilityHidden(true)
-                    }
-                }
-            } label: {
-                Image(systemName: "photo.badge.plus")
-                    .accessibilityLabel(Text("Add Photo"))
-            }
-            .cooklePopoverTip(
-                addPhotoTip,
-                arrowEdge: .top
-            )
-        } else {
-            Button {
-                isPhotosPickerPresented = true
-            } label: {
-                Image(systemName: "photo.on.rectangle")
-                    .accessibilityLabel(Text("Choose Photo"))
-            }
+    var addPhotoControl: some View {
+        Menu {
+            photoInputSourceButtons
+        } label: {
+            Image(systemName: "photo.badge.plus")
+                .accessibilityLabel(Text("Add Photo"))
         }
+        .cooklePopoverTip(
+            addPhotoTip,
+            arrowEdge: .top
+        )
     }
 
     init(
@@ -222,7 +153,46 @@ struct RecipeFormPhotosSection: View {
     }
 }
 
+#Preview("Empty", traits: .modifier(CookleSampleData())) {
+    Form {
+        RecipeFormPhotosSection(.constant([]))
+    }
+}
+
 private extension RecipeFormPhotosSection {
+    var availablePhotoInputSources: [RecipePhotoInputSource] {
+        RecipePhotoInputSource.allCases.filter(\.isAvailable)
+    }
+
+    var addPhotoRow: some View {
+        Menu {
+            photoInputSourceButtons
+        } label: {
+            Label {
+                Text("Add Photo")
+            } icon: {
+                Image(systemName: "photo.badge.plus")
+                    .accessibilityHidden(true)
+            }
+            .cookleButtonRowContent()
+        }
+        .buttonStyle(.plain)
+        .cooklePopoverTip(
+            addPhotoTip,
+            arrowEdge: .top
+        )
+    }
+
+    @ViewBuilder var photoInputSourceButtons: some View {
+        ForEach(availablePhotoInputSources) { source in
+            Button {
+                presentPhotoInputSource(source)
+            } label: {
+                source.label
+            }
+        }
+    }
+
     var photoRemovalTitle: String {
         switch pendingPhotoRemovalBehavior {
         case .deletePhoto:
@@ -268,7 +238,7 @@ private extension RecipeFormPhotosSection {
     @ViewBuilder
     func photoThumbnails(height: CGFloat) -> some View {
         ForEach(Array(photos.enumerated()), id: \.offset) { index, photo in
-            PhotoThumbnailView(
+            RecipeFormPhotoThumbnailView(
                 photo: photo,
                 index: index,
                 height: height,
@@ -305,6 +275,30 @@ private extension RecipeFormPhotosSection {
                 )
             }
         }
+    }
+
+    func presentPhotoInputSource(
+        _ source: RecipePhotoInputSource
+    ) {
+        switch source {
+        case .camera:
+            isCameraPresented = true
+        case .photoLibrary:
+            isPhotosPickerPresented = true
+        case .imagePlayground:
+            isImagePlaygroundPresented = true
+        }
+    }
+
+    func appendCapturedPhoto(
+        _ data: Data
+    ) {
+        photos.append(
+            .init(
+                data: data.compressed(),
+                source: .photosPicker
+            )
+        )
     }
 
     func photoRemovalBehavior(for index: Int) -> RecipePhotoRemovalBehavior? {

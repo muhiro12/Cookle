@@ -214,8 +214,7 @@ final class RecipeFormModel {
             switch result {
             case .created(let createdRecipe):
                 savedRecipe = createdRecipe
-                if createdRecipe.photos?.isEmpty == true,
-                   CookleImagePlayground.isSupported {
+                if createdRecipe.photos?.isEmpty == true {
                     clearSnapshot()
                     isPhotoConfirmationPresented = true
                     return false

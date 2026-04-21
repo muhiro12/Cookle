@@ -14,16 +14,16 @@ struct RecipeFormView: View {
     @State private var model: RecipeFormModel
 
     @Environment(\.dismiss)
-    private var dismiss
+    var dismiss
 
     @Environment(Recipe.self)
-    private var recipe: Recipe?
+    var recipe: Recipe?
     @Environment(\.modelContext)
-    private var context
+    var context
     @Environment(RecipeActionService.self)
-    private var recipeActionService
+    var recipeActionService
     @Environment(CookleAppLogging.self)
-    private var logging
+    var logging
 
     @AppStorage(\.isDebugOn)
     private var isDebugOn
@@ -31,10 +31,12 @@ struct RecipeFormView: View {
     @State private var editMode = EditMode.inactive
     @State private var isDebugAlertPresented = false
     @State private var isRestoreDraftConfirmationPresented = false
+    @State private var isQuickAddCameraPresented = false
+    @State private var isQuickAddPhotoLibraryPresented = false
 
-    private let type: RecipeFormType
-    private let inferRecipeFromTextTip = InferRecipeFromTextTip()
-    private let imagePlaygroundTip = ImagePlaygroundTip()
+    let type: RecipeFormType
+    let inferRecipeFromTextTip = InferRecipeFromTextTip()
+    let imagePlaygroundTip = ImagePlaygroundTip()
 
     var body: some View {
         @Bindable var model = model
@@ -71,14 +73,16 @@ struct RecipeFormView: View {
             Text("Add a photo?"),
             isPresented: $model.isPhotoConfirmationPresented
         ) {
-            Button("Use Image Playground") {
-                model.isImagePlaygroundPresented = true
+            ForEach(postCreatePhotoInputSources) { source in
+                Button {
+                    presentPostCreatePhotoInputSource(source)
+                } label: {
+                    source.titleText
+                }
             }
             Button("Later", role: .cancel) {
                 dismiss()
             }
-        } message: {
-            Text("No image yet. Try Image Playground?")
         }
         .confirmationDialog(
             Text("Restore Draft"),
@@ -102,6 +106,26 @@ struct RecipeFormView: View {
             }
         } message: {
             Text(model.errorMessage ?? "")
+        }
+        .fullScreenCover(isPresented: $isQuickAddCameraPresented) {
+            CameraPicker { data in
+                appendPostCreatePhoto(
+                    data,
+                    source: .camera
+                )
+            } cancellationHandler: {
+                dismiss()
+            }
+        }
+        .fullScreenCover(isPresented: $isQuickAddPhotoLibraryPresented) {
+            SinglePhotoLibraryPicker { data in
+                appendPostCreatePhoto(
+                    data,
+                    source: .photoLibrary
+                )
+            } cancellationHandler: {
+                dismiss()
+            }
         }
         .cookleImagePlayground(
             isPresented: $model.isImagePlaygroundPresented,
@@ -141,124 +165,6 @@ struct RecipeFormView: View {
         }
     }
 
-    @ViewBuilder var formSections: some View {
-        @Bindable var model = model
-
-        RecipeFormNameSection($model.name)
-            .hidden(editMode == .active)
-        RecipeFormPhotosSection(
-            $model.photos,
-            addPhotoTip: currentRecipeFormTip(
-                for: imagePlaygroundTip,
-                isEligible: model.shouldShowImagePlaygroundTip
-            )
-        )
-        if #available(iOS 26.0, *) {
-            RecipeFormInferSection(
-                name: $model.name,
-                servingSize: $model.servingSize,
-                cookingTime: $model.cookingTime,
-                ingredients: $model.ingredients,
-                steps: $model.steps,
-                categories: $model.categories,
-                note: $model.note,
-                tip: currentRecipeFormTip(
-                    for: inferRecipeFromTextTip,
-                    isEligible: model.shouldShowInferRecipeFromTextTip
-                )
-            )
-        }
-        RecipeFormServingSizeSection($model.servingSize)
-            .hidden(editMode == .active)
-        RecipeFormCookingTimeSection($model.cookingTime)
-            .hidden(editMode == .active)
-        RecipeFormIngredientsSection($model.ingredients)
-        RecipeFormStepsSection($model.steps)
-        RecipeFormCategoriesSection($model.categories)
-        RecipeFormNoteSection($model.note)
-            .hidden(editMode == .active)
-        Section {
-            Button {
-                withAnimation {
-                    editMode = editMode.isEditing ? .inactive : .active
-                }
-            } label: {
-                editMode == .inactive ? Text("Change Order or Delete Row") : Text("Done Edit")
-            }
-            .frame(maxWidth: .infinity)
-        }
-    }
-
-    @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
-        ToolbarItem(placement: .cancellationAction) {
-            Button {
-                if model.name == "Enable Debug" {
-                    model.name = .empty
-                    isDebugAlertPresented = true
-                    return
-                }
-                dismiss()
-            } label: {
-                Text("Cancel")
-            }
-        }
-        switch editMode {
-        case .active:
-            ToolbarItem {
-                Button {
-                    withAnimation {
-                        editMode = .inactive
-                    }
-                } label: {
-                    Text("Done")
-                }
-            }
-        default:
-            restoreToolbarItem
-            confirmationToolbarItem
-        }
-    }
-
-    @ToolbarContentBuilder var restoreToolbarItem: some ToolbarContent {
-        if model.restorePolicy.isRestoreAvailable {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("Restore Draft") {
-                    restoreDraft()
-                }
-            }
-        }
-    }
-
-    @ToolbarContentBuilder var confirmationToolbarItem: some ToolbarContent {
-        ToolbarItem(placement: .confirmationAction) {
-            Button {
-                Task {
-                    let shouldDismiss = await model.save(
-                        context: context,
-                        recipe: recipe,
-                        recipeActionService: recipeActionService,
-                        draftLogger: logging.logger(
-                            category: "RecipeDraft",
-                            source: #fileID
-                        )
-                    )
-                    if shouldDismiss {
-                        dismiss()
-                    }
-                }
-            } label: {
-                switch type {
-                case .create,
-                     .duplicate:
-                    Text("Create")
-                case .edit:
-                    Text("Update")
-                }
-            }
-            .disabled((try? model.makeDraft()) == nil)
-        }
-    }
-
     init(type: RecipeFormType) {
         self.type = type
         _model = State(
@@ -269,77 +175,54 @@ struct RecipeFormView: View {
     }
 }
 
-private extension RecipeFormView {
-    var isErrorPresentedBinding: Binding<Bool> {
-        .init(
-            get: {
-                model.errorMessage != nil
-            },
-            set: { isPresented in
-                if isPresented == false {
-                    model.errorMessage = nil
-                }
-            }
-        )
+extension RecipeFormView {
+    var formModel: RecipeFormModel {
+        model
     }
 
-    func currentRecipeFormTip<T: Tip>(
-        for tip: T,
-        isEligible: Bool
-    ) -> (any Tip)? {
-        guard isEligible else {
-            return nil
+    var currentEditMode: EditMode {
+        get {
+            editMode
         }
-
-        if model.shouldShowInferRecipeFromTextTip {
-            return inferRecipeFromTextTip.id == tip.id ? tip : nil
-        }
-        if model.shouldShowImagePlaygroundTip {
-            return imagePlaygroundTip.id == tip.id ? tip : nil
-        }
-
-        return nil
-    }
-
-    func observeInferRecipeFromTextTipEligibility() async {
-        await MainActor.run {
-            model.updateInferRecipeFromTextTipEligibility(
-                inferRecipeFromTextTip.shouldDisplay
-            )
-        }
-
-        for await shouldDisplay in inferRecipeFromTextTip.shouldDisplayUpdates {
-            await MainActor.run {
-                model.updateInferRecipeFromTextTipEligibility(
-                    shouldDisplay
-                )
-            }
+        nonmutating set {
+            editMode = newValue
         }
     }
 
-    func observeImagePlaygroundTipEligibility() async {
-        await MainActor.run {
-            model.updateImagePlaygroundTipEligibility(
-                imagePlaygroundTip.shouldDisplay
-            )
+    var isDebugConfirmationPresented: Bool {
+        get {
+            isDebugAlertPresented
         }
-
-        for await shouldDisplay in imagePlaygroundTip.shouldDisplayUpdates {
-            await MainActor.run {
-                model.updateImagePlaygroundTipEligibility(
-                    shouldDisplay
-                )
-            }
+        nonmutating set {
+            isDebugAlertPresented = newValue
         }
     }
 
-    func restoreDraft() {
-        if model.restorePolicy.requiresOverwriteConfirmation {
-            isRestoreDraftConfirmationPresented = true
-            return
+    var isRestoreDraftDialogPresented: Bool {
+        get {
+            isRestoreDraftConfirmationPresented
         }
+        nonmutating set {
+            isRestoreDraftConfirmationPresented = newValue
+        }
+    }
 
-        model.restoreSnapshot()
+    var isQuickAddCameraCoverPresented: Bool {
+        get {
+            isQuickAddCameraPresented
+        }
+        nonmutating set {
+            isQuickAddCameraPresented = newValue
+        }
+    }
+
+    var isQuickAddPhotoLibraryCoverPresented: Bool {
+        get {
+            isQuickAddPhotoLibraryPresented
+        }
+        nonmutating set {
+            isQuickAddPhotoLibraryPresented = newValue
+        }
     }
 }
 

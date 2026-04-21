@@ -1,4 +1,5 @@
 @testable import CookleLibrary
+import Foundation
 import SwiftData
 import Testing
 
@@ -104,6 +105,51 @@ struct RecipeFormServiceTests {
         #expect(updatedIngredientValues == ["Egg", "Butter"])
         #expect(recipe.modifiedTimestamp >= originalModifiedTimestamp)
         #expect(recipe.name == "Updated Pancakes")
+    }
+
+    @Test
+    func update_rebuilds_photos_in_draft_order() throws {
+        let firstPhoto = PhotoData(
+            data: Data("first".utf8),
+            source: .photosPicker
+        )
+        let secondPhoto = PhotoData(
+            data: Data("second".utf8),
+            source: .photosPicker
+        )
+        let createDraft = try RecipeFormService.makeDraft(
+            name: "Pancakes",
+            photos: [firstPhoto],
+            servingSize: "1",
+            cookingTime: "10",
+            ingredients: [],
+            steps: [],
+            categories: [],
+            note: ""
+        )
+        let recipe = RecipeFormService.create(
+            context: context,
+            draft: createDraft
+        )
+        let updateDraft = try RecipeFormService.makeDraft(
+            name: "Pancakes",
+            photos: [firstPhoto, secondPhoto],
+            servingSize: "1",
+            cookingTime: "10",
+            ingredients: [],
+            steps: [],
+            categories: [],
+            note: ""
+        )
+
+        RecipeFormService.update(
+            context: context,
+            recipe: recipe,
+            draft: updateDraft
+        )
+
+        #expect(recipe.orderedPhotos.map(\.data) == [firstPhoto.data, secondPhoto.data])
+        #expect(recipe.orderedPhotoObjects.map(\.order) == [1, 2])
     }
 
     @Test
