@@ -56,7 +56,7 @@ struct RecipeLabel: View {
             }
         }
         .confirmationDialog(
-            Text("Delete \(recipe.name)"),
+            Text(RecipeDeleteCopy.title(for: recipe)),
             isPresented: $isDeletePresented
         ) {
             Button("Delete", role: .destructive) {
@@ -76,7 +76,7 @@ struct RecipeLabel: View {
                 // Dismisses the confirmation dialog.
             }
         } message: {
-            Text("Are you sure you want to delete this item? This action cannot be undone.")
+            Text(RecipeDeleteCopy.message(for: recipe))
         }
         .alert(
             Text("Cannot Delete Recipe"),

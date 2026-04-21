@@ -14,21 +14,27 @@ struct DeleteRecipeIntent: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        try await requestDeleteConfirmation(
-            dialog: .init(stringLiteral: "Delete \(recipe.name)?")
-        )
-
         guard let model = try recipe.model(
             context: modelContainer.mainContext
         ) else {
             throw RecipeMutationIntentError.recipeNotFound
         }
 
+        try await requestDeleteConfirmation(
+            dialog: .init(
+                stringLiteral: RecipeDeleteCopy.confirmationDialog(for: model)
+            )
+        )
+
         _ = try await recipeActionService.delete(
             context: modelContainer.mainContext,
             recipe: model
         )
 
-        return .result(dialog: .init(stringLiteral: "Deleted \(recipe.name)"))
+        return .result(
+            dialog: .init(
+                stringLiteral: RecipeDeleteCopy.successDialog(for: model)
+            )
+        )
     }
 }
