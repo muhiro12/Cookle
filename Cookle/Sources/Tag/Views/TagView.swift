@@ -12,6 +12,7 @@ struct TagView<T: Tag>: View {
     @Environment(T.self)
     private var tag
 
+    @Binding private var tagSelection: T?
     @Binding private var recipe: Recipe?
 
     var body: some View {
@@ -29,24 +30,33 @@ struct TagView<T: Tag>: View {
         }
     }
 
-    init(selection: Binding<Recipe?> = .constant(nil)) {
-        _recipe = selection
+    init(
+        tagSelection: Binding<T?> = .constant(nil),
+        recipeSelection: Binding<Recipe?> = .constant(nil)
+    ) {
+        _tagSelection = tagSelection
+        _recipe = recipeSelection
     }
 }
 
 private extension TagView {
     var recipeSection: some View {
         Section {
-            ForEach(tag.recipes.orEmpty) { recipe in
-                Button {
-                    self.recipe = recipe
-                } label: {
-                    RecipeLabel()
-                        .labelStyle(.titleAndLargeIcon)
-                        .environment(recipe)
-                        .cookleButtonRowContent()
+            if tag.recipes.orEmpty.isEmpty {
+                Text("Not used in any recipe.")
+                    .foregroundStyle(.secondary)
+            } else {
+                ForEach(tag.recipes.orEmpty) { recipe in
+                    Button {
+                        self.recipe = recipe
+                    } label: {
+                        RecipeLabel()
+                            .labelStyle(.titleAndLargeIcon)
+                            .environment(recipe)
+                            .cookleButtonRowContent()
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
             }
         } header: {
             Text("Recipes")

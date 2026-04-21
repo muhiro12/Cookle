@@ -26,8 +26,13 @@ struct TagListView<T: Tag>: View {
                     Button {
                         self.tag = tag
                     } label: {
-                        Text(tag.value)
-                            .cookleButtonRowContent()
+                        VStack(alignment: .leading) {
+                            Text(tag.value)
+                            Text(usageText(for: tag))
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                        .cookleButtonRowContent()
                     }
                     .buttonStyle(.plain)
                 }
@@ -41,7 +46,7 @@ struct TagListView<T: Tag>: View {
                             .accessibilityHidden(true)
                     }
                 } description: {
-                    Text("Tags appear when recipes use them.")
+                    Text("Tags appear after recipes create them.")
                 } actions: {
                     AddRecipeButton()
                 }
@@ -67,12 +72,20 @@ struct TagListView<T: Tag>: View {
 private extension TagListView {
     var filteredTags: [T] {
         tags.filter { tag in
-            tag.recipes.orEmpty.isNotEmpty
-                && (
-                    searchText.isEmpty
-                        || tag.value.normalizedContains(searchText)
-                )
+            searchText.isEmpty
+                || tag.value.normalizedContains(searchText)
         }
+    }
+
+    func usageText(for tag: T) -> String {
+        let recipeCount = tag.recipes.orEmpty.count
+        let recipeLabel = recipeCount == 1 ? "recipe" : "recipes"
+
+        if recipeCount == 0 {
+            return "Unused"
+        }
+
+        return "Used by \(recipeCount) \(recipeLabel)"
     }
 }
 

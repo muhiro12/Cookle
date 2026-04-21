@@ -15,8 +15,11 @@ struct TagNavigationView<T: Tag>: View {
             TagListView<T>(selection: $tag)
         } content: {
             if let tag {
-                TagView<T>(selection: $recipe)
-                    .environment(tag)
+                TagView<T>(
+                    tagSelection: $tag,
+                    recipeSelection: $recipe
+                )
+                .environment(tag)
             }
         } detail: {
             if let recipe {
