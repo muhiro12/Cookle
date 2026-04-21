@@ -43,9 +43,13 @@ nonisolated public final class Photo {
 }
 
 public extension Photo {
-    /// Comma-separated recipe names that currently reference this asset.
+    /// Comma-separated recipe names that currently reference this asset, with a fallback title for unlinked photos.
     var title: String {
-        recipes.orEmpty.map(\.name).joined(separator: ", ")
+        let recipeNames = recipes.orEmpty.map(\.name).joined(separator: ", ")
+        guard recipeNames.isNotEmpty else {
+            return "Unlinked Photo"
+        }
+        return recipeNames
     }
 
     /// Typed photo source derived from `sourceID`, with a safe default for unknown values.

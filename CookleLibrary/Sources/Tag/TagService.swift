@@ -64,55 +64,6 @@ public enum TagService {
         )
     }
 
-    /// Deletes an ingredient only when no recipe still references it.
-    public static func delete(
-        context: ModelContext,
-        ingredient: Ingredient
-    ) throws {
-        _ = try deleteWithOutcome(
-            context: context,
-            ingredient: ingredient
-        )
-    }
-
-    /// Deletes an ingredient and returns follow-up hints.
-    public static func deleteWithOutcome(
-        context: ModelContext,
-        ingredient: Ingredient
-    ) throws -> MutationOutcome<Void> {
-        if ingredient.recipes.isNotEmpty {
-            throw TagServiceError.ingredientInUse(ingredient.value)
-        }
-        context.delete(ingredient)
-        return .init(
-            value: (),
-            effects: tagMutationEffects
-        )
-    }
-
-    /// Deletes the supplied category from the current model context.
-    public static func delete(
-        context: ModelContext,
-        category: Category
-    ) {
-        _ = deleteWithOutcome(
-            context: context,
-            category: category
-        )
-    }
-
-    /// Deletes the supplied category and returns follow-up hints.
-    public static func deleteWithOutcome(
-        context: ModelContext,
-        category: Category
-    ) -> MutationOutcome<Void> {
-        context.delete(category)
-        return .init(
-            value: (),
-            effects: tagMutationEffects
-        )
-    }
-
     private static func normalized(_ value: String) throws -> String {
         let normalizedValue = value.trimmingCharacters(
             in: .whitespacesAndNewlines

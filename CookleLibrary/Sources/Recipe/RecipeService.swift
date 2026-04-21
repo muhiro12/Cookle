@@ -144,8 +144,6 @@ public enum RecipeService {
         recipe: Recipe,
         photoObject: PhotoObject
     ) -> MutationOutcome<Void> {
-        let removedPhoto = photoObject.photo
-        let shouldDeletePhoto = removedPhoto?.objects.orEmpty.count == 1
         let remainingPhotoObjects = recipe.photoObjects.orEmpty.filter { currentPhotoObject in
             currentPhotoObject.persistentModelID != photoObject.persistentModelID
         }
@@ -161,11 +159,6 @@ public enum RecipeService {
             categories: recipe.categories.orEmpty,
             note: recipe.note
         )
-
-        if shouldDeletePhoto,
-           let removedPhoto {
-            context.delete(removedPhoto)
-        }
 
         return .init(
             value: (),

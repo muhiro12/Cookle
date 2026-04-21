@@ -9,17 +9,17 @@ struct DeletionPolicyAuditRootModelTests {
     @Test
     func delete_recipe_cascades_subobjects_but_keeps_photo_and_ingredient_records() throws {
         let context = makeTestContext()
-        let sharedPhotoData = makeAuditPhotoData("shared")
-        let uniquePhotoData = makeAuditPhotoData("unique")
+        let sharedPhotoData = DeletionPolicyAuditSupport.makePhotoData("shared")
+        let uniquePhotoData = DeletionPolicyAuditSupport.makePhotoData("unique")
 
-        let recipe = makeAuditRecipe(
+        let recipe = DeletionPolicyAuditSupport.makeRecipe(
             context: context,
             name: "Delete Target",
             photos: [sharedPhotoData, uniquePhotoData],
             ingredients: [.init(ingredient: "Salt", amount: "1 tsp")],
             categories: []
         )
-        let remainingRecipe = makeAuditRecipe(
+        let remainingRecipe = DeletionPolicyAuditSupport.makeRecipe(
             context: context,
             name: "Remaining",
             photos: [sharedPhotoData],
@@ -43,22 +43,16 @@ struct DeletionPolicyAuditRootModelTests {
         try context.save()
 
         let photos = try context.fetch(.photos(.all))
-        let orphanedPhoto = try requirePhoto(
+        let orphanedPhoto = try DeletionPolicyAuditSupport.requirePhoto(
             matching: uniquePhotoData.data,
             in: photos
         )
-        let sharedPhoto = try requirePhoto(
+        let sharedPhoto = try DeletionPolicyAuditSupport.requirePhoto(
             matching: sharedPhotoData.data,
             in: photos
         )
 
-        #expect(try auditCount(of: Recipe.self, in: context) == 1)
-        #expect(try auditCount(of: PhotoObject.self, in: context) == 1)
-        #expect(try auditCount(of: IngredientObject.self, in: context) == 0)
-        #expect(try auditCount(of: DiaryObject.self, in: context) == 0)
-        #expect(try auditCount(of: Photo.self, in: context) == 2)
-        #expect(try auditCount(of: Ingredient.self, in: context) == 1)
-        #expect(try auditCount(of: Diary.self, in: context) == 1)
+        try assertRecipeDeletionCounts(context: context)
         #expect(remainingRecipe.orderedPhotos.count == 1)
         #expect(diary.objects.orEmpty.isEmpty)
         #expect(orphanedPhoto.recipes.orEmpty.isEmpty)
@@ -67,40 +61,12 @@ struct DeletionPolicyAuditRootModelTests {
     }
 
     @Test
-    func delete_in_use_category_keeps_recipe_and_drops_relationship() throws {
-        let context = makeTestContext()
-        let recipe = makeAuditRecipe(
-            context: context,
-            name: "Category Delete",
-            photos: [],
-            ingredients: [],
-            categories: ["Dinner"]
-        )
-        let category = try #require(recipe.categories.orEmpty.first)
-        try context.save()
-
-        TagService.delete(
-            context: context,
-            category: category
-        )
-        try context.save()
-
-        let persistedRecipe = try #require(
-            context.fetch(.recipes(.all)).first
-        )
-
-        #expect(try auditCount(of: Category.self, in: context) == 0)
-        #expect(try auditCount(of: Recipe.self, in: context) == 1)
-        #expect(persistedRecipe.categories.orEmpty.isEmpty)
-    }
-
-    @Test
     func data_reset_removes_every_persisted_model() throws {
         let context = makeTestContext()
-        let recipe = makeAuditRecipe(
+        let recipe = DeletionPolicyAuditSupport.makeRecipe(
             context: context,
             name: "Reset Target",
-            photos: [makeAuditPhotoData("reset")],
+            photos: [DeletionPolicyAuditSupport.makePhotoData("reset")],
             ingredients: [.init(ingredient: "Salt", amount: "1 tsp")],
             categories: ["Dinner"]
         )
@@ -119,8 +85,8 @@ struct DeletionPolicyAuditRootModelTests {
         )
         try context.save()
 
-        let counts = try auditModelCounts(
-            context: auditReloadedContext(from: context)
+        let counts = try DeletionPolicyAuditSupport.modelCounts(
+            context: DeletionPolicyAuditSupport.reloadedContext(from: context)
         )
 
         #expect(counts.recipeCount == 0)
@@ -132,4 +98,44 @@ struct DeletionPolicyAuditRootModelTests {
         #expect(counts.photoObjectCount == 0)
         #expect(counts.ingredientObjectCount == 0)
     }
+}
+
+private func assertRecipeDeletionCounts(
+    context: ModelContext
+) throws {
+    let expectedRemainingRecipeCount = 1
+    let expectedRemainingPhotoObjectCount = 1
+    let expectedDeletedSubobjectCount = 0
+    let expectedRemainingPhotoCount = 2
+    let expectedRemainingIngredientCount = 1
+    let expectedRemainingDiaryCount = 1
+
+    #expect(
+        try DeletionPolicyAuditSupport.count(of: Recipe.self, in: context)
+            == expectedRemainingRecipeCount
+    )
+    #expect(
+        try DeletionPolicyAuditSupport.count(of: PhotoObject.self, in: context)
+            == expectedRemainingPhotoObjectCount
+    )
+    #expect(
+        try DeletionPolicyAuditSupport.count(of: IngredientObject.self, in: context)
+            == expectedDeletedSubobjectCount
+    )
+    #expect(
+        try DeletionPolicyAuditSupport.count(of: DiaryObject.self, in: context)
+            == expectedDeletedSubobjectCount
+    )
+    #expect(
+        try DeletionPolicyAuditSupport.count(of: Photo.self, in: context)
+            == expectedRemainingPhotoCount
+    )
+    #expect(
+        try DeletionPolicyAuditSupport.count(of: Ingredient.self, in: context)
+            == expectedRemainingIngredientCount
+    )
+    #expect(
+        try DeletionPolicyAuditSupport.count(of: Diary.self, in: context)
+            == expectedRemainingDiaryCount
+    )
 }

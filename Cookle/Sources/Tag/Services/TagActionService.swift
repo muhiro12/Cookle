@@ -56,36 +56,6 @@ final class TagActionService {
     }
 
     @discardableResult
-    func delete(
-        context: ModelContext,
-        ingredient: Ingredient
-    ) async throws -> MutationOutcome<Void> {
-        try await run(
-            name: "deleteIngredient"
-        ) {
-            try TagService.deleteWithOutcome(
-                context: context,
-                ingredient: ingredient
-            )
-        }
-    }
-
-    @discardableResult
-    func delete(
-        context: ModelContext,
-        category: Category
-    ) async throws -> MutationOutcome<Void> {
-        try await run(
-            name: "deleteCategory"
-        ) {
-            TagService.deleteWithOutcome(
-                context: context,
-                category: category
-            )
-        }
-    }
-
-    @discardableResult
     func rename<T: Tag>(
         context: ModelContext,
         tag: T,
@@ -104,30 +74,6 @@ final class TagActionService {
                 context: context,
                 category: category,
                 value: value
-            )
-        }
-
-        throw CookleActionError.unsupportedTagType(
-            String(describing: T.self)
-        )
-    }
-
-    @discardableResult
-    func delete<T: Tag>(
-        context: ModelContext,
-        tag: T
-    ) async throws -> MutationOutcome<Void> {
-        if let ingredient = tag as? Ingredient {
-            return try await delete(
-                context: context,
-                ingredient: ingredient
-            )
-        }
-
-        if let category = tag as? Category {
-            return try await delete(
-                context: context,
-                category: category
             )
         }
 

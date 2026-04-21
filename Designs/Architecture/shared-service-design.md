@@ -55,7 +55,6 @@ operations:
 - `DiaryService.addWithOutcome(context:date:recipe:type:)`
 - `DiaryService.deleteWithOutcome(context:diary:)`
 - `TagService.renameWithOutcome(...)`
-- `TagService.deleteWithOutcome(...)`
 - `DataResetService.deleteAllWithOutcome(context:)`
 
 App-side mutation call sites should consume those library APIs and keep

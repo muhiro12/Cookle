@@ -4,16 +4,19 @@ Current as of April 21, 2026.
 
 ## Purpose
 
-This note audits how persisted Cookle data is deleted today, which deletions are
-explicit versus indirect, and whether the repository follows a consistent
-policy across model types.
+This note records how persisted Cookle data is deleted after the conservative
+deletion-policy refactor. The working rule is:
 
-Evidence labels used throughout this document:
+- keep non-Object persisted records conservatively
+- delete parent-owned Object rows when they lose their parent
+- prefer unlink over delete
+- treat `Delete All` and debug raw deletion as explicit exception paths
 
-- `[runtime confirmed]`: confirmed by repository tests, including
-  `CookleLibrary/Tests/DeletionPolicyAuditTests.swift`
-- `[source confirmed]`: confirmed directly from model, service, UI, intent, or
-  migration source
+Evidence labels used below:
+
+- `[runtime confirmed]`: confirmed by repository tests
+- `[source confirmed]`: confirmed directly from models, services, UI, intents,
+  or container/bootstrap code
 - `[source-based inference]`: inferred from source shape where SwiftData macro
   behavior is not fully visible in code
 
@@ -22,11 +25,14 @@ Representative evidence:
 - `CookleLibrary/Sources/Recipe/RecipeService.swift`
 - `CookleLibrary/Sources/Recipe/RecipeFormService.swift`
 - `CookleLibrary/Sources/Diary/DiaryService.swift`
-- `CookleLibrary/Sources/Tag/TagService.swift`
-- `CookleLibrary/Sources/Common/DataResetService.swift`
-- `CookleLibrary/Sources/Common/DatabaseMigrator.swift`
-- `Cookle/Sources/Debug/Views/DebugContentView.swift`
-- `CookleLibrary/Tests/DeletionPolicyAuditTests.swift`
+- `CookleLibrary/Sources/Common/DetachedObjectCleanupService.swift`
+- `CookleLibrary/Sources/Common/ModelContainerFactory.swift`
+- `Cookle/Sources/Photo/Views/PhotoListView.swift`
+- `Cookle/Sources/Tag/Intents/DeleteCategoryIntent.swift`
+- `Cookle/Sources/Tag/Intents/DeleteIngredientIntent.swift`
+- `CookleLibrary/Tests/DeletionPolicyAuditRootModelTests.swift`
+- `CookleLibrary/Tests/DeletionPolicyAuditObjectLifecycleTests.swift`
+- `CookleLibrary/Tests/DetachedObjectCleanupServiceTests.swift`
 - `CookleLibrary/Tests/RecipePhotoRemovalTests.swift`
 
 ## 1) Model-by-Model Deletion Inventory
@@ -38,19 +44,19 @@ Representative evidence:
   `RecipeService.deleteWithOutcome`, `DeleteRecipeButton`,
   `DeleteRecipeIntent`, `DebugContentView`, `DataResetService.deleteAll`.
   `[source confirmed]`
-- Cascade source: none for deleting `Recipe` itself. Deleting a `Recipe`
-  cascades to `PhotoObject`, `IngredientObject`, and `DiaryObject` through
-  `Recipe.photoObjects`, `Recipe.ingredientObjects`, and
-  `Recipe.diaryObjects`. `[source confirmed]`
-- Automatic cleanup: none. `[source confirmed]`
-- Reset / migration path: deleted by `DataResetService.deleteAll`; no schema
-  migration stage deletes individual `Recipe` rows because
-  `CookleMigrationPlan.stages` is empty. Legacy migration only relocates or
-  removes whole store files. `[source confirmed]`
+- Cascade source: deleting a `Recipe` cascades to `PhotoObject`,
+  `IngredientObject`, and `DiaryObject` through `Recipe.photoObjects`,
+  `Recipe.ingredientObjects`, and `Recipe.diaryObjects`. `[source confirmed]`
+- Automatic cleanup: none for the `Recipe` row itself. `[source confirmed]`
+- Reset / migration / maintenance path:
+  deleted by `DataResetService.deleteAll`; no schema migration stage deletes
+  individual `Recipe` rows because `CookleMigrationPlan.stages` is empty.
+  `[source confirmed]`
 - Orphan allowance: not applicable as a root record. Deleting a `Recipe`
-  currently leaves orphaned shared `Photo` and `Ingredient` records behind.
+  keeps shared `Photo`, `Ingredient`, and `Category` records. `[runtime confirmed]`
+- Coverage:
+  `RecipeServiceTests`, `DeletionPolicyAuditRootModelTests`.
   `[runtime confirmed]`
-- Coverage: `RecipeServiceTests`, `DeletionPolicyAuditTests`. `[runtime confirmed]`
 
 ### Diary
 
@@ -58,92 +64,97 @@ Representative evidence:
 - Explicit delete entrypoints:
   `DiaryService.deleteWithOutcome`, `DeleteDiaryButton`, `DeleteDiaryIntent`,
   `DebugContentView`, `DataResetService.deleteAll`. `[source confirmed]`
-- Cascade source: none for deleting `Diary` itself. Deleting a `Diary`
-  cascades to `DiaryObject` through `Diary.objects`. `[source confirmed]`
-- Automatic cleanup: none. `[source confirmed]`
-- Reset / migration path: deleted by `DataResetService.deleteAll`; migration
-  cleanup only removes whole legacy store files. `[source confirmed]`
+- Cascade source: deleting a `Diary` cascades to `DiaryObject` through
+  `Diary.objects`. `[source confirmed]`
+- Automatic cleanup: none for the `Diary` row itself. `[source confirmed]`
+- Reset / migration / maintenance path:
+  deleted by `DataResetService.deleteAll`; schema migration still has no row
+  deletion stage. `[source confirmed]`
 - Orphan allowance: not applicable as a root record. `Diary` survives
-  `Recipe` deletion while its `DiaryObject` rows are removed. `[runtime confirmed]`
-- Coverage: `DiaryServiceQueryTests`, `DeletionPolicyAuditTests`.
+  unrelated `Recipe` deletion while its owned `DiaryObject` rows are removed.
+  `[runtime confirmed]`
+- Coverage:
+  `DiaryServiceQueryTests`, `DeletionPolicyAuditRootModelTests`.
   `[runtime confirmed]`
 
 ### Photo
 
-- Role: shared asset record reused across recipe photo rows. `[source confirmed]`
-- Explicit delete entrypoints: `DebugContentView`, `DataResetService.deleteAll`,
-  and direct `context.delete(photo)` inside
-  `RecipeService.removePhotoWithOutcome` when the last persisted reference is
-  removed. `[source confirmed]`
-- Cascade source: not cascade-deleted by another model. Deleting a `Photo`
-  cascades to `PhotoObject` through `Photo.objects`. `[source confirmed]`
-- Automatic cleanup: removing a photo from a recipe through
-  `RecipeService.removePhotoWithOutcome` deletes the `Photo` asset when
-  `removedPhoto.objects.orEmpty.count == 1`. `[source confirmed]`
-- Reset / migration path: deleted by `DataResetService.deleteAll`; migration
-  cleanup only removes whole legacy store files. `[source confirmed]`
-- Orphan allowance: mixed. `RecipeService.removePhotoWithOutcome` does not allow
-  a last-referenced asset to survive, but `RecipeService.delete` leaves unique
-  `Photo` rows behind, and `RecipeFormService.update` leaves removed `Photo`
-  rows with no `recipes` but still pinned by detached `PhotoObject` rows.
-  `[runtime confirmed]`
-- Coverage: `RecipePhotoRemovalTests`, `DeletionPolicyAuditTests`.
-  `[runtime confirmed]`
+- Role: shared asset record reused across recipe photo rows and now shown in
+  the photo gallery even when unlinked. `[source confirmed]`
+- Explicit delete entrypoints:
+  `DebugContentView`, `DataResetService.deleteAll`. Ordinary recipe photo
+  removal no longer deletes the asset. `[source confirmed]`
+- Cascade source: deleting a `Photo` cascades to `PhotoObject` through
+  `Photo.objects`. `[source confirmed]`
+- Automatic cleanup: none for the `Photo` asset itself.
+  `RecipeService.removePhotoWithOutcome` is unlink-only and deletes only the
+  `PhotoObject` row. `[runtime confirmed]`
+- Reset / migration / maintenance path:
+  deleted by `DataResetService.deleteAll`; detached-object maintenance never
+  deletes `Photo` roots. `[source confirmed]`
+- Orphan allowance: yes by design. A `Photo` can remain stored with no linked
+  `Recipe`, and the Photos tab now surfaces those assets. `[runtime confirmed]`
+- Coverage:
+  `RecipePhotoRemovalTests`, `DeletionPolicyAuditObjectLifecycleTests`,
+  `DetachedObjectCleanupServiceTests`. `[runtime confirmed]`
 
 ### Category
 
 - Role: shared tag record for classification and filtering. `[source confirmed]`
 - Explicit delete entrypoints:
-  `TagService.deleteWithOutcome(context:category:)`, `DeleteTagButton`,
-  `DeleteCategoryIntent`, `DebugContentView`, `DataResetService.deleteAll`.
-  `[source confirmed]`
-- Cascade source: none declared in source. In-use deletion detaches the
-  relationship and keeps the `Recipe` alive. `[runtime confirmed]`
+  `DebugContentView`, `DataResetService.deleteAll`. Ordinary tag delete was
+  removed from main UI. `DeleteCategoryIntent` remains only as a
+  non-mutating compatibility shim. `[source confirmed]`
+- Cascade source: none declared in source. `[source confirmed]`
 - Automatic cleanup: none. `[source confirmed]`
-- Reset / migration path: deleted by `DataResetService.deleteAll`; migration
-  cleanup only removes whole legacy store files. `[source confirmed]`
-- Orphan allowance: yes. Unused `Category` records can exist until they are
-  explicitly deleted. Deleting an in-use `Category` is allowed and removes the
-  shared record without deleting the `Recipe`. `[runtime confirmed]`
-- Coverage: `TagServiceTests`, `DeletionPolicyAuditTests`. `[runtime confirmed]`
+- Reset / migration / maintenance path:
+  deleted by `DataResetService.deleteAll`; detached-object maintenance never
+  deletes `Category` roots. `[source confirmed]`
+- Orphan allowance: yes by design. Categories remain stored even when no recipe
+  currently uses them. `[source confirmed]`
+- Coverage:
+  `TagServiceTests`, `MutationEffectPropagationTests`. `[runtime confirmed]`
 
 ### Ingredient
 
 - Role: shared tag record reused by ingredient rows. `[source confirmed]`
 - Explicit delete entrypoints:
-  `TagService.deleteWithOutcome(context:ingredient:)`, `DeleteTagButton`,
-  `DeleteIngredientIntent`, `DebugContentView`, `DataResetService.deleteAll`.
-  `[source confirmed]`
-- Cascade source: not cascade-deleted by another model. Deleting an
-  `Ingredient` cascades to `IngredientObject` through `Ingredient.objects`.
-  `[source confirmed]`
-- Automatic cleanup: none. `[source confirmed]`
-- Reset / migration path: deleted by `DataResetService.deleteAll`; migration
-  cleanup only removes whole legacy store files. `[source confirmed]`
-- Orphan allowance: yes. `TagService.delete` refuses to delete an in-use
-  `Ingredient`, but `RecipeService.delete` leaves unused `Ingredient` records
-  behind, and `RecipeFormService.update` leaves removed `Ingredient` rows with
-  no `recipes` but still pinned by detached `IngredientObject` rows.
-  `[runtime confirmed]`
-- Coverage: `TagServiceTests`, `DeletionPolicyAuditTests`. `[runtime confirmed]`
+  `DebugContentView`, `DataResetService.deleteAll`. Ordinary tag delete was
+  removed from main UI. `DeleteIngredientIntent` remains only as a
+  non-mutating compatibility shim. `[source confirmed]`
+- Cascade source: deleting an `Ingredient` cascades to `IngredientObject`
+  through `Ingredient.objects`. `[source confirmed]`
+- Automatic cleanup: none for the `Ingredient` root itself. `[source confirmed]`
+- Reset / migration / maintenance path:
+  deleted by `DataResetService.deleteAll`; detached-object maintenance never
+  deletes `Ingredient` roots. `[source confirmed]`
+- Orphan allowance: yes by design. Ingredients remain stored even when no
+  recipe currently uses them. `[runtime confirmed]`
+- Coverage:
+  `TagServiceTests`, `DeletionPolicyAuditObjectLifecycleTests`,
+  `DetachedObjectCleanupServiceTests`. `[runtime confirmed]`
 
 ### DiaryObject
 
-- Role: parent-owned subobject that places a `Recipe` into a `Diary` section.
+- Role: parent-owned subobject that places a `Recipe` into a `Diary` meal slot.
   `[source confirmed]`
 - Explicit delete entrypoints: no user-facing root delete flow. Removed
-  indirectly by `Diary` deletion, `Recipe` deletion, `DataResetService.deleteAll`,
-  and `DebugContentView`. `[source confirmed]`
+  indirectly by `Diary` deletion, `Recipe` deletion, detached-object
+  maintenance, `DataResetService.deleteAll`, and `DebugContentView`.
+  `[source confirmed]`
 - Cascade source: deleting a `Diary` cascades through `Diary.objects`; deleting
   a `Recipe` cascades through `Recipe.diaryObjects`. `[source confirmed]`
-- Automatic cleanup: none for replaced rows during `DiaryService.update`.
-  Updating a saved `Diary` leaves the previous `DiaryObject` persisted with
-  `diary == nil`. `[runtime confirmed]`
-- Reset / migration path: deleted by `DataResetService.deleteAll`; migration
-  cleanup only removes whole legacy store files. `[source confirmed]`
-- Orphan allowance: mixed. Root deletion removes `DiaryObject` rows, but update
-  flows currently allow detached orphan rows. `[runtime confirmed]`
-- Coverage: `DeletionPolicyAuditTests`. `[runtime confirmed]`
+- Automatic cleanup:
+  `DiaryService.updateWithOutcome` deletes replaced rows after rebuilding the
+  owned collection. `[runtime confirmed]`
+- Reset / migration / maintenance path:
+  `DetachedObjectCleanupService` deletes ownerless rows one time during live
+  app container preparation. `[runtime confirmed]`
+- Orphan allowance: no in steady state. Update flows and one-time maintenance
+  remove detached rows. `[runtime confirmed]`
+- Coverage:
+  `DeletionPolicyAuditObjectLifecycleTests`,
+  `DetachedObjectCleanupServiceTests`. `[runtime confirmed]`
 
 ### PhotoObject
 
@@ -151,39 +162,43 @@ Representative evidence:
   `[source confirmed]`
 - Explicit delete entrypoints: no user-facing root delete flow. Removed
   indirectly by `Recipe` deletion, `RecipeService.removePhotoWithOutcome`,
-  `DataResetService.deleteAll`, and `DebugContentView`. `[source confirmed]`
+  detached-object maintenance, `DataResetService.deleteAll`, and
+  `DebugContentView`. `[source confirmed]`
 - Cascade source: deleting a `Recipe` cascades through `Recipe.photoObjects`;
   deleting a `Photo` cascades through `Photo.objects`. `[source confirmed]`
-- Automatic cleanup: none for replaced rows during `RecipeFormService.update`.
-  Updating a saved `Recipe` leaves the previous `PhotoObject` persisted with
-  `recipe == nil`. `[runtime confirmed]`
-- Reset / migration path: deleted by `DataResetService.deleteAll`; migration
-  cleanup only removes whole legacy store files. `[source confirmed]`
-- Orphan allowance: mixed. Root deletion removes `PhotoObject` rows, but update
-  flows currently allow detached orphan rows. Those rows keep removed `Photo`
-  assets alive through `Photo.objects`. `[runtime confirmed]`
-- Coverage: `RecipePhotoRemovalTests`, `DeletionPolicyAuditTests`.
-  `[runtime confirmed]`
+- Automatic cleanup:
+  `RecipeFormService.updateWithOutcome` deletes replaced rows after rebuilding
+  the owned collection. `[runtime confirmed]`
+- Reset / migration / maintenance path:
+  `DetachedObjectCleanupService` deletes ownerless rows one time during live
+  app container preparation. `[runtime confirmed]`
+- Orphan allowance: no in steady state. Detached rows are no longer tolerated
+  after update flows or maintenance. `[runtime confirmed]`
+- Coverage:
+  `RecipePhotoRemovalTests`, `DeletionPolicyAuditObjectLifecycleTests`,
+  `DetachedObjectCleanupServiceTests`. `[runtime confirmed]`
 
 ### IngredientObject
 
 - Role: parent-owned subobject that keeps ingredient order, amount text, and
   the link to `Ingredient`. `[source confirmed]`
 - Explicit delete entrypoints: no user-facing root delete flow. Removed
-  indirectly by `Recipe` deletion, `DataResetService.deleteAll`, and
-  `DebugContentView`. `[source confirmed]`
-- Cascade source: deleting a `Recipe` cascades through `Recipe.ingredientObjects`;
-  deleting an `Ingredient` cascades through `Ingredient.objects`.
-  `[source confirmed]`
-- Automatic cleanup: none for replaced rows during `RecipeFormService.update`.
-  Updating a saved `Recipe` leaves the previous `IngredientObject` persisted
-  with `recipe == nil`. `[runtime confirmed]`
-- Reset / migration path: deleted by `DataResetService.deleteAll`; migration
-  cleanup only removes whole legacy store files. `[source confirmed]`
-- Orphan allowance: mixed. Root deletion removes `IngredientObject` rows, but
-  update flows currently allow detached orphan rows. Those rows keep removed
-  `Ingredient` records alive through `Ingredient.objects`. `[runtime confirmed]`
-- Coverage: `DeletionPolicyAuditTests`. `[runtime confirmed]`
+  indirectly by `Recipe` deletion, detached-object maintenance,
+  `DataResetService.deleteAll`, and `DebugContentView`. `[source confirmed]`
+- Cascade source: deleting a `Recipe` cascades through
+  `Recipe.ingredientObjects`; deleting an `Ingredient` cascades through
+  `Ingredient.objects`. `[source confirmed]`
+- Automatic cleanup:
+  `RecipeFormService.updateWithOutcome` deletes replaced rows after rebuilding
+  the owned collection. `[runtime confirmed]`
+- Reset / migration / maintenance path:
+  `DetachedObjectCleanupService` deletes ownerless rows one time during live
+  app container preparation. `[runtime confirmed]`
+- Orphan allowance: no in steady state. Detached rows are no longer tolerated
+  after update flows or maintenance. `[runtime confirmed]`
+- Coverage:
+  `DeletionPolicyAuditObjectLifecycleTests`,
+  `DetachedObjectCleanupServiceTests`. `[runtime confirmed]`
 
 ## 2) Deletion Trigger Classification
 
@@ -192,18 +207,19 @@ Representative evidence:
 - `Recipe`: explicit delete from detail UI, list UI, and App Intent.
   `[source confirmed]`
 - `Diary`: explicit delete from detail UI and App Intent. `[source confirmed]`
-- `Category`: explicit delete from tag UI and App Intent, even when in use.
-  `[runtime confirmed]`
-- `Ingredient`: explicit delete from tag UI and App Intent, but denied while
-  any `Recipe` still references it. `[runtime confirmed]`
+- No ordinary user-facing delete remains for `Photo`, `Category`, or
+  `Ingredient`. `[source confirmed]`
 
 ### Explicit full deletion or maintenance deletion
 
 - `DataResetService.deleteAll` deletes all eight persisted model types when run
   against saved data. `[runtime confirmed]`
-- `DatabaseMigrator.removeLegacyStoreFilesIfNeeded` removes legacy store files
-  after relocation validation. This is store-file cleanup, not per-row record
+- `DatabaseMigrator.removeLegacyStoreFilesIfNeeded` removes whole legacy store
+  files after relocation validation. This is store-file cleanup, not typed row
   cleanup. `[source confirmed]`
+- `DetachedObjectCleanupService.runIfNeeded` deletes ownerless
+  `DiaryObject`, `PhotoObject`, and `IngredientObject` rows one time during
+  live app container preparation. `[runtime confirmed]`
 
 ### Debug or developer deletion
 
@@ -213,128 +229,65 @@ Representative evidence:
 
 ### App-driven cleanup
 
-- `RecipeService.removePhotoWithOutcome` deletes the `PhotoObject` row and also
-  deletes the `Photo` asset when the removed photo has exactly one persisted
-  object reference. `[runtime confirmed]`
-- No matching app-driven cleanup exists for `Ingredient`, `Category`, or any of
-  the update flows that replace child rows. `[source confirmed]`
+- `RecipeFormService.updateWithOutcome` deletes replaced `PhotoObject` and
+  `IngredientObject` rows after rebuilding the new owned collections.
+  `[runtime confirmed]`
+- `DiaryService.updateWithOutcome` deletes replaced `DiaryObject` rows after
+  rebuilding the new owned collection. `[runtime confirmed]`
+- `RecipeService.removePhotoWithOutcome` deletes the `PhotoObject` row and
+  unlinks the `Photo` asset, but it no longer deletes the asset itself.
+  `[runtime confirmed]`
 
 ## 3) Type Comparison Review
 
-- `Photo` is the most policy-complex shared record. It is treated as a
-  recipe-linked gallery asset in product copy and browse UI, but its deletion
-  semantics are surface-dependent. `[source confirmed]`
-- `Category` and `Ingredient` are both shared tags, but they follow different
-  delete rules. `Category` can be deleted while in use and the `Recipe`
-  survives; `Ingredient` cannot be deleted while in use. `[runtime confirmed]`
-- `DiaryObject`, `PhotoObject`, and `IngredientObject` look like parent-owned
-  rows by model design, and root deletions treat them that way. `[source confirmed]`
-- The same three subobject types are not consistently parent-owned in update
-  flows. Replacing parent collections leaves detached rows behind instead of
-  deleting them. `[runtime confirmed]`
-- `PhotoObject` and `IngredientObject` are especially important because their
-  detached rows keep old shared records alive through inverse relationships.
-  That means a recipe update can create both a detached row and a retained
-  asset or tag record in one step. `[runtime confirmed]`
+- `Photo` is now a conservative shared asset. It remains stored after unlink,
+  and the Photos tab presents all stored assets instead of only
+  recipe-linked assets. `[runtime confirmed]`
+- `Category` and `Ingredient` are now aligned. Both are shared tags with
+  rename support but no ordinary delete surface. `[source confirmed]`
+- `DiaryObject`, `PhotoObject`, and `IngredientObject` are now consistently
+  parent-owned rows. Root deletion, update flows, and one-time maintenance all
+  treat them as disposable when detached. `[runtime confirmed]`
+- `Recipe` and `Diary` remain the only ordinary delete exceptions in the main
+  product surface. `[source confirmed]`
 
 ## 4) Orphan Policy Assessment
 
-- Cookle does not currently enforce a repository-wide "no orphan data" policy.
-  `[runtime confirmed]`
-- Parent root deletion behaves mostly as expected:
-  `Recipe` deletion removes `PhotoObject`, `IngredientObject`, and `DiaryObject`
-  rows; `Diary` deletion removes `DiaryObject` rows. `[runtime confirmed]`
-- Shared records are not treated consistently:
-  `Ingredient` orphans are allowed, `Category` in-use delete is allowed, and
-  `Photo` orphan cleanup is enforced only in `removePhotoWithOutcome`.
-  `[runtime confirmed]`
-- Update flows are the clearest consistency gap. Replacing recipe photos,
-  recipe ingredients, or diary rows leaves detached subobjects behind instead
-  of deleting them. `[runtime confirmed]`
-- Because detached `PhotoObject` and `IngredientObject` rows remain persisted,
-  the repository can retain records that are no longer reachable from any
-  `Recipe` while still appearing "referenced" through subobject inverses.
-  `[runtime confirmed]`
+- Cookle does not enforce a global "no orphan data" rule across every model.
+  Instead, it now uses an explicit split policy. `[runtime confirmed]`
+- Shared and root records are preserved conservatively:
+  `Photo`, `Category`, `Ingredient`, and shared records behind deleted or
+  updated parents are allowed to remain stored. `[runtime confirmed]`
+- Parent-owned Object rows are not allowed to remain detached in the intended
+  steady state. Update flows delete replaced rows, and one-time maintenance
+  clears legacy detached rows. `[runtime confirmed]`
+- Root deletion still removes owned child rows through cascade, while shared
+  roots remain stored. `[runtime confirmed]`
 
-## 5) Inconsistencies and Policy Gaps
+## 5) Remaining Exceptions and Policy Gaps
 
-- `Photo` deletion policy depends on surface:
-  removing one photo from a recipe can delete the last asset, but deleting the
-  whole recipe keeps the same asset. `[runtime confirmed]`
-- `Category` and `Ingredient` use different in-use delete rules without an
-  explicit product rationale recorded in code comments or decision documents.
+- `Recipe` and `Diary` still expose ordinary delete surfaces as deliberate
+  product exceptions to the conservative keep-default rule. `[source confirmed]`
+- `DebugContentView` still bypasses all ordinary policy checks and can delete
+  any persisted model directly. `[source confirmed]`
+- `DeleteCategoryIntent` and `DeleteIngredientIntent` still exist for shortcut
+  compatibility, but they now return non-mutating rejection dialogs rather than
+  deleting records. `[source confirmed]`
+- Detached-object maintenance runs only from live app container preparation.
+  Preview and in-memory test containers do not invoke it automatically unless a
+  test calls the service directly. `[source confirmed]`
+- Cookle still has no ordinary explicit delete for `Photo`. That is intentional
+  in the current product phase and remains a separate future decision.
   `[source confirmed]`
-- Parent-owned subobjects are only reliably non-orphaned on root deletion, not
-  on update. This undermines the apparent ownership model in
-  `Recipe.photoObjects`, `Recipe.ingredientObjects`, and `Diary.objects`.
-  `[runtime confirmed]`
-- `DebugContentView` bypasses all service-layer deletion rules, so it can
-  produce states that normal user flows would block. `[source confirmed]`
-- Store migration cleanup is coarse-grained file cleanup rather than typed row
-  cleanup. That is acceptable, but it should not be confused with a model-level
-  deletion policy. `[source confirmed]`
 
-## 6) Recommended Deletion Policy
+## 6) Current Working Policy
 
-### Working Principle
-
-- While Cookle is still small and the long-term data model is not yet fully
-  settled, non-Object persisted data should be deleted conservatively.
-  User-important records should not disappear just because the current model
-  shape happens to make them look unused.
-- `DiaryObject`, `PhotoObject`, and `IngredientObject` are explanatory
-  parent-owned rows. They are not durable user-owned records in their own
-  right, so losing the parent should also remove the row.
-- Prefer unlink over delete for non-Object persisted records.
-  Detaching a relation is safer than deleting a record when the product meaning
-  of that record is still evolving.
-- Keep `Delete All` and debug raw deletion as explicit exception paths.
-- Treat ordinary root-model delete flows as case-by-case exceptions.
-  A delete surface can remain if it was deliberately designed and its product
-  meaning is clear, but ad-hoc or accidental delete behavior should be removed.
-
-### Desired Steady-State Policy by Type
-
-- `DiaryObject`, `PhotoObject`, `IngredientObject`:
-  parent-owned rows; they should never persist detached. `[runtime confirmed]`
-- `Photo`, `Category`, `Ingredient`:
-  shared non-Object records; default to keep, even when a link is removed,
-  unless an explicit and clearly intentional delete flow says otherwise.
-- `Recipe`, `Diary`:
-  root records; do not assume they must be removed or preserved globally.
-  Evaluate each existing delete surface by whether it is clearly intentional and
-  product-legible.
-- `Delete All` and debug raw delete:
-  keep as exception mechanisms rather than using them as evidence of ordinary
-  product policy.
-
-### Recommended Implementation Order
-
-- First, fix detached Object cleanup:
-  `RecipeFormService.updateWithOutcome` should remove replaced `PhotoObject` and
-  `IngredientObject`, and `DiaryService.updateWithOutcome` should remove
-  replaced `DiaryObject`. This is the clearest current consistency defect.
-- Second, stop implicit `Photo` asset deletion in
-  `RecipeService.removePhotoWithOutcome` and make the operation unlink-only by
-  default.
-- Third, re-evaluate ordinary delete surfaces for `Recipe` and `Diary`.
-  Keep them only if they are judged to be deliberate, explicit product actions
-  rather than incidental convenience paths.
-- Fourth, re-evaluate the current `Category` and `Ingredient` split and either
-  justify it explicitly or simplify it.
-- Fifth, keep the current audit tests as observation coverage until each policy
-  change lands, then flip only the expectations that intentionally changed.
-
-### Recommendation
-
-- Recommend a conservative deletion posture for all non-Object persisted models.
-  Under the current product phase, it is safer to preserve `Photo`, `Category`,
-  `Ingredient`, and possibly `Recipe` / `Diary` than to let them disappear
-  through implicit cleanup. `[runtime confirmed]`
-- Recommend aggressive cleanup only for Object types.
-  Detached `DiaryObject`, `PhotoObject`, and `IngredientObject` rows should be
-  treated as invalid persisted state rather than tolerated leftovers.
-  `[runtime confirmed]`
-- Recommend documenting ordinary delete surfaces separately from storage cleanup.
-  This keeps "the user explicitly deleted something" distinct from "the app
-  silently cleaned up a record because a relationship changed."
+- Keep `Recipe` and `Diary` ordinary delete as explicit exceptions.
+- Keep non-Object shared records conservatively by default:
+  `Photo`, `Category`, and `Ingredient` should survive unlink operations.
+- Delete parent-owned Object rows aggressively:
+  `DiaryObject`, `PhotoObject`, and `IngredientObject` should not persist once
+  their parent relation is gone.
+- Prefer unlink over delete when mutating shared records.
+- Keep `Delete All` and debug raw delete as explicit maintenance exceptions,
+  not as ordinary product policy.

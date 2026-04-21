@@ -25,19 +25,15 @@ struct RecipeFormPhotoThumbnailView: View {
     }
 
     @ViewBuilder var photoRemovalMenu: some View {
-        if let photoRemovalBehavior {
+        if photoRemovalBehavior != nil {
             Menu {
                 Button(role: .destructive) {
                     pendingPhotoRemovalIndex = index
                     isPhotoRemovalDialogPresented = true
                 } label: {
                     Label(
-                        photoRemovalBehavior == .deletePhoto
-                            ? "Delete Photo"
-                            : "Detach from Recipe",
-                        systemImage: photoRemovalBehavior == .deletePhoto
-                            ? "trash"
-                            : "link.badge.minus"
+                        "Remove from Recipe",
+                        systemImage: "link.badge.minus"
                     )
                 }
             } label: {

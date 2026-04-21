@@ -1,5 +1,4 @@
 import AppIntents
-import SwiftData
 
 struct DeleteCategoryIntent: AppIntent {
     static var title: LocalizedStringResource {
@@ -9,26 +8,16 @@ struct DeleteCategoryIntent: AppIntent {
     @Parameter(title: "Category")
     private var value: String
 
-    @Dependency private var modelContainer: ModelContainer
-    @Dependency private var tagActionService: TagActionService
-
     @MainActor
-    func perform() async throws -> some IntentResult & ProvidesDialog {
-        try await requestDeleteConfirmation(
-            dialog: .init(stringLiteral: "Delete category \(value)?")
-        )
+    func perform() -> some IntentResult & ProvidesDialog {
+        let message =
+            "Category deletion is currently unavailable for \(value). " +
+            "Rename it or remove it from recipes instead."
 
-        guard let category = try TagIntentSupport.category(
-            named: value,
-            context: modelContainer.mainContext
-        ) else {
-            throw TagMutationIntentError.categoryNotFound
-        }
-
-        try await tagActionService.delete(
-            context: modelContainer.mainContext,
-            category: category
+        return .result(
+            dialog: .init(
+                stringLiteral: message
+            )
         )
-        return .result(dialog: "Deleted category")
     }
 }

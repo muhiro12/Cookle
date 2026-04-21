@@ -17,6 +17,7 @@ public enum CooklePreferenceCatalog {
             descriptors.lastOpenedRecipeID,
             descriptors.lastLaunchedAppVersion,
             descriptors.activeCookingSessionSnapshot,
+            descriptors.detachedObjectCleanupCompleted,
             descriptors.pendingIntentDeepLinkURL
         ]
     }

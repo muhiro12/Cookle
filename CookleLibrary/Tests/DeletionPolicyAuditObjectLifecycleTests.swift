@@ -7,11 +7,11 @@ import Testing
 @Suite("DeletionPolicyAudit.ObjectLifecycle")
 struct DeletionPolicyAuditObjectLifecycleTests {
     @Test
-    func update_recipe_replaces_photo_objects_but_leaves_removed_photo_asset_orphaned() throws {
+    func update_recipe_replaces_photo_objects_and_cleans_up_old_rows() throws {
         let context = makeTestContext()
-        let firstPhotoData = makeAuditPhotoData("first")
-        let secondPhotoData = makeAuditPhotoData("second")
-        let recipe = makeAuditRecipe(
+        let firstPhotoData = DeletionPolicyAuditSupport.makePhotoData("first")
+        let secondPhotoData = DeletionPolicyAuditSupport.makePhotoData("second")
+        let recipe = DeletionPolicyAuditSupport.makeRecipe(
             context: context,
             name: "Photo Update",
             photos: [firstPhotoData],
@@ -23,7 +23,7 @@ struct DeletionPolicyAuditObjectLifecycleTests {
         RecipeFormService.update(
             context: context,
             recipe: recipe,
-            draft: auditDraft(
+            draft: DeletionPolicyAuditSupport.draft(
                 name: "Photo Update",
                 photos: [secondPhotoData],
                 ingredients: []
@@ -31,34 +31,28 @@ struct DeletionPolicyAuditObjectLifecycleTests {
         )
         try context.save()
 
-        let verificationContext = auditReloadedContext(from: context)
+        let verificationContext = DeletionPolicyAuditSupport.reloadedContext(from: context)
         let persistedRecipe = try #require(
             verificationContext.fetch(.recipes(.all)).first
         )
         let currentPhoto = try #require(persistedRecipe.orderedPhotos.first)
         let photoObjects = try verificationContext.fetch(FetchDescriptor<PhotoObject>())
-        let removedPhoto = try requirePhoto(
+        let removedPhoto = try DeletionPolicyAuditSupport.requirePhoto(
             matching: firstPhotoData.data,
             in: try verificationContext.fetch(.photos(.all))
         )
-        let removedPhotoObject = try requirePhotoObject(
-            matching: firstPhotoData.data,
-            in: photoObjects
-        )
-
-        #expect(photoObjects.count == 2)
-        #expect(try auditCount(of: Photo.self, in: verificationContext) == 2)
+        #expect(photoObjects.count == 1)
+        #expect(try DeletionPolicyAuditSupport.count(of: Photo.self, in: verificationContext) == 2)
         #expect(persistedRecipe.orderedPhotoObjects.count == 1)
         #expect(currentPhoto.data == secondPhotoData.data)
         #expect(removedPhoto.recipes.orEmpty.isEmpty)
-        #expect(removedPhoto.objects.orEmpty.count == 1)
-        #expect(removedPhotoObject.recipe == nil)
+        #expect(removedPhoto.objects.orEmpty.isEmpty)
     }
 
     @Test
-    func update_recipe_replaces_ingredient_objects_but_leaves_removed_ingredient_orphaned() throws {
+    func update_recipe_replaces_ingredient_objects_and_cleans_up_old_rows() throws {
         let context = makeTestContext()
-        let recipe = makeAuditRecipe(
+        let recipe = DeletionPolicyAuditSupport.makeRecipe(
             context: context,
             name: "Ingredient Update",
             photos: [],
@@ -70,7 +64,7 @@ struct DeletionPolicyAuditObjectLifecycleTests {
         RecipeFormService.update(
             context: context,
             recipe: recipe,
-            draft: auditDraft(
+            draft: DeletionPolicyAuditSupport.draft(
                 name: "Ingredient Update",
                 photos: [],
                 ingredients: [.init(ingredient: "Pepper", amount: "1 tsp")]
@@ -78,7 +72,7 @@ struct DeletionPolicyAuditObjectLifecycleTests {
         )
         try context.save()
 
-        let verificationContext = auditReloadedContext(from: context)
+        let verificationContext = DeletionPolicyAuditSupport.reloadedContext(from: context)
         let persistedRecipe = try #require(
             verificationContext.fetch(.recipes(.all)).first
         )
@@ -92,31 +86,30 @@ struct DeletionPolicyAuditObjectLifecycleTests {
             named: "Salt",
             in: try verificationContext.fetch(.ingredients(.all))
         )
-        let removedIngredientObject = try requireIngredientObject(
-            named: "Salt",
-            in: ingredientObjects
+        #expect(ingredientObjects.count == 1)
+        #expect(
+            try DeletionPolicyAuditSupport.count(
+                of: Ingredient.self,
+                in: verificationContext
+            ) == 2
         )
-
-        #expect(ingredientObjects.count == 2)
-        #expect(try auditCount(of: Ingredient.self, in: verificationContext) == 2)
         #expect(persistedRecipe.ingredientObjects.orEmpty.count == 1)
         #expect(currentIngredient.value == "Pepper")
         #expect(removedIngredient.recipes.orEmpty.isEmpty)
-        #expect(removedIngredient.objects.orEmpty.count == 1)
-        #expect(removedIngredientObject.recipe == nil)
+        #expect(removedIngredient.objects.orEmpty.isEmpty)
     }
 
     @Test
-    func update_diary_replaces_old_diary_objects() throws {
+    func update_diary_replaces_old_diary_objects_and_cleans_up_old_rows() throws {
         let context = makeTestContext()
-        let firstRecipe = makeAuditRecipe(
+        let firstRecipe = DeletionPolicyAuditSupport.makeRecipe(
             context: context,
             name: "Breakfast",
             photos: [],
             ingredients: [],
             categories: []
         )
-        let secondRecipe = makeAuditRecipe(
+        let secondRecipe = DeletionPolicyAuditSupport.makeRecipe(
             context: context,
             name: "Lunch",
             photos: [],
@@ -147,38 +140,18 @@ struct DeletionPolicyAuditObjectLifecycleTests {
         )
         try context.save()
 
-        let verificationContext = auditReloadedContext(from: context)
+        let verificationContext = DeletionPolicyAuditSupport.reloadedContext(from: context)
         let persistedDiary = try #require(
             verificationContext.fetch(.diaries(.all)).first
         )
         let diaryObjects = try verificationContext.fetch(FetchDescriptor<DiaryObject>())
-        let attachedObject = try #require(
-            persistedDiary.objects.orEmpty.first
+        try assertUpdatedDiaryObjects(
+            diaryObjects: diaryObjects,
+            persistedDiary: persistedDiary,
+            removedObjectID: removedObjectID,
+            secondRecipe: secondRecipe
         )
-        let removedObject = try #require(
-            diaryObjects.first { diaryObject in
-                diaryObject.persistentModelID == removedObjectID
-            }
-        )
-
-        #expect(diaryObjects.count == 2)
-        #expect(persistedDiary.objects.orEmpty.count == 1)
-        #expect(attachedObject.persistentModelID != removedObjectID)
-        #expect(attachedObject.recipe?.persistentModelID == secondRecipe.persistentModelID)
-        #expect(attachedObject.type == .lunch)
-        #expect(removedObject.diary == nil)
     }
-}
-
-private func requirePhotoObject(
-    matching data: Data,
-    in photoObjects: [PhotoObject]
-) throws -> PhotoObject {
-    try #require(
-        photoObjects.first { photoObject in
-            photoObject.photo?.data == data
-        }
-    )
 }
 
 private func requireIngredient(
@@ -192,13 +165,24 @@ private func requireIngredient(
     )
 }
 
-private func requireIngredientObject(
-    named value: String,
-    in ingredientObjects: [IngredientObject]
-) throws -> IngredientObject {
-    try #require(
-        ingredientObjects.first { ingredientObject in
-            ingredientObject.ingredient?.value == value
-        }
+private func assertUpdatedDiaryObjects(
+    diaryObjects: [DiaryObject],
+    persistedDiary: Diary,
+    removedObjectID: PersistentIdentifier,
+    secondRecipe: Recipe
+) throws {
+    let attachedObject = try #require(
+        persistedDiary.objects.orEmpty.first
+    )
+
+    #expect(diaryObjects.count == 1)
+    #expect(persistedDiary.objects.orEmpty.count == 1)
+    #expect(attachedObject.persistentModelID != removedObjectID)
+    #expect(attachedObject.recipe?.persistentModelID == secondRecipe.persistentModelID)
+    #expect(attachedObject.type == .lunch)
+    #expect(
+        diaryObjects.contains { diaryObject in
+            diaryObject.persistentModelID == removedObjectID
+        } == false
     )
 }

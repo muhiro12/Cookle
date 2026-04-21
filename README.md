@@ -13,7 +13,8 @@ repository contains the full iOS project together with its shared Swift package.
 - Cooking diary that organizes breakfasts, lunches, and dinners per day so you
   can reflect on what you prepared.
 - Dedicated photo gallery that separates imported images from Image Playground
-  creations while keeping them linked to recipes.
+  creations while preserving stored photo assets even after they are unlinked
+  from recipes.
 - Ingredient and category tag management with search and filtering to keep large
   collections tidy.
 - Full-text search across recipe names, ingredients, and categories with smart

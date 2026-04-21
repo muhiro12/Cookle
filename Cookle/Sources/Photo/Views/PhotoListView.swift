@@ -55,7 +55,7 @@ private extension PhotoListView {
         ContentUnavailableView {
             Label("No Photos Yet", systemImage: "photo.on.rectangle")
         } description: {
-            Text("Add recipe photos to browse them here.")
+            Text("Add photos to browse them here.")
         } actions: {
             AddRecipeButton()
         }
@@ -65,11 +65,11 @@ private extension PhotoListView {
         [
             (
                 source: .photosPicker,
-                photos: photos.filter(\.recipes.isNotEmpty)
+                photos: photos
             ),
             (
                 source: .imagePlayground,
-                photos: imagePlaygrounds.filter(\.recipes.isNotEmpty)
+                photos: imagePlaygrounds
             )
         ]
         .filter(\.photos.isNotEmpty)

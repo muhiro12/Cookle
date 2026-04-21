@@ -7,22 +7,22 @@ import Testing
 @Suite("RecipePhotoRemoval")
 struct RecipePhotoRemovalTests {
     @Test
-    func persistedPhotoBehaviorDeletesOrphanedAsset() {
+    func persistedPhotoBehaviorRemovesUniqueAssetFromRecipe() {
         #expect(
             RecipePhotoRemovalBehavior.persistedPhotoBehavior(
                 draftReferenceCount: 1,
                 persistedReferenceCountOutsideRecipe: 0
-            ) == .deletePhoto
+            ) == .removeFromRecipe
         )
     }
 
     @Test
-    func persistedPhotoBehaviorDetachesSharedAsset() {
+    func persistedPhotoBehaviorRemovesSharedAssetFromRecipe() {
         #expect(
             RecipePhotoRemovalBehavior.persistedPhotoBehavior(
                 draftReferenceCount: 1,
                 persistedReferenceCountOutsideRecipe: 1
-            ) == .detachFromRecipe
+            ) == .removeFromRecipe
         )
     }
 
@@ -57,12 +57,13 @@ struct RecipePhotoRemovalTests {
     }
 
     @Test
-    func removePhotoWithOutcome_deletesPhotoAssetWhenItBecomesOrphaned() throws {
+    func removePhotoWithOutcome_keepsPhotoAssetWhenItBecomesUnlinked() throws {
         let context = makeTestContext()
+        let photoData = makePhotoData("solo")
         let recipe = makeRecipe(
             context: context,
             name: "Solo",
-            photos: [makePhotoData("solo")]
+            photos: [photoData]
         )
         let photoObject = try #require(recipe.photoObjects?.first)
 
@@ -71,11 +72,21 @@ struct RecipePhotoRemovalTests {
             recipe: recipe,
             photoObject: photoObject
         )
+        try context.save()
+
+        let verificationContext = ModelContext(
+            context.container
+        )
+        let photos = try verificationContext.fetch(.photos(.all))
+        let remainingPhoto = try #require(photos.first)
 
         #expect(outcome.effects == [.recipeDataChanged, .notificationPlanChanged])
         #expect((recipe.photoObjects ?? []).isEmpty)
         #expect((recipe.photos ?? []).isEmpty)
-        #expect(try context.fetch(.photos(.all)).isEmpty)
+        #expect(photos.count == 1)
+        #expect(remainingPhoto.data == photoData.data)
+        #expect(remainingPhoto.recipes.orEmpty.isEmpty)
+        #expect(remainingPhoto.objects.orEmpty.isEmpty)
     }
 }
 

@@ -72,7 +72,6 @@ private extension TagView {
     var actionSection: some View {
         Section {
             EditTagButton<T>()
-            DeleteTagButton<T>()
         } header: {
             Spacer()
         }

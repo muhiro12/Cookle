@@ -154,6 +154,7 @@ public enum DiaryService {
         dinners: [Recipe],
         note: String
     ) -> MutationOutcome<Diary> {
+        let previousObjects = diary.objects.orEmpty
         let objects = zip(breakfasts.indices, breakfasts).map { index, recipe in
             DiaryObject.create(context: context, recipe: recipe, type: .breakfast, order: index + 1)
         } + zip(lunches.indices, lunches).map { index, recipe in
@@ -166,6 +167,7 @@ public enum DiaryService {
             objects: objects,
             note: note
         )
+        previousObjects.forEach(context.delete)
         return .init(
             value: diary,
             effects: diaryMutationEffects

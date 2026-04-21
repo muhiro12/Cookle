@@ -141,31 +141,36 @@ public enum RecipeFormService {
         recipe: Recipe,
         draft: RecipeFormDraft
     ) -> MutationOutcome<Recipe> {
+        let previousPhotoObjects = recipe.photoObjects.orEmpty
+        let previousIngredientObjects = recipe.ingredientObjects.orEmpty
+        let updatedPhotoObjects = zip(
+            draft.photos.indices,
+            draft.photos
+        ).map { index, photoData in
+            PhotoObject.create(
+                context: context,
+                photoData: photoData,
+                order: index + 1
+            )
+        }
+        let updatedIngredientObjects = zip(
+            draft.ingredients.indices,
+            draft.ingredients
+        ).map { index, ingredientInput in
+            IngredientObject.create(
+                context: context,
+                ingredient: ingredientInput.ingredient,
+                amount: ingredientInput.amount,
+                order: index + 1
+            )
+        }
+
         recipe.update(
             name: draft.name,
-            photos: zip(
-                draft.photos.indices,
-                draft.photos
-            ).map { index, photoData in
-                PhotoObject.create(
-                    context: context,
-                    photoData: photoData,
-                    order: index + 1
-                )
-            },
+            photos: updatedPhotoObjects,
             servingSize: draft.servingSize,
             cookingTime: draft.cookingTime,
-            ingredients: zip(
-                draft.ingredients.indices,
-                draft.ingredients
-            ).map { index, ingredientInput in
-                IngredientObject.create(
-                    context: context,
-                    ingredient: ingredientInput.ingredient,
-                    amount: ingredientInput.amount,
-                    order: index + 1
-                )
-            },
+            ingredients: updatedIngredientObjects,
             steps: draft.steps,
             categories: draft.categories.map { categoryValue in
                 Category.create(
@@ -175,6 +180,8 @@ public enum RecipeFormService {
             },
             note: draft.note
         )
+        previousPhotoObjects.forEach(context.delete)
+        previousIngredientObjects.forEach(context.delete)
         return .init(
             value: recipe,
             effects: recipeMutationEffects

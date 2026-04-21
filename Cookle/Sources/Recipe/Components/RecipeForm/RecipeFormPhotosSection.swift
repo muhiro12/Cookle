@@ -194,14 +194,10 @@ private extension RecipeFormPhotosSection {
     }
 
     var photoRemovalTitle: String {
-        switch pendingPhotoRemovalBehavior {
-        case .deletePhoto:
-            return "Delete Photo"
-        case .detachFromRecipe:
-            return "Detach from Recipe"
-        case nil:
+        guard pendingPhotoRemovalBehavior != nil else {
             return ""
         }
+        return "Remove from Recipe"
     }
 
     var photoRemovalMessage: String {
@@ -209,20 +205,14 @@ private extension RecipeFormPhotosSection {
             return ""
         }
 
-        switch pendingPhotoRemovalBehavior {
-        case .deletePhoto:
-            return """
-                This photo is only linked to \(recipe.name). Deleting it removes \
-                the relation and the stored photo asset.
-                """
-        case .detachFromRecipe:
-            return """
-                This removes the photo from \(recipe.name) and keeps the stored photo \
-                anywhere else it is still linked.
-                """
-        case nil:
+        guard pendingPhotoRemovalBehavior != nil else {
             return ""
         }
+
+        return """
+            This removes the photo from \(recipe.name) and keeps the stored photo \
+            in Photos.
+            """
     }
 
     var pendingPhotoRemovalBehavior: RecipePhotoRemovalBehavior? {

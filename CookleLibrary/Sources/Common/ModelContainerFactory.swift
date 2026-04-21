@@ -40,6 +40,12 @@ public enum ModelContainerFactory {
         let currentContainer = try makeModelContainer(
             cloudKitDatabase: cloudKitDatabase
         )
+        let cleanupContext = ModelContext(
+            currentContainer
+        )
+        _ = try DetachedObjectCleanupService.runIfNeeded(
+            context: cleanupContext
+        )
         let cleanupOutcome = try cleanupLegacyStoreFilesIfNeeded(
             fileManager: fileManager,
             legacyURL: legacyURL,

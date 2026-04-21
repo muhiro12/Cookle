@@ -135,7 +135,8 @@ Cookle uses adaptive tab navigation.
 
 ### Photo Library
 
-- Show a gallery of photos linked to recipes.
+- Show a gallery of all stored photos, including photos that are no longer
+  linked to recipes.
 - Separate gallery sections by photo source:
   - Photos
   - Image Playground
@@ -152,8 +153,7 @@ Cookle uses adaptive tab navigation.
   tag.
 - Search tags by text.
 - Rename tags from the tag detail flow or App Intents.
-- Delete categories freely.
-- Prevent deletion of ingredients that are still used by recipes.
+- Do not expose ordinary tag deletion from the main product surfaces.
 - Rebuild scheduled recipe suggestion notifications after tag mutations so
   notification content stays aligned with ingredient metadata.
 
@@ -219,7 +219,7 @@ Cookle uses adaptive tab navigation.
   - infer a recipe from text on iOS 26.0+
   - create, update, show, and delete diaries
   - add a recipe to today's diary
-  - rename and delete ingredient and category tags
+  - rename ingredient and category tags
   - open settings, subscription, or license destinations
 - App Intents use the same shared model container and workflow services as the
   app instead of owning separate business logic.

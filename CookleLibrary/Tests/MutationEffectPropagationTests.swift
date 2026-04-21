@@ -130,13 +130,14 @@ struct MutationEffectPropagationTests {
             ingredient: ingredient,
             value: "Sea Salt"
         )
-        let deleteOutcome = TagService.deleteWithOutcome(
+        let categoryRenameOutcome = try TagService.renameWithOutcome(
             context: context,
-            category: category
+            category: category,
+            value: "Supper"
         )
 
         #expect(renameOutcome.effects == [.notificationPlanChanged])
-        #expect(deleteOutcome.effects == [.notificationPlanChanged])
+        #expect(categoryRenameOutcome.effects == [.notificationPlanChanged])
     }
 
     @Test

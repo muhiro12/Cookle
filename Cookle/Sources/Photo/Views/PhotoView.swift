@@ -54,19 +54,24 @@ struct PhotoView: View {
 
     var recipeSection: some View {
         Section {
-            ForEach(photo.recipes.orEmpty) { recipe in
-                Button {
-                    self.recipe = recipe
-                } label: {
-                    RecipeLabel()
-                        .labelStyle(.titleOnly)
-                        .environment(recipe)
-                        .cookleButtonRowContent()
+            if photo.recipes.orEmpty.isEmpty {
+                Text("Not linked to any recipe.")
+                    .foregroundStyle(.secondary)
+            } else {
+                ForEach(photo.recipes.orEmpty) { recipe in
+                    Button {
+                        self.recipe = recipe
+                    } label: {
+                        RecipeLabel()
+                            .labelStyle(.titleOnly)
+                            .environment(recipe)
+                            .cookleButtonRowContent()
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
             }
         } header: {
-            Text("Recipe")
+            Text("Recipes")
         }
     }
 

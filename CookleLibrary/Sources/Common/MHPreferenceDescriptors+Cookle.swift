@@ -90,6 +90,15 @@ public extension MHPreferenceDescriptors {
         )
     }
 
+    /// One-time maintenance flag for detached parent-owned object cleanup.
+    var detachedObjectCleanupCompleted: MHBoolPreferenceDescriptor {
+        .init(
+            storageKey: CookleUserDefaultsKeys.Standard.detachedObjectCleanupCompleted.rawValue,
+            defaultSelection: .standard,
+            default: false
+        )
+    }
+
     /// Pending deep link handoff shared across app targets.
     var pendingIntentDeepLinkURL: MHStringPreferenceDescriptor {
         .init(
