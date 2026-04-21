@@ -1,3 +1,4 @@
+import CryptoKit
 import Foundation
 import UIKit
 
@@ -113,25 +114,23 @@ nonisolated private extension NotificationAttachmentStore {
     }
 
     func attachmentFileName(_ stableIdentifier: String) -> String {
-        let sanitizedIdentifier = sanitizedFileNameComponent(
+        let hashedIdentifier = hashedFileNameComponent(
             from: stableIdentifier
         )
         return NotificationConstants.attachmentFileNamePrefix
-            + sanitizedIdentifier
+            + hashedIdentifier
             + NotificationConstants.attachmentFileNameSuffix
     }
 
-    func sanitizedFileNameComponent(from value: String) -> String {
-        let allowedCharacters = CharacterSet.alphanumerics.union(
-            .init(charactersIn: "-_")
+    func hashedFileNameComponent(from value: String) -> String {
+        let digest = SHA256.hash(
+            data: Data(value.utf8)
         )
-        let sanitized = String(value.unicodeScalars.map { scalar in
-            if allowedCharacters.contains(scalar) {
-                return Character(scalar)
+        return digest
+            .map { byte in
+                String(format: "%02x", byte)
             }
-            return "_"
-        })
-        return sanitized.isEmpty ? "recipe" : sanitized
+            .joined()
     }
 
     func existingAttachmentFileURLIfUpToDate(
