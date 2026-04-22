@@ -21,7 +21,8 @@ public enum DiaryTopSuggestionService {
 
         guard try DiaryService.diary(
             on: diaryDate,
-            context: context
+            context: context,
+            calendar: calendar
         ) == nil else {
             return nil
         }

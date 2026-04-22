@@ -6,10 +6,18 @@ import SwiftData
 @MainActor
 public enum DiaryService {
     /// Returns the diary on the specified calendar day, if any.
-    public static func diary(on date: Date, context: ModelContext) throws -> Diary? {
+    public static func diary(
+        on date: Date,
+        context: ModelContext,
+        calendar: Calendar = .current
+    ) throws -> Diary? {
         let diaries = try context.fetch(.diaries(.all))
-        let cal = Calendar.current
-        return diaries.first { cal.isDate($0.date, inSameDayAs: date) }
+        return diaries.first { diary in
+            calendar.isDate(
+                diary.date,
+                inSameDayAs: date
+            )
+        }
     }
 
     /// Returns the latest diary ordered by date and timestamps.

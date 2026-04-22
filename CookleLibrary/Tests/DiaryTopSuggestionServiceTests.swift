@@ -6,17 +6,11 @@ import Testing
 @MainActor
 @Suite(.serialized)
 struct DiaryTopSuggestionServiceTests {
-    private enum TestDate {
-        static let year = 2_026
-        static let month = 4
-        static let day = 21
-    }
-
     let context: ModelContext = makeTestContext()
 
     @Test
     func suggestion_returns_nil_when_today_diary_exists() throws {
-        let calendar = makeCalendar()
+        let calendar = makeUTCCalendar()
         let today = try #require(
             calendar.date(
                 from: .init(
@@ -67,7 +61,7 @@ struct DiaryTopSuggestionServiceTests {
 
     @Test
     func suggestion_returns_nil_when_last_opened_recipe_is_missing() throws {
-        let calendar = makeCalendar()
+        let calendar = makeUTCCalendar()
         let now = try #require(
             calendar.date(
                 from: .init(
@@ -92,7 +86,7 @@ struct DiaryTopSuggestionServiceTests {
 
     @Test
     func suggestion_returns_nil_when_last_opened_recipe_was_deleted() throws {
-        let calendar = makeCalendar()
+        let calendar = makeUTCCalendar()
         let now = try #require(
             calendar.date(
                 from: .init(
@@ -133,7 +127,7 @@ struct DiaryTopSuggestionServiceTests {
 
     @Test
     func suggestion_returns_candidate_for_last_opened_recipe() throws {
-        let calendar = makeCalendar()
+        let calendar = makeUTCCalendar()
         let now = try #require(
             calendar.date(
                 from: .init(
@@ -175,7 +169,7 @@ struct DiaryTopSuggestionServiceTests {
 
     @Test
     func mealType_uses_expected_boundaries() throws {
-        let calendar = makeCalendar()
+        let calendar = makeUTCCalendar()
         let breakfastDate = try makeDate(
             hour: 10,
             minute: 59,
@@ -224,28 +218,30 @@ struct DiaryTopSuggestionServiceTests {
     }
 }
 
-private extension DiaryTopSuggestionServiceTests {
-    func makeCalendar() -> Calendar {
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = TimeZone(secondsFromGMT: .zero) ?? .current
-        return calendar
-    }
+private let kDiaryTopSuggestionTestYear = 2_026
+private let kDiaryTopSuggestionTestMonth = 4
+private let kDiaryTopSuggestionTestDay = 21
 
-    func makeDate(
-        hour: Int,
-        minute: Int,
-        calendar: Calendar
-    ) throws -> Date {
-        try #require(
-            calendar.date(
-                from: .init(
-                    year: TestDate.year,
-                    month: TestDate.month,
-                    day: TestDate.day,
-                    hour: hour,
-                    minute: minute
-                )
+private func makeUTCCalendar() -> Calendar {
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = TimeZone(secondsFromGMT: .zero) ?? .current
+    return calendar
+}
+
+private func makeDate(
+    hour: Int,
+    minute: Int,
+    calendar: Calendar
+) throws -> Date {
+    try #require(
+        calendar.date(
+            from: .init(
+                year: kDiaryTopSuggestionTestYear,
+                month: kDiaryTopSuggestionTestMonth,
+                day: kDiaryTopSuggestionTestDay,
+                hour: hour,
+                minute: minute
             )
         )
-    }
+    )
 }
