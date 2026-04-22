@@ -43,11 +43,11 @@ nonisolated public final class Photo {
 }
 
 public extension Photo {
-    /// Comma-separated recipe names that currently reference this asset, with a fallback title for unlinked photos.
-    var title: String {
+    /// Comma-separated recipe names that currently reference this asset, or `nil` when unlinked.
+    var linkedRecipeNames: String? {
         let recipeNames = recipes.orEmpty.map(\.name).joined(separator: ", ")
         guard recipeNames.isNotEmpty else {
-            return "Unlinked Photo"
+            return nil
         }
         return recipeNames
     }

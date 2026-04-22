@@ -29,7 +29,9 @@ struct PhotoView: View {
             updatedAtSection
             actionSection
         }
-        .navigationTitle(photo.title)
+        .navigationTitle(
+            PhotoDisplayCopy.title(for: photo)
+        )
         .fullScreenCover(isPresented: $isPhotoDetailPresented) {
             PhotoDetailNavigationView(photos: [photo])
         }

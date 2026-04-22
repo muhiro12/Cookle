@@ -111,7 +111,11 @@ private extension PhotoListView {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
-                    .accessibilityLabel(Text(photo.title))
+                    .accessibilityLabel(
+                        Text(
+                            PhotoDisplayCopy.title(for: photo)
+                        )
+                    )
             }
             .buttonStyle(.plain)
         }

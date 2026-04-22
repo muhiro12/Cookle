@@ -47,9 +47,13 @@ private extension DebugContentView {
         case let recipe as Recipe:
             Text(recipe.name)
         case let photo as Photo:
-            Text(photo.title)
+            Text(PhotoDisplayCopy.title(for: photo))
         case let photoObject as PhotoObject:
-            Text(photoObject.photo?.title ?? "")
+            Text(
+                photoObject.photo.map { photo in
+                    PhotoDisplayCopy.title(for: photo)
+                } ?? ""
+            )
         case let ingredient as Ingredient:
             Text(ingredient.value)
         case let ingredientObject as IngredientObject:
