@@ -28,6 +28,7 @@ struct InferRecipeFormView: View {
     @State private var cameraPickerItem: PhotosPickerItem?
     @State private var isPhotoPickerPresented = false
     @State private var isCameraPickerPresented = false
+    @State private var errorMessage = ""
 
     private let placeholder: LocalizedStringKey = .init("Spaghetti Carbonara for 2 people.\nIngredients: Spaghetti 200g, Eggs 2, Pancetta 100g.\nCook spaghetti. Fry pancetta. Mix eggs and cheese. Combine all.") // swiftlint:disable:this line_length
 
@@ -63,6 +64,16 @@ struct InferRecipeFormView: View {
             }
             .onChange(of: cameraPickerItem) {
                 handleCameraPickerChange()
+            }
+            .alert(
+                Text("Cannot Infer Recipe"),
+                isPresented: isInferenceErrorPresented
+            ) {
+                Button("OK", role: .cancel) {
+                    errorMessage = .empty
+                }
+            } message: {
+                Text(errorMessage)
             }
     }
 
@@ -102,7 +113,7 @@ struct InferRecipeFormView: View {
             } label: {
                 Text("Done")
             }
-            .disabled(isLoading)
+            .disabled(isLoading || text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
         ToolbarItem(placement: .bottomBar) {
             importTextMenu
@@ -157,26 +168,43 @@ struct InferRecipeFormView: View {
 
 @available(iOS 26.0, *)
 private extension InferRecipeFormView {
+    var isInferenceErrorPresented: Binding<Bool> {
+        .init(
+            get: {
+                errorMessage.isNotEmpty
+            },
+            set: { isPresented in
+                if isPresented == false {
+                    errorMessage = .empty
+                }
+            }
+        )
+    }
+
     @MainActor
     func applyInference() async {
         defer {
             isLoading = false
         }
 
-        let inference = await RecipeService.infer(text: text)
-        name = inference.name
-        servingSize = inference.servingSize == .zero ? .empty : inference.servingSize.description
-        cookingTime = inference.cookingTime == .zero ? .empty : inference.cookingTime.description
-        ingredients = inference.ingredients.map { inferredIngredient in
-            .init(
-                ingredient: inferredIngredient.ingredient,
-                amount: inferredIngredient.amount
-            )
-        } + [.init(ingredient: .empty, amount: .empty)]
-        steps = inference.steps + [.empty]
-        categories = inference.categories + [.empty]
-        note = inference.note
-        dismiss()
+        do {
+            let inference = try await RecipeService.infer(text: text)
+            name = inference.name
+            servingSize = inference.servingSize == .zero ? .empty : inference.servingSize.description
+            cookingTime = inference.cookingTime == .zero ? .empty : inference.cookingTime.description
+            ingredients = inference.ingredients.map { inferredIngredient in
+                .init(
+                    ingredient: inferredIngredient.ingredient,
+                    amount: inferredIngredient.amount
+                )
+            } + [.init(ingredient: .empty, amount: .empty)]
+            steps = inference.steps + [.empty]
+            categories = inference.categories + [.empty]
+            note = inference.note
+            dismiss()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 
     func handlePhotoPickerChange() {

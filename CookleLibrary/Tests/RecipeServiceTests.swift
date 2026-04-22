@@ -295,6 +295,42 @@ extension RecipeServiceTests {
         let result = try RecipeService.lastOpenedRecipe(context: context)
         #expect(result == nil)
     }
+
+    @available(iOS 26.0, *)
+    @Test
+    func fallbackInference_extracts_ingredients_and_steps_from_common_sections() {
+        let inference = RecipeService.fallbackInference(
+            from: """
+            Curry Rice
+            Ingredients:
+            - Onion
+            - Carrot
+            Steps:
+            1. Chop onion
+            2. Simmer curry
+            """
+        )
+
+        #expect(inference.name == "Curry Rice")
+        #expect(inference.ingredients.map(\.ingredient) == ["Onion", "Carrot"])
+        #expect(inference.steps == ["Chop onion", "Simmer curry"])
+    }
+
+    @available(iOS 26.0, *)
+    @Test
+    func isMeaningfulInference_returns_false_for_title_only_results() {
+        let inference = InferredRecipe(
+            name: "Curry Rice",
+            servingSize: .zero,
+            cookingTime: .zero,
+            ingredients: [],
+            steps: [],
+            categories: [],
+            note: ""
+        )
+
+        #expect(RecipeService.isMeaningfulInference(inference) == false)
+    }
 }
 
 private func restoreLastOpenedRecipePreference(

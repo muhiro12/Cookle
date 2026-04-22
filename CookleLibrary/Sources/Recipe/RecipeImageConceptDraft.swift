@@ -2,6 +2,7 @@
 public struct RecipeImageConceptDraft: Sendable {
     public let title: String
     public let ingredients: [String]
+    /// Optional finish- or plating-oriented steps used to keep image generation focused on the completed dish.
     public let combinedSteps: String?
 
     public init(

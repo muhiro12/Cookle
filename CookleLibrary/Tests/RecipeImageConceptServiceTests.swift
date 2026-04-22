@@ -64,7 +64,7 @@ struct RecipeImageConceptServiceTests {
     }
 
     @Test
-    func makeDraft_combines_steps_into_single_multiline_text() {
+    func makeDraft_returns_nil_combined_steps_when_steps_are_process_only() {
         let draft = RecipeImageConceptService.makeDraft(
             request: .init(
                 name: "Curry",
@@ -76,11 +76,11 @@ struct RecipeImageConceptServiceTests {
             )
         )
 
-        #expect(draft?.combinedSteps == "Chop onion\nSimmer curry")
+        #expect(draft?.combinedSteps == nil)
     }
 
     @Test
-    func makeDraft_removes_empty_steps_only() {
+    func makeDraft_keeps_only_finish_or_serving_steps() {
         let draft = RecipeImageConceptService.makeDraft(
             request: .init(
                 name: "Curry",
@@ -89,28 +89,30 @@ struct RecipeImageConceptServiceTests {
                     "",
                     "  ",
                     " Set rice cooker timer ",
+                    " Garnish with parsley ",
                     " Serve "
                 ]
             )
         )
 
-        #expect(draft?.combinedSteps == "Set rice cooker timer\nServe")
+        #expect(draft?.combinedSteps == "Garnish with parsley\nServe")
     }
 
     @Test
-    func makeDraft_preserves_appliance_words_in_combined_steps() {
+    func makeDraft_keeps_japanese_finish_steps_in_combined_steps() {
         let draft = RecipeImageConceptService.makeDraft(
             request: .init(
                 name: "Curry",
                 ingredients: [],
                 steps: [
                     "炊飯器で加熱する",
-                    "タイマーを3分に設定する"
+                    "器に盛り付ける",
+                    "青ねぎを添える"
                 ]
             )
         )
 
-        #expect(draft?.combinedSteps == "炊飯器で加熱する\nタイマーを3分に設定する")
+        #expect(draft?.combinedSteps == "器に盛り付ける\n青ねぎを添える")
     }
 
     @Test

@@ -1,5 +1,40 @@
 /// Builds Image Playground concept input from saved recipe content.
 public enum RecipeImageConceptService {
+    private static let finishStepMarkers = [
+        "serve",
+        "served",
+        "serving",
+        "plate",
+        "plated",
+        "garnish",
+        "finish",
+        "finished",
+        "finished with",
+        "top with",
+        "topped with",
+        "drizzle",
+        "sprinkle",
+        "arrange",
+        "盛り付け",
+        "盛りつけ",
+        "盛る",
+        "盛って",
+        "盛り",
+        "仕上げ",
+        "仕上がり",
+        "仕上げる",
+        "完成",
+        "添える",
+        "のせる",
+        "のせて",
+        "かける",
+        "かけて",
+        "トッピング",
+        "飾る",
+        "器に",
+        "皿に"
+    ]
+
     /// Returns a normalized concept draft for Image Playground generation.
     public static func makeDraft(
         request: RecipeImageConceptRequest
@@ -11,12 +46,16 @@ public enum RecipeImageConceptService {
         let ingredients = request.ingredients.compactMap { ingredient in
             normalizedText(from: ingredient)
         }
-        let normalizedSteps = request.steps.compactMap { step in
-            normalizedText(from: step)
-        }
-        let combinedSteps = normalizedSteps.isEmpty
+        let finishSteps = request.steps
+            .compactMap { step in
+                normalizedText(from: step)
+            }
+            .filter { step in
+                isFinishOrPlatingStep(step)
+            }
+        let combinedSteps = finishSteps.isEmpty
             ? nil
-            : normalizedSteps.joined(separator: "\n")
+            : finishSteps.joined(separator: "\n")
 
         return .init(
             title: title,
@@ -36,5 +75,22 @@ public enum RecipeImageConceptService {
             return nil
         }
         return collapsedValue
+    }
+
+    static func isFinishOrPlatingStep(
+        _ value: String
+    ) -> Bool {
+        let normalizedValue = value.folding(
+            options: [
+                .caseInsensitive,
+                .diacriticInsensitive,
+                .widthInsensitive
+            ],
+            locale: .current
+        )
+
+        return finishStepMarkers.contains { marker in
+            normalizedValue.localizedCaseInsensitiveContains(marker)
+        }
     }
 }
