@@ -1,0 +1,51 @@
+{
+  "fill" : "automatic",
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "fill" : {
+            "automatic-gradient" : "extended-srgb:1.00000,0.55294,0.15686,1.00000"
+          },
+          "image-name" : "AppIcon.001.png",
+          "name" : "AppIcon.001",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              -160,
+              -256
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "automatic-gradient" : "extended-srgb:1.00000,0.55294,0.15686,1.00000"
+          },
+          "image-name" : "AppIcon.002.png",
+          "name" : "AppIcon.002",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              48,
+              96
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}
