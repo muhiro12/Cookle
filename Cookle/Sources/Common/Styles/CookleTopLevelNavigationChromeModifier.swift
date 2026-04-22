@@ -7,7 +7,6 @@ struct CookleTopLevelNavigationChromeModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .navigationTitle(title)
-            .toolbarTitleDisplayMode(.inline)
             .toolbarRole(.editor)
             .modifier(
                 CookleScrollDismissesKeyboardModifier(
