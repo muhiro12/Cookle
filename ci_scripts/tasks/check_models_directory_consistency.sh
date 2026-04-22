@@ -15,8 +15,9 @@ matches=$(
   rg --line-number \
     --glob 'Cookle/Sources/**/Models/*.swift' \
     --glob 'Widgets/Sources/**/Models/*.swift' \
+    --glob 'Watch/Sources/**/Models/*.swift' \
     '@ViewBuilder|: View\b|: LabelStyle\b' \
-    Cookle/Sources Widgets/Sources || true
+    Cookle/Sources Widgets/Sources Watch/Sources || true
 )
 
 if [[ -n "$matches" ]]; then

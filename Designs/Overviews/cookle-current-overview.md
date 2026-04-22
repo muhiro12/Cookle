@@ -30,6 +30,7 @@ focus is personal cooking organization:
 - Shared package: `CookleLibrary`
 - Main app target: `Cookle`
 - Widget extension target: `Widgets`
+- Watch companion target: `Watch`
 - Optional premium capabilities: iCloud sync and ad removal
 - Remote configuration can require an app update before the main UI continues
 
@@ -213,6 +214,17 @@ Cookle uses adaptive tab navigation.
 - The recipe widget refreshes roughly every six hours.
 - Recipe widget images are downsampled for widget family size before display.
 
+### Watch Companion
+
+- The watch companion focuses on the currently active cooking session.
+- It shows the synced recipe title, current step progress, and a paged step
+  reader.
+- It offers quick timers, timer repeat/cancel actions, and step back/forward
+  controls directly on the watch.
+- It can end the active session from the watch.
+- The session snapshot is synchronized with the iPhone app through
+  `WatchConnectivity` application context updates.
+
 ### App Shortcuts and App Intents
 
 - Shortcut tiles currently exposed in `CookleShortcuts`:
@@ -395,6 +407,7 @@ large custom abstraction layers.
 - `CookleLibrary` is the shared core.
 - `Cookle` is the main app adapter layer.
 - `Widgets` is a target-local adapter layer for WidgetKit.
+- `Watch` is a target-local adapter layer for the watchOS companion surface.
 
 ### What belongs in `CookleLibrary`
 
@@ -416,6 +429,12 @@ large custom abstraction layers.
 - widget reload coordination
 - app-owned route pipeline semantics and navigation application
 - local presentation state
+
+### What belongs in `Watch`
+
+- watch-specific SwiftUI screens
+- watch-local cooking session presentation state
+- `WatchConnectivity` intake and reply flow for the active cooking session
 
 ### Workflow Service Rule
 

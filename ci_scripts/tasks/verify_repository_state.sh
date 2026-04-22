@@ -197,7 +197,7 @@ else
     exit 0
   fi
 
-  if grep -Eq '^Cookle/|^CookleLibrary/|^Cookle\.xcodeproj/|^Widgets/' <<<"$changed_files"; then
+  if grep -Eq '^Cookle/|^CookleLibrary/|^Cookle\.xcodeproj/|^Widgets/|^Watch/' <<<"$changed_files"; then
     needs_cookle_build=true
   fi
 
@@ -205,14 +205,14 @@ else
     needs_cookle_library_tests=true
   fi
 
-  if grep -Eq '^Cookle/|^CookleLibrary/|^Cookle\.xcodeproj/|^Widgets/|^ci_scripts/' <<<"$changed_files"; then
+  if grep -Eq '^Cookle/|^CookleLibrary/|^Cookle\.xcodeproj/|^Widgets/|^Watch/|^ci_scripts/' <<<"$changed_files"; then
     needs_mhplatform_boundary_checks=true
     needs_test_posture_checks=true
   fi
 
   if ! $needs_cookle_build && ! $needs_cookle_library_tests && ! $needs_mhplatform_boundary_checks && ! $needs_test_posture_checks; then
-    echo "No changes under Cookle/, CookleLibrary/, Widgets/, Cookle.xcodeproj/, or ci_scripts/."
-    run_note="No changes under Cookle/, CookleLibrary/, Widgets/, Cookle.xcodeproj/, or ci_scripts/. Build/test steps were skipped."
+    echo "No changes under Cookle/, CookleLibrary/, Widgets/, Watch/, Cookle.xcodeproj/, or ci_scripts/."
+    run_note="No changes under Cookle/, CookleLibrary/, Widgets/, Watch/, Cookle.xcodeproj/, or ci_scripts/. Build/test steps were skipped."
     exit 0
   fi
 

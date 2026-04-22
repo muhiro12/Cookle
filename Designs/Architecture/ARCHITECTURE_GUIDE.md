@@ -19,13 +19,13 @@ Related documents:
 | Layer | Owns | Must not own |
 | --- | --- | --- |
 | Domain (`CookleLibrary`) | SwiftData schema, predicates, route helpers, validation, canonical mutations, canonical search, mutation effect hints | Widget reloads, notification registration, review prompts, deep-link delivery, App Intent result shaping, SwiftUI presentation state |
-| Adapter (`Cookle`, `Widgets`, App Intents) | Parameter parsing, platform API calls, dependency wiring, route intake, follow-up orchestration after shared mutations, App Intent result mapping | Re-implementing recipe, diary, tag, or reset mutation rules |
+| Adapter (`Cookle`, `Widgets`, `Watch`, App Intents) | Parameter parsing, platform API calls, dependency wiring, route intake, follow-up orchestration after shared mutations, App Intent result mapping | Re-implementing recipe, diary, tag, or reset mutation rules |
 | View (SwiftUI) | Focus state, sheets, dialogs, navigation state, screen-scoped `@Observable` models, display formatting, view composition | Canonical business validation, mutation rules, notification scheduling, widget reload coordination |
 
 ## Testing Boundary
 
 - Keep repository-owned unit tests in `CookleLibrary/Tests`.
-- Do not maintain a separate unit test target for `Cookle` or `Widgets`.
+- Do not maintain a separate unit test target for `Cookle`, `Widgets`, or `Watch`.
 - App-owned adapters should stay responsibility-thin enough to verify through
   `Cookle` builds plus `CookleLibrary` test coverage.
 - If an adapter or screen model needs durable coverage, first move the reusable
@@ -152,6 +152,7 @@ Keep in target adapters:
 - `MHAppRuntimeBootstrap` and `MHAppRoutePipeline` assembly
 - `UNUserNotificationCenter` integration
 - WidgetKit reload coordination
+- WatchConnectivity snapshot delivery and watch companion interaction state
 - review prompt orchestration
 
 API style decision:

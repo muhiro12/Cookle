@@ -8,7 +8,8 @@ operation must work across the iOS app, widgets, and App Intents.
 ## Core Principles
 
 - `CookleLibrary` is the source of truth for shared business logic.
-- `Cookle` owns Apple-framework adapters and presentation orchestration.
+- Target-local adapters own Apple-framework integrations and presentation
+  orchestration.
 - App Intents are adapters, not a second domain layer.
 - Views own presentation state and screen-scoped models, but not canonical
   business rules.
@@ -20,16 +21,16 @@ operation must work across the iOS app, widgets, and App Intents.
 | Concern | Lives in | Examples |
 | --- | --- | --- |
 | Shared domain logic | `CookleLibrary` | `Recipe`, `Diary`, `Tag`, predicates, `RecipeFormService`, `RecipeService`, `DiaryService`, `TagService`, `DataResetService` |
-| Apple framework adapters | `Cookle` | `NotificationService`, App Intent types, deep-link delivery, review flow wiring |
+| Apple framework adapters | `Cookle`, `Widgets`, `Watch` | `NotificationService`, App Intent types, widget timeline/provider types, `WatchCookingSessionStore` |
 | App-side platform support | `Cookle/Sources/Common/Platform` | `CookleAppAssemblyFactory`, `MHAppRuntimeBootstrap` assembly, `MHAppRoutePipeline<CookleRoute>` assembly |
-| Presentation orchestration | `Cookle` | SwiftUI views, `MainNavigationRouter`, `RecipeFormModel`, `RecipeFormSaveCoordinator`, `DiaryFormModel`, `DiaryFormSaveCoordinator`, `SettingsScreenModel`, feature action services |
+| Presentation orchestration | `Cookle`, `Widgets`, `Watch` | SwiftUI views, widget view composition, `MainNavigationRouter`, `RecipeFormModel`, `RecipeFormSaveCoordinator`, `DiaryFormModel`, `DiaryFormSaveCoordinator`, `SettingsScreenModel`, `WatchActiveCookingView` |
 
 ## MHPlatform Adoption
 
 - `Cookle` is the intentional `MHPlatform` umbrella adopter.
 - `CookleLibrary` adopts `MHPlatformCore` and must not depend on the
   full `MHPlatform` umbrella.
-- `Widgets` stay off direct umbrella adoption.
+- `Widgets` and `Watch` stay off direct umbrella adoption.
 - This repository intentionally uses the MHPlatform 1.x semver range
   `1.0.0..<2.0.0`.
 
