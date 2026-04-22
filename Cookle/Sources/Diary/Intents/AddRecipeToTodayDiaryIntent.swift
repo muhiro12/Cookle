@@ -19,7 +19,7 @@ struct AddRecipeToTodayDiaryIntent: AppIntent {
         guard let model = try recipe.model(context: context) else {
             throw RecipeMutationIntentError.recipeNotFound
         }
-        _ = try await diaryActionService.add(
+        try await diaryActionService.add(
             context: context,
             date: .now,
             recipe: model,

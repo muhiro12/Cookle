@@ -45,7 +45,7 @@ struct RecipeView: View {
         .task {
             tipController.donateDidOpenRecipeDetail()
             do {
-                _ = try await recipeActionService.recordOpenedRecipe(
+                try await recipeActionService.recordOpenedRecipe(
                     recipe
                 )
             } catch {

@@ -32,7 +32,7 @@ enum RecipeFormSaveCoordinator {
             guard let recipe = request.recipe else {
                 throw CookleActionError.recipeNotFound
             }
-            _ = try await recipeActionService.update(
+            try await recipeActionService.update(
                 context: context,
                 recipe: recipe,
                 draft: request.draft,

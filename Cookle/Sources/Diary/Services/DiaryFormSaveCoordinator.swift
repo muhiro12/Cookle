@@ -15,7 +15,7 @@ enum DiaryFormSaveCoordinator {
         diaryActionService: DiaryActionService
     ) async throws {
         if let diary = request.diary {
-            _ = try await diaryActionService.update(
+            try await diaryActionService.update(
                 context: context,
                 diary: diary,
                 date: request.date,
@@ -24,7 +24,7 @@ enum DiaryFormSaveCoordinator {
             return
         }
 
-        _ = try await diaryActionService.create(
+        try await diaryActionService.create(
             context: context,
             date: request.date,
             input: request.input

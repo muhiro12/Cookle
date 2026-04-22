@@ -52,7 +52,7 @@ struct UpdateRecipeIntent: AppIntent {
             )
         )
 
-        _ = try await recipeActionService.update(
+        try await recipeActionService.update(
             context: modelContainer.mainContext,
             recipe: model,
             draft: draft,

@@ -26,7 +26,7 @@ struct DeleteRecipeIntent: AppIntent {
             )
         )
 
-        _ = try await recipeActionService.delete(
+        try await recipeActionService.delete(
             context: modelContainer.mainContext,
             recipe: model
         )

@@ -28,6 +28,7 @@ final class RecipeActionService {
         self.saveLogger = saveLogger
     }
 
+    @discardableResult
     func create(
         context: ModelContext,
         draft: RecipeFormDraft,
@@ -50,6 +51,7 @@ final class RecipeActionService {
         }
     }
 
+    @discardableResult
     func update(
         context: ModelContext,
         recipe: Recipe,
@@ -74,6 +76,7 @@ final class RecipeActionService {
         }
     }
 
+    @discardableResult
     func delete(
         context: ModelContext,
         recipe: Recipe
@@ -89,6 +92,7 @@ final class RecipeActionService {
         }
     }
 
+    @discardableResult
     func removePhoto(
         context: ModelContext,
         recipe: Recipe,
@@ -106,6 +110,7 @@ final class RecipeActionService {
         }
     }
 
+    @discardableResult
     func replaceGeneratedPhoto(
         context: ModelContext,
         recipe: Recipe,
@@ -129,6 +134,7 @@ final class RecipeActionService {
         )
     }
 
+    @discardableResult
     func appendPhoto(
         context: ModelContext,
         recipe: Recipe,
@@ -158,6 +164,7 @@ final class RecipeActionService {
         )
     }
 
+    @discardableResult
     func recordOpenedRecipe(
         _ recipe: Recipe
     ) async throws -> MutationOutcome<Void> {

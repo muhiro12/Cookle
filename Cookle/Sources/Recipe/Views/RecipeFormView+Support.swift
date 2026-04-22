@@ -180,7 +180,7 @@ extension RecipeFormView {
             }
 
             do {
-                _ = try await recipeActionService.appendPhoto(
+                try await recipeActionService.appendPhoto(
                     context: context,
                     recipe: recipe,
                     data: data,

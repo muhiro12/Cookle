@@ -33,7 +33,7 @@ struct DeleteCategoryButton: View {
             Button("Delete", role: .destructive) {
                 Task {
                     do {
-                        _ = try await tagActionService.delete(
+                        try await tagActionService.delete(
                             context: context,
                             category: category
                         )

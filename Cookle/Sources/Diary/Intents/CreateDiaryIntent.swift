@@ -30,7 +30,7 @@ struct CreateDiaryIntent: AppIntent {
     @MainActor
     func perform() async throws -> some IntentResult {
         let context = modelContainer.mainContext
-        _ = try await diaryActionService.create(
+        try await diaryActionService.create(
             context: context,
             date: date,
             input: .init(

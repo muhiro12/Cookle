@@ -62,7 +62,7 @@ struct RecipeLabel: View {
             Button("Delete", role: .destructive) {
                 Task {
                     do {
-                        _ = try await recipeActionService.delete(
+                        try await recipeActionService.delete(
                             context: context,
                             recipe: recipe
                         )

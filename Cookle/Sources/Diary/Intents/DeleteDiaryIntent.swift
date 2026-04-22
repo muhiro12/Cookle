@@ -27,7 +27,7 @@ struct DeleteDiaryIntent: AppIntent {
             )
         )
 
-        let outcome = try await diaryActionService.delete(
+        try await diaryActionService.delete(
             context: modelContainer.mainContext,
             diary: diary
         )

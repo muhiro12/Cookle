@@ -21,6 +21,7 @@ final class PhotoActionService {
         )
     }
 
+    @discardableResult
     func delete(
         context: ModelContext,
         photo: Photo

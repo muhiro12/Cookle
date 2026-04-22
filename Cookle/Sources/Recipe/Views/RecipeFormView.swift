@@ -138,7 +138,7 @@ struct RecipeFormView: View {
                 }
 
                 do {
-                    _ = try await recipeActionService.replaceGeneratedPhoto(
+                    try await recipeActionService.replaceGeneratedPhoto(
                         context: context,
                         recipe: recipe,
                         data: data

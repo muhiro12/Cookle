@@ -37,7 +37,7 @@ struct DeleteDiaryButton: View {
             Button("Delete", role: .destructive) {
                 Task {
                     do {
-                        _ = try await diaryActionService.delete(
+                        try await diaryActionService.delete(
                             context: context,
                             diary: diary
                         )

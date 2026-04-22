@@ -24,6 +24,7 @@ final class DiaryActionService {
         effectAdapter = CookleMutationEffectAdapter.make()
     }
 
+    @discardableResult
     func create(
         context: ModelContext,
         date: Date,
@@ -43,6 +44,7 @@ final class DiaryActionService {
         }
     }
 
+    @discardableResult
     func update(
         context: ModelContext,
         diary: Diary,
@@ -64,6 +66,7 @@ final class DiaryActionService {
         }
     }
 
+    @discardableResult
     func update(
         context: ModelContext,
         on date: Date,
@@ -88,6 +91,7 @@ final class DiaryActionService {
         )
     }
 
+    @discardableResult
     func add(
         context: ModelContext,
         date: Date,
@@ -106,6 +110,7 @@ final class DiaryActionService {
         }
     }
 
+    @discardableResult
     func delete(
         context: ModelContext,
         diary: Diary
@@ -120,6 +125,7 @@ final class DiaryActionService {
         }
     }
 
+    @discardableResult
     func delete(
         context: ModelContext,
         on date: Date

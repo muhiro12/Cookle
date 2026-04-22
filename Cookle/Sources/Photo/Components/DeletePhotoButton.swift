@@ -33,7 +33,7 @@ struct DeletePhotoButton: View {
             Button("Delete", role: .destructive) {
                 Task {
                     do {
-                        _ = try await photoActionService.delete(
+                        try await photoActionService.delete(
                             context: context,
                             photo: photo
                         )

@@ -63,7 +63,7 @@ private extension AddRecipeToTodayDiaryButton {
     ) async {
         do {
             errorMessage = ""
-            _ = try await diaryActionService.add(
+            try await diaryActionService.add(
                 context: context,
                 date: .now,
                 recipe: recipe,
