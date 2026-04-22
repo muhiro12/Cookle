@@ -11,7 +11,10 @@ public enum RecipeInferenceError: LocalizedError, Equatable, Sendable {
         case .emptyInput:
             return "Paste or import some recipe text first."
         case .insufficientContent:
-            return "Couldn't extract enough recipe details from the text. Try including the title, ingredients, or steps."
+            return """
+                Couldn't extract enough recipe details from the text.
+                Try including the title, ingredients, or steps.
+                """
         case .modelUnavailable:
             return "Apple Intelligence is not available right now."
         }

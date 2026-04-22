@@ -31,6 +31,18 @@ extension RecipeService {
 
     static let allSectionHeadings = ingredientSectionHeadings + stepSectionHeadings
 
+    static var inferenceInstructions: String {
+        """
+        You extract structured recipe form fields from recipe-like text.
+        The text may come from OCR, copied recipe pages, or dictated notes.
+        Return only information that is explicit or strongly implied by the input.
+        Preserve the input's original language and wording where practical.
+        Do not answer as a chef or rewrite the recipe into polished prose.
+        Do not invent ingredients, steps, servings, cooking time, categories, or notes.
+        Use 0 for unknown numeric values and empty strings or empty arrays for missing text fields.
+        """
+    }
+
     /// Infers a recipe structure from free-form text using an LLM and a conservative fallback.
     /// - Parameter text: Free-form user text describing a recipe.
     /// - Returns: An `InferredRecipe` with best-effort fields filled.
@@ -77,18 +89,6 @@ extension RecipeService {
             throw RecipeInferenceError.insufficientContent
         }
         return fallback
-    }
-
-    static var inferenceInstructions: String {
-        """
-        You extract structured recipe form fields from recipe-like text.
-        The text may come from OCR, copied recipe pages, or dictated notes.
-        Return only information that is explicit or strongly implied by the input.
-        Preserve the input's original language and wording where practical.
-        Do not answer as a chef or rewrite the recipe into polished prose.
-        Do not invent ingredients, steps, servings, cooking time, categories, or notes.
-        Use 0 for unknown numeric values and empty strings or empty arrays for missing text fields.
-        """
     }
 
     static func inferencePrompt(
