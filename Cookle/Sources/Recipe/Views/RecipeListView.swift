@@ -128,15 +128,15 @@ private extension RecipeListView {
         }
     }
 
-    func recipeRow(for recipe: Recipe) -> some View {
+    func recipeRow(for rowRecipe: Recipe) -> some View {
         Button {
-            selectRecipeForNavigation(
-                recipe
+            $recipe.cookleSelectForNavigation(
+                rowRecipe
             )
         } label: {
             RecipeLabel()
                 .labelStyle(.titleAndLargeIcon)
-                .environment(recipe)
+                .environment(rowRecipe)
                 .cookleButtonRowContent()
         }
         .buttonStyle(.plain)
@@ -155,7 +155,7 @@ private extension RecipeListView {
                 if let resolvedRecipe = try resolvedRecipe(
                     for: latestTarget
                 ) {
-                    selectRecipeForNavigation(
+                    $recipe.cookleSelectForNavigation(
                         resolvedRecipe
                     )
                 }
@@ -166,7 +166,7 @@ private extension RecipeListView {
                 ) else {
                     return
                 }
-                selectRecipeForNavigation(
+                $recipe.cookleSelectForNavigation(
                     resolvedRecipe
                 )
             }
@@ -182,20 +182,6 @@ private extension RecipeListView {
             from: target.recipeStableIdentifier,
             context: context
         )
-    }
-
-    func selectRecipeForNavigation(
-        _ resolvedRecipe: Recipe
-    ) {
-        guard recipe?.persistentModelID == resolvedRecipe.persistentModelID else {
-            recipe = resolvedRecipe
-            return
-        }
-
-        recipe = nil
-        Task { @MainActor in
-            recipe = resolvedRecipe
-        }
     }
 }
 

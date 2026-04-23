@@ -62,13 +62,15 @@ struct PhotoView: View {
                 Text("Not linked to any recipe.")
                     .foregroundStyle(.secondary)
             } else {
-                ForEach(photo.recipes.orEmpty) { recipe in
+                ForEach(photo.recipes.orEmpty) { rowRecipe in
                     Button {
-                        self.recipe = recipe
+                        $recipe.cookleSelectForNavigation(
+                            rowRecipe
+                        )
                     } label: {
                         RecipeLabel()
                             .labelStyle(.titleOnly)
-                            .environment(recipe)
+                            .environment(rowRecipe)
                             .cookleButtonRowContent()
                     }
                     .buttonStyle(.plain)

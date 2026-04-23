@@ -46,13 +46,15 @@ private extension TagView {
                 Text("Not used in any recipe.")
                     .foregroundStyle(.secondary)
             } else {
-                ForEach(tag.recipes.orEmpty) { recipe in
+                ForEach(tag.recipes.orEmpty) { rowRecipe in
                     Button {
-                        self.recipe = recipe
+                        $recipe.cookleSelectForNavigation(
+                            rowRecipe
+                        )
                     } label: {
                         RecipeLabel()
                             .labelStyle(.titleAndLargeIcon)
-                            .environment(recipe)
+                            .environment(rowRecipe)
                             .cookleButtonRowContent()
                     }
                     .buttonStyle(.plain)

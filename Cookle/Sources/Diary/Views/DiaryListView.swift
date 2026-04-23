@@ -89,7 +89,9 @@ struct DiaryListView: View {
                 Section(section.key) {
                     ForEach(section.value) { diary in
                         Button {
-                            self.diary = diary
+                            $diary.cookleSelectForNavigation(
+                                diary
+                            )
                         } label: {
                             DiaryLabel()
                                 .environment(diary)

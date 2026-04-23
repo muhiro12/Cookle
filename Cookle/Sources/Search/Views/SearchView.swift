@@ -75,13 +75,15 @@ struct SearchView: View {
     }
 
     var searchResults: some View {
-        List(recipes) { recipe in
+        List(recipes) { rowRecipe in
             Button {
-                self.recipe = recipe
+                $recipe.cookleSelectForNavigation(
+                    rowRecipe
+                )
             } label: {
                 RecipeLabel()
                     .labelStyle(.titleAndLargeIcon)
-                    .environment(recipe)
+                    .environment(rowRecipe)
                     .cookleButtonRowContent()
             }
             .buttonStyle(.plain)

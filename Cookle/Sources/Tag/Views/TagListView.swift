@@ -20,48 +20,17 @@ struct TagListView<T: Tag>: View {
     @State private var searchText = ""
 
     var body: some View {
-        Group {
-            if filteredTags.isNotEmpty {
-                List(filteredTags) { tag in
-                    Button {
-                        self.tag = tag
-                    } label: {
-                        VStack(alignment: .leading) {
-                            Text(tag.value)
-                            Text(usageText(for: tag))
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                        }
-                        .cookleButtonRowContent()
-                    }
-                    .buttonStyle(.plain)
-                }
-                .searchable(text: $searchText)
-            } else {
-                ContentUnavailableView {
-                    Label {
-                        Text(T.title)
-                    } icon: {
-                        Image(systemName: "tag")
-                            .accessibilityHidden(true)
-                    }
-                } description: {
-                    Text("Tags appear after recipes create them.")
-                } actions: {
+        contentView
+            .cookleTopLevelNavigationChrome(T.title)
+            .toolbar {
+                ToolbarItem {
                     AddRecipeButton()
                 }
+                ToolbarItem {
+                    CloseButton()
+                        .hidden(!isPresented)
+                }
             }
-        }
-        .cookleTopLevelNavigationChrome(T.title)
-        .toolbar {
-            ToolbarItem {
-                AddRecipeButton()
-            }
-            ToolbarItem {
-                CloseButton()
-                    .hidden(!isPresented)
-            }
-        }
     }
 
     init(selection: Binding<T?> = .constant(nil)) {
@@ -70,6 +39,36 @@ struct TagListView<T: Tag>: View {
 }
 
 private extension TagListView {
+    @ViewBuilder var contentView: some View {
+        if filteredTags.isNotEmpty {
+            tagList
+        } else {
+            emptyStateView
+        }
+    }
+
+    var tagList: some View {
+        List(filteredTags) { rowTag in
+            tagRow(for: rowTag)
+        }
+        .searchable(text: $searchText)
+    }
+
+    var emptyStateView: some View {
+        ContentUnavailableView {
+            Label {
+                Text(T.title)
+            } icon: {
+                Image(systemName: "tag")
+                    .accessibilityHidden(true)
+            }
+        } description: {
+            Text("Tags appear after recipes create them.")
+        } actions: {
+            AddRecipeButton()
+        }
+    }
+
     var filteredTags: [T] {
         tags.filter { tag in
             searchText.isEmpty
@@ -86,6 +85,23 @@ private extension TagListView {
         }
 
         return "Used by \(recipeCount) \(recipeLabel)"
+    }
+
+    func tagRow(for rowTag: T) -> some View {
+        Button {
+            $tag.cookleSelectForNavigation(
+                rowTag
+            )
+        } label: {
+            VStack(alignment: .leading) {
+                Text(rowTag.value)
+                Text(usageText(for: rowTag))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            .cookleButtonRowContent()
+        }
+        .buttonStyle(.plain)
     }
 }
 

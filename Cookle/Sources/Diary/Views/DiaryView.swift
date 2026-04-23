@@ -35,13 +35,15 @@ struct DiaryView: View {
             let recipes = mealRecipes(for: type)
             if recipes.isNotEmpty {
                 Section {
-                    ForEach(recipes) { recipe in
+                    ForEach(recipes) { rowRecipe in
                         Button {
-                            self.recipe = recipe
+                            $recipe.cookleSelectForNavigation(
+                                rowRecipe
+                            )
                         } label: {
                             RecipeLabel()
                                 .labelStyle(.titleAndLargeIcon)
-                                .environment(recipe)
+                                .environment(rowRecipe)
                                 .cookleButtonRowContent()
                         }
                         .buttonStyle(.plain)
