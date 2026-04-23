@@ -9,6 +9,9 @@ nonisolated struct NotificationRecipeSnapshot: Sendable, Equatable {
     let note: String
     let cookingTime: Int
     let servingSize: Int
+    let isFavorite: Bool
+    let madeCount: Int
+    let lastCookedDate: Date?
     let modifiedTimestamp: Date
 
     var hasPhoto: Bool {
@@ -22,7 +25,8 @@ nonisolated struct NotificationRecipeSnapshot: Sendable, Equatable {
 
 nonisolated extension NotificationRecipeSnapshot {
     static func make(
-        recipe: Recipe
+        recipe: Recipe,
+        encodedFavoriteRecipeIDs: String? = nil
     ) -> Self {
         .init(
             name: recipe.name,
@@ -39,6 +43,14 @@ nonisolated extension NotificationRecipeSnapshot {
             note: recipe.note,
             cookingTime: recipe.cookingTime,
             servingSize: recipe.servingSize,
+            isFavorite: FavoriteRecipeService.isFavorite(
+                recipe,
+                encodedFavoriteRecipeIDs: encodedFavoriteRecipeIDs
+            ),
+            madeCount: recipe.diaryObjects.orEmpty.count,
+            lastCookedDate: lastCookedDate(
+                recipe: recipe
+            ),
             modifiedTimestamp: recipe.modifiedTimestamp
         )
     }
@@ -47,5 +59,15 @@ nonisolated extension NotificationRecipeSnapshot {
         recipe: Recipe
     ) -> Data? {
         recipe.primaryPhotoData
+    }
+
+    private static func lastCookedDate(
+        recipe: Recipe
+    ) -> Date? {
+        recipe.diaryObjects.orEmpty
+            .compactMap { diaryObject in
+                diaryObject.diary?.date
+            }
+            .max()
     }
 }

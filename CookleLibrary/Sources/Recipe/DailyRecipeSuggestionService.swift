@@ -3,6 +3,11 @@ import MHPlatformCore
 
 /// Planner for recipe suggestion notification schedules.
 public enum DailyRecipeSuggestionService {
+    private enum QualityConstants {
+        static let minimumFocusedCandidateCount = 2
+        static let recentCookingCooldownDays = 2
+    }
+
     /// Builds future daily suggestion entries from the supplied candidates.
     public static func buildSuggestions(
         candidates: [DailyRecipeSuggestionCandidate],
@@ -21,7 +26,11 @@ public enum DailyRecipeSuggestionService {
         }
 
         return MHSuggestionPlanner.build(
-            candidates: suggestionCandidates(from: candidates),
+            candidates: suggestionCandidates(
+                from: candidates,
+                now: now,
+                calendar: calendar
+            ),
             policy: .init(
                 deliveryTime: deliveryTime,
                 daysAhead: daysAhead,
@@ -47,9 +56,16 @@ public enum DailyRecipeSuggestionService {
 
 private extension DailyRecipeSuggestionService {
     static func suggestionCandidates(
-        from candidates: [DailyRecipeSuggestionCandidate]
+        from candidates: [DailyRecipeSuggestionCandidate],
+        now: Date,
+        calendar: Calendar
     ) -> [MHSuggestionCandidate] {
-        candidates.map { candidate in
+        qualityCandidates(
+            from: candidates,
+            now: now,
+            calendar: calendar
+        )
+        .map { candidate in
             .init(
                 title: candidate.name,
                 stableIdentifier: candidate.stableIdentifier,
@@ -58,6 +74,125 @@ private extension DailyRecipeSuggestionService {
                 )
             )
         }
+    }
+
+    static func qualityCandidates(
+        from candidates: [DailyRecipeSuggestionCandidate],
+        now: Date,
+        calendar: Calendar
+    ) -> [DailyRecipeSuggestionCandidate] {
+        let validCandidates = deduplicatedCandidates(
+            from: candidates.compactMap(normalizedCandidate)
+        )
+        guard validCandidates.isEmpty == false else {
+            return []
+        }
+
+        let focusedCandidates = focusCandidates(
+            validCandidates
+        )
+        return excludeRecentlyCookedCandidatesIfPossible(
+            focusedCandidates,
+            now: now,
+            calendar: calendar
+        )
+    }
+
+    static func normalizedCandidate(
+        _ candidate: DailyRecipeSuggestionCandidate
+    ) -> DailyRecipeSuggestionCandidate? {
+        let name = collapsedWhitespace(
+            in: candidate.name
+        )
+        let stableIdentifier = candidate.stableIdentifier.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        )
+        guard name.isEmpty == false,
+              stableIdentifier.isEmpty == false else {
+            return nil
+        }
+
+        return .init(
+            name: name,
+            stableIdentifier: stableIdentifier,
+            isFavorite: candidate.isFavorite,
+            hasPhoto: candidate.hasPhoto,
+            ingredientCount: candidate.ingredientCount,
+            cookingTime: candidate.cookingTime,
+            madeCount: candidate.madeCount,
+            lastCookedDate: candidate.lastCookedDate
+        )
+    }
+
+    static func deduplicatedCandidates(
+        from candidates: [DailyRecipeSuggestionCandidate]
+    ) -> [DailyRecipeSuggestionCandidate] {
+        var seenIdentifiers = Set<String>()
+        var result = [DailyRecipeSuggestionCandidate]()
+
+        for candidate in candidates
+        where seenIdentifiers.insert(candidate.stableIdentifier).inserted {
+            result.append(candidate)
+        }
+
+        return result
+    }
+
+    static func focusCandidates(
+        _ candidates: [DailyRecipeSuggestionCandidate]
+    ) -> [DailyRecipeSuggestionCandidate] {
+        let favoriteCandidates = candidates.filter(\.isFavorite)
+        if favoriteCandidates.count >= QualityConstants.minimumFocusedCandidateCount {
+            return favoriteCandidates
+        }
+
+        let informativeCandidates = candidates.filter { candidate in
+            candidate.hasPhoto
+                || candidate.ingredientCount > .zero
+                || candidate.cookingTime > .zero
+                || candidate.madeCount > .zero
+        }
+        if informativeCandidates.count >= QualityConstants.minimumFocusedCandidateCount {
+            return informativeCandidates
+        }
+
+        return candidates
+    }
+
+    static func excludeRecentlyCookedCandidatesIfPossible(
+        _ candidates: [DailyRecipeSuggestionCandidate],
+        now: Date,
+        calendar: Calendar
+    ) -> [DailyRecipeSuggestionCandidate] {
+        guard let cutoffDate = calendar.date(
+            byAdding: .day,
+            value: -QualityConstants.recentCookingCooldownDays,
+            to: calendar.startOfDay(for: now)
+        ) else {
+            return candidates
+        }
+
+        let nonRecentCandidates = candidates.filter { candidate in
+            guard let lastCookedDate = candidate.lastCookedDate else {
+                return true
+            }
+            return lastCookedDate < cutoffDate
+        }
+
+        guard nonRecentCandidates.count >= QualityConstants.minimumFocusedCandidateCount else {
+            return candidates
+        }
+
+        return nonRecentCandidates
+    }
+
+    static func collapsedWhitespace(
+        in value: String
+    ) -> String {
+        value
+            .components(separatedBy: .whitespacesAndNewlines)
+            .filter(\.isNotEmpty)
+            .joined(separator: " ")
     }
 
     static func localIdentifier(

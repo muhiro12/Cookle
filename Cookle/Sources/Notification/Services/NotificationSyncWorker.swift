@@ -99,7 +99,15 @@ private extension NotificationSyncWorker {
         ) else {
             return []
         }
-        let snapshots = recipes.map(NotificationRecipeSnapshot.make(recipe:))
+        let encodedFavoriteRecipeIDs = CooklePreferences.string(
+            for: \.favoriteRecipeIDs
+        )
+        let snapshots = recipes.map { recipe in
+            NotificationRecipeSnapshot.make(
+                recipe: recipe,
+                encodedFavoriteRecipeIDs: encodedFavoriteRecipeIDs
+            )
+        }
         logger.notice(
             "notification snapshot fetch finished",
             metadata: [
@@ -118,7 +126,13 @@ private extension NotificationSyncWorker {
         snapshots.map { snapshot in
             .init(
                 name: snapshot.name,
-                stableIdentifier: snapshot.stableIdentifier
+                stableIdentifier: snapshot.stableIdentifier,
+                isFavorite: snapshot.isFavorite,
+                hasPhoto: snapshot.hasPhoto,
+                ingredientCount: snapshot.ingredientCount,
+                cookingTime: snapshot.cookingTime,
+                madeCount: snapshot.madeCount,
+                lastCookedDate: snapshot.lastCookedDate
             )
         }
     }
