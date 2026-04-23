@@ -146,6 +146,10 @@ struct FavoriteRecipeServiceTests {
 }
 
 private extension FavoriteRecipeServiceTests {
+    enum TestValues {
+        static let cookingTimeMinutes = 10
+    }
+
     func makeRecipe(
         context: ModelContext,
         name: String
@@ -155,7 +159,7 @@ private extension FavoriteRecipeServiceTests {
             name: name,
             photos: [],
             servingSize: 1,
-            cookingTime: 10,
+            cookingTime: TestValues.cookingTimeMinutes,
             ingredients: [],
             steps: [],
             categories: [],
