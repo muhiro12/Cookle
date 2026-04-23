@@ -12,6 +12,7 @@ struct SearchView: View {
     private enum DiscoverySheet: String, Identifiable {
         case ingredient
         case category
+        case idea
 
         var id: Self {
             self
@@ -52,6 +53,10 @@ struct SearchView: View {
                 TagNavigationView<Ingredient>()
             case .category:
                 TagNavigationView<Category>()
+            case .idea:
+                if #available(iOS 26.0, *) {
+                    RecipeIdeaSuggestionNavigationView()
+                }
             }
         }
         .toolbar {
@@ -109,6 +114,11 @@ struct SearchView: View {
             Button("Category") {
                 discoverySheet = .category
             }
+            if #available(iOS 26.0, *) {
+                Button("Ingredient Ideas") {
+                    discoverySheet = .idea
+                }
+            }
         }
     }
 
@@ -119,6 +129,11 @@ struct SearchView: View {
             }
             Button("Category") {
                 discoverySheet = .category
+            }
+            if #available(iOS 26.0, *) {
+                Button("Ingredient Ideas", systemImage: "sparkles") {
+                    discoverySheet = .idea
+                }
             }
         } label: {
             Image(systemName: "line.3.horizontal.decrease.circle")
