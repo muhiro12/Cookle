@@ -54,6 +54,9 @@ extension RecipeFormView {
     @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
             Button {
+                guard formModel.isSaving == false else {
+                    return
+                }
                 if formModel.name == "Enable Debug" {
                     formModel.name = .empty
                     isDebugConfirmationPresented = true
@@ -63,6 +66,7 @@ extension RecipeFormView {
             } label: {
                 Text("Cancel")
             }
+            .disabled(formModel.isSaving)
         }
         switch currentEditMode {
         case .active:
@@ -87,6 +91,7 @@ extension RecipeFormView {
                 Button("Restore Draft") {
                     restoreDraft()
                 }
+                .disabled(formModel.isSaving)
             }
         }
     }
@@ -109,15 +114,19 @@ extension RecipeFormView {
                     }
                 }
             } label: {
-                switch type {
-                case .create,
-                     .duplicate:
-                    Text("Create")
-                case .edit:
-                    Text("Update")
+                if formModel.isSaving {
+                    ProgressView()
+                } else {
+                    switch type {
+                    case .create,
+                         .duplicate:
+                        Text("Create")
+                    case .edit:
+                        Text("Update")
+                    }
                 }
             }
-            .disabled((try? formModel.makeDraft()) == nil)
+            .disabled(formModel.isSaving || (try? formModel.makeDraft()) == nil)
         }
     }
 
@@ -174,6 +183,14 @@ extension RecipeFormView {
         source: RecipePhotoInputSource
     ) {
         Task {
+            guard formModel.isSaving == false else {
+                return
+            }
+            formModel.isSaving = true
+            defer {
+                formModel.isSaving = false
+            }
+
             guard let recipe = formModel.savedRecipe else {
                 formModel.errorMessage = CookleActionError.recipeNotFound.localizedDescription
                 return
@@ -226,6 +243,10 @@ extension RecipeFormView {
     }
 
     func restoreDraft() {
+        guard formModel.isSaving == false else {
+            return
+        }
+
         if formModel.restorePolicy.requiresOverwriteConfirmation {
             isRestoreDraftDialogPresented = true
             return

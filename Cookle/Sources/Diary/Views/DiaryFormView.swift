@@ -34,10 +34,16 @@ struct DiaryFormView: View {
             mealSection(type: .dinner, recipes: $model.dinners)
             noteSection
         }
+        .disabled(model.isSaving)
         .navigationDestination(for: DiaryObjectType.self) { type in
             destinationView(for: type)
         }
         .navigationTitle(Text("Diary"))
+        .overlay {
+            if model.isSaving {
+                CookleSavingOverlay()
+            }
+        }
         .alert(
             Text("Cannot Save Diary"),
             isPresented: isErrorPresentedBinding
@@ -102,16 +108,21 @@ struct DiaryFormView: View {
     @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
             Button {
+                guard model.isSaving == false else {
+                    return
+                }
                 dismiss()
             } label: {
                 Text("Cancel")
             }
+            .disabled(model.isSaving)
         }
         if model.restorePolicy.isRestoreAvailable {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Restore Draft") {
                     restoreDraft()
                 }
+                .disabled(model.isSaving)
             }
         }
         ToolbarItem(placement: .confirmationAction) {
@@ -127,9 +138,13 @@ struct DiaryFormView: View {
                     }
                 }
             } label: {
-                Text(diary != nil ? "Update" : "Add")
+                if model.isSaving {
+                    ProgressView()
+                } else {
+                    Text(diary != nil ? "Update" : "Add")
+                }
             }
-            .disabled(model.canSave == false)
+            .disabled(model.isSaving || model.canSave == false)
         }
     }
 
@@ -205,6 +220,10 @@ private extension DiaryFormView {
     }
 
     func restoreDraft() {
+        guard model.isSaving == false else {
+            return
+        }
+
         if model.restorePolicy.requiresOverwriteConfirmation {
             isRestoreDraftConfirmationPresented = true
             return

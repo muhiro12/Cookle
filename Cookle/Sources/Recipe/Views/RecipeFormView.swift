@@ -44,10 +44,16 @@ struct RecipeFormView: View {
         Form {
             formSections
         }
+        .disabled(model.isSaving)
         .environment(\.editMode, $editMode)
         .navigationTitle(editMode == .inactive ? Text("Recipe") : Text("Editing..."))
         .toolbar {
             toolbarItems
+        }
+        .overlay {
+            if model.isSaving {
+                CookleSavingOverlay()
+            }
         }
         .interactiveDismissDisabled()
         .confirmationDialog(
@@ -132,6 +138,14 @@ struct RecipeFormView: View {
             recipe: model.savedRecipe
         ) { data in
             Task {
+                guard model.isSaving == false else {
+                    return
+                }
+                model.isSaving = true
+                defer {
+                    model.isSaving = false
+                }
+
                 guard let recipe = model.savedRecipe else {
                     model.errorMessage = CookleActionError.recipeNotFound.localizedDescription
                     return

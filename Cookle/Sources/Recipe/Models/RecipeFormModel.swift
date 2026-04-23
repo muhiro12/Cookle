@@ -51,6 +51,7 @@ final class RecipeFormModel {
     var isInferRecipeFromTextTipEligible = false
     var isImagePlaygroundTipEligible = false
     var hasRestorableSnapshot = false
+    var isSaving = false
 
     private let snapshotStore: FormSnapshotStore<RecipeFormSnapshot>
     private var hasAppliedRecipe = false
@@ -183,6 +184,13 @@ final class RecipeFormModel {
         recipeActionService: RecipeActionService,
         draftLogger: MHLogger
     ) async -> Bool {
+        guard beginSaving() else {
+            return false
+        }
+        defer {
+            isSaving = false
+        }
+
         let draftSummary = RecipeDraftLogging.formSummary(
             type: type,
             ingredients: ingredients,
@@ -194,37 +202,17 @@ final class RecipeFormModel {
         do {
             errorMessage = nil
             let draft = try makeDraft()
-            RecipeDraftLogging.logSuccess(
-                logger: draftLogger,
+            logDraftSuccess(
+                draft,
                 summary: draftSummary,
-                draft: draft
+                logger: draftLogger
             )
-            let result = try await RecipeFormSaveCoordinator.save(
+            return try await save(
                 context: context,
-                request: .init(
-                    type: type,
-                    recipe: recipe,
-                    draft: draft,
-                    requestReview: photos.isNotEmpty
-                        || CookleImagePlayground.isSupported == false
-                ),
+                recipe: recipe,
+                draft: draft,
                 recipeActionService: recipeActionService
             )
-
-            switch result {
-            case .created(let createdRecipe):
-                savedRecipe = createdRecipe
-                if createdRecipe.photos?.isEmpty == true {
-                    clearSnapshot()
-                    isPhotoConfirmationPresented = true
-                    return false
-                }
-                clearSnapshot()
-                return true
-            case .updated:
-                clearSnapshot()
-                return true
-            }
         } catch {
             RecipeDraftLogging.logFailure(
                 logger: draftLogger,
@@ -233,6 +221,68 @@ final class RecipeFormModel {
             )
             errorMessage = error.localizedDescription
             return false
+        }
+    }
+}
+
+private extension RecipeFormModel {
+    func beginSaving() -> Bool {
+        guard isSaving == false else {
+            return false
+        }
+
+        isSaving = true
+        return true
+    }
+
+    func logDraftSuccess(
+        _ draft: RecipeFormDraft,
+        summary: RecipeDraftLogging.Summary,
+        logger: MHLogger
+    ) {
+        RecipeDraftLogging.logSuccess(
+            logger: logger,
+            summary: summary,
+            draft: draft
+        )
+    }
+
+    func save(
+        context: ModelContext,
+        recipe: Recipe?,
+        draft: RecipeFormDraft,
+        recipeActionService: RecipeActionService
+    ) async throws -> Bool {
+        let result = try await RecipeFormSaveCoordinator.save(
+            context: context,
+            request: .init(
+                type: type,
+                recipe: recipe,
+                draft: draft,
+                requestReview: photos.isNotEmpty
+                    || CookleImagePlayground.isSupported == false
+            ),
+            recipeActionService: recipeActionService
+        )
+
+        return handleSaveResult(result)
+    }
+
+    func handleSaveResult(
+        _ result: RecipeFormSaveCoordinator.Result
+    ) -> Bool {
+        switch result {
+        case .created(let createdRecipe):
+            savedRecipe = createdRecipe
+            clearSnapshot()
+            guard createdRecipe.photos?.isEmpty == false else {
+                isPhotoConfirmationPresented = true
+                return false
+            }
+            return true
+        case .updated:
+            clearSnapshot()
+            return true
         }
     }
 }

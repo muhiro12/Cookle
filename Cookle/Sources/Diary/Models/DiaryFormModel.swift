@@ -32,6 +32,7 @@ final class DiaryFormModel {
     }
     var errorMessage: String?
     var hasRestorableSnapshot = false
+    var isSaving = false
 
     private let snapshotStore: FormSnapshotStore<DiaryFormSnapshot>
     private var hasAppliedInitialValues = false
@@ -163,6 +164,15 @@ final class DiaryFormModel {
         diary: Diary?,
         diaryActionService: DiaryActionService
     ) async -> Bool {
+        guard isSaving == false else {
+            return false
+        }
+
+        isSaving = true
+        defer {
+            isSaving = false
+        }
+
         do {
             errorMessage = nil
             try await DiaryFormSaveCoordinator.save(
