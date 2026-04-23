@@ -55,6 +55,8 @@ struct RecipeLabel: View {
                 isDeletePresented = true
             }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(accessibilitySummary))
         .confirmationDialog(
             Text(RecipeDeleteCopy.title(for: recipe)),
             isPresented: $isDeletePresented
@@ -119,5 +121,30 @@ private extension RecipeLabel {
         recipe.categories?
             .map(\.value)
             .joined(separator: ", ") ?? ""
+    }
+
+    var accessibilitySummary: String {
+        [
+            "Recipe: \(recipe.name)",
+            accessibilityIngredientsText,
+            accessibilityCategoriesText
+        ]
+        .joined(separator: ". ")
+    }
+
+    var accessibilityIngredientsText: String {
+        guard ingredientsText.isEmpty == false else {
+            return "No ingredients"
+        }
+
+        return "Ingredients: \(ingredientsText)"
+    }
+
+    var accessibilityCategoriesText: String {
+        guard categoriesText.isEmpty == false else {
+            return "No categories"
+        }
+
+        return "Categories: \(categoriesText)"
     }
 }

@@ -23,6 +23,10 @@ struct RecipeTopReturnButton: View {
             .cookleButtonRowContent()
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(
+            Text("\(target.accessibilityTitle): \(target.recipeName)")
+        )
+        .accessibilityHint(Text("Opens the recipe."))
     }
 }
 
@@ -42,6 +46,17 @@ struct RecipeTopReturnButton: View {
             }
         }
         .navigationTitle("Recipes")
+    }
+}
+
+private extension RecipeTopReturnTarget {
+    var accessibilityTitle: String {
+        switch kind {
+        case .activeCookingSession:
+            return "Resume cooking"
+        case .lastOpenedRecipe:
+            return "Back to last opened recipe"
+        }
     }
 }
 

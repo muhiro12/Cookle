@@ -52,6 +52,17 @@ actually use in the kitchen.
 - System surfaces: show widgets, Shortcuts, and Apple Watch companion value.
 - Settings trust: show iCloud sync, backup export, restore, and delete controls.
 
+## Accessibility Metadata Draft
+
+- VoiceOver: supported for primary recipe, diary, photo, settings, and cooking
+  actions.
+- Dynamic Type: supported through standard SwiftUI text, list, form, and
+  navigation surfaces.
+- Reduced Transparency or Reduce Motion: no custom motion-heavy flows are
+  required for the primary cooking workflow.
+- Widget privacy: recipe and diary widget content is marked privacy sensitive
+  where supported by the system.
+
 ## What's New Guidance
 
 - Lead with the most user-visible new capability.

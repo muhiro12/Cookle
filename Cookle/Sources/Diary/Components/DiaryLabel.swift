@@ -72,6 +72,8 @@ struct DiaryLabel: View {
                 isDeletePresented = true
             }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(accessibilitySummary))
         .confirmationDialog(
             Text(DiaryDeleteCopy.title(for: diary)),
             isPresented: $isDeletePresented
@@ -116,5 +118,28 @@ struct DiaryLabel: View {
     List {
         DiaryLabel()
             .environment(diaries[0])
+    }
+}
+
+private extension DiaryLabel {
+    var accessibilitySummary: String {
+        [
+            "Diary: \(accessibilityDate)",
+            DiaryListSummary.text(
+                recipeNames: diary.recipes.orEmpty.map(\.name),
+                note: diary.note
+            )
+        ]
+        .joined(separator: ". ")
+    }
+
+    var accessibilityDate: String {
+        diary.date.formatted(
+            .dateTime
+                .year()
+                .month(.wide)
+                .day()
+                .weekday(.wide)
+        )
     }
 }

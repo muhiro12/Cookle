@@ -27,6 +27,8 @@ struct DiaryTopSuggestionButton: View {
             .cookleButtonRowContent()
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(Text(suggestion.accessibilityLabel))
+        .accessibilityHint(Text("Opens an editable diary draft."))
     }
 }
 
@@ -47,5 +49,22 @@ struct DiaryTopSuggestionButton: View {
             }
         }
         .navigationTitle("Diaries")
+    }
+}
+
+private extension DiaryTopSuggestion {
+    var accessibilityLabel: String {
+        "Add \(recipeName) to today's \(mealAccessibilityName)"
+    }
+
+    var mealAccessibilityName: String {
+        switch mealType {
+        case .breakfast:
+            return "breakfast"
+        case .lunch:
+            return "lunch"
+        case .dinner:
+            return "dinner"
+        }
     }
 }

@@ -81,6 +81,17 @@ right dish from widgets, notifications, Shortcuts, or Apple Watch.
 - Keep recipe content private by default, with optional iCloud sync through your
   Apple account.
 
+## Accessibility
+
+- Cookle uses standard SwiftUI controls, lists, forms, and navigation where
+  possible so VoiceOver and Dynamic Type can follow system behavior.
+- Recipe, diary, photo, notification, widget, and cooking-session surfaces use
+  descriptive text labels for their primary actions.
+- Widget content that may reveal recipe or diary details is marked privacy
+  sensitive for supported system contexts.
+- The app avoids color-only meaning for core cooking, diary, and data-management
+  actions.
+
 ## Screenshots
 
 <table class="gallery">
