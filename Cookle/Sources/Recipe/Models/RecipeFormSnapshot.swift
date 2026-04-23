@@ -45,18 +45,6 @@ nonisolated struct RecipeFormSnapshot: Codable, Equatable, Sendable {
     var formIngredients: [RecipeFormIngredient] {
         ingredients.map(\.formIngredient)
     }
-    var isNearlyEmpty: Bool {
-        name.isEmpty
-            && servingSize.isEmpty
-            && cookingTime.isEmpty
-            && note.isEmpty
-            && ingredients.allSatisfy { ingredient in
-                ingredient.ingredient.isEmpty
-                    && ingredient.amount.isEmpty
-            }
-            && steps.allSatisfy(\.isEmpty)
-            && categories.allSatisfy(\.isEmpty)
-    }
 
     init(
         name: String,

@@ -5,7 +5,6 @@
 //  Created by Hiromu Nakano on 2024/04/09.
 //
 
-import Foundation
 import MHPlatform
 import SwiftData
 import SwiftUI
@@ -13,8 +12,6 @@ import SwiftUI
 struct RecipeView: View {
     @Environment(Recipe.self)
     private var recipe
-    @Environment(CookleTipController.self)
-    private var tipController
     @Environment(CookingSessionStore.self)
     private var cookingSessionStore
     @Environment(RecipeActionService.self)
@@ -43,7 +40,6 @@ struct RecipeView: View {
             }
         }
         .task {
-            tipController.donateDidOpenRecipeDetail()
             do {
                 try await recipeActionService.recordOpenedRecipe(
                     recipe

@@ -17,8 +17,4 @@ enum CookleWidgetReloader {
     static func reloadRecipeWidgets() {
         reloadRecipeWidget()
     }
-
-    static func reloadLastOpenedRecipeWidget() {
-        reloadRecipeWidget()
-    }
 }

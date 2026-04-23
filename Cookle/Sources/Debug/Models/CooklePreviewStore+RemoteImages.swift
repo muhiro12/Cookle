@@ -8,18 +8,6 @@ extension CooklePreviewStore {
         static let successStatusCodes = 200...299
     }
 
-    func createPhotoObject(_ context: ModelContext, systemName: String, order: Int) -> PhotoObject {
-        let photoData = photoDataFromSystemImage(named: systemName)
-        return .create(
-            context: context,
-            photoData: .init(
-                data: photoData,
-                source: order == RemoteImageConstants.firstOrder ? .photosPicker : .imagePlayground
-            ),
-            order: order
-        )
-    }
-
     func createPhotoObject(
         _ context: ModelContext,
         asset: SamplePhotoAsset,

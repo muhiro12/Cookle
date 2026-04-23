@@ -124,28 +124,6 @@ final class DiaryActionService {
             )
         }
     }
-
-    @discardableResult
-    func delete(
-        context: ModelContext,
-        on date: Date
-    ) async throws -> MutationOutcome<Bool> {
-        guard let diary = try DiaryService.diary(
-            on: date,
-            context: context
-        ) else {
-            return .init(value: false)
-        }
-
-        let mutationOutcome = try await delete(
-            context: context,
-            diary: diary
-        )
-        return .init(
-            value: true,
-            effects: mutationOutcome.effects
-        )
-    }
 }
 
 private extension DiaryActionService {

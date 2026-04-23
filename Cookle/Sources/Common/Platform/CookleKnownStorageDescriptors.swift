@@ -20,11 +20,4 @@ enum CookleKnownStorageDescriptors {
                 CookleAppLogging.snapshotStorageDescriptors.previous
             ]
     }
-
-    nonisolated static var all: [any MHStorageDescriptorProtocol] {
-        preferenceLifecycleDescriptors
-            + [
-                preferenceLifecycleState
-            ]
-    }
 }

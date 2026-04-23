@@ -2,9 +2,6 @@ import SwiftData
 import SwiftUI
 
 struct DebugContentView<Model: PersistentModel>: View {
-    @Environment(\.modelContext)
-    private var context
-
     @Query private var models: [Model]
 
     @Binding private var detail: Model?

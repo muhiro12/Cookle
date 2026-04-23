@@ -11,8 +11,6 @@ import SwiftUI
 struct RecipeCategoriesSection: View {
     @Environment(Recipe.self)
     private var recipe
-    @Environment(\.modelContext)
-    private var context
 
     var body: some View {
         if let categories = recipe.categories,

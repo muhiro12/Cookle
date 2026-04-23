@@ -2,9 +2,6 @@ import SwiftData
 import SwiftUI
 
 struct EditDiaryButton: View {
-    @Environment(Diary.self)
-    private var diary
-
     @State private var isPresented = false
 
     private let action: (() -> Void)?

@@ -16,8 +16,4 @@ enum PhotoDeleteCopy {
         return "This removes the stored photo asset and \(affectedRowCount) linked " +
             "\(rowLabel). Recipes stay saved."
     }
-
-    static func successDialog(for _: Photo) -> String {
-        "Deleted photo"
-    }
 }

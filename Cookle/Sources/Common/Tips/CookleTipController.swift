@@ -32,10 +32,6 @@ final class CookleTipController {
         isConfigured = true
     }
 
-    func donateDidOpenRecipeDetail() {
-        CookleTipEvents.didOpenRecipeDetail.sendDonation()
-    }
-
     func donateDidOpenDiaryForm() {
         CookleTipEvents.didOpenDiaryForm.sendDonation()
     }

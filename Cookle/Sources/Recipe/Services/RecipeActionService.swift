@@ -93,24 +93,6 @@ final class RecipeActionService {
     }
 
     @discardableResult
-    func removePhoto(
-        context: ModelContext,
-        recipe: Recipe,
-        photoObject: PhotoObject
-    ) async throws -> MutationOutcome<Void> {
-        try await run(
-            name: "removeRecipePhoto",
-            requestReview: false
-        ) {
-            RecipeService.removePhotoWithOutcome(
-                context: context,
-                recipe: recipe,
-                photoObject: photoObject
-            )
-        }
-    }
-
-    @discardableResult
     func replaceGeneratedPhoto(
         context: ModelContext,
         recipe: Recipe,
