@@ -17,8 +17,13 @@ struct RecipeListView: View {
 
     @Binding private var recipe: Recipe?
 
-    @State private var sortMode = RecipeBrowseSortMode.alphabetical
-    @State private var isAscending = true
+    @AppStorage(
+        \.recipeBrowseSortMode,
+        default: RecipeBrowseSortMode.alphabetical.rawValue
+    )
+    private var recipeBrowseSortModeRawValue
+    @AppStorage(\.isRecipeBrowseSortAscending)
+    private var isRecipeBrowseSortAscending
     @State private var cookingPresentation: CookingPresentation?
 
     private let addRecipeTip = AddRecipeTip()
@@ -88,9 +93,22 @@ private extension RecipeListView {
     var sortedRecipes: [Recipe] {
         RecipeService.browse(
             allRecipes,
-            sortMode: sortMode,
-            isAscending: isAscending
+            sortMode: recipeBrowseSortMode,
+            isAscending: isRecipeBrowseSortAscending
         )
+    }
+
+    var recipeBrowseSortMode: RecipeBrowseSortMode {
+        RecipeBrowseSortMode(rawValue: recipeBrowseSortModeRawValue)
+            ?? .alphabetical
+    }
+
+    var recipeBrowseSortModeBinding: Binding<RecipeBrowseSortMode> {
+        .init {
+            recipeBrowseSortMode
+        } set: { sortMode in
+            recipeBrowseSortModeRawValue = sortMode.rawValue
+        }
     }
 
     var topReturnTarget: RecipeTopReturnTarget? {
@@ -105,7 +123,7 @@ private extension RecipeListView {
 
     var sortMenu: some View {
         Menu {
-            Picker("Sort", selection: $sortMode) {
+            Picker("Sort", selection: recipeBrowseSortModeBinding) {
                 ForEach(RecipeBrowseSortMode.allCases) { sortMode in
                     Text(sortMode.title)
                         .tag(sortMode)
@@ -113,7 +131,7 @@ private extension RecipeListView {
             }
             .pickerStyle(.menu)
 
-            Toggle("Ascending", isOn: $isAscending)
+            Toggle("Ascending", isOn: $isRecipeBrowseSortAscending)
         } label: {
             Label("Sort", systemImage: "arrow.up.arrow.down.circle")
         }

@@ -37,6 +37,8 @@ struct CooklePreferenceCatalogTests {
             descriptors.lastLaunchedAppVersion.storageKey,
             descriptors.activeCookingSessionSnapshot.storageKey,
             descriptors.detachedObjectCleanupCompleted.storageKey,
+            descriptors.recipeBrowseSortMode.storageKey,
+            descriptors.isRecipeBrowseSortAscending.storageKey,
             descriptors.pendingIntentDeepLinkURL.storageKey
         ]
 
@@ -58,6 +60,8 @@ struct CooklePreferenceCatalogTests {
         #expect(descriptors.lastLaunchedAppVersion.defaultSelection == .standard)
         #expect(descriptors.activeCookingSessionSnapshot.defaultSelection == .standard)
         #expect(descriptors.detachedObjectCleanupCompleted.defaultSelection == .standard)
+        #expect(descriptors.recipeBrowseSortMode.defaultSelection == .standard)
+        #expect(descriptors.isRecipeBrowseSortAscending.defaultSelection == .standard)
         #expect(
             descriptors.lastOpenedRecipeID.defaultSelection
                 == .suite(CookleSharedPreferences.appGroupIdentifier)

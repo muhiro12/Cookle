@@ -99,6 +99,23 @@ public extension MHPreferenceDescriptors {
         )
     }
 
+    /// Preferred recipe browse sort mode stored in the standard app domain.
+    var recipeBrowseSortMode: MHStringPreferenceDescriptor {
+        .init(
+            storageKey: CookleUserDefaultsKeys.Standard.recipeBrowseSortMode.rawValue,
+            defaultSelection: .standard
+        )
+    }
+
+    /// Preferred recipe browse sort direction stored in the standard app domain.
+    var isRecipeBrowseSortAscending: MHBoolPreferenceDescriptor {
+        .init(
+            storageKey: CookleUserDefaultsKeys.Standard.isRecipeBrowseSortAscending.rawValue,
+            defaultSelection: .standard,
+            default: true
+        )
+    }
+
     /// Pending deep link handoff shared across app targets.
     var pendingIntentDeepLinkURL: MHStringPreferenceDescriptor {
         .init(
