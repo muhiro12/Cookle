@@ -2,6 +2,10 @@ import SwiftData
 import SwiftUI
 
 struct RecipeLabel: View {
+    private enum Layout {
+        static let favoriteIconSpacing = 4.0
+    }
+
     @Environment(Recipe.self)
     private var recipe
     @Environment(\.modelContext)
@@ -9,6 +13,8 @@ struct RecipeLabel: View {
     @Environment(RecipeActionService.self)
     private var recipeActionService
 
+    @AppStorage(\.favoriteRecipeIDs, default: "")
+    private var favoriteRecipeIDs
     @State private var isEditPresented = false
     @State private var isDuplicatePresented = false
     @State private var isDeletePresented = false
@@ -18,7 +24,14 @@ struct RecipeLabel: View {
     var body: some View {
         Label {
             VStack(alignment: .leading) {
-                Text(recipe.name)
+                HStack(spacing: Layout.favoriteIconSpacing) {
+                    Text(recipe.name)
+                    if isFavorite {
+                        Image(systemName: "star.fill")
+                            .foregroundStyle(.yellow)
+                            .accessibilityHidden(true)
+                    }
+                }
                 Text(ingredientsText)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -45,6 +58,14 @@ struct RecipeLabel: View {
             }
         }
         .contextMenu {
+            Button {
+                toggleFavorite()
+            } label: {
+                Label(
+                    favoriteActionTitle,
+                    systemImage: isFavorite ? "star.slash" : "star"
+                )
+            }
             EditRecipeButton {
                 isEditPresented = true
             }
@@ -123,13 +144,32 @@ private extension RecipeLabel {
             .joined(separator: ", ") ?? ""
     }
 
+    var isFavorite: Bool {
+        FavoriteRecipeService.isFavorite(
+            recipe,
+            encodedFavoriteRecipeIDs: favoriteRecipeIDs
+        )
+    }
+
+    var favoriteActionTitle: String {
+        isFavorite
+            ? String(localized: "Remove from Favorites")
+            : String(localized: "Add to Favorites")
+    }
+
     var accessibilitySummary: String {
-        [
+        var summaryParts = [
             "Recipe: \(recipe.name)",
             accessibilityIngredientsText,
             accessibilityCategoriesText
         ]
-        .joined(separator: ". ")
+        if isFavorite {
+            summaryParts.insert(
+                "Favorite recipe",
+                at: 1
+            )
+        }
+        return summaryParts.joined(separator: ". ")
     }
 
     var accessibilityIngredientsText: String {
@@ -146,5 +186,13 @@ private extension RecipeLabel {
         }
 
         return "Categories: \(categoriesText)"
+    }
+
+    func toggleFavorite() {
+        favoriteRecipeIDs = FavoriteRecipeService.setFavorite(
+            isFavorite == false,
+            recipe: recipe,
+            encodedFavoriteRecipeIDs: favoriteRecipeIDs
+        ) ?? ""
     }
 }

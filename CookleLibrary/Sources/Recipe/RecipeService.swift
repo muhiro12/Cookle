@@ -127,6 +127,16 @@ public enum RecipeService {
         context: ModelContext,
         recipe: Recipe
     ) -> MutationOutcome<Void> {
+        CooklePreferences.set(
+            FavoriteRecipeService.setFavorite(
+                false,
+                recipe: recipe,
+                encodedFavoriteRecipeIDs: CooklePreferences.string(
+                    for: \.favoriteRecipeIDs
+                )
+            ),
+            for: \.favoriteRecipeIDs
+        )
         context.delete(recipe)
         return .init(
             value: (),

@@ -116,6 +116,14 @@ public extension MHPreferenceDescriptors {
         )
     }
 
+    /// Favorite recipe identifiers stored in the standard app domain.
+    var favoriteRecipeIDs: MHStringPreferenceDescriptor {
+        .init(
+            storageKey: CookleUserDefaultsKeys.Standard.favoriteRecipeIDs.rawValue,
+            defaultSelection: .standard
+        )
+    }
+
     /// Pending deep link handoff shared across app targets.
     var pendingIntentDeepLinkURL: MHStringPreferenceDescriptor {
         .init(

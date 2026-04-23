@@ -20,6 +20,7 @@ public enum CooklePreferenceCatalog {
             descriptors.detachedObjectCleanupCompleted,
             descriptors.recipeBrowseSortMode,
             descriptors.isRecipeBrowseSortAscending,
+            descriptors.favoriteRecipeIDs,
             descriptors.pendingIntentDeepLinkURL
         ]
     }
