@@ -74,7 +74,10 @@ private extension MergeDuplicateTagButton {
     }
 
     var confirmationMessage: String {
-        "This will reassign recipes from \(duplicateCount - 1) matching tags to \(tag.value), then delete the duplicate tags."
+        """
+        This will reassign recipes from \(duplicateCount - 1) matching tags to \(tag.value), \
+        then delete the duplicate tags.
+        """
     }
 
     func mergeDuplicates() {
