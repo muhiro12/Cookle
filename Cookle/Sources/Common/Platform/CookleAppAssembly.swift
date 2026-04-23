@@ -8,6 +8,7 @@ final class CookleAppAssembly {
     let navigationModel: MainNavigationModel
     let services: CookleAppServices
     let cookingSessionStore: CookingSessionStore
+    // periphery:ignore - Retain the watch sync service for the lifetime of the app assembly.
     let cookingSessionWatchSyncService: CookingSessionWatchSyncService
     let recipeActionService: RecipeActionService
     let photoActionService: PhotoActionService

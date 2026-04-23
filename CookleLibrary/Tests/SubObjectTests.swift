@@ -1,4 +1,3 @@
-@testable import CookleLibrary
 import Testing
 
 @Suite("SubObject")

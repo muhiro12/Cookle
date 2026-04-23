@@ -234,6 +234,13 @@ are source-controlled production identifiers, not local-only credentials.
   bash ci_scripts/tasks/test_shared_library.sh
   ```
 
+- Run the manual unused code audit:
+
+  ```bash
+  bash ci_scripts/tasks/build_app.sh
+  bash ci_scripts/tasks/check_unused_code.sh
+  ```
+
 ## Continuous integration
 
 - `ci_scripts/ci_post_clone.sh` adjusts Xcode defaults for plugin validation
@@ -254,6 +261,8 @@ post-clone CI setup.
   repository state and still writes CI run artifacts.
 - `bash ci_scripts/tasks/verify_pre_push.sh` is the optional local `pre-push`
   hook wrapper for the same non-destructive verification gate.
+- `bash ci_scripts/tasks/check_unused_code.sh` runs the opt-in Periphery audit
+  after `build_app.sh` has refreshed the shared index store.
 
 SwiftLint is resolved from the `SimplyDanny/SwiftLintPlugins` package declared
 in `Cookle.xcodeproj`. The repository scripts do not require a separately
@@ -314,6 +323,30 @@ If you only need library tests:
 ```sh
 bash ci_scripts/tasks/test_shared_library.sh
 ```
+
+## Unused code audit (Periphery)
+
+Periphery is an opt-in manual audit tool in this repository. It is not part of
+`verify_task_completion.sh`, `verify_repository_state.sh`, or
+`verify_pre_push.sh`.
+
+Install `periphery` manually before using the audit task. For example:
+
+```sh
+brew install periphery
+```
+
+Then refresh the shared index store and run the audit:
+
+```sh
+bash ci_scripts/tasks/build_app.sh
+bash ci_scripts/tasks/check_unused_code.sh
+```
+
+The repository keeps the scan options in `.periphery.yml` and reuses
+`.build/ci/shared/DerivedData/Index.noindex/DataStore` with `--skip-build`.
+This repository does not maintain a Periphery baseline file. Keep intentional
+framework entry points with `// periphery:ignore` when needed.
 
 If you want an optional Git `pre-push` hook for the same repository flow, add a
 local `.git/hooks/pre-push` script like this:

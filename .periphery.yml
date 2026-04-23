@@ -1,0 +1,22 @@
+# Manual Periphery audit configuration for Cookle.
+# Keep baseline support disabled so existing shared-library candidates remain visible.
+disable_update_check: true
+exclude_tests: true
+index_store_path:
+  - .build/ci/shared/DerivedData/Index.noindex/DataStore
+project: Cookle.xcodeproj
+relative_results: true
+report_exclude:
+  - CookleLibrary/Tests/**
+retain_files:
+  - Cookle/Sources/**/Intents/*.swift
+  - Widgets/Sources/**/Intents/*.swift
+  - Cookle/Sources/Common/Intents/CookleShortcuts.swift
+  - Cookle/Sources/Recipe/Models/RecipeEntity.swift
+  - Cookle/Sources/Recipe/Models/RecipeEntityQuery.swift
+retain_objc_accessible: true
+retain_swift_ui_previews: true
+schemes:
+  - Cookle
+  - Widgets
+skip_build: true
