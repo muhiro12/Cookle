@@ -93,6 +93,9 @@ private extension RecipeView {
     var recipeActionSection: some View {
         Section {
             startCookingButton
+            if #available(iOS 26.0, *) {
+                QuickRecipeVersionButton()
+            }
             ToggleRecipeFavoriteButton()
             ShareRecipeLinkButton()
             AddRecipeToTodayDiaryButton()
