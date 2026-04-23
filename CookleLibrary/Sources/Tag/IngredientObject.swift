@@ -67,4 +67,16 @@ nonisolated public final class IngredientObject: SubObject {
         return object
     }
     // swiftlint:enable function_parameter_count
+
+    /// Reassigns this row to another ingredient tag while keeping amount and order explicit.
+    public func update(
+        ingredient: Ingredient,
+        amount: String,
+        order: Int
+    ) {
+        self.ingredient = ingredient
+        self.amount = amount
+        self.order = order
+        self.modifiedTimestamp = .now
+    }
 }

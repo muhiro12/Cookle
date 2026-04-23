@@ -83,6 +83,7 @@ private extension TagView {
 
     var actionSection: some View {
         Section {
+            MergeDuplicateTagButton<T>()
             EditTagButton<T>()
             deleteSectionButton
         } header: {

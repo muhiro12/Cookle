@@ -92,7 +92,86 @@ public enum TagService {
         )
     }
 
-    private static func normalized(_ value: String) throws -> String {
+    /// Returns all tags that look equivalent to `tag` in the supplied collection.
+    public static func duplicateTags<T: Tag>(
+        matching tag: T,
+        in tags: [T]
+    ) -> [T] {
+        let targetKey = duplicateKey(
+            for: tag
+        )
+        return tags.filter { candidate in
+            duplicateKey(
+                for: candidate
+            ) == targetKey
+        }
+    }
+
+    /// Returns one representative per duplicate-looking group in the supplied collection.
+    public static func duplicateTags<T: Tag>(
+        in tags: [T]
+    ) -> [T] {
+        Dictionary(grouping: tags) { tag in
+            duplicateKey(
+                for: tag
+            )
+        }
+        .compactMap { _, group in
+            guard group.count > 1 else {
+                return nil
+            }
+            return group.min(
+                by: tagComesBefore
+            )
+        }
+        .sorted(
+            by: tagComesBefore
+        )
+    }
+
+    /// Merges duplicate-looking ingredients into the supplied ingredient.
+    public static func mergeDuplicatesWithOutcome(
+        context: ModelContext,
+        keeping ingredient: Ingredient
+    ) throws -> MutationOutcome<Void> {
+        let duplicates = duplicateTags(
+            matching: ingredient,
+            in: try context.fetch(.ingredients(.all))
+        )
+        mergeDuplicateIngredients(
+            context: context,
+            keeping: ingredient,
+            duplicates: duplicates
+        )
+        return .init(
+            value: (),
+            effects: tagMutationEffects
+        )
+    }
+
+    /// Merges duplicate-looking categories into the supplied category.
+    public static func mergeDuplicatesWithOutcome(
+        context: ModelContext,
+        keeping category: Category
+    ) throws -> MutationOutcome<Void> {
+        let duplicates = duplicateTags(
+            matching: category,
+            in: try context.fetch(.categories(.all))
+        )
+        mergeDuplicateCategories(
+            context: context,
+            keeping: category,
+            duplicates: duplicates
+        )
+        return .init(
+            value: (),
+            effects: tagMutationEffects
+        )
+    }
+}
+
+private extension TagService {
+    static func normalized(_ value: String) throws -> String {
         let normalizedValue = value.trimmingCharacters(
             in: .whitespacesAndNewlines
         )
@@ -100,5 +179,132 @@ public enum TagService {
             throw TagServiceError.emptyValue
         }
         return normalizedValue
+    }
+
+    static func duplicateKey<T: Tag>(
+        for tag: T
+    ) -> String {
+        tag.value
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .components(separatedBy: .whitespacesAndNewlines)
+            .filter(\.isNotEmpty)
+            .joined(separator: " ")
+            .folding(
+                options: [
+                    .caseInsensitive,
+                    .diacriticInsensitive,
+                    .widthInsensitive
+                ],
+                locale: .current
+            )
+    }
+
+    static func mergeDuplicateIngredients(
+        context: ModelContext,
+        keeping parent: Ingredient,
+        duplicates: [Ingredient]
+    ) {
+        let children = duplicateChildren(
+            keeping: parent,
+            duplicates: duplicates
+        )
+        let affectedObjects = uniqueModels(
+            children.flatMap(\.objects.orEmpty)
+        )
+        let affectedRecipes = uniqueModels(
+            affectedObjects.compactMap(\.recipe)
+        )
+
+        for object in affectedObjects {
+            object.update(
+                ingredient: parent,
+                amount: object.amount,
+                order: object.order
+            )
+        }
+
+        for recipe in affectedRecipes {
+            recipe.refreshIngredients()
+        }
+
+        for child in children {
+            context.delete(child)
+        }
+    }
+
+    static func mergeDuplicateCategories(
+        context: ModelContext,
+        keeping parent: Category,
+        duplicates: [Category]
+    ) {
+        let children = duplicateChildren(
+            keeping: parent,
+            duplicates: duplicates
+        )
+        let childIDs = Set(
+            children.map(\.persistentModelID)
+        )
+        let affectedRecipes = uniqueModels(
+            children.flatMap(\.recipes.orEmpty)
+        )
+
+        for recipe in affectedRecipes {
+            var categories = recipe.categories.orEmpty.filter { category in
+                childIDs.contains(
+                    category.persistentModelID
+                ) == false
+            }
+            if categories.contains(where: { category in
+                category.persistentModelID == parent.persistentModelID
+            }) == false {
+                categories.append(parent)
+            }
+            recipe.updateCategories(
+                categories
+            )
+        }
+
+        for child in children {
+            context.delete(child)
+        }
+    }
+
+    static func duplicateChildren<T: Tag>(
+        keeping parent: T,
+        duplicates: [T]
+    ) -> [T] {
+        duplicates.filter { tag in
+            tag.persistentModelID != parent.persistentModelID
+        }
+    }
+
+    static func uniqueModels<Model: PersistentModel>(
+        _ models: [Model]
+    ) -> [Model] {
+        var seenIDs = Set<PersistentIdentifier>()
+        var result = [Model]()
+
+        for model in models
+        where seenIDs.insert(model.persistentModelID).inserted {
+            result.append(model)
+        }
+
+        return result
+    }
+
+    static func tagComesBefore<T: Tag>(
+        _ lhs: T,
+        _ rhs: T
+    ) -> Bool {
+        if lhs.value != rhs.value {
+            return lhs.value.localizedStandardCompare(
+                rhs.value
+            ) == .orderedAscending
+        }
+        return String(
+            describing: lhs.persistentModelID
+        ) < String(
+            describing: rhs.persistentModelID
+        )
     }
 }

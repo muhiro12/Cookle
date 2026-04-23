@@ -111,6 +111,38 @@ final class TagActionService {
             )
         }
     }
+
+    @discardableResult
+    func mergeDuplicates<T: Tag>(
+        context: ModelContext,
+        keeping tag: T
+    ) async throws -> MutationOutcome<Void> {
+        if let ingredient = tag as? Ingredient {
+            return try await run(
+                name: "mergeDuplicateIngredients"
+            ) {
+                try TagService.mergeDuplicatesWithOutcome(
+                    context: context,
+                    keeping: ingredient
+                )
+            }
+        }
+
+        if let category = tag as? Category {
+            return try await run(
+                name: "mergeDuplicateCategories"
+            ) {
+                try TagService.mergeDuplicatesWithOutcome(
+                    context: context,
+                    keeping: category
+                )
+            }
+        }
+
+        throw CookleActionError.unsupportedTagType(
+            String(describing: T.self)
+        )
+    }
 }
 
 private extension TagActionService {

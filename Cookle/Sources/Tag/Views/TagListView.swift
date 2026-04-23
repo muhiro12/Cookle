@@ -79,12 +79,22 @@ private extension TagListView {
     func usageText(for tag: T) -> String {
         let recipeCount = tag.recipes.orEmpty.count
         let recipeLabel = recipeCount == 1 ? "recipe" : "recipes"
+        let duplicateCount = TagService.duplicateTags(
+            matching: tag,
+            in: tags
+        ).count
 
         if recipeCount == 0 {
-            return "Unused"
+            return duplicateUsageText(
+                baseText: "Unused",
+                duplicateCount: duplicateCount
+            )
         }
 
-        return "Used by \(recipeCount) \(recipeLabel)"
+        return duplicateUsageText(
+            baseText: "Used by \(recipeCount) \(recipeLabel)",
+            duplicateCount: duplicateCount
+        )
     }
 
     func tagRow(for rowTag: T) -> some View {
@@ -102,6 +112,17 @@ private extension TagListView {
             .cookleButtonRowContent()
         }
         .buttonStyle(.plain)
+    }
+
+    func duplicateUsageText(
+        baseText: String,
+        duplicateCount: Int
+    ) -> String {
+        guard duplicateCount > 1 else {
+            return baseText
+        }
+
+        return "\(baseText) · \(duplicateCount) possible duplicates"
     }
 }
 

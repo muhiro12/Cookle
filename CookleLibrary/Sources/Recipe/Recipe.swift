@@ -142,6 +142,18 @@ nonisolated public final class Recipe {
         self.modifiedTimestamp = .now
     }
     // swiftlint:enable function_parameter_count
+
+    /// Replaces only category tags while keeping the rest of the recipe content unchanged.
+    public func updateCategories(_ categories: [Category]) {
+        self.categories = categories
+        self.modifiedTimestamp = .now
+    }
+
+    /// Rebuilds flattened ingredient relations from the ordered ingredient rows.
+    public func refreshIngredients() {
+        self.ingredients = ingredientObjects.orEmpty.compactMap(\.ingredient)
+        self.modifiedTimestamp = .now
+    }
 }
 
 extension Recipe: Identifiable {}
