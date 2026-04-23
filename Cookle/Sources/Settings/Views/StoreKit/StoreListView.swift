@@ -6,8 +6,10 @@ struct StoreListView: View {
     private var appRuntime
 
     var body: some View {
-        List {
-            appRuntime.subscriptionSectionView()
+        SettingsDeferredRuntimeContentView {
+            List {
+                appRuntime.subscriptionSectionView()
+            }
         }
         .navigationTitle(Text("Subscription"))
     }
