@@ -24,12 +24,7 @@ struct CookingSessionView: View {
                     CloseButton()
                 }
             }
-            .onAppear {
-                UIApplication.shared.isIdleTimerDisabled = true
-            }
-            .onDisappear {
-                UIApplication.shared.isIdleTimerDisabled = false
-            }
+            .cookleIdleTimerDisabled()
             .onChange(of: cookingSessionStore.activeSnapshot?.updatedAt) {
                 guard cookingSessionStore.activeSnapshot == nil else {
                     return

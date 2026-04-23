@@ -29,6 +29,7 @@ struct RecipeView: View {
             recipeActionSection
         }
         .navigationTitle(recipe.name)
+        .cookleIdleTimerDisabled()
         .fullScreenCover(isPresented: $isCookingPresented) {
             NavigationStack {
                 CookingSessionView()
