@@ -89,6 +89,37 @@ nonisolated public final class Recipe {
     // swiftlint:enable function_parameter_count
 
     // swiftlint:disable function_parameter_count
+    static func restore(
+        context: ModelContext,
+        name: String,
+        photos: [PhotoObject],
+        servingSize: Int,
+        cookingTime: Int,
+        ingredients: [IngredientObject],
+        steps: [String],
+        categories: [Category],
+        note: String,
+        createdTimestamp: Date,
+        modifiedTimestamp: Date
+    ) -> Recipe {
+        let recipe = create(
+            context: context,
+            name: name,
+            photos: photos,
+            servingSize: servingSize,
+            cookingTime: cookingTime,
+            ingredients: ingredients,
+            steps: steps,
+            categories: categories,
+            note: note
+        )
+        recipe.createdTimestamp = createdTimestamp
+        recipe.modifiedTimestamp = modifiedTimestamp
+        return recipe
+    }
+    // swiftlint:enable function_parameter_count
+
+    // swiftlint:disable function_parameter_count
     /// Replaces editable recipe content, rebuilds derived relations, and refreshes `modifiedTimestamp`.
     public func update(name: String,
                        photos: [PhotoObject],

@@ -46,4 +46,25 @@ nonisolated public final class IngredientObject: SubObject {
         object.order = order
         return object
     }
+
+    // swiftlint:disable function_parameter_count
+    static func restore(
+        context: ModelContext,
+        ingredient: Ingredient,
+        amount: String,
+        order: Int,
+        createdTimestamp: Date,
+        modifiedTimestamp: Date
+    ) -> IngredientObject {
+        let object = IngredientObject(
+            ingredient: ingredient
+        )
+        context.insert(object)
+        object.amount = amount
+        object.order = order
+        object.createdTimestamp = createdTimestamp
+        object.modifiedTimestamp = modifiedTimestamp
+        return object
+    }
+    // swiftlint:enable function_parameter_count
 }

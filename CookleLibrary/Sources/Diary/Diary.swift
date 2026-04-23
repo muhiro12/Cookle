@@ -44,6 +44,27 @@ nonisolated public final class Diary {
         return diary
     }
 
+    // swiftlint:disable function_parameter_count
+    static func restore(
+        context: ModelContext,
+        date: Date,
+        objects: [DiaryObject],
+        note: String,
+        createdTimestamp: Date,
+        modifiedTimestamp: Date
+    ) -> Diary {
+        let diary = create(
+            context: context,
+            date: date,
+            objects: objects,
+            note: note
+        )
+        diary.createdTimestamp = createdTimestamp
+        diary.modifiedTimestamp = modifiedTimestamp
+        return diary
+    }
+    // swiftlint:enable function_parameter_count
+
     /// Replaces the stored date, meal rows, and note, then refreshes `modifiedTimestamp`.
     public func update(date: Date,
                        objects: [DiaryObject],

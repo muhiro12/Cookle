@@ -40,6 +40,22 @@ nonisolated public final class Photo {
         photo.sourceID = photoData.source.rawValue
         return photo
     }
+
+    static func restore(
+        context: ModelContext,
+        data: Data,
+        sourceID: String,
+        createdTimestamp: Date,
+        modifiedTimestamp: Date
+    ) -> Photo {
+        let photo = Photo()
+        context.insert(photo)
+        photo.data = data
+        photo.sourceID = sourceID
+        photo.createdTimestamp = createdTimestamp
+        photo.modifiedTimestamp = modifiedTimestamp
+        return photo
+    }
 }
 
 public extension Photo {

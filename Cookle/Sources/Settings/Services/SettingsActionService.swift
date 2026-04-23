@@ -1,3 +1,4 @@
+import Foundation
 import Observation
 @preconcurrency import SwiftData
 
@@ -19,6 +20,40 @@ final class SettingsActionService {
     func applyNotificationSettings() async {
         normalizeNotificationDefaultsIfNeeded()
         await notificationService.applySuggestionSettings()
+    }
+
+    func exportBackupData(modelContainer: ModelContainer) throws -> Data {
+        try CookleDataArchiveService.encodedArchive(
+            from: modelContainer.mainContext
+        )
+    }
+
+    func validatedBackupArchive(from url: URL) throws -> CookleDataArchive {
+        let didAccessSecurityScopedResource = url.startAccessingSecurityScopedResource()
+        defer {
+            if didAccessSecurityScopedResource {
+                url.stopAccessingSecurityScopedResource()
+            }
+        }
+
+        return try CookleDataArchiveService.validatedArchive(
+            from: Data(contentsOf: url)
+        )
+    }
+
+    func restoreBackup(
+        _ archive: CookleDataArchive,
+        modelContainer: ModelContainer
+    ) async throws -> CookleDataRestoreSummary {
+        let summary = try CookleDataArchiveService.restore(
+            archive,
+            context: modelContainer.mainContext
+        )
+
+        CookleWidgetReloader.reloadTodayDiaryWidget()
+        CookleWidgetReloader.reloadRecipeWidgets()
+        await notificationService.synchronizeScheduledSuggestions()
+        return summary
     }
 
     func deleteAllData(modelContainer: ModelContainer) async throws {

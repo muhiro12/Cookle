@@ -41,6 +41,20 @@ nonisolated public final class Category: Tag {
         return category
     }
 
+    static func restore(
+        context: ModelContext,
+        value: String,
+        createdTimestamp: Date,
+        modifiedTimestamp: Date
+    ) -> Category {
+        let category = Category()
+        context.insert(category)
+        category.value = value
+        category.createdTimestamp = createdTimestamp
+        category.modifiedTimestamp = modifiedTimestamp
+        return category
+    }
+
     /// Replaces the stored category label and refreshes `modifiedTimestamp`.
     public func update(value: String) {
         self.value = value

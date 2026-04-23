@@ -57,28 +57,11 @@ struct SettingsSidebarView: View {
                         .hidden(!isPresented)
                 }
             }
-            .confirmationDialog(
-                Text("Delete All"),
-                isPresented: $model.isDeleteAllConfirmationPresented
-            ) {
-                Button(role: .destructive) {
-                    Task {
-                        _ = await model.deleteAllData(
-                            modelContainer: context.container,
-                            settingsActionService: settingsActionService
-                        )
-                    }
-                } label: {
-                    Text("Delete")
-                }
-                Button(role: .cancel) {
-                    // Dismisses the confirmation dialog.
-                } label: {
-                    Text("Cancel")
-                }
-            } message: {
-                Text("Are you sure you want to delete all data?")
-            }
+            .settingsDataManagementDialogs(
+                model: model,
+                modelContainer: context.container,
+                settingsActionService: settingsActionService
+            )
             .alert(
                 Text("Cannot Complete Settings Action"),
                 isPresented: isErrorPresentedBinding
@@ -136,7 +119,11 @@ struct SettingsSidebarView: View {
             subscriptionSection
             iCloudSection
             notificationSection
-            manageSection
+            SettingsDataManagementSection(
+                model: model,
+                modelContainer: context.container,
+                settingsActionService: settingsActionService
+            )
             generalSection
             ShortcutsLinkSection(
                 tip: currentSettingsTip(
@@ -214,16 +201,6 @@ struct SettingsSidebarView: View {
                     }
                 }
             }
-        }
-    }
-
-    var manageSection: some View {
-        Section {
-            Button("Delete All", systemImage: "trash", role: .destructive) {
-                model.isDeleteAllConfirmationPresented = true
-            }
-        } header: {
-            Text("Manage")
         }
     }
 

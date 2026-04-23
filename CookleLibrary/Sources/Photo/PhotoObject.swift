@@ -31,4 +31,21 @@ nonisolated public final class PhotoObject: SubObject {
         object.order = order
         return object
     }
+
+    static func restore(
+        context: ModelContext,
+        photo: Photo,
+        order: Int,
+        createdTimestamp: Date,
+        modifiedTimestamp: Date
+    ) -> PhotoObject {
+        let object = PhotoObject(
+            photo: photo
+        )
+        context.insert(object)
+        object.order = order
+        object.createdTimestamp = createdTimestamp
+        object.modifiedTimestamp = modifiedTimestamp
+        return object
+    }
 }

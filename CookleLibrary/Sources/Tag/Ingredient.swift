@@ -45,6 +45,20 @@ nonisolated public final class Ingredient: Tag {
         return ingredient
     }
 
+    static func restore(
+        context: ModelContext,
+        value: String,
+        createdTimestamp: Date,
+        modifiedTimestamp: Date
+    ) -> Ingredient {
+        let ingredient = Ingredient()
+        context.insert(ingredient)
+        ingredient.value = value
+        ingredient.createdTimestamp = createdTimestamp
+        ingredient.modifiedTimestamp = modifiedTimestamp
+        return ingredient
+    }
+
     /// Replaces the stored ingredient label and refreshes `modifiedTimestamp`.
     public func update(value: String) {
         self.value = value

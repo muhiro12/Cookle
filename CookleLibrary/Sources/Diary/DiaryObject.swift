@@ -39,4 +39,25 @@ nonisolated public final class DiaryObject: SubObject {
         object.order = order
         return object
     }
+
+    // swiftlint:disable function_parameter_count
+    static func restore(
+        context: ModelContext,
+        recipe: Recipe,
+        type: DiaryObjectType,
+        order: Int,
+        createdTimestamp: Date,
+        modifiedTimestamp: Date
+    ) -> DiaryObject {
+        let object = DiaryObject(
+            recipe: recipe,
+            type: type
+        )
+        context.insert(object)
+        object.order = order
+        object.createdTimestamp = createdTimestamp
+        object.modifiedTimestamp = modifiedTimestamp
+        return object
+    }
+    // swiftlint:enable function_parameter_count
 }
