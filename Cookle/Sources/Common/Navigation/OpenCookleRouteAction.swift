@@ -1,10 +1,18 @@
 import SwiftUI
 
 struct OpenCookleRouteAction {
+    enum Key: EnvironmentKey {
+        static let defaultValue = OpenCookleRouteAction()
+    }
+
+    private static let defaultAction: @MainActor (CookleRoute) -> Void = { route in
+        _ = route
+    }
+
     private let action: @MainActor (CookleRoute) -> Void
 
     init(
-        action: @escaping @MainActor (CookleRoute) -> Void = { _ in }
+        action: @escaping @MainActor (CookleRoute) -> Void = Self.defaultAction
     ) {
         self.action = action
     }
@@ -12,31 +20,5 @@ struct OpenCookleRouteAction {
     @MainActor
     func callAsFunction(_ route: CookleRoute) {
         action(route)
-    }
-}
-
-private struct OpenCookleRouteActionKey: EnvironmentKey {
-    static let defaultValue = OpenCookleRouteAction()
-}
-
-extension EnvironmentValues {
-    var openCookleRoute: OpenCookleRouteAction {
-        get {
-            self[OpenCookleRouteActionKey.self]
-        }
-        set {
-            self[OpenCookleRouteActionKey.self] = newValue
-        }
-    }
-}
-
-extension View {
-    func openCookleRoute(
-        _ action: @escaping @MainActor (CookleRoute) -> Void
-    ) -> some View {
-        environment(
-            \.openCookleRoute,
-            OpenCookleRouteAction(action: action)
-        )
     }
 }
