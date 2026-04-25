@@ -15,10 +15,6 @@ public enum DataResetService {
     public static func deleteAllWithOutcome(
         context: ModelContext
     ) throws -> MutationOutcome<Void> {
-        CooklePreferences.set(
-            nil,
-            for: \.favoriteRecipeIDs
-        )
         try context.delete(model: Diary.self)
         try context.delete(model: DiaryObject.self)
         try context.delete(model: Recipe.self)

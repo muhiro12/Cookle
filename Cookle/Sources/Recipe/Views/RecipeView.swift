@@ -93,7 +93,6 @@ private extension RecipeView {
     var recipeActionSection: some View {
         Section {
             startCookingButton
-            ToggleRecipeFavoriteButton()
             ShareRecipeLinkButton()
             AddRecipeToTodayDiaryButton()
             EditRecipeButton()

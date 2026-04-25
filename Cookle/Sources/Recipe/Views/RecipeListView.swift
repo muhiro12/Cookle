@@ -24,8 +24,6 @@ struct RecipeListView: View {
     private var recipeBrowseSortModeRawValue
     @AppStorage(\.isRecipeBrowseSortAscending)
     private var isRecipeBrowseSortAscending
-    @AppStorage(\.favoriteRecipeIDs, default: "")
-    private var favoriteRecipeIDs
     @State private var cookingPresentation: CookingPresentation?
 
     private let addRecipeTip = AddRecipeTip()
@@ -72,24 +70,8 @@ private extension RecipeListView {
                 }
             }
 
-            if favoriteRecipes.isEmpty {
-                ForEach(sortedRecipes) { recipe in
-                    recipeRow(for: recipe)
-                }
-            } else {
-                Section("Favorites") {
-                    ForEach(favoriteRecipes) { recipe in
-                        recipeRow(for: recipe)
-                    }
-                }
-
-                if otherRecipes.isNotEmpty {
-                    Section("Other Recipes") {
-                        ForEach(otherRecipes) { recipe in
-                            recipeRow(for: recipe)
-                        }
-                    }
-                }
+            ForEach(sortedRecipes) { recipe in
+                recipeRow(for: recipe)
             }
         }
     }
@@ -113,20 +95,6 @@ private extension RecipeListView {
             allRecipes,
             sortMode: recipeBrowseSortMode,
             isAscending: isRecipeBrowseSortAscending
-        )
-    }
-
-    var favoriteRecipes: [Recipe] {
-        FavoriteRecipeService.favoriteRecipes(
-            sortedRecipes,
-            encodedFavoriteRecipeIDs: favoriteRecipeIDs
-        )
-    }
-
-    var otherRecipes: [Recipe] {
-        FavoriteRecipeService.nonFavoriteRecipes(
-            sortedRecipes,
-            encodedFavoriteRecipeIDs: favoriteRecipeIDs
         )
     }
 
