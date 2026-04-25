@@ -1,127 +1,74 @@
-# Privacy Policy
+**Privacy Policy**
 
-Last updated: April 23, 2026
+This privacy policy applies to the Cookle app (hereby referred to as "Application") for mobile devices that was created by Hiromu Nakano (hereby referred to as "Service Provider") as a Freemium service. This service is intended for use "AS IS".
 
-This Privacy Policy applies to Cookle, a freemium recipe management
-application created by Hiromu Nakano.
+**Information Collection and Use**
 
-## Summary
+The Application collects information when you download and use it. This information may include information such as
 
-Cookle is designed to keep your recipes, cooking diary, tags, and photos under
-your control. The app stores the content you create on your device and, if you
-turn on iCloud sync, in your Apple iCloud account through Apple's CloudKit
-services.
+*   Your device's Internet Protocol address (e.g. IP address)
+*   The pages of the Application that you visit, the time and date of your visit, the time spent on those pages
+*   The time spent on the Application
+*   The operating system you use on your mobile device
 
-The service provider does not operate a separate Cookle account system and does
-not run a server that receives your recipe, diary, or photo content.
+The Application does not gather precise information about the location of your mobile device.
 
-## Information You Provide
+The Application collects your device's location, which helps the Service Provider determine your approximate geographical location and make use of in below ways:
 
-Cookle may store the following information when you choose to enter, import, or
-create it in the app:
+*   Geolocation Services: The Service Provider utilizes location data to provide features such as personalized content, relevant recommendations, and location-based services.
+*   Analytics and Improvements: Aggregated and anonymized location data helps the Service Provider to analyze user behavior, identify trends, and improve the overall performance and functionality of the Application.
+*   Third-Party Services: Periodically, the Service Provider may transmit anonymized location data to external services. These services assist them in enhancing the Application and optimizing their offerings.
 
-- Recipes, ingredients, categories, steps, serving sizes, cooking times, and
-  notes.
-- Cooking diary entries and meal history.
-- Photos selected from your photo library, captured with the camera, or created
-  with Apple Image Playground.
-- Active cooking session state, timers, and recently opened recipe state.
-- App settings such as sort order, notification preferences, subscription state,
-  and iCloud sync preferences.
-- Backup files that you explicitly export or restore.
+The Service Provider may use the information you provided to contact you from time to time to provide you with important information, required notices and marketing promotions.
 
-This information is used to provide the app's recipe, diary, search,
-notification, widget, Apple Watch, Shortcuts, backup, and restore features.
+For a better experience, while using the Application, the Service Provider may require you to provide us with certain personally identifiable information. The information that the Service Provider request will be retained by them and used as described in this privacy policy.
 
-## Device Permissions
+**Third Party Access**
 
-Cookle may ask for these permissions when you use related features:
+Only aggregated, anonymized data is periodically transmitted to external services to aid the Service Provider in improving the Application and their service. The Service Provider may share your information with third parties in the ways that are described in this privacy statement.
 
-- Photos access, to import recipe photos that you select.
-- Camera access, to capture recipe photos.
-- Notifications, to schedule optional recipe suggestion notifications.
+Please note that the Application utilizes third-party services that have their own Privacy Policy about handling data. Below are the links to the Privacy Policy of the third-party service providers used by the Application:
 
-Cookle does not ask for or collect precise or approximate device location.
+*   [AdMob](https://support.google.com/admob/answer/6128543?hl=en)
 
-## Local Storage and iCloud
+The Service Provider may disclose User Provided and Automatically Collected Information:
 
-Cookle stores app data using Apple's local storage frameworks. If you enable
-iCloud sync, supported Cookle data may sync through your Apple iCloud account.
-Apple processes iCloud and CloudKit data under Apple's own terms and privacy
-policies.
+*   as required by law, such as to comply with a subpoena, or similar legal process;
+*   when they believe in good faith that disclosure is necessary to protect their rights, protect your safety or the safety of others, investigate fraud, or respond to a government request;
+*   with their trusted services providers who work on their behalf, do not have an independent use of the information we disclose to them, and have agreed to adhere to the rules set forth in this privacy statement.
 
-You can disable iCloud sync in Cookle settings. You can also manage iCloud data
-from your Apple device and iCloud settings.
+**Opt-Out Rights**
 
-## Apple System Features
+You can stop all collection of information by the Application easily by uninstalling it. You may use the standard uninstall processes as may be available as part of your mobile device or via the mobile application marketplace or network.
 
-Cookle integrates with Apple system features such as widgets, Apple Watch, App
-Shortcuts, notifications, Photos, camera, Image Playground, Vision text
-recognition, and on-device recipe assistance features where available.
+**Data Retention Policy**
 
-These features may process your content on your device or through Apple's
-system services. Cookle does not send your recipe, diary, or photo content to a
-Cookle-owned server.
+The Service Provider will retain User Provided data for as long as you use the Application and for a reasonable time thereafter. If you'd like them to delete User Provided Data that you have provided via the Application, please contact them at https://twitter.com/muhiro_12 and they will respond in a reasonable time.
 
-## Subscriptions and Payments
+**Children**
 
-Cookle subscriptions are handled by Apple through the App Store and StoreKit.
-Cookle can read subscription status so it can enable premium features, but the
-service provider does not receive your payment card details.
+The Service Provider does not use the Application to knowingly solicit data from or market to children under the age of 13.
 
-## Advertising and Third-Party Services
+The Application does not address anyone under the age of 13\. The Service Provider does not knowingly collect personally identifiable information from children under 13 years of age. In the case the Service Provider discover that a child under 13 has provided personal information, the Service Provider will immediately delete this from their servers. If you are a parent or guardian and you are aware that your child has provided us with personal information, please contact the Service Provider (https://twitter.com/muhiro_12) so that they will be able to take the necessary actions.
 
-Cookle uses Google Mobile Ads to show ads to non-subscribed users. Google
-Mobile Ads and related Google services may process information such as device
-information, advertising identifiers where available, IP address, diagnostics,
-ad interactions, and consent choices according to Google's policies.
+**Security**
 
-Third-party services used by Cookle include:
+The Service Provider is concerned about safeguarding the confidentiality of your information. The Service Provider provides physical, electronic, and procedural safeguards to protect information the Service Provider processes and maintains.
 
-- [Google AdMob](https://support.google.com/admob/answer/6128543)
-- [Google Privacy Policy](https://policies.google.com/privacy)
-- [Apple Privacy Policy](https://www.apple.com/legal/privacy/)
+**Changes**
 
-Cookle does not sell your recipe, diary, or photo content.
+This Privacy Policy may be updated from time to time for any reason. The Service Provider will notify you of any changes to the Privacy Policy by updating this page with the new Privacy Policy. You are advised to consult this Privacy Policy regularly for any changes, as continued use is deemed approval of all changes.
 
-## Backups and Data Export
+This privacy policy is effective as of 2024-06-01
 
-Cookle lets you export a backup of your recipes, diaries, tags, and linked
-photos. Backup files are created only when you choose to export them. You are
-responsible for where you store or share exported backup files.
+**Your Consent**
 
-Restoring a backup replaces the current Cookle data on the device with the
-contents of the selected backup.
+By using the Application, you are consenting to the processing of your information as set forth in this Privacy Policy now and as amended by us.
 
-## Data Retention and Deletion
+**Contact Us**
 
-Cookle retains your app data while it remains stored on your device or in your
-iCloud account. You can delete individual items in the app or use the
-data-management controls in Settings to delete Cookle data.
+If you have any questions regarding privacy while using the Application, or have questions about the practices, please contact the Service Provider via email at https://twitter.com/muhiro_12.
 
-Uninstalling the app removes local app data from the device. If iCloud sync was
-enabled, synced data may remain available in iCloud until you delete it through
-Cookle or your Apple iCloud settings.
+* * *
 
-## Children
-
-Cookle is not directed to children under 13. The service provider does not
-knowingly collect personal information from children under 13.
-
-## Security
-
-Cookle relies on Apple platform security, device storage protections, iCloud
-security, and App Store payment infrastructure. No method of storage or
-transmission is completely secure, but Cookle limits its own data handling by
-keeping user-created cooking content on device or in the user's Apple iCloud
-account.
-
-## Changes
-
-This Privacy Policy may be updated from time to time. Changes are published by
-updating this page.
-
-## Contact
-
-If you have questions about this Privacy Policy, contact the service provider
-at [https://twitter.com/muhiro_12](https://twitter.com/muhiro_12).
+This privacy policy page was generated by [App Privacy Policy Generator](https://app-privacy-policy-generator.nisrulz.com/)
