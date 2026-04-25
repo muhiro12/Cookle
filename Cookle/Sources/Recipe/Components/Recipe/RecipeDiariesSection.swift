@@ -11,6 +11,8 @@ import SwiftUI
 struct RecipeDiariesSection: View {
     @Environment(Recipe.self)
     private var recipe
+    @Environment(\.openCookleRoute)
+    private var openCookleRoute
 
     var body: some View {
         if let diaries = recipe.diaries,
@@ -19,12 +21,40 @@ struct RecipeDiariesSection: View {
                 ForEach(diaries.sorted { lhs, rhs in
                     lhs.date > rhs.date
                 }) { diary in
-                    Text(diary.date.formatted(.dateTime.year().month().day()))
+                    Button {
+                        openDiary(diary)
+                    } label: {
+                        Text(diary.date.formatted(.dateTime.year().month().day()))
+                            .cookleButtonRowContent()
+                    }
+                    .buttonStyle(.plain)
                 }
             } header: {
                 Text("Diaries")
             }
         }
+    }
+}
+
+private extension RecipeDiariesSection {
+    func openDiary(_ diary: Diary) {
+        let dateComponents = Calendar.current.dateComponents(
+            [.year, .month, .day],
+            from: diary.date
+        )
+        guard let year = dateComponents.year,
+              let month = dateComponents.month,
+              let day = dateComponents.day else {
+            openCookleRoute(.diary)
+            return
+        }
+        openCookleRoute(
+            .diaryDate(
+                year: year,
+                month: month,
+                day: day
+            )
+        )
     }
 }
 

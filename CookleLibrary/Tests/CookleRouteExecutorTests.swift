@@ -43,11 +43,14 @@ struct CookleRouteExecutorTests {
                     diary.persistentModelID
             )
         case .home,
+             .photo,
              .recipe,
              .search,
              .settings,
              .settingsSubscription,
-             .settingsLicense:
+             .settingsLicense,
+             .tagCategory,
+             .tagIngredient:
             Issue.record("Expected .diary outcome for diary date route.")
         }
     }
@@ -63,11 +66,14 @@ struct CookleRouteExecutorTests {
         case .diary(let resolvedDiary):
             #expect(resolvedDiary == nil)
         case .home,
+             .photo,
              .recipe,
              .search,
              .settings,
              .settingsSubscription,
-             .settingsLicense:
+             .settingsLicense,
+             .tagCategory,
+             .tagIngredient:
             Issue.record("Expected .diary fallback outcome when diary is missing.")
         }
     }
@@ -101,10 +107,13 @@ struct CookleRouteExecutorTests {
             )
         case .home,
              .diary,
+             .photo,
              .search,
              .settings,
              .settingsSubscription,
-             .settingsLicense:
+             .settingsLicense,
+             .tagCategory,
+             .tagIngredient:
             Issue.record("Expected .recipe outcome for recipe detail route.")
         }
     }
@@ -121,10 +130,13 @@ struct CookleRouteExecutorTests {
             #expect(resolvedRecipe == nil)
         case .home,
              .diary,
+             .photo,
              .search,
              .settings,
              .settingsSubscription,
-             .settingsLicense:
+             .settingsLicense,
+             .tagCategory,
+             .tagIngredient:
             Issue.record("Expected .recipe fallback outcome for invalid recipe route.")
         }
     }
@@ -141,10 +153,13 @@ struct CookleRouteExecutorTests {
             #expect(query == "curry")
         case .home,
              .diary,
+             .photo,
              .recipe,
              .settings,
              .settingsSubscription,
-             .settingsLicense:
+             .settingsLicense,
+             .tagCategory,
+             .tagIngredient:
             Issue.record("Expected .search outcome for search route.")
         }
     }
@@ -161,10 +176,13 @@ struct CookleRouteExecutorTests {
             break
         case .home,
              .diary,
+             .photo,
              .recipe,
              .search,
              .settings,
-             .settingsLicense:
+             .settingsLicense,
+             .tagCategory,
+             .tagIngredient:
             Issue.record("Expected .settingsSubscription outcome.")
         }
     }

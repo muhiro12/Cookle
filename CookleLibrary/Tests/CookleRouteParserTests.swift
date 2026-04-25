@@ -44,6 +44,30 @@ struct CookleRouteParserTests {
         #expect(route == .search(query: "soup"))
     }
 
+    @Test("Parses custom scheme photo detail route with query")
+    func parseCustomSchemePhotoDetailRoute() {
+        let route = CookleRouteParser.parse(
+            url: testURL("cookle://photo?id=photo-id")
+        )
+        #expect(route == .photoDetail("photo-id"))
+    }
+
+    @Test("Parses custom scheme category tag detail route with query")
+    func parseCustomSchemeCategoryTagDetailRoute() {
+        let route = CookleRouteParser.parse(
+            url: testURL("cookle://tag/category?id=category-id")
+        )
+        #expect(route == .tagDetail(kind: .category, id: "category-id"))
+    }
+
+    @Test("Parses custom scheme ingredient tag list route")
+    func parseCustomSchemeIngredientTagListRoute() {
+        let route = CookleRouteParser.parse(
+            url: testURL("cookle://tag/ingredient")
+        )
+        #expect(route == .tag(kind: .ingredient))
+    }
+
     @Test("Parses custom scheme settings subscription route")
     func parseCustomSchemeSettingsSubscriptionRoute() {
         let route = CookleRouteParser.parse(
@@ -58,6 +82,14 @@ struct CookleRouteParserTests {
             url: testURL("https://muhiro12.github.io/Cookle/recipe?id=recipe-id")
         )
         #expect(route == .recipeDetail("recipe-id"))
+    }
+
+    @Test("Parses universal link category tag route with path prefix")
+    func parseUniversalLinkCategoryTagRouteWithPrefix() {
+        let route = CookleRouteParser.parse(
+            url: testURL("https://muhiro12.github.io/Cookle/tag/category?id=category-id")
+        )
+        #expect(route == .tagDetail(kind: .category, id: "category-id"))
     }
 
     @Test("Parses universal link route without path prefix")
@@ -116,6 +148,38 @@ struct CookleRouteParserTests {
     func parseRejectsRecipeRouteWithEmptyID() {
         let route = CookleRouteParser.parse(
             url: testURL("cookle://recipe?id=")
+        )
+        #expect(route == nil)
+    }
+
+    @Test("Rejects photo route with empty id")
+    func parseRejectsPhotoRouteWithEmptyID() {
+        let route = CookleRouteParser.parse(
+            url: testURL("cookle://photo?id=")
+        )
+        #expect(route == nil)
+    }
+
+    @Test("Rejects unknown tag kind route")
+    func parseRejectsUnknownTagKindRoute() {
+        let route = CookleRouteParser.parse(
+            url: testURL("cookle://tag/course?id=tag-id")
+        )
+        #expect(route == nil)
+    }
+
+    @Test("Rejects tag route with extra path segments")
+    func parseRejectsTagRouteWithExtraPathSegments() {
+        let route = CookleRouteParser.parse(
+            url: testURL("cookle://tag/category/extra?id=tag-id")
+        )
+        #expect(route == nil)
+    }
+
+    @Test("Rejects tag route with empty id")
+    func parseRejectsTagRouteWithEmptyID() {
+        let route = CookleRouteParser.parse(
+            url: testURL("cookle://tag/category?id=")
         )
         #expect(route == nil)
     }

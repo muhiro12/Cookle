@@ -2,8 +2,8 @@ import SwiftData
 import SwiftUI
 
 struct TagNavigationView<T: Tag>: View {
-    @State private var tag: T?
-    @State private var recipe: Recipe?
+    @Binding private var tag: T?
+    @Binding private var recipe: Recipe?
     @State private var preferredCompactColumn = NavigationSplitViewColumn.sidebar
     @State private var hasAppliedInitialCompactColumn = false
 
@@ -37,6 +37,14 @@ struct TagNavigationView<T: Tag>: View {
         .onChange(of: recipe?.persistentModelID) {
             syncPreferredCompactColumn()
         }
+    }
+
+    init(
+        selection: Binding<T?> = .constant(nil),
+        recipeSelection: Binding<Recipe?> = .constant(nil)
+    ) {
+        _tag = selection
+        _recipe = recipeSelection
     }
 }
 

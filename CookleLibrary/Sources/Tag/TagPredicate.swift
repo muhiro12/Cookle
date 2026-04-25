@@ -14,6 +14,8 @@ nonisolated public enum TagPredicate<T: Tag> {
     case all
     /// Excludes every tag record from the fetch.
     case none // swiftlint:disable:this discouraged_none_name
+    /// Includes only the tag with the supplied persistent identifier.
+    case idIs(PersistentIdentifier)
     /// Includes only tags whose stored value exactly equals the supplied text.
     case valueIs(String)
     /// Includes tags whose value contains the supplied text or its kana-normalized forms.
@@ -26,6 +28,10 @@ nonisolated public enum TagPredicate<T: Tag> {
             return .true
         case .none:
             return .false
+        case .idIs(let id):
+            return #Predicate<T> { tag in
+                tag.persistentModelID == id
+            }
         case .valueIs(let value):
             return #Predicate<T> { tag in
                 tag.value == value
@@ -90,6 +96,10 @@ private extension TagPredicate where T == Ingredient {
             return .true
         case .none:
             return .false
+        case .idIs(let id):
+            return #Predicate<Ingredient> { ingredient in
+                ingredient.persistentModelID == id
+            }
         case .valueIs(let value):
             return #Predicate<Ingredient> { ingredient in
                 ingredient.value == value
@@ -113,6 +123,10 @@ private extension TagPredicate where T == Category {
             return .true
         case .none:
             return .false
+        case .idIs(let id):
+            return #Predicate<Category> { category in
+                category.persistentModelID == id
+            }
         case .valueIs(let value):
             return #Predicate<Category> { category in
                 category.value == value

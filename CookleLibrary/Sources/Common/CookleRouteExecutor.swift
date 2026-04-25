@@ -15,6 +15,44 @@ public enum CookleRouteExecutor {
         switch route {
         case .home:
             return .home
+        case .diary,
+             .diaryDate:
+            return try diaryOutcome(
+                for: route,
+                context: context
+            )
+        case .recipe,
+             .recipeDetail:
+            return try recipeOutcome(
+                for: route,
+                context: context
+            )
+        case .photo,
+             .photoDetail:
+            return try photoOutcome(
+                for: route,
+                context: context
+            )
+        case .tag,
+             .tagDetail:
+            return try tagOutcome(
+                for: route,
+                context: context
+            )
+        case let .search(query):
+            return .search(query: query)
+        case .settings,
+             .settingsSubscription,
+             .settingsLicense:
+            return settingsOutcome(for: route)
+        }
+    }
+
+    private static func diaryOutcome(
+        for route: CookleRoute,
+        context: ModelContext
+    ) throws -> CookleRouteOutcome {
+        switch route {
         case .diary:
             return .diary(diary: nil)
         case let .diaryDate(year, month, day):
@@ -30,11 +68,21 @@ public enum CookleRouteExecutor {
                 context: context
             )
             return .diary(diary: diary)
+        default:
+            return .home
+        }
+    }
+
+    private static func recipeOutcome(
+        for route: CookleRoute,
+        context: ModelContext
+    ) throws -> CookleRouteOutcome {
+        switch route {
         case .recipe:
             return .recipe(recipe: nil)
         case let .recipeDetail(recipeID):
-            guard let persistentIdentifier = try? PersistentIdentifier(
-                base64Encoded: recipeID
+            guard let persistentIdentifier = try? PersistentModelStableIdentifierCodec.decode(
+                recipeID
             ) else {
                 return .recipe(recipe: nil)
             }
@@ -42,12 +90,84 @@ public enum CookleRouteExecutor {
                 .recipes(.idIs(persistentIdentifier))
             )
             return .recipe(recipe: recipe)
-        case let .search(query):
-            return .search(query: query)
-        case .settings,
-             .settingsSubscription,
-             .settingsLicense:
-            return settingsOutcome(for: route)
+        default:
+            return .home
+        }
+    }
+
+    private static func photoOutcome(
+        for route: CookleRoute,
+        context: ModelContext
+    ) throws -> CookleRouteOutcome {
+        switch route {
+        case .photo:
+            return .photo(photo: nil)
+        case let .photoDetail(photoID):
+            guard let persistentIdentifier = try? PersistentModelStableIdentifierCodec.decode(
+                photoID
+            ) else {
+                return .photo(photo: nil)
+            }
+            let photo = try context.fetchFirst(
+                .photos(.idIs(persistentIdentifier))
+            )
+            return .photo(photo: photo)
+        default:
+            return .home
+        }
+    }
+
+    private static func tagOutcome(
+        for route: CookleRoute,
+        context: ModelContext
+    ) throws -> CookleRouteOutcome {
+        switch route {
+        case .tag(let kind):
+            return tagListOutcome(for: kind)
+        case let .tagDetail(kind, tagID):
+            return try tagDetailOutcome(
+                kind: kind,
+                tagID: tagID,
+                context: context
+            )
+        default:
+            return .home
+        }
+    }
+
+    private static func tagListOutcome(
+        for kind: CookleTagRouteKind
+    ) -> CookleRouteOutcome {
+        switch kind {
+        case .category:
+            return .tagCategory(category: nil)
+        case .ingredient:
+            return .tagIngredient(ingredient: nil)
+        }
+    }
+
+    private static func tagDetailOutcome(
+        kind: CookleTagRouteKind,
+        tagID: String,
+        context: ModelContext
+    ) throws -> CookleRouteOutcome {
+        guard let persistentIdentifier = try? PersistentModelStableIdentifierCodec.decode(
+            tagID
+        ) else {
+            return tagListOutcome(for: kind)
+        }
+
+        switch kind {
+        case .category:
+            let category = try context.fetchFirst(
+                .categories(.idIs(persistentIdentifier))
+            )
+            return .tagCategory(category: category)
+        case .ingredient:
+            let ingredient = try context.fetchFirst(
+                .ingredients(.idIs(persistentIdentifier))
+            )
+            return .tagIngredient(ingredient: ingredient)
         }
     }
 

@@ -88,6 +88,52 @@ public enum CookleDeepLinkURLBuilder {
         preferredURL(for: .recipeDetail(recipeID))
     }
 
+    /// Returns the photo list route as a universal link.
+    public static func photoURL() -> URL? {
+        routeURL(for: .photo)
+    }
+
+    /// Returns the preferred URL for the photo list route.
+    public static func preferredPhotoURL() -> URL {
+        preferredURL(for: .photo)
+    }
+
+    /// Returns a photo-detail URL for the supplied photo identifier.
+    public static func photoDetailURL(for photoID: String) -> URL? {
+        routeURL(for: .photoDetail(photoID))
+    }
+
+    /// Returns the preferred photo-detail URL for the supplied photo identifier.
+    public static func preferredPhotoDetailURL(for photoID: String) -> URL {
+        preferredURL(for: .photoDetail(photoID))
+    }
+
+    /// Returns a tag list URL for the supplied tag kind.
+    public static func tagURL(kind: CookleTagRouteKind) -> URL? {
+        routeURL(for: .tag(kind: kind))
+    }
+
+    /// Returns the preferred tag list URL for the supplied tag kind.
+    public static func preferredTagURL(kind: CookleTagRouteKind) -> URL {
+        preferredURL(for: .tag(kind: kind))
+    }
+
+    /// Returns a tag-detail URL for the supplied tag kind and identifier.
+    public static func tagDetailURL(
+        kind: CookleTagRouteKind,
+        id: String
+    ) -> URL? {
+        routeURL(for: .tagDetail(kind: kind, id: id))
+    }
+
+    /// Returns the preferred tag-detail URL for the supplied tag kind and identifier.
+    public static func preferredTagDetailURL(
+        kind: CookleTagRouteKind,
+        id: String
+    ) -> URL {
+        preferredURL(for: .tagDetail(kind: kind, id: id))
+    }
+
     /// Returns a search URL for the supplied query text.
     public static func searchURL(query: String?) -> URL? {
         routeURL(for: .search(query: query))

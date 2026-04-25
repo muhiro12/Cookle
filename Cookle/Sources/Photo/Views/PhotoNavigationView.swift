@@ -2,7 +2,7 @@ import SwiftData
 import SwiftUI
 
 struct PhotoNavigationView: View {
-    @State private var photo: Photo?
+    @Binding private var photo: Photo?
     @State private var recipe: Recipe?
     @State private var preferredCompactColumn = NavigationSplitViewColumn.sidebar
     @State private var hasAppliedInitialCompactColumn = false
@@ -37,6 +37,10 @@ struct PhotoNavigationView: View {
         .onChange(of: recipe?.persistentModelID) {
             syncPreferredCompactColumn()
         }
+    }
+
+    init(selection: Binding<Photo?> = .constant(nil)) {
+        _photo = selection
     }
 }
 

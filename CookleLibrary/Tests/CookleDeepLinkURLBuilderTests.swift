@@ -28,6 +28,25 @@ struct CookleDeepLinkURLBuilderTests {
         )
     }
 
+    @Test("Builds photo detail URL")
+    func photoDetailURLBuildsPhotoDetailURL() {
+        let url = CookleDeepLinkURLBuilder.photoDetailURL(for: "photo-id")
+        #expect(
+            url?.absoluteString == "https://muhiro12.github.io/Cookle/photo?id=photo-id"
+        )
+    }
+
+    @Test("Builds tag detail URL")
+    func tagDetailURLBuildsTagDetailURL() {
+        let url = CookleDeepLinkURLBuilder.tagDetailURL(
+            kind: .category,
+            id: "category-id"
+        )
+        #expect(
+            url?.absoluteString == "https://muhiro12.github.io/Cookle/tag/category?id=category-id"
+        )
+    }
+
     @Test("Builds preferred diary URL from date components")
     func preferredDiaryURLBuildsDiaryDateRoute() {
         var calendar = Calendar(identifier: .gregorian)

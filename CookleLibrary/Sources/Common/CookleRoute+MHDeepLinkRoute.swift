@@ -32,6 +32,24 @@ extension CookleRoute: MHDeepLinkRoute {
                     .init(name: "id", value: recipeID)
                 ] : []
             )
+        case .photo:
+            .init(pathComponents: ["photo"])
+        case .photoDetail(let photoID):
+            .init(
+                pathComponents: ["photo"],
+                queryItems: photoID.isNotEmpty ? [
+                    .init(name: "id", value: photoID)
+                ] : []
+            )
+        case .tag(let kind):
+            .init(pathComponents: ["tag", kind.rawValue])
+        case let .tagDetail(kind, tagID):
+            .init(
+                pathComponents: ["tag", kind.rawValue],
+                queryItems: tagID.isNotEmpty ? [
+                    .init(name: "id", value: tagID)
+                ] : []
+            )
         case .search(let query):
             .init(
                 pathComponents: ["search"],
@@ -74,10 +92,7 @@ extension CookleRoute: MHDeepLinkRoute {
     ) -> CookleRoute? {
         switch destination {
         case "home":
-            guard pathComponents.count == 1 else {
-                return nil
-            }
-            return .home
+            return Self.parseHomeRoute(from: pathComponents)
         case "diary":
             return Self.parseDiaryRoute(
                 from: Array(pathComponents.dropFirst())
@@ -87,23 +102,33 @@ extension CookleRoute: MHDeepLinkRoute {
                 from: Array(pathComponents.dropFirst()),
                 queryItems: queryItems
             )
+        case "photo":
+            return Self.parsePhotoRoute(
+                from: Array(pathComponents.dropFirst()),
+                queryItems: queryItems
+            )
+        case "tag":
+            return Self.parseTagRoute(
+                from: Array(pathComponents.dropFirst()),
+                queryItems: queryItems
+            )
         case "search":
-            guard pathComponents.count == 1 else {
-                return nil
-            }
-            let query = queryItems.first { queryItem in
-                queryItem.name == "q"
-            }?.value
-            if let query,
-               query.isNotEmpty {
-                return .search(query: query)
-            }
-            return .search(query: nil)
+            return Self.parseSearchRoute(
+                from: pathComponents,
+                queryItems: queryItems
+            )
         case "settings":
             return Self.parseSettingsRoute(from: pathComponents)
         default:
             return nil
         }
+    }
+
+    private static func parseHomeRoute(from pathComponents: [String]) -> CookleRoute? {
+        guard pathComponents.count == 1 else {
+            return nil
+        }
+        return .home
     }
 
     private static func parseSettingsRoute(from pathComponents: [String]) -> CookleRoute? {
@@ -161,6 +186,63 @@ extension CookleRoute: MHDeepLinkRoute {
             return nil
         }
         return .recipeDetail(recipeID)
+    }
+
+    private static func parsePhotoRoute(
+        from segments: [String],
+        queryItems: [URLQueryItem]
+    ) -> CookleRoute? {
+        guard segments.isEmpty else {
+            return nil
+        }
+        guard let photoID = queryItems.first(where: { queryItem in
+            queryItem.name == "id"
+        })?.value else {
+            return .photo
+        }
+        guard photoID.isNotEmpty else {
+            return nil
+        }
+        return .photoDetail(photoID)
+    }
+
+    private static func parseTagRoute(
+        from segments: [String],
+        queryItems: [URLQueryItem]
+    ) -> CookleRoute? {
+        guard segments.count == 1,
+              let kind = CookleTagRouteKind(rawValue: segments[0].lowercased()) else {
+            return nil
+        }
+        guard let tagID = queryItems.first(where: { queryItem in
+            queryItem.name == "id"
+        })?.value else {
+            return .tag(kind: kind)
+        }
+        guard tagID.isNotEmpty else {
+            return nil
+        }
+        return .tagDetail(
+            kind: kind,
+            id: tagID
+        )
+    }
+
+    private static func parseSearchRoute(
+        from pathComponents: [String],
+        queryItems: [URLQueryItem]
+    ) -> CookleRoute? {
+        guard pathComponents.count == 1 else {
+            return nil
+        }
+        let query = queryItems.first { queryItem in
+            queryItem.name == "q"
+        }?.value
+        if let query,
+           query.isNotEmpty {
+            return .search(query: query)
+        }
+        return .search(query: nil)
     }
 
     private static func parseDateRoute(from value: String) -> DateComponents? {

@@ -11,18 +11,39 @@ import SwiftUI
 struct RecipeCategoriesSection: View {
     @Environment(Recipe.self)
     private var recipe
+    @Environment(\.openCookleRoute)
+    private var openCookleRoute
 
     var body: some View {
         if let categories = recipe.categories,
            categories.isNotEmpty {
             Section {
                 ForEach(categories) { category in
-                    Text(category.value)
+                    Button {
+                        openCategory(category)
+                    } label: {
+                        Text(category.value)
+                            .cookleButtonRowContent()
+                    }
+                    .buttonStyle(.plain)
                 }
             } header: {
                 Text("Categories")
             }
         }
+    }
+}
+
+private extension RecipeCategoriesSection {
+    func openCategory(_ category: Category) {
+        openCookleRoute(
+            .tagDetail(
+                kind: .category,
+                id: PersistentModelStableIdentifierCodec.stableIdentifier(
+                    for: category
+                )
+            )
+        )
     }
 }
 

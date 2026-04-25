@@ -26,6 +26,36 @@ struct CookleRouteURLBuilderTests {
         )
     }
 
+    @Test("Builds custom scheme URL for photo detail route")
+    func buildCustomSchemeURLForPhotoDetailRoute() {
+        let route = CookleRoute.photoDetail("photo-id")
+        let url = CookleRouteURLBuilder.customSchemeURL(for: route)
+        #expect(
+            url?.absoluteString == "cookle://photo?id=photo-id"
+        )
+    }
+
+    @Test("Builds custom scheme URL for category tag list route")
+    func buildCustomSchemeURLForCategoryTagListRoute() {
+        let route = CookleRoute.tag(kind: .category)
+        let url = CookleRouteURLBuilder.customSchemeURL(for: route)
+        #expect(
+            url?.absoluteString == "cookle://tag/category?"
+        )
+    }
+
+    @Test("Builds custom scheme URL for ingredient tag detail route")
+    func buildCustomSchemeURLForIngredientTagDetailRoute() {
+        let route = CookleRoute.tagDetail(
+            kind: .ingredient,
+            id: "ingredient-id"
+        )
+        let url = CookleRouteURLBuilder.customSchemeURL(for: route)
+        #expect(
+            url?.absoluteString == "cookle://tag/ingredient?id=ingredient-id"
+        )
+    }
+
     @Test("Builds custom scheme URL for settings subscription route")
     func buildCustomSchemeURLForSettingsSubscriptionRoute() {
         let route = CookleRoute.settingsSubscription
@@ -45,6 +75,19 @@ struct CookleRouteURLBuilderTests {
         )
         #expect(
             url?.absoluteString == "https://muhiro12.github.io/Cookle/search?q=ramen"
+        )
+    }
+
+    @Test("Builds universal link URL for photo route")
+    func buildUniversalLinkURLForPhotoRoute() {
+        let route = CookleRoute.photo
+        let url = CookleRouteURLBuilder.universalLinkURL(
+            for: route,
+            host: "muhiro12.github.io",
+            appPathPrefix: "Cookle"
+        )
+        #expect(
+            url?.absoluteString == "https://muhiro12.github.io/Cookle/photo?"
         )
     }
 }

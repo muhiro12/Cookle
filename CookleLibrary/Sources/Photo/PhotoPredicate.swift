@@ -14,6 +14,8 @@ nonisolated public enum PhotoPredicate {
     case all
     /// Excludes every photo asset from the fetch.
     case none // swiftlint:disable:this discouraged_none_name
+    /// Includes only the photo asset with the supplied persistent identifier.
+    case idIs(Photo.ID)
     /// Includes only photo assets created from the supplied source.
     case sourceIs(PhotoSource)
     /// Includes only photo assets whose binary data matches the supplied payload.
@@ -26,6 +28,10 @@ nonisolated public enum PhotoPredicate {
             return .true
         case .none:
             return .false
+        case .idIs(let id):
+            return #Predicate<Photo> { photo in
+                photo.persistentModelID == id
+            }
         case .sourceIs(let source):
             let id = source.rawValue
             return #Predicate<Photo> { photo in

@@ -11,23 +11,66 @@ import SwiftUI
 struct RecipeIngredientsSection: View {
     @Environment(Recipe.self)
     private var recipe
+    @Environment(\.openCookleRoute)
+    private var openCookleRoute
 
     var body: some View {
         if let objects = recipe.ingredientObjects,
            objects.isNotEmpty {
             Section {
                 ForEach(objects.sorted()) { object in
-                    HStack {
-                        Text(object.ingredient?.value ?? "")
-                        Spacer()
-                        Text(object.amount)
-                            .foregroundStyle(.secondary)
-                    }
+                    ingredientRow(for: object)
                 }
             } header: {
                 Text("Ingredients")
             }
         }
+    }
+}
+
+private extension RecipeIngredientsSection {
+    @ViewBuilder
+    func ingredientRow(for object: IngredientObject) -> some View {
+        if let ingredient = object.ingredient {
+            Button {
+                openIngredient(ingredient)
+            } label: {
+                ingredientLabel(
+                    name: ingredient.value,
+                    amount: object.amount
+                )
+                .cookleButtonRowContent()
+            }
+            .buttonStyle(.plain)
+        } else {
+            ingredientLabel(
+                name: "",
+                amount: object.amount
+            )
+        }
+    }
+
+    func ingredientLabel(
+        name: String,
+        amount: String
+    ) -> some View {
+        HStack {
+            Text(name)
+            Spacer()
+            Text(amount)
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    func openIngredient(_ ingredient: Ingredient) {
+        openCookleRoute(
+            .tagDetail(
+                kind: .ingredient,
+                id: PersistentModelStableIdentifierCodec.stableIdentifier(
+                    for: ingredient
+                )
+            )
+        )
     }
 }
 

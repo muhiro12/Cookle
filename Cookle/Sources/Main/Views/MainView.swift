@@ -1,4 +1,5 @@
 import MHPlatform
+import SwiftData
 import SwiftUI
 
 struct MainView: View {
@@ -8,6 +9,8 @@ struct MainView: View {
     private var navigationModel
     @Environment(MHAppRoutePipeline<CookleRoute>.self)
     private var routePipeline
+    @Environment(\.modelContext)
+    private var modelContext
     @Environment(CookleAppLogging.self)
     private var logging
 
@@ -19,10 +22,19 @@ struct MainView: View {
             diarySelection: $navigationModel.selectedDiary,
             diaryRecipeSelection: $navigationModel.selectedDiaryRecipe,
             recipeSelection: $navigationModel.selectedRecipe,
+            photoSelection: $navigationModel.selectedPhoto,
             searchSelection: $navigationModel.selectedSearchRecipe,
+            tagBrowser: $navigationModel.selectedTagBrowser,
+            categorySelection: $navigationModel.selectedCategory,
+            categoryRecipeSelection: $navigationModel.selectedCategoryRecipe,
+            ingredientSelection: $navigationModel.selectedIngredient,
+            ingredientRecipeSelection: $navigationModel.selectedIngredientRecipe,
             incomingSearchQuery: $navigationModel.incomingSearchQuery,
             incomingSettingsSelection: $navigationModel.incomingSettingsSelection
         )
+        .openCookleRoute { route in
+            openRoute(route)
+        }
         .alert(Text("Update Required"), isPresented: isUpdateRequiredBinding) {
             Button {
                 guard let appStoreURL = URL(
@@ -75,6 +87,29 @@ private extension MainView {
             ]
         )
         routePipeline.clearLastParseFailure()
+    }
+
+    func openRoute(_ route: CookleRoute) {
+        do {
+            try MainNavigationRouter(
+                navigationModel: navigationModel
+            )
+            .apply(
+                route: route,
+                context: modelContext
+            )
+        } catch {
+            let routeLogger = logging.logger(
+                category: "RouteExecution",
+                source: #fileID
+            )
+            routeLogger.error(
+                "in-app route execution failed",
+                metadata: [
+                    "error": error.localizedDescription
+                ]
+            )
+        }
     }
 }
 

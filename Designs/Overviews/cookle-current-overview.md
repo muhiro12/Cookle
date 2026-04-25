@@ -257,6 +257,12 @@ Cookle uses adaptive tab navigation.
   - `diary/YYYY-MM-DD`
   - `recipe`
   - `recipe?id=<base64PersistentIdentifier>`
+  - `photo`
+  - `photo?id=<base64PersistentIdentifier>`
+  - `tag/category`
+  - `tag/category?id=<base64PersistentIdentifier>`
+  - `tag/ingredient`
+  - `tag/ingredient?id=<base64PersistentIdentifier>`
   - `search`
   - `search?q=<query>`
   - `settings`
