@@ -18,8 +18,7 @@ public enum CooklePreferenceCatalog {
             descriptors.lastLaunchedAppVersion,
             descriptors.activeCookingSessionSnapshot,
             descriptors.detachedObjectCleanupCompleted,
-            descriptors.recipeBrowseSortMode,
-            descriptors.isRecipeBrowseSortAscending,
+            descriptors.recipeBrowseSortSelection,
             descriptors.pendingIntentDeepLinkURL
         ]
     }

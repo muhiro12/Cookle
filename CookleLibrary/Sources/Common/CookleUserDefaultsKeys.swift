@@ -19,8 +19,7 @@ public enum CookleUserDefaultsKeys {
         case detachedObjectCleanupCompleted = "G6rK4mTp"
         case currentLogSnapshot = "J4mK7pXd"
         case previousLogSnapshot = "Q9tB3cLf"
-        case recipeBrowseSortMode = "V4sP8nQm"
-        case isRecipeBrowseSortAscending = "C2hL9rTa"
+        case recipeBrowseSortSelection = "V4sP8nQm"
     }
 
     /// Keys stored in the shared app-group suite.

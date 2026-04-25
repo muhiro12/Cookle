@@ -1,8 +1,13 @@
+import Foundation
 import SwiftData
 import SwiftUI
 import TipKit
 
 struct RecipeListView: View {
+    private enum LegacyStorage {
+        static let isRecipeBrowseSortAscendingKey = "C2hL9rTa"
+    }
+
     private struct CookingPresentation: Identifiable {
         let id = UUID()
     }
@@ -18,12 +23,10 @@ struct RecipeListView: View {
     @Binding private var recipe: Recipe?
 
     @AppStorage(
-        \.recipeBrowseSortMode,
-        default: RecipeBrowseSortMode.alphabetical.rawValue
+        \.recipeBrowseSortSelection,
+        default: RecipeBrowseSortSelection.alphabeticalAscending.rawValue
     )
-    private var recipeBrowseSortModeRawValue
-    @AppStorage(\.isRecipeBrowseSortAscending)
-    private var isRecipeBrowseSortAscending
+    private var recipeBrowseSortSelectionRawValue
     @State private var cookingPresentation: CookingPresentation?
 
     private let addRecipeTip = AddRecipeTip()
@@ -49,6 +52,9 @@ struct RecipeListView: View {
                     CloseButton()
                         .hidden(!isPresented)
                 }
+            }
+            .task {
+                migrateLegacyRecipeBrowseSortSelectionIfNeeded()
             }
     }
 
@@ -93,22 +99,62 @@ private extension RecipeListView {
     var sortedRecipes: [Recipe] {
         RecipeService.browse(
             allRecipes,
-            sortMode: recipeBrowseSortMode,
-            isAscending: isRecipeBrowseSortAscending
+            sortMode: recipeBrowseSortSelection.sortMode,
+            isAscending: recipeBrowseSortSelection.isAscending
         )
     }
 
-    var recipeBrowseSortMode: RecipeBrowseSortMode {
-        RecipeBrowseSortMode(rawValue: recipeBrowseSortModeRawValue)
-            ?? .alphabetical
+    var recipeBrowseSortSelection: RecipeBrowseSortSelection {
+        if let selection = RecipeBrowseSortSelection(
+            rawValue: recipeBrowseSortSelectionRawValue
+        ) {
+            return selection
+        }
+        if let legacySortMode = RecipeBrowseSortMode(
+            rawValue: recipeBrowseSortSelectionRawValue
+        ) {
+            return .init(
+                sortMode: legacySortMode,
+                isAscending: legacyIsRecipeBrowseSortAscending
+            )
+        }
+        return .alphabeticalAscending
     }
 
     var recipeBrowseSortModeBinding: Binding<RecipeBrowseSortMode> {
         .init {
-            recipeBrowseSortMode
+            recipeBrowseSortSelection.sortMode
         } set: { sortMode in
-            recipeBrowseSortModeRawValue = sortMode.rawValue
+            recipeBrowseSortSelectionRawValue = RecipeBrowseSortSelection(
+                sortMode: sortMode,
+                isAscending: recipeBrowseSortSelection.isAscending
+            )
+            .rawValue
         }
+    }
+
+    var recipeBrowseSortAscendingBinding: Binding<Bool> {
+        .init {
+            recipeBrowseSortSelection.isAscending
+        } set: { isAscending in
+            recipeBrowseSortSelectionRawValue = RecipeBrowseSortSelection(
+                sortMode: recipeBrowseSortSelection.sortMode,
+                isAscending: isAscending
+            )
+            .rawValue
+        }
+    }
+
+    var legacyIsRecipeBrowseSortAscending: Bool {
+        let defaults = UserDefaults.standard
+        guard defaults.object(
+            forKey: LegacyStorage.isRecipeBrowseSortAscendingKey
+        ) != nil else {
+            return true
+        }
+        return defaults.bool(
+            forKey: LegacyStorage.isRecipeBrowseSortAscendingKey
+        )
     }
 
     var topReturnTarget: RecipeTopReturnTarget? {
@@ -131,7 +177,7 @@ private extension RecipeListView {
             }
             .pickerStyle(.menu)
 
-            Toggle("Ascending", isOn: $isRecipeBrowseSortAscending)
+            Toggle("Ascending", isOn: recipeBrowseSortAscendingBinding)
         } label: {
             Label("Sort", systemImage: "arrow.up.arrow.down.circle")
         }
@@ -199,6 +245,28 @@ private extension RecipeListView {
         try RecipeStableIdentifierCodec.recipe(
             from: target.recipeStableIdentifier,
             context: context
+        )
+    }
+
+    func migrateLegacyRecipeBrowseSortSelectionIfNeeded() {
+        guard RecipeBrowseSortSelection(
+            rawValue: recipeBrowseSortSelectionRawValue
+        ) == nil else {
+            return
+        }
+        guard let legacySortMode = RecipeBrowseSortMode(
+            rawValue: recipeBrowseSortSelectionRawValue
+        ) else {
+            return
+        }
+
+        recipeBrowseSortSelectionRawValue = RecipeBrowseSortSelection(
+            sortMode: legacySortMode,
+            isAscending: legacyIsRecipeBrowseSortAscending
+        )
+        .rawValue
+        UserDefaults.standard.removeObject(
+            forKey: LegacyStorage.isRecipeBrowseSortAscendingKey
         )
     }
 }
