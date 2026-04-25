@@ -29,7 +29,7 @@ table.gallery img {
 <div class="hero">
   <img src="../../Cookle/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon.png" alt="Cookle Icon" width="120">
   <h1>Cookle</h1>
-  <p>Recipes, diary, and cooking sessions that stay useful while you cook.</p>
+  <p>Keep your favorite recipes organised across all your devices.</p>
   <p>
     <a href="https://apps.apple.com/app/id6483363226">
       <img src="https://linkmaker.itunes.apple.com/en-us/badge-lrg.svg?releaseDate=2024-04-29&kind=iossoftware" alt="Download on the App Store" width="160">
@@ -37,49 +37,28 @@ table.gallery img {
   </p>
 </div>
 
-Cookle helps you keep personal recipes, photos, cooking notes, and meal history
-in one place. Open a recipe while cooking, log what you made, and return to the
-right dish from widgets, notifications, Shortcuts, or Apple Watch.
+Cookle is a lightweight recipe manager built entirely with SwiftUI.
 
 <div class="features">
   <div class="feature">
     <img src="../../.Resources/SpaghettiCarbonara1.png" alt="Recipe Example">
-    <p>Build a recipe library with photos, ingredients, steps, tags, and notes.</p>
+    <p>Create and manage recipes with photos and detailed steps.</p>
   </div>
   <div class="feature">
     <img src="../../.Resources/Pancakes1.png" alt="Quick Search">
-    <p>Search by name, ingredients, and categories when you need an idea fast.</p>
+    <p>Organize with categories and quickly search by keywords.</p>
   </div>
   <div class="feature">
     <img src="../../.Resources/BeefStew1.png" alt="Diary">
-    <p>Record breakfasts, lunches, dinners, and notes in the built-in diary.</p>
+    <p>Record your cooking experiences in the built‑in diary.</p>
   </div>
 </div>
 
-## Highlights
+## More Features
 
-- Active cooking mode keeps the recipe available through the cooking flow.
-- Recipe suggestion notifications can surface something to make each day.
-- Widgets bring today's diary and recipe suggestions to the Home Screen.
-- Apple Watch support mirrors the active cooking session and timer state.
-- App Shortcuts and App Intents open recipes, search, diary, settings, and
-  suggestion flows from system surfaces.
-- Image Playground, camera, and photo-library import help attach useful visuals
-  to recipes.
-- Optional iCloud sync keeps your collection available across devices.
-- Backup export, restore, and delete-all controls help you stay in control of
-  your cooking data.
-
-## For Everyday Cooking
-
-- Save recipes with serving sizes, cooking times, ingredients, categories,
-  photos, and free-form notes.
-- Use diary history to remember what worked, what changed, and what you cooked
-  on a specific day.
-- Jump back to the last opened or currently active recipe without searching
-  again.
-- Keep recipe content private by default, with optional iCloud sync through your
-  Apple account.
+- App Shortcuts for search and showing the last opened recipe
+- Optional iCloud synchronisation and subscription support
+- Google Mobile Ads integration
 
 ## Accessibility
 
@@ -96,18 +75,17 @@ right dish from widgets, notifications, Shortcuts, or Apple Watch.
 
 <table class="gallery">
 <tr>
-<td><img src="https://github.com/user-attachments/assets/d1d874c5-b2d9-4342-873e-7efdfa88e865" alt="Recipe list screenshot"></td>
-<td><img src="https://github.com/user-attachments/assets/ae8f05e2-5fe6-4123-a049-f56799ccc759" alt="Recipe detail screenshot"></td>
-<td><img src="https://github.com/user-attachments/assets/ace07047-2005-4dd3-8dce-f3d694832e83" alt="Diary screenshot"></td>
+<td><img src="https://github.com/user-attachments/assets/d1d874c5-b2d9-4342-873e-7efdfa88e865" alt="iPhone screenshot 1"></td>
+<td><img src="https://github.com/user-attachments/assets/ae8f05e2-5fe6-4123-a049-f56799ccc759" alt="iPhone screenshot 2"></td>
+<td><img src="https://github.com/user-attachments/assets/ace07047-2005-4dd3-8dce-f3d694832e83" alt="iPhone screenshot 3"></td>
 </tr>
 <tr>
-<td><img src="https://github.com/user-attachments/assets/9fd3da4b-3739-4ac5-b581-48adbbbb7143" alt="iPad recipe library screenshot"></td>
-<td><img src="https://github.com/user-attachments/assets/1b5364d0-75a8-4f44-9fa4-0b529fdef5f5" alt="iPad recipe detail screenshot"></td>
-<td><img src="https://github.com/user-attachments/assets/e1e6aac3-8563-4560-be5d-ef473bf63e10" alt="iPad diary screenshot"></td>
+<td><img src="https://github.com/user-attachments/assets/9fd3da4b-3739-4ac5-b581-48adbbbb7143" alt="iPad screenshot 1"></td>
+<td><img src="https://github.com/user-attachments/assets/1b5364d0-75a8-4f44-9fa4-0b529fdef5f5" alt="iPad screenshot 2"></td>
+<td><img src="https://github.com/user-attachments/assets/e1e6aac3-8563-4560-be5d-ef473bf63e10" alt="iPad screenshot 3"></td>
 </tr>
 </table>
 
 ## Development
 
-The project uses Swift 6 with Xcode 26.3 or later. After cloning the
-repository, open `Cookle.xcodeproj` in Xcode and build the `Cookle` scheme.
+The project uses **Swift 5** and requires **Xcode 15** or later. After cloning the repository, open `Cookle.xcodeproj` in Xcode and build the `Cookle` scheme.
