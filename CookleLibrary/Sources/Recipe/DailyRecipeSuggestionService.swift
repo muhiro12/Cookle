@@ -115,7 +115,6 @@ private extension DailyRecipeSuggestionService {
         return .init(
             name: name,
             stableIdentifier: stableIdentifier,
-            isFavorite: candidate.isFavorite,
             hasPhoto: candidate.hasPhoto,
             ingredientCount: candidate.ingredientCount,
             cookingTime: candidate.cookingTime,
@@ -141,11 +140,6 @@ private extension DailyRecipeSuggestionService {
     static func focusCandidates(
         _ candidates: [DailyRecipeSuggestionCandidate]
     ) -> [DailyRecipeSuggestionCandidate] {
-        let favoriteCandidates = candidates.filter(\.isFavorite)
-        if favoriteCandidates.count >= QualityConstants.minimumFocusedCandidateCount {
-            return favoriteCandidates
-        }
-
         let informativeCandidates = candidates.filter { candidate in
             candidate.hasPhoto
                 || candidate.ingredientCount > .zero

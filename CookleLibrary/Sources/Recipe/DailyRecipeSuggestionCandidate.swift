@@ -4,7 +4,6 @@ import Foundation
 public struct DailyRecipeSuggestionCandidate: Sendable {
     public let name: String
     public let stableIdentifier: String
-    public let isFavorite: Bool
     public let hasPhoto: Bool
     public let ingredientCount: Int
     public let cookingTime: Int
@@ -14,7 +13,6 @@ public struct DailyRecipeSuggestionCandidate: Sendable {
     public init(
         name: String,
         stableIdentifier: String,
-        isFavorite: Bool = false,
         hasPhoto: Bool = false,
         ingredientCount: Int = .zero,
         cookingTime: Int = .zero,
@@ -23,7 +21,6 @@ public struct DailyRecipeSuggestionCandidate: Sendable {
     ) {
         self.name = name
         self.stableIdentifier = stableIdentifier
-        self.isFavorite = isFavorite
         self.hasPhoto = hasPhoto
         self.ingredientCount = ingredientCount
         self.cookingTime = cookingTime

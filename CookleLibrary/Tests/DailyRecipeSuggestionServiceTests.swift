@@ -111,7 +111,7 @@ struct DailyRecipeSuggestionServiceTests {
     }
 
     @Test
-    func buildSuggestions_prefersFavoritesWhenEnoughExist() throws {
+    func buildSuggestions_prefersInformativeCandidatesWhenEnoughExist() throws {
         let calendar = testCalendar()
         let now = try testDate(
             calendar: calendar
@@ -120,19 +120,18 @@ struct DailyRecipeSuggestionServiceTests {
         let suggestions = DailyRecipeSuggestionService.buildSuggestions(
             candidates: [
                 .init(
-                    name: "Favorite Alpha",
-                    stableIdentifier: "favorite-alpha",
-                    isFavorite: true
+                    name: "Informative Alpha",
+                    stableIdentifier: "informative-alpha",
+                    hasPhoto: true
                 ),
                 .init(
-                    name: "Favorite Beta",
-                    stableIdentifier: "favorite-beta",
-                    isFavorite: true
+                    name: "Informative Beta",
+                    stableIdentifier: "informative-beta",
+                    ingredientCount: 3
                 ),
                 .init(
                     name: "Ordinary",
-                    stableIdentifier: "ordinary",
-                    hasPhoto: true
+                    stableIdentifier: "ordinary"
                 )
             ],
             hour: DailySuggestionTimePolicy.defaultHour,
@@ -145,7 +144,7 @@ struct DailyRecipeSuggestionServiceTests {
         #expect(suggestions.isEmpty == false)
         #expect(
             suggestions.allSatisfy { suggestion in
-                suggestion.recipeName.hasPrefix("Favorite")
+                suggestion.recipeName.hasPrefix("Informative")
             }
         )
     }
