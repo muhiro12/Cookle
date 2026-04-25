@@ -17,21 +17,8 @@ struct SettingsDataManagementDialogsModifier: ViewModifier {
                 )
             )
             .modifier(
-                RestoreBackupConfirmationDialogModifier(
-                    model: model,
-                    modelContainer: modelContainer,
-                    settingsActionService: settingsActionService
-                )
-            )
-            .modifier(
                 SettingsActionStatusAlertModifier(
                     model: model
-                )
-            )
-            .modifier(
-                BackupFileTransferModifier(
-                    model: model,
-                    settingsActionService: settingsActionService
                 )
             )
     }

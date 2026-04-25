@@ -120,9 +120,7 @@ struct SettingsSidebarView: View {
             iCloudSection
             notificationSection
             SettingsDataManagementSection(
-                model: model,
-                modelContainer: context.container,
-                settingsActionService: settingsActionService
+                model: model
             )
             generalSection
             ShortcutsLinkSection(

@@ -29,7 +29,7 @@ struct DeleteAllConfirmationDialogModifier: ViewModifier {
                     Text("Cancel")
                 }
             } message: {
-                Text("This deletes all recipes, diaries, tags, and photos. Export a backup first if you might need this data later.") // swiftlint:disable:this line_length
+                Text("This permanently deletes all recipes, diaries, tags, and photos from this device.")
             }
     }
 }
