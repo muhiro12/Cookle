@@ -71,9 +71,168 @@ struct CookleDataArchiveServiceTests {
             Issue.record(error)
         }
     }
+
+    @Test
+    func validatedArchive_throws_when_format_version_is_unsupported() {
+        do {
+            _ = try CookleDataArchiveService.validatedArchive(
+                from: try encodedData(
+                    from: unsupportedFormatArchive()
+                )
+            )
+            Issue.record("Expected archive validation to fail.")
+        } catch CookleDataArchiveService.ArchiveError.unsupportedFormatVersion(let version) {
+            #expect(version == TestArchive.unsupportedFormatVersion)
+        } catch {
+            Issue.record(error)
+        }
+    }
+
+    @Test
+    func validatedArchive_throws_when_archive_contains_duplicate_identifier() {
+        do {
+            _ = try CookleDataArchiveService.validatedArchive(
+                from: try encodedData(
+                    from: duplicateIngredientIdentifierArchive()
+                )
+            )
+            Issue.record("Expected archive validation to fail.")
+        } catch CookleDataArchiveService.ArchiveError.duplicateIdentifier(let identifier) {
+            #expect(identifier == TestArchive.duplicateIngredientIdentifier)
+        } catch {
+            Issue.record(error)
+        }
+    }
+
+    @Test
+    func validatedArchive_throws_when_diary_references_missing_recipe() {
+        do {
+            _ = try CookleDataArchiveService.validatedArchive(
+                from: try encodedData(
+                    from: missingDiaryRecipeArchive()
+                )
+            )
+            Issue.record("Expected archive validation to fail.")
+        } catch CookleDataArchiveService.ArchiveError.missingReference(let identifier) {
+            #expect(identifier == TestArchive.missingRecipeIdentifier)
+        } catch {
+            Issue.record(error)
+        }
+    }
+
+    @Test
+    func restore_keeps_existing_data_when_archive_is_invalid() throws {
+        try insertTemporaryRecipe()
+
+        do {
+            _ = try CookleDataArchiveService.restore(
+                unsupportedFormatArchive(),
+                context: context
+            )
+            Issue.record("Expected archive restore to fail.")
+        } catch CookleDataArchiveService.ArchiveError.unsupportedFormatVersion(let version) {
+            #expect(version == TestArchive.unsupportedFormatVersion)
+        } catch {
+            Issue.record(error)
+        }
+
+        let recipes = try context.fetch(.recipes(.all))
+        let recipe = try #require(recipes.first)
+        #expect(recipes.count == 1)
+        #expect(recipe.name == "Temporary")
+    }
 }
 
 private extension CookleDataArchiveServiceTests {
+    func encodedData(
+        from archive: CookleDataArchive
+    ) throws -> Data {
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        return try encoder.encode(
+            archive
+        )
+    }
+
+    func emptyArchive(
+        formatVersion: Int = CookleDataArchive.currentFormatVersion
+    ) -> CookleDataArchive {
+        .init(
+            formatVersion: formatVersion,
+            exportedAt: .now,
+            ingredients: [],
+            categories: [],
+            photos: [],
+            recipes: [],
+            diaries: []
+        )
+    }
+
+    func unsupportedFormatArchive() -> CookleDataArchive {
+        emptyArchive(
+            formatVersion: TestArchive.unsupportedFormatVersion
+        )
+    }
+
+    func duplicateIngredientIdentifierArchive() -> CookleDataArchive {
+        .init(
+            formatVersion: CookleDataArchive.currentFormatVersion,
+            exportedAt: .now,
+            ingredients: [
+                ingredientRecord(
+                    id: TestArchive.duplicateIngredientIdentifier
+                ),
+                ingredientRecord(
+                    id: TestArchive.duplicateIngredientIdentifier
+                )
+            ],
+            categories: [],
+            photos: [],
+            recipes: [],
+            diaries: []
+        )
+    }
+
+    func missingDiaryRecipeArchive() -> CookleDataArchive {
+        .init(
+            formatVersion: CookleDataArchive.currentFormatVersion,
+            exportedAt: .now,
+            ingredients: [],
+            categories: [],
+            photos: [],
+            recipes: [],
+            diaries: [
+                .init(
+                    id: "diary-1",
+                    date: TestArchive.diaryDate,
+                    objects: [
+                        .init(
+                            recipeID: TestArchive.missingRecipeIdentifier,
+                            type: .breakfast,
+                            order: 1,
+                            createdTimestamp: .now,
+                            modifiedTimestamp: .now
+                        )
+                    ],
+                    note: "",
+                    createdTimestamp: .now,
+                    modifiedTimestamp: .now
+                )
+            ]
+        )
+    }
+
+    func ingredientRecord(
+        id: String
+    ) -> CookleDataArchive.IngredientRecord {
+        .init(
+            id: id,
+            value: "Eggs",
+            createdTimestamp: .now,
+            modifiedTimestamp: .now
+        )
+    }
+
     func makeSampleBackupData() throws -> Data {
         let category = Category.create(
             context: context,
