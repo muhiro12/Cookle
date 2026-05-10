@@ -6,11 +6,6 @@ import SwiftData
 @MainActor
 @Observable
 final class DiaryActionService {
-    private struct OperationResult<Value> {
-        let value: Value
-        let effects: MutationEffect
-    }
-
     struct FormInput {
         let breakfasts: [Recipe]
         let lunches: [Recipe]
@@ -131,28 +126,10 @@ private extension DiaryActionService {
         name: String,
         operation: @escaping @MainActor () throws -> MutationOutcome<Value>
     ) async throws -> MutationOutcome<Value> {
-        let result = try await MHMutationWorkflow.runThrowing(
+        try await CookleMutationWorkflow.run(
             name: name,
-            operation: {
-                let outcome = try operation()
-                return OperationResult(
-                    value: outcome.value,
-                    effects: outcome.effects
-                )
-            },
             adapter: effectAdapter,
-            projection: .closures(
-                afterSuccess: { result in
-                    result.effects
-                },
-                returning: { result in
-                    result
-                }
-            )
-        )
-        return .init(
-            value: result.value,
-            effects: result.effects
+            operation: operation
         )
     }
 }

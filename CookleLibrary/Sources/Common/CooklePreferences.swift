@@ -56,10 +56,8 @@ public enum CooklePreferences {
         default defaultValue: Int
     ) -> Int {
         store.int(
-            for: overriddenIntDescriptor(
-                for: keyPath,
-                default: defaultValue
-            )
+            for: keyPath,
+            default: defaultValue
         )
     }
 
@@ -80,21 +78,6 @@ public enum CooklePreferences {
     ) -> Bool {
         store.contains(
             MHPreferenceDescriptors()[keyPath: keyPath]
-        )
-    }
-}
-
-private extension CooklePreferences {
-    static func overriddenIntDescriptor(
-        for keyPath: KeyPath<MHPreferenceDescriptors, MHIntPreferenceDescriptor>,
-        default defaultValue: Int
-    ) -> MHIntPreferenceDescriptor {
-        let baseDescriptor = MHPreferenceDescriptors()[keyPath: keyPath]
-        return .init(
-            storageKey: baseDescriptor.storageKey,
-            defaultSelection: baseDescriptor.defaultSelection,
-            legacySources: baseDescriptor.legacySources,
-            default: defaultValue
         )
     }
 }

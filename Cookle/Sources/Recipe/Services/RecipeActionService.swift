@@ -6,11 +6,6 @@ import SwiftData
 @MainActor
 @Observable
 final class RecipeActionService {
-    private struct OperationResult<Value> {
-        let value: Value
-        let effects: MutationEffect
-    }
-
     private let effectAdapter: MHMutationAdapter<MutationEffect>
     private let saveLogger: MHLogger
 
@@ -193,38 +188,26 @@ private extension RecipeActionService {
         operation: @escaping @MainActor () throws -> MutationOutcome<Value>
     ) async throws -> MutationOutcome<Value> {
         do {
-            let result = try await MHMutationWorkflow.runThrowing(
+            let outcome = try await CookleMutationWorkflow.run(
                 name: name,
-                operation: {
-                    let outcome = try operation()
-                    return OperationResult(
-                        value: outcome.value,
-                        effects: self.recipeMutationEffects(
-                            baseEffects: outcome.effects,
-                            requestReview: requestReview
-                        )
+                adapter: effectAdapter
+            ) {
+                let outcome = try operation()
+                return .init(
+                    value: outcome.value,
+                    effects: self.recipeMutationEffects(
+                        baseEffects: outcome.effects,
+                        requestReview: requestReview
                     )
-                },
-                adapter: effectAdapter,
-                projection: .closures(
-                    afterSuccess: { result in
-                        result.effects
-                    },
-                    returning: { result in
-                        result
-                    }
                 )
-            )
+            }
             if let saveSummary {
                 RecipeSaveLogging.logSuccess(
                     logger: saveLogger,
                     summary: saveSummary
                 )
             }
-            return .init(
-                value: result.value,
-                effects: result.effects
-            )
+            return outcome
         } catch {
             if let saveSummary {
                 RecipeSaveLogging.logFailure(

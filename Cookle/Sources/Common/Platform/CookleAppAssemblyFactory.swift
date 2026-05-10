@@ -95,27 +95,18 @@ private extension CookleAppAssemblyFactory {
         notificationService: NotificationService,
         routePipeline: MHAppRoutePipeline<Route>
     ) -> MHAppRuntimeBootstrap {
-        var bootstrap: MHAppRuntimeBootstrap?
         let lifecyclePlan = makeLifecyclePlan(
-            runtimeProvider: {
-                bootstrap?.runtime
-            },
             remoteConfigurationService: remoteConfigurationService,
             notificationService: notificationService,
             routePipeline: routePipeline
         )
-        bootstrap = .init(
+        return .init(
             configuration: makeRuntimeConfiguration(
                 nativeAdUnitID: nativeAdUnitID
             ),
             lifecyclePlan: lifecyclePlan,
             routePipeline: routePipeline
         )
-        guard let bootstrap else {
-            fatalError("MHAppRuntimeBootstrap should be initialized before assembly creation completes.")
-        }
-
-        return bootstrap
     }
 
     static func makeRecipeActionService(
@@ -219,21 +210,13 @@ private extension CookleAppAssemblyFactory {
     }
 
     static func makeLifecyclePlan<Route: Sendable>(
-        runtimeProvider: @escaping @MainActor () -> MHAppRuntime?,
         remoteConfigurationService: RemoteConfigurationService,
         notificationService: NotificationService,
         routePipeline: MHAppRoutePipeline<Route>
     ) -> MHAppRuntimeLifecyclePlan {
         .init(
             commonTasks: [
-                .init(name: "syncSubscriptionState") {
-                    guard let runtime = runtimeProvider() else {
-                        assertionFailure(
-                            "MHAppRuntimeBootstrap runtime was unavailable during subscription sync."
-                        )
-                        return
-                    }
-
+                .runtime(name: "syncSubscriptionState") { runtime in
                     syncSubscriptionStateIfNeeded(runtime: runtime)
                 },
                 .init(name: "loadRemoteConfiguration") {
