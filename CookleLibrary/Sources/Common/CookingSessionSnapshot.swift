@@ -39,6 +39,16 @@ public struct CookingSessionSnapshot: Codable, Equatable, Sendable {
         currentStepIndex + 1 < stepCount
     }
 
+    public var suggestedTimerMinutes: Int? {
+        guard let currentStep else {
+            return nil
+        }
+
+        return CookingTimerSuggestionParser.suggestedTimer(
+            for: currentStep
+        )?.minutes
+    }
+
     public init(
         recipeID: String,
         recipeName: String,

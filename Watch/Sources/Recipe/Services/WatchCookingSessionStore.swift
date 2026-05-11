@@ -6,9 +6,9 @@ import WatchConnectivity
 final class WatchCookingSessionStore: NSObject, ObservableObject, WCSessionDelegate {
     private let session: WCSession?
 
-    @Published private(set) var snapshot: WatchCookingSessionSnapshot?
+    @Published private(set) var snapshot: CookingSessionSnapshot?
 
-    var activeSnapshot: WatchCookingSessionSnapshot? {
+    var activeSnapshot: CookingSessionSnapshot? {
         guard let snapshot,
               snapshot.isActive else {
             return nil
@@ -205,7 +205,7 @@ final class WatchCookingSessionStore: NSObject, ObservableObject, WCSessionDeleg
             return
         }
 
-        guard let incomingSnapshot = WatchCookingSessionSnapshot.decoded(
+        guard let incomingSnapshot = CookingSessionSnapshot.decoded(
             from: encodedSnapshot
         ) else {
             return
@@ -224,7 +224,7 @@ final class WatchCookingSessionStore: NSObject, ObservableObject, WCSessionDeleg
     }
 
     private func applySnapshot(
-        _ updatedSnapshot: WatchCookingSessionSnapshot?
+        _ updatedSnapshot: CookingSessionSnapshot?
     ) {
         guard snapshot != updatedSnapshot else {
             return
@@ -237,7 +237,7 @@ final class WatchCookingSessionStore: NSObject, ObservableObject, WCSessionDeleg
     }
 
     private func pushSnapshot(
-        _ snapshot: WatchCookingSessionSnapshot?
+        _ snapshot: CookingSessionSnapshot?
     ) {
         guard let session,
               canPushSnapshot(

@@ -47,7 +47,7 @@ private extension WatchActiveCookingView {
     }
 
     func activeSessionContent(
-        snapshot: WatchCookingSessionSnapshot
+        snapshot: CookingSessionSnapshot
     ) -> some View {
         ScrollView {
             VStack(spacing: Layout.contentSpacing) {
@@ -93,7 +93,7 @@ private extension WatchActiveCookingView {
     }
 
     func progressSection(
-        snapshot: WatchCookingSessionSnapshot
+        snapshot: CookingSessionSnapshot
     ) -> some View {
         VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
             Text(
@@ -109,7 +109,7 @@ private extension WatchActiveCookingView {
     }
 
     func stepPager(
-        snapshot: WatchCookingSessionSnapshot
+        snapshot: CookingSessionSnapshot
     ) -> some View {
         TabView(
             selection: Binding(
@@ -167,7 +167,7 @@ private extension WatchActiveCookingView {
 
     @ViewBuilder
     func timerSection(
-        snapshot: WatchCookingSessionSnapshot
+        snapshot: CookingSessionSnapshot
     ) -> some View {
         TimelineView(
             .periodic(
@@ -184,7 +184,7 @@ private extension WatchActiveCookingView {
 
     @ViewBuilder
     func timerContent(
-        snapshot: WatchCookingSessionSnapshot,
+        snapshot: CookingSessionSnapshot,
         at date: Date
     ) -> some View {
         switch snapshot.timerStatus(at: date) {
@@ -204,7 +204,7 @@ private extension WatchActiveCookingView {
     }
 
     func idleTimerSection(
-        snapshot: WatchCookingSessionSnapshot
+        snapshot: CookingSessionSnapshot
     ) -> some View {
         VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
             Text("Quick Timers")
@@ -294,7 +294,7 @@ private extension WatchActiveCookingView {
     }
 
     func expiredTimerSection(
-        snapshot: WatchCookingSessionSnapshot
+        snapshot: CookingSessionSnapshot
     ) -> some View {
         VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
             Label(
@@ -321,7 +321,7 @@ private extension WatchActiveCookingView {
     }
 
     func stepNavigationSection(
-        snapshot: WatchCookingSessionSnapshot
+        snapshot: CookingSessionSnapshot
     ) -> some View {
         VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
             Text("Step Navigation")
@@ -344,7 +344,7 @@ private extension WatchActiveCookingView {
     }
 
     func timerOptions(
-        for snapshot: WatchCookingSessionSnapshot
+        for snapshot: CookingSessionSnapshot
     ) -> [Int] {
         let suggestedTimerMinutes = snapshot.suggestedTimerMinutes
         let additionalOptions: [Int] = [

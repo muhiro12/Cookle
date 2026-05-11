@@ -14,6 +14,7 @@
 		AD3909AB2DC4E8300052749F /* SwiftUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = AD3909AA2DC4E8300052749F /* SwiftUtilities */; };
 		AD7F5C0E2F5B3186008D91F3 /* MHPlatform in Frameworks */ = {isa = PBXBuildFile; productRef = AD7F5C0D2F5B3186008D91F3 /* MHPlatform */; };
 		AD9910122FF0000000AAA001 /* SwiftUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = AD9910112FF0000000AAA001 /* SwiftUtilities */; };
+		AD51C0012FA3000000000001 /* CookleLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AD51C0002FA3000000000001 /* CookleLibrary */; };
 		ADB8BF9D2F8FE0DF00C59D93 /* MHDesign in Frameworks */ = {isa = PBXBuildFile; productRef = ADB8BF9C2F8FE0DF00C59D93 /* MHDesign */; };
 		ADB8C6262F9293B700C59D93 /* Watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = ADB8C61C2F9293B500C59D93 /* Watch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		ADF13D702E8233A7002572CD /* CookleLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = ADF13D6F2E8233A7002572CD /* CookleLibrary */; };
@@ -120,6 +121,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD51C0012FA3000000000001 /* CookleLibrary in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,6 +233,7 @@
 			);
 			name = Watch;
 			packageProductDependencies = (
+				AD51C0002FA3000000000001 /* CookleLibrary */,
 			);
 			productName = "CookleWatch Watch App";
 			productReference = ADB8C61C2F9293B500C59D93 /* Watch.app */;
@@ -786,6 +789,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AD3909A92DC4E8300052749F /* XCRemoteSwiftPackageReference "SwiftUtilities" */;
 			productName = SwiftUtilities;
+		};
+		AD51C0002FA3000000000001 /* CookleLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CookleLibrary;
 		};
 		AD7F5C0D2F5B3186008D91F3 /* MHPlatform */ = {
 			isa = XCSwiftPackageProductDependency;
