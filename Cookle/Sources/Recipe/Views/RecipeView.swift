@@ -28,7 +28,6 @@ struct RecipeView: View {
             recipeSections
             recipeActionSection
         }
-        .cookleFloatingTabBarScrollMargins()
         .navigationTitle(recipe.name)
         .cookleIdleTimerDisabled()
         .fullScreenCover(isPresented: $isCookingPresented) {

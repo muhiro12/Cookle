@@ -100,7 +100,6 @@ struct SearchView: View {
             }
             .buttonStyle(.plain)
         }
-        .cookleFloatingTabBarScrollMargins()
     }
 
     var notFoundPlaceholder: some View {

@@ -80,7 +80,6 @@ private extension RecipeListView {
                 recipeRow(for: recipe)
             }
         }
-        .cookleFloatingTabBarScrollMargins()
     }
 
     var emptyStateView: some View {

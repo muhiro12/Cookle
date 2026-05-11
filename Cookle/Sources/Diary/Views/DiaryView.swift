@@ -22,7 +22,6 @@ struct DiaryView: View {
             updatedAtSection
             actionSection
         }
-        .cookleFloatingTabBarScrollMargins()
         .navigationTitle(diary.date.formatted(.dateTime.year().month().day().weekday()))
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
