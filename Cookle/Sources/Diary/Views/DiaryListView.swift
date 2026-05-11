@@ -104,6 +104,7 @@ struct DiaryListView: View {
                     .hidden(isSubscribeOn)
             }
         }
+        .cookleFloatingTabBarScrollMargins()
     }
 
     var emptyStateView: some View {

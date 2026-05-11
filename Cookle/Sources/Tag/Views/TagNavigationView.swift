@@ -1,13 +1,41 @@
 import SwiftData
 import SwiftUI
 
-struct TagNavigationView<T: Tag>: View {
+struct TagNavigationView<T: Tag & Identifiable>: View {
+    @Environment(\.horizontalSizeClass)
+    private var horizontalSizeClass
+
     @Binding private var tag: T?
     @Binding private var recipe: Recipe?
     @State private var preferredCompactColumn = NavigationSplitViewColumn.sidebar
     @State private var hasAppliedInitialCompactColumn = false
 
     var body: some View {
+        if horizontalSizeClass == .compact {
+            compactNavigationStack
+        } else {
+            splitNavigationView
+        }
+    }
+
+    var compactNavigationStack: some View {
+        NavigationStack {
+            TagListView<T>(selection: $tag)
+                .navigationDestination(item: $tag) { selectedTag in
+                    TagView<T>(
+                        tagSelection: $tag,
+                        recipeSelection: $recipe
+                    )
+                    .environment(selectedTag)
+                }
+                .navigationDestination(item: $recipe) { selectedRecipe in
+                    RecipeView()
+                        .environment(selectedRecipe)
+                }
+        }
+    }
+
+    var splitNavigationView: some View {
         NavigationSplitView(
             columnVisibility: .constant(.all),
             preferredCompactColumn: $preferredCompactColumn

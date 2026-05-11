@@ -49,6 +49,7 @@ private extension PhotoListView {
                 photoSection(for: group)
             }
         }
+        .cookleFloatingTabBarScrollMargins()
     }
 
     var emptyStateView: some View {

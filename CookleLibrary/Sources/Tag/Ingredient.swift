@@ -87,3 +87,5 @@ public extension Ingredient {
         .ingredients(predicate)
     }
 }
+
+extension Ingredient: Identifiable {}

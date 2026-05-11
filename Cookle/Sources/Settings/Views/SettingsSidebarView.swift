@@ -130,6 +130,7 @@ struct SettingsSidebarView: View {
                 )
             )
         }
+        .cookleFloatingTabBarScrollMargins()
     }
 
     var subscriptionSection: some View {

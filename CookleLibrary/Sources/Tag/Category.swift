@@ -83,3 +83,5 @@ public extension Category {
         .categories(predicate)
     }
 }
+
+extension Category: Identifiable {}

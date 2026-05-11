@@ -30,6 +30,9 @@ struct SearchView: View {
     @State private var searchText = ""
     @State private var isFocused = false
     @State private var discoverySheet: DiscoverySheet?
+    @State private var ingredientSelection: Ingredient?
+    @State private var categorySelection: Category?
+    @State private var discoveryRecipeSelection: Recipe?
 
     var body: some View {
         Group {
@@ -46,12 +49,21 @@ struct SearchView: View {
             "Search",
             keyboardDismissMode: .immediately
         )
-        .sheet(item: $discoverySheet) { sheet in
+        .sheet(
+            item: $discoverySheet,
+            onDismiss: resetDiscoverySelections
+        ) { sheet in
             switch sheet {
             case .ingredient:
-                TagNavigationView<Ingredient>()
+                TagNavigationView<Ingredient>(
+                    selection: $ingredientSelection,
+                    recipeSelection: $discoveryRecipeSelection
+                )
             case .category:
-                TagNavigationView<Category>()
+                TagNavigationView<Category>(
+                    selection: $categorySelection,
+                    recipeSelection: $discoveryRecipeSelection
+                )
             }
         }
         .toolbar {
@@ -88,6 +100,7 @@ struct SearchView: View {
             }
             .buttonStyle(.plain)
         }
+        .cookleFloatingTabBarScrollMargins()
     }
 
     var notFoundPlaceholder: some View {
@@ -155,6 +168,12 @@ private extension SearchView {
         } catch {
             recipes = []
         }
+    }
+
+    func resetDiscoverySelections() {
+        ingredientSelection = nil
+        categorySelection = nil
+        discoveryRecipeSelection = nil
     }
 }
 

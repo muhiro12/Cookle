@@ -28,6 +28,7 @@ struct PhotoDetailView: View {
             .scrollTargetBehavior(.paging)
             .scrollPosition(id: $currentID)
         }
+        .background(.black)
         .ignoresSafeArea(edges: .top)
         .toolbar {
             ToolbarItem {

@@ -29,6 +29,7 @@ struct PhotoView: View {
             updatedAtSection
             actionSection
         }
+        .cookleFloatingTabBarScrollMargins()
         .navigationTitle(
             PhotoDisplayCopy.title(for: photo)
         )
