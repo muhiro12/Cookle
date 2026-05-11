@@ -319,7 +319,7 @@ extension RecipeServiceTests {
     @available(iOS 26.0, *)
     @Test
     func isMeaningfulInference_returns_false_for_title_only_results() {
-        let inference = InferredRecipe(
+        let inference = RecipeInferenceResult(
             name: "Curry Rice",
             servingSize: .zero,
             cookingTime: .zero,

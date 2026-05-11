@@ -24,6 +24,13 @@ public struct InferredRecipeIngredient {
     )
     public var amount: String
 
+    var recipeInferenceIngredient: RecipeInferenceIngredient {
+        .init(
+            ingredient: ingredient,
+            amount: amount
+        )
+    }
+
     /// Creates an inferred ingredient entry.
     public init(ingredient: String, amount: String) {
         self.ingredient = ingredient

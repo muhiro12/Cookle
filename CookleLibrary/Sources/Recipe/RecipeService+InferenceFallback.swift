@@ -1,7 +1,5 @@
 import Foundation
-import FoundationModels
 
-@available(iOS 26.0, *)
 extension RecipeService {
     private enum InferenceConstants {
         static let minimumMeaningfulMetadataScore = 3
@@ -31,85 +29,13 @@ extension RecipeService {
 
     static let allSectionHeadings = ingredientSectionHeadings + stepSectionHeadings
 
-    static var inferenceInstructions: String {
-        """
-        You extract structured recipe form fields from recipe-like text.
-        The text may come from OCR, copied recipe pages, or dictated notes.
-        Return only information that is explicit or strongly implied by the input.
-        Preserve the input's original language and wording where practical.
-        Do not answer as a chef or rewrite the recipe into polished prose.
-        Do not invent ingredients, steps, servings, cooking time, categories, or notes.
-        Use 0 for unknown numeric values and empty strings or empty arrays for missing text fields.
-        """
-    }
-
-    /// Infers a recipe structure from free-form text using an LLM and a conservative fallback.
-    /// - Parameter text: Free-form user text describing a recipe.
-    /// - Returns: An `InferredRecipe` with best-effort fields filled.
-    public static func infer(text: String) async throws -> InferredRecipe {
-        let normalizedText = normalizedInferenceInput(text)
-        guard normalizedText.isNotEmpty else {
-            throw RecipeInferenceError.emptyInput
-        }
-
-        let fallback = sanitizedInference(
-            fallbackInference(from: normalizedText)
-        )
-        let model = SystemLanguageModel.default
-        switch model.availability {
-        case .available:
-            break
-        case .unavailable:
-            guard isMeaningfulInference(fallback) else {
-                throw RecipeInferenceError.modelUnavailable
-            }
-            return fallback
-        }
-
-        let session = LanguageModelSession(
-            instructions: inferenceInstructions
-        )
-
-        do {
-            let inferred = try await session.respond(
-                to: inferencePrompt(
-                    text: normalizedText
-                ),
-                generating: InferredRecipe.self
-            ).content
-            let sanitized = sanitizedInference(inferred)
-            if isMeaningfulInference(sanitized) {
-                return sanitized
-            }
-        } catch {
-            // Fall back to deterministic extraction below.
-        }
-
-        guard isMeaningfulInference(fallback) else {
-            throw RecipeInferenceError.insufficientContent
-        }
-        return fallback
-    }
-
-    static func inferencePrompt(
-        text: String
-    ) -> String {
-        """
-        Extract a recipe form from the following text.
-        Return only the structured fields defined by the schema.
-
-        Text:
-        \(text)
-        """
-    }
-
-    static func normalizedInferenceInput(_ text: String) -> String {
+    public static func normalizedInferenceInput(_ text: String) -> String {
         text.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
-    static func sanitizedInference(
-        _ inference: InferredRecipe
-    ) -> InferredRecipe {
+    public static func sanitizedInference(
+        _ inference: RecipeInferenceResult
+    ) -> RecipeInferenceResult {
         .init(
             name: sanitizedInferenceLine(inference.name),
             servingSize: max(inference.servingSize, .zero),
@@ -140,8 +66,8 @@ extension RecipeService {
         )
     }
 
-    static func isMeaningfulInference(
-        _ inference: InferredRecipe
+    public static func isMeaningfulInference(
+        _ inference: RecipeInferenceResult
     ) -> Bool {
         if inference.ingredients.isNotEmpty || inference.steps.isNotEmpty {
             return true
@@ -167,13 +93,13 @@ extension RecipeService {
         return RecipeBlurbService.collapsedWhitespace(trimmedValue)
     }
 
-    static func fallbackInference(from text: String) -> InferredRecipe {
+    public static func fallbackInference(from text: String) -> RecipeInferenceResult {
         let lines = text.components(separatedBy: .newlines)
         let ingredients = fallbackSectionItems(
             from: lines,
             headings: ingredientSectionHeadings
         ).map { ingredient in
-            InferredRecipeIngredient(
+            RecipeInferenceIngredient(
                 ingredient: ingredient,
                 amount: .empty
             )

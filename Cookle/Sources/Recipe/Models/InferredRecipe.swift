@@ -49,6 +49,18 @@ public struct InferredRecipe {
     )
     public var note: String
 
+    var recipeInferenceResult: RecipeInferenceResult {
+        .init(
+            name: name,
+            servingSize: servingSize,
+            cookingTime: cookingTime,
+            ingredients: ingredients.map(\.recipeInferenceIngredient),
+            steps: steps,
+            categories: categories,
+            note: note
+        )
+    }
+
     /// Creates an inferred recipe value.
     public init(
         name: String,
