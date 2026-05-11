@@ -261,6 +261,10 @@ post-clone CI setup.
   repository state and still writes CI run artifacts.
 - `bash ci_scripts/tasks/verify_pre_push.sh` is the optional local `pre-push`
   hook wrapper for the same non-destructive verification gate.
+- Release UI smoke auditing is intentionally separate from the normal verify
+  gate. Use the global `$xcode-ui-smoke-auditor` skill and the
+  [release UI smoke audit guide](Designs/Architecture/release-ui-smoke-audit.md)
+  when a release or UI-sensitive change needs live Simulator evidence.
 - `bash ci_scripts/tasks/check_unused_code.sh` runs the opt-in Periphery audit
   after `build_app.sh` has refreshed the shared index store.
 
