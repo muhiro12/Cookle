@@ -18,6 +18,7 @@ append_error() {
 }
 
 project_file="Cookle.xcodeproj/project.pbxproj"
+schemes_directory="Cookle.xcodeproj/xcshareddata/xcschemes"
 tests_directory="CookleTests"
 legacy_test_script="ci_scripts/tasks/test_app.sh"
 
@@ -31,6 +32,11 @@ fi
 
 if rg -n 'CookleTests|com\.apple\.product-type\.bundle\.unit-test|CookleTests\.xctest' "$project_file" >/dev/null; then
   append_error "Cookle.xcodeproj must not define a CookleTests unit test target."
+fi
+
+if [[ -d "$schemes_directory" ]] \
+  && rg -n 'CookleTests|CookleTests\.xctest' "$schemes_directory" >/dev/null; then
+  append_error "Shared Xcode schemes must not reference CookleTests."
 fi
 
 if [[ ${#errors[@]} -gt 0 ]]; then
