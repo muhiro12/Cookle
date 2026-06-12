@@ -419,7 +419,8 @@ large custom abstraction layers.
 
 - SwiftData models
 - predicates and fetch descriptors
-- validation and mutation services
+- public `*Operations` facades plus internal validation and mutation
+  collaborators
 - schema migration and storage helpers
 - shared route parsing and route execution
 - reusable logic that should behave the same in the app, widgets, and intents
@@ -454,7 +455,7 @@ Current workflow services are:
 - `TagActionService`
 - `SettingsActionService`
 
-Their role is to call shared domain services first, then run app-only side
+Their role is to call shared Operations APIs first, then run app-only side
 effects such as widget reloads, notification sync, or review prompts.
 
 They currently express mutation follow-up through
@@ -479,7 +480,7 @@ Current workflow-specific follow-up policies include:
 App Intents are treated as adapters, not domain owners.
 
 - They resolve parameters and entities.
-- They call shared services or app workflow services.
+- They call shared Operations APIs or app workflow services.
 - They return dialogs, values, snippet views, or route actions.
 - They do not duplicate canonical mutation or validation logic.
 
@@ -502,6 +503,8 @@ Views should not own:
 
 ### Canonical Behavior Rules
 
+- Public `*Operations` facades are the delivery-surface entry points for shared
+  business use cases.
 - `RecipeOperations.search` is the canonical recipe search implementation.
 - `CookleLibrary` also owns the canonical recipe browse sort semantics and
   persisted photo ordering/removal rules.
@@ -538,7 +541,8 @@ Views should not own:
   - route parsing and URL building
   - preferences
   - migrations
-  - diary, recipe, and tag services
+  - public Operations contracts and their internal diary, recipe, tag, photo,
+    and data-maintenance collaborators
   - notification scheduling helpers
 
 ## Summary

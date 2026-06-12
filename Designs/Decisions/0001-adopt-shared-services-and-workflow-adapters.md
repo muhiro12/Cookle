@@ -27,6 +27,10 @@ boundary.
 
 We will separate the system into shared services and target adapters.
 
+ADR 0007 refines the public shared-library entry point: delivery surfaces now
+call public `*Operations` facades, while lower-level services remain internal
+collaborators behind that boundary.
+
 ### Shared core
 
 `CookleLibrary` is the source of truth for shared business logic.
@@ -59,7 +63,7 @@ App Intents are treated as system-facing adapters, not domain services.
 They should:
 
 - resolve parameters
-- call a shared query service or workflow service
+- call a shared Operations API or workflow service
 - return dialogs, values, snippets, or route actions
 
 They should not:

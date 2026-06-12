@@ -3,12 +3,12 @@ import Foundation
 import Testing
 
 @MainActor
-struct MutationEffectPropagationTests {
+struct OperationsMutationEffectPropagationTests {
     let context = makeTestContext()
 
     @Test
     func recipeFormMutationsReturnRecipeAndNotificationEffects() throws {
-        let createDraft = try RecipeFormService.makeDraft(
+        let createDraft = try RecipeFormOperations.makeDraft(
             name: "Pasta",
             photos: [],
             servingSize: "2",
@@ -19,7 +19,7 @@ struct MutationEffectPropagationTests {
             note: ""
         )
 
-        let createOutcome = RecipeFormService.createWithOutcome(
+        let createOutcome = RecipeFormOperations.createWithOutcome(
             context: context,
             draft: createDraft
         )
@@ -28,7 +28,7 @@ struct MutationEffectPropagationTests {
         #expect(createOutcome.effects.contains(.notificationPlanChanged))
         #expect(createOutcome.effects.contains(.reviewPromptEligible) == false)
 
-        let updateDraft = try RecipeFormService.makeDraft(
+        let updateDraft = try RecipeFormOperations.makeDraft(
             name: "Updated Pasta",
             photos: [],
             servingSize: "4",
@@ -39,7 +39,7 @@ struct MutationEffectPropagationTests {
             note: "Updated"
         )
 
-        let updateOutcome = RecipeFormService.updateWithOutcome(
+        let updateOutcome = RecipeFormOperations.updateWithOutcome(
             context: context,
             recipe: createOutcome.value,
             draft: updateDraft
@@ -63,10 +63,10 @@ struct MutationEffectPropagationTests {
             note: ""
         )
 
-        let lastOpenedOutcome = RecipeService.recordLastOpenedRecipeWithOutcome(
+        let lastOpenedOutcome = RecipeOperations.recordLastOpenedRecipeWithOutcome(
             recipe
         )
-        let deleteOutcome = RecipeService.deleteWithOutcome(
+        let deleteOutcome = RecipeOperations.deleteWithOutcome(
             context: context,
             recipe: recipe
         )
@@ -90,7 +90,7 @@ struct MutationEffectPropagationTests {
             note: ""
         )
 
-        let createOutcome = DiaryService.createWithOutcome(
+        let createOutcome = DiaryOperations.createWithOutcome(
             context: context,
             date: .now,
             breakfasts: [recipe],
@@ -98,13 +98,13 @@ struct MutationEffectPropagationTests {
             dinners: [],
             note: ""
         )
-        let addOutcome = try DiaryService.addWithOutcome(
+        let addOutcome = try DiaryOperations.addWithOutcome(
             context: context,
             date: .now,
             recipe: recipe,
             type: .dinner
         )
-        let deleteOutcome = DiaryService.deleteWithOutcome(
+        let deleteOutcome = DiaryOperations.deleteWithOutcome(
             context: context,
             diary: createOutcome.value
         )
@@ -125,12 +125,12 @@ struct MutationEffectPropagationTests {
             value: "Dinner"
         )
 
-        let renameOutcome = try TagService.renameWithOutcome(
+        let renameOutcome = try TagOperations.renameWithOutcome(
             context: context,
             ingredient: ingredient,
             value: "Sea Salt"
         )
-        let categoryRenameOutcome = try TagService.renameWithOutcome(
+        let categoryRenameOutcome = try TagOperations.renameWithOutcome(
             context: context,
             category: category,
             value: "Supper"
@@ -154,7 +154,7 @@ struct MutationEffectPropagationTests {
             note: ""
         )
 
-        let outcome = try DataResetService.deleteAllWithOutcome(
+        let outcome = try DataMaintenanceOperations.deleteAllWithOutcome(
             context: context
         )
 
@@ -173,7 +173,7 @@ struct MutationEffectPropagationTests {
             )
         )
 
-        let outcome = PhotoService.deleteWithOutcome(
+        let outcome = PhotoOperations.deleteWithOutcome(
             context: context,
             photo: photo
         )

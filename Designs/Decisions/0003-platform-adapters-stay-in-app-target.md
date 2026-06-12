@@ -36,5 +36,5 @@ Keep these concerns in `CookleLibrary`:
 - `CookleLibrary` remains reusable and easier to reason about.
 - App-owned side effects stay visible in one target instead of leaking through
   shared services.
-- Cross-surface reuse happens through canonical library APIs, not by sharing
-  platform glue.
+- Cross-surface reuse happens through canonical library Operations APIs, not by
+  sharing platform glue.

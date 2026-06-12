@@ -14,20 +14,20 @@ surface_sources=(
   "$repository_root/Watch/Sources"
 )
 
-service_pattern='(RecipeService|RecipeFormService|DiaryService|TagService|PhotoService|DataResetService)'
+internal_collaborator_pattern='(RecipeService|RecipeFormService|RecipeTopReturnTargetService|DailyRecipeSuggestionService|RecipeBlurbService|RecipeImageConceptService|DiaryService|DiaryTopSuggestionService|TagService|PhotoService|DataResetService|CookleDataArchiveService|DetachedObjectCleanupService)'
 
-service_matches=$(
+collaborator_matches=$(
   rg \
     --line-number \
-    "\\b${service_pattern}\\b" \
+    "\\b${internal_collaborator_pattern}\\b" \
     "${surface_sources[@]}" \
     -g '*.swift' || true
 )
 
-if [[ -n "$service_matches" ]]; then
+if [[ -n "$collaborator_matches" ]]; then
   echo "Operations boundary check failed." >&2
-  echo "Delivery surfaces must call public *Operations facades instead of service collaborators:" >&2
-  echo "$service_matches" >&2
+  echo "Delivery surfaces must call public *Operations facades instead of internal library collaborators:" >&2
+  echo "$collaborator_matches" >&2
   exit 1
 fi
 

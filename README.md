@@ -37,7 +37,8 @@ repository contains the full iOS project together with its shared Swift package.
 - `Cookle/` – main SwiftUI application target with feature-based sources,
   platform wiring, remote-configuration adapters, and target configuration.
 - `CookleLibrary/` – shared Swift package that exposes SwiftData models,
-  services, predicates, migrations, and utilities used by the app and intents.
+  Operations facades, predicates, migrations, and utilities used by the app and
+  intents.
 - `Widgets/` – home-screen widget extension target built on top of
   `CookleLibrary`.
 - `MHPlatform` – shared app-runtime package family. The `Cookle` app
@@ -47,8 +48,8 @@ repository contains the full iOS project together with its shared Swift package.
 - `Designs/Decisions/` – architecture decision records that capture why major
   design choices were made.
 - `Designs/Overviews/` – current project snapshot and product overview.
-- `CookleLibrary/Tests/` – package tests for reusable utilities such as
-  preferences, photo sources, and shared sub-object logic.
+- `CookleLibrary/Tests/` – package tests for public Operations contracts,
+  reusable utilities, preferences, photo sources, and shared sub-object logic.
 - `ci_scripts/` – automation helpers used by Xcode Cloud and CI pipelines to
   inject secrets and configure the build environment.
 
@@ -82,8 +83,8 @@ Primary records:
 - [Deletion policy audit](Designs/Overviews/cookle-data-deletion-policy-audit.md)
 - [ADR 0007](Designs/Decisions/0007-adapt-incomes-june-boundaries.md)
 
-- `CookleLibrary` owns shared SwiftData models, predicates, queries,
-  validation, mutations, migrations, and route helpers.
+- `CookleLibrary` owns shared SwiftData models, public `*Operations` facades,
+  predicates, queries, validation, mutations, migrations, and route helpers.
 - MHPlatform consumer boundaries are explicit in this repo: `Cookle` is the
   umbrella-app adopter, `CookleLibrary` stays on `MHPlatformCore`, and
   `Widgets` stay off the umbrella.

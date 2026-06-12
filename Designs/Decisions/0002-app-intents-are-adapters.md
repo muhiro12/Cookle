@@ -20,7 +20,7 @@ App Intents are adapters, not domain services.
 App Intent files may:
 
 - resolve entities and parameters
-- call app adapters or shared query services
+- call app adapters or shared Operations APIs
 - convert errors into intent-facing failures
 - return dialogs, values, and route-based destinations
 
@@ -33,7 +33,7 @@ App Intent files must not:
 
 The preferred flow is:
 
-`App Intent parameter parsing -> app adapter/service -> CookleLibrary API -> intent result`
+`App Intent parameter parsing -> app adapter/service -> CookleLibrary Operations API -> intent result`
 
 ## Consequences
 

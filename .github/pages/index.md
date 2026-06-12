@@ -88,4 +88,6 @@ Cookle is a lightweight recipe manager built entirely with SwiftUI.
 
 ## Development
 
-The project uses **Swift 5** and requires **Xcode 15** or later. After cloning the repository, open `Cookle.xcodeproj` in Xcode and build the `Cookle` scheme.
+The project uses **Swift 6** with **Xcode 26.3** project settings and a
+minimum deployment target of **iOS 18.0**. After cloning the repository, open
+`Cookle.xcodeproj` in Xcode and build the `Cookle` scheme.
