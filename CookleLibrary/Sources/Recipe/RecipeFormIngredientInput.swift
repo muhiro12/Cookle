@@ -1,5 +1,5 @@
 /// Ingredient input used in recipe form flows.
-public struct RecipeFormIngredientInput: Sendable {
+public struct RecipeFormIngredientInput: Equatable, Sendable {
     public var ingredient: String
     public var amount: String
 

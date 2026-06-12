@@ -1,3 +1,4 @@
+import Foundation
 import MHDesign
 import PhotosUI
 import SwiftData
@@ -24,6 +25,7 @@ struct RecipeFormPhotosSection: View {
     @State private var isImagePlaygroundPresented = false
     @State private var pendingPhotoRemovalIndex: Int?
     @State private var isPhotoRemovalDialogPresented = false
+    @State private var photoRowIDs: [UUID]
 
     var body: some View {
         Section {
@@ -33,6 +35,12 @@ struct RecipeFormPhotosSection: View {
         }
         .onChange(of: photosPickerItems) {
             applySelectedPhotoItems()
+        }
+        .onAppear {
+            synchronizePhotoRowIDs()
+        }
+        .onChange(of: photos.count) {
+            synchronizePhotoRowIDs()
         }
         .confirmationDialog(
             Text(photoRemovalTitle),
@@ -105,8 +113,8 @@ struct RecipeFormPhotosSection: View {
     }
 
     var editModeContent: some View {
-        ForEach(photos, id: \.data) { photo in
-            if let image = UIImage(data: photo.data) {
+        ForEach(photoRows) { row in
+            if let image = UIImage(data: photos[row.index].data) {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
@@ -115,10 +123,13 @@ struct RecipeFormPhotosSection: View {
             }
         }
         .onMove { sourceOffsets, destinationOffset in
-            photos.move(fromOffsets: sourceOffsets, toOffset: destinationOffset)
+            movePhotos(
+                fromOffsets: sourceOffsets,
+                toOffset: destinationOffset
+            )
         }
         .onDelete { offsets in
-            photos.remove(atOffsets: offsets)
+            deletePhotos(atOffsets: offsets)
         }
     }
 
@@ -141,6 +152,11 @@ struct RecipeFormPhotosSection: View {
     ) {
         _photos = photos
         self.addPhotoTip = addPhotoTip
+        _photoRowIDs = State(
+            initialValue: RecipeFormStableRowIDs.make(
+                count: photos.wrappedValue.count
+            )
+        )
     }
 }
 
@@ -162,6 +178,13 @@ struct RecipeFormPhotosSection: View {
 private extension RecipeFormPhotosSection {
     var availablePhotoInputSources: [RecipePhotoInputSource] {
         RecipePhotoInputSource.allCases.filter(\.isAvailable)
+    }
+
+    var photoRows: [RecipeFormStableRowIDs.IndexedRow] {
+        RecipeFormStableRowIDs.indexedRows(
+            rowIDs: photoRowIDs,
+            count: photos.count
+        )
     }
 
     var addPhotoRow: some View {
@@ -227,15 +250,15 @@ private extension RecipeFormPhotosSection {
 
     @ViewBuilder
     func photoThumbnails(height: CGFloat) -> some View {
-        ForEach(Array(photos.enumerated()), id: \.offset) { index, photo in
+        ForEach(photoRows) { row in
             RecipeFormPhotoThumbnailView(
-                photo: photo,
-                index: index,
+                photo: photos[row.index],
+                index: row.index,
                 height: height,
                 cornerRadius: designMetrics.cornerRadius.control,
                 actionButtonPadding: designMetrics.spacing.inline,
                 photoRemovalBehavior: photoRemovalBehavior(
-                    for: index
+                    for: row.index
                 ),
                 pendingPhotoRemovalIndex: $pendingPhotoRemovalIndex,
                 isPhotoRemovalDialogPresented: $isPhotoRemovalDialogPresented
@@ -292,92 +315,63 @@ private extension RecipeFormPhotosSection {
     }
 
     func photoRemovalBehavior(for index: Int) -> RecipePhotoRemovalBehavior? {
-        guard let recipe,
-              let persistedPhotoObject = persistedPhotoObject(
-                for: index
-              ) else {
-            return nil
-        }
-
-        return .persistedPhotoBehavior(
-            draftReferenceCount: draftReferenceCount(
-                for: index
-            ),
-            persistedReferenceCountOutsideRecipe:
-                persistedReferenceCountOutsideRecipe(
-                    for: persistedPhotoObject,
-                    recipe: recipe
-                )
-        )
-    }
-
-    func persistedPhotoObject(for index: Int) -> PhotoObject? {
         guard let recipe else {
             return nil
         }
 
-        let photoData = photos[index]
-        let matchingPhotoObjects = recipe.orderedPhotoObjects.filter { photoObject in
-            guard let photo = photoObject.photo else {
-                return false
-            }
-
-            return photo.data == photoData.data
-                && photo.source == photoData.source
-        }
-        let matchingDraftCount = photos.prefix(
-            index + 1
+        return RecipeFormPhotoRemovalResolver(
+            recipe: recipe,
+            photos: photos
         )
-        .filter { currentPhoto in
-            currentPhoto.data == photoData.data
-                && currentPhoto.source == photoData.source
-        }
-        .count
-
-        guard matchingDraftCount <= matchingPhotoObjects.count else {
-            return nil
-        }
-
-        return matchingPhotoObjects[matchingDraftCount - 1]
-    }
-
-    func draftReferenceCount(for index: Int) -> Int {
-        let photoData = photos[index]
-        return photos.filter { currentPhoto in
-            currentPhoto.data == photoData.data
-                && currentPhoto.source == photoData.source
-        }
-        .count
-    }
-
-    func persistedReferenceCountOutsideRecipe(
-        for photoObject: PhotoObject,
-        recipe: Recipe
-    ) -> Int {
-        guard let photo = photoObject.photo else {
-            return .zero
-        }
-
-        let currentRecipeReferenceCount = recipe.orderedPhotoObjects
-            .filter { currentPhotoObject in
-                guard let currentPhoto = currentPhotoObject.photo else {
-                    return false
-                }
-
-                return currentPhoto.data == photo.data
-                    && currentPhoto.source == photo.source
-            }
-            .count
-        let totalReferenceCount = (photo.objects ?? []).count
-
-        return max(
-            .zero,
-            totalReferenceCount - currentRecipeReferenceCount
-        )
+        .behavior(for: index)
     }
 
     func removePhoto(at index: Int) {
+        guard photos.indices.contains(index) else {
+            return
+        }
+
         pendingPhotoRemovalIndex = nil
         photos.remove(at: index)
+        if photoRowIDs.indices.contains(index) {
+            photoRowIDs.remove(at: index)
+        }
+    }
+
+    func movePhotos(
+        fromOffsets sourceOffsets: IndexSet,
+        toOffset destinationOffset: Int
+    ) {
+        photos.move(
+            fromOffsets: sourceOffsets,
+            toOffset: destinationOffset
+        )
+        photoRowIDs.move(
+            fromOffsets: sourceOffsets,
+            toOffset: destinationOffset
+        )
+    }
+
+    func deletePhotos(atOffsets offsets: IndexSet) {
+        photos.remove(atOffsets: offsets)
+        photoRowIDs.remove(atOffsets: offsets)
+        clearStalePendingPhotoRemoval()
+    }
+
+    func synchronizePhotoRowIDs() {
+        RecipeFormStableRowIDs.synchronize(
+            &photoRowIDs,
+            count: photos.count
+        )
+        clearStalePendingPhotoRemoval()
+    }
+
+    func clearStalePendingPhotoRemoval() {
+        guard let pendingPhotoRemovalIndex,
+              photos.indices.contains(pendingPhotoRemovalIndex) == false else {
+            return
+        }
+
+        self.pendingPhotoRemovalIndex = nil
     }
 }

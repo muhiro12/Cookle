@@ -5,44 +5,109 @@
 //  Created by Hiromu Nakano on 2024/04/11.
 //
 
+import Foundation
 import SwiftData
 import SwiftUI
 
 struct RecipeFormCategoriesSection: View {
     @Binding private var categories: [String]
 
-    @FocusState private var focusedIndex: Int?
+    @FocusState private var focusedRowID: UUID?
+    @State private var categoryRowIDs: [UUID]
 
     var body: some View {
         Section {
-            ForEach(categories.indices, id: \.self) { index in
-                TextField(text: $categories[index], axis: .vertical) {
+            ForEach(categoryRows) { row in
+                TextField(text: categoryBinding(at: row.index), axis: .vertical) {
                     Text("Italian")
                 }
-                .focused($focusedIndex, equals: index)
+                .focused($focusedRowID, equals: row.id)
                 .toolbar {
                     ToolbarItem(placement: .keyboard) {
-                        if focusedIndex == index {
-                            SuggestionButtons<Category>(input: $categories[index])
+                        if focusedRowID == row.id {
+                            SuggestionButtons<Category>(
+                                input: categoryBinding(at: row.index)
+                            )
                         }
                     }
                 }
             }
             .onDelete { offsets in
-                categories.remove(atOffsets: offsets)
+                deleteCategories(atOffsets: offsets)
             }
         } header: {
             Text("Categories")
         }
+        .onAppear {
+            synchronizeCategoryRowIDs()
+        }
         .onChange(of: categories) {
-            categories = RecipeFormPlaceholderRows.normalizedStrings(
-                categories
-            )
+            normalizeCategories()
+            synchronizeCategoryRowIDs()
         }
     }
 
     init(_ categories: Binding<[String]>) {
         self._categories = categories
+        self._categoryRowIDs = State(
+            initialValue: RecipeFormStableRowIDs.make(
+                count: categories.wrappedValue.count
+            )
+        )
+    }
+}
+
+private extension RecipeFormCategoriesSection {
+    var categoryRows: [RecipeFormStableRowIDs.IndexedRow] {
+        RecipeFormStableRowIDs.indexedRows(
+            rowIDs: categoryRowIDs,
+            count: categories.count
+        )
+    }
+
+    func categoryBinding(at index: Int) -> Binding<String> {
+        .init(
+            get: {
+                categories[index]
+            },
+            set: { value in
+                categories[index] = value
+            }
+        )
+    }
+
+    func deleteCategories(atOffsets offsets: IndexSet) {
+        categories.remove(atOffsets: offsets)
+        categoryRowIDs.remove(atOffsets: offsets)
+        clearStaleFocus()
+    }
+
+    func normalizeCategories() {
+        let normalizedCategories = RecipeFormPlaceholderRows.normalizedStrings(
+            categories
+        )
+        guard normalizedCategories != categories else {
+            return
+        }
+
+        categories = normalizedCategories
+    }
+
+    func synchronizeCategoryRowIDs() {
+        RecipeFormStableRowIDs.synchronize(
+            &categoryRowIDs,
+            count: categories.count
+        )
+        clearStaleFocus()
+    }
+
+    func clearStaleFocus() {
+        guard let focusedRowID,
+              categoryRowIDs.contains(focusedRowID) == false else {
+            return
+        }
+
+        self.focusedRowID = nil
     }
 }
 

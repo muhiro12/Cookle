@@ -134,8 +134,7 @@ struct SearchView: View {
                 discoverySheet = .category
             }
         } label: {
-            Image(systemName: "line.3.horizontal.decrease.circle")
-                .accessibilityLabel("Browse Tags")
+            Label("Browse Tags", systemImage: "line.3.horizontal.decrease.circle")
         }
     }
 

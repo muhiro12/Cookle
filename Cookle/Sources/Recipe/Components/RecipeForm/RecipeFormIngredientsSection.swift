@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2024/05/03.
 //
 
+import Foundation
 import SwiftData
 import SwiftUI
 
@@ -13,34 +14,40 @@ typealias RecipeFormIngredient = RecipeFormIngredientInput
 struct RecipeFormIngredientsSection: View {
     @Binding private var ingredients: [RecipeFormIngredient]
 
-    @FocusState private var focusedIndex: Int?
+    @FocusState private var focusedRowID: UUID?
+    @State private var ingredientRowIDs: [UUID]
 
     var body: some View {
         Section {
-            ForEach(ingredients.indices, id: \.self) { index in
+            ForEach(ingredientRows) { row in
                 HStack(alignment: .top) {
-                    TextField(text: $ingredients[index].ingredient, axis: .vertical) {
+                    TextField(text: ingredientNameBinding(at: row.index), axis: .vertical) {
                         Text("Spaghetti")
                     }
-                    .focused($focusedIndex, equals: index)
-                    TextField(text: $ingredients[index].amount) {
+                    .focused($focusedRowID, equals: row.id)
+                    TextField(text: ingredientAmountBinding(at: row.index)) {
                         Text("200g")
                     }
                     .multilineTextAlignment(.trailing)
                 }
                 .toolbar {
                     ToolbarItem(placement: .keyboard) {
-                        if focusedIndex == index {
-                            SuggestionButtons<Ingredient>(input: $ingredients[index].ingredient)
+                        if focusedRowID == row.id {
+                            SuggestionButtons<Ingredient>(
+                                input: ingredientNameBinding(at: row.index)
+                            )
                         }
                     }
                 }
             }
             .onMove { sourceOffsets, destinationOffset in
-                ingredients.move(fromOffsets: sourceOffsets, toOffset: destinationOffset)
+                moveIngredients(
+                    fromOffsets: sourceOffsets,
+                    toOffset: destinationOffset
+                )
             }
             .onDelete { offsets in
-                ingredients.remove(atOffsets: offsets)
+                deleteIngredients(atOffsets: offsets)
             }
         } header: {
             HStack {
@@ -51,20 +58,101 @@ struct RecipeFormIngredientsSection: View {
                     .textCase(nil)
             }
         }
-        .onChange(of: ingredients.map(\.ingredient)) {
-            ingredients = RecipeFormPlaceholderRows.normalizedIngredients(
-                ingredients
-            )
+        .onAppear {
+            synchronizeIngredientRowIDs()
         }
-        .onChange(of: ingredients.map(\.amount)) {
-            ingredients = RecipeFormPlaceholderRows.normalizedIngredients(
-                ingredients
-            )
+        .onChange(of: ingredients) {
+            normalizeIngredients()
+            synchronizeIngredientRowIDs()
         }
     }
 
     init(_ ingredients: Binding<[RecipeFormIngredient]>) {
         self._ingredients = ingredients
+        self._ingredientRowIDs = State(
+            initialValue: RecipeFormStableRowIDs.make(
+                count: ingredients.wrappedValue.count
+            )
+        )
+    }
+}
+
+private extension RecipeFormIngredientsSection {
+    var ingredientRows: [RecipeFormStableRowIDs.IndexedRow] {
+        RecipeFormStableRowIDs.indexedRows(
+            rowIDs: ingredientRowIDs,
+            count: ingredients.count
+        )
+    }
+
+    func ingredientNameBinding(at index: Int) -> Binding<String> {
+        .init(
+            get: {
+                ingredients[index].ingredient
+            },
+            set: { value in
+                ingredients[index].ingredient = value
+            }
+        )
+    }
+
+    func ingredientAmountBinding(at index: Int) -> Binding<String> {
+        .init(
+            get: {
+                ingredients[index].amount
+            },
+            set: { value in
+                ingredients[index].amount = value
+            }
+        )
+    }
+
+    func moveIngredients(
+        fromOffsets sourceOffsets: IndexSet,
+        toOffset destinationOffset: Int
+    ) {
+        ingredients.move(
+            fromOffsets: sourceOffsets,
+            toOffset: destinationOffset
+        )
+        ingredientRowIDs.move(
+            fromOffsets: sourceOffsets,
+            toOffset: destinationOffset
+        )
+    }
+
+    func deleteIngredients(atOffsets offsets: IndexSet) {
+        ingredients.remove(atOffsets: offsets)
+        ingredientRowIDs.remove(atOffsets: offsets)
+        clearStaleFocus()
+    }
+
+    func normalizeIngredients() {
+        let normalizedIngredients = RecipeFormPlaceholderRows.normalizedIngredients(
+            ingredients
+        )
+        guard normalizedIngredients != ingredients else {
+            return
+        }
+
+        ingredients = normalizedIngredients
+    }
+
+    func synchronizeIngredientRowIDs() {
+        RecipeFormStableRowIDs.synchronize(
+            &ingredientRowIDs,
+            count: ingredients.count
+        )
+        clearStaleFocus()
+    }
+
+    func clearStaleFocus() {
+        guard let focusedRowID,
+              ingredientRowIDs.contains(focusedRowID) == false else {
+            return
+        }
+
+        self.focusedRowID = nil
     }
 }
 

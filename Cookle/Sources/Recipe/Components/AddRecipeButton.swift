@@ -31,7 +31,7 @@ struct AddRecipeButton: View {
             Label {
                 Text("Add Recipe")
             } icon: {
-                Image(systemName: "book.pages")
+                Image(systemName: "plus")
                     .accessibilityHidden(true)
             }
         }
