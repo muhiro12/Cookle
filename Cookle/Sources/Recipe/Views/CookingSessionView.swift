@@ -87,7 +87,7 @@ private extension CookingSessionView {
                 ) {
                     cookingSessionStore.endSession()
                 }
-                .buttonStyle(.borderedProminent)
+                .cookleGlassButtonStyle(isProminent: true)
             }
             .padding(Layout.screenPadding)
         }
@@ -164,8 +164,7 @@ private extension CookingSessionView {
             .padding(Layout.sectionPadding)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .background(
-            .background,
+        .cookleGlassSurface(
             in: RoundedRectangle(
                 cornerRadius: Layout.sectionCornerRadius,
                 style: .continuous
@@ -202,13 +201,13 @@ private extension CookingSessionView {
         Button("Previous Step") {
             cookingSessionStore.returnToPreviousStep()
         }
-        .buttonStyle(.bordered)
+        .cookleGlassButtonStyle()
         .disabled(snapshot.hasPreviousStep == false)
 
         Button("Next Step") {
             cookingSessionStore.advanceToNextStep()
         }
-        .buttonStyle(.borderedProminent)
+        .cookleGlassButtonStyle(isProminent: true)
         .disabled(snapshot.hasNextStep == false)
     }
 
@@ -217,8 +216,7 @@ private extension CookingSessionView {
     ) -> some View {
         content()
             .padding(Layout.sectionPadding)
-            .background(
-                .background,
+            .cookleGlassSurface(
                 in: RoundedRectangle(
                     cornerRadius: Layout.sectionCornerRadius,
                     style: .continuous

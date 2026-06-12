@@ -126,19 +126,19 @@ private extension CookingSessionTimerSection {
         Button("Repeat") {
             cookingSessionStore.repeatTimer()
         }
-        .buttonStyle(.borderedProminent)
+        .cookleGlassButtonStyle(isProminent: true)
 
         if snapshot.hasNextStep {
             Button("Next Step") {
                 cookingSessionStore.advanceFromTimerFollowUp()
             }
-            .buttonStyle(.bordered)
+            .cookleGlassButtonStyle()
         }
 
         Button("Cancel Timer") {
             cookingSessionStore.cancelTimer()
         }
-        .buttonStyle(.bordered)
+        .cookleGlassButtonStyle()
     }
 
     @ViewBuilder
@@ -171,7 +171,7 @@ private extension CookingSessionTimerSection {
                 Text("\(minutes) min")
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.borderedProminent)
+            .cookleGlassButtonStyle(isProminent: true)
         } else {
             Button {
                 cookingSessionStore.startTimer(
@@ -181,7 +181,7 @@ private extension CookingSessionTimerSection {
                 Text("\(minutes) min")
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.bordered)
+            .cookleGlassButtonStyle()
         }
     }
 
@@ -209,7 +209,7 @@ private extension CookingSessionTimerSection {
             ) {
                 cookingSessionStore.cancelTimer()
             }
-            .buttonStyle(.bordered)
+            .cookleGlassButtonStyle()
         }
     }
 

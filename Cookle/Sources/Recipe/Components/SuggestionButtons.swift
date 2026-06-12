@@ -15,20 +15,49 @@ struct SuggestionButtons<T: Tag>: View {
 
     var body: some View {
         ScrollView(.horizontal) {
-            HStack {
-                ForEach(suggestions) { suggestion in
-                    Button(suggestion.value) {
-                        input = suggestion.value
-                    }
-                    Divider()
+            if #available(iOS 26.0, *) {
+                GlassEffectContainer(
+                    spacing: SuggestionButtonsLayout.buttonSpacing
+                ) {
+                    suggestionButtonRow
                 }
+            } else {
+                suggestionButtonRow
             }
         }
+        .scrollIndicators(.hidden)
     }
 
     init(input: Binding<String>) {
         _input = input
         _suggestions = .init(T.descriptor(.valueContains(input.wrappedValue)))
+    }
+}
+
+private extension SuggestionButtons {
+    var suggestionButtonRow: some View {
+        HStack(spacing: SuggestionButtonsLayout.buttonSpacing) {
+            ForEach(suggestions) { suggestion in
+                Button(suggestion.value) {
+                    input = suggestion.value
+                }
+                .buttonStyle(.plain)
+                .font(.subheadline)
+                .foregroundStyle(.primary)
+                .lineLimit(1)
+                .padding(
+                    .horizontal,
+                    SuggestionButtonsLayout.buttonHorizontalPadding
+                )
+                .padding(
+                    .vertical,
+                    SuggestionButtonsLayout.buttonVerticalPadding
+                )
+                .cookleGlassControl(
+                    in: Capsule(style: .continuous)
+                )
+            }
+        }
     }
 }
 
