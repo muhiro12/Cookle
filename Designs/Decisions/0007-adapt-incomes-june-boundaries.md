@@ -10,8 +10,8 @@ Incomes' June 2026 design cleanup clarified three reusable portfolio patterns:
 - delivery surfaces should enter shared business use cases through stable
   `*Operations` library facades
 - local Apple verification should be MCP-first, with retained scripts limited
-  to static repository rules, SwiftLint/autofix, compatibility wrappers, or
-  checks MCP does not naturally cover
+  to static repository rules, SwiftLint/autofix, optional audits, or checks MCP
+  does not naturally cover
 - repository environment work, including static checks and test-target posture,
   should support the intended architecture rather than merely document it
 
@@ -34,8 +34,8 @@ Cookle will adopt the Incomes direction in stages:
    `*Operations` facades in `CookleLibrary`.
 3. Keep target adapters responsible for platform glue.
 4. Retain only the shell scripts that support MCP-first development through
-   SwiftLint/autofix, static repository rules, compatibility wrappers, or
-   checks that MCP does not naturally cover.
+   SwiftLint/autofix, static repository rules, optional audits, or checks that
+   MCP does not naturally cover.
 
 ### Direct Adoption
 
@@ -65,9 +65,8 @@ Cookle will adopt the Incomes direction in stages:
 - Introduce Cookle-specific static boundary checks as the Operations boundary
   becomes enforceable. Do not copy Incomes' finance-domain collaborator
   deny-list.
-- Convert existing shell aggregate gates into compatibility wrappers around
-  retained repository rules and, during migration, any build/test steps not yet
-  covered by MCP defaults.
+- Remove shell aggregate gates once MCP build/test evidence and retained
+  repository rules provide the required task-completion evidence.
 - Review test targets and scheme coverage as part of the migration. Keep
   durable tests in `CookleLibrary/Tests`; remove or avoid target-local test
   surfaces that would encourage business rules to live in adapters.
@@ -78,8 +77,8 @@ Cookle will adopt the Incomes direction in stages:
   duplication flows, watch sync contracts, or navigation helpers.
 - Do not rename types without improving the boundary that delivery surfaces
   call.
-- Do not delete compatibility wrappers before MCP and retained repository rules
-  provide equivalent task-completion evidence.
+- Do not reintroduce shell aggregate build/test gates when MCP and retained
+  repository rules already provide the required task-completion evidence.
 - Do not add process-heavy public repository artifacts solely for portfolio
   symmetry.
 
@@ -90,8 +89,8 @@ Cookle will adopt the Incomes direction in stages:
 - Future cross-surface behavior should prefer `*Operations` facades, and
   existing services should be migrated when the facade clarifies surface usage
   or enables static enforcement.
-- XcodeBuildMCP becomes the preferred evidence surface, while shell scripts
-  shrink toward retained repository rules and migration compatibility.
+- XcodeBuildMCP becomes the preferred evidence surface, while shell scripts stay
+  focused on retained repository rules, SwiftLint/autofix, and opt-in audits.
 - Further code refactors should be driven by concrete Cookle boundary drift,
   test posture, and verification-contract migration rather than superficial
   parity with Incomes.

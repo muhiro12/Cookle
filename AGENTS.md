@@ -120,15 +120,9 @@ bash ci_scripts/tasks/check_repository_rules.sh
 architecture checks that are not naturally covered by XcodeBuildMCP.
 SwiftLint is resolved from the `SimplyDanny/SwiftLintPlugins` package declared
 in `Cookle.xcodeproj`, not from a separately installed `swiftlint` binary.
-`verify_task_completion.sh`, `verify_repository_state.sh`, `build_app.sh`,
-`test_shared_library.sh`, and `verify_pre_push.sh` remain compatibility
-wrappers during the MCP-first migration.
+Xcode Cloud owns formal CI builds, tests, and archives.
 
-Compatibility run artifacts are written under `.build/ci/runs/<RUN_ID>/`.
-Each run stores `summary.md`, `commands.txt`, `meta.json`, `logs/`, `results/`, and `work/`.
-Shared CI directories are under `.build/ci/shared/` (`cache/`, `DerivedData/`, `tmp/`, `home/`).
-Only the newest 5 run directories are retained.
-The entire `.build/ci` directory is disposable.
+Helper scripts may write disposable cache data under `.build/ci/shared/`.
 
 ## Release UI Smoke Audit
 

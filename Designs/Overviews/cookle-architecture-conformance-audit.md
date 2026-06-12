@@ -59,7 +59,8 @@ in `CookleLibrary`, and the repository no longer carries a separate
 - Representative files:
   - `CookleLibrary/Tests/RecipeBrowseCriteriaTests.swift`
   - `CookleLibrary/Tests/RecipePhotoRemovalTests.swift`
-  - `ci_scripts/tasks/verify_repository_state.sh`
+  - `AGENTS.md`
+  - `ci_scripts/tasks/check_repository_rules.sh`
   - `ci_scripts/tasks/check_test_posture.sh`
 
 ## Corrected Drift
@@ -68,8 +69,8 @@ in `CookleLibrary`, and the repository no longer carries a separate
 
 - Previous state:
   - The repository defined a `CookleTests` unit test target.
-  - `verify_repository_state.sh` treated `test_app.sh` as the required app-side
-    verification path.
+  - Shell verification wrappers treated app-owned tests as the required
+    app-side verification path.
   - App-owned tests had started to cover logic that should have been modeled as
     shared rules instead.
 - Risk:
@@ -77,7 +78,8 @@ in `CookleLibrary`, and the repository no longer carries a separate
     architecture and made it easy to keep durable logic in the app target.
 - Current correction:
   - `CookleTests` and `test_app.sh` are removed.
-  - Verification now uses `build_app.sh` plus `test_shared_library.sh`.
+  - Verification now uses XcodeBuildMCP `build_sim` with the `Cookle` scheme
+    plus XcodeBuildMCP `test_sim` with the `CookleLibrary` scheme.
   - A dedicated `check_test_posture.sh` guardrail blocks reintroduction of the
     removed app test posture.
 

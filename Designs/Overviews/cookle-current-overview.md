@@ -502,7 +502,7 @@ Views should not own:
 
 ### Canonical Behavior Rules
 
-- `RecipeService.search` is the canonical recipe search implementation.
+- `RecipeOperations.search` is the canonical recipe search implementation.
 - `CookleLibrary` also owns the canonical recipe browse sort semantics and
   persisted photo ordering/removal rules.
 - Route parsing and route execution are shared so every entry point uses the
@@ -523,7 +523,11 @@ Views should not own:
 
 ## Operational Notes
 
-- Standard build and test entry point: `bash ci_scripts/tasks/verify_task_completion.sh`
+- Standard Apple build and test evidence is MCP-first: use XcodeBuildMCP
+  `build_sim` with the `Cookle` scheme and XcodeBuildMCP `test_sim` with the
+  `CookleLibrary` scheme.
+- Retained shell checks are limited to SwiftLint, repository static rules, and
+  optional audits that XcodeBuildMCP does not naturally cover.
 - Repository-owned unit tests stay concentrated in `CookleLibrary/Tests`.
 - `Cookle` and `Widgets` are verified through app builds plus shared-library
   tests, without a separate app unit test target.

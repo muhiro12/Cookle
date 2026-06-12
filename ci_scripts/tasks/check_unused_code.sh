@@ -25,7 +25,8 @@ fi
 
 if [[ ! -d "$index_store_path" ]]; then
   echo "Periphery index store not found: $index_store_path" >&2
-  echo "Run 'bash ci_scripts/tasks/build_app.sh' first to refresh the index store." >&2
+  echo "Run XcodeBuildMCP build_sim with the Cookle scheme first." >&2
+  echo "Use derivedDataPath: $repository_root/.build/ci/shared/DerivedData" >&2
   exit 1
 fi
 
