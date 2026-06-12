@@ -11,10 +11,8 @@
 		AD277E732E8449CC00B4AC19 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD277E722E8449CC00B4AC19 /* SwiftUI.framework */; };
 		AD277E842E8449CD00B4AC19 /* Widgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AD277E6F2E8449CC00B4AC19 /* Widgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		AD2781342E844E0400B4AC19 /* CookleLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AD2781332E844E0400B4AC19 /* CookleLibrary */; };
-		AD3909AB2DC4E8300052749F /* SwiftUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = AD3909AA2DC4E8300052749F /* SwiftUtilities */; };
 		AD51C0012FA3000000000001 /* CookleLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AD51C0002FA3000000000001 /* CookleLibrary */; };
 		AD7F5C0E2F5B3186008D91F3 /* MHPlatform in Frameworks */ = {isa = PBXBuildFile; productRef = AD7F5C0D2F5B3186008D91F3 /* MHPlatform */; };
-		AD9910122FF0000000AAA001 /* SwiftUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = AD9910112FF0000000AAA001 /* SwiftUtilities */; };
 		ADB8BF9D2F8FE0DF00C59D93 /* MHDesign in Frameworks */ = {isa = PBXBuildFile; productRef = ADB8BF9C2F8FE0DF00C59D93 /* MHDesign */; };
 		ADB8C6262F9293B700C59D93 /* Watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = ADB8C61C2F9293B500C59D93 /* Watch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		ADF13D702E8233A7002572CD /* CookleLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = ADF13D6F2E8233A7002572CD /* CookleLibrary */; };
@@ -100,7 +98,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD277E732E8449CC00B4AC19 /* SwiftUI.framework in Frameworks */,
-				AD9910122FF0000000AAA001 /* SwiftUtilities in Frameworks */,
 				AD2781342E844E0400B4AC19 /* CookleLibrary in Frameworks */,
 				AD277E712E8449CC00B4AC19 /* WidgetKit.framework in Frameworks */,
 			);
@@ -111,7 +108,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD7F5C0E2F5B3186008D91F3 /* MHPlatform in Frameworks */,
-				AD3909AB2DC4E8300052749F /* SwiftUtilities in Frameworks */,
 				ADF13D702E8233A7002572CD /* CookleLibrary in Frameworks */,
 				ADB8BF9D2F8FE0DF00C59D93 /* MHDesign in Frameworks */,
 			);
@@ -180,7 +176,6 @@
 			name = Widgets;
 			packageProductDependencies = (
 				AD2781332E844E0400B4AC19 /* CookleLibrary */,
-				AD9910112FF0000000AAA001 /* SwiftUtilities */,
 			);
 			productName = WidgetsExtension;
 			productReference = AD277E6F2E8449CC00B4AC19 /* Widgets.appex */;
@@ -208,7 +203,6 @@
 			name = Cookle;
 			packageProductDependencies = (
 				AD7F5C0D2F5B3186008D91F3 /* MHPlatform */,
-				AD3909AA2DC4E8300052749F /* SwiftUtilities */,
 				ADF13D6F2E8233A7002572CD /* CookleLibrary */,
 				ADB8BF9C2F8FE0DF00C59D93 /* MHDesign */,
 			);
@@ -274,7 +268,6 @@
 			);
 			mainGroup = AD8C8E5F2BFABEE200872BF2;
 			packageReferences = (
-				AD3909A92DC4E8300052749F /* XCRemoteSwiftPackageReference "SwiftUtilities" */,
 				AD7F5C0F2F5B3186008D91F3 /* XCRemoteSwiftPackageReference "MHPlatform" */,
 				B00000012F7A000100000017 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
 				ADF13D6E2E8233A7002572CD /* XCLocalSwiftPackageReference "CookleLibrary" */,
@@ -746,14 +739,6 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		AD3909A92DC4E8300052749F /* XCRemoteSwiftPackageReference "SwiftUtilities" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/muhiro12/SwiftUtilities";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 		AD7F5C0F2F5B3186008D91F3 /* XCRemoteSwiftPackageReference "MHPlatform" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/muhiro12/MHPlatform";
@@ -785,11 +770,6 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = CookleLibrary;
 		};
-		AD3909AA2DC4E8300052749F /* SwiftUtilities */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AD3909A92DC4E8300052749F /* XCRemoteSwiftPackageReference "SwiftUtilities" */;
-			productName = SwiftUtilities;
-		};
 		AD51C0002FA3000000000001 /* CookleLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CookleLibrary;
@@ -798,11 +778,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AD7F5C0F2F5B3186008D91F3 /* XCRemoteSwiftPackageReference "MHPlatform" */;
 			productName = MHPlatform;
-		};
-		AD9910112FF0000000AAA001 /* SwiftUtilities */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AD3909A92DC4E8300052749F /* XCRemoteSwiftPackageReference "SwiftUtilities" */;
-			productName = SwiftUtilities;
 		};
 		ADB8BF9C2F8FE0DF00C59D93 /* MHDesign */ = {
 			isa = XCSwiftPackageProductDependency;

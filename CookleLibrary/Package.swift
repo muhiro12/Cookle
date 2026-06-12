@@ -19,10 +19,6 @@ let kPackage = Package(
     ],
     dependencies: [
         .package(
-            url: "https://github.com/muhiro12/SwiftUtilities",
-            "1.0.0"..<"2.0.0"
-        ),
-        .package(
             url: "https://github.com/muhiro12/MHPlatform.git",
             "1.0.0"..<"2.0.0"
         )
@@ -31,10 +27,6 @@ let kPackage = Package(
         .target(
             name: "CookleLibrary",
             dependencies: [
-                .product(
-                    name: "SwiftUtilities",
-                    package: "SwiftUtilities"
-                ),
                 .product(
                     name: "MHPlatformCore",
                     package: "MHPlatform"
