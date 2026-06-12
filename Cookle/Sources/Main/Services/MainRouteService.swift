@@ -18,11 +18,14 @@ enum MainRouteService {
                 context: modelContext
             )
         }
+        let isDuplicateRoute: @Sendable (CookleRoute, CookleRoute) -> Bool = { firstRoute, secondRoute in
+            firstRoute == secondRoute
+        }
 
         return .init(
             routeLifecycle: .init(
                 logger: logger,
-                isDuplicate: ==
+                isDuplicate: isDuplicateRoute
             ),
             parse: { routeURL in
                 CookleRouteParser.parse(url: routeURL)
