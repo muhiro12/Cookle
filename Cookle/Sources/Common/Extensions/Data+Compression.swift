@@ -4,14 +4,14 @@ import UniformTypeIdentifiers
 
 @usableFromInline
 enum DataCompressionConstants {
-    @usableFromInline nonisolated(unsafe) static let defaultMaxSizeKilobytes = 500
-    @usableFromInline nonisolated(unsafe) static let bytesPerKilobyte = 1_024
-    @usableFromInline nonisolated(unsafe) static let defaultMaxSize =
+    @usableFromInline nonisolated static let defaultMaxSizeKilobytes = 500
+    @usableFromInline nonisolated static let bytesPerKilobyte = 1_024
+    @usableFromInline nonisolated static let defaultMaxSize =
         defaultMaxSizeKilobytes * bytesPerKilobyte
-    nonisolated(unsafe) static let initialQuality = 1.0
-    nonisolated(unsafe) static let minimumQuality = 0.0
-    nonisolated(unsafe) static let qualityStep = 0.1
-    nonisolated(unsafe) static let destinationImageCount = 1
+    nonisolated static let initialQuality = 1.0
+    nonisolated static let minimumQuality = 0.0
+    nonisolated static let qualityStep = 0.1
+    nonisolated static let destinationImageCount = 1
 }
 
 public extension Data {
