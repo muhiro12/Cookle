@@ -21,7 +21,7 @@ struct SearchRecipesIntent: AppIntent {
     @MainActor
     func perform() throws -> some ReturnsValue<[RecipeEntity]> {
         .result(
-            value: try RecipeService.search(
+            value: try RecipeOperations.search(
                 context: modelContainer.mainContext,
                 text: searchText
             )

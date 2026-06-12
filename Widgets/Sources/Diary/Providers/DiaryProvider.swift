@@ -77,11 +77,11 @@ private extension DiaryProvider {
     func diary(for selection: DiaryWidgetSelection, date: Date, context: ModelContext) throws -> Diary? {
         switch selection {
         case .latest:
-            return try DiaryService.latestDiary(context: context)
+            return try DiaryOperations.latestDiary(context: context)
         case .today:
-            return try DiaryService.diary(on: date, context: context)
+            return try DiaryOperations.diary(on: date, context: context)
         case .random:
-            return try DiaryService.randomDiary(context: context)
+            return try DiaryOperations.randomDiary(context: context)
         }
     }
 

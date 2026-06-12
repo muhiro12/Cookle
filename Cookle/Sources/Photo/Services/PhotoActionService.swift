@@ -24,7 +24,7 @@ final class PhotoActionService {
         try await run(
             name: "deletePhoto"
         ) {
-            PhotoService.deleteWithOutcome(
+            PhotoOperations.deleteWithOutcome(
                 context: context,
                 photo: photo
             )

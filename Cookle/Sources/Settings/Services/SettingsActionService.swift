@@ -56,7 +56,7 @@ final class SettingsActionService {
     }
 
     func deleteAllData(modelContainer: ModelContainer) async throws {
-        let mutationOutcome = try DataResetService.deleteAllWithOutcome(
+        let mutationOutcome = try DataMaintenanceOperations.deleteAllWithOutcome(
             context: modelContainer.mainContext
         )
 

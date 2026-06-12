@@ -79,7 +79,7 @@ private extension TagListView {
     func usageText(for tag: T) -> String {
         let recipeCount = tag.recipes.orEmpty.count
         let recipeLabel = recipeCount == 1 ? "recipe" : "recipes"
-        let duplicateCount = TagService.duplicateTags(
+        let duplicateCount = TagOperations.duplicateTags(
             matching: tag,
             in: tags
         ).count

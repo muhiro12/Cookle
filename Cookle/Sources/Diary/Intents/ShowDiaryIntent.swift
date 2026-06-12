@@ -14,7 +14,7 @@ struct ShowDiaryIntent: AppIntent {
 
     @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
-        guard let diary = try DiaryService.diary(
+        guard let diary = try DiaryOperations.diary(
             on: date,
             context: modelContainer.mainContext
         ) else {

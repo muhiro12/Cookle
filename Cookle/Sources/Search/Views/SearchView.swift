@@ -160,7 +160,7 @@ private extension SearchView {
 
     func performSearch() {
         do {
-            recipes = try RecipeService.search(
+            recipes = try RecipeOperations.search(
                 context: context,
                 text: searchText
             )

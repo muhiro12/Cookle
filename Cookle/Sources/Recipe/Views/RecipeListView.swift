@@ -97,7 +97,7 @@ private extension RecipeListView {
     }
 
     var sortedRecipes: [Recipe] {
-        RecipeService.browse(
+        RecipeOperations.browse(
             allRecipes,
             sortMode: recipeBrowseSortSelection.sortMode,
             isAscending: recipeBrowseSortSelection.isAscending

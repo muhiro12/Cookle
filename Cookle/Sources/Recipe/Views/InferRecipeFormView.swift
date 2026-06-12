@@ -188,7 +188,7 @@ private extension InferRecipeFormView {
         }
 
         do {
-            let inference = try await RecipeService.infer(text: text)
+            let inference = try await RecipeFoundationModelInferenceOperations.infer(text: text)
             name = inference.name
             servingSize = inference.servingSize == .zero ? .empty : inference.servingSize.description
             cookingTime = inference.cookingTime == .zero ? .empty : inference.cookingTime.description

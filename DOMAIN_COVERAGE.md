@@ -3,18 +3,18 @@
 ## Scope
 
 This map defines canonical domain ownership for Cookle and highlights gaps where
-canonical rules should be moved into `CookleLibrary` while preserving the
-Workflow Service Rule in `Cookle`.
+canonical rules should be moved into `CookleLibrary` Operations while
+preserving the Workflow Service Rule in `Cookle`.
 
 ## Coverage Matrix
 
 | Feature area | Canonical in CookleLibrary | Adapter-only in Cookle/Widgets | Observed gaps |
 | --- | --- | --- | --- |
-| recipes | `Recipe`, `RecipeService`, `RecipeFormService`, `RecipePredicate`, `RecipeBlurbService`, `DailyRecipeSuggestionService` | `RecipeActionService`, recipe SwiftUI views, recipe App Intents | Intent text parsing lived in app code; stable recipe ID conversion duplicated across targets |
-| diaries | `Diary`, `DiaryService`, `DiaryObjectType`, `DiaryPredicate` | `DiaryActionService`, diary SwiftUI views, diary App Intents, diary widget timeline rendering | Update/delete target resolution for date-based diary flows lived in Intent branches |
-| photos | `Photo`, `PhotoObject`, `PhotoSource`, `PhotoService`, photo predicates | `PhotoActionService`, photo screens, widget image rendering, notification attachment I/O | primary photo selection heuristic duplicated across adapters (not fully unified yet) |
-| search | `RecipeService.search` + `RecipePredicate.anyTextMatches` | search UI state, searchable presentation, search intents/snippets | no high-impact gap after canonical search consolidation |
-| tags | `TagService`, `TagPredicate`, `TagServiceError` | `TagActionService`, tag forms, tag intents | named lookup helper remains in Intent support (`TagIntentSupport`) |
+| recipes | `Recipe`, `RecipeOperations`, `RecipeFormOperations`, `RecipeInferenceOperations`, `RecipePredicate`, `RecipeBlurbService`, `DailyRecipeSuggestionService` | `RecipeActionService`, recipe SwiftUI views, recipe App Intents | lower-level services remain public compatibility collaborators during staged migration |
+| diaries | `Diary`, `DiaryOperations`, `DiaryObjectType`, `DiaryPredicate` | `DiaryActionService`, diary SwiftUI views, diary App Intents, diary widget timeline rendering | lower-level services remain public compatibility collaborators during staged migration |
+| photos | `Photo`, `PhotoObject`, `PhotoSource`, `PhotoOperations`, photo predicates | `PhotoActionService`, photo screens, widget image rendering, notification attachment I/O | primary photo selection heuristic duplicated across adapters (not fully unified yet) |
+| search | `RecipeOperations.search` + `RecipePredicate.anyTextMatches` | search UI state, searchable presentation, search intents/snippets | no high-impact gap after canonical search consolidation |
+| tags | `TagOperations`, `TagPredicate`, `TagServiceError` | `TagActionService`, tag forms, tag intents | named lookup helper remains in Intent support (`TagIntentSupport`) |
 | routes | `CookleRoute`, parser/executor/url builders/deep-link helpers | `MainRouteService` state mapping, route inbox, openApp intents | no canonical parsing/execution gap observed |
 | notifications | suggestion planning (`DailyRecipeSuggestionService`), route URL builders, recipe blurb generation | `UNUserNotificationCenter` orchestration, authorization flow, attachment persistence | time normalization rules duplicated in app (`NotificationService` and `SettingsSidebarView`) |
 | widgets | shared model/query/mutation and deep-link vocabulary | WidgetKit providers, timeline policy, widget rendering views | stable recipe identifier conversion duplicated in recipe widget provider |
@@ -24,15 +24,20 @@ Workflow Service Rule in `Cookle`.
 ## Evidence Paths
 
 - Recipes:
+  - `CookleLibrary/Sources/Recipe/RecipeOperations.swift`
+  - `CookleLibrary/Sources/Recipe/RecipeFormOperations.swift`
+  - `CookleLibrary/Sources/Recipe/RecipeInferenceOperations.swift`
   - `CookleLibrary/Sources/Recipe/RecipeService.swift`
   - `CookleLibrary/Sources/Recipe/RecipeFormService.swift`
   - `Cookle/Sources/Recipe/Services/RecipeActionService.swift`
 - Diaries:
+  - `CookleLibrary/Sources/Diary/DiaryOperations.swift`
   - `CookleLibrary/Sources/Diary/DiaryService.swift`
   - `Cookle/Sources/Diary/Services/DiaryActionService.swift`
   - `Cookle/Sources/Diary/Intents/UpdateDiaryIntent.swift`
 - Photos:
   - `CookleLibrary/Sources/Photo/Photo.swift`
+  - `CookleLibrary/Sources/Photo/PhotoOperations.swift`
   - `CookleLibrary/Sources/Photo/PhotoService.swift`
   - `Cookle/Sources/Photo/Services/PhotoActionService.swift`
   - `Cookle/Sources/Notification/Services/NotificationAttachmentStore.swift`
@@ -41,6 +46,7 @@ Workflow Service Rule in `Cookle`.
   - `CookleLibrary/Sources/Recipe/RecipePredicate.swift`
   - `Cookle/Sources/Search/Views/SearchView.swift`
 - Tags:
+  - `CookleLibrary/Sources/Tag/TagOperations.swift`
   - `CookleLibrary/Sources/Tag/TagService.swift`
   - `Cookle/Sources/Tag/Intents/TagIntentSupport.swift`
 - Routes:

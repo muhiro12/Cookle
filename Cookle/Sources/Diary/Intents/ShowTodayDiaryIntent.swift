@@ -9,7 +9,7 @@ struct ShowTodayDiaryIntent: AppIntent {
 
     @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
-        if let diary = try DiaryService.diary(on: .now, context: modelContainer.mainContext) {
+        if let diary = try DiaryOperations.diary(on: .now, context: modelContainer.mainContext) {
             let dialog = diary.date.formatted(
                 .dateTime.year().month().day().weekday()
             )

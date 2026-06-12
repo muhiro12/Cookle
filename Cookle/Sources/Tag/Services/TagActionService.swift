@@ -25,7 +25,7 @@ final class TagActionService {
         try await run(
             name: "renameIngredient"
         ) {
-            try TagService.renameWithOutcome(
+            try TagOperations.renameWithOutcome(
                 context: context,
                 ingredient: ingredient,
                 value: value
@@ -42,7 +42,7 @@ final class TagActionService {
         try await run(
             name: "renameCategory"
         ) {
-            try TagService.renameWithOutcome(
+            try TagOperations.renameWithOutcome(
                 context: context,
                 category: category,
                 value: value
@@ -85,7 +85,7 @@ final class TagActionService {
         try await run(
             name: "deleteCategory"
         ) {
-            TagService.deleteWithOutcome(
+            TagOperations.deleteWithOutcome(
                 context: context,
                 category: category
             )
@@ -100,7 +100,7 @@ final class TagActionService {
         try await run(
             name: "deleteIngredient"
         ) {
-            try TagService.deleteWithOutcome(
+            try TagOperations.deleteWithOutcome(
                 context: context,
                 ingredient: ingredient
             )
@@ -116,7 +116,7 @@ final class TagActionService {
             return try await run(
                 name: "mergeDuplicateIngredients"
             ) {
-                try TagService.mergeDuplicatesWithOutcome(
+                try TagOperations.mergeDuplicatesWithOutcome(
                     context: context,
                     keeping: ingredient
                 )
@@ -127,7 +127,7 @@ final class TagActionService {
             return try await run(
                 name: "mergeDuplicateCategories"
             ) {
-                try TagService.mergeDuplicatesWithOutcome(
+                try TagOperations.mergeDuplicatesWithOutcome(
                     context: context,
                     keeping: category
                 )

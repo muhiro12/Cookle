@@ -28,7 +28,7 @@ final class DiaryActionService {
         try await run(
             name: "createDiary"
         ) {
-            DiaryService.createWithOutcome(
+            DiaryOperations.createWithOutcome(
                 context: context,
                 date: date,
                 breakfasts: input.breakfasts,
@@ -49,7 +49,7 @@ final class DiaryActionService {
         try await run(
             name: "updateDiary"
         ) {
-            DiaryService.updateWithOutcome(
+            DiaryOperations.updateWithOutcome(
                 context: context,
                 diary: diary,
                 date: date,
@@ -67,7 +67,7 @@ final class DiaryActionService {
         on date: Date,
         input: FormInput
     ) async throws -> MutationOutcome<Diary?> {
-        guard let diary = try DiaryService.diary(
+        guard let diary = try DiaryOperations.diary(
             on: date,
             context: context
         ) else {
@@ -96,7 +96,7 @@ final class DiaryActionService {
         try await run(
             name: "addRecipeToDiary"
         ) {
-            try DiaryService.addWithOutcome(
+            try DiaryOperations.addWithOutcome(
                 context: context,
                 date: date,
                 recipe: recipe,
@@ -113,7 +113,7 @@ final class DiaryActionService {
         try await run(
             name: "deleteDiary"
         ) {
-            DiaryService.deleteWithOutcome(
+            DiaryOperations.deleteWithOutcome(
                 context: context,
                 diary: diary
             )

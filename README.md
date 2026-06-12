@@ -102,9 +102,10 @@ Primary records:
 - App startup and foreground refreshes are driven through
   `MHAppRuntimeBootstrap` and `MHAppRuntimeLifecyclePlan` instead of ad-hoc
   `scenePhase` handlers.
-- SwiftUI views and App Intents call those workflow services for commands
-  instead of mutating models directly.
-- `RecipeService.search` is the canonical recipe search API used by views,
+- SwiftUI views and App Intents call workflow services for commands instead of
+  mutating models directly, and delivery surfaces call `*Operations` facades
+  instead of service collaborators for shared business use cases.
+- `RecipeOperations.search` is the canonical recipe search API used by views,
   intents, and widgets.
 - Route parsing and execution stay shared so deep links, widgets, and intents
   speak the same navigation language through a single `MHAppRoutePipeline`.

@@ -21,7 +21,7 @@ struct ShowSearchResultIntent: AppIntent {
 
     @MainActor
     func perform() throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
-        let results = try RecipeService.search(
+        let results = try RecipeOperations.search(
             context: modelContainer.mainContext,
             text: searchText
         )

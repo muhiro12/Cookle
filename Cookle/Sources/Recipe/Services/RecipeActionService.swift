@@ -39,7 +39,7 @@ final class RecipeActionService {
             requestReview: requestReview,
             saveSummary: summary
         ) {
-            RecipeFormService.createWithOutcome(
+            RecipeFormOperations.createWithOutcome(
                 context: context,
                 draft: draft
             )
@@ -63,7 +63,7 @@ final class RecipeActionService {
             requestReview: requestReview,
             saveSummary: summary
         ) {
-            RecipeFormService.updateWithOutcome(
+            RecipeFormOperations.updateWithOutcome(
                 context: context,
                 recipe: recipe,
                 draft: draft
@@ -80,7 +80,7 @@ final class RecipeActionService {
             name: "deleteRecipe",
             requestReview: false
         ) {
-            RecipeService.deleteWithOutcome(
+            RecipeOperations.deleteWithOutcome(
                 context: context,
                 recipe: recipe
             )
@@ -149,7 +149,7 @@ final class RecipeActionService {
             name: "recordOpenedRecipe",
             requestReview: false
         ) {
-            RecipeService.recordLastOpenedRecipeWithOutcome(
+            RecipeOperations.recordLastOpenedRecipeWithOutcome(
                 recipe
             )
         }

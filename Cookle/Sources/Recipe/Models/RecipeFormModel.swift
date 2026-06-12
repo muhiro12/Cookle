@@ -154,7 +154,7 @@ final class RecipeFormModel {
     }
 
     func makeDraft() throws -> RecipeFormDraft {
-        try RecipeFormService.makeDraft(
+        try RecipeFormOperations.makeDraft(
             name: name,
             photos: photos,
             servingSize: servingSize,

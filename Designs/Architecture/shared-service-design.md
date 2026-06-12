@@ -60,8 +60,8 @@ that use case.
 
 ## Canonical Shared APIs
 
-The following types are the current shared entry points for business
-operations:
+The following types are the current shared entry points for business use cases
+and supporting contracts:
 
 - `RecipeBrowseCriteria`
 - `RecipeBrowseSortMode`
@@ -69,31 +69,26 @@ operations:
 - `MutationOutcome`
 - `MutationEffect`
 - `RecipePhotoRemovalBehavior`
-- `RecipeService.search(context:criteria:)`
-- `RecipeFormService.createWithOutcome(context:draft:)`
-- `RecipeFormService.updateWithOutcome(context:recipe:draft:)`
-- `RecipeService.deleteWithOutcome(context:recipe:)`
-- `RecipeService.removePhotoWithOutcome(context:recipe:photoObject:)`
-- `RecipeService.recordLastOpenedRecipeWithOutcome(_:)`
-- `PhotoService.deleteWithOutcome(context:photo:)`
-- `DiaryService.createWithOutcome(context:date:breakfasts:lunches:dinners:note:)`
-- `DiaryService.updateWithOutcome(context:diary:date:breakfasts:lunches:dinners:note:)`
-- `DiaryService.addWithOutcome(context:date:recipe:type:)`
-- `DiaryService.deleteWithOutcome(context:diary:)`
-- `TagService.renameWithOutcome(...)`
-- `DataResetService.deleteAllWithOutcome(context:)`
+- `RecipeOperations`
+- `RecipeFormOperations`
+- `RecipeInferenceOperations`
+- `DiaryOperations`
+- `TagOperations`
+- `PhotoOperations`
+- `DataMaintenanceOperations`
 
-App-side mutation call sites should consume those library APIs and keep
-platform-only side effects in the app target.
+Delivery-surface call sites should consume Operations APIs and keep
+platform-only side effects in the app target. Existing `*Service` types remain
+as implementation collaborators and compatibility surfaces during migration.
 
 ## Placement Rules
 
 1. If an operation is reusable across more than one surface, add or extend a
-   library service first.
+   library `*Operations` facade first.
 2. If an operation depends on Apple-only frameworks, keep it in `Cookle` and
-   make it call library APIs.
+   make it call library Operations or supporting contracts.
 3. If a view or App Intent starts recreating mutation rules, treat that as a
-   missing library API.
+   missing Operations boundary.
 4. Keep platform-specific types out of `CookleLibrary`. Convert them at the
    boundary into library models or value types.
 5. If glue code is app-only but reused by multiple app entry points, factor it
@@ -112,22 +107,24 @@ platform-only side effects in the app target.
   compact settings presentation are app-only concerns.
 - `RecipeFormSaveCoordinator` and `DiaryFormSaveCoordinator` stay in `Cookle`
   because they convert screen state into canonical library drafts and inputs.
-- `RecipeFormService`, `DiaryService`, `TagService`, and `DataResetService`
-  stay in `CookleLibrary` because their mutation rules must remain stable
-  across the app and App Intents.
-- `PhotoService` stays in `CookleLibrary` because deleting a photo asset has
-  shared recipe and notification follow-up meaning, while `PhotoActionService`
-  stays in `Cookle` because it executes the platform side effects.
+- `RecipeOperations`, `RecipeFormOperations`, `DiaryOperations`,
+  `TagOperations`, `PhotoOperations`, and `DataMaintenanceOperations` stay in
+  `CookleLibrary` because their use cases must remain stable across the app,
+  widgets, watch surface, and App Intents.
+- `RecipeService`, `RecipeFormService`, `DiaryService`, `TagService`,
+  `PhotoService`, and `DataResetService` remain in `CookleLibrary` as
+  implementation collaborators during the staged Operations migration.
 - `NotificationService` stays in `Cookle` because scheduling, authorization,
   and route delivery depend on Apple frameworks.
 - `SettingsActionService` stays in `Cookle` because destructive reset follow-up
-  is platform orchestration, while the actual reset decision stays in
-  `DataResetService`.
+  is platform orchestration, while the actual reset use case is exposed through
+  `DataMaintenanceOperations`.
 
 ## Refactoring Heuristic
 
 When a business rule is duplicated, the default fix is to move the rule into
-`CookleLibrary` rather than duplicating it in a view, App Intent, or widget.
+`CookleLibrary` behind an Operations facade rather than duplicating it in a
+view, App Intent, or widget.
 
 When the duplicated code is still Apple-framework glue, the default fix is to
 extract it into an app-side adapter in `Cookle/Sources/Common/Platform` or a

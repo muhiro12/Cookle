@@ -96,11 +96,11 @@ private extension RecipeProvider {
     func recipe(for selection: RecipeWidgetSelection, context: ModelContext) throws -> Recipe? {
         switch selection {
         case .latest:
-            return try RecipeService.latestRecipe(context: context)
+            return try RecipeOperations.latestRecipe(context: context)
         case .lastOpened:
-            return try RecipeService.lastOpenedRecipe(context: context)
+            return try RecipeOperations.lastOpenedRecipe(context: context)
         case .random:
-            return try RecipeService.randomRecipe(context: context)
+            return try RecipeOperations.randomRecipe(context: context)
         }
     }
 

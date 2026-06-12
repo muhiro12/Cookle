@@ -14,7 +14,7 @@ struct DeleteDiaryIntent: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        guard let diary = try DiaryService.diary(
+        guard let diary = try DiaryOperations.diary(
             on: date,
             context: modelContainer.mainContext
         ) else {

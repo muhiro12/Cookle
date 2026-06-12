@@ -67,7 +67,7 @@ private extension MergeDuplicateTagButton {
     }
 
     var duplicateTags: [T] {
-        TagService.duplicateTags(
+        TagOperations.duplicateTags(
             matching: tag,
             in: tags
         )

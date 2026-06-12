@@ -2,7 +2,7 @@ import Foundation
 import FoundationModels
 
 @available(iOS 26.0, *)
-extension RecipeService {
+enum RecipeFoundationModelInferenceOperations {
     static var inferenceInstructions: String {
         """
         You extract structured recipe form fields from recipe-like text.
@@ -19,20 +19,20 @@ extension RecipeService {
     /// - Parameter text: Free-form user text describing a recipe.
     /// - Returns: A `RecipeInferenceResult` with best-effort fields filled.
     static func infer(text: String) async throws -> RecipeInferenceResult {
-        let normalizedText = normalizedInferenceInput(text)
+        let normalizedText = RecipeInferenceOperations.normalizedInput(text)
         guard normalizedText.isNotEmpty else {
             throw RecipeInferenceError.emptyInput
         }
 
-        let fallback = sanitizedInference(
-            fallbackInference(from: normalizedText)
+        let fallback = RecipeInferenceOperations.sanitizedInference(
+            RecipeInferenceOperations.fallbackInference(from: normalizedText)
         )
         let model = SystemLanguageModel.default
         switch model.availability {
         case .available:
             break
         case .unavailable:
-            guard isMeaningfulInference(fallback) else {
+            guard RecipeInferenceOperations.isMeaningfulInference(fallback) else {
                 throw RecipeInferenceError.modelUnavailable
             }
             return fallback
@@ -49,15 +49,15 @@ extension RecipeService {
                 ),
                 generating: InferredRecipe.self
             ).content
-            let sanitized = sanitizedInference(inferred.recipeInferenceResult)
-            if isMeaningfulInference(sanitized) {
+            let sanitized = RecipeInferenceOperations.sanitizedInference(inferred.recipeInferenceResult)
+            if RecipeInferenceOperations.isMeaningfulInference(sanitized) {
                 return sanitized
             }
         } catch {
             // Fall back to deterministic extraction below.
         }
 
-        guard isMeaningfulInference(fallback) else {
+        guard RecipeInferenceOperations.isMeaningfulInference(fallback) else {
             throw RecipeInferenceError.insufficientContent
         }
         return fallback

@@ -26,7 +26,7 @@ enum RecipeIntentDraftBuilder {
         )
 
         do {
-            let draft = try RecipeFormService.makeDraft(
+            let draft = try RecipeFormOperations.makeDraft(
                 name: input.name,
                 servingSize: input.servingSize,
                 cookingTime: input.cookingTime,
