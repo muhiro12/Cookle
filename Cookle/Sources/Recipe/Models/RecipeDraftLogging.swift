@@ -56,10 +56,10 @@ enum RecipeDraftLogging {
     ) -> Summary {
         .init(
             source: formSource(for: type),
-            inputIngredientCount: ingredients.filter(\.ingredient.isNotEmpty).count,
-            inputStepCount: steps.filter(\.isNotEmpty).count,
-            inputCategoryCount: categories.filter(\.isNotEmpty).count,
-            hasNote: note.isNotEmpty
+            inputIngredientCount: ingredients.filter { !$0.ingredient.isEmpty }.count,
+            inputStepCount: steps.filter { !$0.isEmpty }.count,
+            inputCategoryCount: categories.filter { !$0.isEmpty }.count,
+            hasNote: !note.isEmpty
         )
     }
 
@@ -75,7 +75,7 @@ enum RecipeDraftLogging {
             inputIngredientCount: lines(in: ingredientsText).count,
             inputStepCount: lines(in: stepsText).count,
             inputCategoryCount: lines(in: categoriesText).count,
-            hasNote: note.isNotEmpty
+            hasNote: !note.isEmpty
         )
     }
 
@@ -128,6 +128,6 @@ private extension RecipeDraftLogging {
                     in: .whitespacesAndNewlines
                 )
             }
-            .filter(\.isNotEmpty)
+            .filter { !$0.isEmpty }
     }
 }

@@ -6,7 +6,7 @@ enum PhotoDeleteCopy {
     }
 
     static func message(for photo: Photo) -> String {
-        let affectedRowCount = photo.objects.orEmpty.count
+        let affectedRowCount = (photo.objects ?? []).count
         let rowLabel = affectedRowCount == 1 ? "recipe photo row" : "recipe photo rows"
 
         if affectedRowCount == 0 {

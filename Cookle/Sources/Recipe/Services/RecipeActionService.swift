@@ -166,7 +166,7 @@ private extension RecipeActionService {
             photos: photos,
             servingSize: recipe.servingSize,
             cookingTime: recipe.cookingTime,
-            ingredients: recipe.ingredientObjects.orEmpty.sorted().compactMap { object in
+            ingredients: (recipe.ingredientObjects ?? []).sorted().compactMap { object in
                 guard let ingredient = object.ingredient else {
                     return nil
                 }
@@ -176,7 +176,7 @@ private extension RecipeActionService {
                 )
             },
             steps: recipe.steps,
-            categories: recipe.categories.orEmpty.map(\.value),
+            categories: (recipe.categories ?? []).map(\.value),
             note: recipe.note
         )
     }

@@ -14,8 +14,8 @@ consumers that should call app-owned shared APIs before adding direct platform
 products.
 
 MHUI now separates `MHDesign` metrics from the full `MHUI` styled surface and
-explicitly keeps SwiftUtilities-style generic helpers and thin host-app
-presentation shortcuts outside the package.
+explicitly keeps generic helpers and thin host-app presentation shortcuts
+outside the package.
 
 Cookle already has the matching app shape: app-owned adapters call shared
 `*Operations` facades, repository-owned tests live in `CookleLibrary/Tests`, and
@@ -35,9 +35,8 @@ package-surface parity.
   adopts package-owned styled primitives.
 - `Widgets`, `Watch`, and App Intents call `CookleLibrary` APIs first and stay
   off app-runtime and presentation package umbrellas by default.
-- SwiftUtilities remains an app or shared-library utility dependency. It is not
-  migrated into MHUI, and MHUI is not used as a replacement for host-app helper
-  shortcuts.
+- Cookle does not keep a generic utility package dependency. Generic helpers
+  and thin host-app presentation shortcuts are not migrated into MHUI.
 - Repository static rules guard the package consumer boundary alongside the
   Operations and test-posture boundaries.
 

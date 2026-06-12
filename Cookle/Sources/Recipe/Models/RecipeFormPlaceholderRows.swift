@@ -5,7 +5,7 @@ enum RecipeFormPlaceholderRows {
         _ values: [String]
     ) -> [String] {
         normalize(values, isPlaceholder: \.isEmpty) {
-            .empty
+            ""
         }
     }
 
@@ -19,8 +19,8 @@ enum RecipeFormPlaceholderRows {
             },
             makePlaceholder: {
                 .init(
-                    ingredient: .empty,
-                    amount: .empty
+                    ingredient: "",
+                    amount: ""
                 )
             }
         )
@@ -33,7 +33,7 @@ private extension RecipeFormPlaceholderRows {
         isPlaceholder: (Element) -> Bool,
         makePlaceholder: () -> Element
     ) -> [Element] {
-        guard values.isNotEmpty else {
+        guard !values.isEmpty else {
             return [makePlaceholder()]
         }
 

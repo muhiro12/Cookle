@@ -17,7 +17,7 @@ public enum RecipePhotoDisplay {
         let orderedPhotos = orderedPhotoObjects(
             photoObjects: photoObjects
         ).compactMap(\.photo)
-        if orderedPhotos.isNotEmpty {
+        if !orderedPhotos.isEmpty {
             return orderedPhotos
         }
         return fallbackPhotos
@@ -50,31 +50,31 @@ public extension Recipe {
     /// Photo objects sorted by their display order.
     var orderedPhotoObjects: [PhotoObject] {
         RecipePhotoDisplay.orderedPhotoObjects(
-            photoObjects: photoObjects.orEmpty
+            photoObjects: (photoObjects ?? [])
         )
     }
 
     /// Photos sorted for display, with legacy fallback when needed.
     var orderedPhotos: [Photo] {
         RecipePhotoDisplay.orderedPhotos(
-            photoObjects: photoObjects.orEmpty,
-            fallbackPhotos: photos.orEmpty
+            photoObjects: (photoObjects ?? []),
+            fallbackPhotos: (photos ?? [])
         )
     }
 
     /// The first photo that should be shown for this recipe.
     var primaryPhoto: Photo? {
         RecipePhotoDisplay.primaryPhoto(
-            photoObjects: photoObjects.orEmpty,
-            fallbackPhotos: photos.orEmpty
+            photoObjects: (photoObjects ?? []),
+            fallbackPhotos: (photos ?? [])
         )
     }
 
     /// The data for the first photo that should be shown for this recipe.
     var primaryPhotoData: Data? {
         RecipePhotoDisplay.primaryPhotoData(
-            photoObjects: photoObjects.orEmpty,
-            fallbackPhotos: photos.orEmpty
+            photoObjects: (photoObjects ?? []),
+            fallbackPhotos: (photos ?? [])
         )
     }
 }

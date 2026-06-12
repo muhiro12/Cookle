@@ -147,9 +147,9 @@ final class RecipeFormModel {
                                 ingredient: ingredient.value,
                                 amount: object.amount
                             )
-                        } ?? .empty) + [.init(ingredient: .empty, amount: .empty)]
-        steps = recipe.steps + [.empty]
-        categories = (recipe.categories?.map(\.value) ?? .empty) + [.empty]
+                        } ?? []) + [.init(ingredient: "", amount: "")]
+        steps = recipe.steps + [""]
+        categories = (recipe.categories?.map(\.value) ?? []) + [""]
         note = recipe.note
     }
 
@@ -259,7 +259,7 @@ private extension RecipeFormModel {
                 type: type,
                 recipe: recipe,
                 draft: draft,
-                requestReview: photos.isNotEmpty
+                requestReview: !photos.isEmpty
                     || CookleImagePlayground.isSupported == false
             ),
             recipeActionService: recipeActionService

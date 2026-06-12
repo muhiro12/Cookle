@@ -28,7 +28,7 @@ extension CookleRoute: MHDeepLinkRoute {
         case .recipeDetail(let recipeID):
             .init(
                 pathComponents: ["recipe"],
-                queryItems: recipeID.isNotEmpty ? [
+                queryItems: !recipeID.isEmpty ? [
                     .init(name: "id", value: recipeID)
                 ] : []
             )
@@ -37,7 +37,7 @@ extension CookleRoute: MHDeepLinkRoute {
         case .photoDetail(let photoID):
             .init(
                 pathComponents: ["photo"],
-                queryItems: photoID.isNotEmpty ? [
+                queryItems: !photoID.isEmpty ? [
                     .init(name: "id", value: photoID)
                 ] : []
             )
@@ -46,14 +46,14 @@ extension CookleRoute: MHDeepLinkRoute {
         case let .tagDetail(kind, tagID):
             .init(
                 pathComponents: ["tag", kind.rawValue],
-                queryItems: tagID.isNotEmpty ? [
+                queryItems: !tagID.isEmpty ? [
                     .init(name: "id", value: tagID)
                 ] : []
             )
         case .search(let query):
             .init(
                 pathComponents: ["search"],
-                queryItems: query?.isNotEmpty == true ? [
+                queryItems: query?.isEmpty == false ? [
                     .init(name: "q", value: query)
                 ] : []
             )
@@ -182,7 +182,7 @@ extension CookleRoute: MHDeepLinkRoute {
         })?.value else {
             return .recipe
         }
-        guard recipeID.isNotEmpty else {
+        guard !recipeID.isEmpty else {
             return nil
         }
         return .recipeDetail(recipeID)
@@ -200,7 +200,7 @@ extension CookleRoute: MHDeepLinkRoute {
         })?.value else {
             return .photo
         }
-        guard photoID.isNotEmpty else {
+        guard !photoID.isEmpty else {
             return nil
         }
         return .photoDetail(photoID)
@@ -219,7 +219,7 @@ extension CookleRoute: MHDeepLinkRoute {
         })?.value else {
             return .tag(kind: kind)
         }
-        guard tagID.isNotEmpty else {
+        guard !tagID.isEmpty else {
             return nil
         }
         return .tagDetail(
@@ -239,7 +239,7 @@ extension CookleRoute: MHDeepLinkRoute {
             queryItem.name == "q"
         }?.value
         if let query,
-           query.isNotEmpty {
+           !query.isEmpty {
             return .search(query: query)
         }
         return .search(query: nil)

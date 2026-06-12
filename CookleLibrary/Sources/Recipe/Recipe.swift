@@ -12,34 +12,34 @@ import SwiftData
 @Model
 nonisolated public final class Recipe {
     /// Display name shown anywhere the recipe is listed or shared.
-    public private(set) var name = String.empty
+    public private(set) var name = ""
     /// Flattened photo relation derived from `photoObjects` for quick lookup.
-    @Relationship public private(set) var photos = [Photo]?.some(.empty)
+    @Relationship public private(set) var photos = [Photo]?.some([])
     /// Ordered photo rows that preserve per-photo metadata.
     @Relationship(deleteRule: .cascade)
-    public private(set) var photoObjects = [PhotoObject]?.some(.empty)
+    public private(set) var photoObjects = [PhotoObject]?.some([])
     /// Intended serving count for the recipe.
     public private(set) var servingSize = Int.zero
     /// Expected cooking time in minutes.
     public private(set) var cookingTime = Int.zero
     /// Flattened ingredient relation derived from `ingredientObjects`.
-    @Relationship public private(set) var ingredients = [Ingredient]?.some(.empty)
+    @Relationship public private(set) var ingredients = [Ingredient]?.some([])
     /// Ordered ingredient rows that preserve amount text and display order.
     @Relationship(deleteRule: .cascade)
-    public private(set) var ingredientObjects = [IngredientObject]?.some(.empty)
+    public private(set) var ingredientObjects = [IngredientObject]?.some([])
     /// Cooking instructions in display order.
-    public private(set) var steps = [String].empty
+    public private(set) var steps = [String]()
     /// Category tags used to browse and filter the recipe.
-    @Relationship public private(set) var categories = [Category]?.some(.empty)
+    @Relationship public private(set) var categories = [Category]?.some([])
     /// Optional free-form note attached to the recipe.
-    public private(set) var note = String.empty
+    public private(set) var note = ""
 
     /// Diaries that currently surface this recipe in their flattened relation.
     @Relationship(inverse: \Diary.recipes)
-    public private(set) var diaries = [Diary]?.some(.empty)
+    public private(set) var diaries = [Diary]?.some([])
     /// Diary rows that currently point at this recipe.
     @Relationship(deleteRule: .cascade, inverse: \DiaryObject.recipe)
-    public private(set) var diaryObjects = [DiaryObject]?.some(.empty)
+    public private(set) var diaryObjects = [DiaryObject]?.some([])
 
     /// Timestamp captured when the recipe is first inserted.
     public private(set) var createdTimestamp = Date.now
@@ -151,7 +151,7 @@ nonisolated public final class Recipe {
 
     /// Rebuilds flattened ingredient relations from the ordered ingredient rows.
     public func refreshIngredients() {
-        self.ingredients = ingredientObjects.orEmpty.compactMap(\.ingredient)
+        self.ingredients = (ingredientObjects ?? []).compactMap(\.ingredient)
         self.modifiedTimestamp = .now
     }
 }

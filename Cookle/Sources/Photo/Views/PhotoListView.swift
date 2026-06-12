@@ -31,8 +31,9 @@ struct PhotoListView: View {
                     AddRecipeButton()
                 }
                 ToolbarItem {
-                    CloseButton()
-                        .hidden(!isPresented)
+                    if isPresented {
+                        CloseButton()
+                    }
                 }
             }
     }
@@ -72,12 +73,12 @@ private extension PhotoListView {
                 photos: imagePlaygrounds
             )
         ]
-        .filter(\.photos.isNotEmpty)
+        .filter { !$0.photos.isEmpty }
     }
 
     @ViewBuilder
     func contentView() -> some View {
-        if groupedPhotos.isNotEmpty {
+        if !groupedPhotos.isEmpty {
             photoSectionsView
         } else {
             emptyStateView

@@ -15,11 +15,11 @@ nonisolated public final class Diary {
     public private(set) var date = Date.now
     /// Meal rows stored for the day, including section and display order.
     @Relationship(deleteRule: .cascade)
-    public private(set) var objects = [DiaryObject]?.some(.empty)
+    public private(set) var objects = [DiaryObject]?.some([])
     /// Flattened recipe relation maintained from `objects` for quick lookup.
-    @Relationship public private(set) var recipes = [Recipe]?.some(.empty)
+    @Relationship public private(set) var recipes = [Recipe]?.some([])
     /// Free-form note attached to the day.
-    public private(set) var note = String.empty
+    public private(set) var note = ""
 
     /// Timestamp captured when the diary is first inserted.
     public private(set) var createdTimestamp = Date.now

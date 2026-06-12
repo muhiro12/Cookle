@@ -13,12 +13,13 @@ struct RecipeServingSizeSection: View {
     private var recipe
 
     var body: some View {
-        Section {
-            Text(recipe.servingSize.description + " servings")
-        } header: {
-            Text("Serving Size")
+        if recipe.servingSize != .zero {
+            Section {
+                Text(recipe.servingSize.description + " servings")
+            } header: {
+                Text("Serving Size")
+            }
         }
-        .hidden(recipe.servingSize.isZero)
     }
 }
 

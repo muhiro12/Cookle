@@ -33,7 +33,7 @@ struct DiaryView: View {
     @ViewBuilder var mealSections: some View {
         ForEach(DiaryObjectType.allCases) { type in
             let recipes = mealRecipes(for: type)
-            if recipes.isNotEmpty {
+            if !recipes.isEmpty {
                 Section {
                     ForEach(recipes) { rowRecipe in
                         Button {
@@ -56,7 +56,7 @@ struct DiaryView: View {
     }
 
     @ViewBuilder var noteSection: some View {
-        if diary.note.isNotEmpty {
+        if !diary.note.isEmpty {
             Section {
                 Text(diary.note)
             } header: {
@@ -95,7 +95,7 @@ struct DiaryView: View {
     }
 
     func mealRecipes(for type: DiaryObjectType) -> [Recipe] {
-        diary.objects.orEmpty
+        (diary.objects ?? [])
             .filter { object in
                 object.type == type
             }

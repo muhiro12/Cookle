@@ -70,29 +70,30 @@ struct InferRecipeFormView: View {
                 isPresented: isInferenceErrorPresented
             ) {
                 Button("OK", role: .cancel) {
-                    errorMessage = .empty
+                    errorMessage = ""
                 }
             } message: {
                 Text(errorMessage)
             }
     }
 
-    var placeholderOverlay: some View {
-        Text(placeholder)
-            .font(.body)
-            .foregroundStyle(.placeholder)
-            .padding(
-                .vertical,
-                RecipeTextEditorLayout.placeholderVerticalPadding(
-                    metrics: designMetrics
+    @ViewBuilder var placeholderOverlay: some View {
+        if text.isEmpty {
+            Text(placeholder)
+                .font(.body)
+                .foregroundStyle(.placeholder)
+                .padding(
+                    .vertical,
+                    RecipeTextEditorLayout.placeholderVerticalPadding(
+                        metrics: designMetrics
+                    )
                 )
-            )
-            .padding(
-                .horizontal,
-                RecipeTextEditorLayout.placeholderHorizontalPadding
-            )
-            .allowsHitTesting(false)
-            .hidden(text.isNotEmpty)
+                .padding(
+                    .horizontal,
+                    RecipeTextEditorLayout.placeholderHorizontalPadding
+                )
+                .allowsHitTesting(false)
+        }
     }
 
     @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
@@ -171,11 +172,11 @@ private extension InferRecipeFormView {
     var isInferenceErrorPresented: Binding<Bool> {
         .init(
             get: {
-                errorMessage.isNotEmpty
+                !errorMessage.isEmpty
             },
             set: { isPresented in
                 if isPresented == false {
-                    errorMessage = .empty
+                    errorMessage = ""
                 }
             }
         )
@@ -190,16 +191,16 @@ private extension InferRecipeFormView {
         do {
             let inference = try await RecipeFoundationModelInferenceOperations.infer(text: text)
             name = inference.name
-            servingSize = inference.servingSize == .zero ? .empty : inference.servingSize.description
-            cookingTime = inference.cookingTime == .zero ? .empty : inference.cookingTime.description
+            servingSize = inference.servingSize == .zero ? "" : inference.servingSize.description
+            cookingTime = inference.cookingTime == .zero ? "" : inference.cookingTime.description
             ingredients = inference.ingredients.map { inferredIngredient in
                 .init(
                     ingredient: inferredIngredient.ingredient,
                     amount: inferredIngredient.amount
                 )
-            } + [.init(ingredient: .empty, amount: .empty)]
-            steps = inference.steps + [.empty]
-            categories = inference.categories + [.empty]
+            } + [.init(ingredient: "", amount: "")]
+            steps = inference.steps + [""]
+            categories = inference.categories + [""]
             note = inference.note
             dismiss()
         } catch {

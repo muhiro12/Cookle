@@ -17,7 +17,7 @@ enum RecipeFormService {
         categories: [String],
         note: String
     ) throws -> RecipeFormDraft {
-        guard name.isNotEmpty else {
+        guard !name.isEmpty else {
             throw RecipeFormValidationError.emptyName
         }
         let servingSizeValue = try number(
@@ -28,7 +28,7 @@ enum RecipeFormService {
             from: cookingTime,
             field: .cookingTime
         )
-        let normalizedIngredients = ingredients.filter(\.ingredient.isNotEmpty)
+        let normalizedIngredients = ingredients.filter { !$0.ingredient.isEmpty }
 
         return .init(
             name: name,
@@ -36,8 +36,8 @@ enum RecipeFormService {
             servingSize: servingSizeValue,
             cookingTime: cookingTimeValue,
             ingredients: normalizedIngredients,
-            steps: steps.filter(\.isNotEmpty),
-            categories: categories.filter(\.isNotEmpty),
+            steps: steps.filter { !$0.isEmpty },
+            categories: categories.filter { !$0.isEmpty },
             note: note
         )
     }
@@ -55,8 +55,8 @@ enum RecipeFormService {
         try makeDraft(
             name: name,
             photos: [],
-            servingSize: servingSize == .zero ? .empty : servingSize.description,
-            cookingTime: cookingTime == .zero ? .empty : cookingTime.description,
+            servingSize: servingSize == .zero ? "" : servingSize.description,
+            cookingTime: cookingTime == .zero ? "" : cookingTime.description,
             ingredients: ingredientInputs(from: ingredientsText),
             steps: lines(from: stepsText),
             categories: lines(from: categoriesText),
@@ -141,8 +141,8 @@ enum RecipeFormService {
         recipe: Recipe,
         draft: RecipeFormDraft
     ) -> MutationOutcome<Recipe> {
-        let previousPhotoObjects = recipe.photoObjects.orEmpty
-        let previousIngredientObjects = recipe.ingredientObjects.orEmpty
+        let previousPhotoObjects = (recipe.photoObjects ?? [])
+        let previousIngredientObjects = (recipe.ingredientObjects ?? [])
         let updatedPhotoObjects = zip(
             draft.photos.indices,
             draft.photos
@@ -206,13 +206,13 @@ private extension RecipeFormService {
         from value: String,
         field: NumberField
     ) throws -> Int {
-        guard value.isNotEmpty else {
+        guard !value.isEmpty else {
             return .zero
         }
         let normalizedValue = value.applyingTransform(
             .fullwidthToHalfwidth,
             reverse: false
-        ) ?? .empty
+        ) ?? ""
         guard let number = Int(normalizedValue) else {
             switch field {
             case .servingSize:
@@ -231,7 +231,7 @@ private extension RecipeFormService {
             .map { line in
                 line.trimmingCharacters(in: .whitespacesAndNewlines)
             }
-            .filter(\.isNotEmpty)
+            .filter { !$0.isEmpty }
     }
 
     static func ingredientInputs(
@@ -262,7 +262,7 @@ private extension RecipeFormService {
 
             return .init(
                 ingredient: line,
-                amount: .empty
+                amount: ""
             )
         }
     }

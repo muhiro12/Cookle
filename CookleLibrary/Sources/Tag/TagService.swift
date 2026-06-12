@@ -81,7 +81,7 @@ enum TagService {
         context: ModelContext,
         ingredient: Ingredient
     ) throws -> MutationOutcome<Void> {
-        guard ingredient.recipes.orEmpty.isEmpty else {
+        guard (ingredient.recipes ?? []).isEmpty else {
             throw TagOperationsError.ingredientInUse(ingredient.value)
         }
 
@@ -175,7 +175,7 @@ private extension TagService {
         let normalizedValue = value.trimmingCharacters(
             in: .whitespacesAndNewlines
         )
-        guard normalizedValue.isNotEmpty else {
+        guard !normalizedValue.isEmpty else {
             throw TagOperationsError.emptyValue
         }
         return normalizedValue
@@ -187,7 +187,7 @@ private extension TagService {
         tag.value
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .components(separatedBy: .whitespacesAndNewlines)
-            .filter(\.isNotEmpty)
+            .filter { !$0.isEmpty }
             .joined(separator: " ")
             .folding(
                 options: [
@@ -209,7 +209,9 @@ private extension TagService {
             duplicates: duplicates
         )
         let affectedObjects = uniqueModels(
-            children.flatMap(\.objects.orEmpty)
+            children.flatMap { child in
+                child.objects ?? []
+            }
         )
         let affectedRecipes = uniqueModels(
             affectedObjects.compactMap(\.recipe)
@@ -245,11 +247,13 @@ private extension TagService {
             children.map(\.persistentModelID)
         )
         let affectedRecipes = uniqueModels(
-            children.flatMap(\.recipes.orEmpty)
+            children.flatMap { child in
+                child.recipes ?? []
+            }
         )
 
         for recipe in affectedRecipes {
-            var categories = recipe.categories.orEmpty.filter { category in
+            var categories = (recipe.categories ?? []).filter { category in
                 childIDs.contains(
                     category.persistentModelID
                 ) == false

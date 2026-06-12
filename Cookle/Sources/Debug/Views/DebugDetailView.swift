@@ -22,7 +22,7 @@ private extension DebugDetailView {
                 .toolbar {
                     ToolbarItem {
                         Menu("Recipes") {
-                            ForEach(diary.recipes.orEmpty, id: \.persistentModelID) { recipe in
+                            ForEach((diary.recipes ?? []), id: \.persistentModelID) { recipe in
                                 Text(recipe.name)
                             }
                         }
@@ -37,7 +37,7 @@ private extension DebugDetailView {
                 .toolbar {
                     ToolbarItem {
                         Menu("Objects") {
-                            ForEach(ingredient.objects.orEmpty, id: \.persistentModelID) { object in
+                            ForEach((ingredient.objects ?? []), id: \.persistentModelID) { object in
                                 Text(object.amount)
                             }
                         }

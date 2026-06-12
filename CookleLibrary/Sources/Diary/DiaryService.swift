@@ -34,7 +34,7 @@ enum DiaryService {
 
     /// Returns a random diary.
     static func randomDiary(context: ModelContext) throws -> Diary? {
-        try context.fetchRandom(.diaries(.all))
+        try context.fetch(.diaries(.all)).randomElement()
     }
 
     /// Adds a recipe to the diary of `date` for a given meal type, creating the diary when needed.
@@ -60,7 +60,7 @@ enum DiaryService {
         type: DiaryObjectType
     ) throws -> MutationOutcome<Diary> {
         if let existing = try diary(on: date, context: context) {
-            var meals = mealRecipes(from: existing.objects.orEmpty)
+            var meals = mealRecipes(from: (existing.objects ?? []))
             append(recipe: recipe, to: &meals, for: type)
             let outcome = Self.updateWithOutcome(
                 context: context,
@@ -162,7 +162,7 @@ enum DiaryService {
         dinners: [Recipe],
         note: String
     ) -> MutationOutcome<Diary> {
-        let previousObjects = diary.objects.orEmpty
+        let previousObjects = (diary.objects ?? [])
         let objects = zip(breakfasts.indices, breakfasts).map { index, recipe in
             DiaryObject.create(context: context, recipe: recipe, type: .breakfast, order: index + 1)
         } + zip(lunches.indices, lunches).map { index, recipe in

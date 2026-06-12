@@ -76,12 +76,12 @@ extension RecipeEntity {
         self.init(
             id: encodedID,
             name: model.name,
-            photos: model.photos?.compactMap(\.data) ?? .empty,
+            photos: model.photos?.compactMap(\.data) ?? [],
             servingSize: model.servingSize,
             cookingTime: model.cookingTime,
             ingredients: zip(model.ingredients ?? [], model.ingredientObjects ?? []).map { ($0.value, $1.amount) },
             steps: model.steps,
-            categories: model.categories?.map(\.value) ?? .empty,
+            categories: model.categories?.map(\.value) ?? [],
             note: model.note,
             createdTimestamp: model.createdTimestamp,
             modifiedTimestamp: model.modifiedTimestamp

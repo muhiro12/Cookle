@@ -73,9 +73,9 @@ repository contains the full iOS project together with its shared Swift package.
 - MHUI 1.x through the `MHDesign` product for metrics-only app presentation
   adoption. The full `MHUI` chrome product is not linked unless Cookle
   intentionally adopts package-owned styled primitives.
-- SwiftUtilities remains an app and shared-library utility dependency. It is not
-  migrated into MHUI, whose boundary deliberately excludes generic utilities and
-  thin host-app presentation shortcuts.
+- Cookle does not keep a generic utility package dependency. Small app-owned
+  helper behavior stays local, while generic utilities and thin host-app
+  presentation shortcuts remain outside MHUI.
 - MHPlatform-managed StoreKit, Google Mobile Ads, and license presentation
   delivered through Swift Package Manager.
 

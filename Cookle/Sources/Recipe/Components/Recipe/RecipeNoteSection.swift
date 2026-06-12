@@ -13,12 +13,13 @@ struct RecipeNoteSection: View {
     private var recipe
 
     var body: some View {
-        Section {
-            Text(recipe.note)
-        } header: {
-            Text("Note")
+        if !recipe.note.isEmpty {
+            Section {
+                Text(recipe.note)
+            } header: {
+                Text("Note")
+            }
         }
-        .hidden(recipe.note.isEmpty)
     }
 }
 

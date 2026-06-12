@@ -113,7 +113,7 @@ private extension DiaryProvider {
     }
 
     func mealText(for type: DiaryObjectType, from diary: Diary) -> String {
-        let meals = diary.objects.orEmpty
+        let meals = (diary.objects ?? [])
             .filter { diaryObject in
                 diaryObject.type == type
             }

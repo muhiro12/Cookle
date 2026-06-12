@@ -10,9 +10,11 @@ struct RecipeEntityQuery: EntityStringQuery {
             let persistentIdentifier = try RecipeStableIdentifierCodec.decode(
                 id
             )
-            guard let recipe = try modelContainer.mainContext.fetchFirst(
-                .recipes(.idIs(persistentIdentifier))
-            ) else {
+            var descriptor = FetchDescriptor<Recipe>.recipes(
+                .idIs(persistentIdentifier)
+            )
+            descriptor.fetchLimit = 1
+            guard let recipe = try modelContainer.mainContext.fetch(descriptor).first else {
                 return nil
             }
             return RecipeEntity(recipe)

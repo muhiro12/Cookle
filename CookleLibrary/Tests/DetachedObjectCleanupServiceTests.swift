@@ -193,7 +193,7 @@ private extension DetachedObjectCleanupServiceTests {
 
         #expect(try context.fetchCount(FetchDescriptor<Photo>()) == 1)
         #expect(try context.fetchCount(FetchDescriptor<Ingredient>()) == 1)
-        #expect(remainingPhoto.objects.orEmpty.isEmpty)
-        #expect(remainingIngredient.objects.orEmpty.isEmpty)
+        #expect((remainingPhoto.objects ?? []).isEmpty)
+        #expect((remainingIngredient.objects ?? []).isEmpty)
     }
 }

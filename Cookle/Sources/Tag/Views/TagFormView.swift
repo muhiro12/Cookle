@@ -26,11 +26,11 @@ struct TagFormView<T: Tag>: View {
                 Text("Value")
             }
             Section {
-                if tag.recipes.orEmpty.isEmpty {
+                if (tag.recipes ?? []).isEmpty {
                     Text("Not used in any recipe.")
                         .foregroundStyle(.secondary)
                 } else {
-                    ForEach(tag.recipes.orEmpty) { recipe in
+                    ForEach((tag.recipes ?? [])) { recipe in
                         Text(recipe.name)
                     }
                 }

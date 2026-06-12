@@ -13,12 +13,13 @@ struct RecipeCookingTimeSection: View {
     private var recipe
 
     var body: some View {
-        Section {
-            Text(recipe.cookingTime.description + " minutes")
-        } header: {
-            Text("Cooking Time")
+        if recipe.cookingTime != .zero {
+            Section {
+                Text(recipe.cookingTime.description + " minutes")
+            } header: {
+                Text("Cooking Time")
+            }
         }
-        .hidden(recipe.cookingTime.isZero)
     }
 }
 

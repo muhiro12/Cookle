@@ -12,16 +12,16 @@ import SwiftData
 @Model
 nonisolated public final class Photo {
     /// Binary image data stored for the asset.
-    public private(set) var data = Data.empty
+    public private(set) var data = Data()
     /// Persisted source identifier used to recover a typed `PhotoSource`.
     public private(set) var sourceID = PhotoSource.defaultValue.rawValue
 
     /// Recipe photo rows that reference this asset.
     @Relationship(deleteRule: .cascade, inverse: \PhotoObject.photo)
-    public private(set) var objects = [PhotoObject]?.some(.empty)
+    public private(set) var objects = [PhotoObject]?.some([])
     /// Recipes that currently reference this asset.
     @Relationship(inverse: \Recipe.photos)
-    public private(set) var recipes = [Recipe]?.some(.empty)
+    public private(set) var recipes = [Recipe]?.some([])
 
     /// Timestamp captured when the asset is first inserted.
     public private(set) var createdTimestamp = Date.now
@@ -61,8 +61,8 @@ nonisolated public final class Photo {
 public extension Photo {
     /// Comma-separated recipe names that currently reference this asset, or `nil` when unlinked.
     var linkedRecipeNames: String? {
-        let recipeNames = recipes.orEmpty.map(\.name).joined(separator: ", ")
-        guard recipeNames.isNotEmpty else {
+        let recipeNames = (recipes ?? []).map(\.name).joined(separator: ", ")
+        guard !recipeNames.isEmpty else {
             return nil
         }
         return recipeNames

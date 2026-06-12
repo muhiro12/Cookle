@@ -25,8 +25,9 @@ struct DebugSidebarView: View {
             .cookleTopLevelNavigationChrome("Debug")
             .toolbar {
                 ToolbarItem {
-                    CloseButton()
-                        .hidden(!isPresented)
+                    if isPresented {
+                        CloseButton()
+                    }
                 }
             }
             .confirmationDialog(

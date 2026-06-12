@@ -14,7 +14,7 @@ nonisolated public final class IngredientObject: SubObject {
     /// Ingredient tag referenced by this row.
     @Relationship public private(set) var ingredient = Ingredient?.none
     /// Free-form amount text shown beside the ingredient label.
-    public private(set) var amount = String.empty
+    public private(set) var amount = ""
     /// Position of this row within the recipe's ingredient list.
     public private(set) var order = Int.zero
 

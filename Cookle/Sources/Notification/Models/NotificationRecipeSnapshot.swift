@@ -34,14 +34,14 @@ nonisolated extension NotificationRecipeSnapshot {
             primaryPhotoData: primaryPhotoData(
                 recipe: recipe
             ),
-            ingredientNames: recipe.ingredientObjects.orEmpty.sorted().compactMap { object in
+            ingredientNames: (recipe.ingredientObjects ?? []).sorted().compactMap { object in
                 object.ingredient?.value
             },
             steps: recipe.steps,
             note: recipe.note,
             cookingTime: recipe.cookingTime,
             servingSize: recipe.servingSize,
-            madeCount: recipe.diaryObjects.orEmpty.count,
+            madeCount: (recipe.diaryObjects ?? []).count,
             lastCookedDate: lastCookedDate(
                 recipe: recipe
             ),
@@ -58,7 +58,7 @@ nonisolated extension NotificationRecipeSnapshot {
     private static func lastCookedDate(
         recipe: Recipe
     ) -> Date? {
-        recipe.diaryObjects.orEmpty
+        (recipe.diaryObjects ?? [])
             .compactMap { diaryObject in
                 diaryObject.diary?.date
             }

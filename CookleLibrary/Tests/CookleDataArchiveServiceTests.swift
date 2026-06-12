@@ -319,13 +319,13 @@ private extension CookleDataArchiveServiceTests {
         #expect(restoredRecipe.cookingTime == TestArchive.cookingTime)
         #expect(restoredRecipe.steps == ["Mix", "Cook"])
         #expect(restoredRecipe.note == "Weekend")
-        #expect(restoredRecipe.categories.orEmpty.map(\.value) == ["Breakfast"])
+        #expect((restoredRecipe.categories ?? []).map(\.value) == ["Breakfast"])
         #expect(restoredRecipe.orderedPhotos.map(\.data) == [TestArchive.photoData])
-        #expect(restoredRecipe.ingredientObjects.orEmpty.first?.ingredient?.value == "Eggs")
-        #expect(restoredRecipe.ingredientObjects.orEmpty.first?.amount == "2")
+        #expect((restoredRecipe.ingredientObjects ?? []).first?.ingredient?.value == "Eggs")
+        #expect((restoredRecipe.ingredientObjects ?? []).first?.amount == "2")
         #expect(restoredDiaries.count == 1)
         #expect(restoredDiary.note == "Good")
-        #expect(restoredDiary.objects.orEmpty.first?.recipe === restoredRecipe)
-        #expect(restoredDiary.objects.orEmpty.first?.type == .breakfast)
+        #expect((restoredDiary.objects ?? []).first?.recipe === restoredRecipe)
+        #expect((restoredDiary.objects ?? []).first?.type == .breakfast)
     }
 }

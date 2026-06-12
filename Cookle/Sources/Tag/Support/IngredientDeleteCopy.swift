@@ -14,7 +14,7 @@ enum IngredientDeleteCopy {
     }
 
     static func inUseMessage(for ingredient: Ingredient) -> String {
-        let recipeCount = ingredient.recipes.orEmpty.count
+        let recipeCount = (ingredient.recipes ?? []).count
         let recipeLabel = recipeCount == 1 ? "recipe" : "recipes"
 
         return "Delete is available only when no recipes use this ingredient. " +

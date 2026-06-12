@@ -6,7 +6,9 @@ enum TagIntentSupport {
         named value: String,
         context: ModelContext
     ) throws -> Ingredient? {
-        try context.fetchFirst(.ingredients(.valueIs(value)))
+        var descriptor = FetchDescriptor<Ingredient>.ingredients(.valueIs(value))
+        descriptor.fetchLimit = 1
+        return try context.fetch(descriptor).first
     }
 
     @MainActor
@@ -14,6 +16,8 @@ enum TagIntentSupport {
         named value: String,
         context: ModelContext
     ) throws -> Category? {
-        try context.fetchFirst(.categories(.valueIs(value)))
+        var descriptor = FetchDescriptor<Category>.categories(.valueIs(value))
+        descriptor.fetchLimit = 1
+        return try context.fetch(descriptor).first
     }
 }

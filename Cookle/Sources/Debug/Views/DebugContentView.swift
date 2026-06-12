@@ -20,7 +20,8 @@ struct DebugContentView<Model: PersistentModel>: View {
             .onDelete { indexSet in
                 withAnimation {
                     indexSet.forEach { index in
-                        models[index].delete()
+                        let model = models[index]
+                        model.modelContext?.delete(model)
                     }
                 }
             }

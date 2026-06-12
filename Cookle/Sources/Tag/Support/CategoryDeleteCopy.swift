@@ -10,7 +10,7 @@ enum CategoryDeleteCopy {
     }
 
     static func message(for category: Category) -> String {
-        let affectedRecipeCount = category.recipes.orEmpty.count
+        let affectedRecipeCount = (category.recipes ?? []).count
         let recipeLabel = affectedRecipeCount == 1 ? "recipe" : "recipes"
 
         if affectedRecipeCount == 0 {

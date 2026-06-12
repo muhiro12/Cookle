@@ -25,7 +25,7 @@ struct ShowSearchResultIntent: AppIntent {
             context: modelContainer.mainContext,
             text: searchText
         )
-        guard results.isNotEmpty else {
+        guard !results.isEmpty else {
             return .result(dialog: "Not Found")
         }
         return .result(dialog: "Result") {

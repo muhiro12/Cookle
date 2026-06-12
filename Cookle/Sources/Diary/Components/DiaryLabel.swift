@@ -32,7 +32,7 @@ struct DiaryLabel: View {
             VStack(alignment: .leading) {
                 LazyVGrid(columns: [.init(.adaptive(minimum: Layout.photoGridMinimum))], alignment: .leading) {
                     ForEach(
-                        diary.recipes.orEmpty.compactMap(\.primaryPhoto)
+                        (diary.recipes ?? []).compactMap(\.primaryPhoto)
                     ) { photo in
                         if let image = UIImage(data: photo.data) {
                             Image(uiImage: image)
@@ -43,7 +43,7 @@ struct DiaryLabel: View {
                     }
                 }
                 Text(DiaryListSummary.text(
-                    recipeNames: diary.recipes.orEmpty.map(\.name),
+                    recipeNames: (diary.recipes ?? []).map(\.name),
                     note: diary.note
                 ))
                 .font(.subheadline)
@@ -126,7 +126,7 @@ private extension DiaryLabel {
         [
             "Diary: \(accessibilityDate)",
             DiaryListSummary.text(
-                recipeNames: diary.recipes.orEmpty.map(\.name),
+                recipeNames: (diary.recipes ?? []).map(\.name),
                 note: diary.note
             )
         ]

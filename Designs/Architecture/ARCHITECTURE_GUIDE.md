@@ -40,9 +40,9 @@ symmetry with sibling apps.
   product until it intentionally adopts package-owned styled primitives.
 - `Widgets`, `Watch`, and App Intents call Cookle shared APIs first. They stay
   off app-runtime and presentation package umbrellas by default.
-- SwiftUtilities remains app- or shared-library-owned utility support. It is
-  not an MHUI migration target because MHUI deliberately excludes generic
-  utilities and thin host-app presentation shortcuts.
+- Cookle does not keep a generic utility package dependency. Small app-owned
+  helper behavior stays local, while generic utilities and thin host-app
+  presentation shortcuts remain outside MHUI.
 
 ## Testing Boundary
 

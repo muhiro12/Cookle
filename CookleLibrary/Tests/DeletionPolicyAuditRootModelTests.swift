@@ -54,10 +54,10 @@ struct DeletionPolicyAuditRootModelTests {
 
         try assertRecipeDeletionCounts(context: context)
         #expect(remainingRecipe.orderedPhotos.count == 1)
-        #expect(diary.objects.orEmpty.isEmpty)
-        #expect(orphanedPhoto.recipes.orEmpty.isEmpty)
-        #expect(orphanedPhoto.objects.orEmpty.isEmpty)
-        #expect(sharedPhoto.recipes.orEmpty.count == 1)
+        #expect((diary.objects ?? []).isEmpty)
+        #expect((orphanedPhoto.recipes ?? []).isEmpty)
+        #expect((orphanedPhoto.objects ?? []).isEmpty)
+        #expect((sharedPhoto.recipes ?? []).count == 1)
     }
 
     @Test

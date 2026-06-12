@@ -18,11 +18,11 @@ struct RecipePhotosSection: View {
         let orderedPhotoObjects = recipe.orderedPhotoObjects
         let orderedPhotos = recipe.orderedPhotos
 
-        if orderedPhotos.isNotEmpty {
+        if !orderedPhotos.isEmpty {
             Section {
                 ScrollView(.horizontal) {
                     LazyHStack {
-                        if orderedPhotoObjects.isNotEmpty {
+                        if !orderedPhotoObjects.isEmpty {
                             ForEach(orderedPhotoObjects) { photoObject in
                                 photoTile(for: photoObject)
                             }

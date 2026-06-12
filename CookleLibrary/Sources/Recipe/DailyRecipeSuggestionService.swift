@@ -185,7 +185,7 @@ private extension DailyRecipeSuggestionService {
     ) -> String {
         value
             .components(separatedBy: .whitespacesAndNewlines)
-            .filter(\.isNotEmpty)
+            .filter { !$0.isEmpty }
             .joined(separator: " ")
     }
 

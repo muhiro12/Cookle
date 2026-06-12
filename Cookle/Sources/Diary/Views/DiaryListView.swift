@@ -37,7 +37,7 @@ struct DiaryListView: View {
 
     var body: some View {
         Group {
-            if diaries.isNotEmpty {
+            if !diaries.isEmpty {
                 diaryList
             } else {
                 emptyStateView
@@ -54,8 +54,9 @@ struct DiaryListView: View {
                 AddDiaryButton()
             }
             ToolbarItem {
-                CloseButton()
-                    .hidden(!isPresented)
+                if isPresented {
+                    CloseButton()
+                }
             }
         }
     }
@@ -100,8 +101,9 @@ struct DiaryListView: View {
                         .buttonStyle(.plain)
                     }
                 }
-                AdvertisementSection(.small)
-                    .hidden(isSubscribeOn)
+                if !isSubscribeOn {
+                    AdvertisementSection(.small)
+                }
             }
         }
     }

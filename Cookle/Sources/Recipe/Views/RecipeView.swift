@@ -81,8 +81,9 @@ private extension RecipeView {
         RecipeCookingTimeSection()
         RecipeIngredientsSection()
         RecipeStepsSection()
-        AdvertisementSection(.medium)
-            .hidden(isSubscribeOn)
+        if !isSubscribeOn {
+            AdvertisementSection(.medium)
+        }
         RecipeCategoriesSection()
         RecipeNoteSection()
         RecipeDiariesSection()
@@ -104,7 +105,7 @@ private extension RecipeView {
     }
 
     @ViewBuilder var startCookingButton: some View {
-        if recipe.steps.isNotEmpty {
+        if !recipe.steps.isEmpty {
             Button {
                 startOrResumeCooking()
             } label: {

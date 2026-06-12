@@ -16,7 +16,7 @@ struct RecipeDiariesSection: View {
 
     var body: some View {
         if let diaries = recipe.diaries,
-           diaries.isNotEmpty {
+           !diaries.isEmpty {
             Section {
                 ForEach(diaries.sorted { lhs, rhs in
                     lhs.date > rhs.date

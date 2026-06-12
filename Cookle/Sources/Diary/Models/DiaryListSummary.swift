@@ -10,12 +10,12 @@ enum DiaryListSummary {
         recipeNames: [String],
         note: String
     ) -> String {
-        if recipeNames.isNotEmpty {
+        if !recipeNames.isEmpty {
             return recipeNames.joined(separator: ", ")
         }
 
         let normalizedNote = normalized(note)
-        if normalizedNote.isNotEmpty {
+        if !normalizedNote.isEmpty {
             return truncated(
                 normalizedNote,
                 maxLength: Constants.maxLength

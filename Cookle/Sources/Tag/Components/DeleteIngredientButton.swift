@@ -16,7 +16,7 @@ struct DeleteIngredientButton: View {
     private let afterDelete: (() -> Void)?
 
     private var isDeletionAvailable: Bool {
-        ingredient.recipes.orEmpty.isEmpty
+        (ingredient.recipes ?? []).isEmpty
     }
 
     var body: some View {

@@ -244,7 +244,7 @@ private extension RecipeFormPhotosSection {
     }
 
     func applySelectedPhotoItems() {
-        guard photosPickerItems.isNotEmpty else {
+        guard !photosPickerItems.isEmpty else {
             return
         }
 
@@ -368,7 +368,7 @@ private extension RecipeFormPhotosSection {
                     && currentPhoto.source == photo.source
             }
             .count
-        let totalReferenceCount = photo.objects.orEmpty.count
+        let totalReferenceCount = (photo.objects ?? []).count
 
         return max(
             .zero,

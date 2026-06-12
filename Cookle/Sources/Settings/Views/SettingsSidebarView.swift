@@ -54,8 +54,9 @@ struct SettingsSidebarView: View {
             .cookleTopLevelNavigationChrome("Settings")
             .toolbar {
                 ToolbarItem {
-                    CloseButton()
-                        .hidden(!isPresented)
+                    if isPresented {
+                        CloseButton()
+                    }
                 }
             }
             .settingsDataManagementDialogs(
@@ -133,39 +134,41 @@ struct SettingsSidebarView: View {
         }
     }
 
-    var subscriptionSection: some View {
-        Section {
-            Button {
-                content = .subscription
-            } label: {
-                Text("Subscription")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .buttonStyle(.plain)
-            .cooklePopoverTip(
-                currentSettingsTip(
-                    for: subscriptionTip,
-                    isEligible: shouldShowSubscriptionTip
-                ),
-                arrowEdge: .top
-            )
-            .accessibilityAddTraits(.isButton)
-            .simultaneousGesture(
-                TapGesture().onEnded {
-                    tipController.donateDidOpenSubscription()
+    @ViewBuilder var subscriptionSection: some View {
+        if !isSubscribeOn {
+            Section {
+                Button {
+                    content = .subscription
+                } label: {
+                    Text("Subscription")
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-            )
+                .buttonStyle(.plain)
+                .cooklePopoverTip(
+                    currentSettingsTip(
+                        for: subscriptionTip,
+                        isEligible: shouldShowSubscriptionTip
+                    ),
+                    arrowEdge: .top
+                )
+                .accessibilityAddTraits(.isButton)
+                .simultaneousGesture(
+                    TapGesture().onEnded {
+                        tipController.donateDidOpenSubscription()
+                    }
+                )
+            }
         }
-        .hidden(isSubscribeOn)
     }
 
-    var iCloudSection: some View {
-        Section {
-            Toggle("iCloud On", isOn: $isICloudOn)
-        } header: {
-            Text("Settings")
+    @ViewBuilder var iCloudSection: some View {
+        if isSubscribeOn {
+            Section {
+                Toggle("iCloud On", isOn: $isICloudOn)
+            } header: {
+                Text("Settings")
+            }
         }
-        .hidden(!isSubscribeOn)
     }
 
     var notificationSection: some View {

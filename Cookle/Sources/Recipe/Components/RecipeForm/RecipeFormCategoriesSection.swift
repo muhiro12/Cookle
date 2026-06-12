@@ -22,8 +22,9 @@ struct RecipeFormCategoriesSection: View {
                 .focused($focusedIndex, equals: index)
                 .toolbar {
                     ToolbarItem(placement: .keyboard) {
-                        SuggestionButtons<Category>(input: $categories[index])
-                            .hidden(focusedIndex != index)
+                        if focusedIndex == index {
+                            SuggestionButtons<Category>(input: $categories[index])
+                        }
                     }
                 }
             }
@@ -49,7 +50,7 @@ struct RecipeFormCategoriesSection: View {
     @Previewable @Query var categories: [Category]
     Form { () -> RecipeFormCategoriesSection in
         RecipeFormCategoriesSection(
-            .constant(categories.map(\.value) + [.empty])
+            .constant(categories.map(\.value) + [""])
         )
     }
 }

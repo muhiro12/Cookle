@@ -49,7 +49,7 @@ enum RecipeBlurbService {
     static func normalizedNoteLine(from value: String) -> String? {
         for line in value.components(separatedBy: .newlines) {
             let normalizedValue = normalizedLine(from: line)
-            if normalizedValue.isNotEmpty {
+            if !normalizedValue.isEmpty {
                 return normalizedValue
             }
         }
@@ -59,11 +59,11 @@ enum RecipeBlurbService {
     static func normalizedIngredients(from values: [String]) -> [String] {
         values.compactMap { value in
             let trimmedValue = value.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard trimmedValue.isNotEmpty else {
+            guard !trimmedValue.isEmpty else {
                 return nil
             }
             let collapsedValue = collapsedWhitespace(trimmedValue)
-            return collapsedValue.isNotEmpty ? collapsedValue : nil
+            return !collapsedValue.isEmpty ? collapsedValue : nil
         }
     }
 
@@ -88,13 +88,13 @@ enum RecipeBlurbService {
     static func collapsedWhitespace(_ value: String) -> String {
         value
             .components(separatedBy: .whitespacesAndNewlines)
-            .filter(\.isNotEmpty)
+            .filter { !$0.isEmpty }
             .joined(separator: " ")
     }
 
     static func truncatedBlurb(_ value: String, maxLength: Int) -> String? {
         let trimmedValue = value.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard trimmedValue.isNotEmpty, maxLength > 0 else {
+        guard !trimmedValue.isEmpty, maxLength > 0 else {
             return nil
         }
         guard trimmedValue.count > maxLength else {
@@ -111,7 +111,7 @@ enum RecipeBlurbService {
         if let lastSpaceIndex = prefixWithoutTrailingWhitespace.lastIndex(of: " ") {
             let candidate = String(prefixWithoutTrailingWhitespace[..<lastSpaceIndex])
                 .trimmingCharacters(in: .whitespacesAndNewlines)
-            if candidate.isNotEmpty {
+            if !candidate.isEmpty {
                 truncatedPrefix = candidate
             } else {
                 truncatedPrefix = prefixWithoutTrailingWhitespace
@@ -123,13 +123,13 @@ enum RecipeBlurbService {
         let cleanedPrefix = truncatedPrefix.trimmingCharacters(
             in: CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters)
         )
-        let safePrefix = cleanedPrefix.isNotEmpty ? cleanedPrefix : prefixWithoutTrailingWhitespace
+        let safePrefix = !cleanedPrefix.isEmpty ? cleanedPrefix : prefixWithoutTrailingWhitespace
         return safePrefix + "..."
     }
 
     private static func normalizedLine(from value: String) -> String {
         let trimmedValue = value.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard trimmedValue.isNotEmpty else {
+        guard !trimmedValue.isEmpty else {
             return ""
         }
 

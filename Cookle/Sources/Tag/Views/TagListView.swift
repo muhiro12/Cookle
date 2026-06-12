@@ -27,8 +27,9 @@ struct TagListView<T: Tag>: View {
                     AddRecipeButton()
                 }
                 ToolbarItem {
-                    CloseButton()
-                        .hidden(!isPresented)
+                    if isPresented {
+                        CloseButton()
+                    }
                 }
             }
     }
@@ -40,7 +41,7 @@ struct TagListView<T: Tag>: View {
 
 private extension TagListView {
     @ViewBuilder var contentView: some View {
-        if filteredTags.isNotEmpty {
+        if !filteredTags.isEmpty {
             tagList
         } else {
             emptyStateView
@@ -77,7 +78,7 @@ private extension TagListView {
     }
 
     func usageText(for tag: T) -> String {
-        let recipeCount = tag.recipes.orEmpty.count
+        let recipeCount = (tag.recipes ?? []).count
         let recipeLabel = recipeCount == 1 ? "recipe" : "recipes"
         let duplicateCount = TagOperations.duplicateTags(
             matching: tag,

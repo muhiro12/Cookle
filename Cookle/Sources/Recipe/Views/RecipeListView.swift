@@ -40,7 +40,7 @@ struct RecipeListView: View {
                 }
             }
             .toolbar {
-                if allRecipes.isNotEmpty {
+                if !allRecipes.isEmpty {
                     ToolbarItem {
                         sortMenu
                     }
@@ -49,8 +49,9 @@ struct RecipeListView: View {
                     AddRecipeButton()
                 }
                 ToolbarItem {
-                    CloseButton()
-                        .hidden(!isPresented)
+                    if isPresented {
+                        CloseButton()
+                    }
                 }
             }
             .task {
@@ -185,7 +186,7 @@ private extension RecipeListView {
 
     @ViewBuilder
     func contentView() -> some View {
-        if allRecipes.isNotEmpty {
+        if !allRecipes.isEmpty {
             recipeListView
         } else {
             emptyStateView

@@ -115,7 +115,7 @@ struct TagMergeServiceTests {
         #expect(outcome.effects == [.notificationPlanChanged])
         #expect(categories.count == 1)
         #expect(recipes.allSatisfy { recipe in
-            recipe.categories.orEmpty.map(\.persistentModelID) == [
+            (recipe.categories ?? []).map(\.persistentModelID) == [
                 parent.persistentModelID
             ]
         })

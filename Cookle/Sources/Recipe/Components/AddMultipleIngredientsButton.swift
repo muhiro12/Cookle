@@ -66,7 +66,7 @@ struct AddMultipleIngredientsButton: View {
                 ingredient: texts[index],
                 amount: texts.endIndex > index + Constants.valueOffset
                     ? texts[index + Constants.valueOffset]
-                    : .empty
+                    : ""
             )
         }
     }

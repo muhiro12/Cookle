@@ -55,7 +55,7 @@ final class CookingSessionStore {
         for recipe: Recipe,
         startedAt: Date = .now
     ) {
-        guard recipe.steps.isNotEmpty else {
+        guard !recipe.steps.isEmpty else {
             return
         }
 

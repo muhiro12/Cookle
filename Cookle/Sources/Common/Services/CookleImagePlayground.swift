@@ -45,12 +45,12 @@ extension View {
     @available(iOS 18.1, *)
     private func imagePlaygroundConcepts(for recipe: Recipe?) -> [ImagePlaygroundConcept] {
         guard let recipe else {
-            return .empty
+            return []
         }
 
         let ingredients = recipe.ingredientObjects?.sorted().compactMap { object in
             object.ingredient?.value
-        } ?? .empty
+        } ?? []
         guard let draft = RecipeOperations.makeImageConceptDraft(
             request: .init(
                 name: recipe.name,
@@ -58,10 +58,10 @@ extension View {
                 steps: recipe.steps
             )
         ) else {
-            return .empty
+            return []
         }
 
-        var concepts = [ImagePlaygroundConcept].empty
+        var concepts = [ImagePlaygroundConcept]()
         concepts.append(
             .text(draft.title)
         )

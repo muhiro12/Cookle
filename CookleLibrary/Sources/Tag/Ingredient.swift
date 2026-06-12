@@ -13,15 +13,15 @@ import SwiftUI
 @Model
 nonisolated public final class Ingredient: Tag {
     /// Canonical ingredient label shown in recipe forms and search results.
-    public private(set) var value = String.empty
+    public private(set) var value = ""
 
     /// Recipe rows that attach amounts and ordering metadata to this ingredient.
     @Relationship(deleteRule: .cascade, inverse: \IngredientObject.ingredient)
-    public private(set) var objects = [IngredientObject]?.some(.empty)
+    public private(set) var objects = [IngredientObject]?.some([])
 
     /// Recipes that currently reference this ingredient.
     @Relationship(inverse: \Recipe.ingredients)
-    public private(set) var recipes = [Recipe]?.some(.empty)
+    public private(set) var recipes = [Recipe]?.some([])
 
     /// Timestamp captured when the ingredient is first inserted.
     public private(set) var createdTimestamp = Date.now

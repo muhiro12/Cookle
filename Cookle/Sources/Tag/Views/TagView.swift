@@ -42,11 +42,11 @@ struct TagView<T: Tag>: View {
 private extension TagView {
     var recipeSection: some View {
         Section {
-            if tag.recipes.orEmpty.isEmpty {
+            if (tag.recipes ?? []).isEmpty {
                 Text("Not used in any recipe.")
                     .foregroundStyle(.secondary)
             } else {
-                ForEach(tag.recipes.orEmpty) { rowRecipe in
+                ForEach((tag.recipes ?? [])) { rowRecipe in
                     Button {
                         $recipe.cookleSelectForNavigation(
                             rowRecipe
@@ -102,7 +102,7 @@ private extension TagView {
                 tagSelection = nil
             }
             .environment(ingredient)
-            if ingredient.recipes.orEmpty.isNotEmpty {
+            if !(ingredient.recipes ?? []).isEmpty {
                 Text(IngredientDeleteCopy.inUseMessage(for: ingredient))
                     .font(.footnote)
                     .foregroundStyle(.secondary)

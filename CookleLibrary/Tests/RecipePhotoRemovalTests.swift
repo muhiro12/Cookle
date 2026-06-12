@@ -85,8 +85,8 @@ struct RecipePhotoRemovalTests {
         #expect((recipe.photos ?? []).isEmpty)
         #expect(photos.count == 1)
         #expect(remainingPhoto.data == photoData.data)
-        #expect(remainingPhoto.recipes.orEmpty.isEmpty)
-        #expect(remainingPhoto.objects.orEmpty.isEmpty)
+        #expect((remainingPhoto.recipes ?? []).isEmpty)
+        #expect((remainingPhoto.objects ?? []).isEmpty)
     }
 }
 

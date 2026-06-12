@@ -35,8 +35,8 @@ nonisolated public enum RecipePredicate {
                 recipe.persistentModelID == id
             }
         case .nameContains(let name):
-            let hiragana = name.applyingTransform(.hiraganaToKatakana, reverse: true).orEmpty
-            let katakana = name.applyingTransform(.hiraganaToKatakana, reverse: false).orEmpty
+            let hiragana = name.applyingTransform(.hiraganaToKatakana, reverse: true) ?? ""
+            let katakana = name.applyingTransform(.hiraganaToKatakana, reverse: false) ?? ""
             return #Predicate<Recipe> { recipe in
                 recipe.name.localizedStandardContains(name)
                     || recipe.name.localizedStandardContains(hiragana)

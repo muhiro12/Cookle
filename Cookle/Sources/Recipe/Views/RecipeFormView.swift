@@ -61,7 +61,7 @@ struct RecipeFormView: View {
             isPresented: $isDebugAlertPresented
         ) {
             Button {
-                model.name = .empty
+                model.name = ""
                 isDebugOn = true
                 dismiss()
             } label: {

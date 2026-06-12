@@ -36,9 +36,9 @@ struct SearchView: View {
 
     var body: some View {
         Group {
-            if recipes.isNotEmpty {
+            if !recipes.isEmpty {
                 searchResults
-            } else if searchText.isNotEmpty {
+            } else if !searchText.isEmpty {
                 notFoundPlaceholder
             } else {
                 searchPromptPlaceholder
@@ -71,8 +71,9 @@ struct SearchView: View {
                 discoveryMenu
             }
             ToolbarItem {
-                CloseButton()
-                    .hidden(!isPresented)
+                if isPresented {
+                    CloseButton()
+                }
             }
         }
         .onChange(of: searchText) {

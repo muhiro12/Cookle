@@ -21,7 +21,7 @@ struct DeleteIngredientIntent: AppIntent {
             throw TagMutationIntentError.ingredientNotFound
         }
 
-        guard ingredient.recipes.orEmpty.isEmpty else {
+        guard (ingredient.recipes ?? []).isEmpty else {
             return .result(
                 dialog: .init(
                     stringLiteral: IngredientDeleteCopy.rejectionDialog(

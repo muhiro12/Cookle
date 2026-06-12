@@ -16,7 +16,7 @@ struct RecipeIngredientsSection: View {
 
     var body: some View {
         if let objects = recipe.ingredientObjects,
-           objects.isNotEmpty {
+           !objects.isEmpty {
             Section {
                 ForEach(objects.sorted()) { object in
                     ingredientRow(for: object)

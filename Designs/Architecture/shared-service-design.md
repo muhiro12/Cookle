@@ -64,9 +64,9 @@ that use case.
 - `Widgets` and `Watch` stay off MHUI and MHDesign by default; they should call
   shared Operations APIs first and add direct presentation package dependencies
   only for an explicit surface-level reason.
-- SwiftUtilities remains an app or shared-library utility dependency. It should
-  not be treated as an MHUI migration target unless a utility becomes a stable
-  platform-foundation contract.
+- Cookle does not keep a generic utility package dependency. Generic utilities
+  should not be treated as an MHUI migration target unless a utility becomes a
+  stable platform-foundation contract.
 
 ## Canonical Shared APIs
 

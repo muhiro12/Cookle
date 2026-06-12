@@ -158,21 +158,35 @@ private extension RecipeSaveLogging {
         context: ModelContext,
         value: String
     ) -> Bool {
-        (try? context.fetchFirst(
+        modelExists(
             .ingredients(
                 .valueIs(value)
-            )
-        )) != nil
+            ),
+            context: context
+        )
     }
 
     static func categoryExists(
         context: ModelContext,
         value: String
     ) -> Bool {
-        (try? context.fetchFirst(
+        modelExists(
             .categories(
                 .valueIs(value)
-            )
-        )) != nil
+            ),
+            context: context
+        )
+    }
+
+    static func modelExists<Model>(
+        _ descriptor: FetchDescriptor<Model>,
+        context: ModelContext
+    ) -> Bool where Model: PersistentModel {
+        var descriptor = descriptor
+        descriptor.fetchLimit = 1
+        guard let models = try? context.fetch(descriptor) else {
+            return false
+        }
+        return !models.isEmpty
     }
 }

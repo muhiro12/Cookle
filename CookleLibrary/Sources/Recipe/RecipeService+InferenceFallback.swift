@@ -46,7 +46,7 @@ extension RecipeService {
                 let ingredient = sanitizedInferenceLine(
                     inferredIngredient.ingredient
                 )
-                guard ingredient.isNotEmpty else {
+                guard !ingredient.isEmpty else {
                     return nil
                 }
                 return .init(
@@ -58,11 +58,11 @@ extension RecipeService {
             },
             steps: inference.steps.compactMap { step in
                 let normalizedStep = sanitizedInferenceLine(step)
-                return normalizedStep.isNotEmpty ? normalizedStep : nil
+                return !normalizedStep.isEmpty ? normalizedStep : nil
             },
             categories: inference.categories.compactMap { category in
                 let normalizedCategory = sanitizedInferenceLine(category)
-                return normalizedCategory.isNotEmpty ? normalizedCategory : nil
+                return !normalizedCategory.isEmpty ? normalizedCategory : nil
             },
             note: sanitizedInferenceLine(inference.note)
         )
@@ -72,16 +72,16 @@ extension RecipeService {
     static func isMeaningfulInference(
         _ inference: RecipeInferenceResult
     ) -> Bool {
-        if inference.ingredients.isNotEmpty || inference.steps.isNotEmpty {
+        if !inference.ingredients.isEmpty || !inference.steps.isEmpty {
             return true
         }
 
         let metadataScore = [
-            inference.name.isNotEmpty,
+            !inference.name.isEmpty,
             inference.servingSize > .zero,
             inference.cookingTime > .zero,
-            inference.categories.isNotEmpty,
-            inference.note.isNotEmpty
+            !inference.categories.isEmpty,
+            !inference.note.isEmpty
         ].filter(\.self).count
         return metadataScore >= InferenceConstants.minimumMeaningfulMetadataScore
     }
@@ -90,8 +90,8 @@ extension RecipeService {
         _ value: String
     ) -> String {
         let trimmedValue = value.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard trimmedValue.isNotEmpty else {
-            return .empty
+        guard !trimmedValue.isEmpty else {
+            return ""
         }
         return RecipeBlurbService.collapsedWhitespace(trimmedValue)
     }
@@ -105,7 +105,7 @@ extension RecipeService {
         ).map { ingredient in
             RecipeInferenceIngredient(
                 ingredient: ingredient,
-                amount: .empty
+                amount: ""
             )
         }
         let steps = fallbackSectionItems(
@@ -138,7 +138,7 @@ extension RecipeService {
                     from: line
                 )
             )
-            guard normalizedLine.isNotEmpty else {
+            guard !normalizedLine.isEmpty else {
                 continue
             }
             guard matchesSectionHeading(
@@ -149,7 +149,7 @@ extension RecipeService {
             }
             return normalizedLine
         }
-        return .empty
+        return ""
     }
 
     static func fallbackSectionItems(
@@ -161,7 +161,7 @@ extension RecipeService {
 
         for line in lines {
             let trimmedLine = line.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard trimmedLine.isNotEmpty else {
+            guard !trimmedLine.isEmpty else {
                 continue
             }
 
@@ -175,7 +175,7 @@ extension RecipeService {
                         from: inlineItem
                     )
                 )
-                if normalizedItem.isNotEmpty {
+                if !normalizedItem.isEmpty {
                     collectedItems.append(normalizedItem)
                 }
                 continue
@@ -200,7 +200,7 @@ extension RecipeService {
                     from: trimmedLine
                 )
             )
-            if normalizedItem.isNotEmpty {
+            if !normalizedItem.isEmpty {
                 collectedItems.append(normalizedItem)
             }
         }
@@ -236,7 +236,7 @@ extension RecipeService {
         ) else {
             return nil
         }
-        return .empty
+        return ""
     }
 
     static func matchesSectionHeading(

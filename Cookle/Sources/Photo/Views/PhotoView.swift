@@ -58,11 +58,11 @@ struct PhotoView: View {
 
     var recipeSection: some View {
         Section {
-            if photo.recipes.orEmpty.isEmpty {
+            if (photo.recipes ?? []).isEmpty {
                 Text("Not linked to any recipe.")
                     .foregroundStyle(.secondary)
             } else {
-                ForEach(photo.recipes.orEmpty) { rowRecipe in
+                ForEach((photo.recipes ?? [])) { rowRecipe in
                     Button {
                         $recipe.cookleSelectForNavigation(
                             rowRecipe

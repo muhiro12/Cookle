@@ -43,9 +43,9 @@ final class DiaryFormModel {
         breakfasts.isEmpty == false
             || lunches.isEmpty == false
             || dinners.isEmpty == false
-            || note
+            || !note
             .trimmingCharacters(in: .whitespacesAndNewlines)
-            .isNotEmpty
+            .isEmpty
     }
 
     var formInput: DiaryActionService.FormInput {
@@ -220,7 +220,7 @@ private extension DiaryFormModel {
         for diary: Diary?,
         type: DiaryObjectType
     ) -> Set<Recipe> {
-        let recipes = diary?.objects.orEmpty
+        let recipes = (diary?.objects ?? [])
             .filter { object in
                 object.type == type
             }

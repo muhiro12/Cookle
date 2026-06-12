@@ -38,7 +38,7 @@ enum RecipeService {
     /// - Parameter context: Model context to query.
     /// - Returns: A random `Recipe` or `nil` when the store is empty.
     static func randomRecipe(context: ModelContext) throws -> Recipe? {
-        try context.fetchRandom(.recipes(.all))
+        try context.fetch(.recipes(.all)).randomElement()
     }
 
     /// Returns the most recently updated recipe.
@@ -143,7 +143,7 @@ enum RecipeService {
         recipe: Recipe,
         photoObject: PhotoObject
     ) -> MutationOutcome<Void> {
-        let remainingPhotoObjects = recipe.photoObjects.orEmpty.filter { currentPhotoObject in
+        let remainingPhotoObjects = (recipe.photoObjects ?? []).filter { currentPhotoObject in
             currentPhotoObject.persistentModelID != photoObject.persistentModelID
         }
 
@@ -153,9 +153,9 @@ enum RecipeService {
             photos: remainingPhotoObjects,
             servingSize: recipe.servingSize,
             cookingTime: recipe.cookingTime,
-            ingredients: recipe.ingredientObjects.orEmpty,
+            ingredients: (recipe.ingredientObjects ?? []),
             steps: recipe.steps,
-            categories: recipe.categories.orEmpty,
+            categories: (recipe.categories ?? []),
             note: recipe.note
         )
 
@@ -235,8 +235,8 @@ private extension RecipeService {
                 ascending: true
             )
         case .madeCount:
-            let lhsCount = lhs.diaryObjects.orEmpty.count
-            let rhsCount = rhs.diaryObjects.orEmpty.count
+            let lhsCount = (lhs.diaryObjects ?? []).count
+            let rhsCount = (rhs.diaryObjects ?? []).count
 
             if lhsCount != rhsCount {
                 return isAscending

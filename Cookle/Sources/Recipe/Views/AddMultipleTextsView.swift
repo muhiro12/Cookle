@@ -17,21 +17,22 @@ struct AddMultipleTextsView: View {
     var body: some View {
         TextEditor(text: $text)
             .overlay(alignment: .topLeading) {
-                Text(placeholder)
-                    .font(.body)
-                    .foregroundStyle(.placeholder)
-                    .padding(
-                        .vertical,
-                        RecipeTextEditorLayout.placeholderVerticalPadding(
-                            metrics: designMetrics
+                if text.isEmpty {
+                    Text(placeholder)
+                        .font(.body)
+                        .foregroundStyle(.placeholder)
+                        .padding(
+                            .vertical,
+                            RecipeTextEditorLayout.placeholderVerticalPadding(
+                                metrics: designMetrics
+                            )
                         )
-                    )
-                    .padding(
-                        .horizontal,
-                        RecipeTextEditorLayout.placeholderHorizontalPadding
-                    )
-                    .allowsHitTesting(false)
-                    .hidden(text.isNotEmpty)
+                        .padding(
+                            .horizontal,
+                            RecipeTextEditorLayout.placeholderHorizontalPadding
+                        )
+                        .allowsHitTesting(false)
+                }
             }
             .padding()
             .scrollContentBackground(.hidden)

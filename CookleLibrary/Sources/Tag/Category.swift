@@ -13,11 +13,11 @@ import SwiftUI
 @Model
 nonisolated public final class Category: Tag {
     /// Canonical category label shown in forms, filters, and recipe detail.
-    public private(set) var value = String.empty
+    public private(set) var value = ""
 
     /// Recipes currently assigned to this category.
     @Relationship(inverse: \Recipe.categories)
-    public private(set) var recipes = [Recipe]?.some(.empty)
+    public private(set) var recipes = [Recipe]?.some([])
 
     /// Timestamp captured when the category is first inserted.
     public private(set) var createdTimestamp = Date.now

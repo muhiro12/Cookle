@@ -20,7 +20,7 @@ enum RecipeFoundationModelInferenceOperations {
     /// - Returns: A `RecipeInferenceResult` with best-effort fields filled.
     static func infer(text: String) async throws -> RecipeInferenceResult {
         let normalizedText = RecipeInferenceOperations.normalizedInput(text)
-        guard normalizedText.isNotEmpty else {
+        guard !normalizedText.isEmpty else {
             throw RecipeInferenceError.emptyInput
         }
 

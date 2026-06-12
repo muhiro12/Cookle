@@ -80,17 +80,17 @@ extension CookleDataArchiveService {
                 id: id,
                 name: recipe.name,
                 photos: recipePhotoRecords(
-                    recipe.photoObjects.orEmpty.sorted(),
+                    (recipe.photoObjects ?? []).sorted(),
                     photoIDs: photoIDs
                 ),
                 servingSize: recipe.servingSize,
                 cookingTime: recipe.cookingTime,
                 ingredients: recipeIngredientRecords(
-                    recipe.ingredientObjects.orEmpty.sorted(),
+                    (recipe.ingredientObjects ?? []).sorted(),
                     ingredientIDs: ingredientIDs
                 ),
                 steps: recipe.steps,
-                categoryIDs: recipe.categories.orEmpty.compactMap { category in
+                categoryIDs: (recipe.categories ?? []).compactMap { category in
                     identifier(
                         for: category,
                         in: categoryIDs
@@ -162,7 +162,7 @@ extension CookleDataArchiveService {
                 id: id,
                 date: diary.date,
                 objects: diaryObjectRecords(
-                    diary.objects.orEmpty.sorted(),
+                    (diary.objects ?? []).sorted(),
                     recipeIDs: recipeIDs
                 ),
                 note: diary.note,

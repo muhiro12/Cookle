@@ -8,7 +8,7 @@ enum RecipeDeleteCopy {
     }
 
     static func message(for recipe: Recipe) -> String {
-        let affectedMealRowCount = recipe.diaryObjects.orEmpty.count
+        let affectedMealRowCount = (recipe.diaryObjects ?? []).count
         let mealRowLabel = affectedMealRowCount == 1 ? "meal row" : "meal rows"
 
         if affectedMealRowCount == 0 {

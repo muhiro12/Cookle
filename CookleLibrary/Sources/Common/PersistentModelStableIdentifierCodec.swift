@@ -3,6 +3,11 @@ import SwiftData
 
 /// Canonical codec for stable persistent model identifiers shared across targets.
 public enum PersistentModelStableIdentifierCodec {
+    /// Errors thrown while decoding stable persistent model identifiers.
+    public enum Error: Swift.Error {
+        case invalidBase64String
+    }
+
     /// Encodes a persistent model identifier into a stable string.
     public static func encode(
         _ identifier: PersistentIdentifier
@@ -33,6 +38,9 @@ public enum PersistentModelStableIdentifierCodec {
     public static func decode(
         _ stableIdentifier: String
     ) throws -> PersistentIdentifier {
-        try .init(base64Encoded: stableIdentifier)
+        guard let data = Data(base64Encoded: stableIdentifier) else {
+            throw Error.invalidBase64String
+        }
+        return try JSONDecoder().decode(PersistentIdentifier.self, from: data)
     }
 }

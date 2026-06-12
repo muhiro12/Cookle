@@ -81,11 +81,11 @@ public extension FetchDescriptor where T == Category {
 
 private extension TagPredicate {
     static func hiragana(for value: String) -> String {
-        value.applyingTransform(.hiraganaToKatakana, reverse: true).orEmpty
+        value.applyingTransform(.hiraganaToKatakana, reverse: true) ?? ""
     }
 
     static func katakana(for value: String) -> String {
-        value.applyingTransform(.hiraganaToKatakana, reverse: false).orEmpty
+        value.applyingTransform(.hiraganaToKatakana, reverse: false) ?? ""
     }
 }
 

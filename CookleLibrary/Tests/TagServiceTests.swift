@@ -181,7 +181,7 @@ struct TagServiceTests {
         let recipe = try #require(
             context.fetch(.recipes(.all)).first
         )
-        #expect(recipe.categories.orEmpty.isEmpty)
+        #expect((recipe.categories ?? []).isEmpty)
     }
 
     @Test

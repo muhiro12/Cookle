@@ -29,9 +29,9 @@ struct DiaryServiceMutationTests {
         )
 
         #expect(diary.note.isEmpty)
-        #expect(diary.objects.orEmpty.count == 1)
-        #expect(diary.objects.orEmpty.first?.recipe === pancake)
-        #expect(diary.objects.orEmpty.first?.type == .breakfast)
+        #expect((diary.objects ?? []).count == 1)
+        #expect((diary.objects ?? []).first?.recipe === pancake)
+        #expect((diary.objects ?? []).first?.type == .breakfast)
     }
 
     @Test
@@ -76,11 +76,11 @@ struct DiaryServiceMutationTests {
 
         #expect(updatedDiary === diary)
         #expect(updatedDiary.note == "Keep note")
-        #expect(updatedDiary.objects.orEmpty.count == 2)
-        #expect(updatedDiary.objects.orEmpty.first { object in
+        #expect((updatedDiary.objects ?? []).count == 2)
+        #expect((updatedDiary.objects ?? []).first { object in
             object.type == .breakfast
         }?.recipe === pancake)
-        #expect(updatedDiary.objects.orEmpty.first { object in
+        #expect((updatedDiary.objects ?? []).first { object in
             object.type == .dinner
         }?.recipe === soup)
     }
@@ -98,7 +98,7 @@ struct DiaryServiceMutationTests {
 
         let diaries = try context.fetch(.diaries(.all))
         #expect(diaries.first === diary)
-        #expect(diary.objects.orEmpty.isEmpty)
+        #expect((diary.objects ?? []).isEmpty)
         #expect(diary.note == "Quick note")
     }
 
@@ -193,8 +193,8 @@ struct DiaryServiceMutationTests {
             note: "Only note"
         )
 
-        #expect(diary.objects.orEmpty.isEmpty)
-        #expect(diary.recipes.orEmpty.isEmpty)
+        #expect((diary.objects ?? []).isEmpty)
+        #expect((diary.recipes ?? []).isEmpty)
         #expect(diary.note == "Only note")
     }
 }

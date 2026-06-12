@@ -6,8 +6,9 @@ extension RecipeFormView {
     @ViewBuilder var formSections: some View {
         @Bindable var bindableModel = formModel
 
-        RecipeFormNameSection($bindableModel.name)
-            .hidden(currentEditMode == .active)
+        if currentEditMode != .active {
+            RecipeFormNameSection($bindableModel.name)
+        }
         RecipeFormPhotosSection(
             $bindableModel.photos,
             addPhotoTip: currentRecipeFormTip(
@@ -30,15 +31,16 @@ extension RecipeFormView {
                 )
             )
         }
-        RecipeFormServingSizeSection($bindableModel.servingSize)
-            .hidden(currentEditMode == .active)
-        RecipeFormCookingTimeSection($bindableModel.cookingTime)
-            .hidden(currentEditMode == .active)
+        if currentEditMode != .active {
+            RecipeFormServingSizeSection($bindableModel.servingSize)
+            RecipeFormCookingTimeSection($bindableModel.cookingTime)
+        }
         RecipeFormIngredientsSection($bindableModel.ingredients)
         RecipeFormStepsSection($bindableModel.steps)
         RecipeFormCategoriesSection($bindableModel.categories)
-        RecipeFormNoteSection($bindableModel.note)
-            .hidden(currentEditMode == .active)
+        if currentEditMode != .active {
+            RecipeFormNoteSection($bindableModel.note)
+        }
         Section {
             Button {
                 withAnimation {
@@ -58,7 +60,7 @@ extension RecipeFormView {
                     return
                 }
                 if formModel.name == "Enable Debug" {
-                    formModel.name = .empty
+                    formModel.name = ""
                     isDebugConfirmationPresented = true
                     return
                 }

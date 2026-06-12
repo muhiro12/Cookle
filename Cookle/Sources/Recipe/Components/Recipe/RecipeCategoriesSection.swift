@@ -16,7 +16,7 @@ struct RecipeCategoriesSection: View {
 
     var body: some View {
         if let categories = recipe.categories,
-           categories.isNotEmpty {
+           !categories.isEmpty {
             Section {
                 ForEach(categories) { category in
                     Button {

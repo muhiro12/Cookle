@@ -30,8 +30,9 @@ struct RecipeFormIngredientsSection: View {
                 }
                 .toolbar {
                     ToolbarItem(placement: .keyboard) {
-                        SuggestionButtons<Ingredient>(input: $ingredients[index].ingredient)
-                            .hidden(focusedIndex != index)
+                        if focusedIndex == index {
+                            SuggestionButtons<Ingredient>(input: $ingredients[index].ingredient)
+                        }
                     }
                 }
             }
@@ -82,7 +83,7 @@ struct RecipeFormIngredientsSection: View {
         RecipeFormIngredientsSection(
             .constant(
                 previewIngredients
-                    + [.init(ingredient: .empty, amount: .empty)]
+                    + [.init(ingredient: "", amount: "")]
             )
         )
     }

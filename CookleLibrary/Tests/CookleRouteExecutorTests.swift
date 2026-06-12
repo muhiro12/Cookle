@@ -91,7 +91,7 @@ struct CookleRouteExecutorTests {
             categories: [],
             note: ""
         )
-        let recipeID = try recipe.id.base64Encoded()
+        let recipeID = try PersistentModelStableIdentifierCodec.encode(recipe.id)
 
         let outcome = try CookleRouteExecutor.execute(
             route: .recipeDetail(recipeID),

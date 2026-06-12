@@ -13,19 +13,20 @@ struct RecipeStepsSection: View {
     private var recipe
 
     var body: some View {
-        Section {
-            ForEach(Array(recipe.steps.enumerated()), id: \.offset) { values in
-                HStack(alignment: .top) {
-                    Text((values.offset + RecipeStepLayout.stepNumberOffset).description + ".")
-                        .foregroundStyle(.secondary)
-                        .frame(width: RecipeStepLayout.indexWidth)
-                    Text(values.element)
+        if !recipe.steps.isEmpty {
+            Section {
+                ForEach(Array(recipe.steps.enumerated()), id: \.offset) { values in
+                    HStack(alignment: .top) {
+                        Text((values.offset + RecipeStepLayout.stepNumberOffset).description + ".")
+                            .foregroundStyle(.secondary)
+                            .frame(width: RecipeStepLayout.indexWidth)
+                        Text(values.element)
+                    }
                 }
+            } header: {
+                Text("Steps")
             }
-        } header: {
-            Text("Steps")
         }
-        .hidden(recipe.steps.isEmpty)
     }
 }
 

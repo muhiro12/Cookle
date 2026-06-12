@@ -6,6 +6,10 @@ extension CooklePreviewStore {
     enum RemoteImageConstants {
         static let firstOrder = 1
         static let successStatusCodes = 200...299
+        static let adjustmentRange = 61
+        static let maximumAdjustment = 30
+        static let componentScale = CGFloat(UInt8.max)
+        static let maximumColorComponent = CGFloat(1)
     }
 
     func createPhotoObject(
@@ -27,9 +31,7 @@ extension CooklePreviewStore {
     }
 
     func photoDataFromSystemImage(named systemImageName: String) -> Data {
-        let tintColor: UIColor = .init(
-            .init(uiColor: .tintColor).adjusted(by: .init(systemImageName.hashValue))
-        )
+        let tintColor = adjustedTintColor(seed: systemImageName.hashValue)
         if let imageData = UIImage(systemName: systemImageName)?
             .withTintColor(tintColor)
             .jpegData(compressionQuality: 1) {
@@ -41,6 +43,59 @@ extension CooklePreviewStore {
             return fallbackImageData
         }
         return .init()
+    }
+
+    private func adjustedTintColor(seed: Int) -> UIColor {
+        let baseColor = UIColor.tintColor.resolvedColor(with: .current)
+        var red = CGFloat.zero
+        var green = CGFloat.zero
+        var blue = CGFloat.zero
+        var alpha = CGFloat.zero
+        guard baseColor.getRed(
+            &red,
+            green: &green,
+            blue: &blue,
+            alpha: &alpha
+        ) else {
+            return baseColor
+        }
+
+        let redAdjustment = adjustment(for: seed)
+        let greenAdjustment = adjustment(
+            for: seed / RemoteImageConstants.adjustmentRange
+        )
+        let blueAdjustment = adjustment(
+            for: seed / (
+                RemoteImageConstants.adjustmentRange
+                    * RemoteImageConstants.adjustmentRange
+            )
+        )
+        return .init(
+            red: adjustedComponent(red, by: redAdjustment),
+            green: adjustedComponent(green, by: greenAdjustment),
+            blue: adjustedComponent(blue, by: blueAdjustment),
+            alpha: alpha
+        )
+    }
+
+    private func adjustedComponent(
+        _ component: CGFloat,
+        by adjustment: CGFloat
+    ) -> CGFloat {
+        min(
+            max(
+                component + adjustment / RemoteImageConstants.componentScale,
+                .zero
+            ),
+            RemoteImageConstants.maximumColorComponent
+        )
+    }
+
+    private func adjustment(for seed: Int) -> CGFloat {
+        CGFloat(
+            seed % RemoteImageConstants.adjustmentRange
+                - RemoteImageConstants.maximumAdjustment
+        )
     }
 
     func fetchRemotePhotoDataMap() async -> [SamplePhotoAsset: Data] {

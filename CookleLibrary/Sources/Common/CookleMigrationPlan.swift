@@ -16,7 +16,7 @@ public enum CookleMigrationPlan: SchemaMigrationPlan {
     }
 
     public static var stages: [MigrationStage] {
-        .empty
+        []
     }
 }
 

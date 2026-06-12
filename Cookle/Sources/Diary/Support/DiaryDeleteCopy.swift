@@ -10,7 +10,7 @@ enum DiaryDeleteCopy {
     }
 
     static func message(for diary: Diary) -> String {
-        let mealRowCount = diary.objects.orEmpty.count
+        let mealRowCount = (diary.objects ?? []).count
         let mealRowLabel = mealRowCount == 1 ? "meal row" : "meal rows"
 
         return "This removes the diary and its \(mealRowCount) \(mealRowLabel). Recipes stay saved."

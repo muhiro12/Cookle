@@ -34,11 +34,11 @@ struct RecipeSuggestionNotificationComposer {
         recipeName: String,
         stableIdentifier: String? = nil
     ) -> UNMutableNotificationContent {
-        let resolvedStableIdentifier = stableIdentifier ?? .empty
+        let resolvedStableIdentifier = stableIdentifier ?? ""
         return makeContent(
             .init(
                 title: String(localized: "Recipe Suggestion"),
-                subtitle: .empty,
+                subtitle: "",
                 body: String(localized: "How about making \(recipeName) today?"),
                 routeURL: routeURL(for: resolvedStableIdentifier),
                 stableIdentifier: resolvedStableIdentifier,
@@ -101,7 +101,7 @@ private extension RecipeSuggestionNotificationComposer {
     }
 
     func routeURL(for stableIdentifier: String) -> URL {
-        guard stableIdentifier.isNotEmpty else {
+        guard !stableIdentifier.isEmpty else {
             return CookleDeepLinkURLBuilder.preferredRecipeURL()
         }
         return CookleDeepLinkURLBuilder.preferredRecipeDetailURL(
@@ -113,7 +113,7 @@ private extension RecipeSuggestionNotificationComposer {
         let trimmedName = snapshot.name.trimmingCharacters(
             in: .whitespacesAndNewlines
         )
-        return trimmedName.isNotEmpty ? trimmedName : String(localized: "Recipe")
+        return !trimmedName.isEmpty ? trimmedName : String(localized: "Recipe")
     }
 
     func body(
@@ -164,7 +164,7 @@ private extension RecipeSuggestionNotificationComposer {
             from: snapshot.ingredientNames
         )
 
-        if snapshot.cookingTime > 0, ingredientNames.isNotEmpty {
+        if snapshot.cookingTime > 0, !ingredientNames.isEmpty {
             return String.localizedStringWithFormat(
                 String(
                     localized: "Ready in %lld min with %lld ingredients."
@@ -191,7 +191,7 @@ private extension RecipeSuggestionNotificationComposer {
     func ingredientBody(
         ingredientNames: [String]
     ) -> String? {
-        guard ingredientNames.isNotEmpty else {
+        guard !ingredientNames.isEmpty else {
             return nil
         }
 
@@ -239,7 +239,7 @@ private extension RecipeSuggestionNotificationComposer {
             let trimmedIngredientName = ingredientName.trimmingCharacters(
                 in: .whitespacesAndNewlines
             )
-            guard trimmedIngredientName.isNotEmpty else {
+            guard !trimmedIngredientName.isEmpty else {
                 return nil
             }
             return collapsedWhitespace(
@@ -253,7 +253,7 @@ private extension RecipeSuggestionNotificationComposer {
     ) -> String {
         value
             .components(separatedBy: .whitespacesAndNewlines)
-            .filter(\.isNotEmpty)
+            .filter { !$0.isEmpty }
             .joined(separator: " ")
     }
 }

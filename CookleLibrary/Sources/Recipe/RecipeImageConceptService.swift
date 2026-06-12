@@ -66,12 +66,12 @@ enum RecipeImageConceptService {
 
     static func normalizedText(from value: String) -> String? {
         let trimmedValue = value.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard trimmedValue.isNotEmpty else {
+        guard !trimmedValue.isEmpty else {
             return nil
         }
 
         let collapsedValue = RecipeBlurbService.collapsedWhitespace(trimmedValue)
-        guard collapsedValue.isNotEmpty else {
+        guard !collapsedValue.isEmpty else {
             return nil
         }
         return collapsedValue

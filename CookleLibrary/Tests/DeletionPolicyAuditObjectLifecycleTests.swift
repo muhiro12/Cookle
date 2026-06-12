@@ -45,8 +45,8 @@ struct DeletionPolicyAuditObjectLifecycleTests {
         #expect(try DeletionPolicyAuditSupport.count(of: Photo.self, in: verificationContext) == 2)
         #expect(persistedRecipe.orderedPhotoObjects.count == 1)
         #expect(currentPhoto.data == secondPhotoData.data)
-        #expect(removedPhoto.recipes.orEmpty.isEmpty)
-        #expect(removedPhoto.objects.orEmpty.isEmpty)
+        #expect((removedPhoto.recipes ?? []).isEmpty)
+        #expect((removedPhoto.objects ?? []).isEmpty)
     }
 
     @Test
@@ -77,7 +77,7 @@ struct DeletionPolicyAuditObjectLifecycleTests {
             verificationContext.fetch(.recipes(.all)).first
         )
         let currentIngredient = try #require(
-            persistedRecipe.ingredientObjects.orEmpty.first?.ingredient
+            (persistedRecipe.ingredientObjects ?? []).first?.ingredient
         )
         let ingredientObjects = try verificationContext.fetch(
             FetchDescriptor<IngredientObject>()
@@ -93,10 +93,10 @@ struct DeletionPolicyAuditObjectLifecycleTests {
                 in: verificationContext
             ) == 2
         )
-        #expect(persistedRecipe.ingredientObjects.orEmpty.count == 1)
+        #expect((persistedRecipe.ingredientObjects ?? []).count == 1)
         #expect(currentIngredient.value == "Pepper")
-        #expect(removedIngredient.recipes.orEmpty.isEmpty)
-        #expect(removedIngredient.objects.orEmpty.isEmpty)
+        #expect((removedIngredient.recipes ?? []).isEmpty)
+        #expect((removedIngredient.objects ?? []).isEmpty)
     }
 
     @Test
@@ -126,7 +126,7 @@ struct DeletionPolicyAuditObjectLifecycleTests {
         )
         try context.save()
         let removedObjectID = try #require(
-            diary.objects.orEmpty.first?.persistentModelID
+            (diary.objects ?? []).first?.persistentModelID
         )
 
         DiaryService.update(
@@ -172,11 +172,11 @@ private func assertUpdatedDiaryObjects(
     secondRecipe: Recipe
 ) throws {
     let attachedObject = try #require(
-        persistedDiary.objects.orEmpty.first
+        (persistedDiary.objects ?? []).first
     )
 
     #expect(diaryObjects.count == 1)
-    #expect(persistedDiary.objects.orEmpty.count == 1)
+    #expect((persistedDiary.objects ?? []).count == 1)
     #expect(attachedObject.persistentModelID != removedObjectID)
     #expect(attachedObject.recipe?.persistentModelID == secondRecipe.persistentModelID)
     #expect(attachedObject.type == .lunch)
