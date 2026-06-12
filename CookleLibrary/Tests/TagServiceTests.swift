@@ -212,7 +212,7 @@ struct TagServiceTests {
             context.fetch(.ingredients(.valueIs("Eggs"))).first
         )
 
-        #expect(throws: TagServiceError.ingredientInUse("Eggs")) {
+        #expect(throws: TagOperationsError.ingredientInUse("Eggs")) {
             try TagService.deleteWithOutcome(
                 context: context,
                 ingredient: ingredient

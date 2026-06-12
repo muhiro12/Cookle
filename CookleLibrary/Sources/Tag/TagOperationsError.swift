@@ -1,7 +1,7 @@
 import Foundation
 
 /// Errors thrown by tag workflows.
-public enum TagServiceError: Equatable, LocalizedError {
+public enum TagOperationsError: Equatable, LocalizedError {
     case emptyValue
     case ingredientInUse(String)
 

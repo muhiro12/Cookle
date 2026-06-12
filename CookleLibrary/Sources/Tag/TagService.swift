@@ -82,7 +82,7 @@ enum TagService {
         ingredient: Ingredient
     ) throws -> MutationOutcome<Void> {
         guard ingredient.recipes.orEmpty.isEmpty else {
-            throw TagServiceError.ingredientInUse(ingredient.value)
+            throw TagOperationsError.ingredientInUse(ingredient.value)
         }
 
         context.delete(ingredient)
@@ -176,7 +176,7 @@ private extension TagService {
             in: .whitespacesAndNewlines
         )
         guard normalizedValue.isNotEmpty else {
-            throw TagServiceError.emptyValue
+            throw TagOperationsError.emptyValue
         }
         return normalizedValue
     }
