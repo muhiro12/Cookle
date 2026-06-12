@@ -1,5 +1,6 @@
 @testable import CookleLibrary
 import Foundation
+import SwiftData
 import Testing
 
 @MainActor

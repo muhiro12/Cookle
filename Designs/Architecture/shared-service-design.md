@@ -48,14 +48,25 @@ Delivery surfaces should not call calculators, builders, planners, loaders,
 or parser helpers for business behavior when an Operations boundary can own
 that use case.
 
-## MHPlatform Adoption
+## Package Consumer Boundaries
 
 - `Cookle` is the intentional `MHPlatform` umbrella adopter.
 - `CookleLibrary` adopts `MHPlatformCore` and must not depend on the
   full `MHPlatform` umbrella.
-- `Widgets` and `Watch` stay off direct umbrella adoption.
+- `Widgets` and `Watch` call `CookleLibrary` first and stay off direct
+  app-runtime umbrella adoption.
 - This repository intentionally uses the MHPlatform 1.x semver range
-  `1.0.0..<2.0.0`.
+  `1.0.0..<2.0.0` with a checked-in `1.9+` resolved baseline.
+- `Cookle` adopts `MHDesign` from MHUI as a metrics-only presentation
+  dependency for shared spacing and radius values.
+- `CookleLibrary` stays presentation-free and must not depend on MHUI or
+  MHDesign.
+- `Widgets` and `Watch` stay off MHUI and MHDesign by default; they should call
+  shared Operations APIs first and add direct presentation package dependencies
+  only for an explicit surface-level reason.
+- SwiftUtilities remains an app or shared-library utility dependency. It should
+  not be treated as an MHUI migration target unless a utility becomes a stable
+  platform-foundation contract.
 
 ## Canonical Shared APIs
 

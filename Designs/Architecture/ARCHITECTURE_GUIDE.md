@@ -14,6 +14,7 @@ Related documents:
 - [ADR 0004](../Decisions/0004-views-own-presentation-and-screen-models.md)
 - [ADR 0005](../Decisions/0005-adapter-failure-surfacing-contract.md)
 - [ADR 0007](../Decisions/0007-adapt-incomes-june-boundaries.md)
+- [ADR 0008](../Decisions/0008-adopt-package-consumer-boundaries.md)
 
 ## Responsibility Boundaries
 
@@ -22,6 +23,26 @@ Related documents:
 | Domain (`CookleLibrary`) | SwiftData schema, public `*Operations` facades, internal mutation/query collaborators, predicates, route helpers, validation, canonical mutations, canonical search, mutation effect hints | Widget reloads, notification registration, review prompts, deep-link delivery, App Intent result shaping, SwiftUI presentation state |
 | Adapter (`Cookle`, `Widgets`, `Watch`, App Intents) | Parameter parsing, platform API calls, dependency wiring, route intake, follow-up orchestration after shared mutations, App Intent result mapping | Re-implementing recipe, diary, tag, or reset mutation rules |
 | View (SwiftUI) | Focus state, sheets, dialogs, navigation state, screen-scoped `@Observable` models, display formatting, view composition | Canonical business validation, mutation rules, notification scheduling, widget reload coordination |
+
+## Package Consumer Boundaries
+
+Cookle adopts shared packages by target responsibility, not by superficial
+symmetry with sibling apps.
+
+- `Cookle` is the full-app `MHPlatform` adopter because the app target owns
+  runtime bootstrap, ads, StoreKit, license presentation, review flow, mutation
+  follow-up, and route delivery wiring.
+- `CookleLibrary` adopts `MHPlatformCore` for core-safe route, preference,
+  persistence-maintenance, and logging contracts. It must not depend on
+  `MHPlatform`, `MHAppRuntime`, app-runtime split products, MHUI, or MHDesign.
+- `Cookle` adopts `MHDesign` as a metrics-only MHUI dependency for shared
+  spacing and corner-radius values. Cookle does not link the full `MHUI`
+  product until it intentionally adopts package-owned styled primitives.
+- `Widgets`, `Watch`, and App Intents call Cookle shared APIs first. They stay
+  off app-runtime and presentation package umbrellas by default.
+- SwiftUtilities remains app- or shared-library-owned utility support. It is
+  not an MHUI migration target because MHUI deliberately excludes generic
+  utilities and thin host-app presentation shortcuts.
 
 ## Testing Boundary
 
