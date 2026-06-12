@@ -1,9 +1,8 @@
 # AGENTS.md
 
 This document defines the repository-specific behavior contract for agents
-working in Cookle. Global development policy belongs in
-`/Users/Hiromu/.codex/AGENTS.md` and the developer principle archive; this file
-keeps only Cookle-specific rules and durable local conventions.
+working in Cookle. Global development policy belongs outside this repository;
+this file keeps only Cookle-specific rules and durable local conventions.
 
 ## Agent Philosophy
 
