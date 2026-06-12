@@ -8,6 +8,9 @@ operation must work across the iOS app, widgets, and App Intents.
 ## Core Principles
 
 - `CookleLibrary` is the source of truth for shared business logic.
+- Current public `CookleLibrary` services are Cookle's business-use-case
+  boundary. Add `*Operations` facades only when a new cross-surface use case is
+  clearer as a facade than as an extension of an existing service.
 - Target-local adapters own Apple-framework integrations and presentation
   orchestration.
 - App Intents are adapters, not a second domain layer.
@@ -24,6 +27,27 @@ operation must work across the iOS app, widgets, and App Intents.
 | Apple framework adapters | `Cookle`, `Widgets`, `Watch` | `NotificationService`, App Intent types, widget timeline/provider types, `WatchCookingSessionStore` |
 | App-side platform support | `Cookle/Sources/Common/Platform` | `CookleAppAssemblyFactory`, `MHAppRuntimeBootstrap` assembly, `MHAppRoutePipeline<CookleRoute>` assembly |
 | Presentation orchestration | `Cookle`, `Widgets`, `Watch` | SwiftUI views, widget view composition, `MainNavigationRouter`, `RecipeFormModel`, `RecipeFormSaveCoordinator`, `DiaryFormModel`, `DiaryFormSaveCoordinator`, `SettingsScreenModel`, `WatchActiveCookingView` |
+
+## Incomes Operations Adaptation
+
+Cookle follows the Incomes June boundary intent without copying its naming
+surface. Incomes uses public `*Operations` facades as its shared-library
+application layer. Cookle already exposes its cross-surface business behavior
+through public `CookleLibrary` services, so existing services remain the
+preferred boundary when their responsibility is clear.
+
+Use this rule for new work:
+
+1. Extend an existing service when the use case clearly belongs to that domain.
+2. Add a new service when the use case is domain-specific but not covered by an
+   existing service.
+3. Add an `*Operations` facade only when a cross-surface workflow needs a
+   higher-level boundary over several collaborators and a service name would
+   hide that orchestration role.
+
+Delivery surfaces should not call calculators, builders, planners, loaders,
+or parser helpers for business behavior when a shared service boundary can
+own that use case.
 
 ## MHPlatform Adoption
 
@@ -51,6 +75,7 @@ operations:
 - `RecipeService.deleteWithOutcome(context:recipe:)`
 - `RecipeService.removePhotoWithOutcome(context:recipe:photoObject:)`
 - `RecipeService.recordLastOpenedRecipeWithOutcome(_:)`
+- `PhotoService.deleteWithOutcome(context:photo:)`
 - `DiaryService.createWithOutcome(context:date:breakfasts:lunches:dinners:note:)`
 - `DiaryService.updateWithOutcome(context:diary:date:breakfasts:lunches:dinners:note:)`
 - `DiaryService.addWithOutcome(context:date:recipe:type:)`
@@ -90,6 +115,9 @@ platform-only side effects in the app target.
 - `RecipeFormService`, `DiaryService`, `TagService`, and `DataResetService`
   stay in `CookleLibrary` because their mutation rules must remain stable
   across the app and App Intents.
+- `PhotoService` stays in `CookleLibrary` because deleting a photo asset has
+  shared recipe and notification follow-up meaning, while `PhotoActionService`
+  stays in `Cookle` because it executes the platform side effects.
 - `NotificationService` stays in `Cookle` because scheduling, authorization,
   and route delivery depend on Apple frameworks.
 - `SettingsActionService` stays in `Cookle` because destructive reset follow-up

@@ -12,7 +12,7 @@ Workflow Service Rule in `Cookle`.
 | --- | --- | --- | --- |
 | recipes | `Recipe`, `RecipeService`, `RecipeFormService`, `RecipePredicate`, `RecipeBlurbService`, `DailyRecipeSuggestionService` | `RecipeActionService`, recipe SwiftUI views, recipe App Intents | Intent text parsing lived in app code; stable recipe ID conversion duplicated across targets |
 | diaries | `Diary`, `DiaryService`, `DiaryObjectType`, `DiaryPredicate` | `DiaryActionService`, diary SwiftUI views, diary App Intents, diary widget timeline rendering | Update/delete target resolution for date-based diary flows lived in Intent branches |
-| photos | `Photo`, `PhotoObject`, `PhotoSource`, photo predicates | photo screens, widget image rendering, notification attachment I/O | primary photo selection heuristic duplicated across adapters (not fully unified yet) |
+| photos | `Photo`, `PhotoObject`, `PhotoSource`, `PhotoService`, photo predicates | `PhotoActionService`, photo screens, widget image rendering, notification attachment I/O | primary photo selection heuristic duplicated across adapters (not fully unified yet) |
 | search | `RecipeService.search` + `RecipePredicate.anyTextMatches` | search UI state, searchable presentation, search intents/snippets | no high-impact gap after canonical search consolidation |
 | tags | `TagService`, `TagPredicate`, `TagServiceError` | `TagActionService`, tag forms, tag intents | named lookup helper remains in Intent support (`TagIntentSupport`) |
 | routes | `CookleRoute`, parser/executor/url builders/deep-link helpers | `MainRouteService` state mapping, route inbox, openApp intents | no canonical parsing/execution gap observed |
@@ -33,6 +33,8 @@ Workflow Service Rule in `Cookle`.
   - `Cookle/Sources/Diary/Intents/UpdateDiaryIntent.swift`
 - Photos:
   - `CookleLibrary/Sources/Photo/Photo.swift`
+  - `CookleLibrary/Sources/Photo/PhotoService.swift`
+  - `Cookle/Sources/Photo/Services/PhotoActionService.swift`
   - `Cookle/Sources/Notification/Services/NotificationAttachmentStore.swift`
   - `Widgets/Sources/Recipe/Providers/RecipeProvider.swift`
 - Search:

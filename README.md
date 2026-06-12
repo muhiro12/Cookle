@@ -80,6 +80,7 @@ Primary records:
 - [Shared service design](Designs/Architecture/shared-service-design.md)
 - [ADR 0001](Designs/Decisions/0001-adopt-shared-services-and-workflow-adapters.md)
 - [Deletion policy audit](Designs/Overviews/cookle-data-deletion-policy-audit.md)
+- [ADR 0007](Designs/Decisions/0007-adapt-incomes-june-boundaries.md)
 
 - `CookleLibrary` owns shared SwiftData models, predicates, queries,
   validation, mutations, migrations, and route helpers.
@@ -92,8 +93,9 @@ Primary records:
 - The repository does not maintain a separate `CookleTests` unit test target;
   app adapters are verified through `Cookle` builds plus shared-library tests.
 - The `Cookle` app target owns workflow services such as
-  `RecipeActionService`, `DiaryActionService`, `TagActionService`, and
-  `SettingsActionService` that add app-only side effects after shared mutations.
+  `RecipeActionService`, `DiaryActionService`, `PhotoActionService`,
+  `TagActionService`, and `SettingsActionService` that add app-only side
+  effects after shared mutations.
 - The root `CookleAppAssembly` centralizes model-container wiring, app service
   graph assembly, runtime bootstrap, and environment injection for the live app
   and SwiftUI previews.
@@ -265,6 +267,11 @@ post-clone CI setup.
   gate. Use the global `$xcode-ui-smoke-auditor` skill and the
   [release UI smoke audit guide](Designs/Architecture/release-ui-smoke-audit.md)
   when a release or UI-sensitive change needs live Simulator evidence.
+- Prefer XcodeBuildMCP for direct build, run, Simulator, runtime log,
+  screenshot, and UI snapshot evidence when a task needs that evidence outside
+  the current shell gate. Keep the documented shell gate as the final repository
+  contract until Cookle deliberately migrates to an MCP-first retained-rule
+  contract.
 - `bash ci_scripts/tasks/check_unused_code.sh` runs the opt-in Periphery audit
   after `build_app.sh` has refreshed the shared index store.
 

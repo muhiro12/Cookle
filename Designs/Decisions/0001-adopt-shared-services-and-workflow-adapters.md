@@ -70,8 +70,8 @@ They should not:
 ### Workflow services
 
 User-facing command flows in the app should go through workflow services such as
-`RecipeActionService`, `DiaryActionService`, `TagActionService`, and
-`SettingsActionService`.
+`RecipeActionService`, `DiaryActionService`, `PhotoActionService`,
+`TagActionService`, and `SettingsActionService`.
 
 These services wrap shared mutations and then run app-only side effects.
 Review prompts should be attached to successful user-facing workflows rather

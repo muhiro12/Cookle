@@ -13,6 +13,7 @@ Related documents:
 - [ADR 0003](../Decisions/0003-platform-adapters-stay-in-app-target.md)
 - [ADR 0004](../Decisions/0004-views-own-presentation-and-screen-models.md)
 - [ADR 0005](../Decisions/0005-adapter-failure-surfacing-contract.md)
+- [ADR 0007](../Decisions/0007-adapt-incomes-june-boundaries.md)
 
 ## Responsibility Boundaries
 
@@ -73,6 +74,7 @@ The current app-side mutation adapters are:
 
 - `Cookle/Sources/Recipe/Services/RecipeActionService.swift`
 - `Cookle/Sources/Diary/Services/DiaryActionService.swift`
+- `Cookle/Sources/Photo/Services/PhotoActionService.swift`
 - `Cookle/Sources/Tag/Services/TagActionService.swift`
 - `Cookle/Sources/Settings/Services/SettingsActionService.swift`
 

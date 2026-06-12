@@ -110,6 +110,10 @@ When Swift files are edited, agents should run
 verification gate.
 `bash ci_scripts/tasks/verify_pre_push.sh` is the optional local `pre-push`
 hook wrapper for the same non-destructive verification gate.
+Prefer XcodeBuildMCP for direct Apple build, run, Simulator, runtime log,
+screenshot, and UI snapshot evidence when a task needs that evidence outside
+the current shell gate. Keep the shell gate as the final repository contract
+until this repository deliberately adopts an MCP-first retained-rule contract.
 SwiftLint is resolved from the `SimplyDanny/SwiftLintPlugins` package declared
 in `Cookle.xcodeproj`, not from a separately installed `swiftlint` binary.
 

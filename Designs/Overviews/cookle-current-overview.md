@@ -450,6 +450,7 @@ Current workflow services are:
 
 - `RecipeActionService`
 - `DiaryActionService`
+- `PhotoActionService`
 - `TagActionService`
 - `SettingsActionService`
 
@@ -467,6 +468,8 @@ Current workflow-specific follow-up policies include:
   follow-up after successful recipe mutations.
 - `DiaryActionService` owns diary widget follow-up after successful diary
   mutations.
+- `PhotoActionService` owns recipe widget and notification follow-up after
+  successful photo asset deletion.
 - `TagActionService` owns notification refresh after successful tag mutations.
 - `SettingsActionService` owns notification-setting normalization/application
   and destructive reset orchestration.
