@@ -6,7 +6,7 @@ source "$script_directory/../lib/task_utils.sh"
 
 usage() {
   cat <<'EOF' >&2
-Usage: bash ci_scripts/tasks/check_environment.sh --profile <format|build|verify>
+Usage: bash ci_scripts/tasks/check_environment.sh --profile <format|rules|build|verify>
 EOF
 }
 
@@ -18,7 +18,7 @@ fi
 
 profile=$2
 case "$profile" in
-  format | build | verify)
+  format | rules | build | verify)
     ;;
   *)
     usage
@@ -84,15 +84,23 @@ check_build_environment() {
   ensure_command "xcrun" "Install Xcode command line tools and ensure xcrun is available."
 }
 
+check_rules_environment() {
+  check_swiftlint_environment
+  ensure_command "rg" "Install ripgrep so repository rule checks can scan source files."
+}
+
 case "$profile" in
   format)
     check_swiftlint_environment
+    ;;
+  rules)
+    check_rules_environment
     ;;
   build)
     check_build_environment
     ;;
   verify)
-    check_swiftlint_environment
+    check_rules_environment
     check_build_environment
     ;;
 esac

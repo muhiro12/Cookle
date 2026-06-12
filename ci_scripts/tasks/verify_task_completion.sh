@@ -11,14 +11,15 @@ repository_root=$CI_TASK_REPOSITORY_ROOT
 before_worktree_state=$(git status --short --untracked-files=all)
 
 if [[ "${CI_RUN_FORCE_FULL:-0}" == "1" || "${CI_RUN_FORCE_FULL:-}" == "true" ]]; then
-  echo "Running verify pipeline (environment + lint + full required builds/tests)..."
+  echo "Running compatibility verify pipeline (retained rules + full required builds/tests)..."
 else
-  echo "Running verify pipeline (environment + lint + required builds/tests)..."
+  echo "Running compatibility verify pipeline (retained rules + required builds/tests)..."
 fi
 
-bash "$repository_root/ci_scripts/tasks/check_environment.sh" --profile verify
-CI_SKIP_ENV_CHECK=1 bash "$repository_root/ci_scripts/tasks/lint_swift.sh"
-CI_SKIP_ENV_CHECK=1 bash "$repository_root/ci_scripts/tasks/verify_repository_state.sh"
+bash "$repository_root/ci_scripts/tasks/check_repository_rules.sh"
+CI_SKIP_ENV_CHECK=1 \
+  CI_SKIP_RETAINED_RULES=1 \
+  bash "$repository_root/ci_scripts/tasks/verify_repository_state.sh"
 
 after_worktree_state=$(git status --short --untracked-files=all)
 

@@ -8,9 +8,9 @@ operation must work across the iOS app, widgets, and App Intents.
 ## Core Principles
 
 - `CookleLibrary` is the source of truth for shared business logic.
-- Current public `CookleLibrary` services are Cookle's business-use-case
-  boundary. Add `*Operations` facades only when a new cross-surface use case is
-  clearer as a facade than as an extension of an existing service.
+- Current public `CookleLibrary` services are Cookle's migration baseline for
+  business-use-case boundaries. Move cross-surface business use cases toward
+  explicit `*Operations` facades as the boundary is clarified.
 - Target-local adapters own Apple-framework integrations and presentation
   orchestration.
 - App Intents are adapters, not a second domain layer.
@@ -28,26 +28,26 @@ operation must work across the iOS app, widgets, and App Intents.
 | App-side platform support | `Cookle/Sources/Common/Platform` | `CookleAppAssemblyFactory`, `MHAppRuntimeBootstrap` assembly, `MHAppRoutePipeline<CookleRoute>` assembly |
 | Presentation orchestration | `Cookle`, `Widgets`, `Watch` | SwiftUI views, widget view composition, `MainNavigationRouter`, `RecipeFormModel`, `RecipeFormSaveCoordinator`, `DiaryFormModel`, `DiaryFormSaveCoordinator`, `SettingsScreenModel`, `WatchActiveCookingView` |
 
-## Incomes Operations Adaptation
+## Operations Migration
 
-Cookle follows the Incomes June boundary intent without copying its naming
-surface. Incomes uses public `*Operations` facades as its shared-library
-application layer. Cookle already exposes its cross-surface business behavior
-through public `CookleLibrary` services, so existing services remain the
-preferred boundary when their responsibility is clear.
+Cookle follows the Incomes June boundary direction without copying
+finance-domain behavior. Incomes uses public `*Operations` facades as its
+shared-library application layer. Cookle already exposes cross-surface
+business behavior through public `CookleLibrary` services, so those services
+are the migration baseline rather than the final target.
 
 Use this rule for new work:
 
-1. Extend an existing service when the use case clearly belongs to that domain.
-2. Add a new service when the use case is domain-specific but not covered by an
-   existing service.
-3. Add an `*Operations` facade only when a cross-surface workflow needs a
-   higher-level boundary over several collaborators and a service name would
-   hide that orchestration role.
+1. Add or extend `*Operations` when a delivery surface needs a public business
+   use case.
+2. Keep services, calculators, builders, planners, loaders, parsers, and codecs
+   as narrower collaborators when they are implementation details.
+3. Migrate existing public services into Operations facades when the facade
+   makes surface usage clearer or enables static boundary checks.
 
 Delivery surfaces should not call calculators, builders, planners, loaders,
-or parser helpers for business behavior when a shared service boundary can
-own that use case.
+or parser helpers for business behavior when an Operations boundary can own
+that use case.
 
 ## MHPlatform Adoption
 

@@ -95,29 +95,36 @@ tasks.filter { $0.isCompleted }
 
 ## Build and Test Entry Point
 
-Agents MUST use one of these standardized entrypoints:
+Agents MUST prefer XcodeBuildMCP for Apple build, test, run, Simulator,
+runtime log, screenshot, and UI snapshot verification.
+
+For app compile checks, use XcodeBuildMCP `build_sim` with the `Cookle`
+scheme. For shared-library tests, use XcodeBuildMCP `test_sim` with the
+`CookleLibrary` scheme. For runtime or UI-sensitive checks, use XcodeBuildMCP
+`build_run_sim`, `launch_app_sim`, `snapshot_ui`, and `screenshot` as
+appropriate.
+
+When Swift files are edited, agents should run:
 
 ``` sh
-bash ci_scripts/tasks/verify_task_completion.sh
-bash ci_scripts/tasks/verify_repository_state.sh
+bash ci_scripts/tasks/format_swift.sh
 ```
 
-Agents may run `bash ci_scripts/tasks/check_environment.sh --profile verify`
-first to diagnose missing local prerequisites.
-When Swift files are edited, agents should run
-`bash ci_scripts/tasks/format_swift.sh` before the final verification gate.
-`bash ci_scripts/tasks/verify_task_completion.sh` is the non-destructive
-verification gate.
-`bash ci_scripts/tasks/verify_pre_push.sh` is the optional local `pre-push`
-hook wrapper for the same non-destructive verification gate.
-Prefer XcodeBuildMCP for direct Apple build, run, Simulator, runtime log,
-screenshot, and UI snapshot evidence when a task needs that evidence outside
-the current shell gate. Keep the shell gate as the final repository contract
-until this repository deliberately adopts an MCP-first retained-rule contract.
+Agents should also run the retained repository rule checks:
+
+``` sh
+bash ci_scripts/tasks/check_repository_rules.sh
+```
+
+`check_repository_rules.sh` runs SwiftLint plus repository-specific static
+architecture checks that are not naturally covered by XcodeBuildMCP.
 SwiftLint is resolved from the `SimplyDanny/SwiftLintPlugins` package declared
 in `Cookle.xcodeproj`, not from a separately installed `swiftlint` binary.
+`verify_task_completion.sh`, `verify_repository_state.sh`, `build_app.sh`,
+`test_shared_library.sh`, and `verify_pre_push.sh` remain compatibility
+wrappers during the MCP-first migration.
 
-CI run artifacts are written under `.build/ci/runs/<RUN_ID>/`.
+Compatibility run artifacts are written under `.build/ci/runs/<RUN_ID>/`.
 Each run stores `summary.md`, `commands.txt`, `meta.json`, `logs/`, `results/`, and `work/`.
 Shared CI directories are under `.build/ci/shared/` (`cache/`, `DerivedData/`, `tmp/`, `home/`).
 Only the newest 5 run directories are retained.

@@ -212,27 +212,26 @@ are source-controlled production identifiers, not local-only credentials.
 - `Cookle`, `Widgets`, and App Intents are verified through app builds plus
   shared-library tests instead of a separate app unit test target.
 
-- Use the recommended final gate:
+- Use XcodeBuildMCP for Apple build, test, run, Simulator, runtime log,
+  screenshot, and UI snapshot verification.
+- For app compile checks, use XcodeBuildMCP `build_sim` with the `Cookle`
+  scheme.
+- For shared-library tests, use XcodeBuildMCP `test_sim` with the
+  `CookleLibrary` scheme.
+- For runtime or UI-sensitive checks, use XcodeBuildMCP `build_run_sim`,
+  `launch_app_sim`, `snapshot_ui`, and `screenshot` as appropriate.
+- Run retained repository rule checks after MCP build/test evidence:
+
+  ```bash
+  bash ci_scripts/tasks/check_repository_rules.sh
+  ```
+
+- During migration, compatibility wrappers remain available:
 
   ```bash
   bash ci_scripts/tasks/verify_task_completion.sh
-  ```
-
-- Run required builds/tests based on local changes:
-
-  ```bash
   bash ci_scripts/tasks/verify_repository_state.sh
-  ```
-
-- Run the app build directly:
-
-  ```bash
   bash ci_scripts/tasks/build_app.sh
-  ```
-
-- Run the shared package tests directly:
-
-  ```bash
   bash ci_scripts/tasks/test_shared_library.sh
   ```
 
@@ -248,30 +247,29 @@ are source-controlled production identifiers, not local-only credentials.
 - `ci_scripts/ci_post_clone.sh` adjusts Xcode defaults for plugin validation
   inside automated builds.
 
-The repository contract is:
+The repository contract is MCP-first:
 Direct entrypoints live in `ci_scripts/tasks/`, shared shell helpers live in
 `ci_scripts/lib/`, and `ci_scripts/ci_post_clone.sh` is reserved for external
 post-clone CI setup.
 
-- `bash ci_scripts/tasks/check_environment.sh --profile <format|build|verify>`
+- XcodeBuildMCP owns Apple build, test, run, Simulator, runtime log,
+  screenshot, and UI snapshot evidence.
+- `bash ci_scripts/tasks/check_environment.sh --profile <format|rules|build|verify>`
   diagnoses missing local prerequisites before you start a tool-dependent flow.
 - `bash ci_scripts/tasks/format_swift.sh` is the explicit SwiftLint autofix
-  step to run after Swift edits and before the final verification gate.
-- `bash ci_scripts/tasks/verify_task_completion.sh` is the non-destructive
-  verification gate for Codex task completion.
-- `bash ci_scripts/tasks/verify_repository_state.sh` checks the current
-  repository state and still writes CI run artifacts.
-- `bash ci_scripts/tasks/verify_pre_push.sh` is the optional local `pre-push`
-  hook wrapper for the same non-destructive verification gate.
+  step to run after Swift edits.
+- `bash ci_scripts/tasks/check_repository_rules.sh` runs retained SwiftLint and
+  static architecture checks that are not naturally covered by XcodeBuildMCP.
+- `bash ci_scripts/tasks/verify_task_completion.sh`,
+  `bash ci_scripts/tasks/verify_repository_state.sh`,
+  `bash ci_scripts/tasks/build_app.sh`,
+  `bash ci_scripts/tasks/test_shared_library.sh`, and
+  `bash ci_scripts/tasks/verify_pre_push.sh` remain compatibility wrappers
+  during the MCP-first migration.
 - Release UI smoke auditing is intentionally separate from the normal verify
   gate. Use the global `$xcode-ui-smoke-auditor` skill and the
   [release UI smoke audit guide](Designs/Architecture/release-ui-smoke-audit.md)
   when a release or UI-sensitive change needs live Simulator evidence.
-- Prefer XcodeBuildMCP for direct build, run, Simulator, runtime log,
-  screenshot, and UI snapshot evidence when a task needs that evidence outside
-  the current shell gate. Keep the documented shell gate as the final repository
-  contract until Cookle deliberately migrates to an MCP-first retained-rule
-  contract.
 - `bash ci_scripts/tasks/check_unused_code.sh` runs the opt-in Periphery audit
   after `build_app.sh` has refreshed the shared index store.
 
@@ -279,10 +277,10 @@ SwiftLint is resolved from the `SimplyDanny/SwiftLintPlugins` package declared
 in `Cookle.xcodeproj`. The repository scripts do not require a separately
 installed `swiftlint` binary on your `PATH`.
 
-Before running the full verify gate, diagnose the local prerequisites:
+Before running retained repository rules, diagnose the local prerequisites:
 
 ```sh
-bash ci_scripts/tasks/check_environment.sh --profile verify
+bash ci_scripts/tasks/check_environment.sh --profile rules
 ```
 
 After Swift edits, run the explicit autofix step:
@@ -291,14 +289,20 @@ After Swift edits, run the explicit autofix step:
 bash ci_scripts/tasks/format_swift.sh
 ```
 
-Then run the non-destructive full recheck:
+Then run retained repository rules:
+
+```sh
+bash ci_scripts/tasks/check_repository_rules.sh
+```
+
+If you need the compatibility task-completion wrapper during migration:
 
 ```sh
 bash ci_scripts/tasks/verify_task_completion.sh
 ```
 
-For release-time verification or a clean-worktree full run, force the standard
-verify entrypoint to execute all required checks:
+For release-time verification or a clean-worktree compatibility run, force the
+wrapper to execute all required checks:
 
 ```sh
 CI_RUN_FORCE_FULL=1 bash ci_scripts/tasks/verify_task_completion.sh

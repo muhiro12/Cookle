@@ -170,6 +170,11 @@ if [[ "${CI_SKIP_ENV_CHECK:-0}" == "1" || "${CI_SKIP_ENV_CHECK:-}" == "true" ]];
   should_skip_environment_check=true
 fi
 
+should_skip_retained_rules=false
+if [[ "${CI_SKIP_RETAINED_RULES:-0}" == "1" || "${CI_SKIP_RETAINED_RULES:-}" == "true" ]]; then
+  should_skip_retained_rules=true
+fi
+
 needs_cookle_build=false
 needs_cookle_library_tests=false
 needs_mhplatform_boundary_checks=false
@@ -205,14 +210,20 @@ else
     needs_cookle_library_tests=true
   fi
 
-  if grep -Eq '^Cookle/|^CookleLibrary/|^Cookle\.xcodeproj/|^Widgets/|^Watch/|^ci_scripts/' <<<"$changed_files"; then
+  if ! $should_skip_retained_rules \
+    && grep -Eq '^Cookle/|^CookleLibrary/|^Cookle\.xcodeproj/|^Widgets/|^Watch/|^ci_scripts/' <<<"$changed_files"; then
     needs_mhplatform_boundary_checks=true
     needs_test_posture_checks=true
   fi
 
   if ! $needs_cookle_build && ! $needs_cookle_library_tests && ! $needs_mhplatform_boundary_checks && ! $needs_test_posture_checks; then
-    echo "No changes under Cookle/, CookleLibrary/, Widgets/, Watch/, Cookle.xcodeproj/, or ci_scripts/."
-    run_note="No changes under Cookle/, CookleLibrary/, Widgets/, Watch/, Cookle.xcodeproj/, or ci_scripts/. Build/test steps were skipped."
+    if $should_skip_retained_rules; then
+      echo "No build/test steps were required after retained repository rules."
+      run_note="No build/test steps were required after retained repository rules."
+    else
+      echo "No changes under Cookle/, CookleLibrary/, Widgets/, Watch/, Cookle.xcodeproj/, or ci_scripts/."
+      run_note="No changes under Cookle/, CookleLibrary/, Widgets/, Watch/, Cookle.xcodeproj/, or ci_scripts/. Build/test steps were skipped."
+    fi
     exit 0
   fi
 
@@ -241,10 +252,12 @@ if $needs_test_posture_checks; then
 fi
 
 if $needs_cookle_build; then
-  run_logged_step \
-    "check_models_directory_consistency" \
-    "Check Models directory consistency" \
-    bash "$repository_root/ci_scripts/tasks/check_models_directory_consistency.sh"
+  if ! $should_skip_retained_rules; then
+    run_logged_step \
+      "check_models_directory_consistency" \
+      "Check Models directory consistency" \
+      bash "$repository_root/ci_scripts/tasks/check_models_directory_consistency.sh"
+  fi
 
   run_logged_step \
     "build_app" \
