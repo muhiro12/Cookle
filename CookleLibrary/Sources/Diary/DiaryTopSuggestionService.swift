@@ -1,17 +1,17 @@
 import Foundation
 import SwiftData
 
-/// Builds the diary-list suggestion candidate from existing persisted state.
+/// Internal top-suggestion collaborator used by diary Operations.
 @preconcurrency
 @MainActor
-public enum DiaryTopSuggestionService {
+enum DiaryTopSuggestionService {
     private enum MealHourBoundary {
         static let breakfastEndsAt = 11
         static let lunchEndsAt = 16
     }
 
     /// Returns a top-of-list diary suggestion for today when one can be derived.
-    public static func suggestion(
+    static func suggestion(
         context: ModelContext,
         now: Date = .now,
         calendar: Calendar = .current,
@@ -48,7 +48,7 @@ public enum DiaryTopSuggestionService {
     }
 
     /// Resolves the meal bucket for a given date using the v1 fixed time boundaries.
-    public static func mealType(
+    nonisolated static func mealType(
         for date: Date,
         calendar: Calendar = .current
     ) -> DiaryObjectType {

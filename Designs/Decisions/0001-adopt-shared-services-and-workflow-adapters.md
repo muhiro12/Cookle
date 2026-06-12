@@ -79,7 +79,7 @@ than generic app foreground transitions.
 
 ### Canonical search
 
-`RecipeService.search` is the canonical recipe search implementation used by
+`RecipeOperations.search` is the canonical recipe search implementation used by
 views, intents, and widgets.
 
 ## Consequences

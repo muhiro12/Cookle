@@ -10,15 +10,15 @@ preserving the Workflow Service Rule in `Cookle`.
 
 | Feature area | Canonical in CookleLibrary | Adapter-only in Cookle/Widgets | Observed gaps |
 | --- | --- | --- | --- |
-| recipes | `Recipe`, `RecipeOperations`, `RecipeFormOperations`, `RecipeInferenceOperations`, `RecipePredicate`, `RecipeBlurbService`, `DailyRecipeSuggestionService` | `RecipeActionService`, recipe SwiftUI views, recipe App Intents | lower-level services are internal collaborators behind Operations |
-| diaries | `Diary`, `DiaryOperations`, `DiaryObjectType`, `DiaryPredicate` | `DiaryActionService`, diary SwiftUI views, diary App Intents, diary widget timeline rendering | lower-level services are internal collaborators behind Operations |
+| recipes | `Recipe`, `RecipeOperations`, `RecipeFormOperations`, `RecipeInferenceOperations`, `RecipePredicate` | `RecipeActionService`, recipe SwiftUI views, recipe App Intents | lower-level services and planners are internal collaborators behind Operations |
+| diaries | `Diary`, `DiaryOperations`, `DiaryObjectType`, `DiaryPredicate` | `DiaryActionService`, diary SwiftUI views, diary App Intents, diary widget timeline rendering | lower-level services and planners are internal collaborators behind Operations |
 | photos | `Photo`, `PhotoObject`, `PhotoSource`, `PhotoOperations`, photo predicates | `PhotoActionService`, photo screens, widget image rendering, notification attachment I/O | primary photo selection heuristic duplicated across adapters (not fully unified yet) |
 | search | `RecipeOperations.search` + `RecipePredicate.anyTextMatches` | search UI state, searchable presentation, search intents/snippets | no high-impact gap after canonical search consolidation |
 | tags | `TagOperations`, `TagPredicate`, `TagServiceError` | `TagActionService`, tag forms, tag intents | named lookup helper remains in Intent support (`TagIntentSupport`) |
 | routes | `CookleRoute`, parser/executor/url builders/deep-link helpers | `MainRouteService` state mapping, route inbox, openApp intents | no canonical parsing/execution gap observed |
-| notifications | suggestion planning (`DailyRecipeSuggestionService`), route URL builders, recipe blurb generation | `UNUserNotificationCenter` orchestration, authorization flow, attachment persistence | time normalization rules duplicated in app (`NotificationService` and `SettingsSidebarView`) |
+| notifications | suggestion planning and recipe blurb generation through `RecipeOperations`, route URL builders | `UNUserNotificationCenter` orchestration, authorization flow, attachment persistence | time normalization rules duplicated in app (`NotificationService` and `SettingsSidebarView`) |
 | widgets | shared model/query/mutation and deep-link vocabulary | WidgetKit providers, timeline policy, widget rendering views | stable recipe identifier conversion duplicated in recipe widget provider |
-| intents | shared domain logic consumed via services and workflows | parameter resolution, dialogs, snippet views, open-app behavior | some mutation-target branching and parsing logic leaked into intents |
+| intents | shared domain logic consumed via Operations and workflows | parameter resolution, dialogs, snippet views, open-app behavior | some mutation-target branching and parsing logic leaked into intents |
 | migrations | `CookleMigrationPlan`, `DatabaseMigrator`, `ModelContainerFactory`, MHPlatform-backed store relocation validation | app startup orchestration and fatal-error handling | no high-impact canonical gap observed |
 
 ## Evidence Paths
@@ -113,7 +113,7 @@ services.
    - Before:
      - `RecipeView` directly updated shared preferences and reloaded widgets.
    - After:
-     - Canonical record persistence moved to `RecipeService`.
+     - Canonical record persistence moved behind `RecipeOperations`.
      - Workflow service owns side effects.
    - Files:
      - `CookleLibrary/Sources/Recipe/RecipeService.swift`

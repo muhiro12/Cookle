@@ -1,7 +1,7 @@
 import Foundation
 
-/// Builds short deterministic recipe blurbs from saved recipe content.
-public enum RecipeBlurbService {
+/// Internal deterministic blurb collaborator used by recipe Operations.
+enum RecipeBlurbService {
     private enum BlurbConstants {
         static let minimumDetailedStepLength = 12
         static let ingredientSummaryCount = 2
@@ -9,7 +9,7 @@ public enum RecipeBlurbService {
     }
 
     /// Returns a concise, deterministic blurb from recipe steps, note, or ingredients.
-    public static func makeBlurb(
+    static func makeBlurb(
         request: RecipeBlurbRequest,
         maxLength: Int = 72
     ) -> String? {

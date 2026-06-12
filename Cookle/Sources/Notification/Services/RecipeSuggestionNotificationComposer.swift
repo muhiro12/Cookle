@@ -121,7 +121,7 @@ private extension RecipeSuggestionNotificationComposer {
         recipeName: String
     ) -> String {
         practicalBody(for: snapshot)
-            ?? RecipeBlurbService.makeBlurb(
+            ?? RecipeOperations.makeBlurb(
                 request: .init(
                     steps: snapshot.steps,
                     ingredients: snapshot.ingredientNames,

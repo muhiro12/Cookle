@@ -189,10 +189,10 @@ API style decision:
 3. Mutation follow-up hints must stay shared while platform side effects stay
    app-owned.
    Files:
-   - `CookleLibrary/Sources/Recipe/RecipeFormService.swift`
-   - `CookleLibrary/Sources/Diary/DiaryService.swift`
-   - `CookleLibrary/Sources/Tag/TagService.swift`
-   - `CookleLibrary/Sources/Common/DataResetService.swift`
+   - `CookleLibrary/Sources/Recipe/RecipeFormOperations.swift`
+   - `CookleLibrary/Sources/Diary/DiaryOperations.swift`
+   - `CookleLibrary/Sources/Tag/TagOperations.swift`
+   - `CookleLibrary/Sources/Common/DataMaintenanceOperations.swift`
    Minimal plan:
    - keep effect-hint decisions in `CookleLibrary`
    - keep notification sync, widget reload, and review flow wiring in app-side

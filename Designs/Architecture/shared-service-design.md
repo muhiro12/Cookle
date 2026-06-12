@@ -8,9 +8,10 @@ operation must work across the iOS app, widgets, and App Intents.
 ## Core Principles
 
 - `CookleLibrary` is the source of truth for shared business logic.
-- Current public `CookleLibrary` services are Cookle's migration baseline for
-  business-use-case boundaries. Move cross-surface business use cases toward
-  explicit `*Operations` facades as the boundary is clarified.
+- Public cross-surface business use cases enter through explicit `*Operations`
+  facades. Lower-level services, calculators, builders, planners, loaders,
+  parsers, and codecs stay as narrower collaborators unless they are durable
+  contracts in their own right.
 - Target-local adapters own Apple-framework integrations and presentation
   orchestration.
 - App Intents are adapters, not a second domain layer.
@@ -23,7 +24,7 @@ operation must work across the iOS app, widgets, and App Intents.
 
 | Concern | Lives in | Examples |
 | --- | --- | --- |
-| Shared domain logic | `CookleLibrary` | `Recipe`, `Diary`, `Tag`, predicates, `RecipeFormService`, `RecipeService`, `DiaryService`, `TagService`, `DataResetService` |
+| Shared domain logic | `CookleLibrary` | `Recipe`, `Diary`, `Tag`, predicates, `RecipeOperations`, `RecipeFormOperations`, `DiaryOperations`, `TagOperations`, `DataMaintenanceOperations` |
 | Apple framework adapters | `Cookle`, `Widgets`, `Watch` | `NotificationService`, App Intent types, widget timeline/provider types, `WatchCookingSessionStore` |
 | App-side platform support | `Cookle/Sources/Common/Platform` | `CookleAppAssemblyFactory`, `MHAppRuntimeBootstrap` assembly, `MHAppRoutePipeline<CookleRoute>` assembly |
 | Presentation orchestration | `Cookle`, `Widgets`, `Watch` | SwiftUI views, widget view composition, `MainNavigationRouter`, `RecipeFormModel`, `RecipeFormSaveCoordinator`, `DiaryFormModel`, `DiaryFormSaveCoordinator`, `SettingsScreenModel`, `WatchActiveCookingView` |
@@ -31,10 +32,8 @@ operation must work across the iOS app, widgets, and App Intents.
 ## Operations Migration
 
 Cookle follows the Incomes June boundary direction without copying
-finance-domain behavior. Incomes uses public `*Operations` facades as its
-shared-library application layer. Cookle already exposes cross-surface
-business behavior through public `CookleLibrary` services, so those services
-are the migration baseline rather than the final target.
+finance-domain behavior. Public `*Operations` facades are the shared-library
+application layer for delivery surfaces.
 
 Use this rule for new work:
 
@@ -42,8 +41,8 @@ Use this rule for new work:
    use case.
 2. Keep services, calculators, builders, planners, loaders, parsers, and codecs
    as narrower collaborators when they are implementation details.
-3. Migrate existing public services into Operations facades when the facade
-   makes surface usage clearer or enables static boundary checks.
+3. Keep existing services internal when they only support Operations or tested
+   library behavior.
 
 Delivery surfaces should not call calculators, builders, planners, loaders,
 or parser helpers for business behavior when an Operations boundary can own
@@ -79,7 +78,7 @@ and supporting contracts:
 
 Delivery-surface call sites should consume Operations APIs and keep
 platform-only side effects in the app target. Existing `*Service` types remain
-as implementation collaborators and compatibility surfaces during migration.
+as implementation collaborators rather than public delivery-surface APIs.
 
 ## Placement Rules
 
@@ -111,9 +110,8 @@ as implementation collaborators and compatibility surfaces during migration.
   `TagOperations`, `PhotoOperations`, and `DataMaintenanceOperations` stay in
   `CookleLibrary` because their use cases must remain stable across the app,
   widgets, watch surface, and App Intents.
-- `RecipeService`, `RecipeFormService`, `DiaryService`, `TagService`,
-  `PhotoService`, and `DataResetService` remain in `CookleLibrary` as
-  implementation collaborators during the staged Operations migration.
+- Service, builder, and planner types remain in `CookleLibrary` as internal
+  implementation collaborators behind the Operations boundary.
 - `NotificationService` stays in `Cookle` because scheduling, authorization,
   and route delivery depend on Apple frameworks.
 - `SettingsActionService` stays in `Cookle` because destructive reset follow-up

@@ -1,15 +1,15 @@
 import Foundation
 import MHPlatformCore
 
-/// Planner for recipe suggestion notification schedules.
-public enum DailyRecipeSuggestionService {
+/// Internal planner for recipe suggestion notification Operations.
+enum DailyRecipeSuggestionService {
     private enum QualityConstants {
         static let minimumFocusedCandidateCount = 2
         static let recentCookingCooldownDays = 2
     }
 
     /// Builds future daily suggestion entries from the supplied candidates.
-    public static func buildSuggestions(
+    static func buildSuggestions(
         candidates: [DailyRecipeSuggestionCandidate],
         hour: Int,
         minute: Int,

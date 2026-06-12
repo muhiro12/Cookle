@@ -41,7 +41,7 @@ actor NotificationSyncWorker {
         now: Date = .now
     ) -> Plan {
         let snapshots = fetchRecipeSnapshots()
-        let suggestions = DailyRecipeSuggestionService.buildSuggestions(
+        let suggestions = RecipeOperations.buildDailySuggestions(
             candidates: suggestionCandidates(
                 snapshots: snapshots
             ),

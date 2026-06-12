@@ -51,7 +51,7 @@ extension View {
         let ingredients = recipe.ingredientObjects?.sorted().compactMap { object in
             object.ingredient?.value
         } ?? .empty
-        guard let draft = RecipeImageConceptService.makeDraft(
+        guard let draft = RecipeOperations.makeImageConceptDraft(
             request: .init(
                 name: recipe.name,
                 ingredients: ingredients,

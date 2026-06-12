@@ -1,5 +1,5 @@
-/// Builds Image Playground concept input from saved recipe content.
-public enum RecipeImageConceptService {
+/// Internal Image Playground concept collaborator used by recipe Operations.
+enum RecipeImageConceptService {
     private static let finishStepMarkers = [
         "serve",
         "served",
@@ -36,7 +36,7 @@ public enum RecipeImageConceptService {
     ]
 
     /// Returns a normalized concept draft for Image Playground generation.
-    public static func makeDraft(
+    static func makeDraft(
         request: RecipeImageConceptRequest
     ) -> RecipeImageConceptDraft? {
         guard let title = normalizedText(from: request.name) else {

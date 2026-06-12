@@ -92,11 +92,11 @@ in `CookleLibrary`, and the repository no longer carries a separate
   - Different app surfaces could drift away from the canonical search and photo
     semantics expected across widgets, notifications, and intents.
 - Current correction:
-  - `RecipeService.search(context:criteria:)` owns canonical browse/search
+  - `RecipeOperations.search(context:criteria:)` owns canonical browse/search
     sorting.
   - `RecipePhotoDisplay` and `RecipePhotoRemovalBehavior` now live in
     `CookleLibrary`.
-  - `RecipeService.removePhotoWithOutcome(...)` now owns the shared persisted
+  - `RecipeOperations.removePhotoWithOutcome(...)` now owns the shared persisted
     photo mutation rule.
 
 ## Notes

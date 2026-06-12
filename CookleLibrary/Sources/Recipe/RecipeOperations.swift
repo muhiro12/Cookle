@@ -1,3 +1,4 @@
+import Foundation
 import SwiftData
 
 /// Recipe use cases called by delivery surfaces.
@@ -17,6 +18,23 @@ public enum RecipeOperations {
     /// Returns the most recently updated recipe.
     public static func latestRecipe(context: ModelContext) throws -> Recipe? {
         try RecipeService.latestRecipe(context: context)
+    }
+
+    /// Returns the highest-priority quick-return target for the recipe list.
+    public static func topReturnTarget(
+        context: ModelContext,
+        activeCookingSessionSnapshot: String? = CooklePreferences.string(
+            for: \.activeCookingSessionSnapshot
+        ),
+        lastOpenedRecipeID: String? = CookleSharedPreferences.string(
+            for: \.lastOpenedRecipeID
+        )
+    ) throws -> RecipeTopReturnTarget? {
+        try RecipeTopReturnTargetService.target(
+            context: context,
+            activeCookingSessionSnapshot: activeCookingSessionSnapshot,
+            lastOpenedRecipeID: lastOpenedRecipeID
+        )
     }
 
     /// Orders already-loaded recipes using the repository's canonical browse semantics.
@@ -51,6 +69,47 @@ public enum RecipeOperations {
         try RecipeService.search(
             context: context,
             text: text
+        )
+    }
+
+    /// Builds future daily suggestion entries from recipe suggestion candidates.
+    nonisolated public static func buildDailySuggestions(
+        candidates: [DailyRecipeSuggestionCandidate],
+        hour: Int,
+        minute: Int,
+        now: Date = .now,
+        calendar: Calendar = .current,
+        daysAhead: Int = 14,
+        identifierPrefix: String = "daily-recipe-suggestion-"
+    ) -> [DailyRecipeSuggestion] {
+        DailyRecipeSuggestionService.buildSuggestions(
+            candidates: candidates,
+            hour: hour,
+            minute: minute,
+            now: now,
+            calendar: calendar,
+            daysAhead: daysAhead,
+            identifierPrefix: identifierPrefix
+        )
+    }
+
+    /// Returns a concise deterministic blurb from recipe content.
+    nonisolated public static func makeBlurb(
+        request: RecipeBlurbRequest,
+        maxLength: Int = 72
+    ) -> String? {
+        RecipeBlurbService.makeBlurb(
+            request: request,
+            maxLength: maxLength
+        )
+    }
+
+    /// Returns normalized Image Playground concept input from recipe content.
+    nonisolated public static func makeImageConceptDraft(
+        request: RecipeImageConceptRequest
+    ) -> RecipeImageConceptDraft? {
+        RecipeImageConceptService.makeDraft(
+            request: request
         )
     }
 

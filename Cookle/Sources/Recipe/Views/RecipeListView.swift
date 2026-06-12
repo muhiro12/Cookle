@@ -159,7 +159,7 @@ private extension RecipeListView {
 
     var topReturnTarget: RecipeTopReturnTarget? {
         do {
-            return try RecipeTopReturnTargetService.target(
+            return try RecipeOperations.topReturnTarget(
                 context: context
             )
         } catch {
@@ -208,7 +208,7 @@ private extension RecipeListView {
 
     func handleTopReturnTap() {
         do {
-            guard let latestTarget = try RecipeTopReturnTargetService.target(
+            guard let latestTarget = try RecipeOperations.topReturnTarget(
                 context: context
             ) else {
                 return

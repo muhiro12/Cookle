@@ -28,6 +28,34 @@ public enum DiaryOperations {
         try DiaryService.randomDiary(context: context)
     }
 
+    /// Returns a top-of-list diary suggestion for today when one can be derived.
+    public static func topSuggestion(
+        context: ModelContext,
+        now: Date = .now,
+        calendar: Calendar = .current,
+        lastOpenedRecipeID: String? = CookleSharedPreferences.string(
+            for: \.lastOpenedRecipeID
+        )
+    ) throws -> DiaryTopSuggestion? {
+        try DiaryTopSuggestionService.suggestion(
+            context: context,
+            now: now,
+            calendar: calendar,
+            lastOpenedRecipeID: lastOpenedRecipeID
+        )
+    }
+
+    /// Resolves the meal bucket for a given date using the canonical boundaries.
+    nonisolated public static func mealType(
+        for date: Date,
+        calendar: Calendar = .current
+    ) -> DiaryObjectType {
+        DiaryTopSuggestionService.mealType(
+            for: date,
+            calendar: calendar
+        )
+    }
+
     /// Adds a recipe to a diary and returns follow-up hints.
     public static func addWithOutcome(
         context: ModelContext,

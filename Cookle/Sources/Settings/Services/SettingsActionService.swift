@@ -22,7 +22,7 @@ final class SettingsActionService {
     }
 
     func exportBackupData(modelContainer: ModelContainer) throws -> Data {
-        try CookleDataArchiveService.encodedArchive(
+        try DataMaintenanceOperations.encodedArchive(
             from: modelContainer.mainContext
         )
     }
@@ -35,7 +35,7 @@ final class SettingsActionService {
             }
         }
 
-        return try CookleDataArchiveService.validatedArchive(
+        return try DataMaintenanceOperations.validatedArchive(
             from: Data(contentsOf: url)
         )
     }
@@ -44,7 +44,7 @@ final class SettingsActionService {
         _ archive: CookleDataArchive,
         modelContainer: ModelContainer
     ) async throws -> CookleDataRestoreSummary {
-        let summary = try CookleDataArchiveService.restore(
+        let summary = try DataMaintenanceOperations.restore(
             archive,
             context: modelContainer.mainContext
         )

@@ -1,12 +1,12 @@
 import Foundation
 import SwiftData
 
-/// Resolves the highest-priority quick-return target for the recipe list.
+/// Internal quick-return target collaborator used by recipe Operations.
 @preconcurrency
 @MainActor
-public enum RecipeTopReturnTargetService {
+enum RecipeTopReturnTargetService {
     /// Returns the active cooking session target when valid, otherwise the last opened recipe target.
-    public static func target(
+    static func target(
         context: ModelContext,
         activeCookingSessionSnapshot: String? = CooklePreferences.string(for: \.activeCookingSessionSnapshot),
         lastOpenedRecipeID: String? = CookleSharedPreferences.string(for: \.lastOpenedRecipeID)

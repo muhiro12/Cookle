@@ -162,7 +162,7 @@ struct DiaryListView: View {
 private extension DiaryListView {
     var topSuggestion: DiaryTopSuggestion? {
         do {
-            return try DiaryTopSuggestionService.suggestion(
+            return try DiaryOperations.topSuggestion(
                 context: context
             )
         } catch {
@@ -184,7 +184,7 @@ private extension DiaryListView {
         for renderedSuggestion: DiaryTopSuggestion
     ) -> DiaryFormPrefill? {
         do {
-            guard let freshSuggestion = try DiaryTopSuggestionService.suggestion(
+            guard let freshSuggestion = try DiaryOperations.topSuggestion(
                 context: context
             ) else {
                 return nil

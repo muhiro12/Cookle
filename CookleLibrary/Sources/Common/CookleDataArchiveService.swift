@@ -1,16 +1,16 @@
 import Foundation
 import SwiftData
 
-/// Exports and restores portable Cookle backup archives.
+/// Internal archive collaborator used by data maintenance Operations.
 @preconcurrency
 @MainActor
-public enum CookleDataArchiveService {
-    public enum ArchiveError: LocalizedError, Sendable {
+enum CookleDataArchiveService {
+    enum ArchiveError: LocalizedError, Sendable {
         case unsupportedFormatVersion(Int)
         case duplicateIdentifier(String)
         case missingReference(String)
 
-        public var errorDescription: String? {
+        var errorDescription: String? {
             switch self {
             case .unsupportedFormatVersion(let version):
                 "Unsupported backup format version: \(version)"
@@ -23,7 +23,7 @@ public enum CookleDataArchiveService {
     }
 
     /// Builds an in-memory archive from the current persisted user data.
-    public static func makeArchive(
+    static func makeArchive(
         context: ModelContext
     ) throws -> CookleDataArchive {
         let ingredients = try context.fetch(.ingredients(.all))
@@ -71,7 +71,7 @@ public enum CookleDataArchiveService {
     }
 
     /// Encodes the current persisted user data as portable JSON backup data.
-    public static func encodedArchive(
+    static func encodedArchive(
         from context: ModelContext
     ) throws -> Data {
         try encoder.encode(
@@ -82,7 +82,7 @@ public enum CookleDataArchiveService {
     }
 
     /// Decodes JSON backup data without applying it to the store.
-    public static func decodedArchive(
+    static func decodedArchive(
         from data: Data
     ) throws -> CookleDataArchive {
         try decoder.decode(
@@ -92,7 +92,7 @@ public enum CookleDataArchiveService {
     }
 
     /// Decodes and validates JSON backup data before restore confirmation.
-    public static func validatedArchive(
+    static func validatedArchive(
         from data: Data
     ) throws -> CookleDataArchive {
         let archive = try decodedArchive(
@@ -103,7 +103,7 @@ public enum CookleDataArchiveService {
     }
 
     /// Replaces current persisted user data with the supplied validated archive.
-    public static func restore(
+    static func restore(
         _ archive: CookleDataArchive,
         context: ModelContext
     ) throws -> CookleDataRestoreSummary {
