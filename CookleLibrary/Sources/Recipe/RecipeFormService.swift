@@ -1,13 +1,13 @@
 import Foundation
 import SwiftData
 
-/// Recipe form domain service used by app and widgets.
+/// Internal recipe form collaborator used by public Operations.
 @preconcurrency
 @MainActor
-public enum RecipeFormService {
+enum RecipeFormService {
     // swiftlint:disable function_parameter_count
     /// Builds a validated draft from raw form input.
-    public static func makeDraft(
+    static func makeDraft(
         name: String,
         photos: [PhotoData],
         servingSize: String,
@@ -43,7 +43,7 @@ public enum RecipeFormService {
     }
 
     /// Builds a validated draft from App Intent style text input.
-    public static func makeDraft(
+    static func makeDraft(
         name: String,
         servingSize: Int,
         cookingTime: Int,
@@ -66,7 +66,7 @@ public enum RecipeFormService {
     // swiftlint:enable function_parameter_count
 
     /// Creates a new recipe from a validated draft.
-    public static func create(
+    static func create(
         context: ModelContext,
         draft: RecipeFormDraft
     ) -> Recipe {
@@ -77,7 +77,7 @@ public enum RecipeFormService {
     }
 
     /// Creates a new recipe from a validated draft and returns follow-up hints.
-    public static func createWithOutcome(
+    static func createWithOutcome(
         context: ModelContext,
         draft: RecipeFormDraft
     ) -> MutationOutcome<Recipe> {
@@ -123,7 +123,7 @@ public enum RecipeFormService {
     }
 
     /// Updates an existing recipe from a validated draft.
-    public static func update(
+    static func update(
         context: ModelContext,
         recipe: Recipe,
         draft: RecipeFormDraft
@@ -136,7 +136,7 @@ public enum RecipeFormService {
     }
 
     /// Updates an existing recipe from a validated draft and returns follow-up hints.
-    public static func updateWithOutcome(
+    static func updateWithOutcome(
         context: ModelContext,
         recipe: Recipe,
         draft: RecipeFormDraft

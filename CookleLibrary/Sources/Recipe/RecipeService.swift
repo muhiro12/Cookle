@@ -1,15 +1,15 @@
 import Foundation
 import SwiftData
 
-/// Recipe-related domain services.
+/// Internal recipe collaborator used by public Operations.
 @preconcurrency
 @MainActor
-public enum RecipeService {
+enum RecipeService {
     /// Returns the last opened recipe stored in preferences, if available.
     /// - Parameters:
     ///   - context: Model context to query.
     /// - Returns: The matching `Recipe` or `nil` when not found.
-    public static func lastOpenedRecipe(context: ModelContext) throws -> Recipe? {
+    static func lastOpenedRecipe(context: ModelContext) throws -> Recipe? {
         try lastOpenedRecipe(
             context: context,
             lastOpenedRecipeID: CookleSharedPreferences.string(for: \.lastOpenedRecipeID)
@@ -21,7 +21,7 @@ public enum RecipeService {
     ///   - context: Model context to query.
     ///   - lastOpenedRecipeID: Optional base64-encoded persistent identifier.
     /// - Returns: The matching `Recipe` or `nil` when not found.
-    public static func lastOpenedRecipe(
+    static func lastOpenedRecipe(
         context: ModelContext,
         lastOpenedRecipeID: String?
     ) throws -> Recipe? {
@@ -37,12 +37,12 @@ public enum RecipeService {
     /// Returns any single recipe from the store.
     /// - Parameter context: Model context to query.
     /// - Returns: A random `Recipe` or `nil` when the store is empty.
-    public static func randomRecipe(context: ModelContext) throws -> Recipe? {
+    static func randomRecipe(context: ModelContext) throws -> Recipe? {
         try context.fetchRandom(.recipes(.all))
     }
 
     /// Returns the most recently updated recipe.
-    public static func latestRecipe(context: ModelContext) throws -> Recipe? {
+    static func latestRecipe(context: ModelContext) throws -> Recipe? {
         let descriptor: FetchDescriptor<Recipe> = .init(
             sortBy: [
                 .init(\.modifiedTimestamp, order: .reverse),
@@ -59,7 +59,7 @@ public enum RecipeService {
     ///   - sortMode: Sort mode to apply.
     ///   - isAscending: Sort direction.
     /// - Returns: The ordered recipes.
-    public static func browse(
+    static func browse(
         _ recipes: [Recipe],
         sortMode: RecipeBrowseSortMode,
         isAscending: Bool
@@ -79,7 +79,7 @@ public enum RecipeService {
     ///   - context: Model context to query.
     ///   - criteria: Shared browse criteria including text search and sort mode.
     /// - Returns: Matching recipes ordered for the caller's browse surface.
-    public static func search(
+    static func search(
         context: ModelContext,
         criteria: RecipeBrowseCriteria
     ) throws -> [Recipe] {
@@ -100,7 +100,7 @@ public enum RecipeService {
     ///   - context: Model context to query.
     ///   - text: Search text. Short text (< 3 chars) uses equality for tags; otherwise partial match.
     /// - Returns: Matching recipes ordered by name.
-    public static func search(context: ModelContext, text: String) throws -> [Recipe] {
+    static func search(context: ModelContext, text: String) throws -> [Recipe] {
         try search(
             context: context,
             criteria: .init(
@@ -112,7 +112,7 @@ public enum RecipeService {
     }
 
     /// Deletes the supplied recipe from the store.
-    public static func delete(
+    static func delete(
         context: ModelContext,
         recipe: Recipe
     ) {
@@ -123,7 +123,7 @@ public enum RecipeService {
     }
 
     /// Deletes the supplied recipe and returns follow-up hints.
-    public static func deleteWithOutcome(
+    static func deleteWithOutcome(
         context: ModelContext,
         recipe: Recipe
     ) -> MutationOutcome<Void> {
@@ -138,7 +138,7 @@ public enum RecipeService {
     }
 
     /// Removes one persisted photo row from a recipe and returns follow-up hints.
-    public static func removePhotoWithOutcome(
+    static func removePhotoWithOutcome(
         context: ModelContext,
         recipe: Recipe,
         photoObject: PhotoObject
@@ -169,14 +169,14 @@ public enum RecipeService {
     }
 
     /// Stores the current recipe as the last opened target.
-    public static func recordLastOpenedRecipe(_ recipe: Recipe) {
+    static func recordLastOpenedRecipe(_ recipe: Recipe) {
         _ = recordLastOpenedRecipeWithOutcome(
             recipe
         )
     }
 
     /// Stores the current recipe as the last opened target and returns follow-up hints.
-    public static func recordLastOpenedRecipeWithOutcome(
+    static func recordLastOpenedRecipeWithOutcome(
         _ recipe: Recipe
     ) -> MutationOutcome<Void> {
         let encodedRecipeID = RecipeStableIdentifierCodec.encodeIfPossible(

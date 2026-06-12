@@ -10,8 +10,8 @@ preserving the Workflow Service Rule in `Cookle`.
 
 | Feature area | Canonical in CookleLibrary | Adapter-only in Cookle/Widgets | Observed gaps |
 | --- | --- | --- | --- |
-| recipes | `Recipe`, `RecipeOperations`, `RecipeFormOperations`, `RecipeInferenceOperations`, `RecipePredicate`, `RecipeBlurbService`, `DailyRecipeSuggestionService` | `RecipeActionService`, recipe SwiftUI views, recipe App Intents | lower-level services remain public compatibility collaborators during staged migration |
-| diaries | `Diary`, `DiaryOperations`, `DiaryObjectType`, `DiaryPredicate` | `DiaryActionService`, diary SwiftUI views, diary App Intents, diary widget timeline rendering | lower-level services remain public compatibility collaborators during staged migration |
+| recipes | `Recipe`, `RecipeOperations`, `RecipeFormOperations`, `RecipeInferenceOperations`, `RecipePredicate`, `RecipeBlurbService`, `DailyRecipeSuggestionService` | `RecipeActionService`, recipe SwiftUI views, recipe App Intents | lower-level services are internal collaborators behind Operations |
+| diaries | `Diary`, `DiaryOperations`, `DiaryObjectType`, `DiaryPredicate` | `DiaryActionService`, diary SwiftUI views, diary App Intents, diary widget timeline rendering | lower-level services are internal collaborators behind Operations |
 | photos | `Photo`, `PhotoObject`, `PhotoSource`, `PhotoOperations`, photo predicates | `PhotoActionService`, photo screens, widget image rendering, notification attachment I/O | primary photo selection heuristic duplicated across adapters (not fully unified yet) |
 | search | `RecipeOperations.search` + `RecipePredicate.anyTextMatches` | search UI state, searchable presentation, search intents/snippets | no high-impact gap after canonical search consolidation |
 | tags | `TagOperations`, `TagPredicate`, `TagServiceError` | `TagActionService`, tag forms, tag intents | named lookup helper remains in Intent support (`TagIntentSupport`) |

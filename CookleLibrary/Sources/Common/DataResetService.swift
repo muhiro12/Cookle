@@ -1,18 +1,18 @@
 import SwiftData
 
-/// Domain service to delete all persisted app data.
+/// Internal data-reset collaborator used by public Operations.
 @preconcurrency
 @MainActor
-public enum DataResetService {
+enum DataResetService {
     /// Deletes every persisted Cookle model from the supplied context.
-    public static func deleteAll(context: ModelContext) throws {
+    static func deleteAll(context: ModelContext) throws {
         _ = try deleteAllWithOutcome(
             context: context
         )
     }
 
     /// Deletes every persisted Cookle model and returns follow-up hints.
-    public static func deleteAllWithOutcome(
+    static func deleteAllWithOutcome(
         context: ModelContext
     ) throws -> MutationOutcome<Void> {
         try context.delete(model: Diary.self)

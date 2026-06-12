@@ -1,9 +1,9 @@
 import SwiftData
 
-/// Tag workflows shared by the app, widgets, and App Intents.
+/// Internal tag collaborator used by public Operations.
 @preconcurrency
 @MainActor
-public enum TagService {
+enum TagService {
     private static var tagMutationEffects: MutationEffect {
         [
             .notificationPlanChanged
@@ -11,7 +11,7 @@ public enum TagService {
     }
 
     /// Renames an ingredient after trimming whitespace and validating non-empty input.
-    public static func rename(
+    static func rename(
         context: ModelContext,
         ingredient: Ingredient,
         value: String
@@ -24,7 +24,7 @@ public enum TagService {
     }
 
     /// Renames an ingredient and returns follow-up hints.
-    public static func renameWithOutcome(
+    static func renameWithOutcome(
         context _: ModelContext,
         ingredient: Ingredient,
         value: String
@@ -38,7 +38,7 @@ public enum TagService {
     }
 
     /// Renames a category after trimming whitespace and validating non-empty input.
-    public static func rename(
+    static func rename(
         context: ModelContext,
         category: Category,
         value: String
@@ -51,7 +51,7 @@ public enum TagService {
     }
 
     /// Renames a category and returns follow-up hints.
-    public static func renameWithOutcome(
+    static func renameWithOutcome(
         context _: ModelContext,
         category: Category,
         value: String
@@ -65,7 +65,7 @@ public enum TagService {
     }
 
     /// Deletes a category and returns follow-up hints.
-    public static func deleteWithOutcome(
+    static func deleteWithOutcome(
         context: ModelContext,
         category: Category
     ) -> MutationOutcome<Void> {
@@ -77,7 +77,7 @@ public enum TagService {
     }
 
     /// Deletes an unused ingredient and returns follow-up hints.
-    public static func deleteWithOutcome(
+    static func deleteWithOutcome(
         context: ModelContext,
         ingredient: Ingredient
     ) throws -> MutationOutcome<Void> {
@@ -93,7 +93,7 @@ public enum TagService {
     }
 
     /// Returns all tags that look equivalent to `tag` in the supplied collection.
-    public static func duplicateTags<T: Tag>(
+    static func duplicateTags<T: Tag>(
         matching tag: T,
         in tags: [T]
     ) -> [T] {
@@ -108,7 +108,7 @@ public enum TagService {
     }
 
     /// Returns one representative per duplicate-looking group in the supplied collection.
-    public static func duplicateTags<T: Tag>(
+    static func duplicateTags<T: Tag>(
         in tags: [T]
     ) -> [T] {
         Dictionary(grouping: tags) { tag in
@@ -130,7 +130,7 @@ public enum TagService {
     }
 
     /// Merges duplicate-looking ingredients into the supplied ingredient.
-    public static func mergeDuplicatesWithOutcome(
+    static func mergeDuplicatesWithOutcome(
         context: ModelContext,
         keeping ingredient: Ingredient
     ) throws -> MutationOutcome<Void> {
@@ -150,7 +150,7 @@ public enum TagService {
     }
 
     /// Merges duplicate-looking categories into the supplied category.
-    public static func mergeDuplicatesWithOutcome(
+    static func mergeDuplicatesWithOutcome(
         context: ModelContext,
         keeping category: Category
     ) throws -> MutationOutcome<Void> {

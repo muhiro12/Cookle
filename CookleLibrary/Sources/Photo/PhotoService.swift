@@ -1,11 +1,11 @@
 import SwiftData
 
-/// Photo asset workflows shared by the app and maintenance surfaces.
+/// Internal photo asset collaborator used by public Operations.
 @preconcurrency
 @MainActor
-public enum PhotoService {
+enum PhotoService {
     /// Deletes the supplied photo asset and returns follow-up hints.
-    public static func deleteWithOutcome(
+    static func deleteWithOutcome(
         context: ModelContext,
         photo: Photo
     ) -> MutationOutcome<Void> {

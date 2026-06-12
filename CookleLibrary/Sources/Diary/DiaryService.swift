@@ -1,12 +1,12 @@
 import Foundation
 import SwiftData
 
-/// Diary-related domain services.
+/// Internal diary collaborator used by public Operations.
 @preconcurrency
 @MainActor
-public enum DiaryService {
+enum DiaryService {
     /// Returns the diary on the specified calendar day, if any.
-    public static func diary(
+    static func diary(
         on date: Date,
         context: ModelContext,
         calendar: Calendar = .current
@@ -21,7 +21,7 @@ public enum DiaryService {
     }
 
     /// Returns the latest diary ordered by date and timestamps.
-    public static func latestDiary(context: ModelContext) throws -> Diary? {
+    static func latestDiary(context: ModelContext) throws -> Diary? {
         let descriptor: FetchDescriptor<Diary> = .init(
             sortBy: [
                 .init(\.date, order: .reverse),
@@ -33,12 +33,12 @@ public enum DiaryService {
     }
 
     /// Returns a random diary.
-    public static func randomDiary(context: ModelContext) throws -> Diary? {
+    static func randomDiary(context: ModelContext) throws -> Diary? {
         try context.fetchRandom(.diaries(.all))
     }
 
     /// Adds a recipe to the diary of `date` for a given meal type, creating the diary when needed.
-    public static func add(
+    static func add(
         context: ModelContext,
         date: Date,
         recipe: Recipe,
@@ -53,7 +53,7 @@ public enum DiaryService {
     }
 
     /// Adds a recipe to a diary and returns follow-up hints.
-    public static func addWithOutcome(
+    static func addWithOutcome(
         context: ModelContext,
         date: Date,
         recipe: Recipe,
@@ -85,7 +85,7 @@ public enum DiaryService {
     }
     // swiftlint:disable function_parameter_count
     /// Creates a new diary for the given date with provided recipes by meal type.
-    public static func create(
+    static func create(
         context: ModelContext,
         date: Date,
         breakfasts: [Recipe],
@@ -104,7 +104,7 @@ public enum DiaryService {
     }
 
     /// Creates a new diary and returns follow-up hints.
-    public static func createWithOutcome(
+    static func createWithOutcome(
         context: ModelContext,
         date: Date,
         breakfasts: [Recipe],
@@ -132,7 +132,7 @@ public enum DiaryService {
     }
 
     /// Updates the specified diary with new date, items and note.
-    public static func update(
+    static func update(
         context: ModelContext,
         diary: Diary,
         date: Date,
@@ -153,7 +153,7 @@ public enum DiaryService {
     }
 
     /// Updates the specified diary and returns follow-up hints.
-    public static func updateWithOutcome(
+    static func updateWithOutcome(
         context: ModelContext,
         diary: Diary,
         date: Date,
@@ -184,7 +184,7 @@ public enum DiaryService {
     // swiftlint:enable function_parameter_count
 
     /// Deletes the supplied diary from the store.
-    public static func delete(
+    static func delete(
         context: ModelContext,
         diary: Diary
     ) {
@@ -195,7 +195,7 @@ public enum DiaryService {
     }
 
     /// Deletes the supplied diary and returns follow-up hints.
-    public static func deleteWithOutcome(
+    static func deleteWithOutcome(
         context: ModelContext,
         diary: Diary
     ) -> MutationOutcome<Void> {

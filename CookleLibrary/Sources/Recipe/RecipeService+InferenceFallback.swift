@@ -30,12 +30,12 @@ extension RecipeService {
     static let allSectionHeadings = ingredientSectionHeadings + stepSectionHeadings
 
     /// Trims user-provided text before recipe inference.
-    public static func normalizedInferenceInput(_ text: String) -> String {
+    static func normalizedInferenceInput(_ text: String) -> String {
         text.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     /// Removes empty entries and normalizes whitespace in inference output.
-    public static func sanitizedInference(
+    static func sanitizedInference(
         _ inference: RecipeInferenceResult
     ) -> RecipeInferenceResult {
         .init(
@@ -69,7 +69,7 @@ extension RecipeService {
     }
 
     /// Returns whether inference output contains enough data to create a recipe.
-    public static func isMeaningfulInference(
+    static func isMeaningfulInference(
         _ inference: RecipeInferenceResult
     ) -> Bool {
         if inference.ingredients.isNotEmpty || inference.steps.isNotEmpty {
@@ -97,7 +97,7 @@ extension RecipeService {
     }
 
     /// Extracts basic recipe fields with deterministic local parsing.
-    public static func fallbackInference(from text: String) -> RecipeInferenceResult {
+    static func fallbackInference(from text: String) -> RecipeInferenceResult {
         let lines = text.components(separatedBy: .newlines)
         let ingredients = fallbackSectionItems(
             from: lines,

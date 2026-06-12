@@ -52,8 +52,8 @@ Cookle will adopt the Incomes direction in stages:
 
 ### Staged Adoption
 
-- Treat current public `CookleLibrary` service APIs as migration candidates for
-  `*Operations` facades, not as the final naming posture.
+- Treat lower-level `CookleLibrary` service APIs as internal collaborators
+  behind `*Operations` facades, not as delivery-surface entry points.
 - Keep app-side `*ActionService` types as workflow adapters that call shared
   services first, then perform platform side effects.
 - Add or migrate to `*Operations` facades by behavior boundary, not by
@@ -84,8 +84,9 @@ Cookle will adopt the Incomes direction in stages:
 
 ## Consequences
 
-- Cookle's current service vocabulary remains usable during migration, but it
-  is not the final boundary target for cross-surface business use cases.
+- Cookle's lower-level service vocabulary remains usable inside
+  `CookleLibrary`, but it is not the public boundary target for cross-surface
+  business use cases.
 - Future cross-surface behavior should prefer `*Operations` facades, and
   existing services should be migrated when the facade clarifies surface usage
   or enables static enforcement.
