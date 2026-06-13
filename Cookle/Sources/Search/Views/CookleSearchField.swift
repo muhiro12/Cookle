@@ -37,9 +37,8 @@ struct CookleSearchField: View {
         }
         .padding(.horizontal, Layout.horizontalPadding)
         .padding(.vertical, Layout.verticalPadding)
-        .background(
-            Color(.secondarySystemFill),
-            in: .rect(
+        .cookleGlassControl(
+            in: RoundedRectangle(
                 cornerRadius: Layout.cornerRadius,
                 style: .continuous
             )

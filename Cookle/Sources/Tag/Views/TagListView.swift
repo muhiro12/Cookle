@@ -9,6 +9,8 @@ import SwiftData
 import SwiftUI
 
 struct TagListView<T: Tag>: View {
+    private let searchFieldVerticalPadding: CGFloat = 8
+
     @Environment(\.isPresented)
     private var isPresented
 
@@ -18,20 +20,33 @@ struct TagListView<T: Tag>: View {
     @Binding private var tag: T?
 
     @State private var searchText = ""
+    @FocusState private var isSearchFocused: Bool
 
     var body: some View {
-        contentView
-            .cookleTopLevelNavigationChrome(T.title)
-            .toolbar {
-                ToolbarItem {
-                    AddRecipeButton()
-                }
-                ToolbarItem {
-                    if isPresented {
-                        CloseButton()
-                    }
+        VStack(spacing: 0) {
+            CookleSearchField(
+                text: $searchText,
+                isFocused: $isSearchFocused
+            )
+            .padding(.horizontal)
+            .padding(.vertical, searchFieldVerticalPadding)
+
+            Divider()
+
+            contentView
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .cookleTopLevelNavigationChrome(T.title)
+        .toolbar {
+            ToolbarItem {
+                AddRecipeButton()
+            }
+            ToolbarItem {
+                if isPresented {
+                    CloseButton()
                 }
             }
+        }
     }
 
     init(selection: Binding<T?> = .constant(nil)) {
@@ -52,21 +67,24 @@ private extension TagListView {
         List(filteredTags) { rowTag in
             tagRow(for: rowTag)
         }
-        .searchable(text: $searchText)
     }
 
-    var emptyStateView: some View {
-        ContentUnavailableView {
-            Label {
-                Text(T.title)
-            } icon: {
-                Image(systemName: "tag")
-                    .accessibilityHidden(true)
+    @ViewBuilder var emptyStateView: some View {
+        if !tags.isEmpty {
+            ContentUnavailableView.search(text: searchText)
+        } else {
+            ContentUnavailableView {
+                Label {
+                    Text(T.title)
+                } icon: {
+                    Image(systemName: "tag")
+                        .accessibilityHidden(true)
+                }
+            } description: {
+                Text("Tags appear after recipes create them.")
+            } actions: {
+                AddRecipeButton()
             }
-        } description: {
-            Text("Tags appear after recipes create them.")
-        } actions: {
-            AddRecipeButton()
         }
     }
 
