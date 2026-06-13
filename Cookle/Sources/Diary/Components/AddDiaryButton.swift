@@ -19,9 +19,9 @@ struct AddDiaryButton: View {
             }
         } label: {
             Label {
-                Text("Add")
+                Text("Add Diary")
             } icon: {
-                Image(systemName: "book")
+                Image(systemName: "plus")
                     .accessibilityHidden(true)
             }
         }

@@ -41,7 +41,9 @@ struct RecipeFormPhotoThumbnailView: View {
                     .font(.title3)
                     .foregroundStyle(.primary)
                     .padding(actionButtonPadding)
-                    .background(.thinMaterial, in: .circle)
+                    .cookleGlassControl(
+                        in: Circle()
+                    )
             }
             .accessibilityLabel(Text("Photo Actions"))
             .padding(actionButtonPadding)

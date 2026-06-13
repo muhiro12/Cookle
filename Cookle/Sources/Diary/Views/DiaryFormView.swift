@@ -97,9 +97,15 @@ struct DiaryFormView: View {
         @Bindable var model = model
 
         return Section {
-            TextField(text: $model.note, axis: .vertical) {
-                Text("Classic spaghetti carbonara and warm beef stew for a comforting end to the day.")
-            }
+            TextField(
+                "Note",
+                text: $model.note,
+                prompt: Text("Classic spaghetti carbonara and warm beef stew for a comforting end to the day."),
+                axis: .vertical
+            )
+            .accessibilityValue(
+                model.note.isEmpty ? Text(verbatim: "") : Text(verbatim: model.note)
+            )
         } header: {
             Text("Note")
         }

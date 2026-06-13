@@ -9,6 +9,10 @@ import SwiftData
 import SwiftUI
 
 struct SearchView: View {
+    private enum Layout {
+        static let searchFieldVerticalPadding: CGFloat = 8
+    }
+
     private enum DiscoverySheet: String, Identifiable {
         case ingredient
         case category
@@ -28,23 +32,26 @@ struct SearchView: View {
 
     @State private var recipes = [Recipe]()
     @State private var searchText = ""
-    @State private var isFocused = false
     @State private var discoverySheet: DiscoverySheet?
     @State private var ingredientSelection: Ingredient?
     @State private var categorySelection: Category?
     @State private var discoveryRecipeSelection: Recipe?
+    @FocusState private var isSearchFocused: Bool
 
     var body: some View {
-        Group {
-            if !recipes.isEmpty {
-                searchResults
-            } else if !searchText.isEmpty {
-                notFoundPlaceholder
-            } else {
-                searchPromptPlaceholder
-            }
+        VStack(spacing: 0) {
+            CookleSearchField(
+                text: $searchText,
+                isFocused: $isSearchFocused
+            )
+            .padding(.horizontal)
+            .padding(.vertical, Layout.searchFieldVerticalPadding)
+
+            Divider()
+
+            searchContent
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .searchable(text: $searchText, isPresented: $isFocused)
         .cookleTopLevelNavigationChrome(
             "Search",
             keyboardDismissMode: .immediately
@@ -87,6 +94,16 @@ struct SearchView: View {
         }
     }
 
+    @ViewBuilder var searchContent: some View {
+        if !recipes.isEmpty {
+            searchResults
+        } else if !searchText.isEmpty {
+            notFoundPlaceholder
+        } else {
+            searchPromptPlaceholder
+        }
+    }
+
     var searchResults: some View {
         List(recipes) { rowRecipe in
             Button {
@@ -114,7 +131,7 @@ struct SearchView: View {
             Text("Search by recipe name, ingredient, or category.")
         } actions: {
             Button("Start Searching") {
-                isFocused = true
+                isSearchFocused = true
             }
             Button("Ingredient") {
                 discoverySheet = .ingredient
@@ -134,8 +151,7 @@ struct SearchView: View {
                 discoverySheet = .category
             }
         } label: {
-            Image(systemName: "line.3.horizontal.decrease.circle")
-                .accessibilityLabel("Browse Tags")
+            Label("Browse Tags", systemImage: "line.3.horizontal.decrease.circle")
         }
     }
 
@@ -154,12 +170,17 @@ private extension SearchView {
             return
         }
         searchText = incomingSearchQuery
-        isFocused = true
+        isSearchFocused = true
         self.incomingSearchQuery = nil
         performSearch()
     }
 
     func performSearch() {
+        guard !searchText.isEmpty else {
+            recipes = []
+            return
+        }
+
         do {
             recipes = try RecipeOperations.search(
                 context: context,

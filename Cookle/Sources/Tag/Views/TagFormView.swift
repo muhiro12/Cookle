@@ -19,9 +19,7 @@ struct TagFormView<T: Tag>: View {
     var body: some View {
         Form {
             Section {
-                TextField(text: $value) {
-                    Text("Spaghetti")
-                }
+                TextField("Value", text: $value, prompt: Text("Spaghetti"))
             } header: {
                 Text("Value")
             }

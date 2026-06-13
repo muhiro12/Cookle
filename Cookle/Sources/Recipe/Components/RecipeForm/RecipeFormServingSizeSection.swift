@@ -13,10 +13,11 @@ struct RecipeFormServingSizeSection: View {
     var body: some View {
         Section {
             HStack {
-                TextField(text: $servingSize) {
-                    Text("2")
-                }
-                .keyboardType(.numberPad)
+                TextField("Serving Size", text: $servingSize, prompt: Text("2"))
+                    .keyboardType(.numberPad)
+                    .accessibilityValue(
+                        servingSize.isEmpty ? Text(verbatim: "") : Text(verbatim: servingSize)
+                    )
                 Text("servings")
             }
         } header: {

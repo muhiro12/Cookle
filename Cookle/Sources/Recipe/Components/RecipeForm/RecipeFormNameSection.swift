@@ -12,9 +12,10 @@ struct RecipeFormNameSection: View {
 
     var body: some View {
         Section {
-            TextField(text: $name) {
-                Text("Spaghetti Carbonara")
-            }
+            TextField("Name", text: $name, prompt: Text("Spaghetti Carbonara"))
+                .accessibilityValue(
+                    name.isEmpty ? Text(verbatim: "") : Text(verbatim: name)
+                )
         } header: {
             HStack {
                 Text("Name")
