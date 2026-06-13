@@ -20,25 +20,10 @@ struct RecipeFormIngredientsSection: View {
     var body: some View {
         Section {
             ForEach(ingredientRows) { row in
-                HStack(alignment: .top) {
-                    TextField(text: ingredientNameBinding(at: row.index), axis: .vertical) {
-                        Text("Spaghetti")
+                ingredientRow(for: row)
+                    .toolbar {
+                        ingredientSuggestionToolbarItem(for: row)
                     }
-                    .focused($focusedRowID, equals: row.id)
-                    TextField(text: ingredientAmountBinding(at: row.index)) {
-                        Text("200g")
-                    }
-                    .multilineTextAlignment(.trailing)
-                }
-                .toolbar {
-                    ToolbarItem(placement: .keyboard) {
-                        if focusedRowID == row.id {
-                            SuggestionButtons<Ingredient>(
-                                input: ingredientNameBinding(at: row.index)
-                            )
-                        }
-                    }
-                }
             }
             .onMove { sourceOffsets, destinationOffset in
                 moveIngredients(
@@ -83,6 +68,39 @@ private extension RecipeFormIngredientsSection {
             rowIDs: ingredientRowIDs,
             count: ingredients.count
         )
+    }
+
+    func ingredientRow(
+        for row: RecipeFormStableRowIDs.IndexedRow
+    ) -> some View {
+        HStack(alignment: .top) {
+            TextField(
+                "Ingredient",
+                text: ingredientNameBinding(at: row.index),
+                prompt: Text("Spaghetti"),
+                axis: .vertical
+            )
+            .focused($focusedRowID, equals: row.id)
+            TextField(
+                "Amount",
+                text: ingredientAmountBinding(at: row.index),
+                prompt: Text("200g")
+            )
+            .multilineTextAlignment(.trailing)
+        }
+    }
+
+    @ToolbarContentBuilder
+    func ingredientSuggestionToolbarItem(
+        for row: RecipeFormStableRowIDs.IndexedRow
+    ) -> some ToolbarContent {
+        ToolbarItem(placement: .keyboard) {
+            if focusedRowID == row.id {
+                SuggestionButtons<Ingredient>(
+                    input: ingredientNameBinding(at: row.index)
+                )
+            }
+        }
     }
 
     func ingredientNameBinding(at index: Int) -> Binding<String> {

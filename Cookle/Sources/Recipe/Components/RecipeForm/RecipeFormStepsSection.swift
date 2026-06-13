@@ -21,9 +21,12 @@ struct RecipeFormStepsSection: View {
                     Text((row.index + RecipeStepLayout.stepNumberOffset).description + ".")
                         .foregroundStyle(.secondary)
                         .frame(width: RecipeStepLayout.indexWidth)
-                    TextField(text: stepBinding(at: row.index), axis: .vertical) {
-                        Text("Boil water in a large pot and add salt.")
-                    }
+                    TextField(
+                        "Steps",
+                        text: stepBinding(at: row.index),
+                        prompt: Text("Boil water in a large pot and add salt."),
+                        axis: .vertical
+                    )
                     .focused($focusedRowID, equals: row.id)
                 }
             }

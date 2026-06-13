@@ -18,9 +18,12 @@ struct RecipeFormCategoriesSection: View {
     var body: some View {
         Section {
             ForEach(categoryRows) { row in
-                TextField(text: categoryBinding(at: row.index), axis: .vertical) {
-                    Text("Italian")
-                }
+                TextField(
+                    "Category",
+                    text: categoryBinding(at: row.index),
+                    prompt: Text("Italian"),
+                    axis: .vertical
+                )
                 .focused($focusedRowID, equals: row.id)
                 .toolbar {
                     ToolbarItem(placement: .keyboard) {

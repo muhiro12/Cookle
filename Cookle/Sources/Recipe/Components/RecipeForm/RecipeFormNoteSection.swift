@@ -12,9 +12,15 @@ struct RecipeFormNoteSection: View {
 
     var body: some View {
         Section {
-            TextField(text: $note, axis: .vertical) {
-                Text("Use freshly grated Parmesan for the best flavor.")
-            }
+            TextField(
+                "Note",
+                text: $note,
+                prompt: Text("Use freshly grated Parmesan for the best flavor."),
+                axis: .vertical
+            )
+            .accessibilityValue(
+                note.isEmpty ? Text(verbatim: "") : Text(verbatim: note)
+            )
         } header: {
             Text("Note")
         }
