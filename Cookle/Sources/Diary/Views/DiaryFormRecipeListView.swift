@@ -9,6 +9,10 @@ import SwiftData
 import SwiftUI
 
 struct DiaryFormRecipeListView: View {
+    private enum Layout {
+        static let searchFieldVerticalPadding: CGFloat = 8
+    }
+
     @Environment(\.dismiss)
     private var dismiss
 
@@ -19,25 +23,26 @@ struct DiaryFormRecipeListView: View {
 
     @State private var temporarySelection = Set<Recipe>()
     @State private var searchText = ""
+    @FocusState private var isSearchFocused: Bool
 
     private let type: DiaryObjectType
 
     var body: some View {
-        List(
-            recipes.filter { recipe in
-                guard !searchText.isEmpty else {
-                    return true
-                }
-                return recipe.name.normalizedContains(searchText)
-            },
-            selection: $temporarySelection
-        ) { recipe in
-            RecipeLabel()
-                .labelStyle(.titleAndLargeIcon)
-                .tag(recipe)
-                .environment(recipe)
+        VStack(spacing: 0) {
+            if !recipes.isEmpty {
+                CookleSearchField(
+                    text: $searchText,
+                    isFocused: $isSearchFocused
+                )
+                .padding(.horizontal)
+                .padding(.vertical, Layout.searchFieldVerticalPadding)
+
+                Divider()
+            }
+
+            contentView
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .searchable(text: $searchText)
         .environment(\.editMode, .constant(.active))
         .navigationTitle(type.title)
         .toolbar {
@@ -56,6 +61,49 @@ struct DiaryFormRecipeListView: View {
         _selection = selection
         _temporarySelection = .init(initialValue: selection.wrappedValue)
         self.type = type
+    }
+}
+
+private extension DiaryFormRecipeListView {
+    @ViewBuilder var contentView: some View {
+        if !filteredRecipes.isEmpty {
+            recipeList
+        } else {
+            emptyStateView
+        }
+    }
+
+    var recipeList: some View {
+        List(
+            filteredRecipes,
+            selection: $temporarySelection
+        ) { recipe in
+            RecipeLabel()
+                .labelStyle(.titleAndLargeIcon)
+                .tag(recipe)
+                .environment(recipe)
+        }
+    }
+
+    @ViewBuilder var emptyStateView: some View {
+        if !recipes.isEmpty {
+            ContentUnavailableView.search(text: searchText)
+        } else {
+            ContentUnavailableView {
+                Label("No Recipes Yet", systemImage: "book.pages")
+            } description: {
+                Text("Add a recipe to start building your collection.")
+            }
+        }
+    }
+
+    var filteredRecipes: [Recipe] {
+        recipes.filter { recipe in
+            guard !searchText.isEmpty else {
+                return true
+            }
+            return recipe.name.normalizedContains(searchText)
+        }
     }
 }
 
