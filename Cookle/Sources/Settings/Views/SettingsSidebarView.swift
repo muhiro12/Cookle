@@ -12,6 +12,10 @@ import TipKit
 import UIKit
 
 struct SettingsSidebarView: View {
+    private enum Layout {
+        static let bottomContentMargin: CGFloat = 96
+    }
+
     @State private var model = SettingsScreenModel()
     @State private var isDebugPresented = false
 
@@ -132,6 +136,11 @@ struct SettingsSidebarView: View {
                 )
             )
         }
+        .contentMargins(
+            .bottom,
+            Layout.bottomContentMargin,
+            for: .scrollContent
+        )
     }
 
     @ViewBuilder var subscriptionSection: some View {

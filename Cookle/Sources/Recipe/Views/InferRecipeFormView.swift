@@ -34,6 +34,8 @@ struct InferRecipeFormView: View {
 
     var body: some View {
         TextEditor(text: $text)
+            .accessibilityLabel(Text("Recipe Text"))
+            .accessibilityValue(Text(verbatim: text))
             .overlay(alignment: .topLeading) {
                 placeholderOverlay
             }
@@ -93,6 +95,7 @@ struct InferRecipeFormView: View {
                     RecipeTextEditorLayout.placeholderHorizontalPadding
                 )
                 .allowsHitTesting(false)
+                .accessibilityHidden(true)
         }
     }
 
