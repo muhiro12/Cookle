@@ -9,8 +9,6 @@ import SwiftData
 import SwiftUI
 
 struct TagListView<T: Tag>: View {
-    private let searchFieldVerticalPadding: CGFloat = 8
-
     @Environment(\.isPresented)
     private var isPresented
 
@@ -20,33 +18,29 @@ struct TagListView<T: Tag>: View {
     @Binding private var tag: T?
 
     @State private var searchText = ""
-    @FocusState private var isSearchFocused: Bool
+    @State private var isSearchPresented = false
 
     var body: some View {
-        VStack(spacing: 0) {
-            CookleSearchField(
+        contentView
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .cookleTopLevelNavigationChrome(T.title)
+            .searchable(
                 text: $searchText,
-                isFocused: $isSearchFocused
+                isPresented: $isSearchPresented,
+                prompt: Text("Search")
             )
-            .padding(.horizontal)
-            .padding(.vertical, searchFieldVerticalPadding)
-
-            Divider()
-
-            contentView
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-        .cookleTopLevelNavigationChrome(T.title)
-        .toolbar {
-            ToolbarItem {
-                AddRecipeButton()
-            }
-            ToolbarItem {
-                if isPresented {
-                    CloseButton()
+            .textInputAutocapitalization(.never)
+            .autocorrectionDisabled()
+            .toolbar {
+                ToolbarItem {
+                    AddRecipeButton()
+                }
+                ToolbarItem {
+                    if isPresented {
+                        CloseButton()
+                    }
                 }
             }
-        }
     }
 
     init(selection: Binding<T?> = .constant(nil)) {

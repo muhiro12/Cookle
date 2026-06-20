@@ -9,10 +9,6 @@ import SwiftData
 import SwiftUI
 
 struct DiaryFormRecipeListView: View {
-    private enum Layout {
-        static let searchFieldVerticalPadding: CGFloat = 8
-    }
-
     @Environment(\.dismiss)
     private var dismiss
 
@@ -23,38 +19,32 @@ struct DiaryFormRecipeListView: View {
 
     @State private var temporarySelection = Set<Recipe>()
     @State private var searchText = ""
-    @FocusState private var isSearchFocused: Bool
+    @State private var isSearchPresented = false
 
     private let type: DiaryObjectType
 
     var body: some View {
-        VStack(spacing: 0) {
-            if !recipes.isEmpty {
-                CookleSearchField(
-                    text: $searchText,
-                    isFocused: $isSearchFocused
-                )
-                .padding(.horizontal)
-                .padding(.vertical, Layout.searchFieldVerticalPadding)
-
-                Divider()
-            }
-
-            contentView
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-        .environment(\.editMode, .constant(.active))
-        .navigationTitle(type.title)
-        .toolbar {
-            ToolbarItem {
-                Button {
-                    selection = temporarySelection
-                    dismiss()
-                } label: {
-                    Text("Done")
+        contentView
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .environment(\.editMode, .constant(.active))
+            .navigationTitle(type.title)
+            .searchable(
+                text: $searchText,
+                isPresented: $isSearchPresented,
+                prompt: Text("Search")
+            )
+            .textInputAutocapitalization(.never)
+            .autocorrectionDisabled()
+            .toolbar {
+                ToolbarItem {
+                    Button {
+                        selection = temporarySelection
+                        dismiss()
+                    } label: {
+                        Text("Done")
+                    }
                 }
             }
-        }
     }
 
     init(selection: Binding<Set<Recipe>>, type: DiaryObjectType) {

@@ -9,10 +9,6 @@ import SwiftData
 import SwiftUI
 
 struct SearchView: View {
-    private enum Layout {
-        static let searchFieldVerticalPadding: CGFloat = 8
-    }
-
     private enum DiscoverySheet: String, Identifiable {
         case ingredient
         case category
@@ -32,66 +28,62 @@ struct SearchView: View {
 
     @State private var recipes = [Recipe]()
     @State private var searchText = ""
+    @State private var isSearchPresented = false
     @State private var discoverySheet: DiscoverySheet?
     @State private var ingredientSelection: Ingredient?
     @State private var categorySelection: Category?
     @State private var discoveryRecipeSelection: Recipe?
-    @FocusState private var isSearchFocused: Bool
 
     var body: some View {
-        VStack(spacing: 0) {
-            CookleSearchField(
-                text: $searchText,
-                isFocused: $isSearchFocused
+        searchContent
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .cookleTopLevelNavigationChrome(
+                "Search",
+                keyboardDismissMode: .immediately
             )
-            .padding(.horizontal)
-            .padding(.vertical, Layout.searchFieldVerticalPadding)
-
-            Divider()
-
-            searchContent
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-        .cookleTopLevelNavigationChrome(
-            "Search",
-            keyboardDismissMode: .immediately
-        )
-        .sheet(
-            item: $discoverySheet,
-            onDismiss: resetDiscoverySelections
-        ) { sheet in
-            switch sheet {
-            case .ingredient:
-                TagNavigationView<Ingredient>(
-                    selection: $ingredientSelection,
-                    recipeSelection: $discoveryRecipeSelection
-                )
-            case .category:
-                TagNavigationView<Category>(
-                    selection: $categorySelection,
-                    recipeSelection: $discoveryRecipeSelection
-                )
-            }
-        }
-        .toolbar {
-            ToolbarItem {
-                discoveryMenu
-            }
-            ToolbarItem {
-                if isPresented {
-                    CloseButton()
+            .searchable(
+                text: $searchText,
+                isPresented: $isSearchPresented,
+                prompt: Text("Search")
+            )
+            .textInputAutocapitalization(.never)
+            .autocorrectionDisabled()
+            .sheet(
+                item: $discoverySheet,
+                onDismiss: resetDiscoverySelections
+            ) { sheet in
+                switch sheet {
+                case .ingredient:
+                    TagNavigationView<Ingredient>(
+                        selection: $ingredientSelection,
+                        recipeSelection: $discoveryRecipeSelection
+                    )
+                case .category:
+                    TagNavigationView<Category>(
+                        selection: $categorySelection,
+                        recipeSelection: $discoveryRecipeSelection
+                    )
                 }
             }
-        }
-        .onChange(of: searchText) {
-            performSearch()
-        }
-        .task {
-            applyIncomingSearchQueryIfNeeded()
-        }
-        .onChange(of: incomingSearchQuery) {
-            applyIncomingSearchQueryIfNeeded()
-        }
+            .toolbar {
+                ToolbarItem {
+                    discoveryMenu
+                }
+                ToolbarItem {
+                    if isPresented {
+                        CloseButton()
+                    }
+                }
+            }
+            .onChange(of: searchText) {
+                performSearch()
+            }
+            .task {
+                applyIncomingSearchQueryIfNeeded()
+            }
+            .onChange(of: incomingSearchQuery) {
+                applyIncomingSearchQueryIfNeeded()
+            }
     }
 
     @ViewBuilder var searchContent: some View {
@@ -131,7 +123,7 @@ struct SearchView: View {
             Text("Search by recipe name, ingredient, or category.")
         } actions: {
             Button("Start Searching") {
-                isSearchFocused = true
+                isSearchPresented = true
             }
             Button("Ingredient") {
                 discoverySheet = .ingredient
@@ -170,7 +162,7 @@ private extension SearchView {
             return
         }
         searchText = incomingSearchQuery
-        isSearchFocused = true
+        isSearchPresented = true
         self.incomingSearchQuery = nil
         performSearch()
     }
