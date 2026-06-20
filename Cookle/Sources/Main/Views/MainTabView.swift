@@ -37,7 +37,7 @@ struct MainTabView: View {
         if #available(iOS 18, *) {
             TabView(selection: $selection) {
                 ForEach(tabs) { tab in
-                    Tab(value: tab, role: tab == .search ? .search : nil) {
+                    Tab(value: tab, role: tab.role) {
                         rootView(for: tab)
                     } label: {
                         tab.label
@@ -85,6 +85,23 @@ struct MainTabView: View {
         _ingredientRecipeSelection = ingredientRecipeSelection
         _incomingSearchQuery = incomingSearchQuery
         _incomingSettingsSelection = incomingSettingsSelection
+    }
+}
+
+private extension MainTab {
+    @available(iOS 18, *)
+    var role: TabRole? {
+        guard self == .search else {
+            return nil
+        }
+
+        #if compiler(>=6.4)
+        if #available(iOS 27, *) {
+            return .prominent
+        }
+        #endif
+
+        return .search
     }
 }
 
