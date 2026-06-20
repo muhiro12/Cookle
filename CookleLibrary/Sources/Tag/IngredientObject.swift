@@ -47,14 +47,12 @@ nonisolated public final class IngredientObject: SubObject {
         return object
     }
 
-    // swiftlint:disable function_parameter_count
     static func restore(
         context: ModelContext,
         ingredient: Ingredient,
         amount: String,
         order: Int,
-        createdTimestamp: Date,
-        modifiedTimestamp: Date
+        timestamps: PersistentTimestamps
     ) -> IngredientObject {
         let object = IngredientObject(
             ingredient: ingredient
@@ -62,11 +60,10 @@ nonisolated public final class IngredientObject: SubObject {
         context.insert(object)
         object.amount = amount
         object.order = order
-        object.createdTimestamp = createdTimestamp
-        object.modifiedTimestamp = modifiedTimestamp
+        object.createdTimestamp = timestamps.created
+        object.modifiedTimestamp = timestamps.modified
         return object
     }
-    // swiftlint:enable function_parameter_count
 
     /// Reassigns this row to another ingredient tag while keeping amount and order explicit.
     public func update(

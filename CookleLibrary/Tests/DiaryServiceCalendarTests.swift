@@ -89,26 +89,30 @@ private func insertLunchDiary(
 ) {
     let recipe = Recipe.create(
         context: context,
-        name: recipeName,
-        photos: [],
-        servingSize: kDiaryServiceCalendarTestServingSize,
-        cookingTime: kDiaryServiceCalendarTestCookingTime,
-        ingredients: [],
-        steps: [],
-        categories: [],
-        note: ""
+        content: .init(
+            name: recipeName,
+            photos: [],
+            servingSize: kDiaryServiceCalendarTestServingSize,
+            cookingTime: kDiaryServiceCalendarTestCookingTime,
+            ingredients: [],
+            steps: [],
+            categories: [],
+            note: ""
+        )
     )
     _ = Diary.create(
         context: context,
-        date: date,
-        objects: [
-            DiaryObject.create(
-                context: context,
-                recipe: recipe,
-                type: .lunch,
-                order: kLunchDisplayOrder
-            )
-        ],
-        note: ""
+        content: .init(
+            date: date,
+            objects: [
+                DiaryObject.create(
+                    context: context,
+                    recipe: recipe,
+                    type: .lunch,
+                    order: kLunchDisplayOrder
+                )
+            ],
+            note: ""
+        )
     )
 }

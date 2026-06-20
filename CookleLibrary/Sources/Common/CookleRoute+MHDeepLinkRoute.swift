@@ -9,6 +9,13 @@ extension CookleRoute: MHDeepLinkRoute {
     private static let yearTextCount = 4
     private static let monthTextCount = 2
     private static let dayTextCount = 2
+    private static let settingsRouteComponentLimit = 2
+    private static let settingsSubrouteComponentCount = 2
+    private static let settingsSubrouteComponentIndex = 1
+    private static let minimumDateComponentValue = 1
+    private static let maximumYearComponentValue = 9_999
+    private static let maximumMonthComponentValue = 12
+    private static let maximumDayComponentValue = 31
 
     public var deepLinkDescriptor: MHDeepLinkDescriptor {
         switch self {
@@ -132,13 +139,13 @@ extension CookleRoute: MHDeepLinkRoute {
     }
 
     private static func parseSettingsRoute(from pathComponents: [String]) -> CookleRoute? {
-        guard pathComponents.count <= 2 else { // swiftlint:disable:this no_magic_numbers
+        guard pathComponents.count <= Self.settingsRouteComponentLimit else {
             return nil
         }
-        guard pathComponents.count == 2 else { // swiftlint:disable:this no_magic_numbers
+        guard pathComponents.count == Self.settingsSubrouteComponentCount else {
             return .settings
         }
-        switch pathComponents[1].lowercased() {
+        switch pathComponents[Self.settingsSubrouteComponentIndex].lowercased() {
         case "subscription":
             return .settingsSubscription
         case "license":
@@ -260,9 +267,9 @@ extension CookleRoute: MHDeepLinkRoute {
               let year = Int(yearText),
               let month = Int(monthText),
               let day = Int(dayText),
-              1...9_999 ~= year, // swiftlint:disable:this no_magic_numbers
-              1...12 ~= month, // swiftlint:disable:this no_magic_numbers
-              1...31 ~= day else { // swiftlint:disable:this no_magic_numbers
+              Self.minimumDateComponentValue...Self.maximumYearComponentValue ~= year,
+              Self.minimumDateComponentValue...Self.maximumMonthComponentValue ~= month,
+              Self.minimumDateComponentValue...Self.maximumDayComponentValue ~= day else {
             return nil
         }
 

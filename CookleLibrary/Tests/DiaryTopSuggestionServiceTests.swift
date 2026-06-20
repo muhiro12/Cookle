@@ -24,27 +24,31 @@ struct DiaryTopSuggestionServiceTests {
         )
         let recipe = Recipe.create(
             context: context,
-            name: "Omelette",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Omelette",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 10,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
         _ = Diary.create(
             context: context,
-            date: today,
-            objects: [
-                DiaryObject.create(
-                    context: context,
-                    recipe: recipe,
-                    type: .lunch,
-                    order: 1
-                )
-            ],
-            note: ""
+            content: .init(
+                date: today,
+                objects: [
+                    DiaryObject.create(
+                        context: context,
+                        recipe: recipe,
+                        type: .lunch,
+                        order: 1
+                    )
+                ],
+                note: ""
+            )
         )
 
         let result = try DiaryTopSuggestionService.suggestion(
@@ -100,14 +104,16 @@ struct DiaryTopSuggestionServiceTests {
         )
         let recipe = Recipe.create(
             context: context,
-            name: "Toast",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 5,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Toast",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 5,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
         let stableIdentifier = RecipeStableIdentifierCodec.stableIdentifier(
             for: recipe
@@ -141,14 +147,16 @@ struct DiaryTopSuggestionServiceTests {
         )
         let recipe = Recipe.create(
             context: context,
-            name: "Spaghetti",
-            photos: [],
-            servingSize: 2,
-            cookingTime: 15,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Spaghetti",
+                photos: [],
+                servingSize: 2,
+                cookingTime: 15,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
         let stableIdentifier = RecipeStableIdentifierCodec.stableIdentifier(
             for: recipe

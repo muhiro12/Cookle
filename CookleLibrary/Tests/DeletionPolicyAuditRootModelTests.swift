@@ -28,11 +28,13 @@ struct DeletionPolicyAuditRootModelTests {
         )
         let diary = DiaryService.create(
             context: context,
-            date: .now,
-            breakfasts: [recipe],
-            lunches: [],
-            dinners: [],
-            note: ""
+            input: .init(
+                date: .now,
+                breakfasts: [recipe],
+                lunches: [],
+                dinners: [],
+                note: ""
+            )
         )
         try context.save()
 
@@ -72,11 +74,13 @@ struct DeletionPolicyAuditRootModelTests {
         )
         _ = DiaryService.create(
             context: context,
-            date: .now,
-            breakfasts: [recipe],
-            lunches: [],
-            dinners: [],
-            note: ""
+            input: .init(
+                date: .now,
+                breakfasts: [recipe],
+                lunches: [],
+                dinners: [],
+                note: ""
+            )
         )
         try context.save()
 

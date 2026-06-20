@@ -308,7 +308,12 @@ private extension SettingsSidebarView {
                 )
             }
 
-            return String(localized: "Notifications are allowed. Turn on daily recipe suggestions to receive one recipe suggestion each day.") // swiftlint:disable:this line_length
+            return String(
+                localized: """
+                Notifications are allowed. \
+                Turn on daily recipe suggestions to receive one recipe suggestion each day.
+                """
+            )
         case .denied:
             return String(
                 localized: "Notifications are disabled in system settings."

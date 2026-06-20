@@ -31,48 +31,42 @@ nonisolated public final class Diary {
     }
 
     /// Inserts a diary and snapshots the supplied meal rows and derived recipe links.
-    public static func create(context: ModelContext,
-                              date: Date,
-                              objects: [DiaryObject],
-                              note: String) -> Diary {
+    public static func create(
+        context: ModelContext,
+        content: DiaryContent
+    ) -> Diary {
         let diary = Diary()
         context.insert(diary)
-        diary.date = date
-        diary.objects = objects
-        diary.recipes = objects.compactMap(\.recipe)
-        diary.note = note
+        diary.apply(content)
         return diary
     }
 
-    // swiftlint:disable function_parameter_count
     static func restore(
         context: ModelContext,
-        date: Date,
-        objects: [DiaryObject],
-        note: String,
-        createdTimestamp: Date,
-        modifiedTimestamp: Date
+        content: DiaryContent,
+        timestamps: PersistentTimestamps
     ) -> Diary {
         let diary = create(
             context: context,
-            date: date,
-            objects: objects,
-            note: note
+            content: content
         )
-        diary.createdTimestamp = createdTimestamp
-        diary.modifiedTimestamp = modifiedTimestamp
+        diary.createdTimestamp = timestamps.created
+        diary.modifiedTimestamp = timestamps.modified
         return diary
     }
-    // swiftlint:enable function_parameter_count
 
     /// Replaces the stored date, meal rows, and note, then refreshes `modifiedTimestamp`.
-    public func update(date: Date,
-                       objects: [DiaryObject],
-                       note: String) {
-        self.date = date
-        self.objects = objects
-        self.recipes = objects.compactMap(\.recipe)
-        self.note = note
+    public func update(content: DiaryContent) {
+        apply(content)
         self.modifiedTimestamp = .now
+    }
+}
+
+private extension Diary {
+    func apply(_ content: DiaryContent) {
+        self.date = content.date
+        self.objects = content.objects
+        self.recipes = content.objects.compactMap(\.recipe)
+        self.note = content.note
     }
 }

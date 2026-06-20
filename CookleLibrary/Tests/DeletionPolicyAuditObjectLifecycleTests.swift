@@ -104,25 +104,18 @@ struct DeletionPolicyAuditObjectLifecycleTests {
         let context = makeTestContext()
         let firstRecipe = DeletionPolicyAuditSupport.makeRecipe(
             context: context,
-            name: "Breakfast",
-            photos: [],
-            ingredients: [],
-            categories: []
+            name: "Breakfast"
         )
         let secondRecipe = DeletionPolicyAuditSupport.makeRecipe(
             context: context,
-            name: "Lunch",
-            photos: [],
-            ingredients: [],
-            categories: []
+            name: "Lunch"
         )
         let diary = DiaryService.create(
             context: context,
-            date: .now,
-            breakfasts: [firstRecipe],
-            lunches: [],
-            dinners: [],
-            note: ""
+            input: .init(
+                date: .now,
+                breakfasts: [firstRecipe]
+            )
         )
         try context.save()
         let removedObjectID = try #require(
@@ -132,11 +125,11 @@ struct DeletionPolicyAuditObjectLifecycleTests {
         DiaryService.update(
             context: context,
             diary: diary,
-            date: diary.date,
-            breakfasts: [],
-            lunches: [secondRecipe],
-            dinners: [],
-            note: "updated"
+            input: .init(
+                date: diary.date,
+                lunches: [secondRecipe],
+                note: "updated"
+            )
         )
         try context.save()
 

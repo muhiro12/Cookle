@@ -26,16 +26,16 @@ struct TagServiceTests {
         ]
         return .create(
             context: context,
-            name: name,
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: ingredients,
-            steps: [
-                "Cook the eggs."
-            ],
-            categories: categories,
-            note: ""
+            content: .init(
+                name: name,
+                servingSize: 1,
+                cookingTime: 10,
+                ingredients: ingredients,
+                steps: [
+                    "Cook the eggs."
+                ],
+                categories: categories
+            )
         )
     }
 

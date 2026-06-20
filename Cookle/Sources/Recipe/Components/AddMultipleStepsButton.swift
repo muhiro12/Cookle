@@ -9,7 +9,16 @@ import SwiftUI
 
 struct AddMultipleStepsButton: View {
     private enum Placeholder {
-        static let steps: LocalizedStringKey = .init("Boil water in a large pot and add salt.\nCook the spaghetti until al dente.\nIn a separate pan, cook the pancetta until crispy.\nBeat the eggs in a bowl and mix with grated Parmesan cheese.\nDrain the spaghetti and mix with pancetta and the egg mixture.\nSeason with black pepper and serve immediately.") // swiftlint:disable:this line_length
+        static let steps: LocalizedStringKey = .init(
+            """
+            Boil water in a large pot and add salt.
+            Cook the spaghetti until al dente.
+            In a separate pan, cook the pancetta until crispy.
+            Beat the eggs in a bowl and mix with grated Parmesan cheese.
+            Drain the spaghetti and mix with pancetta and the egg mixture.
+            Season with black pepper and serve immediately.
+            """
+        )
     }
 
     @Binding private var steps: [String]

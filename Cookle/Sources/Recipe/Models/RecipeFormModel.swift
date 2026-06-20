@@ -155,14 +155,16 @@ final class RecipeFormModel {
 
     func makeDraft() throws -> RecipeFormDraft {
         try RecipeFormOperations.makeDraft(
-            name: name,
-            photos: photos,
-            servingSize: servingSize,
-            cookingTime: cookingTime,
-            ingredients: ingredients,
-            steps: steps,
-            categories: categories,
-            note: note
+            input: .init(
+                name: name,
+                photos: photos,
+                servingSize: servingSize,
+                cookingTime: cookingTime,
+                ingredients: ingredients,
+                steps: steps,
+                categories: categories,
+                note: note
+            )
         )
     }
 

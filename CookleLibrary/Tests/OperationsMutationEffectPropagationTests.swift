@@ -10,14 +10,16 @@ struct OperationsMutationEffectPropagationTests {
     @Test
     func recipeFormMutationsReturnRecipeAndNotificationEffects() throws {
         let createDraft = try RecipeFormOperations.makeDraft(
-            name: "Pasta",
-            photos: [],
-            servingSize: "2",
-            cookingTime: "15",
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            input: .init(
+                name: "Pasta",
+                photos: [],
+                servingSize: "2",
+                cookingTime: "15",
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
 
         let createOutcome = RecipeFormOperations.createWithOutcome(
@@ -30,14 +32,16 @@ struct OperationsMutationEffectPropagationTests {
         #expect(createOutcome.effects.contains(.reviewPromptEligible) == false)
 
         let updateDraft = try RecipeFormOperations.makeDraft(
-            name: "Updated Pasta",
-            photos: [],
-            servingSize: "4",
-            cookingTime: "20",
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: "Updated"
+            input: .init(
+                name: "Updated Pasta",
+                photos: [],
+                servingSize: "4",
+                cookingTime: "20",
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: "Updated"
+            )
         )
 
         let updateOutcome = RecipeFormOperations.updateWithOutcome(
@@ -54,14 +58,16 @@ struct OperationsMutationEffectPropagationTests {
     func recipeDeletionAndLastOpenedTrackingReturnExpectedEffects() {
         let recipe = Recipe.create(
             context: context,
-            name: "Toast",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 5,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Toast",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 5,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
 
         let lastOpenedOutcome = RecipeOperations.recordLastOpenedRecipeWithOutcome(
@@ -81,23 +87,27 @@ struct OperationsMutationEffectPropagationTests {
     func diaryMutationsReturnDiaryEffectHint() throws {
         let recipe = Recipe.create(
             context: context,
-            name: "Soup",
-            photos: [],
-            servingSize: 2,
-            cookingTime: 30,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Soup",
+                photos: [],
+                servingSize: 2,
+                cookingTime: 30,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
 
         let createOutcome = DiaryOperations.createWithOutcome(
             context: context,
-            date: .now,
-            breakfasts: [recipe],
-            lunches: [],
-            dinners: [],
-            note: ""
+            input: .init(
+                date: .now,
+                breakfasts: [recipe],
+                lunches: [],
+                dinners: [],
+                note: ""
+            )
         )
         let addOutcome = try DiaryOperations.addWithOutcome(
             context: context,
@@ -145,14 +155,16 @@ struct OperationsMutationEffectPropagationTests {
     func dataResetReturnsAllFollowUpHints() throws {
         _ = Recipe.create(
             context: context,
-            name: "Reset Target",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Reset Target",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 10,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
 
         let outcome = try DataMaintenanceOperations.deleteAllWithOutcome(

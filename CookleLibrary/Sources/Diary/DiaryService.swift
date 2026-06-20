@@ -65,11 +65,13 @@ enum DiaryService {
             let outcome = Self.updateWithOutcome(
                 context: context,
                 diary: existing,
-                date: date,
-                breakfasts: meals.breakfasts,
-                lunches: meals.lunches,
-                dinners: meals.dinners,
-                note: existing.note
+                input: .init(
+                    date: date,
+                    breakfasts: meals.breakfasts,
+                    lunches: meals.lunches,
+                    dinners: meals.dinners,
+                    note: existing.note
+                )
             )
             return .init(
                 value: existing,
@@ -83,47 +85,36 @@ enum DiaryService {
             type: type
         )
     }
-    // swiftlint:disable function_parameter_count
     /// Creates a new diary for the given date with provided recipes by meal type.
     static func create(
         context: ModelContext,
-        date: Date,
-        breakfasts: [Recipe],
-        lunches: [Recipe],
-        dinners: [Recipe],
-        note: String
+        input: DiaryFormInput
     ) -> Diary {
         createWithOutcome(
             context: context,
-            date: date,
-            breakfasts: breakfasts,
-            lunches: lunches,
-            dinners: dinners,
-            note: note
+            input: input
         ).value
     }
 
     /// Creates a new diary and returns follow-up hints.
     static func createWithOutcome(
         context: ModelContext,
-        date: Date,
-        breakfasts: [Recipe],
-        lunches: [Recipe],
-        dinners: [Recipe],
-        note: String
+        input: DiaryFormInput
     ) -> MutationOutcome<Diary> {
-        let objects = zip(breakfasts.indices, breakfasts).map { index, recipe in
+        let objects = zip(input.breakfasts.indices, input.breakfasts).map { index, recipe in
             DiaryObject.create(context: context, recipe: recipe, type: .breakfast, order: index + 1)
-        } + zip(lunches.indices, lunches).map { index, recipe in
+        } + zip(input.lunches.indices, input.lunches).map { index, recipe in
             DiaryObject.create(context: context, recipe: recipe, type: .lunch, order: index + 1)
-        } + zip(dinners.indices, dinners).map { index, recipe in
+        } + zip(input.dinners.indices, input.dinners).map { index, recipe in
             DiaryObject.create(context: context, recipe: recipe, type: .dinner, order: index + 1)
         }
         let diary = Diary.create(
             context: context,
-            date: date,
-            objects: objects,
-            note: note
+            content: .init(
+                date: input.date,
+                objects: objects,
+                note: input.note
+            )
         )
         return .init(
             value: diary,
@@ -135,20 +126,12 @@ enum DiaryService {
     static func update(
         context: ModelContext,
         diary: Diary,
-        date: Date,
-        breakfasts: [Recipe],
-        lunches: [Recipe],
-        dinners: [Recipe],
-        note: String
+        input: DiaryFormInput
     ) {
         _ = updateWithOutcome(
             context: context,
             diary: diary,
-            date: date,
-            breakfasts: breakfasts,
-            lunches: lunches,
-            dinners: dinners,
-            note: note
+            input: input
         )
     }
 
@@ -156,24 +139,22 @@ enum DiaryService {
     static func updateWithOutcome(
         context: ModelContext,
         diary: Diary,
-        date: Date,
-        breakfasts: [Recipe],
-        lunches: [Recipe],
-        dinners: [Recipe],
-        note: String
+        input: DiaryFormInput
     ) -> MutationOutcome<Diary> {
         let previousObjects = (diary.objects ?? [])
-        let objects = zip(breakfasts.indices, breakfasts).map { index, recipe in
+        let objects = zip(input.breakfasts.indices, input.breakfasts).map { index, recipe in
             DiaryObject.create(context: context, recipe: recipe, type: .breakfast, order: index + 1)
-        } + zip(lunches.indices, lunches).map { index, recipe in
+        } + zip(input.lunches.indices, input.lunches).map { index, recipe in
             DiaryObject.create(context: context, recipe: recipe, type: .lunch, order: index + 1)
-        } + zip(dinners.indices, dinners).map { index, recipe in
+        } + zip(input.dinners.indices, input.dinners).map { index, recipe in
             DiaryObject.create(context: context, recipe: recipe, type: .dinner, order: index + 1)
         }
         diary.update(
-            date: date,
-            objects: objects,
-            note: note
+            content: .init(
+                date: input.date,
+                objects: objects,
+                note: input.note
+            )
         )
         previousObjects.forEach(context.delete)
         return .init(
@@ -181,8 +162,6 @@ enum DiaryService {
             effects: diaryMutationEffects
         )
     }
-    // swiftlint:enable function_parameter_count
-
     /// Deletes the supplied diary from the store.
     static func delete(
         context: ModelContext,
@@ -262,29 +241,26 @@ private extension DiaryService {
         case .breakfast:
             return Self.createWithOutcome(
                 context: context,
-                date: date,
-                breakfasts: [recipe],
-                lunches: [],
-                dinners: [],
-                note: ""
+                input: .init(
+                    date: date,
+                    breakfasts: [recipe]
+                )
             )
         case .lunch:
             return Self.createWithOutcome(
                 context: context,
-                date: date,
-                breakfasts: [],
-                lunches: [recipe],
-                dinners: [],
-                note: ""
+                input: .init(
+                    date: date,
+                    lunches: [recipe]
+                )
             )
         case .dinner:
             return Self.createWithOutcome(
                 context: context,
-                date: date,
-                breakfasts: [],
-                lunches: [],
-                dinners: [recipe],
-                note: ""
+                input: .init(
+                    date: date,
+                    dinners: [recipe]
+                )
             )
         }
     }

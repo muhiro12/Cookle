@@ -123,14 +123,16 @@ private extension DetachedObjectCleanupServiceTests {
     ) throws {
         let recipe = Recipe.create(
             context: context,
-            name: "Cleanup Target",
-            photos: [],
-            servingSize: 1,
-            cookingTime: TestValues.cookingTimeMinutes,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Cleanup Target",
+                photos: [],
+                servingSize: 1,
+                cookingTime: TestValues.cookingTimeMinutes,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
         _ = PhotoObject.create(
             context: context,

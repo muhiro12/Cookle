@@ -12,14 +12,16 @@ struct RecipePredicateTests {
 
         _ = Recipe.create(
             context: context,
-            name: "Pancakes",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [.create(context: context, ingredient: "Egg", amount: "2", order: 1)],
-            steps: [],
-            categories: [breakfast],
-            note: ""
+            content: .init(
+                name: "Pancakes",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 10,
+                ingredients: [.create(context: context, ingredient: "Egg", amount: "2", order: 1)],
+                steps: [],
+                categories: [breakfast],
+                note: ""
+            )
         )
 
         // short text (<3) should use equality for tags
@@ -34,14 +36,16 @@ struct RecipePredicateTests {
     func anyTextMatches_longText_matchesNameContains() throws {
         _ = Recipe.create(
             context: context,
-            name: "Spaghetti Bolognese",
-            photos: [],
-            servingSize: 2,
-            cookingTime: 30,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Spaghetti Bolognese",
+                photos: [],
+                servingSize: 2,
+                cookingTime: 30,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
 
         let result = try context.fetch(.recipes(.anyTextMatches("Bologn")))

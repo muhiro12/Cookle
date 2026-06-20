@@ -225,7 +225,7 @@ private extension DiaryFormModel {
                 object.type == type
             }
             .sorted()
-            .compactMap(\.recipe) ?? []
+            .compactMap(\.recipe)
         return .init(recipes)
     }
 

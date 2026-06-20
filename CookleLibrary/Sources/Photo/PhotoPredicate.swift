@@ -13,7 +13,7 @@ nonisolated public enum PhotoPredicate {
     /// Includes every photo asset in the fetch.
     case all
     /// Excludes every photo asset from the fetch.
-    case none // swiftlint:disable:this discouraged_none_name
+    case matchingNone
     /// Includes only the photo asset with the supplied persistent identifier.
     case idIs(Photo.ID)
     /// Includes only photo assets created from the supplied source.
@@ -26,7 +26,7 @@ nonisolated public enum PhotoPredicate {
         switch self {
         case .all:
             return .true
-        case .none:
+        case .matchingNone:
             return .false
         case .idIs(let id):
             return #Predicate<Photo> { photo in

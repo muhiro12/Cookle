@@ -102,23 +102,25 @@ private extension RecipePhotoRemovalTests {
     ) -> Recipe {
         Recipe.create(
             context: context,
-            name: name,
-            photos: zip(
-                photos.indices,
-                photos
-            ).map { index, photoData in
-                PhotoObject.create(
-                    context: context,
-                    photoData: photoData,
-                    order: index + 1
-                )
-            },
-            servingSize: 1,
-            cookingTime: TestValues.cookingTimeMinutes,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: name,
+                photos: zip(
+                    photos.indices,
+                    photos
+                ).map { index, photoData in
+                    PhotoObject.create(
+                        context: context,
+                        photoData: photoData,
+                        order: index + 1
+                    )
+                },
+                servingSize: 1,
+                cookingTime: TestValues.cookingTimeMinutes,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
     }
 

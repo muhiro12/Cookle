@@ -25,9 +25,11 @@ struct CookleRouteExecutorTests {
         )
         let diary = Diary.create(
             context: context,
-            date: date,
-            objects: [],
-            note: "Note"
+            content: .init(
+                date: date,
+                objects: [],
+                note: "Note"
+            )
         )
 
         let outcome = try CookleRouteExecutor.execute(
@@ -82,14 +84,16 @@ struct CookleRouteExecutorTests {
     func executeResolvesRecipeDetailRoute() throws {
         let recipe = Recipe.create(
             context: context,
-            name: "Pancakes",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Pancakes",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 10,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
         let recipeID = try PersistentModelStableIdentifierCodec.encode(recipe.id)
 

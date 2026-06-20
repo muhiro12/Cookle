@@ -71,23 +71,14 @@ public enum DiaryOperations {
         )
     }
 
-    // swiftlint:disable function_parameter_count
     /// Creates a new diary and returns follow-up hints.
     public static func createWithOutcome(
         context: ModelContext,
-        date: Date,
-        breakfasts: [Recipe],
-        lunches: [Recipe],
-        dinners: [Recipe],
-        note: String
+        input: DiaryFormInput
     ) -> MutationOutcome<Diary> {
         DiaryService.createWithOutcome(
             context: context,
-            date: date,
-            breakfasts: breakfasts,
-            lunches: lunches,
-            dinners: dinners,
-            note: note
+            input: input
         )
     }
 
@@ -95,23 +86,14 @@ public enum DiaryOperations {
     public static func updateWithOutcome(
         context: ModelContext,
         diary: Diary,
-        date: Date,
-        breakfasts: [Recipe],
-        lunches: [Recipe],
-        dinners: [Recipe],
-        note: String
+        input: DiaryFormInput
     ) -> MutationOutcome<Diary> {
         DiaryService.updateWithOutcome(
             context: context,
             diary: diary,
-            date: date,
-            breakfasts: breakfasts,
-            lunches: lunches,
-            dinners: dinners,
-            note: note
+            input: input
         )
     }
-    // swiftlint:enable function_parameter_count
 
     /// Deletes the supplied diary and returns follow-up hints.
     public static func deleteWithOutcome(

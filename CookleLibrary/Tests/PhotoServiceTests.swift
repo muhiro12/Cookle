@@ -55,20 +55,22 @@ private extension PhotoServiceTests {
     ) -> Recipe {
         Recipe.create(
             context: context,
-            name: name,
-            photos: [
-                PhotoObject.create(
-                    context: context,
-                    photoData: photoData,
-                    order: 1
-                )
-            ],
-            servingSize: 1,
-            cookingTime: cookingTime,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: name,
+                photos: [
+                    PhotoObject.create(
+                        context: context,
+                        photoData: photoData,
+                        order: 1
+                    )
+                ],
+                servingSize: 1,
+                cookingTime: cookingTime,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
     }
 }

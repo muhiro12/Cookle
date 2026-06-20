@@ -148,16 +148,9 @@ enum RecipeService {
         }
 
         context.delete(photoObject)
-        recipe.update(
-            name: recipe.name,
-            photos: remainingPhotoObjects,
-            servingSize: recipe.servingSize,
-            cookingTime: recipe.cookingTime,
-            ingredients: (recipe.ingredientObjects ?? []),
-            steps: recipe.steps,
-            categories: (recipe.categories ?? []),
-            note: recipe.note
-        )
+        var content = recipe.content
+        content.photos = remainingPhotoObjects
+        recipe.update(content: content)
 
         return .init(
             value: (),

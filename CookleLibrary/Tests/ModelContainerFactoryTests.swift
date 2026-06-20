@@ -84,27 +84,31 @@ private extension ModelContainerFactoryTests {
     func seed(context: ModelContext) throws {
         let recipe = Recipe.create(
             context: context,
-            name: "Recipe",
-            photos: [],
-            servingSize: 1,
-            cookingTime: TestValues.cookingTime,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Recipe",
+                photos: [],
+                servingSize: 1,
+                cookingTime: TestValues.cookingTime,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
         _ = Diary.create(
             context: context,
-            date: .now,
-            objects: [
-                .create(
-                    context: context,
-                    recipe: recipe,
-                    type: .breakfast,
-                    order: 1
-                )
-            ],
-            note: ""
+            content: .init(
+                date: .now,
+                objects: [
+                    .create(
+                        context: context,
+                        recipe: recipe,
+                        type: .breakfast,
+                        order: 1
+                    )
+                ],
+                note: ""
+            )
         )
         try context.save()
     }

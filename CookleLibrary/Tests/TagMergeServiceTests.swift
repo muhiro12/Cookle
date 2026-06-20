@@ -138,8 +138,10 @@ private extension TagMergeServiceTests {
             ingredient: ingredient,
             amount: amount,
             order: TestValues.firstOrder,
-            createdTimestamp: .now,
-            modifiedTimestamp: .now
+            timestamps: .init(
+                created: .now,
+                modified: .now
+            )
         )
     }
 
@@ -151,14 +153,16 @@ private extension TagMergeServiceTests {
     ) -> Recipe {
         Recipe.create(
             context: context,
-            name: name,
-            photos: [],
-            servingSize: TestValues.servingSize,
-            cookingTime: TestValues.cookingTimeMinutes,
-            ingredients: ingredients,
-            steps: [],
-            categories: categories,
-            note: ""
+            content: .init(
+                name: name,
+                photos: [],
+                servingSize: TestValues.servingSize,
+                cookingTime: TestValues.cookingTimeMinutes,
+                ingredients: ingredients,
+                steps: [],
+                categories: categories,
+                note: ""
+            )
         )
     }
 }

@@ -13,25 +13,29 @@ struct RecipeServiceTests {
     func search_returns_recipes_matching_prefix() throws {
         _ = Recipe.create(
             context: context,
-            name: "Pancakes",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Pancakes",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 10,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
         _ = Recipe.create(
             context: context,
-            name: "Spaghetti",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Spaghetti",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 10,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
 
         let result = try RecipeService.search(
@@ -46,25 +50,29 @@ struct RecipeServiceTests {
     func randomRecipe_returns_any_existing_recipe() throws {
         let pancake = Recipe.create(
             context: context,
-            name: "Pancakes",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Pancakes",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 10,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
         _ = Recipe.create(
             context: context,
-            name: "Spaghetti",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Spaghetti",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 10,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
 
         let result = try RecipeService.randomRecipe(context: context)
@@ -88,36 +96,42 @@ struct RecipeServiceTests {
     func latestRecipe_prefers_recently_updated_recipe_over_newer_created_recipe() throws {
         let firstRecipe = Recipe.create(
             context: context,
-            name: "First",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "First",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 10,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
         Thread.sleep(forTimeInterval: 0.001)
         let secondRecipe = Recipe.create(
             context: context,
-            name: "Second",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Second",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 10,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
         firstRecipe.update(
-            name: firstRecipe.name,
-            photos: [],
-            servingSize: firstRecipe.servingSize,
-            cookingTime: firstRecipe.cookingTime,
-            ingredients: [],
-            steps: firstRecipe.steps,
-            categories: [],
-            note: firstRecipe.note
+            content: .init(
+                name: firstRecipe.name,
+                photos: [],
+                servingSize: firstRecipe.servingSize,
+                cookingTime: firstRecipe.cookingTime,
+                ingredients: [],
+                steps: firstRecipe.steps,
+                categories: [],
+                note: firstRecipe.note
+            )
         )
 
         let result = try RecipeService.latestRecipe(context: context)
@@ -129,26 +143,30 @@ struct RecipeServiceTests {
     func latestRecipe_prefers_newer_created_when_not_updated() throws {
         let firstRecipe = Recipe.create(
             context: context,
-            name: "First",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "First",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 10,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
         Thread.sleep(forTimeInterval: 0.001)
         let secondRecipe = Recipe.create(
             context: context,
-            name: "Second",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Second",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 10,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
 
         let result = try RecipeService.latestRecipe(context: context)
@@ -160,14 +178,16 @@ struct RecipeServiceTests {
     func delete_removes_recipe_from_store() throws {
         let recipe = Recipe.create(
             context: context,
-            name: "Pancakes",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Pancakes",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 10,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
 
         RecipeService.delete(
@@ -201,14 +221,16 @@ extension RecipeServiceTests {
 
         let recipe = Recipe.create(
             context: context,
-            name: "Pancakes",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Pancakes",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 10,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
         RecipeService.recordLastOpenedRecipe(recipe)
 
@@ -236,14 +258,16 @@ extension RecipeServiceTests {
 
         let recipe = Recipe.create(
             context: context,
-            name: "Toast",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 5,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Toast",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 5,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
 
         RecipeService.recordLastOpenedRecipe(recipe)
@@ -276,14 +300,16 @@ extension RecipeServiceTests {
 
         let recipe = Recipe.create(
             context: context,
-            name: "Legacy Toast",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 5,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Legacy Toast",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 5,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
 
         sharedDefaults.removeObject(forKey: preferenceKey)

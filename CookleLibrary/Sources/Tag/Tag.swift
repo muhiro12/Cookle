@@ -17,6 +17,10 @@ nonisolated public protocol Tag: PersistentModel {
     /// Canonical text value users select, edit, and search against.
     var value: String { get }
     /// Recipes that currently reference this tag.
+    ///
+    /// Keep this optional to match SwiftData `@Relationship` storage in
+    /// concrete tag models; changing it only to satisfy SwiftLint can create
+    /// schema and runtime behavior drift.
     var recipes: [Recipe]? { get } // swiftlint:disable:this discouraged_optional_collection
     /// Timestamp captured when the tag record is first inserted.
     var createdTimestamp: Date { get }

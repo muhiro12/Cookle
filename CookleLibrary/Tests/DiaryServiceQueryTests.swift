@@ -11,20 +11,26 @@ struct DiaryServiceQueryTests {
     func latestDiary_returns_most_recent_diary() throws {
         let first = Diary.create(
             context: context,
-            date: .now.addingTimeInterval(-86_400),
-            objects: [],
-            note: "first"
+            content: .init(
+                date: .now.addingTimeInterval(-86_400),
+                objects: [],
+                note: "first"
+            )
         )
         _ = Diary.create(
             context: context,
-            date: .now,
-            objects: [],
-            note: "second"
+            content: .init(
+                date: .now,
+                objects: [],
+                note: "second"
+            )
         )
         first.update(
-            date: .now.addingTimeInterval(86_400),
-            objects: [],
-            note: first.note
+            content: .init(
+                date: .now.addingTimeInterval(86_400),
+                objects: [],
+                note: first.note
+            )
         )
 
         let result = try DiaryService.latestDiary(context: context)
@@ -35,15 +41,19 @@ struct DiaryServiceQueryTests {
     func randomDiary_returns_any_existing_diary() throws {
         _ = Diary.create(
             context: context,
-            date: .now,
-            objects: [],
-            note: "one"
+            content: .init(
+                date: .now,
+                objects: [],
+                note: "one"
+            )
         )
         _ = Diary.create(
             context: context,
-            date: .now.addingTimeInterval(86_400),
-            objects: [],
-            note: "two"
+            content: .init(
+                date: .now.addingTimeInterval(86_400),
+                objects: [],
+                note: "two"
+            )
         )
 
         let result = try DiaryService.randomDiary(context: context)
@@ -69,20 +79,26 @@ struct DiaryServiceQueryTests {
 
         let todayDiary = Diary.create(
             context: context,
-            date: today,
-            objects: [],
-            note: "today"
+            content: .init(
+                date: today,
+                objects: [],
+                note: "today"
+            )
         )
         let tomorrowDiary = Diary.create(
             context: context,
-            date: tomorrow,
-            objects: [],
-            note: "tomorrow"
+            content: .init(
+                date: tomorrow,
+                objects: [],
+                note: "tomorrow"
+            )
         )
         todayDiary.update(
-            date: today,
-            objects: [],
-            note: "updated-today"
+            content: .init(
+                date: today,
+                objects: [],
+                note: "updated-today"
+            )
         )
 
         let result = try DiaryService.latestDiary(context: context)
@@ -96,20 +112,26 @@ struct DiaryServiceQueryTests {
 
         let firstDiary = Diary.create(
             context: context,
-            date: sameDay,
-            objects: [],
-            note: "first"
+            content: .init(
+                date: sameDay,
+                objects: [],
+                note: "first"
+            )
         )
         let secondDiary = Diary.create(
             context: context,
-            date: sameDay,
-            objects: [],
-            note: "second"
+            content: .init(
+                date: sameDay,
+                objects: [],
+                note: "second"
+            )
         )
         firstDiary.update(
-            date: sameDay,
-            objects: [],
-            note: "updated-first"
+            content: .init(
+                date: sameDay,
+                objects: [],
+                note: "updated-first"
+            )
         )
 
         let result = try DiaryService.latestDiary(context: context)
@@ -121,9 +143,11 @@ struct DiaryServiceQueryTests {
     func delete_removes_diary_from_store() throws {
         let diary = Diary.create(
             context: context,
-            date: .now,
-            objects: [],
-            note: "Diary"
+            content: .init(
+                date: .now,
+                objects: [],
+                note: "Diary"
+            )
         )
 
         DiaryService.delete(

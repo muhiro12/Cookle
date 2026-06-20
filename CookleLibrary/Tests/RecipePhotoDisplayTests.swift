@@ -73,14 +73,16 @@ private extension RecipePhotoDisplayTests {
     ) -> Recipe {
         Recipe.create(
             context: context,
-            name: "Recipe",
-            photos: photos,
-            servingSize: 1,
-            cookingTime: TestValues.cookingTimeMinutes,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Recipe",
+                photos: photos,
+                servingSize: 1,
+                cookingTime: TestValues.cookingTimeMinutes,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
     }
 

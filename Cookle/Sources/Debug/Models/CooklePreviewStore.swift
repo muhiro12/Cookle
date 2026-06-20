@@ -130,12 +130,14 @@ private extension CooklePreviewStore {
     ) -> Diary {
         .create(
             context: context,
-            date: previewDate(for: dayOffset),
-            objects: previewDiaryObjects(
-                context,
-                recipes: recipes
-            ),
-            note: previewDiaryNote
+            content: .init(
+                date: previewDate(for: dayOffset),
+                objects: previewDiaryObjects(
+                    context,
+                    recipes: recipes
+                ),
+                note: previewDiaryNote
+            )
         )
     }
 

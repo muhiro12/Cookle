@@ -29,7 +29,12 @@ struct RestoreBackupConfirmationDialogModifier: ViewModifier {
                     Text("Cancel")
                 }
             } message: {
-                Text("Restoring a backup replaces all current recipes, diaries, tags, and photos. Export a backup first if you need to keep the current data.") // swiftlint:disable:this line_length
+                Text(
+                    """
+                    Restoring a backup replaces all current recipes, diaries, tags, and photos. \
+                    Export a backup first if you need to keep the current data.
+                    """
+                )
             }
     }
 }

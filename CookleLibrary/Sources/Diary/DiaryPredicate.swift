@@ -13,14 +13,14 @@ public enum DiaryPredicate {
     /// Includes every diary in the fetch.
     case all
     /// Excludes every diary from the fetch.
-    case none // swiftlint:disable:this discouraged_none_name
+    case matchingNone
 
     /// SwiftData predicate that preserves the semantics of the selected query case.
     public var value: Predicate<Diary> {
         switch self {
         case .all:
             .true
-        case .none:
+        case .matchingNone:
             .false
         }
     }

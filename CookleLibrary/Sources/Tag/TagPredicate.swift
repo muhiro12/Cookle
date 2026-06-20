@@ -13,7 +13,7 @@ nonisolated public enum TagPredicate<T: Tag> {
     /// Includes every tag record in the fetch.
     case all
     /// Excludes every tag record from the fetch.
-    case none // swiftlint:disable:this discouraged_none_name
+    case matchingNone
     /// Includes only the tag with the supplied persistent identifier.
     case idIs(PersistentIdentifier)
     /// Includes only tags whose stored value exactly equals the supplied text.
@@ -26,7 +26,7 @@ nonisolated public enum TagPredicate<T: Tag> {
         switch self {
         case .all:
             return .true
-        case .none:
+        case .matchingNone:
             return .false
         case .idIs(let id):
             return #Predicate<T> { tag in
@@ -94,7 +94,7 @@ private extension TagPredicate where T == Ingredient {
         switch self {
         case .all:
             return .true
-        case .none:
+        case .matchingNone:
             return .false
         case .idIs(let id):
             return #Predicate<Ingredient> { ingredient in
@@ -121,7 +121,7 @@ private extension TagPredicate where T == Category {
         switch self {
         case .all:
             return .true
-        case .none:
+        case .matchingNone:
             return .false
         case .idIs(let id):
             return #Predicate<Category> { category in

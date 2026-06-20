@@ -13,7 +13,7 @@ nonisolated public enum RecipePredicate {
     /// Includes every recipe in the fetch.
     case all
     /// Excludes every recipe from the fetch.
-    case none // swiftlint:disable:this discouraged_none_name
+    case matchingNone
     /// Includes only the recipe with the supplied persistent identifier.
     case idIs(Recipe.ID)
     /// Includes recipes whose name contains the supplied text or its kana-normalized forms.
@@ -28,7 +28,7 @@ nonisolated public enum RecipePredicate {
         switch self {
         case .all:
             return .true
-        case .none:
+        case .matchingNone:
             return .false
         case .idIs(let id):
             return #Predicate<Recipe> { recipe in

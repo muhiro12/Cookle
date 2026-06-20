@@ -50,98 +50,40 @@ nonisolated public final class Recipe {
         // SwiftData-managed initializer.
     }
 
-    // swiftlint:disable function_parameter_count
-    /// Inserts a recipe and derives its flattened photo and ingredient relations from the supplied child rows.
+    /// Inserts a recipe and derives its flattened photo and ingredient relations from supplied content.
     /// - Parameters:
     ///   - context: Model context to insert into.
-    ///   - name: Recipe name.
-    ///   - photos: Photo objects in display order.
-    ///   - servingSize: Number of servings.
-    ///   - cookingTime: Time in minutes.
-    ///   - ingredients: Ingredient objects in order.
-    ///   - steps: Cooking steps.
-    ///   - categories: Category tags.
-    ///   - note: Optional note.
+    ///   - content: Editable recipe content.
     /// - Returns: The newly created `Recipe`.
-    public static func create(context: ModelContext,
-                              name: String,
-                              photos: [PhotoObject],
-                              servingSize: Int,
-                              cookingTime: Int,
-                              ingredients: [IngredientObject],
-                              steps: [String],
-                              categories: [Category],
-                              note: String) -> Recipe {
+    public static func create(
+        context: ModelContext,
+        content: RecipeContent
+    ) -> Recipe {
         let recipe = Recipe()
         context.insert(recipe)
-        recipe.name = name
-        recipe.photos = photos.compactMap(\.photo)
-        recipe.photoObjects = photos
-        recipe.servingSize = servingSize
-        recipe.cookingTime = cookingTime
-        recipe.ingredients = ingredients.compactMap(\.ingredient)
-        recipe.ingredientObjects = ingredients
-        recipe.steps = steps
-        recipe.categories = categories
-        recipe.note = note
+        recipe.apply(content)
         return recipe
     }
-    // swiftlint:enable function_parameter_count
 
-    // swiftlint:disable function_parameter_count
     static func restore(
         context: ModelContext,
-        name: String,
-        photos: [PhotoObject],
-        servingSize: Int,
-        cookingTime: Int,
-        ingredients: [IngredientObject],
-        steps: [String],
-        categories: [Category],
-        note: String,
-        createdTimestamp: Date,
-        modifiedTimestamp: Date
+        content: RecipeContent,
+        timestamps: PersistentTimestamps
     ) -> Recipe {
         let recipe = create(
             context: context,
-            name: name,
-            photos: photos,
-            servingSize: servingSize,
-            cookingTime: cookingTime,
-            ingredients: ingredients,
-            steps: steps,
-            categories: categories,
-            note: note
+            content: content
         )
-        recipe.createdTimestamp = createdTimestamp
-        recipe.modifiedTimestamp = modifiedTimestamp
+        recipe.createdTimestamp = timestamps.created
+        recipe.modifiedTimestamp = timestamps.modified
         return recipe
     }
-    // swiftlint:enable function_parameter_count
 
-    // swiftlint:disable function_parameter_count
     /// Replaces editable recipe content, rebuilds derived relations, and refreshes `modifiedTimestamp`.
-    public func update(name: String,
-                       photos: [PhotoObject],
-                       servingSize: Int,
-                       cookingTime: Int,
-                       ingredients: [IngredientObject],
-                       steps: [String],
-                       categories: [Category],
-                       note: String) {
-        self.name = name
-        self.photos = photos.compactMap(\.photo)
-        self.photoObjects = photos
-        self.servingSize = servingSize
-        self.cookingTime = cookingTime
-        self.ingredients = ingredients.compactMap(\.ingredient)
-        self.ingredientObjects = ingredients
-        self.steps = steps
-        self.categories = categories
-        self.note = note
+    public func update(content: RecipeContent) {
+        apply(content)
         self.modifiedTimestamp = .now
     }
-    // swiftlint:enable function_parameter_count
 
     /// Replaces only category tags while keeping the rest of the recipe content unchanged.
     public func updateCategories(_ categories: [Category]) {
@@ -153,6 +95,34 @@ nonisolated public final class Recipe {
     public func refreshIngredients() {
         self.ingredients = (ingredientObjects ?? []).compactMap(\.ingredient)
         self.modifiedTimestamp = .now
+    }
+}
+
+extension Recipe {
+    var content: RecipeContent {
+        .init(
+            name: name,
+            photos: photoObjects ?? [],
+            servingSize: servingSize,
+            cookingTime: cookingTime,
+            ingredients: ingredientObjects ?? [],
+            steps: steps,
+            categories: categories ?? [],
+            note: note
+        )
+    }
+
+    private func apply(_ content: RecipeContent) {
+        self.name = content.name
+        self.photos = content.photos.compactMap(\.photo)
+        self.photoObjects = content.photos
+        self.servingSize = content.servingSize
+        self.cookingTime = content.cookingTime
+        self.ingredients = content.ingredients.compactMap(\.ingredient)
+        self.ingredientObjects = content.ingredients
+        self.steps = content.steps
+        self.categories = content.categories
+        self.note = content.note
     }
 }
 

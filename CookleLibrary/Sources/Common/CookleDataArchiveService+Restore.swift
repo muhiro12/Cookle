@@ -119,29 +119,33 @@ extension CookleDataArchiveService {
     ) throws -> Recipe {
         try Recipe.restore(
             context: context,
-            name: record.name,
-            photos: restoredPhotoObjects(
-                from: record.photos,
-                context: context,
-                photos: photos
+            content: .init(
+                name: record.name,
+                photos: restoredPhotoObjects(
+                    from: record.photos,
+                    context: context,
+                    photos: photos
+                ),
+                servingSize: record.servingSize,
+                cookingTime: record.cookingTime,
+                ingredients: restoredIngredientObjects(
+                    from: record.ingredients,
+                    context: context,
+                    ingredients: ingredients
+                ),
+                steps: record.steps,
+                categories: record.categoryIDs.map { categoryID in
+                    guard let category = categories[categoryID] else {
+                        throw ArchiveError.missingReference(categoryID)
+                    }
+                    return category
+                },
+                note: record.note
             ),
-            servingSize: record.servingSize,
-            cookingTime: record.cookingTime,
-            ingredients: restoredIngredientObjects(
-                from: record.ingredients,
-                context: context,
-                ingredients: ingredients
-            ),
-            steps: record.steps,
-            categories: record.categoryIDs.map { categoryID in
-                guard let category = categories[categoryID] else {
-                    throw ArchiveError.missingReference(categoryID)
-                }
-                return category
-            },
-            note: record.note,
-            createdTimestamp: record.createdTimestamp,
-            modifiedTimestamp: record.modifiedTimestamp
+            timestamps: .init(
+                created: record.createdTimestamp,
+                modified: record.modifiedTimestamp
+            )
         )
     }
 
@@ -178,8 +182,10 @@ extension CookleDataArchiveService {
                 ingredient: ingredient,
                 amount: record.amount,
                 order: record.order,
-                createdTimestamp: record.createdTimestamp,
-                modifiedTimestamp: record.modifiedTimestamp
+                timestamps: .init(
+                    created: record.createdTimestamp,
+                    modified: record.modifiedTimestamp
+                )
             )
         }
     }
@@ -191,15 +197,19 @@ extension CookleDataArchiveService {
     ) throws -> Diary {
         try Diary.restore(
             context: context,
-            date: record.date,
-            objects: restoredDiaryObjects(
-                from: record.objects,
-                context: context,
-                recipes: recipes
+            content: .init(
+                date: record.date,
+                objects: restoredDiaryObjects(
+                    from: record.objects,
+                    context: context,
+                    recipes: recipes
+                ),
+                note: record.note
             ),
-            note: record.note,
-            createdTimestamp: record.createdTimestamp,
-            modifiedTimestamp: record.modifiedTimestamp
+            timestamps: .init(
+                created: record.createdTimestamp,
+                modified: record.modifiedTimestamp
+            )
         )
     }
 
@@ -217,8 +227,10 @@ extension CookleDataArchiveService {
                 recipe: recipe,
                 type: record.type,
                 order: record.order,
-                createdTimestamp: record.createdTimestamp,
-                modifiedTimestamp: record.modifiedTimestamp
+                timestamps: .init(
+                    created: record.createdTimestamp,
+                    modified: record.modifiedTimestamp
+                )
             )
         }
     }

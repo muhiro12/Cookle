@@ -27,13 +27,15 @@ enum RecipeIntentDraftBuilder {
 
         do {
             let draft = try RecipeFormOperations.makeDraft(
-                name: input.name,
-                servingSize: input.servingSize,
-                cookingTime: input.cookingTime,
-                ingredientsText: input.ingredientsText,
-                stepsText: input.stepsText,
-                categoriesText: input.categoriesText,
-                note: input.note
+                input: .init(
+                    name: input.name,
+                    servingSize: input.servingSize,
+                    cookingTime: input.cookingTime,
+                    ingredientsText: input.ingredientsText,
+                    stepsText: input.stepsText,
+                    categoriesText: input.categoriesText,
+                    note: input.note
+                )
             )
             RecipeDraftLogging.logSuccess(
                 logger: logger,

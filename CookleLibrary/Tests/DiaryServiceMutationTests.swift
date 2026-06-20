@@ -11,14 +11,11 @@ struct DiaryServiceMutationTests {
     func add_creates_new_diary_for_recipe_when_missing() throws {
         let pancake = Recipe.create(
             context: context,
-            name: "Pancakes",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Pancakes",
+                servingSize: 1,
+                cookingTime: 10
+            )
         )
 
         let diary = try DiaryService.add(
@@ -38,33 +35,27 @@ struct DiaryServiceMutationTests {
     func add_appends_recipe_to_existing_diary() throws {
         let pancake = Recipe.create(
             context: context,
-            name: "Pancakes",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Pancakes",
+                servingSize: 1,
+                cookingTime: 10
+            )
         )
         let soup = Recipe.create(
             context: context,
-            name: "Soup",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 20,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Soup",
+                servingSize: 1,
+                cookingTime: 20
+            )
         )
         let diary = DiaryService.create(
             context: context,
-            date: .now,
-            breakfasts: [pancake],
-            lunches: [],
-            dinners: [],
-            note: "Keep note"
+            input: .init(
+                date: .now,
+                breakfasts: [pancake],
+                note: "Keep note"
+            )
         )
 
         let updatedDiary = try DiaryService.add(
@@ -89,11 +80,13 @@ struct DiaryServiceMutationTests {
     func create_creates_note_only_diary() throws {
         let diary = DiaryService.create(
             context: context,
-            date: .now,
-            breakfasts: [],
-            lunches: [],
-            dinners: [],
-            note: "Quick note"
+            input: .init(
+                date: .now,
+                breakfasts: [],
+                lunches: [],
+                dinners: [],
+                note: "Quick note"
+            )
         )
 
         let diaries = try context.fetch(.diaries(.all))
@@ -106,22 +99,26 @@ struct DiaryServiceMutationTests {
     func create_creates_diary_with_breakfast_recipe() throws {
         let pancake = Recipe.create(
             context: context,
-            name: "Pancakes",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Pancakes",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 10,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
         _ = DiaryService.create(
             context: context,
-            date: .now,
-            breakfasts: [pancake],
-            lunches: [],
-            dinners: [],
-            note: "Note"
+            input: .init(
+                date: .now,
+                breakfasts: [pancake],
+                lunches: [],
+                dinners: [],
+                note: "Note"
+            )
         )
 
         let diaries = try context.fetch(.diaries(.all))
@@ -132,29 +129,35 @@ struct DiaryServiceMutationTests {
     func update_updates_diary_with_new_note_and_recipe() {
         let pancake = Recipe.create(
             context: context,
-            name: "Pancakes",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Pancakes",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 10,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
         let diary = Diary.create(
             context: context,
-            date: .now,
-            objects: [],
-            note: ""
+            content: .init(
+                date: .now,
+                objects: [],
+                note: ""
+            )
         )
         DiaryService.update(
             context: context,
             diary: diary,
-            date: .now,
-            breakfasts: [pancake],
-            lunches: [],
-            dinners: [],
-            note: "Updated"
+            input: .init(
+                date: .now,
+                breakfasts: [pancake],
+                lunches: [],
+                dinners: [],
+                note: "Updated"
+            )
         )
 
         #expect(diary.note == "Updated")
@@ -165,32 +168,38 @@ struct DiaryServiceMutationTests {
     func update_allows_note_only_diary_and_clears_meals() {
         let pancake = Recipe.create(
             context: context,
-            name: "Pancakes",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Pancakes",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 10,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
         let diary = DiaryService.create(
             context: context,
-            date: .now,
-            breakfasts: [pancake],
-            lunches: [],
-            dinners: [],
-            note: ""
+            input: .init(
+                date: .now,
+                breakfasts: [pancake],
+                lunches: [],
+                dinners: [],
+                note: ""
+            )
         )
 
         DiaryService.update(
             context: context,
             diary: diary,
-            date: diary.date,
-            breakfasts: [],
-            lunches: [],
-            dinners: [],
-            note: "Only note"
+            input: .init(
+                date: diary.date,
+                breakfasts: [],
+                lunches: [],
+                dinners: [],
+                note: "Only note"
+            )
         )
 
         #expect((diary.objects ?? []).isEmpty)

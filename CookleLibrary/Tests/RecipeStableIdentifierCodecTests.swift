@@ -10,14 +10,16 @@ struct RecipeStableIdentifierCodecTests {
     func encode_and_decode_round_trip_recipe_identifier() throws {
         let recipe = Recipe.create(
             context: context,
-            name: "Soup",
-            photos: [],
-            servingSize: 2,
-            cookingTime: 20,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Soup",
+                photos: [],
+                servingSize: 2,
+                cookingTime: 20,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
 
         let encodedIdentifier = try RecipeStableIdentifierCodec.encode(
@@ -34,14 +36,16 @@ struct RecipeStableIdentifierCodecTests {
     func stableIdentifier_isDeterministic_forTheSameRecipe() {
         let recipe = Recipe.create(
             context: context,
-            name: "Stew",
-            photos: [],
-            servingSize: 2,
-            cookingTime: 25,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Stew",
+                photos: [],
+                servingSize: 2,
+                cookingTime: 25,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
 
         let firstIdentifier = RecipeStableIdentifierCodec.stableIdentifier(
@@ -58,14 +62,16 @@ struct RecipeStableIdentifierCodecTests {
     func recipe_lookup_resolves_existing_recipe() throws {
         let recipe = Recipe.create(
             context: context,
-            name: "Curry",
-            photos: [],
-            servingSize: 3,
-            cookingTime: 30,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Curry",
+                photos: [],
+                servingSize: 3,
+                cookingTime: 30,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
 
         let stableIdentifier = RecipeStableIdentifierCodec.stableIdentifier(

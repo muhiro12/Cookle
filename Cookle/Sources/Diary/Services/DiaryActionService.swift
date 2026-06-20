@@ -30,11 +30,13 @@ final class DiaryActionService {
         ) {
             DiaryOperations.createWithOutcome(
                 context: context,
-                date: date,
-                breakfasts: input.breakfasts,
-                lunches: input.lunches,
-                dinners: input.dinners,
-                note: input.note
+                input: .init(
+                    date: date,
+                    breakfasts: input.breakfasts,
+                    lunches: input.lunches,
+                    dinners: input.dinners,
+                    note: input.note
+                )
             )
         }
     }
@@ -52,11 +54,13 @@ final class DiaryActionService {
             DiaryOperations.updateWithOutcome(
                 context: context,
                 diary: diary,
-                date: date,
-                breakfasts: input.breakfasts,
-                lunches: input.lunches,
-                dinners: input.dinners,
-                note: input.note
+                input: .init(
+                    date: date,
+                    breakfasts: input.breakfasts,
+                    lunches: input.lunches,
+                    dinners: input.dinners,
+                    note: input.note
+                )
             )
         }
     }

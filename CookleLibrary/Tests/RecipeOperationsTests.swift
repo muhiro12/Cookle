@@ -11,25 +11,29 @@ struct RecipeOperationsTests {
     func search_returns_recipes_matching_prefix() throws {
         _ = Recipe.create(
             context: context,
-            name: "Pancakes",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Pancakes",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 10,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
         _ = Recipe.create(
             context: context,
-            name: "Spaghetti",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 10,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Spaghetti",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 10,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
 
         let result = try RecipeOperations.search(

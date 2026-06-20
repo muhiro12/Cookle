@@ -254,17 +254,16 @@ private extension CookleDataArchiveServiceTests {
         )
         let recipe = Recipe.create(
             context: context,
-            name: "Pancakes",
-            photos: [photoObject],
-            servingSize: TestArchive.servingSize,
-            cookingTime: TestArchive.cookingTime,
-            ingredients: [ingredientObject],
-            steps: [
-                "Mix",
-                "Cook"
-            ],
-            categories: [category],
-            note: "Weekend"
+            content: .init(
+                name: "Pancakes",
+                photos: [photoObject],
+                servingSize: TestArchive.servingSize,
+                cookingTime: TestArchive.cookingTime,
+                ingredients: [ingredientObject],
+                steps: ["Mix", "Cook"],
+                categories: [category],
+                note: "Weekend"
+            )
         )
         let diaryObject = DiaryObject.create(
             context: context,
@@ -274,9 +273,11 @@ private extension CookleDataArchiveServiceTests {
         )
         _ = Diary.create(
             context: context,
-            date: TestArchive.diaryDate,
-            objects: [diaryObject],
-            note: "Good"
+            content: .init(
+                date: TestArchive.diaryDate,
+                objects: [diaryObject],
+                note: "Good"
+            )
         )
         try context.save()
 
@@ -288,14 +289,16 @@ private extension CookleDataArchiveServiceTests {
     func insertTemporaryRecipe() throws {
         _ = Recipe.create(
             context: context,
-            name: "Temporary",
-            photos: [],
-            servingSize: 1,
-            cookingTime: 1,
-            ingredients: [],
-            steps: [],
-            categories: [],
-            note: ""
+            content: .init(
+                name: "Temporary",
+                photos: [],
+                servingSize: 1,
+                cookingTime: 1,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
         )
         try context.save()
     }

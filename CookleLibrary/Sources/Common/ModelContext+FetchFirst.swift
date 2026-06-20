@@ -1,4 +1,4 @@
-import SwiftData // swiftlint:disable:this file_name
+import SwiftData
 
 extension ModelContext {
     func fetchFirst<Model>(

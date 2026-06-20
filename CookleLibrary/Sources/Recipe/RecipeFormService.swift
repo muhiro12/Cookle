@@ -5,65 +5,36 @@ import SwiftData
 @preconcurrency
 @MainActor
 enum RecipeFormService {
-    // swiftlint:disable function_parameter_count
     /// Builds a validated draft from raw form input.
     static func makeDraft(
-        name: String,
-        photos: [PhotoData],
-        servingSize: String,
-        cookingTime: String,
-        ingredients: [RecipeFormIngredientInput],
-        steps: [String],
-        categories: [String],
-        note: String
+        input: RecipeFormInput
     ) throws -> RecipeFormDraft {
-        guard !name.isEmpty else {
+        guard !input.name.isEmpty else {
             throw RecipeFormValidationError.emptyName
         }
         let servingSizeValue = try number(
-            from: servingSize,
+            from: input.servingSize,
             field: .servingSize
         )
         let cookingTimeValue = try number(
-            from: cookingTime,
+            from: input.cookingTime,
             field: .cookingTime
         )
-        let normalizedIngredients = ingredients.filter { !$0.ingredient.isEmpty }
+        let normalizedIngredients = input.ingredients.filter { ingredient in
+            !ingredient.ingredient.isEmpty
+        }
 
         return .init(
-            name: name,
-            photos: photos,
+            name: input.name,
+            photos: input.photos,
             servingSize: servingSizeValue,
             cookingTime: cookingTimeValue,
             ingredients: normalizedIngredients,
-            steps: steps.filter { !$0.isEmpty },
-            categories: categories.filter { !$0.isEmpty },
-            note: note
+            steps: input.steps.filter { !$0.isEmpty },
+            categories: input.categories.filter { !$0.isEmpty },
+            note: input.note
         )
     }
-
-    /// Builds a validated draft from App Intent style text input.
-    static func makeDraft(
-        name: String,
-        servingSize: Int,
-        cookingTime: Int,
-        ingredientsText: String,
-        stepsText: String,
-        categoriesText: String,
-        note: String
-    ) throws -> RecipeFormDraft {
-        try makeDraft(
-            name: name,
-            photos: [],
-            servingSize: servingSize == .zero ? "" : servingSize.description,
-            cookingTime: cookingTime == .zero ? "" : cookingTime.description,
-            ingredients: ingredientInputs(from: ingredientsText),
-            steps: lines(from: stepsText),
-            categories: lines(from: categoriesText),
-            note: note
-        )
-    }
-    // swiftlint:enable function_parameter_count
 
     /// Creates a new recipe from a validated draft.
     static func create(
@@ -83,38 +54,10 @@ enum RecipeFormService {
     ) -> MutationOutcome<Recipe> {
         let recipe = Recipe.create(
             context: context,
-            name: draft.name,
-            photos: zip(
-                draft.photos.indices,
-                draft.photos
-            ).map { index, photoData in
-                PhotoObject.create(
-                    context: context,
-                    photoData: photoData,
-                    order: index + 1
-                )
-            },
-            servingSize: draft.servingSize,
-            cookingTime: draft.cookingTime,
-            ingredients: zip(
-                draft.ingredients.indices,
-                draft.ingredients
-            ).map { index, ingredientInput in
-                IngredientObject.create(
-                    context: context,
-                    ingredient: ingredientInput.ingredient,
-                    amount: ingredientInput.amount,
-                    order: index + 1
-                )
-            },
-            steps: draft.steps,
-            categories: draft.categories.map { categoryValue in
-                Category.create(
-                    context: context,
-                    value: categoryValue
-                )
-            },
-            note: draft.note
+            content: recipeContent(
+                from: draft,
+                context: context
+            )
         )
         return .init(
             value: recipe,
@@ -166,19 +109,19 @@ enum RecipeFormService {
         }
 
         recipe.update(
-            name: draft.name,
-            photos: updatedPhotoObjects,
-            servingSize: draft.servingSize,
-            cookingTime: draft.cookingTime,
-            ingredients: updatedIngredientObjects,
-            steps: draft.steps,
-            categories: draft.categories.map { categoryValue in
-                Category.create(
-                    context: context,
-                    value: categoryValue
-                )
-            },
-            note: draft.note
+            content: .init(
+                name: draft.name,
+                photos: updatedPhotoObjects,
+                servingSize: draft.servingSize,
+                cookingTime: draft.cookingTime,
+                ingredients: updatedIngredientObjects,
+                steps: draft.steps,
+                categories: categories(
+                    from: draft,
+                    context: context
+                ),
+                note: draft.note
+            )
         )
         previousPhotoObjects.forEach(context.delete)
         previousIngredientObjects.forEach(context.delete)
@@ -224,45 +167,72 @@ private extension RecipeFormService {
         return number
     }
 
-    static func lines(
-        from text: String
-    ) -> [String] {
-        text.split(whereSeparator: \.isNewline)
-            .map { line in
-                line.trimmingCharacters(in: .whitespacesAndNewlines)
-            }
-            .filter { !$0.isEmpty }
+    static func recipeContent(
+        from draft: RecipeFormDraft,
+        context: ModelContext
+    ) -> RecipeContent {
+        .init(
+            name: draft.name,
+            photos: photoObjects(
+                from: draft,
+                context: context
+            ),
+            servingSize: draft.servingSize,
+            cookingTime: draft.cookingTime,
+            ingredients: ingredientObjects(
+                from: draft,
+                context: context
+            ),
+            steps: draft.steps,
+            categories: categories(
+                from: draft,
+                context: context
+            ),
+            note: draft.note
+        )
     }
 
-    static func ingredientInputs(
-        from text: String
-    ) -> [RecipeFormIngredientInput] {
-        lines(from: text).map { line in
-            if let range = line.range(of: ":") {
-                let ingredient = String(line[..<range.lowerBound])
-                    .trimmingCharacters(in: .whitespacesAndNewlines)
-                let amount = String(line[range.upperBound...])
-                    .trimmingCharacters(in: .whitespacesAndNewlines)
-                return .init(
-                    ingredient: ingredient,
-                    amount: amount
-                )
-            }
+    static func photoObjects(
+        from draft: RecipeFormDraft,
+        context: ModelContext
+    ) -> [PhotoObject] {
+        zip(
+            draft.photos.indices,
+            draft.photos
+        ).map { index, photoData in
+            PhotoObject.create(
+                context: context,
+                photoData: photoData,
+                order: index + 1
+            )
+        }
+    }
 
-            if let range = line.range(of: " - ") {
-                let ingredient = String(line[..<range.lowerBound])
-                    .trimmingCharacters(in: .whitespacesAndNewlines)
-                let amount = String(line[range.upperBound...])
-                    .trimmingCharacters(in: .whitespacesAndNewlines)
-                return .init(
-                    ingredient: ingredient,
-                    amount: amount
-                )
-            }
+    static func ingredientObjects(
+        from draft: RecipeFormDraft,
+        context: ModelContext
+    ) -> [IngredientObject] {
+        zip(
+            draft.ingredients.indices,
+            draft.ingredients
+        ).map { index, ingredientInput in
+            IngredientObject.create(
+                context: context,
+                ingredient: ingredientInput.ingredient,
+                amount: ingredientInput.amount,
+                order: index + 1
+            )
+        }
+    }
 
-            return .init(
-                ingredient: line,
-                amount: ""
+    static func categories(
+        from draft: RecipeFormDraft,
+        context: ModelContext
+    ) -> [Category] {
+        draft.categories.map { categoryValue in
+            Category.create(
+                context: context,
+                value: categoryValue
             )
         }
     }

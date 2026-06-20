@@ -19,44 +19,46 @@ enum DeletionPolicyAuditSupport {
     static func makeRecipe(
         context: ModelContext,
         name: String,
-        photos: [PhotoData],
-        ingredients: [DeletionPolicyAuditIngredientInput],
-        categories: [String]
+        photos: [PhotoData] = [],
+        ingredients: [DeletionPolicyAuditIngredientInput] = [],
+        categories: [String] = []
     ) -> Recipe {
         Recipe.create(
             context: context,
-            name: name,
-            photos: zip(
-                photos.indices,
-                photos
-            ).map { index, photoData in
-                PhotoObject.create(
-                    context: context,
-                    photoData: photoData,
-                    order: index + 1
-                )
-            },
-            servingSize: servingSize,
-            cookingTime: cookingTimeMinutes,
-            ingredients: zip(
-                ingredients.indices,
-                ingredients
-            ).map { index, ingredient in
-                IngredientObject.create(
-                    context: context,
-                    ingredient: ingredient.ingredient,
-                    amount: ingredient.amount,
-                    order: index + 1
-                )
-            },
-            steps: [],
-            categories: categories.map { value in
-                Category.create(
-                    context: context,
-                    value: value
-                )
-            },
-            note: ""
+            content: .init(
+                name: name,
+                photos: zip(
+                    photos.indices,
+                    photos
+                ).map { index, photoData in
+                    PhotoObject.create(
+                        context: context,
+                        photoData: photoData,
+                        order: index + 1
+                    )
+                },
+                servingSize: servingSize,
+                cookingTime: cookingTimeMinutes,
+                ingredients: zip(
+                    ingredients.indices,
+                    ingredients
+                ).map { index, ingredient in
+                    IngredientObject.create(
+                        context: context,
+                        ingredient: ingredient.ingredient,
+                        amount: ingredient.amount,
+                        order: index + 1
+                    )
+                },
+                steps: [],
+                categories: categories.map { value in
+                    Category.create(
+                        context: context,
+                        value: value
+                    )
+                },
+                note: ""
+            )
         )
     }
 

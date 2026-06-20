@@ -197,14 +197,16 @@ private extension RecipeBrowseCriteriaTests {
 
         return Recipe.create(
             context: context,
-            name: name,
-            photos: [],
-            servingSize: 1,
-            cookingTime: TestValues.cookingTimeMinutes,
-            ingredients: ingredientObjects,
-            steps: [],
-            categories: categories,
-            note: ""
+            content: .init(
+                name: name,
+                photos: [],
+                servingSize: 1,
+                cookingTime: TestValues.cookingTimeMinutes,
+                ingredients: ingredientObjects,
+                steps: [],
+                categories: categories,
+                note: ""
+            )
         )
     }
 
@@ -224,9 +226,11 @@ private extension RecipeBrowseCriteriaTests {
 
         _ = Diary.create(
             context: context,
-            date: .now,
-            objects: objects,
-            note: ""
+            content: .init(
+                date: .now,
+                objects: objects,
+                note: ""
+            )
         )
     }
 }

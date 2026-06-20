@@ -181,14 +181,16 @@ private extension RecipeTopReturnTargetServiceTests {
     ) -> Recipe {
         Recipe.create(
             context: context,
-            name: name,
-            photos: [],
-            servingSize: 1,
-            cookingTime: TestValues.cookingTimeMinutes,
-            ingredients: [],
-            steps: ["Cook"],
-            categories: [],
-            note: ""
+            content: .init(
+                name: name,
+                photos: [],
+                servingSize: 1,
+                cookingTime: TestValues.cookingTimeMinutes,
+                ingredients: [],
+                steps: ["Cook"],
+                categories: [],
+                note: ""
+            )
         )
     }
 
