@@ -10,7 +10,7 @@ Cookle architecture:
 - `CookleLibrary` is the single source of truth for reusable business logic.
 - `Cookle`, `Widgets`, and App Intents stay responsibility-thin as
   Apple-platform adapters.
-- Repository-owned unit tests stay concentrated in `CookleLibrary/Tests`.
+- Repository-owned unit tests stay concentrated in `CookleLibrary/Tests/Default`.
 
 Authoritative design rules remain:
 
@@ -40,25 +40,25 @@ in `CookleLibrary`, and the repository no longer carries a separate
   - `CookleLibrary/Sources/Recipe/RecipeService.swift`
   - `CookleLibrary/Sources/Recipe/RecipeBrowseCriteria.swift`
   - `CookleLibrary/Sources/Recipe/RecipePhotoDisplay.swift`
-  - `CookleLibrary/Sources/Common/CooklePreferenceCatalog.swift`
+  - `CookleLibrary/Sources/Preferences/CooklePreferenceCatalog.swift`
 
 ### Multiple targets still consume the same shared APIs
 
 - The iOS app and widgets both depend on the local `CookleLibrary` package
   product from `Cookle.xcodeproj`.
 - Representative files:
-  - `Cookle/Sources/Common/CookleLibrary.swift`
-  - `Widgets/Sources/Common/CookleLibrary.swift`
+  - `Cookle/Sources/App/CookleLibrary.swift`
+  - `Widgets/Sources/App/CookleLibrary.swift`
   - `Cookle.xcodeproj/project.pbxproj`
 
 ### Tests are library-centered
 
-- Repository-owned unit tests are concentrated in `CookleLibrary/Tests`.
+- Repository-owned unit tests are concentrated in `CookleLibrary/Tests/Default`.
 - `Cookle.xcodeproj` no longer defines a `CookleTests` unit test target.
 - Verification now builds the `Cookle` scheme and runs `CookleLibrary` tests.
 - Representative files:
-  - `CookleLibrary/Tests/RecipeBrowseCriteriaTests.swift`
-  - `CookleLibrary/Tests/RecipePhotoRemovalTests.swift`
+  - `CookleLibrary/Tests/Default/Recipe/RecipeBrowseCriteriaTests.swift`
+  - `CookleLibrary/Tests/Default/Photo/RecipePhotoRemovalTests.swift`
   - `AGENTS.md`
   - `ci_scripts/tasks/check_repository_rules.sh`
   - `ci_scripts/tasks/check_test_posture.sh`

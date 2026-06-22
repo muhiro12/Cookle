@@ -26,8 +26,25 @@ operation must work across the iOS app, widgets, and App Intents.
 | --- | --- | --- |
 | Shared domain logic | `CookleLibrary` | `Recipe`, `Diary`, `Tag`, predicates, `RecipeOperations`, `RecipeFormOperations`, `DiaryOperations`, `TagOperations`, `DataMaintenanceOperations` |
 | Apple framework adapters | `Cookle`, `Widgets`, `Watch` | `NotificationService`, App Intent types, widget timeline/provider types, `WatchCookingSessionStore` |
-| App-side platform support | `Cookle/Sources/Common/Platform` | `CookleAppAssemblyFactory`, `MHAppRuntimeBootstrap` assembly, `MHAppRoutePipeline<CookleRoute>` assembly |
+| App-side platform support | `Cookle/Sources/Platform` | `CookleAppAssemblyFactory`, `MHAppRuntimeBootstrap` assembly, `MHAppRoutePipeline<CookleRoute>` assembly |
 | Presentation orchestration | `Cookle`, `Widgets`, `Watch` | SwiftUI views, widget view composition, `MainNavigationRouter`, `RecipeFormModel`, `RecipeFormSaveCoordinator`, `DiaryFormModel`, `DiaryFormSaveCoordinator`, `SettingsScreenModel`, `WatchActiveCookingView` |
+
+## Source Layout
+
+- `Cookle/Sources/App` is for app entry points, app-level App Intents,
+  app-wide support, and generic workflow adapters.
+- `Cookle/Sources/Features` is for feature-owned SwiftUI, App Intents,
+  presentation models, and target-local action services.
+- `Cookle/Sources/Platform` is for app-side Apple framework and package glue
+  that is reused by multiple app entry points.
+- `Cookle/Sources/SharedUI` is for reusable app-target UI components,
+  modifiers, styles, navigation environment helpers, and tips.
+- `CookleLibrary/Sources/<Capability>` is for shared capability groups rather
+  than a broad `Common` folder.
+- `Widgets/Sources/App` and `Watch/Sources/App` contain target entry wiring;
+  their `Features` folders contain visible surface behavior.
+- `CookleLibrary/Tests/Default/<Capability>` mirrors the shared-library
+  source capabilities.
 
 ## Operations Migration
 
@@ -102,12 +119,12 @@ as implementation collaborators rather than public delivery-surface APIs.
 4. Keep platform-specific types out of `CookleLibrary`. Convert them at the
    boundary into library models or value types.
 5. If glue code is app-only but reused by multiple app entry points, factor it
-   into `Cookle/Sources/Common/Platform` or a dedicated app-side service.
+   into `Cookle/Sources/Platform` or a dedicated app-side service.
 
 ## Test Posture
 
-- Keep repository-owned unit tests in `CookleLibrary/Tests`.
-- Do not add a separate unit test target for `Cookle` or `Widgets`.
+- Keep repository-owned unit tests in `CookleLibrary/Tests/Default`.
+- Do not add a separate unit test target for `Cookle`, `Widgets`, or `Watch`.
 - If an app-side adapter or screen model starts needing durable coverage, first
   extract the reusable rule into `CookleLibrary` and test it there.
 
@@ -136,5 +153,5 @@ When a business rule is duplicated, the default fix is to move the rule into
 view, App Intent, or widget.
 
 When the duplicated code is still Apple-framework glue, the default fix is to
-extract it into an app-side adapter in `Cookle/Sources/Common/Platform` or a
+extract it into an app-side adapter in `Cookle/Sources/Platform` or a
 feature-local app service.

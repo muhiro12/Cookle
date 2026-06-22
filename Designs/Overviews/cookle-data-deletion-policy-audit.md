@@ -29,15 +29,15 @@ Representative evidence:
 - `CookleLibrary/Sources/Recipe/RecipeService.swift`
 - `CookleLibrary/Sources/Recipe/RecipeFormService.swift`
 - `CookleLibrary/Sources/Diary/DiaryService.swift`
-- `CookleLibrary/Sources/Common/DetachedObjectCleanupService.swift`
-- `CookleLibrary/Sources/Common/ModelContainerFactory.swift`
-- `Cookle/Sources/Photo/Views/PhotoListView.swift`
-- `Cookle/Sources/Tag/Intents/DeleteCategoryIntent.swift`
-- `Cookle/Sources/Tag/Intents/DeleteIngredientIntent.swift`
-- `CookleLibrary/Tests/DeletionPolicyAuditRootModelTests.swift`
-- `CookleLibrary/Tests/DeletionPolicyAuditObjectLifecycleTests.swift`
-- `CookleLibrary/Tests/DetachedObjectCleanupServiceTests.swift`
-- `CookleLibrary/Tests/RecipePhotoRemovalTests.swift`
+- `CookleLibrary/Sources/DataManagement/DetachedObjectCleanupService.swift`
+- `CookleLibrary/Sources/Persistence/ModelContainerFactory.swift`
+- `Cookle/Sources/Features/Photo/Views/PhotoListView.swift`
+- `Cookle/Sources/Features/Tag/Intents/DeleteCategoryIntent.swift`
+- `Cookle/Sources/Features/Tag/Intents/DeleteIngredientIntent.swift`
+- `CookleLibrary/Tests/Default/DataManagement/DeletionPolicyAuditRootModelTests.swift`
+- `CookleLibrary/Tests/Default/DataManagement/DeletionPolicyAuditObjectLifecycleTests.swift`
+- `CookleLibrary/Tests/Default/DataManagement/DetachedObjectCleanupServiceTests.swift`
+- `CookleLibrary/Tests/Default/Photo/RecipePhotoRemovalTests.swift`
 
 ## 1) Model-by-Model Deletion Inventory
 
@@ -118,7 +118,8 @@ Representative evidence:
 - Orphan allowance: yes by design. Categories remain stored even when no recipe
   currently uses them. `[source confirmed]`
 - Coverage:
-  `TagServiceTests`, `MutationEffectPropagationTests`. `[runtime confirmed]`
+  `TagServiceTests`, `OperationsMutationEffectPropagationTests`.
+  `[runtime confirmed]`
 
 ### Ingredient
 

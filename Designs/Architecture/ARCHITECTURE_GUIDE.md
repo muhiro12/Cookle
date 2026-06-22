@@ -24,6 +24,36 @@ Related documents:
 | Adapter (`Cookle`, `Widgets`, `Watch`, App Intents) | Parameter parsing, platform API calls, dependency wiring, route intake, follow-up orchestration after shared mutations, App Intent result mapping | Re-implementing recipe, diary, tag, or reset mutation rules |
 | View (SwiftUI) | Focus state, sheets, dialogs, navigation state, screen-scoped `@Observable` models, display formatting, view composition | Canonical business validation, mutation rules, notification scheduling, widget reload coordination |
 
+## Source Layout
+
+Cookle follows the Incomes source-layout direction by making architecture
+areas visible in paths instead of keeping reusable app code in a broad
+`Common` folder.
+
+- `Cookle/Sources/App` contains app entry points, app-level App Intents,
+  app-wide support types, and generic mutation workflow adapters.
+- `Cookle/Sources/Features` contains product feature surfaces such as recipe,
+  diary, photo, tag, search, settings, notifications, debug, and main
+  navigation.
+- `Cookle/Sources/Platform` contains app-side Apple framework and package
+  integration such as runtime assembly, app group route storage, WidgetKit
+  reloads, WatchConnectivity delivery, logging, monetization, and image
+  processing.
+- `Cookle/Sources/SharedUI` contains reusable app-target UI components,
+  modifiers, styles, navigation environment helpers, text support, and TipKit
+  definitions.
+- `CookleLibrary/Sources/<Capability>` contains shared-library capabilities
+  such as `Recipe`, `Diary`, `Photo`, `Tag`, `Navigation`, `Persistence`,
+  `Preferences`, `Mutation`, `DataManagement`, `Notification`,
+  `CookingSession`, and `Widgets`.
+- `Widgets/Sources/App` contains widget entry wiring, while
+  `Widgets/Sources/Features` contains individual widget implementations.
+- `Watch/Sources/App` contains watch app entry wiring,
+  `Watch/Sources/Features` contains watch UI, and
+  `Watch/Sources/Platform` contains WatchConnectivity transport.
+- `CookleLibrary/Tests/Default/<Capability>` mirrors the shared-library
+  capability split.
+
 ## Package Consumer Boundaries
 
 Cookle adopts shared packages by target responsibility, not by superficial
@@ -46,7 +76,7 @@ symmetry with sibling apps.
 
 ## Testing Boundary
 
-- Keep repository-owned unit tests in `CookleLibrary/Tests`.
+- Keep repository-owned unit tests in `CookleLibrary/Tests/Default`.
 - Do not maintain a separate unit test target for `Cookle`, `Widgets`, or `Watch`.
 - App-owned adapters should stay responsibility-thin enough to verify through
   `Cookle` builds plus `CookleLibrary` test coverage.
@@ -77,12 +107,12 @@ When a screen grows beyond trivial local state, keep a screen-scoped
 
 Current examples:
 
-- `Cookle/Sources/Main/State/MainNavigationRouter.swift`
-- `Cookle/Sources/Recipe/Models/RecipeFormModel.swift`
-- `Cookle/Sources/Recipe/Services/RecipeFormSaveCoordinator.swift`
-- `Cookle/Sources/Diary/Models/DiaryFormModel.swift`
-- `Cookle/Sources/Diary/Services/DiaryFormSaveCoordinator.swift`
-- `Cookle/Sources/Settings/Models/SettingsScreenModel.swift`
+- `Cookle/Sources/Features/Main/State/MainNavigationRouter.swift`
+- `Cookle/Sources/Features/Recipe/Models/RecipeFormModel.swift`
+- `Cookle/Sources/Features/Recipe/Services/RecipeFormSaveCoordinator.swift`
+- `Cookle/Sources/Features/Diary/Models/DiaryFormModel.swift`
+- `Cookle/Sources/Features/Diary/Services/DiaryFormSaveCoordinator.swift`
+- `Cookle/Sources/Features/Settings/Models/SettingsScreenModel.swift`
 
 Prefer this over `ObservableObject`, `EnvironmentObject`, or pushing
 screen-local sequencing into a broader router.
@@ -93,11 +123,11 @@ screen-local sequencing into a broader router.
 
 The current app-side mutation adapters are:
 
-- `Cookle/Sources/Recipe/Services/RecipeActionService.swift`
-- `Cookle/Sources/Diary/Services/DiaryActionService.swift`
-- `Cookle/Sources/Photo/Services/PhotoActionService.swift`
-- `Cookle/Sources/Tag/Services/TagActionService.swift`
-- `Cookle/Sources/Settings/Services/SettingsActionService.swift`
+- `Cookle/Sources/Features/Recipe/Services/RecipeActionService.swift`
+- `Cookle/Sources/Features/Diary/Services/DiaryActionService.swift`
+- `Cookle/Sources/Features/Photo/Services/PhotoActionService.swift`
+- `Cookle/Sources/Features/Tag/Services/TagActionService.swift`
+- `Cookle/Sources/Features/Settings/Services/SettingsActionService.swift`
 
 Those adapters may coordinate widget reloads, notification refreshes, and
 review prompting after a shared mutation succeeds, but the mutation rules and
@@ -127,8 +157,8 @@ App Intent files must not:
 
 Shared mutations express follow-up hints through:
 
-- `CookleLibrary/Sources/Common/MutationOutcome.swift`
-- `CookleLibrary/Sources/Common/MutationEffect.swift`
+- `CookleLibrary/Sources/Mutation/MutationOutcome.swift`
+- `CookleLibrary/Sources/Mutation/MutationEffect.swift`
 
 Current effect hints are:
 
@@ -189,8 +219,8 @@ API style decision:
 
 1. Route assembly should stay separate from navigation state mutation.
    Files:
-   - `Cookle/Sources/Main/Services/MainRouteService.swift`
-   - `Cookle/Sources/Main/State/MainNavigationRouter.swift`
+   - `Cookle/Sources/Features/Main/Services/MainRouteService.swift`
+   - `Cookle/Sources/Features/Main/State/MainNavigationRouter.swift`
    Minimal plan:
    - keep `MainRouteService` focused on pipeline assembly, parsing, and inbox
      sources
@@ -199,9 +229,9 @@ API style decision:
 2. Form screens should keep state in screen models instead of large view-local
    mutation code.
    Files:
-   - `Cookle/Sources/Recipe/Views/RecipeFormView.swift`
-   - `Cookle/Sources/Diary/Views/DiaryFormView.swift`
-   - `Cookle/Sources/Settings/Views/SettingsSidebarView.swift`
+   - `Cookle/Sources/Features/Recipe/Views/RecipeFormView.swift`
+   - `Cookle/Sources/Features/Diary/Views/DiaryFormView.swift`
+   - `Cookle/Sources/Features/Settings/Views/SettingsSidebarView.swift`
    Minimal plan:
    - keep views focused on UI composition and error presentation
    - keep form state, tip priority, and save sequencing in dedicated models and
@@ -213,7 +243,7 @@ API style decision:
    - `CookleLibrary/Sources/Recipe/RecipeFormOperations.swift`
    - `CookleLibrary/Sources/Diary/DiaryOperations.swift`
    - `CookleLibrary/Sources/Tag/TagOperations.swift`
-   - `CookleLibrary/Sources/Common/DataMaintenanceOperations.swift`
+   - `CookleLibrary/Sources/DataManagement/DataMaintenanceOperations.swift`
    Minimal plan:
    - keep effect-hint decisions in `CookleLibrary`
    - keep notification sync, widget reload, and review flow wiring in app-side
@@ -222,8 +252,8 @@ API style decision:
 4. Notification route delivery should stay adapter-owned without duplicating
    route meaning.
    Files:
-   - `Cookle/Sources/Notification/Services/NotificationService.swift`
-   - `CookleLibrary/Sources/Route/*`
+   - `Cookle/Sources/Features/Notification/Services/NotificationService.swift`
+   - `CookleLibrary/Sources/Navigation/*`
    Minimal plan:
    - keep payload decoding and delivery in notification adapters
    - keep route vocabulary and parsing shared in `CookleLibrary`

@@ -36,11 +36,15 @@ repository contains the full iOS project together with its shared Swift package.
 
 - `Cookle/` – main SwiftUI application target with feature-based sources,
   platform wiring, remote-configuration adapters, and target configuration.
+  App entry code lives in `Sources/App`, product surfaces live in
+  `Sources/Features`, Apple-framework glue lives in `Sources/Platform`, and
+  reusable target-local UI lives in `Sources/SharedUI`.
 - `CookleLibrary/` – shared Swift package that exposes SwiftData models,
   Operations facades, predicates, migrations, and utilities used by the app and
-  intents.
+  intents. Source and tests are organized by capability.
 - `Widgets/` – home-screen widget extension target built on top of
   `CookleLibrary`.
+- `Watch/` – watch companion target for the active cooking session.
 - `MHPlatform` – shared app-runtime package family. The `Cookle` app
   intentionally adopts the default `MHPlatform` umbrella surface, while
   `CookleLibrary` stays on `MHPlatformCore` for core-safe shared logic.
@@ -51,7 +55,7 @@ repository contains the full iOS project together with its shared Swift package.
 - `Designs/Decisions/` – architecture decision records that capture why major
   design choices were made.
 - `Designs/Overviews/` – current project snapshot and product overview.
-- `CookleLibrary/Tests/` – package tests for public Operations contracts,
+- `CookleLibrary/Tests/Default/` – package tests for public Operations contracts,
   reusable utilities, preferences, photo sources, and shared sub-object logic.
 - `ci_scripts/` – automation helpers used by Xcode Cloud and CI pipelines to
   inject secrets and configure the build environment.
@@ -97,14 +101,14 @@ Primary records:
   predicates, queries, validation, mutations, migrations, and route helpers.
 - MHPlatform consumer boundaries are explicit in this repo: `Cookle` is the
   umbrella-app adopter, `CookleLibrary` stays on `MHPlatformCore`, and
-  `Widgets` stay off the umbrella.
+  `Widgets`/`Watch` stay off the umbrella.
 - MHUI consumer boundaries are explicit in this repo: `Cookle` currently adopts
   `MHDesign` for shared metrics only, `CookleLibrary` stays presentation-free,
   and `Widgets`/`Watch` call app shared APIs before adding presentation package
   dependencies.
 - `MHAppRuntime` remains available as an advanced app-root surface, but this
   repo does not use it as the default adoption path.
-- Repository-owned unit tests stay concentrated in `CookleLibrary/Tests`.
+- Repository-owned unit tests stay concentrated in `CookleLibrary/Tests/Default`.
 - The repository does not maintain a separate `CookleTests` unit test target;
   app adapters are verified through `Cookle` builds plus shared-library tests.
 - The `Cookle` app target owns workflow services such as
@@ -219,12 +223,12 @@ Universal Links require Apple App Site Association (AASA) deployment for
 3. Build and run on an iOS 18 simulator or device.
 
 The monetization identifiers live in
-`Cookle/Sources/Common/Platform/CookleMonetizationConfiguration.swift`. They
+`Cookle/Sources/Platform/CookleMonetizationConfiguration.swift`. They
 are source-controlled production identifiers, not local-only credentials.
 
 ## Testing
 
-- Repository-owned unit tests stay in `CookleLibrary/Tests`.
+- Repository-owned unit tests stay in `CookleLibrary/Tests/Default`.
 - `Cookle`, `Widgets`, and App Intents are verified through app builds plus
   shared-library tests instead of a separate app unit test target.
 - Use XcodeBuildMCP for Apple build, test, run, Simulator, runtime log,

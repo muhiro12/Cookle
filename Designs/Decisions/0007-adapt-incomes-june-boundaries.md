@@ -45,7 +45,7 @@ Cookle will adopt the Incomes direction in stages:
 - Keep Apple-framework adapters, runtime assembly, notifications, review
   prompting, widget reloads, WatchConnectivity, and route intake out of the
   shared library.
-- Keep repository-owned unit tests in `CookleLibrary/Tests`.
+- Keep repository-owned unit tests in `CookleLibrary/Tests/Default`.
 - Keep release UI smoke auditing separate from ordinary task verification.
 - Use XcodeBuildMCP as the default local and agent evidence surface for Apple
   build, test, run, Simulator, runtime log, screenshot, and UI snapshot checks.
@@ -68,8 +68,8 @@ Cookle will adopt the Incomes direction in stages:
 - Remove shell aggregate gates once MCP build/test evidence and retained
   repository rules provide the required task-completion evidence.
 - Review test targets and scheme coverage as part of the migration. Keep
-  durable tests in `CookleLibrary/Tests`; remove or avoid target-local test
-  surfaces that would encourage business rules to live in adapters.
+  durable tests in `CookleLibrary/Tests/Default`; remove or avoid target-local
+  test surfaces that would encourage business rules to live in adapters.
 
 ### Non-Goals
 

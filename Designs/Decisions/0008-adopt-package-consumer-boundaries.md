@@ -18,7 +18,7 @@ explicitly keeps generic helpers and thin host-app presentation shortcuts
 outside the package.
 
 Cookle already has the matching app shape: app-owned adapters call shared
-`*Operations` facades, repository-owned tests live in `CookleLibrary/Tests`, and
+`*Operations` facades, repository-owned tests live in `CookleLibrary/Tests/Default`, and
 MCP-first verification is the Apple evidence surface.
 
 ## Decision

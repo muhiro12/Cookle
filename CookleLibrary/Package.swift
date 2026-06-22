@@ -37,7 +37,8 @@ let kPackage = Package(
             name: "CookleLibraryTests",
             dependencies: [
                 "CookleLibrary"
-            ]
+            ],
+            path: "Tests/Default"
         )
     ]
 )

@@ -531,7 +531,7 @@ Views should not own:
   `CookleLibrary` scheme.
 - Retained shell checks are limited to SwiftLint, repository static rules, and
   optional audits that XcodeBuildMCP does not naturally cover.
-- Repository-owned unit tests stay concentrated in `CookleLibrary/Tests`.
+- Repository-owned unit tests stay concentrated in `CookleLibrary/Tests/Default`.
 - `Cookle` and `Widgets` are verified through app builds plus shared-library
   tests, without a separate app unit test target.
 - Shared package tests cover core reusable behavior such as:
