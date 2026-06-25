@@ -104,8 +104,8 @@ private extension CookleAppAssemblyFactory {
             configuration: makeRuntimeConfiguration(
                 nativeAdUnitID: nativeAdUnitID
             ),
-            lifecyclePlan: lifecyclePlan,
-            routePipeline: routePipeline
+            routePipeline: routePipeline,
+            lifecyclePlan: lifecyclePlan
         )
     }
 

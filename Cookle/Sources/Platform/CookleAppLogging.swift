@@ -32,10 +32,10 @@ final class CookleAppLogging {
         )
         return .init(
             bootstrap: .init(
+                snapshotStore: snapshotStore,
                 captureLevel: captureLevel,
                 subsystem: subsystem,
-                snapshotStorageDescriptors: snapshotStorageDescriptors,
-                snapshotStore: snapshotStore
+                snapshotStorageDescriptors: snapshotStorageDescriptors
             )
         )
     }

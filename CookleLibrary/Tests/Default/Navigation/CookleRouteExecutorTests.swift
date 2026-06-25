@@ -38,8 +38,8 @@ struct CookleRouteExecutorTests {
         )
 
         switch outcome {
-        case .diary(let resolvedDiary):
-            let resolvedDiary = try #require(resolvedDiary)
+        case .diary(let optionalDiary):
+            let resolvedDiary = try #require(optionalDiary)
             #expect(
                 resolvedDiary.persistentModelID ==
                     diary.persistentModelID
@@ -103,8 +103,8 @@ struct CookleRouteExecutorTests {
         )
 
         switch outcome {
-        case .recipe(let resolvedRecipe):
-            let resolvedRecipe = try #require(resolvedRecipe)
+        case .recipe(let optionalRecipe):
+            let resolvedRecipe = try #require(optionalRecipe)
             #expect(
                 resolvedRecipe.persistentModelID ==
                     recipe.persistentModelID

@@ -27,8 +27,8 @@ struct CookleRouteExecutorLinkedResourceTests {
         )
 
         switch outcome {
-        case .photo(let resolvedPhoto):
-            let resolvedPhoto = try #require(resolvedPhoto)
+        case .photo(let optionalPhoto):
+            let resolvedPhoto = try #require(optionalPhoto)
             #expect(
                 resolvedPhoto.persistentModelID ==
                     photo.persistentModelID
@@ -88,8 +88,8 @@ struct CookleRouteExecutorLinkedResourceTests {
         )
 
         switch outcome {
-        case .tagCategory(let resolvedCategory):
-            let resolvedCategory = try #require(resolvedCategory)
+        case .tagCategory(let optionalCategory):
+            let resolvedCategory = try #require(optionalCategory)
             #expect(
                 resolvedCategory.persistentModelID ==
                     category.persistentModelID
@@ -126,8 +126,8 @@ struct CookleRouteExecutorLinkedResourceTests {
         )
 
         switch outcome {
-        case .tagIngredient(let resolvedIngredient):
-            let resolvedIngredient = try #require(resolvedIngredient)
+        case .tagIngredient(let optionalIngredient):
+            let resolvedIngredient = try #require(optionalIngredient)
             #expect(
                 resolvedIngredient.persistentModelID ==
                     ingredient.persistentModelID

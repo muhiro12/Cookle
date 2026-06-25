@@ -7,19 +7,19 @@ extension CookleDataArchiveService {
     }
 
     static var encoder: JSONEncoder {
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-        encoder.outputFormatting = [
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.dateEncodingStrategy = .iso8601
+        jsonEncoder.outputFormatting = [
             .prettyPrinted,
             .sortedKeys
         ]
-        return encoder
+        return jsonEncoder
     }
 
     static var decoder: JSONDecoder {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        return decoder
+        let jsonDecoder = JSONDecoder()
+        jsonDecoder.dateDecodingStrategy = .iso8601
+        return jsonDecoder
     }
 
     static func identifierMap<Model: PersistentModel>(

@@ -196,32 +196,41 @@ private extension DiaryFormView {
     func destinationView(for type: DiaryObjectType) -> some View {
         switch type {
         case .breakfast:
-            DiaryFormRecipeListView(selection: Binding(
-                get: {
-                    model.breakfasts
-                },
-                set: { newValue in
-                    model.breakfasts = newValue
-                }
-            ), type: type)
+            DiaryFormRecipeListView(
+                selection: Binding(
+                    get: {
+                        model.breakfasts
+                    },
+                    set: { newValue in
+                        model.breakfasts = newValue
+                    }
+                ),
+                type: type
+            )
         case .lunch:
-            DiaryFormRecipeListView(selection: Binding(
-                get: {
-                    model.lunches
-                },
-                set: { newValue in
-                    model.lunches = newValue
-                }
-            ), type: type)
+            DiaryFormRecipeListView(
+                selection: Binding(
+                    get: {
+                        model.lunches
+                    },
+                    set: { newValue in
+                        model.lunches = newValue
+                    }
+                ),
+                type: type
+            )
         case .dinner:
-            DiaryFormRecipeListView(selection: Binding(
-                get: {
-                    model.dinners
-                },
-                set: { newValue in
-                    model.dinners = newValue
-                }
-            ), type: type)
+            DiaryFormRecipeListView(
+                selection: Binding(
+                    get: {
+                        model.dinners
+                    },
+                    set: { newValue in
+                        model.dinners = newValue
+                    }
+                ),
+                type: type
+            )
         }
     }
 

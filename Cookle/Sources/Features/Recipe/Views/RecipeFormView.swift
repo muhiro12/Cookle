@@ -136,7 +136,7 @@ struct RecipeFormView: View {
         .cookleImagePlayground(
             isPresented: $model.isImagePlaygroundPresented,
             recipe: model.savedRecipe
-        ) { data in
+        ) { photoData in
             Task {
                 guard model.isSaving == false else {
                     return
@@ -146,7 +146,7 @@ struct RecipeFormView: View {
                     model.isSaving = false
                 }
 
-                guard let recipe = model.savedRecipe else {
+                guard let savedRecipe = model.savedRecipe else {
                     model.errorMessage = CookleActionError.recipeNotFound.localizedDescription
                     return
                 }
@@ -154,8 +154,8 @@ struct RecipeFormView: View {
                 do {
                     try await recipeActionService.replaceGeneratedPhoto(
                         context: context,
-                        recipe: recipe,
-                        data: data
+                        recipe: savedRecipe,
+                        data: photoData
                     )
                     dismiss()
                 } catch {

@@ -16,11 +16,11 @@ struct CookleDataArchiveDocument: FileDocument {
     }
 
     init(configuration: ReadConfiguration) throws {
-        guard let data = configuration.file.regularFileContents else {
+        guard let fileData = configuration.file.regularFileContents else {
             throw CocoaError(.fileReadCorruptFile)
         }
 
-        self.data = data
+        self.data = fileData
     }
 
     func fileWrapper(configuration _: WriteConfiguration) -> FileWrapper {

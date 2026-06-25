@@ -106,7 +106,7 @@ check_project_package_reference() {
 
 mhplatform_manifest_block=$(
   awk '
-    /url: "https:\/\/github.com\/muhiro12\/MHPlatform\.git"/ {
+    /url: "https:\/\/github.com\/muhiro12\/MHPlatform(\.git)?"/ {
       in_block = 1
     }
     in_block {
