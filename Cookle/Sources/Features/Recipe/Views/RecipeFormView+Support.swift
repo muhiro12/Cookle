@@ -49,8 +49,9 @@ extension RecipeFormView {
             } label: {
                 currentEditMode == .inactive ? Text("Change Order or Delete Row") : Text("Done Edit")
             }
-            .frame(maxWidth: .infinity)
+            .cookleButtonRowContent(alignment: .center)
         }
+        .environment(\.editMode, .constant(.inactive))
     }
 
     @ToolbarContentBuilder var toolbarItems: some ToolbarContent {

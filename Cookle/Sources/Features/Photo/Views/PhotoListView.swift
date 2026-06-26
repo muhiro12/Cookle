@@ -119,6 +119,7 @@ private extension PhotoListView {
                             PhotoDisplayCopy.title(for: rowPhoto)
                         )
                     )
+                    .cookleButtonRowContent(alignment: .center)
             }
             .buttonStyle(.plain)
         }

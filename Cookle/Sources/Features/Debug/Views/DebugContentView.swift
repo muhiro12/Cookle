@@ -13,7 +13,7 @@ struct DebugContentView<Model: PersistentModel>: View {
                     detail = model
                 } label: {
                     rowLabel(for: model)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .cookleButtonRowContent()
                 }
                 .buttonStyle(.plain)
             }

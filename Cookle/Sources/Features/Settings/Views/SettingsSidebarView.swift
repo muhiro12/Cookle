@@ -150,7 +150,7 @@ struct SettingsSidebarView: View {
                     content = .subscription
                 } label: {
                     Text("Subscription")
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .cookleButtonRowContent()
                 }
                 .buttonStyle(.plain)
                 .cooklePopoverTip(
@@ -222,7 +222,7 @@ struct SettingsSidebarView: View {
                     isDebugPresented = true
                 } label: {
                     Text("Debug")
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .cookleButtonRowContent()
                 }
                 .buttonStyle(.plain)
             }
@@ -230,7 +230,7 @@ struct SettingsSidebarView: View {
                 content = .license
             } label: {
                 Text("Licenses")
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .cookleButtonRowContent()
             }
             .buttonStyle(.plain)
             Button("Show tips again") {

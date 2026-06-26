@@ -24,7 +24,7 @@ struct RecipeFormInferSection: View {
                 categories: $categories,
                 note: $note
             )
-            .frame(maxWidth: .infinity)
+            .cookleButtonRowContent(alignment: .center)
             .cooklePopoverTip(
                 tip,
                 arrowEdge: .top

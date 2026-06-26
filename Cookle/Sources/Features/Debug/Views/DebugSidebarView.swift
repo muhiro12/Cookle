@@ -122,7 +122,7 @@ struct DebugSidebarView: View {
                 content = .preview
             } label: {
                 Text("Previews")
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .cookleButtonRowContent()
             }
             .buttonStyle(.plain)
         } header: {
@@ -184,7 +184,7 @@ struct DebugSidebarView: View {
             self.content = content
         } label: {
             Text(title)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .cookleButtonRowContent()
         }
         .buttonStyle(.plain)
     }
