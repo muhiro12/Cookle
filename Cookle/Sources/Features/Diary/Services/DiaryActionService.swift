@@ -6,13 +6,6 @@ import SwiftData
 @MainActor
 @Observable
 final class DiaryActionService {
-    struct FormInput {
-        let breakfasts: [Recipe]
-        let lunches: [Recipe]
-        let dinners: [Recipe]
-        let note: String
-    }
-
     private let effectAdapter: MHMutationAdapter<MutationEffect>
 
     init() {
@@ -22,21 +15,14 @@ final class DiaryActionService {
     @discardableResult
     func create(
         context: ModelContext,
-        date: Date,
-        input: FormInput
+        input: DiaryFormInput
     ) async throws -> MutationOutcome<Diary> {
         try await run(
             name: "createDiary"
         ) {
             DiaryOperations.createWithOutcome(
                 context: context,
-                input: .init(
-                    date: date,
-                    breakfasts: input.breakfasts,
-                    lunches: input.lunches,
-                    dinners: input.dinners,
-                    note: input.note
-                )
+                input: input
             )
         }
     }
@@ -45,8 +31,7 @@ final class DiaryActionService {
     func update(
         context: ModelContext,
         diary: Diary,
-        date: Date,
-        input: FormInput
+        input: DiaryFormInput
     ) async throws -> MutationOutcome<Diary> {
         try await run(
             name: "updateDiary"
@@ -54,13 +39,7 @@ final class DiaryActionService {
             DiaryOperations.updateWithOutcome(
                 context: context,
                 diary: diary,
-                input: .init(
-                    date: date,
-                    breakfasts: input.breakfasts,
-                    lunches: input.lunches,
-                    dinners: input.dinners,
-                    note: input.note
-                )
+                input: input
             )
         }
     }
@@ -68,11 +47,10 @@ final class DiaryActionService {
     @discardableResult
     func update(
         context: ModelContext,
-        on date: Date,
-        input: FormInput
+        input: DiaryFormInput
     ) async throws -> MutationOutcome<Diary?> {
         guard let diary = try DiaryOperations.diary(
-            on: date,
+            on: input.date,
             context: context
         ) else {
             return .init(value: nil)
@@ -81,7 +59,6 @@ final class DiaryActionService {
         let mutationOutcome = try await update(
             context: context,
             diary: diary,
-            date: date,
             input: input
         )
         return .init(

@@ -32,8 +32,8 @@ struct CreateDiaryIntent: AppIntent {
         let context = modelContainer.mainContext
         try await diaryActionService.create(
             context: context,
-            date: date,
             input: .init(
+                date: date,
                 breakfasts: DiaryIntentSupport.resolveRecipes(
                     from: breakfasts,
                     context: context

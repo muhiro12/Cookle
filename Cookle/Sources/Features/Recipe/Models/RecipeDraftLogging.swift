@@ -65,17 +65,14 @@ enum RecipeDraftLogging {
 
     static func intentSummary(
         source: Source,
-        ingredientsText: String,
-        stepsText: String,
-        categoriesText: String,
-        note: String
+        input: RecipeFormInput
     ) -> Summary {
         .init(
             source: source,
-            inputIngredientCount: lines(in: ingredientsText).count,
-            inputStepCount: lines(in: stepsText).count,
-            inputCategoryCount: lines(in: categoriesText).count,
-            hasNote: !note.isEmpty
+            inputIngredientCount: input.ingredients.count,
+            inputStepCount: input.steps.count,
+            inputCategoryCount: input.categories.count,
+            hasNote: !input.note.isEmpty
         )
     }
 
@@ -117,17 +114,5 @@ private extension RecipeDraftLogging {
         case .edit:
             .formEdit
         }
-    }
-
-    static func lines(
-        in text: String
-    ) -> [String] {
-        text.split(whereSeparator: \.isNewline)
-            .map { line in
-                line.trimmingCharacters(
-                    in: .whitespacesAndNewlines
-                )
-            }
-            .filter { !$0.isEmpty }
     }
 }

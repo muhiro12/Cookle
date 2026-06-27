@@ -48,8 +48,9 @@ final class DiaryFormModel {
             .isEmpty
     }
 
-    var formInput: DiaryActionService.FormInput {
+    var formInput: DiaryFormInput {
         .init(
+            date: date,
             breakfasts: .init(breakfasts),
             lunches: .init(lunches),
             dinners: .init(dinners),
@@ -177,11 +178,8 @@ final class DiaryFormModel {
             errorMessage = nil
             try await DiaryFormSaveCoordinator.save(
                 context: context,
-                request: .init(
-                    diary: diary,
-                    date: date,
-                    input: formInput
-                ),
+                diary: diary,
+                input: formInput,
                 diaryActionService: diaryActionService
             )
             clearSnapshot()

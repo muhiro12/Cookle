@@ -1,41 +1,19 @@
-import Foundation
 import MHPlatform
 
 enum RecipeIntentDraftBuilder {
-    struct Input {
-        let name: String
-        let servingSize: Int
-        let cookingTime: Int
-        let ingredientsText: String
-        let stepsText: String
-        let categoriesText: String
-        let note: String
-    }
-
     static func makeDraft(
-        input: Input,
+        input: RecipeFormInput,
         source: RecipeDraftLogging.Source,
         logger: MHLogger
     ) throws -> RecipeFormDraft {
         let summary = RecipeDraftLogging.intentSummary(
             source: source,
-            ingredientsText: input.ingredientsText,
-            stepsText: input.stepsText,
-            categoriesText: input.categoriesText,
-            note: input.note
+            input: input
         )
 
         do {
             let draft = try RecipeFormOperations.makeDraft(
-                input: .init(
-                    name: input.name,
-                    servingSize: input.servingSize,
-                    cookingTime: input.cookingTime,
-                    ingredientsText: input.ingredientsText,
-                    stepsText: input.stepsText,
-                    categoriesText: input.categoriesText,
-                    note: input.note
-                )
+                input: input
             )
             RecipeDraftLogging.logSuccess(
                 logger: logger,

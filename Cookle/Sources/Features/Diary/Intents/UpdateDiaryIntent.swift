@@ -25,8 +25,8 @@ struct UpdateDiaryIntent: AppIntent {
         let context = modelContainer.mainContext
         let outcome = try await diaryActionService.update(
             context: context,
-            on: date,
             input: .init(
+                date: date,
                 breakfasts: DiaryIntentSupport.resolveRecipes(
                     from: breakfasts,
                     context: context

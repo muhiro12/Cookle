@@ -257,13 +257,9 @@ private extension RecipeFormModel {
     ) async throws -> Bool {
         let result = try await RecipeFormSaveCoordinator.save(
             context: context,
-            request: .init(
-                type: type,
-                recipe: recipe,
-                draft: draft,
-                requestReview: !photos.isEmpty
-                    || CookleImagePlayground.isSupported == false
-            ),
+            type: type,
+            recipe: recipe,
+            draft: draft,
             recipeActionService: recipeActionService
         )
 
