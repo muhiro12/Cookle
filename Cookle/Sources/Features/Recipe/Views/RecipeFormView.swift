@@ -50,11 +50,6 @@ struct RecipeFormView: View {
         .toolbar {
             toolbarItems
         }
-        .overlay {
-            if model.isSaving {
-                CookleSavingOverlay()
-            }
-        }
         .interactiveDismissDisabled()
         .confirmationDialog(
             Text("Debug"),

@@ -39,11 +39,6 @@ struct DiaryFormView: View {
             destinationView(for: type)
         }
         .navigationTitle(Text("Diary"))
-        .overlay {
-            if model.isSaving {
-                CookleSavingOverlay()
-            }
-        }
         .alert(
             Text("Cannot Save Diary"),
             isPresented: isErrorPresentedBinding
@@ -144,11 +139,7 @@ struct DiaryFormView: View {
                     }
                 }
             } label: {
-                if model.isSaving {
-                    ProgressView()
-                } else {
-                    Text(diary != nil ? "Update" : "Add")
-                }
+                Text(diary != nil ? "Update" : "Add")
             }
             .disabled(model.isSaving || model.canSave == false)
         }

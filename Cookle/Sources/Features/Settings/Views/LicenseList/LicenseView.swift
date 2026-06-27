@@ -6,10 +6,8 @@ struct LicenseView: View {
     private var appRuntime
 
     var body: some View {
-        SettingsDeferredRuntimeContentView {
-            appRuntime.licensesView()
-        }
-        .navigationTitle(Text("Licenses"))
+        appRuntime.licensesView()
+            .navigationTitle(Text("Licenses"))
     }
 }
 

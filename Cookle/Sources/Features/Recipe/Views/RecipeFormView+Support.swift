@@ -117,16 +117,12 @@ extension RecipeFormView {
                     }
                 }
             } label: {
-                if formModel.isSaving {
-                    ProgressView()
-                } else {
-                    switch type {
-                    case .create,
-                         .duplicate:
-                        Text("Create")
-                    case .edit:
-                        Text("Update")
-                    }
+                switch type {
+                case .create,
+                     .duplicate:
+                    Text("Create")
+                case .edit:
+                    Text("Update")
                 }
             }
             .disabled(formModel.isSaving || (try? formModel.makeDraft()) == nil)
