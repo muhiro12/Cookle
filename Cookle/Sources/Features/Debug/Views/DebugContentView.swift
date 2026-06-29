@@ -26,6 +26,7 @@ struct DebugContentView<Model: PersistentModel>: View {
                 }
             }
         }
+        .cookleListChrome()
         .navigationTitle(Text("Content"))
     }
 

@@ -13,7 +13,7 @@
 		AD2781342E844E0400B4AC19 /* CookleLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AD2781332E844E0400B4AC19 /* CookleLibrary */; };
 		AD51C0012FA3000000000001 /* CookleLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AD51C0002FA3000000000001 /* CookleLibrary */; };
 		AD7F5C0E2F5B3186008D91F3 /* MHPlatform in Frameworks */ = {isa = PBXBuildFile; productRef = AD7F5C0D2F5B3186008D91F3 /* MHPlatform */; };
-		ADB8BF9D2F8FE0DF00C59D93 /* MHDesign in Frameworks */ = {isa = PBXBuildFile; productRef = ADB8BF9C2F8FE0DF00C59D93 /* MHDesign */; };
+		ADB8BF9D2F8FE0DF00C59D93 /* MHUI in Frameworks */ = {isa = PBXBuildFile; productRef = ADB8BF9C2F8FE0DF00C59D93 /* MHUI */; };
 		ADB8C6262F9293B700C59D93 /* Watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = ADB8C61C2F9293B500C59D93 /* Watch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		ADF13D702E8233A7002572CD /* CookleLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = ADF13D6F2E8233A7002572CD /* CookleLibrary */; };
 /* End PBXBuildFile section */
@@ -109,7 +109,7 @@
 			files = (
 				AD7F5C0E2F5B3186008D91F3 /* MHPlatform in Frameworks */,
 				ADF13D702E8233A7002572CD /* CookleLibrary in Frameworks */,
-				ADB8BF9D2F8FE0DF00C59D93 /* MHDesign in Frameworks */,
+				ADB8BF9D2F8FE0DF00C59D93 /* MHUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -204,7 +204,7 @@
 			packageProductDependencies = (
 				AD7F5C0D2F5B3186008D91F3 /* MHPlatform */,
 				ADF13D6F2E8233A7002572CD /* CookleLibrary */,
-				ADB8BF9C2F8FE0DF00C59D93 /* MHDesign */,
+				ADB8BF9C2F8FE0DF00C59D93 /* MHUI */,
 			);
 			productName = Cookle;
 			productReference = AD8C8E682BFABEE200872BF2 /* Cookle.app */;
@@ -779,10 +779,10 @@
 			package = AD7F5C0F2F5B3186008D91F3 /* XCRemoteSwiftPackageReference "MHPlatform" */;
 			productName = MHPlatform;
 		};
-		ADB8BF9C2F8FE0DF00C59D93 /* MHDesign */ = {
+		ADB8BF9C2F8FE0DF00C59D93 /* MHUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = ADB8BF9B2F8FE0DF00C59D93 /* XCRemoteSwiftPackageReference "MHUI" */;
-			productName = MHDesign;
+			productName = MHUI;
 		};
 		ADF13D6F2E8233A7002572CD /* CookleLibrary */ = {
 			isa = XCSwiftPackageProductDependency;

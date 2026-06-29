@@ -9,6 +9,7 @@ struct StoreListView: View {
         List {
             appRuntime.subscriptionSectionView()
         }
+        .cookleListChrome()
         .navigationTitle(Text("Subscription"))
     }
 }

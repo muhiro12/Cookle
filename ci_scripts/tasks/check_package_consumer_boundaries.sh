@@ -21,7 +21,7 @@ shared_service_design="Designs/Architecture/shared-service-design.md"
 # Cookle follows current MHPlatform/MHUI consumer boundaries:
 # - Cookle is the full-app MHPlatform adopter.
 # - CookleLibrary uses MHPlatformCore and must stay off app runtime products.
-# - Cookle uses MHDesign as a metrics-only presentation dependency.
+# - Cookle uses the full MHUI styled surface for app-owned presentation.
 # - Shared logic and delivery-surface adapters stay off MHUI/MHDesign.
 
 declare -a errors=()
@@ -184,12 +184,12 @@ if ! grep -Eq '/\* MHPlatform \*/' <<<"$cookle_target_block"; then
   append_error "Cookle must keep the MHPlatform umbrella linked in $project_file."
 fi
 
-if ! grep -Eq '/\* MHDesign \*/' <<<"$cookle_target_block"; then
-  append_error "Cookle must keep the MHDesign metrics product linked in $project_file."
+if ! grep -Eq '/\* MHUI \*/' <<<"$cookle_target_block"; then
+  append_error "Cookle must keep the full MHUI styled product linked in $project_file."
 fi
 
-if grep -Eq '/\* MHUI \*/|productName = MHUI;' <<<"$cookle_target_block"; then
-  append_error "Cookle currently uses MHDesign as a metrics-only adopter and must not link the full MHUI product."
+if grep -Eq '/\* MHDesign \*/|productName = MHDesign;' <<<"$cookle_target_block"; then
+  append_error "Cookle uses the full MHUI styled product and must not link only MHDesign."
 fi
 
 if rg -nP '^\s*(?:@preconcurrency\s+)?import\s+MHPlatform\s*$' CookleLibrary/Sources CookleLibrary/Tests >/dev/null; then

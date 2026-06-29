@@ -49,8 +49,8 @@ repository contains the full iOS project together with its shared Swift package.
   intentionally adopts the default `MHPlatform` umbrella surface, while
   `CookleLibrary` stays on `MHPlatformCore` for core-safe shared logic.
 - `MHUI` / `MHDesign` – shared presentation package family. `Cookle` adopts
-  `MHDesign` as a metrics-only dependency for shared spacing and radius values,
-  while product-specific screen composition stays in the app target.
+  the full `MHUI` styled surface for app-owned SwiftUI presentation, while
+  product-specific screen composition stays in the app target.
 - `Designs/Architecture/` – current architecture rules and placement guidance.
 - `Designs/Decisions/` – architecture decision records that capture why major
   design choices were made.
@@ -74,9 +74,8 @@ repository contains the full iOS project together with its shared Swift package.
   stays on the default `MHPlatform` umbrella, `CookleLibrary` stays on
   `MHPlatformCore`, and the repository keeps MHPlatform on the
   `1.0.0..<2.0.0` range with a checked-in `1.9+` resolved baseline.
-- MHUI 1.x through the `MHDesign` product for metrics-only app presentation
-  adoption. The full `MHUI` chrome product is not linked unless Cookle
-  intentionally adopts package-owned styled primitives.
+- MHUI 1.x through the full `MHUI` product for app presentation chrome,
+  semantic theme, shared metrics, and package-owned styled primitives.
 - Cookle does not keep a generic utility package dependency. Small app-owned
   helper behavior stays local, while generic utilities and thin host-app
   presentation shortcuts remain outside MHUI.
@@ -102,9 +101,9 @@ Primary records:
 - MHPlatform consumer boundaries are explicit in this repo: `Cookle` is the
   umbrella-app adopter, `CookleLibrary` stays on `MHPlatformCore`, and
   `Widgets`/`Watch` stay off the umbrella.
-- MHUI consumer boundaries are explicit in this repo: `Cookle` currently adopts
-  `MHDesign` for shared metrics only, `CookleLibrary` stays presentation-free,
-  and `Widgets`/`Watch` call app shared APIs before adding presentation package
+- MHUI consumer boundaries are explicit in this repo: `Cookle` adopts the full
+  `MHUI` styled surface, `CookleLibrary` stays presentation-free, and
+  `Widgets`/`Watch` call app shared APIs before adding presentation package
   dependencies.
 - `MHAppRuntime` remains available as an advanced app-root surface, but this
   repo does not use it as the default adoption path.

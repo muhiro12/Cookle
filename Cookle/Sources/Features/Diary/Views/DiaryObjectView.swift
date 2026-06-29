@@ -38,6 +38,7 @@ struct DiaryObjectView: View {
                 Text("Updated At")
             }
         }
+        .cookleListChrome()
     }
 }
 

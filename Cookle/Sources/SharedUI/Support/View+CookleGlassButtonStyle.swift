@@ -1,3 +1,4 @@
+import MHUI
 import SwiftUI
 
 extension View {
@@ -7,5 +8,9 @@ extension View {
                 isProminent: isProminent
             )
         )
+    }
+
+    func cookleDestructiveButtonStyle() -> some View {
+        buttonStyle(.mhDestructive)
     }
 }

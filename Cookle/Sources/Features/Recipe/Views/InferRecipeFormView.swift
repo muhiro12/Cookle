@@ -1,5 +1,5 @@
 import AppIntents
-import MHDesign
+import MHUI
 import PhotosUI
 import SwiftUI
 
@@ -47,16 +47,9 @@ struct InferRecipeFormView: View {
             }
             .padding()
             .scrollContentBackground(.hidden)
-            .background(Color(.secondarySystemGroupedBackground))
-            .clipShape(
-                .rect(
-                    cornerRadius: RecipeTextEditorLayout.cornerRadius(
-                        metrics: designMetrics
-                    )
-                )
-            )
+            .mhInputChrome()
             .padding()
-            .background(Color(.systemGroupedBackground))
+            .cookleScreenChrome()
             .navigationTitle(Text("Recipe Text"))
             .toolbar {
                 toolbarItems

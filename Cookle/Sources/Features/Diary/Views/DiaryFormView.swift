@@ -34,6 +34,7 @@ struct DiaryFormView: View {
             mealSection(type: .dinner, recipes: $model.dinners)
             noteSection
         }
+        .cookleFormChrome()
         .disabled(model.isSaving)
         .navigationDestination(for: DiaryObjectType.self) { type in
             destinationView(for: type)
