@@ -1,4 +1,4 @@
-import MHDesign
+import MHUI
 import SwiftUI
 
 struct AddMultipleTextsView: View {
@@ -39,16 +39,9 @@ struct AddMultipleTextsView: View {
             }
             .padding()
             .scrollContentBackground(.hidden)
-            .background(Color(.secondarySystemGroupedBackground))
-            .clipShape(
-                .rect(
-                    cornerRadius: RecipeTextEditorLayout.cornerRadius(
-                        metrics: designMetrics
-                    )
-                )
-            )
+            .mhInputChrome()
             .padding()
-            .background(Color(.systemGroupedBackground))
+            .cookleScreenChrome()
             .navigationTitle(title)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

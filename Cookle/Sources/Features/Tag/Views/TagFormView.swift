@@ -36,6 +36,7 @@ struct TagFormView<T: Tag>: View {
                 Text("Recipes")
             }
         }
+        .cookleFormChrome()
         .navigationTitle("Edit " + tag.value)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {

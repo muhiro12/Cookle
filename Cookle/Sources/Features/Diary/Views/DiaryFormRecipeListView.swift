@@ -26,6 +26,7 @@ struct DiaryFormRecipeListView: View {
     var body: some View {
         contentView
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .cookleListChrome()
             .environment(\.editMode, .constant(.active))
             .navigationTitle(type.title)
             .searchable(

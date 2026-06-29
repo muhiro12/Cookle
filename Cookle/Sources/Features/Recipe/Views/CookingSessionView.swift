@@ -87,11 +87,11 @@ private extension CookingSessionView {
                 ) {
                     cookingSessionStore.endSession()
                 }
-                .cookleGlassButtonStyle(isProminent: true)
+                .cookleDestructiveButtonStyle()
             }
             .padding(Layout.screenPadding)
         }
-        .background(Color(.systemGroupedBackground))
+        .cookleScreenChrome()
         .navigationTitle(snapshot.recipeName)
     }
 

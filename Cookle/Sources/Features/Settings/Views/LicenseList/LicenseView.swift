@@ -7,6 +7,7 @@ struct LicenseView: View {
 
     var body: some View {
         appRuntime.licensesView()
+            .cookleListChrome()
             .navigationTitle(Text("Licenses"))
     }
 }

@@ -28,6 +28,7 @@ struct RecipeView: View {
             recipeSections
             recipeActionSection
         }
+        .cookleListChrome()
         .navigationTitle(recipe.name)
         .cookleIdleTimerDisabled()
         .fullScreenCover(isPresented: $isCookingPresented) {

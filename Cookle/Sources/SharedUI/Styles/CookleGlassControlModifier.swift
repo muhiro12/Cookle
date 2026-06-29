@@ -1,21 +1,19 @@
+import MHUI
 import SwiftUI
 
 struct CookleGlassControlModifier<S: Shape>: ViewModifier {
     let shape: S
     let isInteractive: Bool
 
-    @ViewBuilder
     func body(content: Content) -> some View {
-        if #available(iOS 26.0, *) {
-            content.glassEffect(
-                .regular.interactive(isInteractive),
-                in: shape
-            )
+        if isInteractive {
+            content
+                .mhSurface()
+                .clipShape(shape)
         } else {
-            content.background(
-                .thinMaterial,
-                in: shape
-            )
+            content
+                .mhSurface(role: .muted)
+                .clipShape(shape)
         }
     }
 }

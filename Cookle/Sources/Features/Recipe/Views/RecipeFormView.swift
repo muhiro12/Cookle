@@ -44,6 +44,7 @@ struct RecipeFormView: View {
         Form {
             formSections
         }
+        .cookleFormChrome()
         .disabled(model.isSaving)
         .environment(\.editMode, $editMode)
         .navigationTitle(editMode == .inactive ? Text("Recipe") : Text("Editing..."))

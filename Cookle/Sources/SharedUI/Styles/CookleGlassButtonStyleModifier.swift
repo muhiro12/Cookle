@@ -1,3 +1,4 @@
+import MHUI
 import SwiftUI
 
 struct CookleGlassButtonStyleModifier: ViewModifier {
@@ -5,16 +6,10 @@ struct CookleGlassButtonStyleModifier: ViewModifier {
 
     @ViewBuilder
     func body(content: Content) -> some View {
-        if #available(iOS 26.0, *) {
-            if isProminent {
-                content.buttonStyle(.glassProminent)
-            } else {
-                content.buttonStyle(.glass)
-            }
-        } else if isProminent {
-            content.buttonStyle(.borderedProminent)
+        if isProminent {
+            content.buttonStyle(.mhPrimary)
         } else {
-            content.buttonStyle(.bordered)
+            content.buttonStyle(.mhSecondary)
         }
     }
 }

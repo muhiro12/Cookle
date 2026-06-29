@@ -29,6 +29,7 @@ struct PhotoView: View {
             updatedAtSection
             actionSection
         }
+        .cookleListChrome()
         .navigationTitle(
             PhotoDisplayCopy.title(for: photo)
         )

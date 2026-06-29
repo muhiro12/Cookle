@@ -22,6 +22,7 @@ struct TagView<T: Tag>: View {
             updatedAtSection
             actionSection
         }
+        .cookleListChrome()
         .navigationTitle(tag.value)
         .toolbar {
             ToolbarItem {

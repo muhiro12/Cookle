@@ -209,7 +209,7 @@ private extension CookingSessionTimerSection {
             ) {
                 cookingSessionStore.cancelTimer()
             }
-            .cookleGlassButtonStyle()
+            .cookleDestructiveButtonStyle()
         }
     }
 

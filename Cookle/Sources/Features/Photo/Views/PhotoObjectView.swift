@@ -13,6 +13,7 @@ struct PhotoObjectView: View {
             createdAtSection
             updatedAtSection
         }
+        .cookleListChrome()
     }
 
     var photoSection: some View {

@@ -38,6 +38,7 @@ struct IngredientObjectView: View {
                 Text("Updated At")
             }
         }
+        .cookleListChrome()
     }
 }
 

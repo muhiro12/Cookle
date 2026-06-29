@@ -19,6 +19,7 @@ struct DebugPreviewsView: View {
             AdvertisementSection(.small)
             ShortcutsLinkSection()
         }
+        .cookleListChrome()
         .navigationTitle(Text("Previews"))
     }
 }

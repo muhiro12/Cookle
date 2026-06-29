@@ -1,3 +1,4 @@
+import MHUI
 import SwiftUI
 
 struct CookleTopLevelNavigationChromeModifier: ViewModifier {
@@ -6,6 +7,7 @@ struct CookleTopLevelNavigationChromeModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
+            .cookleListChrome()
             .navigationTitle(title)
             .toolbarRole(.editor)
             .modifier(

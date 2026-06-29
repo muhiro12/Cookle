@@ -6,6 +6,7 @@
 //
 
 import MHPlatform
+import MHUI
 import SwiftUI
 
 @main
@@ -32,6 +33,7 @@ struct CookleApp: App {
                     )
                 }
             }
+            .mhTheme(.standard())
             .task(id: isICloudOn) {
                 await bootstrapModel.loadAssembly(
                     isICloudOn: isICloudOn
