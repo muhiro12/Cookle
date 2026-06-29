@@ -74,8 +74,9 @@ that use case.
   app-runtime umbrella adoption.
 - This repository intentionally uses the MHPlatform 1.x semver range
   `1.0.0..<2.0.0` with a checked-in `1.9+` resolved baseline.
-- `Cookle` adopts `MHDesign` from MHUI as a metrics-only presentation
-  dependency for shared spacing and radius values.
+- `Cookle` adopts the full `MHUI` styled surface for app-owned SwiftUI
+  presentation chrome, semantic theme, shared metrics, and package-owned
+  styled primitives.
 - `CookleLibrary` stays presentation-free and must not depend on MHUI or
   MHDesign.
 - `Widgets` and `Watch` stay off MHUI and MHDesign by default; they should call

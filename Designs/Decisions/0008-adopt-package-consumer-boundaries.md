@@ -29,10 +29,8 @@ package-surface parity.
 - `Cookle` remains the full-app `MHPlatform` adopter.
 - `CookleLibrary` remains on `MHPlatformCore` and stays off `MHPlatform`,
   `MHAppRuntime`, app-runtime split products, MHUI, and MHDesign.
-- `Cookle` links `MHDesign` as a metrics-only dependency for shared spacing and
-  radius values.
-- `Cookle` does not link the full `MHUI` product until the app intentionally
-  adopts package-owned styled primitives.
+- `Cookle` links the full `MHUI` product for app-owned SwiftUI presentation
+  chrome, semantic theme, shared metrics, and package-owned styled primitives.
 - `Widgets`, `Watch`, and App Intents call `CookleLibrary` APIs first and stay
   off app-runtime and presentation package umbrellas by default.
 - Cookle does not keep a generic utility package dependency. Generic helpers
@@ -49,7 +47,8 @@ Shared package updates should be evaluated by responsibility:
 
 - platform runtime and app composition concerns belong in the app target
 - reusable business behavior belongs behind `CookleLibrary` Operations facades
-- shared visual metrics can come from `MHDesign`
+- app-owned SwiftUI presentation can use `MHUI` styled primitives and its
+  `MHDesign` re-export
 - Cookle-specific screen composition stays in Cookle views and screen models
 - generic helpers stay app/shared-library-owned unless they become a stable
   platform-foundation contract

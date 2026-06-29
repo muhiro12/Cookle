@@ -65,9 +65,9 @@ symmetry with sibling apps.
 - `CookleLibrary` adopts `MHPlatformCore` for core-safe route, preference,
   persistence-maintenance, and logging contracts. It must not depend on
   `MHPlatform`, `MHAppRuntime`, app-runtime split products, MHUI, or MHDesign.
-- `Cookle` adopts `MHDesign` as a metrics-only MHUI dependency for shared
-  spacing and corner-radius values. Cookle does not link the full `MHUI`
-  product until it intentionally adopts package-owned styled primitives.
+- `Cookle` adopts the full `MHUI` styled surface for app-owned SwiftUI
+  presentation chrome, semantic theme, shared metrics, and package-owned
+  styled primitives.
 - `Widgets`, `Watch`, and App Intents call Cookle shared APIs first. They stay
   off app-runtime and presentation package umbrellas by default.
 - Cookle does not keep a generic utility package dependency. Small app-owned
