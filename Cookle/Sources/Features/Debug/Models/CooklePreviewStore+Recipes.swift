@@ -1,6 +1,8 @@
 import Foundation
 import SwiftData
 
+// swiftlint:disable file_length function_body_length line_length
+
 extension CooklePreviewStore {
     struct PreviewIngredient {
         let name: String
@@ -25,7 +27,11 @@ extension CooklePreviewStore {
         .create(
             context: context,
             content: .init(
-                name: "Spaghetti Carbonara",
+                name: String(
+                    localized: "Spaghetti Carbonara",
+                    table: "SampleData",
+                    bundle: .main
+                ),
                 photos: createPhotoObjects(
                     context,
                     assets: [.spaghettiCarbonara1, .spaghettiCarbonara2],
@@ -36,26 +42,79 @@ extension CooklePreviewStore {
                 ingredients: ingredientObjects(
                     context,
                     items: [
-                        .init(name: "Spaghetti", amount: "200g"),
-                        .init(name: "Eggs", amount: "2"),
-                        .init(name: "Parmesan cheese", amount: "50g"),
-                        .init(name: "Pancetta", amount: "100g"),
-                        .init(name: "Black pepper", amount: "to taste"),
-                        .init(name: "Salt", amount: "to taste")
+                        .init(
+                            name: String(localized: "Spaghetti", table: "SampleData", bundle: .main),
+                            amount: String(localized: "200g", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Eggs", table: "SampleData", bundle: .main),
+                            amount: "2"
+                        ),
+                        .init(
+                            name: String(
+                                localized: "Parmesan cheese",
+                                table: "SampleData",
+                                bundle: .main
+                            ),
+                            amount: String(localized: "50g", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Pancetta", table: "SampleData", bundle: .main),
+                            amount: String(localized: "100g", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Black pepper", table: "SampleData", bundle: .main),
+                            amount: String(localized: "to taste", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Salt", table: "SampleData", bundle: .main),
+                            amount: String(localized: "to taste", table: "SampleData", bundle: .main)
+                        )
                     ]
                 ),
                 steps: [
-                    "Boil water in a large pot and add salt.",
-                    "Cook the spaghetti until al dente.",
-                    "In a separate pan, cook the pancetta until crispy.",
-                    "Beat the eggs in a bowl and mix with grated Parmesan cheese.",
-                    "Drain the spaghetti and mix with pancetta and the egg mixture.",
-                    "Season with black pepper and serve immediately."
+                    String(
+                        localized: "Boil water in a large pot and add salt.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Cook the spaghetti until al dente.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "In a separate pan, cook the pancetta until crispy.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Beat the eggs in a bowl and mix with grated Parmesan cheese.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Drain the spaghetti and mix with pancetta and the egg mixture.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Season with black pepper and serve immediately.",
+                        table: "SampleData",
+                        bundle: .main
+                    )
                 ],
                 categories: [
-                    .create(context: context, value: "Italian")
+                    .create(
+                        context: context,
+                        value: String(localized: "Italian", table: "SampleData", bundle: .main)
+                    )
                 ],
-                note: "Use freshly grated Parmesan for the best flavor."
+                note: String(
+                    localized: "Use freshly grated Parmesan for the best flavor.",
+                    table: "SampleData",
+                    bundle: .main
+                )
             )
         )
     }
@@ -67,7 +126,7 @@ extension CooklePreviewStore {
         .create(
             context: context,
             content: .init(
-                name: "Beef Stew",
+                name: String(localized: "Beef Stew", table: "SampleData", bundle: .main),
                 photos: createPhotoObjects(
                     context,
                     assets: [.beefStew1, .beefStew2],
@@ -78,32 +137,101 @@ extension CooklePreviewStore {
                 ingredients: ingredientObjects(
                     context,
                     items: [
-                        .init(name: "Beef chuck", amount: "1 kg"),
-                        .init(name: "Carrots", amount: "3"),
-                        .init(name: "Potatoes", amount: "4"),
-                        .init(name: "Onions", amount: "2"),
-                        .init(name: "Beef broth", amount: "4 cups"),
-                        .init(name: "Tomato paste", amount: "2 tbsp"),
-                        .init(name: "Flour", amount: "1/4 cup"),
-                        .init(name: "Salt", amount: "to taste"),
-                        .init(name: "Black pepper", amount: "to taste"),
-                        .init(name: "Olive oil", amount: "2 tbsp")
+                        .init(
+                            name: String(localized: "Beef chuck", table: "SampleData", bundle: .main),
+                            amount: String(localized: "1 kg", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Carrots", table: "SampleData", bundle: .main),
+                            amount: "3"
+                        ),
+                        .init(
+                            name: String(localized: "Potatoes", table: "SampleData", bundle: .main),
+                            amount: "4"
+                        ),
+                        .init(
+                            name: String(localized: "Onions", table: "SampleData", bundle: .main),
+                            amount: "2"
+                        ),
+                        .init(
+                            name: String(localized: "Beef broth", table: "SampleData", bundle: .main),
+                            amount: String(localized: "4 cups", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Tomato paste", table: "SampleData", bundle: .main),
+                            amount: String(localized: "2 tbsp", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Flour", table: "SampleData", bundle: .main),
+                            amount: String(localized: "1/4 cup", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Salt", table: "SampleData", bundle: .main),
+                            amount: String(localized: "to taste", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Black pepper", table: "SampleData", bundle: .main),
+                            amount: String(localized: "to taste", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Olive oil", table: "SampleData", bundle: .main),
+                            amount: String(localized: "2 tbsp", table: "SampleData", bundle: .main)
+                        )
                     ]
                 ),
                 steps: [
-                    "Cut the beef into large chunks and season with salt and pepper.",
-                    "Heat the oil in a large pot over medium-high heat.",
-                    "Brown the beef on all sides, then remove from the pot.",
-                    "Add the chopped onions, carrots, and potatoes to the pot and cook for 5 minutes.",
-                    "Stir in the flour and tomato paste, and cook for another minute.",
-                    "Return the beef to the pot and add the beef broth.",
-                    "Bring to a boil, then reduce the heat and simmer for 2 hours, until the beef is tender.",
-                    "Season with salt and pepper to taste, and serve hot."
+                    String(
+                        localized: "Cut the beef into large chunks and season with salt and pepper.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Heat the oil in a large pot over medium-high heat.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Brown the beef on all sides, then remove from the pot.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Add the chopped onions, carrots, and potatoes to the pot and cook for 5 minutes.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Stir in the flour and tomato paste, and cook for another minute.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Return the beef to the pot and add the beef broth.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Bring to a boil, then reduce the heat and simmer for 2 hours, until the beef is tender.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Season with salt and pepper to taste, and serve hot.",
+                        table: "SampleData",
+                        bundle: .main
+                    )
                 ],
                 categories: [
-                    .create(context: context, value: "Comfort Food")
+                    .create(
+                        context: context,
+                        value: String(localized: "Comfort Food", table: "SampleData", bundle: .main)
+                    )
                 ],
-                note: "This stew is even better the next day."
+                note: String(
+                    localized: "This stew is even better the next day.",
+                    table: "SampleData",
+                    bundle: .main
+                )
             )
         )
     }
@@ -115,7 +243,7 @@ extension CooklePreviewStore {
         .create(
             context: context,
             content: .init(
-                name: "Chicken Stir Fry",
+                name: String(localized: "Chicken Stir Fry", table: "SampleData", bundle: .main),
                 photos: createPhotoObjects(
                     context,
                     assets: [.chickenStirFry1, .chickenStirFry2],
@@ -126,32 +254,102 @@ extension CooklePreviewStore {
                 ingredients: ingredientObjects(
                     context,
                     items: [
-                        .init(name: "Chicken breast", amount: "500g"),
-                        .init(name: "Bell peppers", amount: "2"),
-                        .init(name: "Broccoli", amount: "1 head"),
-                        .init(name: "Soy sauce", amount: "3 tbsp"),
-                        .init(name: "Garlic", amount: "2 cloves"),
-                        .init(name: "Ginger", amount: "1 inch"),
-                        .init(name: "Vegetable oil", amount: "2 tbsp"),
-                        .init(name: "Cornstarch", amount: "1 tbsp"),
-                        .init(name: "Water", amount: "1/2 cup")
+                        .init(
+                            name: String(localized: "Chicken breast", table: "SampleData", bundle: .main),
+                            amount: String(localized: "500g", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Bell peppers", table: "SampleData", bundle: .main),
+                            amount: "2"
+                        ),
+                        .init(
+                            name: String(localized: "Broccoli", table: "SampleData", bundle: .main),
+                            amount: String(localized: "1 head", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Soy sauce", table: "SampleData", bundle: .main),
+                            amount: String(localized: "3 tbsp", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Garlic", table: "SampleData", bundle: .main),
+                            amount: String(localized: "2 cloves", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Ginger", table: "SampleData", bundle: .main),
+                            amount: String(localized: "1 inch", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Vegetable oil", table: "SampleData", bundle: .main),
+                            amount: String(localized: "2 tbsp", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Cornstarch", table: "SampleData", bundle: .main),
+                            amount: String(localized: "1 tbsp", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Water", table: "SampleData", bundle: .main),
+                            amount: String(localized: "1/2 cup", table: "SampleData", bundle: .main)
+                        )
                     ]
                 ),
                 steps: [
-                    "Cut the chicken into bite-sized pieces.",
-                    "Chop the bell peppers and broccoli into small pieces.",
-                    "Heat the oil in a large skillet over medium-high heat.",
-                    "Add the chicken and cook until browned.",
-                    "Add the garlic and ginger, and cook for another minute.",
-                    "Add the bell peppers and broccoli, and cook until tender.",
-                    "Mix the soy sauce, cornstarch, and water in a small bowl.",
-                    "Pour the sauce over the chicken and vegetables, and cook until thickened.",
-                    "Serve hot with rice."
+                    String(
+                        localized: "Cut the chicken into bite-sized pieces.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Chop the bell peppers and broccoli into small pieces.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Heat the oil in a large skillet over medium-high heat.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Add the chicken and cook until browned.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Add the garlic and ginger, and cook for another minute.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Add the bell peppers and broccoli, and cook until tender.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Mix the soy sauce, cornstarch, and water in a small bowl.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Pour the sauce over the chicken and vegetables, and cook until thickened.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Serve hot with rice.",
+                        table: "SampleData",
+                        bundle: .main
+                    )
                 ],
                 categories: [
-                    .create(context: context, value: "Asian")
+                    .create(
+                        context: context,
+                        value: String(localized: "Asian", table: "SampleData", bundle: .main)
+                    )
                 ],
-                note: "You can use any vegetables you like for this stir fry."
+                note: String(
+                    localized: "You can use any vegetables you like for this stir fry.",
+                    table: "SampleData",
+                    bundle: .main
+                )
             )
         )
     }
@@ -163,7 +361,7 @@ extension CooklePreviewStore {
         .create(
             context: context,
             content: .init(
-                name: "Vegetable Soup",
+                name: String(localized: "Vegetable Soup", table: "SampleData", bundle: .main),
                 photos: createPhotoObjects(
                     context,
                     assets: [.vegetableSoup1, .vegetableSoup2],
@@ -174,32 +372,101 @@ extension CooklePreviewStore {
                 ingredients: ingredientObjects(
                     context,
                     items: [
-                        .init(name: "Carrots", amount: "3"),
-                        .init(name: "Potatoes", amount: "2"),
-                        .init(name: "Celery", amount: "2 stalks"),
-                        .init(name: "Onion", amount: "1"),
-                        .init(name: "Garlic", amount: "2 cloves"),
-                        .init(name: "Vegetable broth", amount: "6 cups"),
-                        .init(name: "Tomatoes", amount: "2"),
-                        .init(name: "Salt", amount: "to taste"),
-                        .init(name: "Black pepper", amount: "to taste"),
-                        .init(name: "Olive oil", amount: "2 tbsp")
+                        .init(
+                            name: String(localized: "Carrots", table: "SampleData", bundle: .main),
+                            amount: "3"
+                        ),
+                        .init(
+                            name: String(localized: "Potatoes", table: "SampleData", bundle: .main),
+                            amount: "2"
+                        ),
+                        .init(
+                            name: String(localized: "Celery", table: "SampleData", bundle: .main),
+                            amount: String(localized: "2 stalks", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Onion", table: "SampleData", bundle: .main),
+                            amount: "1"
+                        ),
+                        .init(
+                            name: String(localized: "Garlic", table: "SampleData", bundle: .main),
+                            amount: String(localized: "2 cloves", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Vegetable broth", table: "SampleData", bundle: .main),
+                            amount: String(localized: "6 cups", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Tomatoes", table: "SampleData", bundle: .main),
+                            amount: "2"
+                        ),
+                        .init(
+                            name: String(localized: "Salt", table: "SampleData", bundle: .main),
+                            amount: String(localized: "to taste", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Black pepper", table: "SampleData", bundle: .main),
+                            amount: String(localized: "to taste", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Olive oil", table: "SampleData", bundle: .main),
+                            amount: String(localized: "2 tbsp", table: "SampleData", bundle: .main)
+                        )
                     ]
                 ),
                 steps: [
-                    "Chop the carrots, potatoes, celery, onion, and tomatoes.",
-                    "Heat the oil in a large pot over medium heat.",
-                    "Add the chopped onions and garlic, and sauté until golden brown.",
-                    "Add the carrots, potatoes, and celery, and cook for another 5 minutes.",
-                    "Pour in the vegetable broth and bring to a boil.",
-                    "Reduce the heat and simmer for 20 minutes, until the vegetables are tender.",
-                    "Season with salt and pepper to taste.",
-                    "Serve hot with a sprinkle of fresh herbs."
+                    String(
+                        localized: "Chop the carrots, potatoes, celery, onion, and tomatoes.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Heat the oil in a large pot over medium heat.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Add the chopped onions and garlic, and sauté until golden brown.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Add the carrots, potatoes, and celery, and cook for another 5 minutes.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Pour in the vegetable broth and bring to a boil.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Reduce the heat and simmer for 20 minutes, until the vegetables are tender.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Season with salt and pepper to taste.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Serve hot with a sprinkle of fresh herbs.",
+                        table: "SampleData",
+                        bundle: .main
+                    )
                 ],
                 categories: [
-                    .create(context: context, value: "Healthy")
+                    .create(
+                        context: context,
+                        value: String(localized: "Healthy", table: "SampleData", bundle: .main)
+                    )
                 ],
-                note: "You can add any vegetables you have on hand."
+                note: String(
+                    localized: "You can add any vegetables you have on hand.",
+                    table: "SampleData",
+                    bundle: .main
+                )
             )
         )
     }
@@ -211,7 +478,7 @@ extension CooklePreviewStore {
         .create(
             context: context,
             content: .init(
-                name: "Pancakes",
+                name: String(localized: "Pancakes", table: "SampleData", bundle: .main),
                 photos: createPhotoObjects(
                     context,
                     assets: [.pancakes1, .pancakes2],
@@ -222,27 +489,79 @@ extension CooklePreviewStore {
                 ingredients: ingredientObjects(
                     context,
                     items: [
-                        .init(name: "All-purpose flour", amount: "1 cup"),
-                        .init(name: "Milk", amount: "1 cup"),
-                        .init(name: "Egg", amount: "1"),
-                        .init(name: "Baking powder", amount: "2 tsp"),
-                        .init(name: "Salt", amount: "1/4 tsp"),
-                        .init(name: "Sugar", amount: "1 tbsp"),
-                        .init(name: "Butter", amount: "2 tbsp")
+                        .init(
+                            name: String(localized: "All-purpose flour", table: "SampleData", bundle: .main),
+                            amount: String(localized: "1 cup", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Milk", table: "SampleData", bundle: .main),
+                            amount: String(localized: "1 cup", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Egg", table: "SampleData", bundle: .main),
+                            amount: "1"
+                        ),
+                        .init(
+                            name: String(localized: "Baking powder", table: "SampleData", bundle: .main),
+                            amount: String(localized: "2 tsp", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Salt", table: "SampleData", bundle: .main),
+                            amount: String(localized: "1/4 tsp", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Sugar", table: "SampleData", bundle: .main),
+                            amount: String(localized: "1 tbsp", table: "SampleData", bundle: .main)
+                        ),
+                        .init(
+                            name: String(localized: "Butter", table: "SampleData", bundle: .main),
+                            amount: String(localized: "2 tbsp", table: "SampleData", bundle: .main)
+                        )
                     ]
                 ),
                 steps: [
-                    "In a large bowl, mix together the flour, baking powder, salt, and sugar.",
-                    "Make a well in the center and pour in the milk, egg, and melted butter.",
-                    "Mix until smooth.",
-                    "Heat a lightly oiled griddle or frying pan over medium-high heat.",
-                    "Pour or scoop the batter onto the griddle, using approximately 1/4 cup for each pancake.",
-                    "Brown on both sides and serve hot."
+                    String(
+                        localized: "In a large bowl, mix together the flour, baking powder, salt, and sugar.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Make a well in the center and pour in the milk, egg, and melted butter.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Mix until smooth.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Heat a lightly oiled griddle or frying pan over medium-high heat.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Pour or scoop the batter onto the griddle, using approximately 1/4 cup for each pancake.",
+                        table: "SampleData",
+                        bundle: .main
+                    ),
+                    String(
+                        localized: "Brown on both sides and serve hot.",
+                        table: "SampleData",
+                        bundle: .main
+                    )
                 ],
                 categories: [
-                    .create(context: context, value: "Breakfast")
+                    .create(
+                        context: context,
+                        value: String(localized: "Breakfast", table: "SampleData", bundle: .main)
+                    )
                 ],
-                note: "Serve with syrup, butter, and fresh fruits."
+                note: String(
+                    localized: "Serve with syrup, butter, and fresh fruits.",
+                    table: "SampleData",
+                    bundle: .main
+                )
             )
         )
     }
@@ -276,3 +595,5 @@ extension CooklePreviewStore {
         }
     }
 }
+
+// swiftlint:enable file_length function_body_length line_length

@@ -65,17 +65,7 @@ final class CooklePreviewStore {
 
 private extension CooklePreviewStore {
     var previewDiaryNote: String {
-        """
-          Today's menu:
-          - Breakfast: Delicious pancakes served with syrup, butter, and fresh fruits.
-          - Lunch: Chicken stir fry with bell peppers and broccoli, accompanied by a hearty vegetable soup.
-          - Dinner: Classic spaghetti carbonara and warm beef stew for a comforting end to the day.
-
-          Tips:
-          - Try adding blueberries or bananas to the pancakes for extra flavor.
-          - The vegetable soup can be stored for up to 3 days, making it perfect for leftovers.
-          - The beef stew tastes even better the next day, so make extra for an easy meal tomorrow.
-          """
+        String(localized: "Preview Diary Note", table: "SampleData", bundle: .main)
     }
 
     func createPreviewDiaries(
