@@ -23,7 +23,8 @@ final class TagActionService {
         value: String
     ) async throws -> MutationOutcome<Void> {
         try await run(
-            name: "renameIngredient"
+            name: "renameIngredient",
+            context: context
         ) {
             try TagOperations.renameWithOutcome(
                 context: context,
@@ -40,7 +41,8 @@ final class TagActionService {
         value: String
     ) async throws -> MutationOutcome<Void> {
         try await run(
-            name: "renameCategory"
+            name: "renameCategory",
+            context: context
         ) {
             try TagOperations.renameWithOutcome(
                 context: context,
@@ -83,7 +85,8 @@ final class TagActionService {
         category: Category
     ) async throws -> MutationOutcome<Void> {
         try await run(
-            name: "deleteCategory"
+            name: "deleteCategory",
+            context: context
         ) {
             TagOperations.deleteWithOutcome(
                 context: context,
@@ -98,7 +101,8 @@ final class TagActionService {
         ingredient: Ingredient
     ) async throws -> MutationOutcome<Void> {
         try await run(
-            name: "deleteIngredient"
+            name: "deleteIngredient",
+            context: context
         ) {
             try TagOperations.deleteWithOutcome(
                 context: context,
@@ -114,7 +118,8 @@ final class TagActionService {
     ) async throws -> MutationOutcome<Void> {
         if let ingredient = tag as? Ingredient {
             return try await run(
-                name: "mergeDuplicateIngredients"
+                name: "mergeDuplicateIngredients",
+                context: context
             ) {
                 try TagOperations.mergeDuplicatesWithOutcome(
                     context: context,
@@ -125,7 +130,8 @@ final class TagActionService {
 
         if let category = tag as? Category {
             return try await run(
-                name: "mergeDuplicateCategories"
+                name: "mergeDuplicateCategories",
+                context: context
             ) {
                 try TagOperations.mergeDuplicatesWithOutcome(
                     context: context,
@@ -143,10 +149,12 @@ final class TagActionService {
 private extension TagActionService {
     func run<Value>(
         name: String,
+        context: ModelContext,
         operation: @escaping @MainActor () throws -> MutationOutcome<Value>
     ) async throws -> MutationOutcome<Value> {
         try await CookleMutationWorkflow.run(
             name: name,
+            context: context,
             adapter: effectAdapter,
             operation: operation
         )

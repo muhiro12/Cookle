@@ -18,7 +18,8 @@ final class DiaryActionService {
         input: DiaryFormInput
     ) async throws -> MutationOutcome<Diary> {
         try await run(
-            name: "createDiary"
+            name: "createDiary",
+            context: context
         ) {
             DiaryOperations.createWithOutcome(
                 context: context,
@@ -34,7 +35,8 @@ final class DiaryActionService {
         input: DiaryFormInput
     ) async throws -> MutationOutcome<Diary> {
         try await run(
-            name: "updateDiary"
+            name: "updateDiary",
+            context: context
         ) {
             DiaryOperations.updateWithOutcome(
                 context: context,
@@ -75,7 +77,8 @@ final class DiaryActionService {
         type: DiaryObjectType
     ) async throws -> MutationOutcome<Diary> {
         try await run(
-            name: "addRecipeToDiary"
+            name: "addRecipeToDiary",
+            context: context
         ) {
             try DiaryOperations.addWithOutcome(
                 context: context,
@@ -92,7 +95,8 @@ final class DiaryActionService {
         diary: Diary
     ) async throws -> MutationOutcome<Void> {
         try await run(
-            name: "deleteDiary"
+            name: "deleteDiary",
+            context: context
         ) {
             DiaryOperations.deleteWithOutcome(
                 context: context,
@@ -105,10 +109,12 @@ final class DiaryActionService {
 private extension DiaryActionService {
     func run<Value>(
         name: String,
+        context: ModelContext,
         operation: @escaping @MainActor () throws -> MutationOutcome<Value>
     ) async throws -> MutationOutcome<Value> {
         try await CookleMutationWorkflow.run(
             name: name,
+            context: context,
             adapter: effectAdapter,
             operation: operation
         )

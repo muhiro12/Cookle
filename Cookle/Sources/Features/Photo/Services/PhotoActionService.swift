@@ -22,7 +22,8 @@ final class PhotoActionService {
         photo: Photo
     ) async throws -> MutationOutcome<Void> {
         try await run(
-            name: "deletePhoto"
+            name: "deletePhoto",
+            context: context
         ) {
             PhotoOperations.deleteWithOutcome(
                 context: context,
@@ -35,10 +36,12 @@ final class PhotoActionService {
 private extension PhotoActionService {
     func run<Value>(
         name: String,
+        context: ModelContext,
         operation: @escaping @MainActor () throws -> MutationOutcome<Value>
     ) async throws -> MutationOutcome<Value> {
         try await CookleMutationWorkflow.run(
             name: name,
+            context: context,
             adapter: effectAdapter,
             operation: operation
         )

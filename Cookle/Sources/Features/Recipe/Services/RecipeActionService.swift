@@ -36,6 +36,7 @@ final class RecipeActionService {
         )
         return try await run(
             name: "createRecipe",
+            context: context,
             requestReview: requestReview,
             saveSummary: summary
         ) {
@@ -60,6 +61,7 @@ final class RecipeActionService {
         )
         return try await run(
             name: "updateRecipe",
+            context: context,
             requestReview: requestReview,
             saveSummary: summary
         ) {
@@ -78,6 +80,7 @@ final class RecipeActionService {
     ) async throws -> MutationOutcome<Void> {
         try await run(
             name: "deleteRecipe",
+            context: context,
             requestReview: false
         ) {
             RecipeOperations.deleteWithOutcome(
@@ -147,6 +150,7 @@ final class RecipeActionService {
     ) async throws -> MutationOutcome<Void> {
         try await run(
             name: "recordOpenedRecipe",
+            context: nil,
             requestReview: false
         ) {
             RecipeOperations.recordLastOpenedRecipeWithOutcome(
@@ -183,6 +187,7 @@ private extension RecipeActionService {
 
     func run<Value>(
         name: String,
+        context: ModelContext?,
         requestReview: Bool,
         saveSummary: RecipeSaveLogging.Summary? = nil,
         operation: @escaping @MainActor () throws -> MutationOutcome<Value>
@@ -190,6 +195,7 @@ private extension RecipeActionService {
         do {
             let outcome = try await CookleMutationWorkflow.run(
                 name: name,
+                context: context,
                 adapter: effectAdapter
             ) {
                 let outcome = try operation()

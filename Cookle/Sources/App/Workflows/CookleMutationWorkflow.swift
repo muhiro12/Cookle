@@ -1,4 +1,5 @@
 import MHPlatform
+import SwiftData
 
 @MainActor
 enum CookleMutationWorkflow {
@@ -10,17 +11,24 @@ enum CookleMutationWorkflow {
 
     static func run<Value>(
         name: String,
+        context: ModelContext?,
         adapter: MHMutationAdapter<MutationEffect>,
         operation: @escaping @MainActor () throws -> MutationOutcome<Value>
     ) async throws -> MutationOutcome<Value> {
         let result = try await MHMutationWorkflow.runThrowing(
             name: name,
             operation: {
-                let outcome = try operation()
-                return OperationResult(
-                    outcome: outcome,
-                    effects: outcome.effects
-                )
+                do {
+                    let outcome = try operation()
+                    try context?.save()
+                    return OperationResult(
+                        outcome: outcome,
+                        effects: outcome.effects
+                    )
+                } catch {
+                    context?.rollback()
+                    throw error
+                }
             },
             adapter: adapter,
             projection: .valueAndFollowUp(
