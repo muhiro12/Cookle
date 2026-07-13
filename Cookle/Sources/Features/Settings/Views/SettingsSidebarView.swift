@@ -205,14 +205,21 @@ struct SettingsSidebarView: View {
                     displayedComponents: .hourAndMinute
                 )
                 if notificationService.authorizationStatus != .denied {
-                    Button("Send test notification") {
-                        Task {
-                            await notificationService.sendTestSuggestionNotification()
-                        }
-                    }
+                    sendTestNotificationButton
                 }
             }
         }
+    }
+
+    var sendTestNotificationButton: some View {
+        Button("Send test notification") {
+            Task {
+                await model.sendTestSuggestionNotification(
+                    notificationService: notificationService
+                )
+            }
+        }
+        .disabled(model.isManageActionInProgress)
     }
 
     var generalSection: some View {

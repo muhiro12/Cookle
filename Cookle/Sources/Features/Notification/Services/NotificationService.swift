@@ -103,7 +103,7 @@ final class NotificationService: NSObject {
         }
     }
 
-    func sendTestSuggestionNotification() async {
+    func sendTestSuggestionNotification() async throws {
         let status = await MHNotificationOrchestrator.requestAuthorizationIfNeeded(
             center: notificationCenter,
             options: authorizationOptions
@@ -114,7 +114,7 @@ final class NotificationService: NSObject {
             return
         }
 
-        let snapshot = await syncWorker.randomRecipeSnapshot()
+        let snapshot = try await testSuggestionSnapshot()
         let attachmentFileURL: URL? = if let snapshot {
             await syncWorker.prepareAttachmentFileURL(
                 for: snapshot
@@ -140,7 +140,15 @@ final class NotificationService: NSObject {
             content: content,
             trigger: trigger
         )
-        try? await notificationCenter.add(request)
+        do {
+            try await notificationCenter.add(request)
+        } catch {
+            logTestSuggestionFailure(
+                error,
+                stage: "request_add"
+            )
+            throw error
+        }
     }
 }
 
@@ -231,6 +239,18 @@ extension NotificationService {
         return nil
     }
 
+    func testSuggestionSnapshot() async throws -> NotificationRecipeSnapshot? {
+        do {
+            return try await syncWorker.randomRecipeSnapshot()
+        } catch {
+            logTestSuggestionFailure(
+                error,
+                stage: "snapshot_fetch"
+            )
+            throw error
+        }
+    }
+
     func isAuthorizationGranted(
         _ status: UNAuthorizationStatus
     ) -> Bool {
@@ -277,23 +297,29 @@ extension NotificationService {
             return
         }
 
-        let plan = await syncWorker.buildPlan(
-            hour: notificationHour,
-            minute: notificationMinute
-        )
+        let plan: NotificationSyncWorker.Plan
+        do {
+            plan = try await syncWorker.buildPlan(
+                hour: notificationHour,
+                minute: notificationMinute
+            )
+        } catch {
+            logPlanBuildFailure(error)
+            return
+        }
         logPlanBuilt(plan)
         await applyPlan(plan)
     }
 
     func replaceManagedSuggestionRequests(
         with requests: [UNNotificationRequest]
-    ) async {
+    ) async -> MHNotificationRequestSyncOutcome {
         let isManagedIdentifier: @Sendable (String) -> Bool = { identifier in
             identifier.hasPrefix(NotificationConstants.suggestionIdentifierPrefix)
                 || identifier == NotificationConstants.testSuggestionIdentifier
         }
 
-        _ = await MHNotificationOrchestrator.replaceManagedPendingRequests(
+        return await MHNotificationOrchestrator.replaceManagedPendingRequests(
             center: notificationCenter,
             requests: requests,
             isManagedIdentifier: isManagedIdentifier

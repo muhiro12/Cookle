@@ -39,8 +39,8 @@ actor NotificationSyncWorker {
         minute: Int,
         daysAhead: Int = 14,
         now: Date = .now
-    ) -> Plan {
-        let snapshots = fetchRecipeSnapshots()
+    ) throws -> Plan {
+        let snapshots = try fetchRecipeSnapshots()
         let suggestions = RecipeOperations.buildDailySuggestions(
             candidates: suggestionCandidates(
                 snapshots: snapshots
@@ -73,8 +73,8 @@ actor NotificationSyncWorker {
         )
     }
 
-    func randomRecipeSnapshot() -> NotificationRecipeSnapshot? {
-        fetchRecipeSnapshots().randomElement()
+    func randomRecipeSnapshot() throws -> NotificationRecipeSnapshot? {
+        try fetchRecipeSnapshots().randomElement()
     }
 
     func prepareAttachmentFileURL(
@@ -91,14 +91,12 @@ actor NotificationSyncWorker {
 }
 
 private extension NotificationSyncWorker {
-    func fetchRecipeSnapshots() -> [NotificationRecipeSnapshot] {
+    func fetchRecipeSnapshots() throws -> [NotificationRecipeSnapshot] {
         let snapshotFetchStartedAt = Date.timeIntervalSinceReferenceDate
         let context = ModelContext(modelContainer)
-        guard let recipes = try? context.fetch(
+        let recipes = try context.fetch(
             .recipes(.all)
-        ) else {
-            return []
-        }
+        )
         let snapshots = recipes.map(NotificationRecipeSnapshot.make(recipe:))
         logger.notice(
             "notification snapshot fetch finished",

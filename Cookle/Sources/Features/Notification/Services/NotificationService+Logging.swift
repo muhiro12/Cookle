@@ -51,7 +51,7 @@ extension NotificationService {
     }
 
     func clearSuggestionsAndAttachments() async {
-        await replaceManagedSuggestionRequests(with: [])
+        _ = await replaceManagedSuggestionRequests(with: [])
         await syncWorker.removeAllAttachments()
     }
 
@@ -82,15 +82,48 @@ extension NotificationService {
         _ plan: NotificationSyncWorker.Plan
     ) async {
         let requestApplyStartedAt = Date.timeIntervalSinceReferenceDate
-        await replaceManagedSuggestionRequests(
+        let outcome = await replaceManagedSuggestionRequests(
             with: plan.preparedRequests.map(suggestionRequest)
         )
         var metadata = planMetadata(plan)
         metadata["duration_ms"] = durationMilliseconds(
             since: requestApplyStartedAt
         ).description
-        syncLogger.notice(
-            "notification request apply finished",
+        metadata["removed_request_count"] = outcome.removedPendingIdentifiers.count.description
+        metadata["added_request_count"] = outcome.addedRequestIdentifiers.count.description
+        metadata["failed_request_count"] = outcome.failedRequestIdentifiers.count.description
+        metadata["failed_request_identifiers"] = outcome.failedRequestIdentifiers.joined(
+            separator: ","
+        )
+
+        if outcome.failedRequestIdentifiers.isEmpty {
+            syncLogger.notice(
+                "notification request apply finished",
+                metadata: metadata
+            )
+        } else {
+            syncLogger.warning(
+                "notification request apply finished with failures",
+                metadata: metadata
+            )
+        }
+    }
+
+    func logPlanBuildFailure(_ error: any Error) {
+        syncLogger.error(
+            "notification plan build failed",
+            metadata: errorMetadata(error)
+        )
+    }
+
+    func logTestSuggestionFailure(
+        _ error: any Error,
+        stage: String
+    ) {
+        var metadata = errorMetadata(error)
+        metadata["stage"] = stage
+        syncLogger.error(
+            "test notification failed",
             metadata: metadata
         )
     }
@@ -184,5 +217,14 @@ extension NotificationService {
         @unknown default:
             "unknown"
         }
+    }
+
+    func errorMetadata(_ error: any Error) -> [String: String] {
+        [
+            "error_type": String(
+                describing: type(of: error)
+            ),
+            "error": error.localizedDescription
+        ]
     }
 }

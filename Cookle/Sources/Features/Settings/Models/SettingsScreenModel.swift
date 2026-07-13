@@ -41,6 +41,23 @@ final class SettingsScreenModel {
         await settingsActionService.applyNotificationSettings()
     }
 
+    func sendTestSuggestionNotification(
+        notificationService: NotificationService
+    ) async {
+        guard beginManageAction() else {
+            return
+        }
+        defer {
+            isManageActionInProgress = false
+        }
+
+        do {
+            try await notificationService.sendTestSuggestionNotification()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
     func prepareBackupExport(
         modelContainer: ModelContainer,
         settingsActionService: SettingsActionService
