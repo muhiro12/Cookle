@@ -11,9 +11,6 @@ report_exclude:
 retain_files:
   - Cookle/Sources/**/Intents/*.swift
   - Widgets/Sources/**/Intents/*.swift
-  - Cookle/Sources/Common/Intents/CookleShortcuts.swift
-  - Cookle/Sources/Recipe/Models/RecipeEntity.swift
-  - Cookle/Sources/Recipe/Models/RecipeEntityQuery.swift
 retain_objc_accessible: true
 retain_swift_ui_previews: true
 schemes:
