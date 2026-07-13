@@ -32,14 +32,16 @@ nonisolated public final class IngredientObject: SubObject {
     }
 
     /// Inserts an ingredient row and reuses or creates the referenced ingredient tag.
+    ///
+    /// - Throws: An error when SwiftData cannot search for an existing ingredient.
     public static func create(
         context: ModelContext,
         ingredient: String,
         amount: String,
         order: Int
-    ) -> IngredientObject {
+    ) throws -> IngredientObject {
         let object = IngredientObject(
-            ingredient: .create(context: context, value: ingredient)
+            ingredient: try .create(context: context, value: ingredient)
         )
         context.insert(object)
         object.amount = amount

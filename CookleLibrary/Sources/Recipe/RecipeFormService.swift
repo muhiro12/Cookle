@@ -40,8 +40,8 @@ enum RecipeFormService {
     static func create(
         context: ModelContext,
         draft: RecipeFormDraft
-    ) -> Recipe {
-        createWithOutcome(
+    ) throws -> Recipe {
+        try createWithOutcome(
             context: context,
             draft: draft
         ).value
@@ -51,10 +51,10 @@ enum RecipeFormService {
     static func createWithOutcome(
         context: ModelContext,
         draft: RecipeFormDraft
-    ) -> MutationOutcome<Recipe> {
+    ) throws -> MutationOutcome<Recipe> {
         let recipe = Recipe.create(
             context: context,
-            content: recipeContent(
+            content: try recipeContent(
                 from: draft,
                 context: context
             )
@@ -70,8 +70,8 @@ enum RecipeFormService {
         context: ModelContext,
         recipe: Recipe,
         draft: RecipeFormDraft
-    ) {
-        _ = updateWithOutcome(
+    ) throws {
+        _ = try updateWithOutcome(
             context: context,
             recipe: recipe,
             draft: draft
@@ -83,24 +83,24 @@ enum RecipeFormService {
         context: ModelContext,
         recipe: Recipe,
         draft: RecipeFormDraft
-    ) -> MutationOutcome<Recipe> {
+    ) throws -> MutationOutcome<Recipe> {
         let previousPhotoObjects = (recipe.photoObjects ?? [])
         let previousIngredientObjects = (recipe.ingredientObjects ?? [])
-        let updatedPhotoObjects = zip(
+        let updatedPhotoObjects = try zip(
             draft.photos.indices,
             draft.photos
         ).map { index, photoData in
-            PhotoObject.create(
+            try PhotoObject.create(
                 context: context,
                 photoData: photoData,
                 order: index + 1
             )
         }
-        let updatedIngredientObjects = zip(
+        let updatedIngredientObjects = try zip(
             draft.ingredients.indices,
             draft.ingredients
         ).map { index, ingredientInput in
-            IngredientObject.create(
+            try IngredientObject.create(
                 context: context,
                 ingredient: ingredientInput.ingredient,
                 amount: ingredientInput.amount,
@@ -116,7 +116,7 @@ enum RecipeFormService {
                 cookingTime: draft.cookingTime,
                 ingredients: updatedIngredientObjects,
                 steps: draft.steps,
-                categories: categories(
+                categories: try categories(
                     from: draft,
                     context: context
                 ),
@@ -170,21 +170,21 @@ private extension RecipeFormService {
     static func recipeContent(
         from draft: RecipeFormDraft,
         context: ModelContext
-    ) -> RecipeContent {
+    ) throws -> RecipeContent {
         .init(
             name: draft.name,
-            photos: photoObjects(
+            photos: try photoObjects(
                 from: draft,
                 context: context
             ),
             servingSize: draft.servingSize,
             cookingTime: draft.cookingTime,
-            ingredients: ingredientObjects(
+            ingredients: try ingredientObjects(
                 from: draft,
                 context: context
             ),
             steps: draft.steps,
-            categories: categories(
+            categories: try categories(
                 from: draft,
                 context: context
             ),
@@ -195,12 +195,12 @@ private extension RecipeFormService {
     static func photoObjects(
         from draft: RecipeFormDraft,
         context: ModelContext
-    ) -> [PhotoObject] {
-        zip(
+    ) throws -> [PhotoObject] {
+        try zip(
             draft.photos.indices,
             draft.photos
         ).map { index, photoData in
-            PhotoObject.create(
+            try PhotoObject.create(
                 context: context,
                 photoData: photoData,
                 order: index + 1
@@ -211,12 +211,12 @@ private extension RecipeFormService {
     static func ingredientObjects(
         from draft: RecipeFormDraft,
         context: ModelContext
-    ) -> [IngredientObject] {
-        zip(
+    ) throws -> [IngredientObject] {
+        try zip(
             draft.ingredients.indices,
             draft.ingredients
         ).map { index, ingredientInput in
-            IngredientObject.create(
+            try IngredientObject.create(
                 context: context,
                 ingredient: ingredientInput.ingredient,
                 amount: ingredientInput.amount,
@@ -228,9 +228,9 @@ private extension RecipeFormService {
     static func categories(
         from draft: RecipeFormDraft,
         context: ModelContext
-    ) -> [Category] {
-        draft.categories.map { categoryValue in
-            Category.create(
+    ) throws -> [Category] {
+        try draft.categories.map { categoryValue in
+            try Category.create(
                 context: context,
                 value: categoryValue
             )

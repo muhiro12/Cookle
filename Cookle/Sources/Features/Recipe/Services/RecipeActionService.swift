@@ -40,7 +40,7 @@ final class RecipeActionService {
             requestReview: requestReview,
             saveSummary: summary
         ) {
-            RecipeFormOperations.createWithOutcome(
+            try RecipeFormOperations.createWithOutcome(
                 context: context,
                 draft: draft
             )
@@ -65,7 +65,7 @@ final class RecipeActionService {
             requestReview: requestReview,
             saveSummary: summary
         ) {
-            RecipeFormOperations.updateWithOutcome(
+            try RecipeFormOperations.updateWithOutcome(
                 context: context,
                 recipe: recipe,
                 draft: draft

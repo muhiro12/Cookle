@@ -269,11 +269,11 @@ private extension CookleDataArchiveServiceTests {
     }
 
     func makeSampleBackupData() throws -> Data {
-        let category = Category.create(
+        let category = try Category.create(
             context: context,
             value: "Breakfast"
         )
-        let photoObject = PhotoObject.create(
+        let photoObject = try PhotoObject.create(
             context: context,
             photoData: .init(
                 data: TestArchive.photoData,
@@ -281,7 +281,7 @@ private extension CookleDataArchiveServiceTests {
             ),
             order: TestArchive.photoOrder
         )
-        let ingredientObject = IngredientObject.create(
+        let ingredientObject = try IngredientObject.create(
             context: context,
             ingredient: "Eggs",
             amount: "2",

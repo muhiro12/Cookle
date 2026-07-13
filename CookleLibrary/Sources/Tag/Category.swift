@@ -29,16 +29,20 @@ nonisolated public final class Category: Tag {
     }
 
     /// Returns an existing category for `value`, or inserts a new one when needed.
-    public static func create(context: ModelContext, value: String) -> Self {
-        if let existingCategory = try? context.fetchFirst(.categories(.valueIs(value))),
-           let category = existingCategory as? Self {
+    ///
+    /// - Throws: An error when SwiftData cannot search for an existing category.
+    public static func create(context: ModelContext, value: String) throws -> Self {
+        try DeduplicatedModelCreation.resolve {
+            guard let existingCategory = try context.fetchFirst(.categories(.valueIs(value))) else {
+                return nil
+            }
+            return existingCategory as? Self
+        } createNew: {
+            let category: Self = .init()
+            context.insert(category)
+            category.value = value
             return category
         }
-
-        let category: Self = .init()
-        context.insert(category)
-        category.value = value
-        return category
     }
 
     static func restore(

@@ -30,12 +30,12 @@ struct RecipePhotoRemovalTests {
     func removePhotoWithOutcome_keepsSharedPhotoAssetWhenAnotherReferenceExists() throws {
         let context = makeTestContext()
         let sharedPhotoData = makePhotoData("shared")
-        let firstRecipe = makeRecipe(
+        let firstRecipe = try makeRecipe(
             context: context,
             name: "First",
             photos: [sharedPhotoData]
         )
-        let secondRecipe = makeRecipe(
+        let secondRecipe = try makeRecipe(
             context: context,
             name: "Second",
             photos: [sharedPhotoData]
@@ -60,7 +60,7 @@ struct RecipePhotoRemovalTests {
     func removePhotoWithOutcome_keepsPhotoAssetWhenItBecomesUnlinked() throws {
         let context = makeTestContext()
         let photoData = makePhotoData("solo")
-        let recipe = makeRecipe(
+        let recipe = try makeRecipe(
             context: context,
             name: "Solo",
             photos: [photoData]
@@ -99,16 +99,16 @@ private extension RecipePhotoRemovalTests {
         context: ModelContext,
         name: String,
         photos: [PhotoData]
-    ) -> Recipe {
+    ) throws -> Recipe {
         Recipe.create(
             context: context,
             content: .init(
                 name: name,
-                photos: zip(
+                photos: try zip(
                     photos.indices,
                     photos
                 ).map { index, photoData in
-                    PhotoObject.create(
+                    try PhotoObject.create(
                         context: context,
                         photoData: photoData,
                         order: index + 1

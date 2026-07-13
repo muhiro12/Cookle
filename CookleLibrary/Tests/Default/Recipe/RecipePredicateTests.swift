@@ -8,7 +8,7 @@ struct RecipePredicateTests {
 
     @Test("anyTextMatches short text equals ingredient/category")
     func anyTextMatches_shortText_matchesIngredientsAndCategories() throws {
-        let breakfast = Category.create(context: context, value: "Breakfast")
+        let breakfast = try Category.create(context: context, value: "Breakfast")
 
         _ = Recipe.create(
             context: context,
@@ -17,7 +17,14 @@ struct RecipePredicateTests {
                 photos: [],
                 servingSize: 1,
                 cookingTime: 10,
-                ingredients: [.create(context: context, ingredient: "Egg", amount: "2", order: 1)],
+                ingredients: [
+                    try .create(
+                        context: context,
+                        ingredient: "Egg",
+                        amount: "2",
+                        order: 1
+                    )
+                ],
                 steps: [],
                 categories: [breakfast],
                 note: ""

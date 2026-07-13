@@ -10,12 +10,12 @@ struct PhotoServiceTests {
     @Test
     func delete_photo_removes_linked_photo_rows_but_keeps_recipes() throws {
         let sharedPhoto = sharedPhotoData()
-        let firstRecipe = makeRecipe(
+        let firstRecipe = try makeRecipe(
             name: "First",
             cookingTime: 10,
             photoData: sharedPhoto
         )
-        let secondRecipe = makeRecipe(
+        let secondRecipe = try makeRecipe(
             name: "Second",
             cookingTime: 15,
             photoData: sharedPhoto
@@ -52,13 +52,13 @@ private extension PhotoServiceTests {
         name: String,
         cookingTime: Int,
         photoData: PhotoData
-    ) -> Recipe {
+    ) throws -> Recipe {
         Recipe.create(
             context: context,
             content: .init(
                 name: name,
                 photos: [
-                    PhotoObject.create(
+                    try PhotoObject.create(
                         context: context,
                         photoData: photoData,
                         order: 1

@@ -17,10 +17,10 @@ extension CooklePreviewStore {
         asset: SamplePhotoAsset,
         order: Int,
         remotePhotoDataMap: [SamplePhotoAsset: Data]
-    ) -> PhotoObject {
+    ) throws -> PhotoObject {
         let photoData = remotePhotoDataMap[asset]
             ?? photoDataFromSystemImage(named: asset.fallbackSystemImageName)
-        return .create(
+        return try .create(
             context: context,
             photoData: .init(
                 data: photoData,

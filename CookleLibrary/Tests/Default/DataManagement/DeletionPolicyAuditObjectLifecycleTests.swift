@@ -11,7 +11,7 @@ struct DeletionPolicyAuditObjectLifecycleTests {
         let context = makeTestContext()
         let firstPhotoData = DeletionPolicyAuditSupport.makePhotoData("first")
         let secondPhotoData = DeletionPolicyAuditSupport.makePhotoData("second")
-        let recipe = DeletionPolicyAuditSupport.makeRecipe(
+        let recipe = try DeletionPolicyAuditSupport.makeRecipe(
             context: context,
             name: "Photo Update",
             photos: [firstPhotoData],
@@ -20,7 +20,7 @@ struct DeletionPolicyAuditObjectLifecycleTests {
         )
         try context.save()
 
-        RecipeFormService.update(
+        try RecipeFormService.update(
             context: context,
             recipe: recipe,
             draft: DeletionPolicyAuditSupport.draft(
@@ -52,7 +52,7 @@ struct DeletionPolicyAuditObjectLifecycleTests {
     @Test
     func update_recipe_replaces_ingredient_objects_and_cleans_up_old_rows() throws {
         let context = makeTestContext()
-        let recipe = DeletionPolicyAuditSupport.makeRecipe(
+        let recipe = try DeletionPolicyAuditSupport.makeRecipe(
             context: context,
             name: "Ingredient Update",
             photos: [],
@@ -61,7 +61,7 @@ struct DeletionPolicyAuditObjectLifecycleTests {
         )
         try context.save()
 
-        RecipeFormService.update(
+        try RecipeFormService.update(
             context: context,
             recipe: recipe,
             draft: DeletionPolicyAuditSupport.draft(
@@ -102,11 +102,11 @@ struct DeletionPolicyAuditObjectLifecycleTests {
     @Test
     func update_diary_replaces_old_diary_objects_and_cleans_up_old_rows() throws {
         let context = makeTestContext()
-        let firstRecipe = DeletionPolicyAuditSupport.makeRecipe(
+        let firstRecipe = try DeletionPolicyAuditSupport.makeRecipe(
             context: context,
             name: "Breakfast"
         )
-        let secondRecipe = DeletionPolicyAuditSupport.makeRecipe(
+        let secondRecipe = try DeletionPolicyAuditSupport.makeRecipe(
             context: context,
             name: "Lunch"
         )

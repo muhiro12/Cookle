@@ -33,16 +33,20 @@ nonisolated public final class Ingredient: Tag {
     }
 
     /// Returns an existing ingredient for `value`, or inserts a new one when needed.
-    public static func create(context: ModelContext, value: String) -> Self {
-        if let existingIngredient = try? context.fetchFirst(.ingredients(.valueIs(value))),
-           let ingredient = existingIngredient as? Self {
+    ///
+    /// - Throws: An error when SwiftData cannot search for an existing ingredient.
+    public static func create(context: ModelContext, value: String) throws -> Self {
+        try DeduplicatedModelCreation.resolve {
+            guard let existingIngredient = try context.fetchFirst(.ingredients(.valueIs(value))) else {
+                return nil
+            }
+            return existingIngredient as? Self
+        } createNew: {
+            let ingredient: Self = .init()
+            context.insert(ingredient)
+            ingredient.value = value
             return ingredient
         }
-
-        let ingredient: Self = .init()
-        context.insert(ingredient)
-        ingredient.value = value
-        return ingredient
     }
 
     static func restore(

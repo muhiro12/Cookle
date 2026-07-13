@@ -6,14 +6,14 @@ import Testing
 @MainActor
 struct RecipePhotoDisplayTests {
     @Test
-    func orderedPhotos_preferPhotoObjectOrderOverFlattenedRelationOrder() {
+    func orderedPhotos_preferPhotoObjectOrderOverFlattenedRelationOrder() throws {
         let context = makeTestContext()
-        let secondPhotoObject = PhotoObject.create(
+        let secondPhotoObject = try PhotoObject.create(
             context: context,
             photoData: makePhotoData("second"),
             order: 2
         )
-        let firstPhotoObject = PhotoObject.create(
+        let firstPhotoObject = try PhotoObject.create(
             context: context,
             photoData: makePhotoData("first"),
             order: 1
@@ -33,14 +33,14 @@ struct RecipePhotoDisplayTests {
     }
 
     @Test
-    func orderedPhotos_fallBackToFlattenedPhotosWhenPhotoObjectsAreEmpty() {
+    func orderedPhotos_fallBackToFlattenedPhotosWhenPhotoObjectsAreEmpty() throws {
         let context = makeTestContext()
         let fallbackPhotos = [
-            Photo.create(
+            try Photo.create(
                 context: context,
                 photoData: makePhotoData("first")
             ),
-            Photo.create(
+            try Photo.create(
                 context: context,
                 photoData: makePhotoData("second")
             )

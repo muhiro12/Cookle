@@ -28,7 +28,9 @@ nonisolated public protocol Tag: PersistentModel {
     var modifiedTimestamp: Date { get }
 
     /// Returns an existing tag for `value`, or inserts a new record when none exists.
-    static func create(context: ModelContext, value: String) -> Self
+    ///
+    /// - Throws: An error when SwiftData cannot search for an existing tag.
+    static func create(context: ModelContext, value: String) throws -> Self
     /// Builds a fetch descriptor for this tag type using the caller's sort order.
     static func descriptor(_ predicate: TagPredicate<Self>, order: SortOrder) -> FetchDescriptor<Self>
     /// Builds a fetch descriptor for this tag type using the default sort order.

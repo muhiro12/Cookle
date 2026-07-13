@@ -22,16 +22,16 @@ enum DeletionPolicyAuditSupport {
         photos: [PhotoData] = [],
         ingredients: [DeletionPolicyAuditIngredientInput] = [],
         categories: [String] = []
-    ) -> Recipe {
+    ) throws -> Recipe {
         Recipe.create(
             context: context,
             content: .init(
                 name: name,
-                photos: zip(
+                photos: try zip(
                     photos.indices,
                     photos
                 ).map { index, photoData in
-                    PhotoObject.create(
+                    try PhotoObject.create(
                         context: context,
                         photoData: photoData,
                         order: index + 1
@@ -39,11 +39,11 @@ enum DeletionPolicyAuditSupport {
                 },
                 servingSize: servingSize,
                 cookingTime: cookingTimeMinutes,
-                ingredients: zip(
+                ingredients: try zip(
                     ingredients.indices,
                     ingredients
                 ).map { index, ingredient in
-                    IngredientObject.create(
+                    try IngredientObject.create(
                         context: context,
                         ingredient: ingredient.ingredient,
                         amount: ingredient.amount,
@@ -51,8 +51,8 @@ enum DeletionPolicyAuditSupport {
                     )
                 },
                 steps: [],
-                categories: categories.map { value in
-                    Category.create(
+                categories: try categories.map { value in
+                    try Category.create(
                         context: context,
                         value: value
                     )

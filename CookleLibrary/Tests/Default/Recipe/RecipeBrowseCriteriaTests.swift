@@ -6,17 +6,17 @@ import Testing
 @MainActor
 struct RecipeBrowseCriteriaTests {
     @Test
-    func browse_withAlphabeticalSort_ordersAscendingAndDescending() {
+    func browse_withAlphabeticalSort_ordersAscendingAndDescending() throws {
         let context = makeTestContext()
-        let carrotSoup = makeRecipe(
+        let carrotSoup = try makeRecipe(
             context: context,
             name: "Carrot Soup"
         )
-        let bananaBread = makeRecipe(
+        let bananaBread = try makeRecipe(
             context: context,
             name: "Banana Bread"
         )
-        let applePie = makeRecipe(
+        let applePie = try makeRecipe(
             context: context,
             name: "Apple Pie"
         )
@@ -43,19 +43,19 @@ struct RecipeBrowseCriteriaTests {
     }
 
     @Test
-    func browse_withRecentlyCreatedSort_ordersAscendingAndDescending() {
+    func browse_withRecentlyCreatedSort_ordersAscendingAndDescending() throws {
         let context = makeTestContext()
-        let first = makeRecipe(
+        let first = try makeRecipe(
             context: context,
             name: "First"
         )
         Thread.sleep(forTimeInterval: 0.001)
-        let second = makeRecipe(
+        let second = try makeRecipe(
             context: context,
             name: "Second"
         )
         Thread.sleep(forTimeInterval: 0.001)
-        let third = makeRecipe(
+        let third = try makeRecipe(
             context: context,
             name: "Third"
         )
@@ -82,17 +82,17 @@ struct RecipeBrowseCriteriaTests {
     }
 
     @Test
-    func browse_withMadeCountSort_ordersAscendingAndDescending() {
+    func browse_withMadeCountSort_ordersAscendingAndDescending() throws {
         let context = makeTestContext()
-        let once = makeRecipe(
+        let once = try makeRecipe(
             context: context,
             name: "Once"
         )
-        let twice = makeRecipe(
+        let twice = try makeRecipe(
             context: context,
             name: "Twice"
         )
-        let thrice = makeRecipe(
+        let thrice = try makeRecipe(
             context: context,
             name: "Thrice"
         )
@@ -133,21 +133,21 @@ struct RecipeBrowseCriteriaTests {
     @Test
     func search_withCriteria_usesCanonicalAnyTextMatchesSemantics() throws {
         let context = makeTestContext()
-        let breakfast = Category.create(
+        let breakfast = try Category.create(
             context: context,
             value: "Breakfast"
         )
-        _ = makeRecipe(
+        _ = try makeRecipe(
             context: context,
             name: "Apple Pie",
             ingredients: ["Flour"]
         )
-        _ = makeRecipe(
+        _ = try makeRecipe(
             context: context,
             name: "Soup",
             ingredients: ["Apple"]
         )
-        _ = makeRecipe(
+        _ = try makeRecipe(
             context: context,
             name: "Toast",
             categories: [breakfast]
@@ -185,9 +185,9 @@ private extension RecipeBrowseCriteriaTests {
         name: String,
         categories: [CookleLibrary.Category] = [],
         ingredients: [String] = []
-    ) -> Recipe {
-        let ingredientObjects = ingredients.enumerated().map { index, ingredient in
-            IngredientObject.create(
+    ) throws -> Recipe {
+        let ingredientObjects = try ingredients.enumerated().map { index, ingredient in
+            try IngredientObject.create(
                 context: context,
                 ingredient: ingredient,
                 amount: "",

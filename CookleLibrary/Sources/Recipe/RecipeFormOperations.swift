@@ -14,23 +14,27 @@ public enum RecipeFormOperations {
     }
 
     /// Creates a new recipe from a validated draft and returns follow-up hints.
+    ///
+    /// - Throws: An error when SwiftData cannot resolve reusable recipe resources.
     public static func createWithOutcome(
         context: ModelContext,
         draft: RecipeFormDraft
-    ) -> MutationOutcome<Recipe> {
-        RecipeFormService.createWithOutcome(
+    ) throws -> MutationOutcome<Recipe> {
+        try RecipeFormService.createWithOutcome(
             context: context,
             draft: draft
         )
     }
 
     /// Updates an existing recipe from a validated draft and returns follow-up hints.
+    ///
+    /// - Throws: An error when SwiftData cannot resolve reusable recipe resources.
     public static func updateWithOutcome(
         context: ModelContext,
         recipe: Recipe,
         draft: RecipeFormDraft
-    ) -> MutationOutcome<Recipe> {
-        RecipeFormService.updateWithOutcome(
+    ) throws -> MutationOutcome<Recipe> {
+        try RecipeFormService.updateWithOutcome(
             context: context,
             recipe: recipe,
             draft: draft

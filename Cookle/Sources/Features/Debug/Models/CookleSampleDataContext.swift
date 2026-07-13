@@ -8,7 +8,7 @@ enum CookleSampleDataContext {
                 configurations: .init(isStoredInMemoryOnly: true)
             )
             let previewStore = CooklePreviewStore()
-            previewStore.prepare(modelContainer.mainContext)
+            try previewStore.prepare(modelContainer.mainContext)
             return MainActor.assumeIsolated {
                 CookleAppAssemblyFactory.preview(
                     modelContainer: modelContainer

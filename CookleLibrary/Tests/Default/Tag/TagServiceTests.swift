@@ -9,9 +9,9 @@ struct TagServiceTests {
     private func makeBreakfastRecipe(
         name: String,
         amount: String
-    ) -> Recipe {
+    ) throws -> Recipe {
         let ingredients = [
-            IngredientObject.create(
+            try IngredientObject.create(
                 context: context,
                 ingredient: "Eggs",
                 amount: amount,
@@ -19,7 +19,7 @@ struct TagServiceTests {
             )
         ]
         let categories = [
-            Category.create(
+            try Category.create(
                 context: context,
                 value: "Breakfast"
             )
@@ -41,11 +41,11 @@ struct TagServiceTests {
 
     @Test
     func ingredient_create_reuses_existing_value() throws {
-        let firstIngredient = Ingredient.create(
+        let firstIngredient = try Ingredient.create(
             context: context,
             value: "Eggs"
         )
-        let secondIngredient = Ingredient.create(
+        let secondIngredient = try Ingredient.create(
             context: context,
             value: "Eggs"
         )
@@ -58,11 +58,11 @@ struct TagServiceTests {
 
     @Test
     func category_create_reuses_existing_value() throws {
-        let firstCategory = Category.create(
+        let firstCategory = try Category.create(
             context: context,
             value: "Breakfast"
         )
-        let secondCategory = Category.create(
+        let secondCategory = try Category.create(
             context: context,
             value: "Breakfast"
         )
@@ -75,11 +75,11 @@ struct TagServiceTests {
 
     @Test
     func ingredient_descriptor_matches_exact_and_kana_variants() throws {
-        _ = Ingredient.create(
+        _ = try Ingredient.create(
             context: context,
             value: "Salt"
         )
-        _ = Ingredient.create(
+        _ = try Ingredient.create(
             context: context,
             value: "タマネギ"
         )
@@ -93,11 +93,11 @@ struct TagServiceTests {
 
     @Test
     func category_descriptor_matches_exact_and_kana_variants() throws {
-        _ = Category.create(
+        _ = try Category.create(
             context: context,
             value: "Breakfast"
         )
-        _ = Category.create(
+        _ = try Category.create(
             context: context,
             value: "アジア"
         )
@@ -111,11 +111,11 @@ struct TagServiceTests {
 
     @Test
     func preview_style_recipe_creation_reuses_existing_tags() throws {
-        _ = makeBreakfastRecipe(
+        _ = try makeBreakfastRecipe(
             name: "Omelette",
             amount: "2"
         )
-        _ = makeBreakfastRecipe(
+        _ = try makeBreakfastRecipe(
             name: "Scrambled Eggs",
             amount: "3"
         )
@@ -129,7 +129,7 @@ struct TagServiceTests {
 
     @Test
     func rename_updates_ingredient_value() throws {
-        let ingredient = Ingredient.create(
+        let ingredient = try Ingredient.create(
             context: context,
             value: "Egg"
         )
@@ -145,7 +145,7 @@ struct TagServiceTests {
 
     @Test
     func rename_updates_category_value() throws {
-        let category = Category.create(
+        let category = try Category.create(
             context: context,
             value: "Lunch"
         )
@@ -161,7 +161,7 @@ struct TagServiceTests {
 
     @Test
     func delete_category_removes_recipe_relation_but_keeps_recipe() throws {
-        _ = makeBreakfastRecipe(
+        _ = try makeBreakfastRecipe(
             name: "Omelette",
             amount: "2"
         )
@@ -186,7 +186,7 @@ struct TagServiceTests {
 
     @Test
     func delete_unused_ingredient_removes_only_the_root_record() throws {
-        let ingredient = Ingredient.create(
+        let ingredient = try Ingredient.create(
             context: context,
             value: "Paprika"
         )
@@ -204,7 +204,7 @@ struct TagServiceTests {
 
     @Test
     func delete_in_use_ingredient_is_rejected() throws {
-        _ = makeBreakfastRecipe(
+        _ = try makeBreakfastRecipe(
             name: "Omelette",
             amount: "2"
         )

@@ -22,7 +22,7 @@ struct OperationsMutationEffectPropagationTests {
             )
         )
 
-        let createOutcome = RecipeFormOperations.createWithOutcome(
+        let createOutcome = try RecipeFormOperations.createWithOutcome(
             context: context,
             draft: createDraft
         )
@@ -44,7 +44,7 @@ struct OperationsMutationEffectPropagationTests {
             )
         )
 
-        let updateOutcome = RecipeFormOperations.updateWithOutcome(
+        let updateOutcome = try RecipeFormOperations.updateWithOutcome(
             context: context,
             recipe: createOutcome.value,
             draft: updateDraft
@@ -127,11 +127,11 @@ struct OperationsMutationEffectPropagationTests {
 
     @Test
     func tagMutationsReturnNotificationPlanningHint() throws {
-        let ingredient = Ingredient.create(
+        let ingredient = try Ingredient.create(
             context: context,
             value: "Salt"
         )
-        let category = Category.create(
+        let category = try Category.create(
             context: context,
             value: "Dinner"
         )
@@ -177,8 +177,8 @@ struct OperationsMutationEffectPropagationTests {
     }
 
     @Test
-    func photoDeletionReturnsRecipeAndNotificationHints() {
-        let photo = Photo.create(
+    func photoDeletionReturnsRecipeAndNotificationHints() throws {
+        let photo = try Photo.create(
             context: context,
             photoData: .init(
                 data: Data("photo-delete".utf8),

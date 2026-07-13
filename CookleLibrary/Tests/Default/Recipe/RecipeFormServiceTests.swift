@@ -76,7 +76,7 @@ struct RecipeFormServiceTests {
                 note: "first"
             )
         )
-        let recipe = RecipeFormService.create(
+        let recipe = try RecipeFormService.create(
             context: context,
             draft: createDraft
         )
@@ -101,7 +101,7 @@ struct RecipeFormServiceTests {
                 note: "updated"
             )
         )
-        RecipeFormService.update(
+        try RecipeFormService.update(
             context: context,
             recipe: recipe,
             draft: updateDraft
@@ -137,7 +137,7 @@ struct RecipeFormServiceTests {
                 note: ""
             )
         )
-        let recipe = RecipeFormService.create(
+        let recipe = try RecipeFormService.create(
             context: context,
             draft: createDraft
         )
@@ -154,7 +154,7 @@ struct RecipeFormServiceTests {
             )
         )
 
-        RecipeFormService.update(
+        try RecipeFormService.update(
             context: context,
             recipe: recipe,
             draft: updateDraft

@@ -35,7 +35,7 @@ struct DetachedObjectCleanupServiceTests {
     @Test
     func runIfNeeded_skips_whenCleanupWasAlreadyCompleted() throws {
         let context = makeTestContext()
-        _ = PhotoObject.create(
+        _ = try PhotoObject.create(
             context: context,
             photoData: .init(
                 data: Data("existing-detached-photo".utf8),
@@ -64,7 +64,7 @@ struct DetachedObjectCleanupServiceTests {
     @Test
     func runIfNeeded_isNoOp_afterFirstSuccessfulRun() throws {
         let context = makeTestContext()
-        _ = PhotoObject.create(
+        _ = try PhotoObject.create(
             context: context,
             photoData: .init(
                 data: Data("one-time-photo".utf8),
@@ -134,7 +134,7 @@ private extension DetachedObjectCleanupServiceTests {
                 note: ""
             )
         )
-        _ = PhotoObject.create(
+        _ = try PhotoObject.create(
             context: context,
             photoData: .init(
                 data: Data("detached-photo".utf8),
@@ -142,7 +142,7 @@ private extension DetachedObjectCleanupServiceTests {
             ),
             order: 1
         )
-        _ = IngredientObject.create(
+        _ = try IngredientObject.create(
             context: context,
             ingredient: "Salt",
             amount: "1 tsp",

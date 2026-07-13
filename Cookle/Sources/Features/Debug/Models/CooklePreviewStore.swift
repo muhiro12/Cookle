@@ -40,23 +40,25 @@ final class CooklePreviewStore {
         return .init(configuration: configuration)
     }()
 
-    func prepare(_ context: ModelContext) {
+    func prepare(_ context: ModelContext) throws {
         if !hasPreparedPreviewData {
-            _ = createPreviewDiaries(context)
+            _ = try createPreviewDiaries(context)
             hasPreparedPreviewData = true
         }
     }
 
-    func createPreviewDiaries(_ context: ModelContext) -> [Diary] {
-        createPreviewDiaries(
+    func createPreviewDiaries(_ context: ModelContext) throws -> [Diary] {
+        try createPreviewDiaries(
             context,
             remotePhotoDataMap: .init()
         )
     }
 
-    func createPreviewDiariesWithRemoteImages(_ context: ModelContext) async -> [Diary] {
+    func createPreviewDiariesWithRemoteImages(
+        _ context: ModelContext
+    ) async throws -> [Diary] {
         let remotePhotoDataMap = await fetchRemotePhotoDataMap()
-        return createPreviewDiaries(
+        return try createPreviewDiaries(
             context,
             remotePhotoDataMap: remotePhotoDataMap
         )
@@ -71,8 +73,8 @@ private extension CooklePreviewStore {
     func createPreviewDiaries(
         _ context: ModelContext,
         remotePhotoDataMap: [SamplePhotoAsset: Data]
-    ) -> [Diary] {
-        let recipes = makePreviewRecipes(
+    ) throws -> [Diary] {
+        let recipes = try makePreviewRecipes(
             context,
             remotePhotoDataMap: remotePhotoDataMap
         )
@@ -88,8 +90,8 @@ private extension CooklePreviewStore {
     private func makePreviewRecipes(
         _ context: ModelContext,
         remotePhotoDataMap: [SamplePhotoAsset: Data]
-    ) -> PreviewRecipes {
-        .init(
+    ) throws -> PreviewRecipes {
+        try .init(
             pancakes: cookPancakes(
                 context,
                 remotePhotoDataMap: remotePhotoDataMap

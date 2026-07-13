@@ -33,9 +33,16 @@ nonisolated public final class Photo {
     }
 
     /// Returns an existing asset for matching binary data, or inserts a new one and stores its source.
-    public static func create(context: ModelContext, photoData: PhotoData) -> Photo {
-        let photo = (try? context.fetchFirst(.photos(.dataIs(photoData.data)))) ?? .init()
-        context.insert(photo)
+    ///
+    /// - Throws: An error when SwiftData cannot search for matching binary data.
+    public static func create(context: ModelContext, photoData: PhotoData) throws -> Photo {
+        let photo = try DeduplicatedModelCreation.resolve {
+            try context.fetchFirst(.photos(.dataIs(photoData.data)))
+        } createNew: {
+            let photo = Photo()
+            context.insert(photo)
+            return photo
+        }
         photo.data = photoData.data
         photo.sourceID = photoData.source.rawValue
         return photo

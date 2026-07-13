@@ -9,14 +9,14 @@ struct PhotoPredicateTests {
 
     @Test
     func idIs_resolves_photo_by_persistent_identifier() throws {
-        let targetPhoto = Photo.create(
+        let targetPhoto = try Photo.create(
             context: context,
             photoData: .init(
                 data: Data("target-photo".utf8),
                 source: .photosPicker
             )
         )
-        _ = Photo.create(
+        _ = try Photo.create(
             context: context,
             photoData: .init(
                 data: Data("other-photo".utf8),

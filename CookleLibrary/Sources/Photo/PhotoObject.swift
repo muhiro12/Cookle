@@ -23,9 +23,16 @@ nonisolated public final class PhotoObject: SubObject {
         self.photo = photo
     }
 
-    public static func create(context: ModelContext, photoData: PhotoData, order: Int) -> PhotoObject {
+    /// Inserts a row while reusing an existing photo with matching binary data.
+    ///
+    /// - Throws: An error when SwiftData cannot search for a matching photo.
+    public static func create(
+        context: ModelContext,
+        photoData: PhotoData,
+        order: Int
+    ) throws -> PhotoObject {
         let object = PhotoObject(
-            photo: .create(context: context, photoData: photoData)
+            photo: try .create(context: context, photoData: photoData)
         )
         context.insert(object)
         object.order = order

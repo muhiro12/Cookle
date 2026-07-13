@@ -10,7 +10,7 @@ struct CookleRouteExecutorLinkedResourceTests {
 
     @Test("Resolves photo detail route to photo detail")
     func executeResolvesPhotoDetailRoute() throws {
-        let photo = Photo.create(
+        let photo = try Photo.create(
             context: context,
             photoData: .init(
                 data: Data("photo".utf8),
@@ -71,7 +71,7 @@ struct CookleRouteExecutorLinkedResourceTests {
 
     @Test("Resolves category tag detail route to category detail")
     func executeResolvesCategoryTagDetailRoute() throws {
-        let category = Category.create(
+        let category = try Category.create(
             context: context,
             value: "Breakfast"
         )
@@ -109,7 +109,7 @@ struct CookleRouteExecutorLinkedResourceTests {
 
     @Test("Resolves ingredient tag detail route to ingredient detail")
     func executeResolvesIngredientTagDetailRoute() throws {
-        let ingredient = Ingredient.create(
+        let ingredient = try Ingredient.create(
             context: context,
             value: "Egg"
         )

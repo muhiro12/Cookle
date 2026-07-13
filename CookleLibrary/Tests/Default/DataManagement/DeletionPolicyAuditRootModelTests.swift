@@ -12,14 +12,14 @@ struct DeletionPolicyAuditRootModelTests {
         let sharedPhotoData = DeletionPolicyAuditSupport.makePhotoData("shared")
         let uniquePhotoData = DeletionPolicyAuditSupport.makePhotoData("unique")
 
-        let recipe = DeletionPolicyAuditSupport.makeRecipe(
+        let recipe = try DeletionPolicyAuditSupport.makeRecipe(
             context: context,
             name: "Delete Target",
             photos: [sharedPhotoData, uniquePhotoData],
             ingredients: [.init(ingredient: "Salt", amount: "1 tsp")],
             categories: []
         )
-        let remainingRecipe = DeletionPolicyAuditSupport.makeRecipe(
+        let remainingRecipe = try DeletionPolicyAuditSupport.makeRecipe(
             context: context,
             name: "Remaining",
             photos: [sharedPhotoData],
@@ -65,7 +65,7 @@ struct DeletionPolicyAuditRootModelTests {
     @Test
     func data_reset_removes_every_persisted_model() throws {
         let context = makeTestContext()
-        let recipe = DeletionPolicyAuditSupport.makeRecipe(
+        let recipe = try DeletionPolicyAuditSupport.makeRecipe(
             context: context,
             name: "Reset Target",
             photos: [DeletionPolicyAuditSupport.makePhotoData("reset")],

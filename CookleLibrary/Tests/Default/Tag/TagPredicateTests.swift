@@ -8,11 +8,11 @@ struct TagPredicateTests {
 
     @Test
     func idIs_resolves_category_by_persistent_identifier() throws {
-        let breakfast = Category.create(
+        let breakfast = try Category.create(
             context: context,
             value: "Breakfast"
         )
-        _ = Category.create(
+        _ = try Category.create(
             context: context,
             value: "Dinner"
         )
@@ -26,11 +26,11 @@ struct TagPredicateTests {
 
     @Test
     func idIs_resolves_ingredient_by_persistent_identifier() throws {
-        let egg = Ingredient.create(
+        let egg = try Ingredient.create(
             context: context,
             value: "Egg"
         )
-        _ = Ingredient.create(
+        _ = try Ingredient.create(
             context: context,
             value: "Salt"
         )

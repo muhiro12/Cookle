@@ -173,7 +173,12 @@ struct DebugSidebarView: View {
             isCreatingPreviewDiaries = false
         }
 
-        _ = await previewStore.createPreviewDiariesWithRemoteImages(context)
+        do {
+            _ = try await previewStore.createPreviewDiariesWithRemoteImages(context)
+        } catch {
+            context.rollback()
+            assertionFailure(error.localizedDescription)
+        }
     }
 
     func sidebarButton(

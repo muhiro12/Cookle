@@ -23,7 +23,7 @@ extension CooklePreviewStore {
     func cookSpaghettiCarbonara(
         _ context: ModelContext,
         remotePhotoDataMap: [SamplePhotoAsset: Data]
-    ) -> Recipe {
+    ) throws -> Recipe {
         .create(
             context: context,
             content: .init(
@@ -32,14 +32,14 @@ extension CooklePreviewStore {
                     table: "SampleData",
                     bundle: .main
                 ),
-                photos: createPhotoObjects(
+                photos: try createPhotoObjects(
                     context,
                     assets: [.spaghettiCarbonara1, .spaghettiCarbonara2],
                     remotePhotoDataMap: remotePhotoDataMap
                 ),
                 servingSize: RecipeConstants.firstServingSize,
                 cookingTime: RecipeConstants.mediumCookingTime,
-                ingredients: ingredientObjects(
+                ingredients: try ingredientObjects(
                     context,
                     items: [
                         .init(
@@ -105,7 +105,7 @@ extension CooklePreviewStore {
                     )
                 ],
                 categories: [
-                    .create(
+                    try .create(
                         context: context,
                         value: String(localized: "Italian", table: "SampleData", bundle: .main)
                     )
@@ -122,19 +122,19 @@ extension CooklePreviewStore {
     func cookBeefStew(
         _ context: ModelContext,
         remotePhotoDataMap: [SamplePhotoAsset: Data]
-    ) -> Recipe {
+    ) throws -> Recipe {
         .create(
             context: context,
             content: .init(
                 name: String(localized: "Beef Stew", table: "SampleData", bundle: .main),
-                photos: createPhotoObjects(
+                photos: try createPhotoObjects(
                     context,
                     assets: [.beefStew1, .beefStew2],
                     remotePhotoDataMap: remotePhotoDataMap
                 ),
                 servingSize: RecipeConstants.thirdServingSize,
                 cookingTime: RecipeConstants.stewCookingTime,
-                ingredients: ingredientObjects(
+                ingredients: try ingredientObjects(
                     context,
                     items: [
                         .init(
@@ -222,7 +222,7 @@ extension CooklePreviewStore {
                     )
                 ],
                 categories: [
-                    .create(
+                    try .create(
                         context: context,
                         value: String(localized: "Comfort Food", table: "SampleData", bundle: .main)
                     )
@@ -239,19 +239,19 @@ extension CooklePreviewStore {
     func cookChickenStirFry(
         _ context: ModelContext,
         remotePhotoDataMap: [SamplePhotoAsset: Data]
-    ) -> Recipe {
+    ) throws -> Recipe {
         .create(
             context: context,
             content: .init(
                 name: String(localized: "Chicken Stir Fry", table: "SampleData", bundle: .main),
-                photos: createPhotoObjects(
+                photos: try createPhotoObjects(
                     context,
                     assets: [.chickenStirFry1, .chickenStirFry2],
                     remotePhotoDataMap: remotePhotoDataMap
                 ),
                 servingSize: RecipeConstants.secondServingSize,
                 cookingTime: RecipeConstants.shortCookingTime,
-                ingredients: ingredientObjects(
+                ingredients: try ingredientObjects(
                     context,
                     items: [
                         .init(
@@ -340,7 +340,7 @@ extension CooklePreviewStore {
                     )
                 ],
                 categories: [
-                    .create(
+                    try .create(
                         context: context,
                         value: String(localized: "Asian", table: "SampleData", bundle: .main)
                     )
@@ -357,19 +357,19 @@ extension CooklePreviewStore {
     func cookVegetableSoup(
         _ context: ModelContext,
         remotePhotoDataMap: [SamplePhotoAsset: Data]
-    ) -> Recipe {
+    ) throws -> Recipe {
         .create(
             context: context,
             content: .init(
                 name: String(localized: "Vegetable Soup", table: "SampleData", bundle: .main),
-                photos: createPhotoObjects(
+                photos: try createPhotoObjects(
                     context,
                     assets: [.vegetableSoup1, .vegetableSoup2],
                     remotePhotoDataMap: remotePhotoDataMap
                 ),
                 servingSize: RecipeConstants.secondServingSize,
                 cookingTime: RecipeConstants.longCookingTime,
-                ingredients: ingredientObjects(
+                ingredients: try ingredientObjects(
                     context,
                     items: [
                         .init(
@@ -457,7 +457,7 @@ extension CooklePreviewStore {
                     )
                 ],
                 categories: [
-                    .create(
+                    try .create(
                         context: context,
                         value: String(localized: "Healthy", table: "SampleData", bundle: .main)
                     )
@@ -474,19 +474,19 @@ extension CooklePreviewStore {
     func cookPancakes(
         _ context: ModelContext,
         remotePhotoDataMap: [SamplePhotoAsset: Data]
-    ) -> Recipe {
+    ) throws -> Recipe {
         .create(
             context: context,
             content: .init(
                 name: String(localized: "Pancakes", table: "SampleData", bundle: .main),
-                photos: createPhotoObjects(
+                photos: try createPhotoObjects(
                     context,
                     assets: [.pancakes1, .pancakes2],
                     remotePhotoDataMap: remotePhotoDataMap
                 ),
                 servingSize: RecipeConstants.secondServingSize,
                 cookingTime: RecipeConstants.shortCookingTime,
-                ingredients: ingredientObjects(
+                ingredients: try ingredientObjects(
                     context,
                     items: [
                         .init(
@@ -552,7 +552,7 @@ extension CooklePreviewStore {
                     )
                 ],
                 categories: [
-                    .create(
+                    try .create(
                         context: context,
                         value: String(localized: "Breakfast", table: "SampleData", bundle: .main)
                     )
@@ -570,9 +570,9 @@ extension CooklePreviewStore {
         _ context: ModelContext,
         assets: [SamplePhotoAsset],
         remotePhotoDataMap: [SamplePhotoAsset: Data]
-    ) -> [PhotoObject] {
-        assets.enumerated().map { offset, asset in
-            createPhotoObject(
+    ) throws -> [PhotoObject] {
+        try assets.enumerated().map { offset, asset in
+            try createPhotoObject(
                 context,
                 asset: asset,
                 order: offset + RecipeConstants.firstOrder,
@@ -584,9 +584,9 @@ extension CooklePreviewStore {
     func ingredientObjects(
         _ context: ModelContext,
         items: [PreviewIngredient]
-    ) -> [IngredientObject] {
-        items.enumerated().map { offset, item in
-            .create(
+    ) throws -> [IngredientObject] {
+        try items.enumerated().map { offset, item in
+            try .create(
                 context: context,
                 ingredient: item.name,
                 amount: item.amount,
