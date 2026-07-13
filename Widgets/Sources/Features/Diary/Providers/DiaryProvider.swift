@@ -4,9 +4,6 @@ import WidgetKit
 
 struct DiaryProvider: AppIntentTimelineProvider {
     private enum RefreshInterval {
-        static let hoursPerDay = 24
-        static let minutesPerHour = 60
-        static let secondsPerMinute = 60
         static let timelineRefreshHours = 6
         static let fallbackRefreshSeconds = 3_600
     }
@@ -88,15 +85,11 @@ private extension DiaryProvider {
     func timelineRefreshDate(date: Date, selection: DiaryWidgetSelection) -> Date {
         switch selection {
         case .today:
-            let startOfDay = Calendar.current.startOfDay(
-                for: date
+            return CookleWidgetTimelineRefreshPolicy.startOfNextDay(
+                after: date
+            ) ?? date.addingTimeInterval(
+                TimeInterval(RefreshInterval.fallbackRefreshSeconds)
             )
-            let secondsPerDay = TimeInterval(
-                RefreshInterval.hoursPerDay
-                    * RefreshInterval.minutesPerHour
-                    * RefreshInterval.secondsPerMinute
-            )
-            return startOfDay.addingTimeInterval(secondsPerDay)
         case .latest,
              .random:
             if let nextDate = Calendar.current.date(
