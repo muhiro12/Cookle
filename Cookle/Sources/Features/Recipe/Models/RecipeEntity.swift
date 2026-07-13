@@ -76,10 +76,15 @@ extension RecipeEntity {
         self.init(
             id: encodedID,
             name: model.name,
-            photos: model.photos?.compactMap(\.data) ?? [],
+            photos: model.orderedPhotos.map(\.data),
             servingSize: model.servingSize,
             cookingTime: model.cookingTime,
-            ingredients: zip(model.ingredients ?? [], model.ingredientObjects ?? []).map { ($0.value, $1.amount) },
+            ingredients: (model.ingredientObjects ?? []).sorted().compactMap { object in
+                guard let ingredient = object.ingredient else {
+                    return nil
+                }
+                return (ingredient.value, object.amount)
+            },
             steps: model.steps,
             categories: model.categories?.map(\.value) ?? [],
             note: model.note,

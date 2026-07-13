@@ -63,9 +63,7 @@ private extension RecipeProvider {
                    family: WidgetFamily,
                    selection: RecipeWidgetSelection) throws -> RecipeEntry {
         if let recipe = try recipe(for: selection, context: context) {
-            let photo = recipe.photoObjects?.min()?.photo
-            let imageData = photo?.data
-            let image = imageData.flatMap { data in
+            let image = recipe.primaryPhotoData.flatMap { data in
                 RecipeWidgetImageLoader.makeImage(from: data, family: family)
             }
             let deepLinkURL: URL = {
