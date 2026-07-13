@@ -5,6 +5,10 @@ import Testing
 
 @MainActor
 struct CookleDataArchiveServiceTests {
+    private enum SaveError: Error {
+        case forcedFailure
+    }
+
     let context: ModelContext = makeTestContext()
 
     @Test
@@ -140,6 +144,37 @@ struct CookleDataArchiveServiceTests {
         let recipe = try #require(recipes.first)
         #expect(recipes.count == 1)
         #expect(recipe.name == "Temporary")
+    }
+
+    @Test
+    func restore_rolls_back_pending_replacement_when_save_fails() throws {
+        try insertTemporaryRecipe()
+        let failingSave: (ModelContext) throws -> Void = { _ in
+            throw SaveError.forcedFailure
+        }
+
+        do {
+            _ = try CookleDataArchiveService.restore(
+                emptyArchive(),
+                context: context,
+                save: failingSave
+            )
+            Issue.record("Expected archive restore to fail.")
+        } catch SaveError.forcedFailure {
+            // Expected failure.
+        } catch {
+            Issue.record(error)
+        }
+
+        #expect(context.hasChanges == false)
+        let currentRecipes = try context.fetch(.recipes(.all))
+        #expect(currentRecipes.map(\.name) == ["Temporary"])
+
+        let freshContext = ModelContext(
+            context.container
+        )
+        let persistedRecipes = try freshContext.fetch(.recipes(.all))
+        #expect(persistedRecipes.map(\.name) == ["Temporary"])
     }
 }
 

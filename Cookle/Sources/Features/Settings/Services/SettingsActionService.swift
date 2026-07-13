@@ -56,9 +56,17 @@ final class SettingsActionService {
     }
 
     func deleteAllData(modelContainer: ModelContainer) async throws {
-        let mutationOutcome = try DataMaintenanceOperations.deleteAllWithOutcome(
-            context: modelContainer.mainContext
-        )
+        let context = modelContainer.mainContext
+        let mutationOutcome: MutationOutcome<Void>
+        do {
+            mutationOutcome = try DataMaintenanceOperations.deleteAllWithOutcome(
+                context: context
+            )
+            try context.save()
+        } catch {
+            context.rollback()
+            throw error
+        }
 
         if mutationOutcome.effects.contains(.diaryDataChanged) {
             CookleWidgetReloader.reloadTodayDiaryWidget()

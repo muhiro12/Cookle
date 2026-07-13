@@ -15,14 +15,14 @@ enum DataResetService {
     static func deleteAllWithOutcome(
         context: ModelContext
     ) throws -> MutationOutcome<Void> {
-        try context.delete(model: Diary.self)
-        try context.delete(model: DiaryObject.self)
-        try context.delete(model: Recipe.self)
-        try context.delete(model: Ingredient.self)
-        try context.delete(model: IngredientObject.self)
-        try context.delete(model: Category.self)
-        try context.delete(model: Photo.self)
-        try context.delete(model: PhotoObject.self)
+        try deleteAll(Diary.self, context: context)
+        try deleteAll(DiaryObject.self, context: context)
+        try deleteAll(Recipe.self, context: context)
+        try deleteAll(Ingredient.self, context: context)
+        try deleteAll(IngredientObject.self, context: context)
+        try deleteAll(Category.self, context: context)
+        try deleteAll(Photo.self, context: context)
+        try deleteAll(PhotoObject.self, context: context)
         return .init(
             value: (),
             effects: [
@@ -31,5 +31,16 @@ enum DataResetService {
                 .notificationPlanChanged
             ]
         )
+    }
+
+    private static func deleteAll<Model: PersistentModel>(
+        _: Model.Type,
+        context: ModelContext
+    ) throws {
+        for model in try context.fetch(
+            FetchDescriptor<Model>()
+        ) {
+            context.delete(model)
+        }
     }
 }

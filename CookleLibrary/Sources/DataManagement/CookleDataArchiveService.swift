@@ -105,36 +105,45 @@ enum CookleDataArchiveService {
     /// Replaces current persisted user data with the supplied validated archive.
     static func restore(
         _ archive: CookleDataArchive,
-        context: ModelContext
+        context: ModelContext,
+        save: (ModelContext) throws -> Void = { context in
+            try context.save()
+        }
     ) throws -> CookleDataRestoreSummary {
         try validate(archive)
-        try DataResetService.deleteAll(context: context)
 
-        let categories = try restoreCategories(
-            archive.categories,
-            context: context
-        )
-        let ingredients = try restoreIngredients(
-            archive.ingredients,
-            context: context
-        )
-        let photos = try restorePhotos(
-            archive.photos,
-            context: context
-        )
-        let recipes = try restoreRecipes(
-            archive.recipes,
-            context: context,
-            photos: photos,
-            ingredients: ingredients,
-            categories: categories
-        )
-        try restoreDiaries(
-            archive.diaries,
-            context: context,
-            recipes: recipes
-        )
-        try context.save()
+        do {
+            try DataResetService.deleteAll(context: context)
+
+            let categories = try restoreCategories(
+                archive.categories,
+                context: context
+            )
+            let ingredients = try restoreIngredients(
+                archive.ingredients,
+                context: context
+            )
+            let photos = try restorePhotos(
+                archive.photos,
+                context: context
+            )
+            let recipes = try restoreRecipes(
+                archive.recipes,
+                context: context,
+                photos: photos,
+                ingredients: ingredients,
+                categories: categories
+            )
+            try restoreDiaries(
+                archive.diaries,
+                context: context,
+                recipes: recipes
+            )
+            try save(context)
+        } catch {
+            context.rollback()
+            throw error
+        }
 
         return .init(
             ingredientCount: archive.ingredients.count,
