@@ -55,6 +55,7 @@ final class RecipeFormModel {
 
     private let snapshotStore: FormSnapshotStore<RecipeFormSnapshot>
     private var hasAppliedRecipe = false
+    var initialChangeSnapshot: RecipeFormChangeSnapshot?
     private var isSnapshotPersistenceEnabled = false
 
     var isCreateFlow: Bool {
@@ -121,6 +122,7 @@ final class RecipeFormModel {
         _ recipe: Recipe?
     ) {
         guard let recipe else {
+            captureInitialChangeSnapshotIfNeeded()
             return
         }
         guard hasAppliedRecipe == false else {
@@ -151,20 +153,12 @@ final class RecipeFormModel {
         steps = recipe.steps + [""]
         categories = (recipe.categories?.map(\.value) ?? []) + [""]
         note = recipe.note
+        captureInitialChangeSnapshotIfNeeded()
     }
 
     func makeDraft() throws -> RecipeFormDraft {
         try RecipeFormOperations.makeDraft(
-            input: .init(
-                name: name,
-                photos: photos,
-                servingSize: servingSize,
-                cookingTime: cookingTime,
-                ingredients: ingredients,
-                steps: steps,
-                categories: categories,
-                note: note
-            )
+            input: formInput
         )
     }
 
@@ -269,6 +263,8 @@ private extension RecipeFormModel {
     func handleSaveResult(
         _ result: RecipeFormSaveCoordinator.Result
     ) -> Bool {
+        acceptCurrentChanges()
+
         switch result {
         case .created(let createdRecipe):
             savedRecipe = createdRecipe

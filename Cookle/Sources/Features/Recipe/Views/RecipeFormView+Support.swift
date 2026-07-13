@@ -56,17 +56,7 @@ extension RecipeFormView {
 
     @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
-            Button {
-                guard formModel.isSaving == false else {
-                    return
-                }
-                if formModel.name == "Enable Debug" {
-                    formModel.name = ""
-                    isDebugConfirmationPresented = true
-                    return
-                }
-                dismiss()
-            } label: {
+            Button(action: cancelForm) {
                 Text("Cancel")
             }
             .disabled(formModel.isSaving)
@@ -252,5 +242,22 @@ extension RecipeFormView {
         }
 
         formModel.restoreSnapshot()
+    }
+
+    func cancelForm() {
+        guard formModel.isSaving == false else {
+            return
+        }
+        if formModel.name == "Enable Debug" {
+            formModel.name = ""
+            isDebugConfirmationPresented = true
+            return
+        }
+        guard formModel.hasUnsavedChanges else {
+            dismiss()
+            return
+        }
+
+        isDiscardChangesDialogPresented = true
     }
 }

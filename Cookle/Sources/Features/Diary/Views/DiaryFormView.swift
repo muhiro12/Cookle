@@ -10,6 +10,7 @@ import SwiftUI
 
 struct DiaryFormView: View {
     @State private var model = DiaryFormModel()
+    @State private var isDiscardChangesConfirmationPresented = false
     @State private var isRestoreDraftConfirmationPresented = false
 
     @Environment(\.modelContext)
@@ -53,6 +54,19 @@ struct DiaryFormView: View {
             toolbarItems
         }
         .interactiveDismissDisabled()
+        .confirmationDialog(
+            Text("Discard Changes?"),
+            isPresented: $isDiscardChangesConfirmationPresented
+        ) {
+            Button("Discard", role: .destructive) {
+                dismiss()
+            }
+            Button("Keep Editing", role: .cancel) {
+                // Dismisses the confirmation dialog.
+            }
+        } message: {
+            Text("You will lose any unsaved changes.")
+        }
         .confirmationDialog(
             Text("Restore Draft"),
             isPresented: $isRestoreDraftConfirmationPresented
@@ -108,12 +122,7 @@ struct DiaryFormView: View {
 
     @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
-            Button {
-                guard model.isSaving == false else {
-                    return
-                }
-                dismiss()
-            } label: {
+            Button(action: cancelForm) {
                 Text("Cancel")
             }
             .disabled(model.isSaving)
@@ -238,5 +247,17 @@ private extension DiaryFormView {
         model.restoreSnapshot(
             context: context
         )
+    }
+
+    func cancelForm() {
+        guard model.isSaving == false else {
+            return
+        }
+        guard model.hasUnsavedChanges else {
+            dismiss()
+            return
+        }
+
+        isDiscardChangesConfirmationPresented = true
     }
 }

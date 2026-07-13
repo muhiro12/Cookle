@@ -35,7 +35,9 @@ final class DiaryFormModel {
     var isSaving = false
 
     private let snapshotStore: FormSnapshotStore<DiaryFormSnapshot>
+    private let calendar: Calendar
     private var hasAppliedInitialValues = false
+    private var initialChangeSnapshot: DiaryFormChangeSnapshot?
     private var initialDate = Date.now
     private var isSnapshotPersistenceEnabled = false
 
@@ -58,6 +60,14 @@ final class DiaryFormModel {
         )
     }
 
+    var hasUnsavedChanges: Bool {
+        guard let initialChangeSnapshot else {
+            return false
+        }
+
+        return changeSnapshot != initialChangeSnapshot
+    }
+
     var restorePolicy: FormSnapshotRestorePolicy {
         .init(
             hasSnapshot: hasRestorableSnapshot,
@@ -66,9 +76,11 @@ final class DiaryFormModel {
     }
 
     init(
-        snapshotStore: FormSnapshotStore<DiaryFormSnapshot> = .init()
+        snapshotStore: FormSnapshotStore<DiaryFormSnapshot> = .init(),
+        calendar: Calendar = .current
     ) {
         self.snapshotStore = snapshotStore
+        self.calendar = calendar
     }
 
     func applyInitialValues(
@@ -182,6 +194,7 @@ final class DiaryFormModel {
                 input: formInput,
                 diaryActionService: diaryActionService
             )
+            initialChangeSnapshot = changeSnapshot
             clearSnapshot()
             return true
         } catch {
@@ -192,6 +205,17 @@ final class DiaryFormModel {
 }
 
 private extension DiaryFormModel {
+    var changeSnapshot: DiaryFormChangeSnapshot {
+        .init(
+            date: date,
+            breakfastRecipeIDs: stableIdentifiers(for: breakfasts),
+            lunchRecipeIDs: stableIdentifiers(for: lunches),
+            dinnerRecipeIDs: stableIdentifiers(for: dinners),
+            note: note,
+            calendar: calendar
+        )
+    }
+
     var isFormNearlyEmpty: Bool {
         snapshot.isNearlyEmpty(
             comparedTo: initialDate
@@ -240,6 +264,7 @@ private extension DiaryFormModel {
         self.lunches = lunches
         self.dinners = dinners
         self.note = note
+        initialChangeSnapshot = changeSnapshot
     }
 
     func restoredRecipes(

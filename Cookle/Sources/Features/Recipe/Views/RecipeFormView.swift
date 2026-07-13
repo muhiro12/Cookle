@@ -31,6 +31,7 @@ struct RecipeFormView: View {
     @State private var editMode = EditMode.inactive
     @State private var isDebugAlertPresented = false
     @State private var isRestoreDraftConfirmationPresented = false
+    @State private var isDiscardChangesConfirmationPresented = false
     @State private var isQuickAddCameraPresented = false
     @State private var isQuickAddPhotoLibraryPresented = false
 
@@ -51,6 +52,19 @@ struct RecipeFormView: View {
             toolbarItems
         }
         .interactiveDismissDisabled()
+        .confirmationDialog(
+            Text("Discard Changes?"),
+            isPresented: $isDiscardChangesConfirmationPresented
+        ) {
+            Button("Discard", role: .destructive) {
+                dismiss()
+            }
+            Button("Keep Editing", role: .cancel) {
+                // Dismisses the confirmation dialog.
+            }
+        } message: {
+            Text("You will lose any unsaved changes.")
+        }
         .confirmationDialog(
             Text("Debug"),
             isPresented: $isDebugAlertPresented
@@ -213,6 +227,15 @@ extension RecipeFormView {
         }
         nonmutating set {
             isRestoreDraftConfirmationPresented = newValue
+        }
+    }
+
+    var isDiscardChangesDialogPresented: Bool {
+        get {
+            isDiscardChangesConfirmationPresented
+        }
+        nonmutating set {
+            isDiscardChangesConfirmationPresented = newValue
         }
     }
 
