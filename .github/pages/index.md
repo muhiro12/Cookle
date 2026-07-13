@@ -27,12 +27,11 @@ table.gallery img {
 </style>
 
 <div class="hero">
-  <img src="../../Cookle/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon.png" alt="Cookle Icon" width="120">
   <h1>Cookle</h1>
   <p>Keep your favorite recipes organised across all your devices.</p>
   <p>
     <a href="https://apps.apple.com/app/id6483363226">
-      <img src="https://linkmaker.itunes.apple.com/en-us/badge-lrg.svg?releaseDate=2024-04-29&kind=iossoftware" alt="Download on the App Store" width="160">
+      <img src="https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-app-store/black/en-us?releaseDate=1717113600" alt="Download on the App Store" width="160">
     </a>
   </p>
 </div>
@@ -41,15 +40,15 @@ Cookle is a lightweight recipe manager built entirely with SwiftUI.
 
 <div class="features">
   <div class="feature">
-    <img src="../../.Resources/SpaghettiCarbonara1.png" alt="Recipe Example">
+    <img src="https://raw.githubusercontent.com/muhiro12/Cookle/main/.Resources/SpaghettiCarbonara1.png" alt="Recipe Example">
     <p>Create and manage recipes with photos and detailed steps.</p>
   </div>
   <div class="feature">
-    <img src="../../.Resources/Pancakes1.png" alt="Quick Search">
+    <img src="https://raw.githubusercontent.com/muhiro12/Cookle/main/.Resources/Pancakes1.png" alt="Quick Search">
     <p>Organize with categories and quickly search by keywords.</p>
   </div>
   <div class="feature">
-    <img src="../../.Resources/BeefStew1.png" alt="Diary">
+    <img src="https://raw.githubusercontent.com/muhiro12/Cookle/main/.Resources/BeefStew1.png" alt="Diary">
     <p>Record your cooking experiences in the built‑in diary.</p>
   </div>
 </div>
