@@ -14,5 +14,6 @@ bash "$repository_root/ci_scripts/tasks/check_package_consumer_boundaries.sh"
 bash "$repository_root/ci_scripts/tasks/check_operations_boundaries.sh"
 bash "$repository_root/ci_scripts/tasks/check_test_posture.sh"
 bash "$repository_root/ci_scripts/tasks/check_models_directory_consistency.sh"
+bash "$repository_root/ci_scripts/tasks/check_remote_update_configuration.sh"
 
 echo "Repository rules check passed."

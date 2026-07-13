@@ -220,7 +220,7 @@ private extension CookleAppAssemblyFactory {
                     syncSubscriptionStateIfNeeded(runtime: runtime)
                 },
                 .init(name: "loadRemoteConfiguration") {
-                    try? await remoteConfigurationService.load()
+                    await remoteConfigurationService.load()
                 },
                 .init(name: "synchronizeNotifications") {
                     notificationService.scheduleLifecycleSynchronization()

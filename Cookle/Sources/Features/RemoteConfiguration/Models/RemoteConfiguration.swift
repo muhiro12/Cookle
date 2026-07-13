@@ -8,5 +8,11 @@
 import Foundation
 
 struct RemoteConfiguration: Decodable {
-    let requiredVersion: String
+    struct ForceUpdate: Decodable {
+        let minimumVersion: String
+        let activatedAt: Date
+        let expiresAt: Date
+    }
+
+    let forceUpdate: ForceUpdate?
 }

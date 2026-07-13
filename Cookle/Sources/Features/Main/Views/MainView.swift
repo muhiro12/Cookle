@@ -63,7 +63,7 @@ private extension MainView {
     var isUpdateRequiredBinding: Binding<Bool> {
         .init(
             get: {
-                remoteConfigurationService.isUpdateRequired()
+                remoteConfigurationService.isUpdateRequired
             },
             set: { _ in
                 // Update-required presentation is controlled by remote configuration.
