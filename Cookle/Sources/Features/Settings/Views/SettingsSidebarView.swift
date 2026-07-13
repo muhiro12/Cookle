@@ -66,7 +66,8 @@ struct SettingsSidebarView: View {
             .settingsDataManagementDialogs(
                 model: model,
                 modelContainer: context.container,
-                settingsActionService: settingsActionService
+                settingsActionService: settingsActionService,
+                isICloudEnabled: isICloudOn
             )
             .alert(
                 Text("Cannot Complete Settings Action"),
@@ -126,7 +127,10 @@ struct SettingsSidebarView: View {
             iCloudSection
             notificationSection
             SettingsDataManagementSection(
-                model: model
+                model: model,
+                modelContainer: context.container,
+                settingsActionService: settingsActionService,
+                isICloudEnabled: isICloudOn
             )
             generalSection
             ShortcutsLinkSection(

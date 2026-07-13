@@ -5,13 +5,15 @@ extension View {
     func settingsDataManagementDialogs(
         model: SettingsScreenModel,
         modelContainer: ModelContainer,
-        settingsActionService: SettingsActionService
+        settingsActionService: SettingsActionService,
+        isICloudEnabled: Bool
     ) -> some View {
         modifier(
             SettingsDataManagementDialogsModifier(
                 model: model,
                 modelContainer: modelContainer,
-                settingsActionService: settingsActionService
+                settingsActionService: settingsActionService,
+                isICloudEnabled: isICloudEnabled
             )
         )
     }

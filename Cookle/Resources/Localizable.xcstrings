@@ -2399,40 +2399,6 @@
         }
       }
     },
-    "Delete All permanently removes recipes, diaries, tags, and photos from this device." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete All permanently removes recipes, diaries, tags, and photos from this device."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eliminar todo elimina permanentemente las recetas, diarios, etiquetas y fotos de este dispositivo."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tout supprimer supprime définitivement les recettes, journaux, étiquettes et photos de cet appareil."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "「すべて削除」は、このデバイスからレシピ、日記、タグ、写真を完全に削除します。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“全部删除”会从此设备永久删除食谱、日记、标签和照片。"
-          }
-        }
-      }
-    },
     "Delete Category" : {
       "localizations" : {
         "en" : {
@@ -3109,6 +3075,108 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "结束会话"
+          }
+        }
+      }
+    },
+    "Export a backup before destructive actions. Delete All permanently removes recipes, diaries, tags, and photos from this device." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export a backup before destructive actions. Delete All permanently removes recipes, diaries, tags, and photos from this device."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "データを削除する操作の前に、バックアップを書き出してください。「すべて削除」を実行すると、このデバイス上のすべてのレシピ、日記、タグ、写真が完全に削除されます。"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exporta una copia de seguridad antes de realizar acciones destructivas. «Eliminar todo» elimina permanentemente de este dispositivo todas las recetas, entradas del diario, etiquetas y fotos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportez une sauvegarde avant toute opération destructive. « Tout supprimer » supprime définitivement de cet appareil toutes les recettes, les entrées du journal, les étiquettes et les photos."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "执行破坏性操作前，请先导出备份。“全部删除”会永久删除此设备上的所有食谱、日记、标签和照片。"
+          }
+        }
+      }
+    },
+    "Export a backup before destructive actions. Restore and Delete All changes sync to other devices using the same iCloud account." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export a backup before destructive actions. Restore and Delete All changes sync to other devices using the same iCloud account."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "データを置き換えたり削除したりする操作の前に、バックアップを書き出してください。バックアップの復元や「すべて削除」による変更は、同じiCloudアカウントを使用しているほかのデバイスにも同期されます。"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exporta una copia de seguridad antes de realizar acciones destructivas. Los cambios realizados al restaurar una copia de seguridad o usar «Eliminar todo» se sincronizan con otros dispositivos que utilizan la misma cuenta de iCloud."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportez une sauvegarde avant toute opération destructive. Les modifications effectuées en restaurant une sauvegarde ou en utilisant « Tout supprimer » sont synchronisées avec les autres appareils utilisant le même compte iCloud."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "执行破坏性操作前，请先导出备份。恢复备份和“全部删除”产生的更改会同步到使用同一iCloud账户的其他设备。"
+          }
+        }
+      }
+    },
+    "Export Backup" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export Backup"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バックアップを書き出す"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportar copia de seguridad"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exporter une sauvegarde"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导出备份"
           }
         }
       }
@@ -6312,36 +6380,70 @@
         }
       }
     },
-    "Restoring a backup replaces all current recipes, diaries, tags, and photos. Export a backup first if you need to keep the current data." : {
+    "Restoring a backup replaces all current recipes, diaries, tags, and photos on this device. Export a backup first if you need to keep the current data." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Restoring a backup replaces all current recipes, diaries, tags, and photos. Export a backup first if you need to keep the current data."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Restaurar una copia de seguridad reemplaza todas las recetas, diarios, etiquetas y fotos actuales. Exporta una copia de seguridad primero si necesitas conservar los datos actuales."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La restauration d'une sauvegarde remplace toutes les recettes, journaux, étiquettes et photos actuels. Exportez d'abord une sauvegarde si vous devez conserver les données actuelles."
+            "value" : "Restoring a backup replaces all current recipes, diaries, tags, and photos on this device. Export a backup first if you need to keep the current data."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "バックアップを復元すると、現在のレシピ、日記、タグ、写真はすべて置き換えられます。現在のデータを残す必要がある場合は、先にバックアップをエクスポートしてください。"
+            "value" : "バックアップを復元すると、このデバイス上のレシピ、日記、タグ、写真がすべて置き換えられます。現在のデータを残す必要がある場合は、先にバックアップを書き出してください。"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al restaurar una copia de seguridad, se reemplazan todas las recetas, entradas del diario, etiquetas y fotos actuales de este dispositivo. Si necesitas conservar los datos actuales, exporta primero una copia de seguridad."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La restauration d’une sauvegarde remplace toutes les recettes, les entrées du journal, les étiquettes et les photos actuellement présentes sur cet appareil. Si vous souhaitez conserver les données actuelles, exportez d’abord une sauvegarde."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "恢复备份会替换当前所有食谱、日记、标签和照片。如果需要保留当前数据，请先导出备份。"
+            "value" : "恢复备份会替换此设备上当前的所有食谱、日记、标签和照片。如果需要保留当前数据，请先导出备份。"
+          }
+        }
+      }
+    },
+    "Restoring a backup replaces all current recipes, diaries, tags, and photos, and the changes sync to other devices using the same iCloud account. Export a backup first if you need to keep the current data." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restoring a backup replaces all current recipes, diaries, tags, and photos, and the changes sync to other devices using the same iCloud account. Export a backup first if you need to keep the current data."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バックアップを復元すると、現在のレシピ、日記、タグ、写真がすべて置き換えられ、その変更は同じiCloudアカウントを使用しているほかのデバイスにも同期されます。現在のデータを残す必要がある場合は、先にバックアップを書き出してください。"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al restaurar una copia de seguridad, se reemplazan todas las recetas, entradas del diario, etiquetas y fotos actuales. Estos cambios se sincronizan con otros dispositivos que utilizan la misma cuenta de iCloud. Si necesitas conservar los datos actuales, exporta primero una copia de seguridad."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La restauration d’une sauvegarde remplace toutes les recettes, les entrées du journal, les étiquettes et les photos actuelles. Ces modifications sont synchronisées avec les autres appareils utilisant le même compte iCloud. Si vous souhaitez conserver les données actuelles, exportez d’abord une sauvegarde."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "恢复备份会替换当前的所有食谱、日记、标签和照片。这些更改会同步到使用同一iCloud账户的其他设备。如果需要保留当前数据，请先导出备份。"
           }
         }
       }
@@ -7536,36 +7638,70 @@
         }
       }
     },
-    "This permanently deletes all recipes, diaries, tags, and photos from this device." : {
+    "This permanently deletes all recipes, diaries, tags, and photos from this device. Export a backup first if you need to keep the data." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This permanently deletes all recipes, diaries, tags, and photos from this device."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Esto elimina permanentemente todas las recetas, diarios, etiquetas y fotos de este dispositivo."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cela supprime définitivement toutes les recettes, journaux, étiquettes et photos de cet appareil."
+            "value" : "This permanently deletes all recipes, diaries, tags, and photos from this device. Export a backup first if you need to keep the data."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "このデバイスからすべてのレシピ、日記、タグ、写真を完全に削除します。"
+            "value" : "この操作を実行すると、このデバイス上のすべてのレシピ、日記、タグ、写真が完全に削除されます。データを残す必要がある場合は、先にバックアップを書き出してください。"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta acción elimina permanentemente de este dispositivo todas las recetas, entradas del diario, etiquetas y fotos. Si necesitas conservar los datos, exporta primero una copia de seguridad."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette action supprime définitivement de cet appareil toutes les recettes, les entrées du journal, les étiquettes et les photos. Si vous souhaitez conserver les données, exportez d’abord une sauvegarde."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "这会从此设备永久删除所有食谱、日记、标签和照片。"
+            "value" : "此操作会永久删除此设备上的所有食谱、日记、标签和照片。如果需要保留这些数据，请先导出备份。"
+          }
+        }
+      }
+    },
+    "This permanently deletes all recipes, diaries, tags, and photos. The deletions sync to other devices using the same iCloud account. Export a backup first if you need to keep the data." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permanently deletes all recipes, diaries, tags, and photos. The deletions sync to other devices using the same iCloud account. Export a backup first if you need to keep the data."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この操作を実行すると、すべてのレシピ、日記、タグ、写真が完全に削除されます。削除内容は、同じiCloudアカウントを使用しているほかのデバイスにも同期されます。データを残す必要がある場合は、先にバックアップを書き出してください。"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta acción elimina permanentemente todas las recetas, entradas del diario, etiquetas y fotos. Las eliminaciones se sincronizan con otros dispositivos que utilizan la misma cuenta de iCloud. Si necesitas conservar los datos, exporta primero una copia de seguridad."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette action supprime définitivement toutes les recettes, les entrées du journal, les étiquettes et les photos. Les suppressions sont synchronisées avec les autres appareils utilisant le même compte iCloud. Si vous souhaitez conserver les données, exportez d’abord une sauvegarde."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此操作会永久删除所有食谱、日记、标签和照片。删除内容会同步到使用同一iCloud账户的其他设备。如果需要保留这些数据，请先导出备份。"
           }
         }
       }

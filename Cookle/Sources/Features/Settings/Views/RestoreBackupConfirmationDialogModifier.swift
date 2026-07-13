@@ -6,6 +6,7 @@ struct RestoreBackupConfirmationDialogModifier: ViewModifier {
 
     let modelContainer: ModelContainer
     let settingsActionService: SettingsActionService
+    let isICloudEnabled: Bool
 
     func body(content: Content) -> some View {
         content
@@ -29,12 +30,22 @@ struct RestoreBackupConfirmationDialogModifier: ViewModifier {
                     Text("Cancel")
                 }
             } message: {
-                Text(
-                    """
-                    Restoring a backup replaces all current recipes, diaries, tags, and photos. \
-                    Export a backup first if you need to keep the current data.
-                    """
-                )
+                if isICloudEnabled {
+                    Text(
+                        """
+                        Restoring a backup replaces all current recipes, diaries, tags, and photos, \
+                        and the changes sync to other devices using the same iCloud account. \
+                        Export a backup first if you need to keep the current data.
+                        """
+                    )
+                } else {
+                    Text(
+                        """
+                        Restoring a backup replaces all current recipes, diaries, tags, and photos on this device. \
+                        Export a backup first if you need to keep the current data.
+                        """
+                    )
+                }
             }
     }
 }
