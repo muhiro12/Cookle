@@ -5,6 +5,31 @@ import SwiftData
 @preconcurrency
 @MainActor
 public enum RecipeOperations {
+    /// Resolves every stable recipe identifier in input order.
+    ///
+    /// - Returns: Matching recipes.
+    /// - Throws: `RecipeResolutionError.recipeNotFound` when any identifier is invalid or
+    ///   missing, or a SwiftData fetch error when the lookup fails.
+    public static func resolveRecipes(
+        stableIdentifiers: [String],
+        context: ModelContext
+    ) throws -> [Recipe] {
+        var recipes = [Recipe]()
+        recipes.reserveCapacity(stableIdentifiers.count)
+
+        for stableIdentifier in stableIdentifiers {
+            guard let recipe = try RecipeStableIdentifierCodec.recipe(
+                from: stableIdentifier,
+                context: context
+            ) else {
+                throw RecipeResolutionError.recipeNotFound
+            }
+            recipes.append(recipe)
+        }
+
+        return recipes
+    }
+
     /// Returns the last opened recipe stored in preferences, if available.
     public static func lastOpenedRecipe(context: ModelContext) throws -> Recipe? {
         try RecipeService.lastOpenedRecipe(context: context)

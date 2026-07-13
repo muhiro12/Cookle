@@ -34,15 +34,15 @@ struct CreateDiaryIntent: AppIntent {
             context: context,
             input: .init(
                 date: date,
-                breakfasts: DiaryIntentSupport.resolveRecipes(
+                breakfasts: try DiaryIntentSupport.resolveRecipes(
                     from: breakfasts,
                     context: context
                 ),
-                lunches: DiaryIntentSupport.resolveRecipes(
+                lunches: try DiaryIntentSupport.resolveRecipes(
                     from: lunches,
                     context: context
                 ),
-                dinners: DiaryIntentSupport.resolveRecipes(
+                dinners: try DiaryIntentSupport.resolveRecipes(
                     from: dinners,
                     context: context
                 ),

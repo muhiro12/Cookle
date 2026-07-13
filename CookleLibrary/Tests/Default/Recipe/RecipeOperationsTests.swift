@@ -8,6 +8,78 @@ struct RecipeOperationsTests {
     let context = makeTestContext()
 
     @Test
+    func resolveRecipes_returns_all_recipes_in_identifier_order() throws {
+        let soup = Recipe.create(
+            context: context,
+            content: .init(
+                name: "Soup",
+                servingSize: 2,
+                cookingTime: 20
+            )
+        )
+        let curry = Recipe.create(
+            context: context,
+            content: .init(
+                name: "Curry",
+                servingSize: 3,
+                cookingTime: 30
+            )
+        )
+        try context.save()
+
+        let recipes = try RecipeOperations.resolveRecipes(
+            stableIdentifiers: [
+                RecipeStableIdentifierCodec.stableIdentifier(for: curry),
+                RecipeStableIdentifierCodec.stableIdentifier(for: soup)
+            ],
+            context: context
+        )
+
+        #expect(recipes.count == 2)
+        #expect(recipes[0] === curry)
+        #expect(recipes[1] === soup)
+    }
+
+    @Test
+    func resolveRecipes_throws_when_any_recipe_is_missing() throws {
+        let availableRecipe = Recipe.create(
+            context: context,
+            content: .init(
+                name: "Soup",
+                servingSize: 2,
+                cookingTime: 20
+            )
+        )
+        let deletedRecipe = Recipe.create(
+            context: context,
+            content: .init(
+                name: "Curry",
+                servingSize: 3,
+                cookingTime: 30
+            )
+        )
+        try context.save()
+        let availableIdentifier = RecipeStableIdentifierCodec.stableIdentifier(
+            for: availableRecipe
+        )
+        let deletedIdentifier = RecipeStableIdentifierCodec.stableIdentifier(
+            for: deletedRecipe
+        )
+        context.delete(deletedRecipe)
+        try context.save()
+
+        #expect(throws: RecipeResolutionError.recipeNotFound) {
+            _ = try RecipeOperations.resolveRecipes(
+                stableIdentifiers: [
+                    availableIdentifier,
+                    deletedIdentifier
+                ],
+                context: context
+            )
+        }
+    }
+
+    @Test
     func search_returns_recipes_matching_prefix() throws {
         _ = Recipe.create(
             context: context,

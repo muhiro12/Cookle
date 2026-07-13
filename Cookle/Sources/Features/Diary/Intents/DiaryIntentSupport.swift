@@ -5,11 +5,18 @@ enum DiaryIntentSupport {
     static func resolveRecipes(
         from entities: Set<RecipeEntity>,
         context: ModelContext
-    ) -> [Recipe] {
-        entities.compactMap { entity in
-            try? entity.model(context: context)
+    ) throws -> [Recipe] {
+        let recipes: [Recipe]
+        do {
+            recipes = try RecipeOperations.resolveRecipes(
+                stableIdentifiers: entities.map(\.id),
+                context: context
+            )
+        } catch RecipeResolutionError.recipeNotFound {
+            throw RecipeMutationIntentError.recipeNotFound
         }
-        .sorted { lhs, rhs in
+
+        return recipes.sorted { lhs, rhs in
             lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
         }
     }
