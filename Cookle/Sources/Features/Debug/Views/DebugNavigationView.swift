@@ -14,6 +14,7 @@ struct DebugNavigationView: View {
     private var logging
 
     @State private var content: DebugContent?
+    @State private var columnVisibility = NavigationSplitViewVisibility.all
     @State private var preferredCompactColumn = NavigationSplitViewColumn.sidebar
     @State private var hasAppliedInitialCompactColumn = false
 
@@ -28,7 +29,7 @@ struct DebugNavigationView: View {
 
     var body: some View {
         NavigationSplitView(
-            columnVisibility: .constant(.all),
+            columnVisibility: $columnVisibility,
             preferredCompactColumn: $preferredCompactColumn
         ) {
             DebugSidebarView(selection: $content)

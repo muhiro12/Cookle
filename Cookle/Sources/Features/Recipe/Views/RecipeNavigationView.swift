@@ -9,12 +9,13 @@ import SwiftUI
 
 struct RecipeNavigationView: View {
     @Binding private var recipe: Recipe?
+    @State private var columnVisibility = NavigationSplitViewVisibility.all
     @State private var preferredCompactColumn = NavigationSplitViewColumn.sidebar
     @State private var hasAppliedInitialCompactColumn = false
 
     var body: some View {
         NavigationSplitView(
-            columnVisibility: .constant(.all),
+            columnVisibility: $columnVisibility,
             preferredCompactColumn: $preferredCompactColumn
         ) {
             RecipeListView(selection: $recipe)

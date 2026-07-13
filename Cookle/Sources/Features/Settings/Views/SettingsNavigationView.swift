@@ -4,12 +4,13 @@ struct SettingsNavigationView: View {
     @Binding private var incomingSelection: SettingsContent?
 
     @State private var selection: SettingsContent?
+    @State private var columnVisibility = NavigationSplitViewVisibility.all
     @State private var preferredCompactColumn = NavigationSplitViewColumn.sidebar
     @State private var hasAppliedInitialCompactColumn = false
 
     var body: some View {
         NavigationSplitView(
-            columnVisibility: .constant(.all),
+            columnVisibility: $columnVisibility,
             preferredCompactColumn: $preferredCompactColumn
         ) {
             SettingsSidebarView(selection: $selection)

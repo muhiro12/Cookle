@@ -4,12 +4,13 @@ import SwiftUI
 struct PhotoNavigationView: View {
     @Binding private var photo: Photo?
     @State private var recipe: Recipe?
+    @State private var columnVisibility = NavigationSplitViewVisibility.all
     @State private var preferredCompactColumn = NavigationSplitViewColumn.sidebar
     @State private var hasAppliedInitialCompactColumn = false
 
     var body: some View {
         NavigationSplitView(
-            columnVisibility: .constant(.all),
+            columnVisibility: $columnVisibility,
             preferredCompactColumn: $preferredCompactColumn
         ) {
             PhotoListView(selection: $photo)

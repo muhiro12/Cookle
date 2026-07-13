@@ -7,6 +7,7 @@ struct TagNavigationView<T: Tag & Identifiable>: View {
 
     @Binding private var tag: T?
     @Binding private var recipe: Recipe?
+    @State private var columnVisibility = NavigationSplitViewVisibility.all
     @State private var preferredCompactColumn = NavigationSplitViewColumn.sidebar
     @State private var hasAppliedInitialCompactColumn = false
 
@@ -37,7 +38,7 @@ struct TagNavigationView<T: Tag & Identifiable>: View {
 
     var splitNavigationView: some View {
         NavigationSplitView(
-            columnVisibility: .constant(.all),
+            columnVisibility: $columnVisibility,
             preferredCompactColumn: $preferredCompactColumn
         ) {
             TagListView<T>(selection: $tag)

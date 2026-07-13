@@ -10,12 +10,13 @@ import SwiftUI
 struct SearchNavigationView: View {
     @Binding private var recipe: Recipe?
     @Binding private var incomingSearchQuery: String?
+    @State private var columnVisibility = NavigationSplitViewVisibility.all
     @State private var preferredCompactColumn = NavigationSplitViewColumn.sidebar
     @State private var hasAppliedInitialCompactColumn = false
 
     var body: some View {
         NavigationSplitView(
-            columnVisibility: .constant(.all),
+            columnVisibility: $columnVisibility,
             preferredCompactColumn: $preferredCompactColumn
         ) {
             SearchView(
