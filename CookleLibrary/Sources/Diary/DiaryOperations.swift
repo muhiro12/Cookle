@@ -75,8 +75,8 @@ public enum DiaryOperations {
     public static func createWithOutcome(
         context: ModelContext,
         input: DiaryFormInput
-    ) -> MutationOutcome<Diary> {
-        DiaryService.createWithOutcome(
+    ) throws -> MutationOutcome<Diary> {
+        try DiaryService.createWithOutcome(
             context: context,
             input: input
         )
@@ -87,8 +87,8 @@ public enum DiaryOperations {
         context: ModelContext,
         diary: Diary,
         input: DiaryFormInput
-    ) -> MutationOutcome<Diary> {
-        DiaryService.updateWithOutcome(
+    ) throws -> MutationOutcome<Diary> {
+        try DiaryService.updateWithOutcome(
             context: context,
             diary: diary,
             input: input

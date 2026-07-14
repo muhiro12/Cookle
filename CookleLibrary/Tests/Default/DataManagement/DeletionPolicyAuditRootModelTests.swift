@@ -26,7 +26,7 @@ struct DeletionPolicyAuditRootModelTests {
             ingredients: [],
             categories: []
         )
-        let diary = DiaryService.create(
+        let diary = try DiaryService.create(
             context: context,
             input: .init(
                 date: .now,
@@ -72,7 +72,7 @@ struct DeletionPolicyAuditRootModelTests {
             ingredients: [.init(ingredient: "Salt", amount: "1 tsp")],
             categories: ["Dinner"]
         )
-        _ = DiaryService.create(
+        _ = try DiaryService.create(
             context: context,
             input: .init(
                 date: .now,

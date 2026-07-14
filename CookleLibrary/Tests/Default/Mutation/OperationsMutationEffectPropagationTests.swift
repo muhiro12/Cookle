@@ -99,7 +99,7 @@ struct OperationsMutationEffectPropagationTests {
             )
         )
 
-        let createOutcome = DiaryOperations.createWithOutcome(
+        let createOutcome = try DiaryOperations.createWithOutcome(
             context: context,
             input: .init(
                 date: .now,

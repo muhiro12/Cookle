@@ -110,7 +110,7 @@ struct DeletionPolicyAuditObjectLifecycleTests {
             context: context,
             name: "Lunch"
         )
-        let diary = DiaryService.create(
+        let diary = try DiaryService.create(
             context: context,
             input: .init(
                 date: .now,
@@ -122,7 +122,7 @@ struct DeletionPolicyAuditObjectLifecycleTests {
             (diary.objects ?? []).first?.persistentModelID
         )
 
-        DiaryService.update(
+        try DiaryService.update(
             context: context,
             diary: diary,
             input: .init(

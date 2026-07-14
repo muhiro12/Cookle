@@ -1,6 +1,9 @@
+import Foundation
+
 extension CookleDataArchiveService {
     nonisolated static func validate(
-        _ archive: CookleDataArchive
+        _ archive: CookleDataArchive,
+        calendar: Calendar
     ) throws {
         guard archive.formatVersion == CookleDataArchive.currentFormatVersion else {
             throw ArchiveError.unsupportedFormatVersion(
@@ -22,6 +25,10 @@ extension CookleDataArchiveService {
         )
         _ = try uniqueIDs(
             archive.diaries.map(\.id)
+        )
+        try validateDiaryDays(
+            archive.diaries,
+            calendar: calendar
         )
         try validateRecipeReferences(
             archive.recipes,
@@ -73,6 +80,21 @@ extension CookleDataArchiveService {
         for diary in diaries {
             for object in diary.objects where recipeIDs.contains(object.recipeID) == false {
                 throw ArchiveError.missingReference(object.recipeID)
+            }
+        }
+    }
+
+    nonisolated static func validateDiaryDays(
+        _ diaries: [CookleDataArchive.DiaryRecord],
+        calendar: Calendar
+    ) throws {
+        var occupiedDays = Set<Date>()
+        for diary in diaries {
+            let day = calendar.startOfDay(
+                for: diary.date
+            )
+            guard occupiedDays.insert(day).inserted else {
+                throw ArchiveError.duplicateDiaryDay
             }
         }
     }

@@ -21,7 +21,7 @@ final class DiaryActionService {
             name: "createDiary",
             context: context
         ) {
-            DiaryOperations.createWithOutcome(
+            try DiaryOperations.createWithOutcome(
                 context: context,
                 input: input
             )
@@ -38,7 +38,7 @@ final class DiaryActionService {
             name: "updateDiary",
             context: context
         ) {
-            DiaryOperations.updateWithOutcome(
+            try DiaryOperations.updateWithOutcome(
                 context: context,
                 diary: diary,
                 input: input

@@ -30,6 +30,7 @@ final class SettingsActionService {
     nonisolated func validatedBackupArchive(
         from url: URL
     ) async throws -> CookleDataArchive {
+        let calendar = Calendar.current
         let validationTask = Task.detached(priority: .userInitiated) {
             try Task.checkCancellation()
             let didAccessSecurityScopedResource = url.startAccessingSecurityScopedResource()
@@ -42,7 +43,8 @@ final class SettingsActionService {
             let data = try Data(contentsOf: url)
             try Task.checkCancellation()
             let archive = try DataMaintenanceOperations.validatedArchive(
-                from: data
+                from: data,
+                calendar: calendar
             )
             try Task.checkCancellation()
             return archive

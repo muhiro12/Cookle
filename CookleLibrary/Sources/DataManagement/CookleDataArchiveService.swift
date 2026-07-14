@@ -8,6 +8,7 @@ enum CookleDataArchiveService {
     enum ArchiveError: LocalizedError, Sendable {
         case unsupportedFormatVersion(Int)
         case duplicateIdentifier(String)
+        case duplicateDiaryDay
         case missingReference(String)
 
         var errorDescription: String? {
@@ -16,6 +17,8 @@ enum CookleDataArchiveService {
                 "Unsupported backup format version: \(version)"
             case .duplicateIdentifier(let identifier):
                 "Backup contains a duplicate identifier: \(identifier)"
+            case .duplicateDiaryDay:
+                "Backup contains multiple diaries for the same calendar day."
             case .missingReference(let identifier):
                 "Backup is missing referenced data: \(identifier)"
             }
@@ -93,12 +96,16 @@ enum CookleDataArchiveService {
 
     /// Decodes and validates JSON backup data before restore confirmation.
     nonisolated static func validatedArchive(
-        from data: Data
+        from data: Data,
+        calendar: Calendar = .current
     ) throws -> CookleDataArchive {
         let archive = try decodedArchive(
             from: data
         )
-        try validate(archive)
+        try validate(
+            archive,
+            calendar: calendar
+        )
         return archive
     }
 
@@ -106,11 +113,15 @@ enum CookleDataArchiveService {
     static func restore(
         _ archive: CookleDataArchive,
         context: ModelContext,
+        calendar: Calendar = .current,
         save: (ModelContext) throws -> Void = { context in
             try context.save()
         }
     ) throws -> CookleDataRestoreSummary {
-        try validate(archive)
+        try validate(
+            archive,
+            calendar: calendar
+        )
 
         do {
             try DataResetService.deleteAll(context: context)

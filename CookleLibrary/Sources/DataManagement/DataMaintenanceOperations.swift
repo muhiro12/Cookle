@@ -16,10 +16,12 @@ public enum DataMaintenanceOperations {
 
     /// Decodes and validates JSON backup data before restore confirmation.
     nonisolated public static func validatedArchive(
-        from data: Data
+        from data: Data,
+        calendar: Calendar = .current
     ) throws -> CookleDataArchive {
         try CookleDataArchiveService.validatedArchive(
-            from: data
+            from: data,
+            calendar: calendar
         )
     }
 

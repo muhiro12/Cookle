@@ -11,13 +11,15 @@ enum DiaryService {
         context: ModelContext,
         calendar: Calendar = .current
     ) throws -> Diary? {
-        let diaries = try context.fetch(.diaries(.all))
-        return diaries.first { diary in
-            calendar.isDate(
-                diary.date,
-                inSameDayAs: date
-            )
+        let diaries = try diaries(
+            on: date,
+            context: context,
+            calendar: calendar
+        )
+        guard diaries.count <= 1 else {
+            throw DiaryDayConflictError.multipleDiariesForDay
         }
+        return diaries.first
     }
 
     /// Returns the latest diary ordered by date and timestamps.
@@ -42,13 +44,15 @@ enum DiaryService {
         context: ModelContext,
         date: Date,
         recipe: Recipe,
-        type: DiaryObjectType
+        type: DiaryObjectType,
+        calendar: Calendar = .current
     ) throws -> Diary {
         try addWithOutcome(
             context: context,
             date: date,
             recipe: recipe,
-            type: type
+            type: type,
+            calendar: calendar
         ).value
     }
 
@@ -57,12 +61,17 @@ enum DiaryService {
         context: ModelContext,
         date: Date,
         recipe: Recipe,
-        type: DiaryObjectType
+        type: DiaryObjectType,
+        calendar: Calendar = .current
     ) throws -> MutationOutcome<Diary> {
-        if let existing = try diary(on: date, context: context) {
+        if let existing = try diary(
+            on: date,
+            context: context,
+            calendar: calendar
+        ) {
             var meals = mealRecipes(from: (existing.objects ?? []))
             append(recipe: recipe, to: &meals, for: type)
-            let outcome = Self.updateWithOutcome(
+            let outcome = try Self.updateWithOutcome(
                 context: context,
                 diary: existing,
                 input: .init(
@@ -71,36 +80,49 @@ enum DiaryService {
                     lunches: meals.lunches,
                     dinners: meals.dinners,
                     note: existing.note
-                )
+                ),
+                calendar: calendar
             )
             return .init(
                 value: existing,
                 effects: outcome.effects
             )
         }
-        return createNewDiaryOutcome(
+        return try createNewDiaryOutcome(
             context: context,
             date: date,
             recipe: recipe,
-            type: type
+            type: type,
+            calendar: calendar
         )
     }
     /// Creates a new diary for the given date with provided recipes by meal type.
     static func create(
         context: ModelContext,
-        input: DiaryFormInput
-    ) -> Diary {
-        createWithOutcome(
+        input: DiaryFormInput,
+        calendar: Calendar = .current
+    ) throws -> Diary {
+        try createWithOutcome(
             context: context,
-            input: input
+            input: input,
+            calendar: calendar
         ).value
     }
 
     /// Creates a new diary and returns follow-up hints.
     static func createWithOutcome(
         context: ModelContext,
-        input: DiaryFormInput
-    ) -> MutationOutcome<Diary> {
+        input: DiaryFormInput,
+        calendar: Calendar = .current
+    ) throws -> MutationOutcome<Diary> {
+        guard try diaries(
+            on: input.date,
+            context: context,
+            calendar: calendar
+        ).isEmpty else {
+            throw DiaryDayConflictError.dayAlreadyOccupied
+        }
+
         let objects = zip(input.breakfasts.indices, input.breakfasts).map { index, recipe in
             DiaryObject.create(context: context, recipe: recipe, type: .breakfast, order: index + 1)
         } + zip(input.lunches.indices, input.lunches).map { index, recipe in
@@ -126,12 +148,14 @@ enum DiaryService {
     static func update(
         context: ModelContext,
         diary: Diary,
-        input: DiaryFormInput
-    ) {
-        _ = updateWithOutcome(
+        input: DiaryFormInput,
+        calendar: Calendar = .current
+    ) throws {
+        _ = try updateWithOutcome(
             context: context,
             diary: diary,
-            input: input
+            input: input,
+            calendar: calendar
         )
     }
 
@@ -139,8 +163,20 @@ enum DiaryService {
     static func updateWithOutcome(
         context: ModelContext,
         diary: Diary,
-        input: DiaryFormInput
-    ) -> MutationOutcome<Diary> {
+        input: DiaryFormInput,
+        calendar: Calendar = .current
+    ) throws -> MutationOutcome<Diary> {
+        let conflictingDiaryExists = try diaries(
+            on: input.date,
+            context: context,
+            calendar: calendar
+        ).contains { existingDiary in
+            existingDiary !== diary
+        }
+        guard conflictingDiaryExists == false else {
+            throw DiaryDayConflictError.dayAlreadyOccupied
+        }
+
         let previousObjects = (diary.objects ?? [])
         let objects = zip(input.breakfasts.indices, input.breakfasts).map { index, recipe in
             DiaryObject.create(context: context, recipe: recipe, type: .breakfast, order: index + 1)
@@ -235,32 +271,49 @@ private extension DiaryService {
         context: ModelContext,
         date: Date,
         recipe: Recipe,
-        type: DiaryObjectType
-    ) -> MutationOutcome<Diary> {
+        type: DiaryObjectType,
+        calendar: Calendar
+    ) throws -> MutationOutcome<Diary> {
         switch type {
         case .breakfast:
-            return Self.createWithOutcome(
+            return try Self.createWithOutcome(
                 context: context,
                 input: .init(
                     date: date,
                     breakfasts: [recipe]
-                )
+                ),
+                calendar: calendar
             )
         case .lunch:
-            return Self.createWithOutcome(
+            return try Self.createWithOutcome(
                 context: context,
                 input: .init(
                     date: date,
                     lunches: [recipe]
-                )
+                ),
+                calendar: calendar
             )
         case .dinner:
-            return Self.createWithOutcome(
+            return try Self.createWithOutcome(
                 context: context,
                 input: .init(
                     date: date,
                     dinners: [recipe]
-                )
+                ),
+                calendar: calendar
+            )
+        }
+    }
+
+    static func diaries(
+        on date: Date,
+        context: ModelContext,
+        calendar: Calendar
+    ) throws -> [Diary] {
+        try context.fetch(.diaries(.all)).filter { diary in
+            calendar.isDate(
+                diary.date,
+                inSameDayAs: date
             )
         }
     }

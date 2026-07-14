@@ -49,7 +49,7 @@ struct DiaryServiceMutationTests {
                 cookingTime: 20
             )
         )
-        let diary = DiaryService.create(
+        let diary = try DiaryService.create(
             context: context,
             input: .init(
                 date: .now,
@@ -78,7 +78,7 @@ struct DiaryServiceMutationTests {
 
     @Test
     func create_creates_note_only_diary() throws {
-        let diary = DiaryService.create(
+        let diary = try DiaryService.create(
             context: context,
             input: .init(
                 date: .now,
@@ -110,7 +110,7 @@ struct DiaryServiceMutationTests {
                 note: ""
             )
         )
-        _ = DiaryService.create(
+        _ = try DiaryService.create(
             context: context,
             input: .init(
                 date: .now,
@@ -126,7 +126,7 @@ struct DiaryServiceMutationTests {
     }
 
     @Test
-    func update_updates_diary_with_new_note_and_recipe() {
+    func update_updates_diary_with_new_note_and_recipe() throws {
         let pancake = Recipe.create(
             context: context,
             content: .init(
@@ -148,7 +148,7 @@ struct DiaryServiceMutationTests {
                 note: ""
             )
         )
-        DiaryService.update(
+        try DiaryService.update(
             context: context,
             diary: diary,
             input: .init(
@@ -165,7 +165,7 @@ struct DiaryServiceMutationTests {
     }
 
     @Test
-    func update_allows_note_only_diary_and_clears_meals() {
+    func update_allows_note_only_diary_and_clears_meals() throws {
         let pancake = Recipe.create(
             context: context,
             content: .init(
@@ -179,7 +179,7 @@ struct DiaryServiceMutationTests {
                 note: ""
             )
         )
-        let diary = DiaryService.create(
+        let diary = try DiaryService.create(
             context: context,
             input: .init(
                 date: .now,
@@ -190,7 +190,7 @@ struct DiaryServiceMutationTests {
             )
         )
 
-        DiaryService.update(
+        try DiaryService.update(
             context: context,
             diary: diary,
             input: .init(
