@@ -4,19 +4,20 @@ struct CookingSessionTimerSection: View {
     private enum Layout {
         static let buttonSpacing: CGFloat = 12
         static let sectionSpacing: CGFloat = 16
-        static let timerValueFontSize: CGFloat = 42
-        static let timerValueWeight = Font.Weight.semibold
     }
 
     private enum TimerValue {
         static let oneMinute = 1
         static let fiveMinutes = 5
+        static let refreshIntervalSeconds = 1
         static let tenMinutes = 10
         static let secondsPerMinute = 60
     }
 
     @Environment(CookingSessionStore.self)
     private var cookingSessionStore
+
+    @State private var timerRefreshDate = Date.now
 
     private let snapshot: CookingSessionSnapshot
 
@@ -30,11 +31,9 @@ struct CookingSessionTimerSection: View {
         VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
             Text("Quick Timers")
                 .font(.headline)
-            TimelineView(.periodic(from: .now, by: 1)) { context in
-                timerContent(
-                    at: context.date
-                )
-            }
+            timerContent(
+                at: timerDisplayDate
+            )
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -47,6 +46,17 @@ struct CookingSessionTimerSection: View {
 }
 
 private extension CookingSessionTimerSection {
+    var timerDisplayDate: Date {
+        guard let activeTimer = snapshot.activeTimer else {
+            return timerRefreshDate
+        }
+
+        return max(
+            timerRefreshDate,
+            activeTimer.startedAt
+        )
+    }
+
     var suggestedTimer: CookingTimerSuggestion? {
         guard let currentStep = snapshot.currentStep else {
             return nil
@@ -152,6 +162,9 @@ private extension CookingSessionTimerSection {
             runningTimerContent(
                 remainingSeconds: remainingSeconds
             )
+            .task(id: snapshot.activeTimer) {
+                await refreshTimerUntilExpiration()
+            }
         case .expired:
             expiredTimerContent
         }
@@ -198,10 +211,11 @@ private extension CookingSessionTimerSection {
             )
             .font(
                 .system(
-                    size: Layout.timerValueFontSize,
-                    weight: Layout.timerValueWeight,
+                    .largeTitle,
                     design: .rounded
                 )
+                .weight(.semibold)
+                .monospacedDigit()
             )
             Button(
                 "Cancel Timer",
@@ -223,6 +237,28 @@ private extension CookingSessionTimerSection {
             minutes,
             seconds
         )
+    }
+
+    @MainActor
+    func refreshTimerUntilExpiration() async {
+        while Task.isCancelled == false {
+            let currentDate = Date.now
+            timerRefreshDate = currentDate
+
+            guard case .running = snapshot.timerStatus(
+                at: currentDate
+            ) else {
+                return
+            }
+
+            do {
+                try await Task.sleep(
+                    for: .seconds(TimerValue.refreshIntervalSeconds)
+                )
+            } catch {
+                return
+            }
+        }
     }
 }
 

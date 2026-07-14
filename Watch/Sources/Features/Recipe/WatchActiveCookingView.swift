@@ -2,36 +2,23 @@ import SwiftUI
 
 struct WatchActiveCookingView: View {
     private enum Layout {
+        static let baseStepPagerHeight: CGFloat = 150
         static let contentSpacing: CGFloat = 12
+        static let minimumHitTargetHeight: CGFloat = 44
         static let sectionSpacing: CGFloat = 8
-        static let timerFontSize: CGFloat = 30
-        static let stepPagerHeight: CGFloat = 150
         static let stepPageBackgroundOpacity = 0.2
         static let stepPageCornerRadius: CGFloat = 16
     }
 
-    private enum TimerValue {
-        static let oneMinute = 1
-        static let fiveMinutes = 5
-        static let tenMinutes = 10
-        static let refreshIntervalSeconds: TimeInterval = 1
-        static let secondsPerMinute = 60
-    }
-
     @EnvironmentObject private var cookingSessionStore: WatchCookingSessionStore
-    @State private var isEndSessionConfirmationPresented = false
+    @ScaledMetric(relativeTo: .body)
+    private var stepPagerHeight = Layout.baseStepPagerHeight
 
-    private let quickTimerMinutes = [
-        TimerValue.oneMinute,
-        TimerValue.fiveMinutes,
-        TimerValue.tenMinutes
-    ]
+    @State private var isEndSessionConfirmationPresented = false
 
     var body: some View {
         sessionContent()
-            .navigationTitle(
-                cookingSessionStore.activeSnapshot?.recipeName ?? "Cooking"
-            )
+            .navigationTitle(sessionNavigationTitle)
             .alert(
                 "End Cooking Session?",
                 isPresented: $isEndSessionConfirmationPresented
@@ -49,6 +36,14 @@ struct WatchActiveCookingView: View {
 }
 
 private extension WatchActiveCookingView {
+    var sessionNavigationTitle: Text {
+        guard let recipeName = cookingSessionStore.activeSnapshot?.recipeName else {
+            return Text("Cooking")
+        }
+
+        return Text(verbatim: recipeName)
+    }
+
     @ViewBuilder
     func sessionContent() -> some View {
         if let activeSnapshot = cookingSessionStore.activeSnapshot {
@@ -71,17 +66,16 @@ private extension WatchActiveCookingView {
                 stepPager(
                     snapshot: snapshot
                 )
-                timerSection(
+                WatchCookingTimerSection(
                     snapshot: snapshot
                 )
                 stepNavigationSection(
                     snapshot: snapshot
                 )
-                Button(
-                    "End Session",
-                    role: .destructive
-                ) {
+                Button(role: .destructive) {
                     isEndSessionConfirmationPresented = true
+                } label: {
+                    actionButtonLabel("End Session")
                 }
                 .buttonStyle(.borderedProminent)
             }
@@ -149,7 +143,7 @@ private extension WatchActiveCookingView {
                 .tag(values.offset)
             }
         }
-        .frame(height: Layout.stepPagerHeight)
+        .frame(height: stepPagerHeight)
     }
 
     func stepPage(
@@ -162,12 +156,17 @@ private extension WatchActiveCookingView {
                 "Step \(stepNumber) of \(stepCount)"
             )
             .font(.caption2)
-            Text(stepText)
-                .frame(
-                    maxWidth: .infinity,
-                    maxHeight: .infinity,
-                    alignment: .topLeading
-                )
+            ScrollView(.vertical) {
+                Text(stepText)
+                    .fixedSize(
+                        horizontal: false,
+                        vertical: true
+                    )
+                    .frame(
+                        maxWidth: .infinity,
+                        alignment: .topLeading
+                    )
+            }
         }
         .padding()
         .background(
@@ -179,161 +178,6 @@ private extension WatchActiveCookingView {
         )
     }
 
-    @ViewBuilder
-    func timerSection(
-        snapshot: CookingSessionSnapshot
-    ) -> some View {
-        TimelineView(
-            .periodic(
-                from: .now,
-                by: TimerValue.refreshIntervalSeconds
-            )
-        ) { context in
-            timerContent(
-                snapshot: snapshot,
-                at: context.date
-            )
-        }
-    }
-
-    @ViewBuilder
-    func timerContent(
-        snapshot: CookingSessionSnapshot,
-        at date: Date
-    ) -> some View {
-        switch snapshot.timerStatus(at: date) {
-        case .inactive:
-            idleTimerSection(
-                snapshot: snapshot
-            )
-        case .running(let remainingSeconds):
-            runningTimerSection(
-                remainingSeconds: remainingSeconds
-            )
-        case .expired:
-            expiredTimerSection(
-                snapshot: snapshot
-            )
-        }
-    }
-
-    func idleTimerSection(
-        snapshot: CookingSessionSnapshot
-    ) -> some View {
-        VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
-            Text("Quick Timers")
-                .font(.headline)
-            if let suggestedTimerMinutes = snapshot.suggestedTimerMinutes {
-                Text(
-                    "Suggested: \(suggestedTimerMinutes) min"
-                )
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-            }
-            LazyVGrid(
-                columns: [
-                    GridItem(.flexible()),
-                    GridItem(.flexible())
-                ],
-                spacing: Layout.sectionSpacing
-            ) {
-                ForEach(
-                    timerOptions(
-                        for: snapshot
-                    ),
-                    id: \.self
-                ) { minutes in
-                    timerButton(
-                        minutes: minutes,
-                        isSuggested: snapshot.suggestedTimerMinutes == minutes
-                    )
-                }
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    @ViewBuilder
-    func timerButton(
-        minutes: Int,
-        isSuggested: Bool
-    ) -> some View {
-        if isSuggested {
-            Button {
-                cookingSessionStore.startTimer(
-                    minutes: minutes
-                )
-            } label: {
-                Text("\(minutes) min")
-                    .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(.borderedProminent)
-        } else {
-            Button {
-                cookingSessionStore.startTimer(
-                    minutes: minutes
-                )
-            } label: {
-                Text("\(minutes) min")
-                    .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(.bordered)
-        }
-    }
-
-    func runningTimerSection(
-        remainingSeconds: Int
-    ) -> some View {
-        VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
-            Text("Timer Running")
-                .font(.headline)
-            Text(
-                formattedDuration(
-                    remainingSeconds: remainingSeconds
-                )
-            )
-            .font(
-                .system(
-                    size: Layout.timerFontSize,
-                    weight: .semibold,
-                    design: .rounded
-                )
-            )
-            Button("Cancel Timer") {
-                cookingSessionStore.cancelTimer()
-            }
-            .buttonStyle(.bordered)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    func expiredTimerSection(
-        snapshot: CookingSessionSnapshot
-    ) -> some View {
-        VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
-            Label(
-                "Timer Finished",
-                systemImage: "bell.fill"
-            )
-            .font(.headline)
-            Button("Repeat") {
-                cookingSessionStore.repeatTimer()
-            }
-            .buttonStyle(.borderedProminent)
-            if snapshot.hasNextStep {
-                Button("Next Step") {
-                    cookingSessionStore.advanceFromTimerFollowUp()
-                }
-                .buttonStyle(.bordered)
-            }
-            Button("Cancel Timer") {
-                cookingSessionStore.cancelTimer()
-            }
-            .buttonStyle(.bordered)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
     func stepNavigationSection(
         snapshot: CookingSessionSnapshot
     ) -> some View {
@@ -341,14 +185,18 @@ private extension WatchActiveCookingView {
             Text("Step Navigation")
                 .font(.headline)
             HStack(spacing: Layout.sectionSpacing) {
-                Button("Prev") {
+                Button {
                     cookingSessionStore.returnToPreviousStep()
+                } label: {
+                    actionButtonLabel("Prev")
                 }
                 .buttonStyle(.bordered)
                 .disabled(snapshot.hasPreviousStep == false)
 
-                Button("Next") {
+                Button {
                     cookingSessionStore.advanceToNextStep()
+                } label: {
+                    actionButtonLabel("Next")
                 }
                 .buttonStyle(.borderedProminent)
                 .disabled(snapshot.hasNextStep == false)
@@ -357,37 +205,14 @@ private extension WatchActiveCookingView {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    func timerOptions(
-        for snapshot: CookingSessionSnapshot
-    ) -> [Int] {
-        let suggestedTimerMinutes = snapshot.suggestedTimerMinutes
-        let additionalOptions: [Int] = [
-            suggestedTimerMinutes
-        ].compactMap { minutes in
-            guard let minutes,
-                  quickTimerMinutes.contains(
-                    where: { value in
-                        value == minutes
-                    }
-                  ) == false else {
-                return nil
-            }
-
-            return minutes
-        }
-
-        return (quickTimerMinutes + additionalOptions).sorted()
-    }
-
-    func formattedDuration(
-        remainingSeconds: Int
-    ) -> String {
-        let minutes = remainingSeconds / TimerValue.secondsPerMinute
-        let seconds = remainingSeconds % TimerValue.secondsPerMinute
-        return String(
-            format: "%02d:%02d",
-            minutes,
-            seconds
-        )
+    func actionButtonLabel(
+        _ title: LocalizedStringKey
+    ) -> some View {
+        Text(title)
+            .frame(
+                maxWidth: .infinity,
+                minHeight: Layout.minimumHitTargetHeight
+            )
+            .contentShape(Rectangle())
     }
 }
