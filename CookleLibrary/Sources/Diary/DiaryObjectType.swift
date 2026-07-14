@@ -5,7 +5,7 @@
 //  Created by Hiromu Nakano on 2024/05/23.
 //
 
-import SwiftUI
+import Foundation
 
 /// Stable meal sections used to organize diary rows and section titles.
 nonisolated public enum DiaryObjectType: CaseIterable, Codable, Identifiable, Sendable {
@@ -14,7 +14,7 @@ nonisolated public enum DiaryObjectType: CaseIterable, Codable, Identifiable, Se
     case dinner
 
     /// Localized section title shown for this meal type in the UI.
-    public var title: LocalizedStringKey {
+    public var title: LocalizedStringResource {
         switch self {
         case .breakfast:
             "Breakfasts"

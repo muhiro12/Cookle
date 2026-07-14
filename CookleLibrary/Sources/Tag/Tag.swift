@@ -7,12 +7,11 @@
 
 import Foundation
 import SwiftData
-import SwiftUI
 
 /// Shared contract for persisted tags that recipes use for filtering and labeling.
 nonisolated public protocol Tag: PersistentModel {
     /// Localized section title used when presenting this tag type in the UI.
-    static var title: LocalizedStringKey { get }
+    static var title: LocalizedStringResource { get }
 
     /// Canonical text value users select, edit, and search against.
     var value: String { get }

@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftData
-import SwiftUI
 
 /// Persisted ingredient tag reused across recipe forms, search, and filtering.
 @Model
@@ -72,7 +71,7 @@ nonisolated public final class Ingredient: Tag {
 
 public extension Ingredient {
     /// Localized section title shown anywhere ingredient collections are presented.
-    static var title: LocalizedStringKey {
+    static var title: LocalizedStringResource {
         "Ingredients"
     }
 

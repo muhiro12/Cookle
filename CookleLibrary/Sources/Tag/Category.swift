@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftData
-import SwiftUI
 
 /// Persisted category tag used to group and filter recipes.
 @Model
@@ -68,7 +67,7 @@ nonisolated public final class Category: Tag {
 
 public extension Category {
     /// Localized section title shown anywhere category collections are presented.
-    static var title: LocalizedStringKey {
+    static var title: LocalizedStringResource {
         "Categories"
     }
 

@@ -204,6 +204,10 @@ if rg -nP '^\s*(?:@preconcurrency\s+)?import\s+(?:MHUI|MHDesign)\s*$' CookleLibr
   append_error "CookleLibrary must not import MHUI or MHDesign."
 fi
 
+if rg -nP '^\s*(?:@preconcurrency\s+)?import\s+(?:SwiftUI|UIKit|AppKit|WatchKit)\s*$' CookleLibrary/Sources CookleLibrary/Tests >/dev/null; then
+  append_error "CookleLibrary Sources and Tests must stay presentation-free and must not import SwiftUI, UIKit, AppKit, or WatchKit."
+fi
+
 if rg -n 'url:\s*"https://github.com/muhiro12/MHUI"|name:\s*"MHUI"|name:\s*"MHDesign"' "$package_manifest" >/dev/null; then
   append_error "CookleLibrary must not depend on MHUI or MHDesign."
 fi
