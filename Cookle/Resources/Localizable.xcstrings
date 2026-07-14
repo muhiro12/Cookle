@@ -1920,6 +1920,74 @@
         }
       }
     },
+    "Cookle has multiple categories named %@. Open Cookle and merge the duplicates before running this shortcut again." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle has multiple categories named %1$@. Open Cookle and merge the duplicates before running this shortcut again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle tiene varias categorías llamadas %1$@. Abre Cookle y combina los duplicados antes de volver a ejecutar este atajo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle contient plusieurs catégories nommées %1$@. Ouvrez Cookle et fusionnez les doublons avant de relancer ce raccourci."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle に「%1$@」という名前のカテゴリが複数あります。Cookle を開いて重複を統合してから、このショートカットをもう一度実行してください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle 中有多个名为“%1$@”的分类。请打开 Cookle 合并重复项，然后再次运行此快捷指令。"
+          }
+        }
+      }
+    },
+    "Cookle has multiple ingredients named %@. Open Cookle and merge the duplicates before running this shortcut again." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle has multiple ingredients named %1$@. Open Cookle and merge the duplicates before running this shortcut again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle tiene varios ingredientes llamados %1$@. Abre Cookle y combina los duplicados antes de volver a ejecutar este atajo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle contient plusieurs ingrédients nommés %1$@. Ouvrez Cookle et fusionnez les doublons avant de relancer ce raccourci."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle に「%1$@」という名前の材料が複数あります。Cookle を開いて重複を統合してから、このショートカットをもう一度実行してください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle 中有多个名为“%1$@”的食材。请打开 Cookle 合并重复项，然后再次运行此快捷指令。"
+          }
+        }
+      }
+    },
     "Could Not Add Photos" : {
       "localizations" : {
         "en" : {

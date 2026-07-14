@@ -6,9 +6,18 @@ enum TagIntentSupport {
         named value: String,
         context: ModelContext
     ) throws -> Ingredient? {
-        var descriptor = FetchDescriptor<Ingredient>.ingredients(.valueIs(value))
-        descriptor.fetchLimit = 1
-        return try context.fetch(descriptor).first
+        let ingredients = try context.fetch(
+            FetchDescriptor<Ingredient>.ingredients(.valueIs(value))
+        )
+
+        switch ingredients.count {
+        case 0:
+            return nil
+        case 1:
+            return ingredients[0]
+        default:
+            throw TagMutationIntentError.ambiguousIngredient(value)
+        }
     }
 
     @MainActor
@@ -16,8 +25,17 @@ enum TagIntentSupport {
         named value: String,
         context: ModelContext
     ) throws -> Category? {
-        var descriptor = FetchDescriptor<Category>.categories(.valueIs(value))
-        descriptor.fetchLimit = 1
-        return try context.fetch(descriptor).first
+        let categories = try context.fetch(
+            FetchDescriptor<Category>.categories(.valueIs(value))
+        )
+
+        switch categories.count {
+        case 0:
+            return nil
+        case 1:
+            return categories[0]
+        default:
+            throw TagMutationIntentError.ambiguousCategory(value)
+        }
     }
 }
