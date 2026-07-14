@@ -26,7 +26,7 @@ struct CookingSessionView: View {
                 }
             }
             .cookleIdleTimerDisabled()
-            .confirmationDialog(
+            .alert(
                 "End Cooking Session?",
                 isPresented: $isEndSessionConfirmationPresented
             ) {
@@ -34,7 +34,7 @@ struct CookingSessionView: View {
                     cookingSessionStore.endSession()
                 }
                 Button("Cancel", role: .cancel) {
-                    // Dismisses the confirmation dialog.
+                    // Dismisses the alert.
                 }
             } message: {
                 Text("This stops the active cooking guide and any running timer.")

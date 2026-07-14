@@ -60,6 +60,26 @@ extension RecipeFormView {
                 Text("Cancel")
             }
             .disabled(formModel.isSaving)
+            .alert(
+                Text("Discard Changes?"),
+                isPresented: Binding(
+                    get: {
+                        isDiscardChangesDialogPresented
+                    },
+                    set: { isPresented in
+                        isDiscardChangesDialogPresented = isPresented
+                    }
+                )
+            ) {
+                Button("Discard", role: .destructive) {
+                    dismiss()
+                }
+                Button("Keep Editing", role: .cancel) {
+                    // Dismisses the alert.
+                }
+            } message: {
+                Text("You will lose any unsaved changes.")
+            }
         }
         switch currentEditMode {
         case .active:

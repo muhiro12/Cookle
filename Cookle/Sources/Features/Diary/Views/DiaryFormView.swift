@@ -55,19 +55,6 @@ struct DiaryFormView: View {
         }
         .interactiveDismissDisabled()
         .confirmationDialog(
-            Text("Discard Changes?"),
-            isPresented: $isDiscardChangesConfirmationPresented
-        ) {
-            Button("Discard", role: .destructive) {
-                dismiss()
-            }
-            Button("Keep Editing", role: .cancel) {
-                // Dismisses the confirmation dialog.
-            }
-        } message: {
-            Text("You will lose any unsaved changes.")
-        }
-        .confirmationDialog(
             Text("Restore Draft"),
             isPresented: $isRestoreDraftConfirmationPresented
         ) {
@@ -126,6 +113,19 @@ struct DiaryFormView: View {
                 Text("Cancel")
             }
             .disabled(model.isSaving)
+            .alert(
+                Text("Discard Changes?"),
+                isPresented: $isDiscardChangesConfirmationPresented
+            ) {
+                Button("Discard", role: .destructive) {
+                    dismiss()
+                }
+                Button("Keep Editing", role: .cancel) {
+                    // Dismisses the alert.
+                }
+            } message: {
+                Text("You will lose any unsaved changes.")
+            }
         }
         if model.restorePolicy.isRestoreAvailable {
             ToolbarItem(placement: .topBarTrailing) {

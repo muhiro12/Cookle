@@ -32,7 +32,7 @@ struct WatchActiveCookingView: View {
             .navigationTitle(
                 cookingSessionStore.activeSnapshot?.recipeName ?? "Cooking"
             )
-            .confirmationDialog(
+            .alert(
                 "End Cooking Session?",
                 isPresented: $isEndSessionConfirmationPresented
             ) {
@@ -40,7 +40,7 @@ struct WatchActiveCookingView: View {
                     cookingSessionStore.endSession()
                 }
                 Button("Cancel", role: .cancel) {
-                    // Dismisses the confirmation dialog.
+                    // Dismisses the alert.
                 }
             } message: {
                 Text("This stops the active cooking guide and any running timer.")

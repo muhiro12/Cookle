@@ -53,19 +53,6 @@ struct RecipeFormView: View {
         }
         .interactiveDismissDisabled()
         .confirmationDialog(
-            Text("Discard Changes?"),
-            isPresented: $isDiscardChangesConfirmationPresented
-        ) {
-            Button("Discard", role: .destructive) {
-                dismiss()
-            }
-            Button("Keep Editing", role: .cancel) {
-                // Dismisses the confirmation dialog.
-            }
-        } message: {
-            Text("You will lose any unsaved changes.")
-        }
-        .confirmationDialog(
             Text("Debug"),
             isPresented: $isDebugAlertPresented
         ) {
