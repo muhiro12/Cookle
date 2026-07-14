@@ -1,6 +1,6 @@
 # Cookle Product and Architecture Overview
 
-Implementation snapshot based on the repository state on April 12, 2026.
+Implementation snapshot based on the repository state on July 14, 2026.
 
 ## Purpose
 
@@ -179,6 +179,9 @@ Cookle uses adaptive tab navigation.
   - choose notification time
   - send a test notification
   - open system notification settings when permission is denied
+- Export all persisted cooking data to a JSON backup.
+- Restore a validated JSON backup after explicit confirmation that it will
+  replace the current recipes, diaries, tags, and photos.
 - Delete all persisted app data with destructive confirmation.
 - Show third-party license information.
 - Re-show TipKit onboarding tips on demand.
@@ -283,8 +286,13 @@ Cookle uses adaptive tab navigation.
   iCloud sync preference.
 - Native ads are shown in diary and recipe flows for non-subscribers.
 - Premium users do not see those ad sections.
-- The app fetches remote configuration from GitHub and can force users to
-  update before continuing.
+- The app fetches remote configuration from GitHub and can require an update
+  only during a positive activation window no longer than 72 hours.
+- Update enforcement also requires an App Store lookup that matches Cookle's
+  configured app identifier and current bundle identifier, and the requested
+  minimum version cannot exceed the confirmed public version.
+- Playgrounds builds, malformed or expired policies, version mismatches,
+  network failures, and App Store lookup failures leave the main app available.
 - A shared runtime lifecycle plan refreshes subscription state, remote
   configuration, notification schedules, and pending routes during initial load
   and foreground transitions.
@@ -393,7 +401,9 @@ Recent cleanup intentionally does not rescue several retired keys:
   `cookle.logging.last-session.previous-session`, because they were diagnostic
   snapshots rather than user data
 - `cookle.formSnapshot.diary` and `cookle.formSnapshot.recipe`, because they
-  were draft-assistance snapshots and the snapshot feature has not shipped yet
+  are retired identifiers. Current recipe and diary create flows persist
+  descriptor-backed draft snapshots under the active `CookleUserDefaultsKeys`
+  values and expose a `Restore Draft` action
 - `cookle.preferences.lifecycle-state`, because it was internal bookkeeping
   state
 - legacy standard-domain `lastOpenedRecipeID`, because it was only a low-value

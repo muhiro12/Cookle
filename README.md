@@ -174,8 +174,9 @@ Cookle exposes several intents so users can automate their workflows.
   linked recipe photo rows will be removed before deleting the asset.
 - Settings and navigation intents open the same route-based destinations used by
   deep links and widgets.
-- FoundationModels hooks are stubbed for future recipe inference workflows once
-  supported on iOS.
+- On iOS 26.0 and later, recipe inference uses Foundation Models when available
+  and falls back to deterministic extraction when the model is unavailable or
+  cannot produce a meaningful result.
 
 ## Deep links
 
@@ -191,6 +192,12 @@ Supported routes:
 - `diary/YYYY-MM-DD`
 - `recipe`
 - `recipe?id=<base64PersistentIdentifier>`
+- `photo`
+- `photo?id=<base64PersistentIdentifier>`
+- `tag/category`
+- `tag/category?id=<base64PersistentIdentifier>`
+- `tag/ingredient`
+- `tag/ingredient?id=<base64PersistentIdentifier>`
 - `search`
 - `search?q=<query>`
 - `settings`

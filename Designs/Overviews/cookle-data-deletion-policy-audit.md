@@ -1,6 +1,6 @@
 # Cookle Data Deletion Policy Audit
 
-Current as of April 21, 2026.
+Current as of July 14, 2026.
 
 ## Purpose
 
@@ -31,7 +31,8 @@ Representative evidence:
 - `CookleLibrary/Sources/Diary/DiaryService.swift`
 - `CookleLibrary/Sources/DataManagement/DetachedObjectCleanupService.swift`
 - `CookleLibrary/Sources/Persistence/ModelContainerFactory.swift`
-- `Cookle/Sources/Features/Photo/Views/PhotoListView.swift`
+- `Cookle/Sources/Features/Photo/Views/PhotoView.swift`
+- `Cookle/Sources/Features/Tag/Views/TagView.swift`
 - `Cookle/Sources/Features/Tag/Intents/DeleteCategoryIntent.swift`
 - `Cookle/Sources/Features/Tag/Intents/DeleteIngredientIntent.swift`
 - `CookleLibrary/Tests/Default/DataManagement/DeletionPolicyAuditRootModelTests.swift`
@@ -213,8 +214,14 @@ Representative evidence:
 - `Recipe`: explicit delete from detail UI, list UI, and App Intent.
   `[source confirmed]`
 - `Diary`: explicit delete from detail UI and App Intent. `[source confirmed]`
-- No ordinary user-facing delete remains for `Photo`, `Category`, or
-  `Ingredient`. `[source confirmed]`
+- `Photo`: explicit asset delete from photo detail. The confirmation reports
+  how many linked recipe photo rows will be removed while preserving the
+  recipes. `[source confirmed]`
+- `Category`: explicit delete from tag detail and App Intent. The confirmation
+  reports how many recipe relations will be removed. `[source confirmed]`
+- `Ingredient`: explicit delete from tag detail and App Intent only when the
+  ingredient is unused. The UI disables deletion for an in-use ingredient, and
+  the App Intent returns an in-use rejection. `[source confirmed]`
 
 ### Explicit full deletion or maintenance deletion
 
@@ -249,15 +256,16 @@ Representative evidence:
 - `Photo` is now a conservative shared asset. It remains stored after unlink,
   and the Photos tab presents all stored assets instead of only
   recipe-linked assets. `[runtime confirmed]`
-- `Category` and `Ingredient` are both shared tags, but their current delete
-  policy differs. `Category` now has ordinary explicit delete with
-  recipe-impact confirmation, while `Ingredient` still has no ordinary delete
-  surface. `[source confirmed]`
+- `Category` and `Ingredient` are both shared tags with explicit delete
+  surfaces, but their safeguards differ. Category deletion confirms recipe
+  impact, while ingredient deletion is available only when the ingredient is
+  unused. `[source confirmed]`
 - `DiaryObject`, `PhotoObject`, and `IngredientObject` are now consistently
   parent-owned rows. Root deletion, update flows, and one-time maintenance all
   treat them as disposable when detached. `[runtime confirmed]`
-- `Recipe` and `Diary` remain the only ordinary delete exceptions in the main
-  product surface. `[source confirmed]`
+- `Recipe`, `Diary`, `Photo`, `Category`, and unused `Ingredient` records expose
+  explicit product delete surfaces. Parent-owned Object rows remain excluded
+  from standalone deletion. `[source confirmed]`
 
 ## 4) Orphan Policy Assessment
 
