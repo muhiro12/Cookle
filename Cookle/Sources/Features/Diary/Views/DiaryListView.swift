@@ -33,7 +33,6 @@ struct DiaryListView: View {
     @State private var suggestedDiaryPrefill: DiaryFormPrefill?
 
     private let addDiaryTip = AddDiaryTip()
-    private let startWithRecipesTip = StartWithRecipesTip()
 
     var body: some View {
         Group {
@@ -116,21 +115,20 @@ struct DiaryListView: View {
             )
         } description: {
             Text(
-                recipes.isEmpty
-                    ? "Add a recipe before creating your first diary entry."
-                    : "Create a diary entry to record what you cooked."
+                "Create a diary entry to record what you cooked."
             )
         } actions: {
             if recipes.isEmpty {
+                AddDiaryButton()
+                    .cooklePopoverTip(
+                        addDiaryTip,
+                        arrowEdge: .top
+                    )
                 Button {
                     navigationModel.selectedTab = .recipe
                 } label: {
                     Text("Open Recipes")
                 }
-                .cooklePopoverTip(
-                    startWithRecipesTip,
-                    arrowEdge: .top
-                )
             } else if let topSuggestion {
                 Button {
                     presentSuggestedDiary(
