@@ -4,9 +4,6 @@
     "" : {
       "shouldTranslate" : false
     },
-    "*" : {
-      "shouldTranslate" : false
-    },
     "%@: %@" : {
       "localizations" : {
         "en" : {
@@ -250,40 +247,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "要添加照片吗？"
-          }
-        }
-      }
-    },
-    "Add a recipe before creating your first diary entry." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add a recipe before creating your first diary entry."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Añade una receta antes de crear tu primera entrada del diario."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ajoutez une recette avant de créer votre première entrée de journal."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "最初の日記を作成する前にレシピを追加しましょう。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "先添加食谱，再创建第一篇日记。"
           }
         }
       }
@@ -5191,40 +5154,6 @@
         }
       }
     },
-    "Open Recipes first" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open Recipes first"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abre primero las recetas"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ouvrez d'abord les recettes"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "先にレシピを開く"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "先打开食谱"
-          }
-        }
-      }
-    },
     "Open Settings" : {
       "localizations" : {
         "en" : {
@@ -6449,6 +6378,40 @@
         }
       }
     },
+    "Required" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Required"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obligatorio"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obligatoire"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "必須"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "必填"
+          }
+        }
+      }
+    },
     "Reset Tips" : {
       "localizations" : {
         "en" : {
@@ -6751,40 +6714,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "保存食谱"
-          }
-        }
-      }
-    },
-    "Save a recipe, then come back here to plan meals." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Save a recipe, then come back here to plan meals."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Guarda una receta y luego vuelve aquí para planificar tus comidas."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enregistrez une recette, puis revenez ici pour planifier vos repas."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピを保存してから、ここに戻って食事を計画しましょう。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "先保存一份食谱，然后回到这里安排餐食。"
           }
         }
       }
