@@ -20,19 +20,7 @@ struct InferRecipeIntent: AppIntent {
     @MainActor
     func perform() async throws -> some IntentResult {
         let inferred = try await RecipeFoundationModelInferenceOperations.infer(text: text)
-        let entity = RecipeEntity(
-            id: UUID().uuidString,
-            name: inferred.name,
-            photos: [],
-            servingSize: inferred.servingSize,
-            cookingTime: inferred.cookingTime,
-            ingredients: inferred.ingredients.map { ($0.ingredient, $0.amount) },
-            steps: inferred.steps,
-            categories: inferred.categories,
-            note: inferred.note,
-            createdTimestamp: .now,
-            modifiedTimestamp: .now
-        )
+        let entity = InferredRecipeEntity(inferred)
         return .result(value: entity)
     }
 }

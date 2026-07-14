@@ -4,6 +4,9 @@
     "" : {
       "shouldTranslate" : false
     },
+    "%@" : {
+      "shouldTranslate" : false
+    },
     "%@: %@" : {
       "localizations" : {
         "en" : {
@@ -1554,12 +1557,6 @@
             "value" : "Cannot Search Recipes"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピを検索できません"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1570,6 +1567,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Impossible de rechercher des recettes"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピを検索できません"
           }
         },
         "zh-Hans" : {
@@ -2982,12 +2985,6 @@
             "value" : "Discard"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "破棄"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2998,6 +2995,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Abandonner"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "破棄"
           }
         },
         "zh-Hans" : {
@@ -3016,12 +3019,6 @@
             "value" : "Discard Changes?"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "変更を破棄しますか？"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3032,6 +3029,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Abandonner les modifications ?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "変更を破棄しますか？"
           }
         },
         "zh-Hans" : {
@@ -3288,12 +3291,6 @@
             "value" : "End Cooking Session?"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "調理セッションを終了しますか？"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3304,6 +3301,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Terminer la session de cuisine ?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "調理セッションを終了しますか？"
           }
         },
         "zh-Hans" : {
@@ -3356,12 +3359,6 @@
             "value" : "Export a backup before destructive actions. Delete All permanently removes recipes, diaries, tags, and photos from this device."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "データを削除する操作の前に、バックアップを書き出してください。「すべて削除」を実行すると、このデバイス上のすべてのレシピ、日記、タグ、写真が完全に削除されます。"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3372,6 +3369,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Exportez une sauvegarde avant toute opération destructive. « Tout supprimer » supprime définitivement de cet appareil toutes les recettes, les entrées du journal, les étiquettes et les photos."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "データを削除する操作の前に、バックアップを書き出してください。「すべて削除」を実行すると、このデバイス上のすべてのレシピ、日記、タグ、写真が完全に削除されます。"
           }
         },
         "zh-Hans" : {
@@ -3390,12 +3393,6 @@
             "value" : "Export a backup before destructive actions. Restore and Delete All changes sync to other devices using the same iCloud account."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "データを置き換えたり削除したりする操作の前に、バックアップを書き出してください。バックアップの復元や「すべて削除」による変更は、同じiCloudアカウントを使用しているほかのデバイスにも同期されます。"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3406,6 +3403,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Exportez une sauvegarde avant toute opération destructive. Les modifications effectuées en restaurant une sauvegarde ou en utilisant « Tout supprimer » sont synchronisées avec les autres appareils utilisant le même compte iCloud."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "データを置き換えたり削除したりする操作の前に、バックアップを書き出してください。バックアップの復元や「すべて削除」による変更は、同じiCloudアカウントを使用しているほかのデバイスにも同期されます。"
           }
         },
         "zh-Hans" : {
@@ -3424,12 +3427,6 @@
             "value" : "Export Backup"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "バックアップを書き出す"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3440,6 +3437,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Exporter une sauvegarde"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バックアップを書き出す"
           }
         },
         "zh-Hans" : {
@@ -3793,6 +3796,40 @@
         }
       }
     },
+    "Inferred Recipe" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inferred Recipe"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Receta inferida"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recette déduite"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "推定レシピ"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "推断食谱"
+          }
+        }
+      }
+    },
     "Ingredient" : {
       "localizations" : {
         "en" : {
@@ -3903,12 +3940,6 @@
             "value" : "Keep Editing"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "編集を続ける"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3919,6 +3950,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Continuer la modification"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "編集を続ける"
           }
         },
         "zh-Hans" : {
@@ -4686,12 +4723,6 @@
             "value" : "No text was found in the photo. Try again with a photo that contains clear text."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "写真にテキストが見つかりませんでした。文字がはっきり写っている写真でもう一度お試しください。"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4702,6 +4733,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aucun texte n’a été trouvé sur la photo. Réessayez avec une photo contenant du texte bien lisible."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "写真にテキストが見つかりませんでした。文字がはっきり写っている写真でもう一度お試しください。"
           }
         },
         "zh-Hans" : {
@@ -6726,12 +6763,6 @@
             "value" : "Restoring a backup replaces all current recipes, diaries, tags, and photos on this device. Export a backup first if you need to keep the current data."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "バックアップを復元すると、このデバイス上のレシピ、日記、タグ、写真がすべて置き換えられます。現在のデータを残す必要がある場合は、先にバックアップを書き出してください。"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6742,6 +6773,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "La restauration d’une sauvegarde remplace toutes les recettes, les entrées du journal, les étiquettes et les photos actuellement présentes sur cet appareil. Si vous souhaitez conserver les données actuelles, exportez d’abord une sauvegarde."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バックアップを復元すると、このデバイス上のレシピ、日記、タグ、写真がすべて置き換えられます。現在のデータを残す必要がある場合は、先にバックアップを書き出してください。"
           }
         },
         "zh-Hans" : {
@@ -6760,12 +6797,6 @@
             "value" : "Restoring a backup replaces all current recipes, diaries, tags, and photos, and the changes sync to other devices using the same iCloud account. Export a backup first if you need to keep the current data."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "バックアップを復元すると、現在のレシピ、日記、タグ、写真がすべて置き換えられ、その変更は同じiCloudアカウントを使用しているほかのデバイスにも同期されます。現在のデータを残す必要がある場合は、先にバックアップを書き出してください。"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6776,6 +6807,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "La restauration d’une sauvegarde remplace toutes les recettes, les entrées du journal, les étiquettes et les photos actuelles. Ces modifications sont synchronisées avec les autres appareils utilisant le même compte iCloud. Si vous souhaitez conserver les données actuelles, exportez d’abord une sauvegarde."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バックアップを復元すると、現在のレシピ、日記、タグ、写真がすべて置き換えられ、その変更は同じiCloudアカウントを使用しているほかのデバイスにも同期されます。現在のデータを残す必要がある場合は、先にバックアップを書き出してください。"
           }
         },
         "zh-Hans" : {
@@ -7066,12 +7103,6 @@
             "value" : "Searching Recipes"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピを検索中"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7082,6 +7113,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Recherche de recettes"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピを検索中"
           }
         },
         "zh-Hans" : {
@@ -7534,40 +7571,6 @@
         }
       }
     },
-    "Some Photos Could Not Be Added" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Some Photos Could Not Be Added"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Algunas fotos no se pudieron añadir"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Certaines photos n’ont pas pu être ajoutées"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "一部の写真を追加できませんでした"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "部分照片无法添加"
-          }
-        }
-      }
-    },
     "Show Today's Diary" : {
       "localizations" : {
         "en" : {
@@ -7598,6 +7601,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "显示今日日记"
+          }
+        }
+      }
+    },
+    "Some Photos Could Not Be Added" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Some Photos Could Not Be Added"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algunas fotos no se pudieron añadir"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Certaines photos n’ont pas pu être ajoutées"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一部の写真を追加できませんでした"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "部分照片无法添加"
           }
         }
       }
@@ -8019,12 +8056,6 @@
             "value" : "Text recognition failed. Try again with a clearer photo."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "テキストを認識できませんでした。より鮮明な写真でもう一度お試しください。"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8035,6 +8066,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "La reconnaissance du texte a échoué. Réessayez avec une photo plus nette."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "テキストを認識できませんでした。より鮮明な写真でもう一度お試しください。"
           }
         },
         "zh-Hans" : {
@@ -8054,12 +8091,6 @@
             "value" : "The photo could not be read. Choose another photo and try again."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "写真を読み取れませんでした。別の写真を選んでもう一度お試しください。"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8070,6 +8101,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Impossible de lire la photo. Choisissez-en une autre et réessayez."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "写真を読み取れませんでした。別の写真を選んでもう一度お試しください。"
           }
         },
         "zh-Hans" : {
@@ -8089,12 +8126,6 @@
             "value" : "The selected photo could not be loaded. Choose another photo and try again."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "選択した写真を読み込めませんでした。別の写真を選んでもう一度お試しください。"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8105,6 +8136,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Impossible de charger la photo sélectionnée. Choisissez-en une autre et réessayez."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選択した写真を読み込めませんでした。別の写真を選んでもう一度お試しください。"
           }
         },
         "zh-Hans" : {
@@ -8123,12 +8160,6 @@
             "value" : "This permanently deletes all recipes, diaries, tags, and photos from this device. Export a backup first if you need to keep the data."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "この操作を実行すると、このデバイス上のすべてのレシピ、日記、タグ、写真が完全に削除されます。データを残す必要がある場合は、先にバックアップを書き出してください。"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8139,6 +8170,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cette action supprime définitivement de cet appareil toutes les recettes, les entrées du journal, les étiquettes et les photos. Si vous souhaitez conserver les données, exportez d’abord une sauvegarde."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この操作を実行すると、このデバイス上のすべてのレシピ、日記、タグ、写真が完全に削除されます。データを残す必要がある場合は、先にバックアップを書き出してください。"
           }
         },
         "zh-Hans" : {
@@ -8157,12 +8194,6 @@
             "value" : "This permanently deletes all recipes, diaries, tags, and photos. The deletions sync to other devices using the same iCloud account. Export a backup first if you need to keep the data."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "この操作を実行すると、すべてのレシピ、日記、タグ、写真が完全に削除されます。削除内容は、同じiCloudアカウントを使用しているほかのデバイスにも同期されます。データを残す必要がある場合は、先にバックアップを書き出してください。"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8173,6 +8204,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cette action supprime définitivement toutes les recettes, les entrées du journal, les étiquettes et les photos. Les suppressions sont synchronisées avec les autres appareils utilisant le même compte iCloud. Si vous souhaitez conserver les données, exportez d’abord une sauvegarde."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この操作を実行すると、すべてのレシピ、日記、タグ、写真が完全に削除されます。削除内容は、同じiCloudアカウントを使用しているほかのデバイスにも同期されます。データを残す必要がある場合は、先にバックアップを書き出してください。"
           }
         },
         "zh-Hans" : {
@@ -8191,12 +8228,6 @@
             "value" : "This stops the active cooking guide and any running timer."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "進行中の調理ガイドと実行中のタイマーを停止します。"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8207,6 +8238,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cette action arrête le guide de cuisine actif et tout minuteur en cours."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "進行中の調理ガイドと実行中のタイマーを停止します。"
           }
         },
         "zh-Hans" : {
@@ -8296,12 +8333,6 @@
             "value" : "Try Again"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "もう一度試す"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8312,6 +8343,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Réessayer"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "もう一度試す"
           }
         },
         "zh-Hans" : {
@@ -8979,12 +9016,6 @@
             "value" : "You will lose any unsaved changes."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "保存していない変更は失われます。"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8995,6 +9026,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Les modifications non enregistrées seront perdues."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存していない変更は失われます。"
           }
         },
         "zh-Hans" : {
