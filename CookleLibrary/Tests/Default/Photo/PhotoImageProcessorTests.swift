@@ -8,26 +8,7 @@ import UniformTypeIdentifiers
 @Suite("PhotoImageProcessor")
 struct PhotoImageProcessorTests {
     private enum Fixture {
-        static let bytesPerPixel = 4
-        static let bitsPerComponent = 8
-        static let bitsPerByte = 8
-        static let firstRandomShift = 13
-        static let secondRandomShift = 17
-        static let thirdRandomShift = 5
-        static let greenByteOffset = 1
-        static let blueByteOffset = 2
-        static let alphaByteOffset = 3
-        static let greenBitShift = 8
-        static let blueBitShift = 16
-        static let destinationImageCount = 1
-        static let fullCompressionQuality = 1.0
-        static let initialRandomState: UInt32 = 0x1234_5678
-    }
-
-    private enum FixtureError: Error {
-        case imageCreationFailed
-        case destinationCreationFailed
-        case destinationFinalizationFailed
+        static let qualityStepCount = PhotoImageProcessorTestFixture.qualityStepCount
     }
 
     @Test("Downsamples an image to the requested longest edge")
@@ -94,7 +75,7 @@ struct PhotoImageProcessorTests {
         )
     }
 
-    @Test("Returns unchanged data within the byte limit")
+    @Test("Returns unchanged valid data within byte and dimension limits")
     func compressedData_preservesDataWithinLimit() throws {
         let data = try makeJPEGData(
             width: 32,
@@ -107,6 +88,30 @@ struct PhotoImageProcessorTests {
         )
 
         #expect(compressedData == data)
+    }
+
+    @Test("Normalizes a high-dimension image below the byte limit")
+    func compressedData_normalizesHighDimensionWithinByteLimit() throws {
+        let data = try makeJPEGData(
+            width: PhotoImageProcessor.defaultMaximumLongestEdge + 1,
+            height: 1
+        )
+        #expect(data.count < PhotoImageProcessor.defaultMaximumByteCount)
+
+        let compressedData = PhotoImageProcessor.compressedData(
+            from: data
+        )
+        let source = try imageSource(from: compressedData)
+        let dimensions = try imageDimensions(from: source)
+
+        #expect(compressedData != data)
+        #expect(
+            max(dimensions.width, dimensions.height)
+                <= PhotoImageProcessor.defaultMaximumLongestEdge
+        )
+        #expect(
+            CGImageSourceGetType(source) == UTType.jpeg.identifier as CFString
+        )
     }
 
     @Test("Returns unchanged data when image decoding fails")
@@ -145,111 +150,148 @@ struct PhotoImageProcessorTests {
         )
     }
 
+    @Test("Creates bounded JPEG data from a PNG source")
+    func compressedJPEGData_convertsPNGToJPEG() throws {
+        let data = try makePNGData(
+            width: 64,
+            height: 32
+        )
+
+        let jpegData = try #require(
+            PhotoImageProcessor.compressedJPEGData(
+                from: data,
+                maximumByteCount: .max
+            )
+        )
+        let source = try imageSource(from: jpegData)
+        let dimensions = try imageDimensions(from: source)
+
+        #expect(
+            CGImageSourceGetType(source) == UTType.jpeg.identifier as CFString
+        )
+        #expect(dimensions.width == 64)
+        #expect(dimensions.height == 32)
+    }
+
+    @Test("Applies orientation while producing bounded JPEG data")
+    func compressedJPEGData_appliesOrientation() throws {
+        let data = try makeJPEGData(
+            width: 120,
+            height: 60,
+            orientation: .right
+        )
+
+        let jpegData = try #require(
+            PhotoImageProcessor.compressedJPEGData(
+                from: data,
+                maximumByteCount: .max,
+                maximumLongestEdge: 30
+            )
+        )
+        let source = try imageSource(from: jpegData)
+        let dimensions = try imageDimensions(from: source)
+
+        #expect(
+            CGImageSourceGetType(source) == UTType.jpeg.identifier as CFString
+        )
+        #expect(dimensions.width == 15)
+        #expect(dimensions.height == 30)
+    }
+
+    @Test("Rejects invalid data when producing JPEG data")
+    func compressedJPEGData_rejectsInvalidData() {
+        let data = Data("not-an-image".utf8)
+
+        #expect(
+            PhotoImageProcessor.compressedJPEGData(
+                from: data
+            ) == nil
+        )
+    }
+
+    @Test("Returns the smallest JPEG when the byte target is unattainable")
+    func compressedJPEGData_returnsSmallestFallback() throws {
+        let maximumLongestEdge = 64
+        let data = try makeJPEGData(
+            width: maximumLongestEdge,
+            height: maximumLongestEdge
+        )
+        let image = try #require(
+            PhotoImageProcessor.downsampledImage(
+                from: data,
+                maximumPixelSize: maximumLongestEdge
+            )
+        )
+        let expectedByteCounts = try stride(
+            from: Fixture.qualityStepCount,
+            through: .zero,
+            by: -1
+        ).map { qualityStep in
+            try encodeJPEG(
+                image,
+                compressionQuality: Double(qualityStep)
+                    / Double(Fixture.qualityStepCount)
+            ).count
+        }
+        let expectedMinimumByteCount = try #require(expectedByteCounts.min())
+
+        let jpegData = try #require(
+            PhotoImageProcessor.compressedJPEGData(
+                from: data,
+                maximumByteCount: 1,
+                maximumLongestEdge: maximumLongestEdge
+            )
+        )
+
+        #expect(jpegData.count == expectedMinimumByteCount)
+        #expect(jpegData.count > 1)
+        #expect(
+            CGImageSourceGetType(try imageSource(from: jpegData))
+                == UTType.jpeg.identifier as CFString
+        )
+    }
+
     private func makeJPEGData(
         width: Int,
         height: Int,
         orientation: CGImagePropertyOrientation? = nil
     ) throws -> Data {
-        let image = try makeImage(
+        try PhotoImageProcessorTestFixture.makeJPEGData(
             width: width,
-            height: height
-        )
-        return try encodeJPEG(
-            image,
+            height: height,
             orientation: orientation
         )
     }
 
-    private func makeImage(
+    private func makePNGData(
         width: Int,
         height: Int
-    ) throws -> CGImage {
-        let bytesPerRow = width * Fixture.bytesPerPixel
-        let pixels = makePixels(
+    ) throws -> Data {
+        try PhotoImageProcessorTestFixture.makePNGData(
             width: width,
             height: height
         )
-        let bitmapInfo = CGBitmapInfo.byteOrder32Big.union(
-            .init(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
-        )
-        guard let provider = CGDataProvider(
-            data: Data(pixels) as CFData
-        ),
-        let image = CGImage(
-            width: width,
-            height: height,
-            bitsPerComponent: Fixture.bitsPerComponent,
-            bitsPerPixel: Fixture.bytesPerPixel * Fixture.bitsPerByte,
-            bytesPerRow: bytesPerRow,
-            space: CGColorSpaceCreateDeviceRGB(),
-            bitmapInfo: bitmapInfo,
-            provider: provider,
-            decode: nil,
-            shouldInterpolate: false,
-            intent: .defaultIntent
-        ) else {
-            throw FixtureError.imageCreationFailed
-        }
-        return image
-    }
-
-    private func makePixels(
-        width: Int,
-        height: Int
-    ) -> [UInt8] {
-        let bytesPerRow = width * Fixture.bytesPerPixel
-        var pixels = [UInt8](
-            repeating: .zero,
-            count: height * bytesPerRow
-        )
-        var randomState = Fixture.initialRandomState
-
-        for pixelIndex in .zero..<(width * height) {
-            randomState ^= randomState << Fixture.firstRandomShift
-            randomState ^= randomState >> Fixture.secondRandomShift
-            randomState ^= randomState << Fixture.thirdRandomShift
-
-            let byteIndex = pixelIndex * Fixture.bytesPerPixel
-            pixels[byteIndex] = UInt8(truncatingIfNeeded: randomState)
-            pixels[byteIndex + Fixture.greenByteOffset] = UInt8(
-                truncatingIfNeeded: randomState >> Fixture.greenBitShift
-            )
-            pixels[byteIndex + Fixture.blueByteOffset] = UInt8(
-                truncatingIfNeeded: randomState >> Fixture.blueBitShift
-            )
-            pixels[byteIndex + Fixture.alphaByteOffset] = .max
-        }
-        return pixels
     }
 
     private func encodeJPEG(
         _ image: CGImage,
-        orientation: CGImagePropertyOrientation?
+        compressionQuality: Double,
+        orientation: CGImagePropertyOrientation? = nil
     ) throws -> Data {
-        let data = NSMutableData()
-        guard let destination = CGImageDestinationCreateWithData(
-            data,
-            UTType.jpeg.identifier as CFString,
-            Fixture.destinationImageCount,
-            nil
-        ) else {
-            throw FixtureError.destinationCreationFailed
-        }
-
-        var properties: [CFString: Any] = [
-            kCGImageDestinationLossyCompressionQuality: Fixture.fullCompressionQuality
-        ]
-        if let orientation {
-            properties[kCGImagePropertyOrientation] = orientation.rawValue
-        }
-        CGImageDestinationAddImage(
-            destination,
+        try PhotoImageProcessorTestFixture.encodeJPEG(
             image,
-            properties as CFDictionary
+            compressionQuality: compressionQuality,
+            orientation: orientation
         )
-        guard CGImageDestinationFinalize(destination) else {
-            throw FixtureError.destinationFinalizationFailed
-        }
-        return data as Data
+    }
+
+    private func imageSource(from data: Data) throws -> CGImageSource {
+        try PhotoImageProcessorTestFixture.imageSource(from: data)
+    }
+
+    private func imageDimensions(
+        from source: CGImageSource
+    ) throws -> (width: Int, height: Int) {
+        try PhotoImageProcessorTestFixture.imageDimensions(from: source)
     }
 }

@@ -1,7 +1,6 @@
 import CookleLibrary
 import CryptoKit
 import Foundation
-import UIKit
 
 nonisolated final class NotificationAttachmentStore {
     private let fileManager: FileManager
@@ -27,7 +26,9 @@ nonisolated final class NotificationAttachmentStore {
                 return cachedFileURL
             }
             guard let photoData = snapshot.primaryPhotoData,
-                  let data = compressedJPEGData(from: photoData) else {
+                  let data = PhotoImageProcessor.compressedJPEGData(
+                    from: photoData
+                  ) else {
                 try removeItemIfExists(at: fileURL)
                 return nil
             }
@@ -99,16 +100,6 @@ nonisolated private extension NotificationAttachmentStore {
         try fileManager.createDirectory(
             at: directoryURL,
             withIntermediateDirectories: true
-        )
-    }
-
-    func compressedJPEGData(from data: Data) -> Data? {
-        guard let image = UIImage(data: data),
-              let jpegData = image.jpegData(compressionQuality: 1) else {
-            return nil
-        }
-        return PhotoImageProcessor.compressedData(
-            from: jpegData
         )
     }
 
