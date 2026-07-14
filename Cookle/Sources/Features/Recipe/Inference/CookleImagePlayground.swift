@@ -6,6 +6,7 @@
 //
 
 import AppIntents
+import Foundation
 import ImagePlayground
 import SwiftUI
 
@@ -28,53 +29,16 @@ extension View {
         onCancellation: (() -> Void)? = nil
     ) -> some View {
         if #available(iOS 18.1, *) {
-            imagePlaygroundSheet(
-                isPresented: isPresented,
-                concepts: imagePlaygroundConcepts(for: recipe)
-            ) { url in
-                guard let data = try? Data(contentsOf: url) else {
-                    return
-                }
-                onCompletion(data)
-            } onCancellation: {
-                onCancellation?()
-            }
-        }
-    }
-
-    @available(iOS 18.1, *)
-    private func imagePlaygroundConcepts(for recipe: Recipe?) -> [ImagePlaygroundConcept] {
-        guard let recipe else {
-            return []
-        }
-
-        let ingredients = recipe.ingredientObjects?.sorted().compactMap { object in
-            object.ingredient?.value
-        } ?? []
-        guard let draft = RecipeOperations.makeImageConceptDraft(
-            request: .init(
-                name: recipe.name,
-                ingredients: ingredients,
-                steps: recipe.steps
+            modifier(
+                CookleImagePlaygroundModifier(
+                    isPresented: isPresented,
+                    recipe: recipe,
+                    onCompletion: onCompletion,
+                    onCancellation: onCancellation
+                )
             )
-        ) else {
-            return []
+        } else {
+            self
         }
-
-        var concepts = [ImagePlaygroundConcept]()
-        concepts.append(
-            .text(draft.title)
-        )
-        draft.ingredients.forEach { ingredient in
-            concepts.append(
-                .text(ingredient)
-            )
-        }
-        if let combinedSteps = draft.combinedSteps {
-            concepts.append(
-                .extracted(from: combinedSteps, title: draft.title)
-            )
-        }
-        return concepts
     }
 }

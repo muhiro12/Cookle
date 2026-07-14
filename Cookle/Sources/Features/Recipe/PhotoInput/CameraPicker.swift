@@ -21,6 +21,13 @@ struct CameraPicker: UIViewControllerRepresentable {
         self.cancellationHandler = cancellationHandler
     }
 
+    static func dismantleUIViewController(
+        _: UIImagePickerController,
+        coordinator: Coordinator
+    ) {
+        coordinator.cancelPendingWork()
+    }
+
     func makeUIViewController(
         context: Context
     ) -> UIImagePickerController {
@@ -46,6 +53,9 @@ struct CameraPicker: UIViewControllerRepresentable {
 extension CameraPicker {
     final class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
         private let parent: CameraPicker
+        private var encodingTask: Task<Void, Never>?
+        private var activeEncodingID: UUID?
+        private var hasResolvedSelection = false
 
         init(parent: CameraPicker) {
             self.parent = parent
@@ -55,10 +65,75 @@ extension CameraPicker {
             _: UIImagePickerController,
             didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]
         ) {
+            guard beginResolvingSelection() else {
+                return
+            }
+
             guard let image = info[.originalImage] as? UIImage,
-                  let data = image.jpegData(compressionQuality: 1) ?? image.pngData() else {
-                parent.cancellationHandler()
-                parent.dismiss()
+                  let imageSource = CameraImageEncoder.Source(image: image) else {
+                finishWithCancellation()
+                return
+            }
+
+            let encodingID = UUID()
+            activeEncodingID = encodingID
+            encodingTask = Task { [weak self] in
+                let data = await CameraImageEncoder.data(
+                    from: imageSource
+                )
+                guard Task.isCancelled == false else {
+                    return
+                }
+
+                self?.finishEncoding(
+                    id: encodingID,
+                    data: data
+                )
+            }
+        }
+
+        func imagePickerControllerDidCancel(
+            _: UIImagePickerController
+        ) {
+            guard beginResolvingSelection() else {
+                return
+            }
+
+            finishWithCancellation()
+        }
+
+        func cancelPendingWork() {
+            guard hasResolvedSelection == false || activeEncodingID != nil else {
+                return
+            }
+
+            hasResolvedSelection = true
+            activeEncodingID = nil
+            encodingTask?.cancel()
+            encodingTask = nil
+        }
+
+        private func beginResolvingSelection() -> Bool {
+            guard hasResolvedSelection == false else {
+                return false
+            }
+
+            hasResolvedSelection = true
+            return true
+        }
+
+        private func finishEncoding(
+            id: UUID,
+            data: Data?
+        ) {
+            guard activeEncodingID == id else {
+                return
+            }
+
+            activeEncodingID = nil
+            encodingTask = nil
+            guard let data else {
+                finishWithCancellation()
                 return
             }
 
@@ -66,9 +141,10 @@ extension CameraPicker {
             parent.dismiss()
         }
 
-        func imagePickerControllerDidCancel(
-            _: UIImagePickerController
-        ) {
+        private func finishWithCancellation() {
+            activeEncodingID = nil
+            encodingTask?.cancel()
+            encodingTask = nil
             parent.cancellationHandler()
             parent.dismiss()
         }
