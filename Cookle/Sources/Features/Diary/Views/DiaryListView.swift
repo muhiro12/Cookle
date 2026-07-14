@@ -73,36 +73,42 @@ struct DiaryListView: View {
 
     var diaryList: some View {
         List {
-            if let topSuggestion {
-                Section {
-                    DiaryTopSuggestionButton(
-                        suggestion: topSuggestion
-                    ) {
-                        presentSuggestedDiary(
-                            for: topSuggestion
-                        )
-                    }
+            diaryListContent
+        }
+    }
+
+    @ViewBuilder var diaryListContent: some View {
+        DuplicateDiaryRepairSection()
+
+        if let topSuggestion {
+            Section {
+                DiaryTopSuggestionButton(
+                    suggestion: topSuggestion
+                ) {
+                    presentSuggestedDiary(
+                        for: topSuggestion
+                    )
                 }
             }
+        }
 
-            ForEach(groupedDiaries, id: \.key) { section in
-                Section(section.key) {
-                    ForEach(section.value) { diary in
-                        Button {
-                            $diary.cookleSelectForNavigation(
-                                diary
-                            )
-                        } label: {
-                            DiaryLabel()
-                                .environment(diary)
-                                .cookleButtonRowContent()
-                        }
-                        .buttonStyle(.plain)
+        ForEach(groupedDiaries, id: \.key) { section in
+            Section(section.key) {
+                ForEach(section.value) { diary in
+                    Button {
+                        $diary.cookleSelectForNavigation(
+                            diary
+                        )
+                    } label: {
+                        DiaryLabel()
+                            .environment(diary)
+                            .cookleButtonRowContent()
                     }
+                    .buttonStyle(.plain)
                 }
-                if !isSubscribeOn {
-                    AdvertisementSection(.small)
-                }
+            }
+            if !isSubscribeOn {
+                AdvertisementSection(.small)
             }
         }
     }

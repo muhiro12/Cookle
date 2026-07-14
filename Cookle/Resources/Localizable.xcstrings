@@ -1447,6 +1447,40 @@
         }
       }
     },
+    "Cannot Merge Diaries" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cannot Merge Diaries"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pueden combinar los diarios"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de fusionner les journaux"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日記を統合できません"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法合并日记"
+          }
+        }
+      }
+    },
     "Cannot Merge Tags" : {
       "localizations" : {
         "en" : {
@@ -1923,6 +1957,40 @@
         }
       }
     },
+    "Cookle found multiple diary entries for the same day. Merge them before exporting a backup." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle found multiple diary entries for the same day. Merge them before exporting a backup."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle encontró varias entradas de diario para el mismo día. Combínalas antes de exportar una copia de seguridad."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle a trouvé plusieurs entrées de journal pour le même jour. Fusionnez-les avant d’exporter une sauvegarde."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "同じ日付に複数の日記があります。バックアップを書き出す前に統合してください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle 发现同一天有多条日记。请先合并，再导出备份。"
+          }
+        }
+      }
+    },
     "Cookle has multiple categories named %@. Open Cookle and merge the duplicates before running this shortcut again." : {
       "localizations" : {
         "en" : {
@@ -1987,6 +2055,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cookle 中有多个名为“%1$@”的食材。请打开 Cookle 合并重复项，然后再次运行此快捷指令。"
+          }
+        }
+      }
+    },
+    "Cookle will keep the newest entry for each day, combine its meals and different notes, and remove only the extra entries. Recipes stay saved. The changes sync to other devices using the same iCloud account. This cannot be undone." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle will keep the newest entry for each day, combine its meals and different notes, and remove only the extra entries. Recipes stay saved. The changes sync to other devices using the same iCloud account. This cannot be undone."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle conservará la entrada más reciente de cada día, combinará sus comidas y notas diferentes, y eliminará solo las entradas adicionales. Las recetas seguirán guardadas. Los cambios se sincronizarán con otros dispositivos que usen la misma cuenta de iCloud. Esta acción no se puede deshacer."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle conservera l’entrée la plus récente de chaque jour, fusionnera ses repas et les notes différentes, et supprimera uniquement les entrées supplémentaires. Les recettes resteront enregistrées. Les modifications seront synchronisées avec les autres appareils utilisant le même compte iCloud. Cette action est irréversible."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookleは日付ごとに最新の日記を残し、食事と異なるメモをまとめ、余分な日記だけを削除します。レシピは保持されます。変更は同じiCloudアカウントを使用するほかのデバイスにも同期されます。この操作は取り消せません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle 会保留每天最新的日记，合并其中的餐食和不同备注，并仅删除多余的日记。食谱会继续保留。更改将同步到使用同一 iCloud 账户的其他设备。此操作无法撤销。"
+          }
+        }
+      }
+    },
+    "Cookle will keep the newest entry for each day, combine its meals and different notes, and remove only the extra entries. Recipes stay saved. This cannot be undone." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle will keep the newest entry for each day, combine its meals and different notes, and remove only the extra entries. Recipes stay saved. This cannot be undone."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle conservará la entrada más reciente de cada día, combinará sus comidas y notas diferentes, y eliminará solo las entradas adicionales. Las recetas seguirán guardadas. Esta acción no se puede deshacer."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle conservera l’entrée la plus récente de chaque jour, fusionnera ses repas et les notes différentes, et supprimera uniquement les entrées supplémentaires. Les recettes resteront enregistrées. Cette action est irréversible."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookleは日付ごとに最新の日記を残し、食事と異なるメモをまとめ、余分な日記だけを削除します。レシピは保持されます。この操作は取り消せません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle 会保留每天最新的日记，合并其中的餐食和不同备注，并仅删除多余的日记。食谱会继续保留。此操作无法撤销。"
           }
         }
       }
@@ -2361,6 +2497,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "每日食谱推荐已开启，并会在你选择的时间送达。"
+          }
+        }
+      }
+    },
+    "Data Repair" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data Repair"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reparación de datos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réparation des données"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "データの修復"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "数据修复"
           }
         }
       }
@@ -3143,6 +3313,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "复制 %@"
+          }
+        }
+      }
+    },
+    "Duplicate Diaries Found" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duplicate Diaries Found"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se encontraron diarios duplicados"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Journaux en double détectés"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重複した日記があります"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "发现重复日记"
           }
         }
       }
@@ -4272,6 +4476,40 @@
         }
       }
     },
+    "Merge" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Merge"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Combinar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fusionner"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "統合"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "合并"
+          }
+        }
+      }
+    },
     "Merge duplicate %@" : {
       "localizations" : {
         "en" : {
@@ -4302,6 +4540,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "合并重复的 %@"
+          }
+        }
+      }
+    },
+    "Merge Duplicate Diaries" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Merge Duplicate Diaries"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Combinar diarios duplicados"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fusionner les journaux en double"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重複した日記を統合"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "合并重复日记"
+          }
+        }
+      }
+    },
+    "Merge Duplicate Diaries?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Merge Duplicate Diaries?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Combinar los diarios duplicados?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fusionner les journaux en double ?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重複した日記を統合しますか？"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "要合并重复日记吗？"
           }
         }
       }
@@ -5187,6 +5493,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "打开 Cookle 路由"
+          }
+        }
+      }
+    },
+    "Open Diaries and merge duplicate diary entries before exporting a backup. No backup was created, and your data was not changed." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Diaries and merge duplicate diary entries before exporting a backup. No backup was created, and your data was not changed."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre Diarios y combina las entradas duplicadas antes de exportar una copia de seguridad. No se creó ninguna copia de seguridad y tus datos no se modificaron."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrez Journaux et fusionnez les entrées en double avant d’exporter une sauvegarde. Aucune sauvegarde n’a été créée et vos données n’ont pas été modifiées."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「日記」を開き、重複した日記を統合してからバックアップを書き出してください。バックアップは作成されず、データも変更されていません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请打开“日记”并合并重复条目，然后再导出备份。未创建备份，你的数据也未更改。"
           }
         }
       }

@@ -104,6 +104,20 @@ final class DiaryActionService {
             )
         }
     }
+
+    @discardableResult
+    func repairDuplicateDays(
+        context: ModelContext
+    ) async throws -> MutationOutcome<DiaryDayRepairSummary> {
+        try await run(
+            name: "repairDuplicateDiaryDays",
+            context: context
+        ) {
+            try DiaryOperations.repairDuplicateDaysWithOutcome(
+                context: context
+            )
+        }
+    }
 }
 
 private extension DiaryActionService {

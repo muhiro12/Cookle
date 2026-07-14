@@ -28,8 +28,15 @@ final class SettingsActionService {
     }
 
     func exportBackupData(modelContainer: ModelContainer) throws -> Data {
-        try DataMaintenanceOperations.encodedArchive(
-            from: modelContainer.mainContext
+        let context = modelContainer.mainContext
+        let duplicateDayReport = try DiaryOperations.duplicateDayReport(
+            context: context
+        )
+        guard duplicateDayReport.hasConflicts == false else {
+            throw SettingsActionError.duplicateDiaryDays
+        }
+        return try DataMaintenanceOperations.encodedArchive(
+            from: context
         )
     }
 
@@ -108,6 +115,19 @@ final class SettingsActionService {
 }
 
 private extension SettingsActionService {
+    enum SettingsActionError: LocalizedError {
+        case duplicateDiaryDays
+
+        var errorDescription: String? {
+            String(
+                localized: """
+                Open Diaries and merge duplicate diary entries before exporting a backup. \
+                No backup was created, and your data was not changed.
+                """
+            )
+        }
+    }
+
     nonisolated static func readBackupData(
         from url: URL,
         maximumByteCount: Int
