@@ -30,6 +30,9 @@ struct AddMultipleStepsButton: View {
             isPresented = true
         } label: {
             Text("Add Multiple Steps at Once")
+                .frame(
+                    minHeight: CookleAccessibilityLayout.minimumHitTargetSize
+                )
         }
         .sheet(isPresented: $isPresented) {
             AddMultipleTextsNavigationView(

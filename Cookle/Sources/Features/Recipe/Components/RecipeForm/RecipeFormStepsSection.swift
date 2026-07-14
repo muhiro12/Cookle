@@ -20,7 +20,7 @@ struct RecipeFormStepsSection: View {
                 HStack(alignment: .top) {
                     Text((row.index + RecipeStepLayout.stepNumberOffset).description + ".")
                         .foregroundStyle(.secondary)
-                        .frame(width: RecipeStepLayout.indexWidth)
+                        .fixedSize(horizontal: true, vertical: false)
                     TextField(
                         "Steps",
                         text: stepBinding(at: row.index),

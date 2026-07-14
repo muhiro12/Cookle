@@ -14,6 +14,8 @@ typealias RecipeFormIngredient = RecipeFormIngredientInput
 struct RecipeFormIngredientsSection: View {
     @Binding private var ingredients: [RecipeFormIngredient]
 
+    @Environment(\.dynamicTypeSize)
+    private var dynamicTypeSize
     @FocusState private var focusedRowID: UUID?
     @State private var ingredientRowIDs: [UUID]
 
@@ -73,21 +75,38 @@ private extension RecipeFormIngredientsSection {
     func ingredientRow(
         for row: RecipeFormStableRowIDs.IndexedRow
     ) -> some View {
-        HStack(alignment: .top) {
-            TextField(
-                "Ingredient",
-                text: ingredientNameBinding(at: row.index),
-                prompt: Text("Spaghetti"),
-                axis: .vertical
-            )
-            .focused($focusedRowID, equals: row.id)
-            TextField(
-                "Amount",
-                text: ingredientAmountBinding(at: row.index),
-                prompt: Text("200g")
-            )
-            .multilineTextAlignment(.trailing)
+        Group {
+            if dynamicTypeSize.isAccessibilitySize {
+                VStack(alignment: .leading) {
+                    ingredientFields(for: row)
+                }
+            } else {
+                HStack(alignment: .top) {
+                    ingredientFields(for: row)
+                }
+            }
         }
+    }
+
+    @ViewBuilder
+    func ingredientFields(
+        for row: RecipeFormStableRowIDs.IndexedRow
+    ) -> some View {
+        TextField(
+            "Ingredient",
+            text: ingredientNameBinding(at: row.index),
+            prompt: Text("Spaghetti"),
+            axis: .vertical
+        )
+        .focused($focusedRowID, equals: row.id)
+        TextField(
+            "Amount",
+            text: ingredientAmountBinding(at: row.index),
+            prompt: Text("200g")
+        )
+        .multilineTextAlignment(
+            dynamicTypeSize.isAccessibilitySize ? .leading : .trailing
+        )
     }
 
     @ToolbarContentBuilder

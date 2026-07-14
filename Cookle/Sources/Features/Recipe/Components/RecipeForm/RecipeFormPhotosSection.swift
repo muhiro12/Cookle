@@ -139,6 +139,11 @@ struct RecipeFormPhotosSection: View {
         } label: {
             Image(systemName: "photo.badge.plus")
                 .accessibilityLabel(Text("Add Photo"))
+                .frame(
+                    minWidth: CookleAccessibilityLayout.minimumHitTargetSize,
+                    minHeight: CookleAccessibilityLayout.minimumHitTargetSize
+                )
+                .contentShape(Rectangle())
         }
         .cooklePopoverTip(
             addPhotoTip,

@@ -53,6 +53,13 @@ private extension SuggestionButtons {
                     .vertical,
                     SuggestionButtonsLayout.buttonVerticalPadding
                 )
+                .frame(
+                    minWidth: CookleAccessibilityLayout.minimumHitTargetSize,
+                    minHeight: CookleAccessibilityLayout.minimumHitTargetSize
+                )
+                .contentShape(
+                    Capsule(style: .continuous)
+                )
                 .cookleGlassControl(
                     in: Capsule(style: .continuous)
                 )

@@ -2,7 +2,11 @@ import SwiftUI
 
 extension View {
     func cookleGlassButtonStyle(isProminent: Bool = false) -> some View {
-        modifier(
+        frame(
+            minWidth: CookleAccessibilityLayout.minimumHitTargetSize,
+            minHeight: CookleAccessibilityLayout.minimumHitTargetSize
+        )
+        .modifier(
             CookleGlassButtonStyleModifier(
                 isProminent: isProminent
             )

@@ -15,6 +15,9 @@ struct AddMultipleIngredientsButton: View {
             isPresented = true
         } label: {
             Text("Add Multiple Ingredients at Once")
+                .frame(
+                    minHeight: CookleAccessibilityLayout.minimumHitTargetSize
+                )
         }
         .sheet(isPresented: $isPresented) {
             AddMultipleTextsNavigationView(

@@ -19,8 +19,10 @@ struct RecipeFormNameSection: View {
         } header: {
             HStack {
                 Text("Name")
-                Text("*")
-                    .foregroundStyle(.red)
+                Text("Required")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .textCase(nil)
             }
         }
     }

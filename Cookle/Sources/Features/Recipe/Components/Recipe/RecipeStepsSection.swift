@@ -19,7 +19,7 @@ struct RecipeStepsSection: View {
                     HStack(alignment: .top) {
                         Text((values.offset + RecipeStepLayout.stepNumberOffset).description + ".")
                             .foregroundStyle(.secondary)
-                            .frame(width: RecipeStepLayout.indexWidth)
+                            .fixedSize(horizontal: true, vertical: false)
                         Text(values.element)
                     }
                 }
