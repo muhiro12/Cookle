@@ -68,6 +68,14 @@ private extension CookleAppAssemblyFactory {
         return .init(
             modelContainer: modelContainer,
             navigationModel: navigationModel,
+            routeNavigator: CookleRouteNavigator(
+                navigationModel: navigationModel,
+                modelContext: modelContainer.mainContext,
+                logger: logging.logger(
+                    category: "RouteExecution",
+                    source: #fileID
+                )
+            ),
             services: services,
             cookingSessionStore: cookingSessionStore,
             cookingSessionWatchSyncService: cookingSessionWatchSyncService,

@@ -39,6 +39,7 @@ struct ShowRandomRecipeIntent: AppIntent {
                 RecipeStepsSection()
             }
             .environment(recipe)
+            .environment(CookleRouteNavigator.disabled)
             .safeAreaPadding()
             .modelContainer(modelContainer)
         }

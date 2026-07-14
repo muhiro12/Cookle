@@ -6,6 +6,7 @@ import SwiftUI
 final class CookleAppAssembly {
     let modelContainer: ModelContainer
     let navigationModel: MainNavigationModel
+    let routeNavigator: CookleRouteNavigator
     let services: CookleAppServices
     let cookingSessionStore: CookingSessionStore
     // periphery:ignore - Retain the watch sync service for the lifetime of the app assembly.
@@ -20,6 +21,7 @@ final class CookleAppAssembly {
     init(
         modelContainer: ModelContainer,
         navigationModel: MainNavigationModel,
+        routeNavigator: CookleRouteNavigator,
         services: CookleAppServices,
         cookingSessionStore: CookingSessionStore,
         cookingSessionWatchSyncService: CookingSessionWatchSyncService,
@@ -32,6 +34,7 @@ final class CookleAppAssembly {
     ) {
         self.modelContainer = modelContainer
         self.navigationModel = navigationModel
+        self.routeNavigator = routeNavigator
         self.services = services
         self.cookingSessionStore = cookingSessionStore
         self.cookingSessionWatchSyncService = cookingSessionWatchSyncService
@@ -79,6 +82,7 @@ extension View {
             .environment(assembly.settingsActionService)
             .environment(assembly.cookingSessionStore)
             .environment(assembly.navigationModel)
+            .environment(assembly.routeNavigator)
             .environment(assembly.services.routePipeline)
     }
 }

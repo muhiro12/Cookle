@@ -11,8 +11,8 @@ import SwiftUI
 struct RecipeCategoriesSection: View {
     @Environment(Recipe.self)
     private var recipe
-    @Environment(\.openCookleRoute)
-    private var openCookleRoute
+    @Environment(CookleRouteNavigator.self)
+    private var routeNavigator
 
     var body: some View {
         if let categories = recipe.categories,
@@ -36,7 +36,7 @@ struct RecipeCategoriesSection: View {
 
 private extension RecipeCategoriesSection {
     func openCategory(_ category: Category) {
-        openCookleRoute(
+        routeNavigator.open(
             .tagDetail(
                 kind: .category,
                 id: PersistentModelStableIdentifierCodec.stableIdentifier(

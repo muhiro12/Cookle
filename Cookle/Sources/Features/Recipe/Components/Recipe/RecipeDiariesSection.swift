@@ -11,8 +11,8 @@ import SwiftUI
 struct RecipeDiariesSection: View {
     @Environment(Recipe.self)
     private var recipe
-    @Environment(\.openCookleRoute)
-    private var openCookleRoute
+    @Environment(CookleRouteNavigator.self)
+    private var routeNavigator
 
     var body: some View {
         if let diaries = recipe.diaries,
@@ -45,10 +45,10 @@ private extension RecipeDiariesSection {
         guard let year = dateComponents.year,
               let month = dateComponents.month,
               let day = dateComponents.day else {
-            openCookleRoute(.diary)
+            routeNavigator.open(.diary)
             return
         }
-        openCookleRoute(
+        routeNavigator.open(
             .diaryDate(
                 year: year,
                 month: month,
