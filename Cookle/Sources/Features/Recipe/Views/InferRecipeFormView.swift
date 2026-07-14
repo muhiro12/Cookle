@@ -2,9 +2,67 @@ import AppIntents
 import MHDesign
 import PhotosUI
 import SwiftUI
+import UIKit
 
 @available(iOS 26.0, *)
 struct InferRecipeFormView: View {
+    private enum RecipeTextImporter {
+        static func recognize(in data: Data) async throws -> String {
+            try await Task.detached(priority: .userInitiated) {
+                guard let image = UIImage(data: data) else {
+                    throw RecipeTextImportError.imageDecodingFailed
+                }
+
+                let recognizedText: String
+                do {
+                    recognizedText = try TextRecognitionService.recognize(in: image)
+                } catch {
+                    throw RecipeTextImportError.textRecognitionFailed
+                }
+
+                let trimmedText = recognizedText.trimmingCharacters(
+                    in: .whitespacesAndNewlines
+                )
+                guard trimmedText.isEmpty == false else {
+                    throw RecipeTextImportError.noRecognizedText
+                }
+                return trimmedText
+            }.value
+        }
+    }
+
+    private enum RecipeTextImportError: LocalizedError, Sendable {
+        case photoDataUnavailable
+        case imageDecodingFailed
+        case textRecognitionFailed
+        case noRecognizedText
+
+        var errorDescription: String? {
+            switch self {
+            case .photoDataUnavailable:
+                String(
+                    localized: "The selected photo could not be loaded. Choose another photo and try again.",
+                    comment: "Error shown when the recipe text importer cannot load a photo library selection."
+                )
+            case .imageDecodingFailed:
+                String(
+                    localized: "The photo could not be read. Choose another photo and try again.",
+                    comment: "Error shown when the recipe text importer cannot decode the selected or captured image."
+                )
+            case .textRecognitionFailed:
+                String(
+                    localized: "Text recognition failed. Try again with a clearer photo.",
+                    comment: "Error shown when Vision fails to recognize recipe text in a photo."
+                )
+            case .noRecognizedText:
+                String(
+                    localized: "No text was found in the photo. Try again with a photo that contains clear text.",
+                    comment: "Error shown when text recognition succeeds but finds no recipe text in a photo."
+                )
+            }
+        }
+    }
+
     private enum Layout {
         static let loadingOverlayOpacity = 0.2
     }
@@ -25,7 +83,6 @@ struct InferRecipeFormView: View {
     @State private var text = ""
     @State private var isLoading = false
     @State private var photoPickerItem: PhotosPickerItem?
-    @State private var cameraPickerItem: PhotosPickerItem?
     @State private var isPhotoPickerPresented = false
     @State private var isCameraPickerPresented = false
     @State private var errorMessage = ""
@@ -66,12 +123,13 @@ struct InferRecipeFormView: View {
                 loadingOverlay
             }
             .photosPicker(isPresented: $isPhotoPickerPresented, selection: $photoPickerItem, matching: .images)
-            .photosPicker(isPresented: $isCameraPickerPresented, selection: $cameraPickerItem, matching: .images)
+            .fullScreenCover(isPresented: $isCameraPickerPresented) {
+                CameraPicker { data in
+                    handleCapturedPhoto(data)
+                }
+            }
             .onChange(of: photoPickerItem) {
                 handlePhotoPickerChange()
-            }
-            .onChange(of: cameraPickerItem) {
-                handleCameraPickerChange()
             }
             .alert(
                 Text("Cannot Infer Recipe"),
@@ -141,20 +199,23 @@ struct InferRecipeFormView: View {
 
     var importTextMenu: some View {
         Menu {
-            Button {
-                isCameraPickerPresented = true
-            } label: {
-                Label("Camera", systemImage: "camera")
+            if RecipePhotoInputSource.camera.isAvailable {
+                Button {
+                    isCameraPickerPresented = true
+                } label: {
+                    RecipePhotoInputSource.camera.label
+                }
             }
             Button {
                 isPhotoPickerPresented = true
             } label: {
-                Label("Photo Library", systemImage: "photo")
+                RecipePhotoInputSource.photoLibrary.label
             }
         } label: {
             Image(systemName: "text.viewfinder")
                 .accessibilityLabel(Text("Import Text"))
         }
+        .disabled(isLoading)
     }
 
     init(
@@ -221,28 +282,47 @@ private extension InferRecipeFormView {
         guard let photoPickerItem else {
             return
         }
+        self.photoPickerItem = nil
         Task {
-            await appendRecognizedText(from: photoPickerItem)
-            self.photoPickerItem = nil
+            isLoading = true
+            defer {
+                isLoading = false
+            }
+
+            do {
+                guard let data = try await photoPickerItem.loadTransferable(
+                    type: Data.self
+                ) else {
+                    throw RecipeTextImportError.photoDataUnavailable
+                }
+                try await appendRecognizedText(from: data)
+            } catch let error as RecipeTextImportError {
+                errorMessage = error.localizedDescription
+            } catch {
+                errorMessage = RecipeTextImportError.photoDataUnavailable.localizedDescription
+            }
         }
     }
 
-    func handleCameraPickerChange() {
-        guard let cameraPickerItem else {
-            return
-        }
+    func handleCapturedPhoto(_ data: Data) {
         Task {
-            await appendRecognizedText(from: cameraPickerItem)
-            self.cameraPickerItem = nil
+            isLoading = true
+            defer {
+                isLoading = false
+            }
+
+            do {
+                try await appendRecognizedText(from: data)
+            } catch let error as RecipeTextImportError {
+                errorMessage = error.localizedDescription
+            } catch {
+                errorMessage = RecipeTextImportError.textRecognitionFailed.localizedDescription
+            }
         }
     }
 
-    func appendRecognizedText(from pickerItem: PhotosPickerItem) async {
-        guard let data = try? await pickerItem.loadTransferable(type: Data.self),
-              let image = UIImage(data: data),
-              let recognized = try? TextRecognitionService.recognize(in: image) else {
-            return
-        }
-        text += (text.isEmpty ? "" : "\n") + recognized
+    func appendRecognizedText(from data: Data) async throws {
+        let recognizedText = try await RecipeTextImporter.recognize(in: data)
+        text += (text.isEmpty ? "" : "\n") + recognizedText
     }
 }
