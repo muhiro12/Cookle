@@ -224,5 +224,26 @@
 			<string>3qcr597p9d.skadnetwork</string>
 		</dict>
 	</array>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>com.apple.package</string>
+				<string>public.content</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Cookle Backup</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.muhiro12.cookle.backup</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cooklebackup</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>

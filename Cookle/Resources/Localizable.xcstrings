@@ -1957,6 +1957,108 @@
         }
       }
     },
+    "Cookle couldn’t access the selected backup. Choose it again and try again." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle couldn’t access the selected backup. Choose it again and try again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle no pudo acceder a la copia de seguridad seleccionada. Selecciónala de nuevo e inténtalo otra vez."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle n’a pas pu accéder à la sauvegarde sélectionnée. Sélectionnez-la de nouveau et réessayez."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookleは選択したバックアップにアクセスできませんでした。もう一度選択してお試しください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle 无法访问所选备份。请重新选择并重试。"
+          }
+        }
+      }
+    },
+    "Cookle couldn’t create the backup. Your data was not changed." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle couldn’t create the backup. Your data was not changed."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle no pudo crear la copia de seguridad. Tus datos no se modificaron."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle n’a pas pu créer la sauvegarde. Vos données n’ont pas été modifiées."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookleはバックアップを作成できませんでした。データは変更されていません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle 无法创建备份。你的数据未被更改。"
+          }
+        }
+      }
+    },
+    "Cookle couldn’t restore the backup. Your current data was not changed." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle couldn’t restore the backup. Your current data was not changed."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle no pudo restaurar la copia de seguridad. Tus datos actuales no se modificaron."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle n’a pas pu restaurer la sauvegarde. Vos données actuelles n’ont pas été modifiées."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookleはバックアップを復元できませんでした。現在のデータは変更されていません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle 无法恢复备份。你当前的数据未被更改。"
+          }
+        }
+      }
+    },
     "Cookle found multiple diary entries for the same day. Merge them before exporting a backup." : {
       "localizations" : {
         "en" : {
@@ -7469,6 +7571,40 @@
         }
       }
     },
+    "Select a Cookle backup package or a legacy JSON backup." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a Cookle backup package or a legacy JSON backup."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecciona un paquete de copia de seguridad de Cookle o una copia de seguridad JSON antigua."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sélectionnez un paquet de sauvegarde Cookle ou une ancienne sauvegarde JSON."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookleのバックアップパッケージ、または従来のJSONバックアップを選択してください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请选择 Cookle 备份包或旧版 JSON 备份。"
+          }
+        }
+      }
+    },
     "Selected Photo" : {
       "localizations" : {
         "en" : {
@@ -8453,6 +8589,142 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无法读取照片。请选择其他照片并重试。"
+          }
+        }
+      }
+    },
+    "The selected backup contains too many photo files." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The selected backup contains too many photo files."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La copia de seguridad seleccionada contiene demasiados archivos de fotos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La sauvegarde sélectionnée contient trop de fichiers photo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選択したバックアップに含まれる写真ファイルが多すぎます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所选备份包含过多照片文件。"
+          }
+        }
+      }
+    },
+    "The selected backup exceeds Cookle’s safe import size limit." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The selected backup exceeds Cookle’s safe import size limit."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La copia de seguridad seleccionada supera el límite de tamaño seguro de importación de Cookle."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La sauvegarde sélectionnée dépasse la limite de taille d’importation sécurisée de Cookle."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選択したバックアップはCookleの安全な読み込みサイズ上限を超えています。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所选备份超过了 Cookle 的安全导入大小限制。"
+          }
+        }
+      }
+    },
+    "The selected backup is invalid, damaged, or not supported by this version of Cookle." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The selected backup is invalid, damaged, or not supported by this version of Cookle."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La copia de seguridad seleccionada no es válida, está dañada o no es compatible con esta versión de Cookle."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La sauvegarde sélectionnée est non valide, endommagée ou non prise en charge par cette version de Cookle."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選択したバックアップは無効か破損しているか、このバージョンのCookleでは対応していません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所选备份无效、已损坏，或不受此版本的 Cookle 支持。"
+          }
+        }
+      }
+    },
+    "The selected Cookle backup package has an invalid file structure." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The selected Cookle backup package has an invalid file structure."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El paquete de copia de seguridad de Cookle seleccionado tiene una estructura de archivos no válida."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le paquet de sauvegarde Cookle sélectionné présente une structure de fichiers non valide."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選択したCookleバックアップパッケージのファイル構造が正しくありません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所选 Cookle 备份包的文件结构无效。"
           }
         }
       }

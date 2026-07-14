@@ -4,12 +4,47 @@
     "CFBundleName" : {
       "comment" : "Bundle name",
       "extractionState" : "extracted_with_value",
-      "shouldTranslate" : false,
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
             "value" : "Cookle"
+          }
+        }
+      },
+      "shouldTranslate" : false
+    },
+    "Cookle Backup" : {
+      "comment" : "Description of Cookle's exported backup package file type.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle Backup"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copia de seguridad de Cookle"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sauvegarde Cookle"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookleバックアップ"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle 备份"
           }
         }
       }

@@ -24,7 +24,7 @@ final class SettingsScreenModel {
     var isSubscriptionTipEligible = false
     var isShortcutsTipEligible = false
     var backupDocument: CookleDataArchiveDocument?
-    var backupFilename = "Cookle-Backup"
+    var backupFilename = "Cookle-Backup.cooklebackup"
     var pendingRestoreArchive: CookleDataArchive?
     var errorMessage: String?
     var statusMessage: String?
@@ -61,7 +61,7 @@ final class SettingsScreenModel {
     func prepareBackupExport(
         modelContainer: ModelContainer,
         settingsActionService: SettingsActionService
-    ) {
+    ) async {
         guard beginManageAction() else {
             return
         }
@@ -69,14 +69,17 @@ final class SettingsScreenModel {
             isManageActionInProgress = false
         }
 
+        backupDocument = nil
         do {
             backupDocument = .init(
-                data: try settingsActionService.exportBackupData(
+                archivePackage: try await settingsActionService.exportBackupPackage(
                     modelContainer: modelContainer
                 )
             )
             backupFilename = Self.backupFilename()
             isBackupExporterPresented = true
+        } catch is CancellationError {
+            // Leaving Settings cancels backup preparation without showing an error.
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -98,6 +101,8 @@ final class SettingsScreenModel {
                 from: url
             )
             isRestoreConfirmationPresented = true
+        } catch is CancellationError {
+            pendingRestoreArchive = nil
         } catch {
             pendingRestoreArchive = nil
             errorMessage = error.localizedDescription
@@ -114,6 +119,7 @@ final class SettingsScreenModel {
         }
         defer {
             isManageActionInProgress = false
+            self.pendingRestoreArchive = nil
         }
 
         do {
@@ -121,7 +127,6 @@ final class SettingsScreenModel {
                 pendingRestoreArchive,
                 modelContainer: modelContainer
             )
-            self.pendingRestoreArchive = nil
             statusMessage = Self.restoreMessage(
                 summary
             )
@@ -234,7 +239,7 @@ private extension SettingsScreenModel {
         formatter.locale = .init(identifier: "en_US_POSIX")
         formatter.timeZone = .current
         formatter.dateFormat = "yyyyMMdd-HHmmss"
-        return "Cookle-Backup-\(formatter.string(from: now))"
+        return "Cookle-Backup-\(formatter.string(from: now)).cooklebackup"
     }
 
     static func restoreMessage(_ summary: CookleDataRestoreSummary) -> String {

@@ -6,24 +6,22 @@ struct SettingsDataManagementSection: View {
     let modelContainer: ModelContainer
     let settingsActionService: SettingsActionService
     let isICloudEnabled: Bool
+    @State private var backupExportRequestID: UUID?
 
     var body: some View {
         Section {
             Button("Export Backup", systemImage: "square.and.arrow.up") {
-                model.prepareBackupExport(
-                    modelContainer: modelContainer,
-                    settingsActionService: settingsActionService
-                )
+                backupExportRequestID = UUID()
             }
-            .disabled(model.isManageActionInProgress)
+            .disabled(isManageActionUnavailable)
             Button("Restore Backup", systemImage: "square.and.arrow.down") {
                 model.isBackupImporterPresented = true
             }
-            .disabled(model.isManageActionInProgress)
+            .disabled(isManageActionUnavailable)
             Button("Delete All", systemImage: "trash", role: .destructive) {
                 model.isDeleteAllConfirmationPresented = true
             }
-            .disabled(model.isManageActionInProgress)
+            .disabled(isManageActionUnavailable)
             if model.isManageActionInProgress {
                 Label {
                     Text("Working...")
@@ -49,6 +47,31 @@ struct SettingsDataManagementSection: View {
                     """
                 )
             }
+        }
+        .task(id: backupExportRequestID) {
+            await prepareRequestedBackupExport()
+        }
+        .onDisappear {
+            backupExportRequestID = nil
+        }
+    }
+}
+
+private extension SettingsDataManagementSection {
+    var isManageActionUnavailable: Bool {
+        model.isManageActionInProgress || backupExportRequestID != nil
+    }
+
+    func prepareRequestedBackupExport() async {
+        guard let requestID = backupExportRequestID else {
+            return
+        }
+        await model.prepareBackupExport(
+            modelContainer: modelContainer,
+            settingsActionService: settingsActionService
+        )
+        if backupExportRequestID == requestID {
+            backupExportRequestID = nil
         }
     }
 }

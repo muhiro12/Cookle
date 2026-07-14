@@ -2,30 +2,50 @@ import Foundation
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct CookleDataArchiveDocument: FileDocument {
-    static var readableContentTypes: [UTType] {
+nonisolated struct CookleDataArchiveDocument: FileDocument {
+    static let readableContentTypes = [UTType]()
+
+    static let writableContentTypes: [UTType] = [
+        .cookleBackup
+    ]
+
+    static var importableContentTypes: [UTType] {
         [
+            .cookleBackup,
             .json
         ]
     }
 
-    let data: Data
+    let archivePackage: CookleDataArchivePackage
 
-    init(data: Data) {
-        self.data = data
+    init(archivePackage: CookleDataArchivePackage) {
+        self.archivePackage = archivePackage
     }
 
-    init(configuration: ReadConfiguration) throws {
-        guard let fileData = configuration.file.regularFileContents else {
-            throw CocoaError(.fileReadCorruptFile)
+    init(configuration _: ReadConfiguration) throws {
+        throw CocoaError(.featureUnsupported)
+    }
+
+    func fileWrapper(configuration _: WriteConfiguration) throws -> FileWrapper {
+        var photoWrappers = [String: FileWrapper]()
+        for photoFile in archivePackage.photoFiles {
+            guard photoWrappers.updateValue(
+                .init(regularFileWithContents: photoFile.data),
+                forKey: photoFile.filename
+            ) == nil else {
+                throw CocoaError(.fileWriteFileExists)
+            }
         }
 
-        self.data = fileData
-    }
-
-    func fileWrapper(configuration _: WriteConfiguration) -> FileWrapper {
-        .init(
-            regularFileWithContents: data
+        return .init(
+            directoryWithFileWrappers: [
+                CookleDataArchivePackage.manifestFilename: .init(
+                    regularFileWithContents: archivePackage.manifestData
+                ),
+                CookleDataArchivePackage.photosDirectoryName: .init(
+                    directoryWithFileWrappers: photoWrappers
+                )
+            ]
         )
     }
 }

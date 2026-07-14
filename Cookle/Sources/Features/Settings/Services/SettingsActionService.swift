@@ -5,12 +5,6 @@ import Observation
 @MainActor
 @Observable
 final class SettingsActionService {
-    nonisolated private enum BackupFileRead {
-        static let chunkKibibytes = 64
-        static let bytesPerKibibyte = 1_024
-        static let chunkByteCount = chunkKibibytes * bytesPerKibibyte
-    }
-
     private let notificationService: NotificationService
 
     init(notificationService: NotificationService) {
@@ -27,17 +21,27 @@ final class SettingsActionService {
         await notificationService.applySuggestionSettings()
     }
 
-    func exportBackupData(modelContainer: ModelContainer) throws -> Data {
-        let context = modelContainer.mainContext
-        let duplicateDayReport = try DiaryOperations.duplicateDayReport(
-            context: context
-        )
-        guard duplicateDayReport.hasConflicts == false else {
-            throw SettingsActionError.duplicateDiaryDays
+    func exportBackupPackage(
+        modelContainer: ModelContainer
+    ) async throws -> CookleDataArchivePackage {
+        do {
+            let context = modelContainer.mainContext
+            let duplicateDayReport = try DiaryOperations.duplicateDayReport(
+                context: context
+            )
+            guard duplicateDayReport.hasConflicts == false else {
+                throw SettingsActionError.duplicateDiaryDays
+            }
+            return try await DataMaintenanceOperations.archivePackage(
+                from: context
+            )
+        } catch is CancellationError {
+            throw CancellationError()
+        } catch let error as SettingsActionError {
+            throw error
+        } catch {
+            throw SettingsActionError.backupCreationFailed
         }
-        return try DataMaintenanceOperations.encodedArchive(
-            from: context
-        )
     }
 
     nonisolated func validatedBackupArchive(
@@ -46,20 +50,8 @@ final class SettingsActionService {
         let calendar = Calendar.current
         let validationTask = Task.detached(priority: .userInitiated) {
             try Task.checkCancellation()
-            let didAccessSecurityScopedResource = url.startAccessingSecurityScopedResource()
-            defer {
-                if didAccessSecurityScopedResource {
-                    url.stopAccessingSecurityScopedResource()
-                }
-            }
-
-            let data = try Self.readBackupData(
+            let archive = try CookleBackupFileReader.validatedArchive(
                 from: url,
-                maximumByteCount: DataMaintenanceOperations.maximumEncodedArchiveByteCount
-            )
-            try Task.checkCancellation()
-            let archive = try DataMaintenanceOperations.validatedArchive(
-                from: data,
                 calendar: calendar
             )
             try Task.checkCancellation()
@@ -76,10 +68,15 @@ final class SettingsActionService {
         _ archive: CookleDataArchive,
         modelContainer: ModelContainer
     ) async throws -> CookleDataRestoreSummary {
-        let summary = try DataMaintenanceOperations.restore(
-            archive,
-            context: modelContainer.mainContext
-        )
+        let summary: CookleDataRestoreSummary
+        do {
+            summary = try DataMaintenanceOperations.restore(
+                archive,
+                context: modelContainer.mainContext
+            )
+        } catch {
+            throw SettingsActionError.backupRestoreFailed
+        }
 
         CookleWidgetReloader.reloadTodayDiaryWidget()
         CookleWidgetReloader.reloadRecipeWidgets()
@@ -117,49 +114,28 @@ final class SettingsActionService {
 private extension SettingsActionService {
     enum SettingsActionError: LocalizedError {
         case duplicateDiaryDays
+        case backupCreationFailed
+        case backupRestoreFailed
 
         var errorDescription: String? {
-            String(
-                localized: """
-                Open Diaries and merge duplicate diary entries before exporting a backup. \
-                No backup was created, and your data was not changed.
-                """
-            )
-        }
-    }
-
-    nonisolated static func readBackupData(
-        from url: URL,
-        maximumByteCount: Int
-    ) throws -> Data {
-        let fileHandle = try FileHandle(
-            forReadingFrom: url
-        )
-        defer {
-            try? fileHandle.close()
-        }
-
-        var data = Data()
-
-        while data.count <= maximumByteCount {
-            try Task.checkCancellation()
-            let remainingByteCount = maximumByteCount - data.count
-            let readByteCount: Int
-            if remainingByteCount >= BackupFileRead.chunkByteCount {
-                readByteCount = BackupFileRead.chunkByteCount
-            } else {
-                readByteCount = remainingByteCount + 1
+            switch self {
+            case .duplicateDiaryDays:
+                String(
+                    localized: """
+                    Open Diaries and merge duplicate diary entries before exporting a backup. \
+                    No backup was created, and your data was not changed.
+                    """
+                )
+            case .backupCreationFailed:
+                String(
+                    localized: "Cookle couldn’t create the backup. Your data was not changed."
+                )
+            case .backupRestoreFailed:
+                String(
+                    localized: "Cookle couldn’t restore the backup. Your current data was not changed."
+                )
             }
-            let dataChunk = try fileHandle.read(
-                upToCount: readByteCount
-            )
-            guard let dataChunk,
-                  dataChunk.isEmpty == false else {
-                break
-            }
-            data.append(dataChunk)
         }
-        return data
     }
 
     func normalizeNotificationDefaultsIfNeeded() {
