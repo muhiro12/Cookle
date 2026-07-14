@@ -3,8 +3,13 @@ import Foundation
 extension CookleDataArchiveService {
     nonisolated static func validate(
         _ archive: CookleDataArchive,
-        calendar: Calendar
+        calendar: Calendar,
+        limits: CookleDataArchiveResourceLimits
     ) throws {
+        try CookleDataArchiveResourceValidator.validate(
+            archive,
+            limits: limits
+        )
         guard archive.formatVersion == CookleDataArchive.currentFormatVersion else {
             throw ArchiveError.unsupportedFormatVersion(
                 archive.formatVersion

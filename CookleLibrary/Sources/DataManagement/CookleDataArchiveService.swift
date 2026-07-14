@@ -10,6 +10,16 @@ enum CookleDataArchiveService {
         case duplicateIdentifier(String)
         case duplicateDiaryDay
         case missingReference(String)
+        case resourceByteCountExceeded(
+                category: CookleDataArchiveResourceCategory,
+                actualByteCount: Int,
+                maximumByteCount: Int
+             )
+        case resourceCountExceeded(
+                category: CookleDataArchiveResourceCategory,
+                actualCount: Int,
+                maximumCount: Int
+             )
 
         var errorDescription: String? {
             switch self {
@@ -21,6 +31,22 @@ enum CookleDataArchiveService {
                 "Backup contains multiple diaries for the same calendar day."
             case .missingReference(let identifier):
                 "Backup is missing referenced data: \(identifier)"
+            case let .resourceByteCountExceeded(
+                category,
+                actualByteCount,
+                maximumByteCount
+            ):
+                """
+                Backup \(category.rawValue) uses \(actualByteCount) bytes, exceeding the \(maximumByteCount)-byte limit.
+                """
+            case let .resourceCountExceeded(
+                category,
+                actualCount,
+                maximumCount
+            ):
+                """
+                Backup contains \(actualCount) \(category.rawValue), exceeding the limit of \(maximumCount).
+                """
             }
         }
     }
@@ -75,20 +101,36 @@ enum CookleDataArchiveService {
 
     /// Encodes the current persisted user data as portable JSON backup data.
     static func encodedArchive(
-        from context: ModelContext
+        from context: ModelContext,
+        limits: CookleDataArchiveResourceLimits = .standard
     ) throws -> Data {
-        try encoder.encode(
-            makeArchive(
-                context: context
-            )
+        let archive = try makeArchive(
+            context: context
         )
+        try CookleDataArchiveResourceValidator.validate(
+            archive,
+            limits: limits
+        )
+        let data = try encoder.encode(
+            archive
+        )
+        try CookleDataArchiveResourceValidator.validateEncodedData(
+            data,
+            limits: limits
+        )
+        return data
     }
 
     /// Decodes JSON backup data without applying it to the store.
     nonisolated static func decodedArchive(
-        from data: Data
+        from data: Data,
+        limits: CookleDataArchiveResourceLimits = .standard
     ) throws -> CookleDataArchive {
-        try decoder.decode(
+        try CookleDataArchiveResourceValidator.validateEncodedData(
+            data,
+            limits: limits
+        )
+        return try decoder.decode(
             CookleDataArchive.self,
             from: data
         )
@@ -97,14 +139,17 @@ enum CookleDataArchiveService {
     /// Decodes and validates JSON backup data before restore confirmation.
     nonisolated static func validatedArchive(
         from data: Data,
-        calendar: Calendar = .current
+        calendar: Calendar = .current,
+        limits: CookleDataArchiveResourceLimits = .standard
     ) throws -> CookleDataArchive {
         let archive = try decodedArchive(
-            from: data
+            from: data,
+            limits: limits
         )
         try validate(
             archive,
-            calendar: calendar
+            calendar: calendar,
+            limits: limits
         )
         return archive
     }
@@ -114,13 +159,15 @@ enum CookleDataArchiveService {
         _ archive: CookleDataArchive,
         context: ModelContext,
         calendar: Calendar = .current,
+        limits: CookleDataArchiveResourceLimits = .standard,
         save: (ModelContext) throws -> Void = { context in
             try context.save()
         }
     ) throws -> CookleDataRestoreSummary {
         try validate(
             archive,
-            calendar: calendar
+            calendar: calendar,
+            limits: limits
         )
 
         do {

@@ -5,6 +5,10 @@ import SwiftData
 @preconcurrency
 @MainActor
 public enum DataMaintenanceOperations {
+    /// Maximum encoded backup payload accepted for restore.
+    nonisolated public static let maximumEncodedArchiveByteCount: Int =
+        CookleDataArchiveResourceLimits.standard.maximumEncodedByteCount
+
     /// Encodes the current persisted user data as portable JSON backup data.
     public static func encodedArchive(
         from context: ModelContext

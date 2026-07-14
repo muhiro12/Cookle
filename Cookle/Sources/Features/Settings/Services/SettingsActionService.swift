@@ -5,6 +5,12 @@ import Observation
 @MainActor
 @Observable
 final class SettingsActionService {
+    nonisolated private enum BackupFileRead {
+        static let chunkKibibytes = 64
+        static let bytesPerKibibyte = 1_024
+        static let chunkByteCount = chunkKibibytes * bytesPerKibibyte
+    }
+
     private let notificationService: NotificationService
 
     init(notificationService: NotificationService) {
@@ -40,7 +46,10 @@ final class SettingsActionService {
                 }
             }
 
-            let data = try Data(contentsOf: url)
+            let data = try Self.readBackupData(
+                from: url,
+                maximumByteCount: DataMaintenanceOperations.maximumEncodedArchiveByteCount
+            )
             try Task.checkCancellation()
             let archive = try DataMaintenanceOperations.validatedArchive(
                 from: data,
@@ -99,6 +108,40 @@ final class SettingsActionService {
 }
 
 private extension SettingsActionService {
+    nonisolated static func readBackupData(
+        from url: URL,
+        maximumByteCount: Int
+    ) throws -> Data {
+        let fileHandle = try FileHandle(
+            forReadingFrom: url
+        )
+        defer {
+            try? fileHandle.close()
+        }
+
+        var data = Data()
+
+        while data.count <= maximumByteCount {
+            try Task.checkCancellation()
+            let remainingByteCount = maximumByteCount - data.count
+            let readByteCount: Int
+            if remainingByteCount >= BackupFileRead.chunkByteCount {
+                readByteCount = BackupFileRead.chunkByteCount
+            } else {
+                readByteCount = remainingByteCount + 1
+            }
+            let dataChunk = try fileHandle.read(
+                upToCount: readByteCount
+            )
+            guard let dataChunk,
+                  dataChunk.isEmpty == false else {
+                break
+            }
+            data.append(dataChunk)
+        }
+        return data
+    }
+
     func normalizeNotificationDefaultsIfNeeded() {
         if CooklePreferences.contains(\.dailyRecipeSuggestionHour) == false {
             CooklePreferences.set(
