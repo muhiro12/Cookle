@@ -1,6 +1,7 @@
 # Privacy Policy
 
-This privacy policy applies to the Cookle app for iPhone and iPad.
+This privacy policy applies to Cookle on iPhone, iPad, and Apple Watch,
+including its widgets.
 
 ## Data You Store in Cookle
 
@@ -57,7 +58,7 @@ collect personal information from children under 13.
 This policy may be updated from time to time. Updates are published on this
 page.
 
-Effective date: 2026-06-12
+Effective date: 2026-07-14
 
 ## Contact
 
