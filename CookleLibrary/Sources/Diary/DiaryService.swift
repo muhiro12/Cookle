@@ -11,15 +11,12 @@ enum DiaryService {
         context: ModelContext,
         calendar: Calendar = .current
     ) throws -> Diary? {
-        let diaries = try diaries(
+        try diaries(
             on: date,
             context: context,
             calendar: calendar
         )
-        guard diaries.count <= 1 else {
-            throw DiaryDayConflictError.multipleDiariesForDay
-        }
-        return diaries.first
+        .first
     }
 
     /// Returns the latest diary ordered by date and timestamps.
@@ -37,6 +34,28 @@ enum DiaryService {
     /// Returns a random diary.
     static func randomDiary(context: ModelContext) throws -> Diary? {
         try context.fetch(.diaries(.all)).randomElement()
+    }
+
+    /// Reports calendar days represented by multiple persisted diaries.
+    static func duplicateDayReport(
+        context: ModelContext,
+        calendar: Calendar = .current
+    ) throws -> DiaryDayConflictReport {
+        try DiaryDuplicateDayService.report(
+            context: context,
+            calendar: calendar
+        )
+    }
+
+    /// Merges every duplicate-day group while preserving distinct notes and meal rows.
+    static func repairDuplicateDaysWithOutcome(
+        context: ModelContext,
+        calendar: Calendar = .current
+    ) throws -> MutationOutcome<DiaryDayRepairSummary> {
+        try DiaryDuplicateDayService.repairWithOutcome(
+            context: context,
+            calendar: calendar
+        )
     }
 
     /// Adds a recipe to the diary of `date` for a given meal type, creating the diary when needed.
@@ -166,12 +185,20 @@ enum DiaryService {
         input: DiaryFormInput,
         calendar: Calendar = .current
     ) throws -> MutationOutcome<Diary> {
-        let conflictingDiaryExists = try diaries(
-            on: input.date,
-            context: context,
-            calendar: calendar
-        ).contains { existingDiary in
-            existingDiary !== diary
+        let isKeepingCalendarDay = calendar.isDate(
+            diary.date,
+            inSameDayAs: input.date
+        )
+        let conflictingDiaryExists = if isKeepingCalendarDay {
+            false
+        } else {
+            try diaries(
+                on: input.date,
+                context: context,
+                calendar: calendar
+            ).contains { existingDiary in
+                existingDiary !== diary
+            }
         }
         guard conflictingDiaryExists == false else {
             throw DiaryDayConflictError.dayAlreadyOccupied
@@ -310,11 +337,14 @@ private extension DiaryService {
         context: ModelContext,
         calendar: Calendar
     ) throws -> [Diary] {
-        try context.fetch(.diaries(.all)).filter { diary in
+        let matchingDiaries = try context.fetch(.diaries(.all)).filter { diary in
             calendar.isDate(
                 diary.date,
                 inSameDayAs: date
             )
         }
+        return DiaryDuplicateDayService.orderedDiaries(
+            matchingDiaries
+        )
     }
 }

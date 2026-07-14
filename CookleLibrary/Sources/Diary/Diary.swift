@@ -31,7 +31,7 @@ nonisolated public final class Diary {
     }
 
     /// Inserts a diary and snapshots the supplied meal rows and derived recipe links.
-    public static func create(
+    static func create(
         context: ModelContext,
         content: DiaryContent
     ) -> Diary {
@@ -56,7 +56,7 @@ nonisolated public final class Diary {
     }
 
     /// Replaces the stored date, meal rows, and note, then refreshes `modifiedTimestamp`.
-    public func update(content: DiaryContent) {
+    func update(content: DiaryContent) {
         apply(content)
         self.modifiedTimestamp = .now
     }

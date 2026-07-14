@@ -114,4 +114,44 @@ struct ArchiveEncodedResourceLimitTests {
             Issue.record(error)
         }
     }
+
+    @Test
+    func encodedArchive_rejectsLegacyDuplicateDiaryDays() {
+        let context = makeTestContext()
+        let morning = Date(timeIntervalSinceReferenceDate: 100_000)
+        _ = Diary.create(
+            context: context,
+            content: .init(
+                date: morning,
+                objects: [],
+                note: "Morning"
+            )
+        )
+        _ = Diary.create(
+            context: context,
+            content: .init(
+                date: morning.addingTimeInterval(3_600),
+                objects: [],
+                note: "Evening"
+            )
+        )
+
+        do {
+            _ = try CookleDataArchiveService.encodedArchive(
+                from: context,
+                calendar: makeEncodedArchiveTestCalendar()
+            )
+            Issue.record("Expected duplicate diary validation to fail before export.")
+        } catch CookleDataArchiveService.ArchiveError.duplicateDiaryDay {
+            // Expected failure.
+        } catch {
+            Issue.record(error)
+        }
+    }
+}
+
+private func makeEncodedArchiveTestCalendar() -> Calendar {
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = TimeZone(secondsFromGMT: .zero) ?? .current
+    return calendar
 }

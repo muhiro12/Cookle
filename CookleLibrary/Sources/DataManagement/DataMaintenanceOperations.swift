@@ -11,10 +11,12 @@ public enum DataMaintenanceOperations {
 
     /// Encodes the current persisted user data as portable JSON backup data.
     public static func encodedArchive(
-        from context: ModelContext
+        from context: ModelContext,
+        calendar: Calendar = .current
     ) throws -> Data {
         try CookleDataArchiveService.encodedArchive(
-            from: context
+            from: context,
+            calendar: calendar
         )
     }
 

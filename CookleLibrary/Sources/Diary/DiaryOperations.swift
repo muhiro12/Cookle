@@ -28,6 +28,28 @@ public enum DiaryOperations {
         try DiaryService.randomDiary(context: context)
     }
 
+    /// Reports calendar days represented by multiple persisted diaries.
+    public static func duplicateDayReport(
+        context: ModelContext,
+        calendar: Calendar = .current
+    ) throws -> DiaryDayConflictReport {
+        try DiaryService.duplicateDayReport(
+            context: context,
+            calendar: calendar
+        )
+    }
+
+    /// Merges duplicate-day diaries while preserving distinct notes and meal rows.
+    public static func repairDuplicateDaysWithOutcome(
+        context: ModelContext,
+        calendar: Calendar = .current
+    ) throws -> MutationOutcome<DiaryDayRepairSummary> {
+        try DiaryService.repairDuplicateDaysWithOutcome(
+            context: context,
+            calendar: calendar
+        )
+    }
+
     /// Returns a top-of-list diary suggestion for today when one can be derived.
     public static func topSuggestion(
         context: ModelContext,

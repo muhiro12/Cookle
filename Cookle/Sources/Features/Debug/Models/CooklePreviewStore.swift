@@ -26,8 +26,6 @@ final class CooklePreviewStore {
         static let hoursPerDay = 24
         static let minutesPerHour = 60
         static let secondsPerMinute = 60
-        static let firstOrder = 1
-        static let secondOrder = 2
     }
 
     private var hasPreparedPreviewData = false
@@ -78,8 +76,8 @@ private extension CooklePreviewStore {
             context,
             remotePhotoDataMap: remotePhotoDataMap
         )
-        return Array(.zero..<PreviewConstants.diaryCount).map { dayOffset in
-            makePreviewDiary(
+        return try Array(.zero..<PreviewConstants.diaryCount).map { dayOffset in
+            try makePreviewDiary(
                 context,
                 dayOffset: dayOffset,
                 recipes: recipes
@@ -119,18 +117,23 @@ private extension CooklePreviewStore {
         _ context: ModelContext,
         dayOffset: Int,
         recipes: PreviewRecipes
-    ) -> Diary {
-        .create(
+    ) throws -> Diary {
+        try DiaryOperations.createWithOutcome(
             context: context,
-            content: .init(
+            input: .init(
                 date: previewDate(for: dayOffset),
-                objects: previewDiaryObjects(
-                    context,
-                    recipes: recipes
-                ),
+                breakfasts: [recipes.pancakes],
+                lunches: [
+                    recipes.chickenStirFry,
+                    recipes.vegetableSoup
+                ],
+                dinners: [
+                    recipes.spaghettiCarbonara,
+                    recipes.beefStew
+                ],
                 note: previewDiaryNote
             )
-        )
+        ).value
     }
 
     func previewDate(for dayOffset: Int) -> Date {
@@ -142,43 +145,5 @@ private extension CooklePreviewStore {
                 * PreviewConstants.secondsPerMinute
         )
         return .now.addingTimeInterval(offsetSeconds)
-    }
-
-    private func previewDiaryObjects(
-        _ context: ModelContext,
-        recipes: PreviewRecipes
-    ) -> [DiaryObject] {
-        [
-            .create(
-                context: context,
-                recipe: recipes.pancakes,
-                type: .breakfast,
-                order: PreviewConstants.firstOrder
-            ),
-            .create(
-                context: context,
-                recipe: recipes.chickenStirFry,
-                type: .lunch,
-                order: PreviewConstants.firstOrder
-            ),
-            .create(
-                context: context,
-                recipe: recipes.vegetableSoup,
-                type: .lunch,
-                order: PreviewConstants.secondOrder
-            ),
-            .create(
-                context: context,
-                recipe: recipes.spaghettiCarbonara,
-                type: .dinner,
-                order: PreviewConstants.firstOrder
-            ),
-            .create(
-                context: context,
-                recipe: recipes.beefStew,
-                type: .dinner,
-                order: PreviewConstants.secondOrder
-            )
-        ]
     }
 }

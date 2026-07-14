@@ -104,7 +104,7 @@ struct DiaryDayUniquenessTests {
     }
 
     @Test
-    func lookup_rejects_multiple_diaries_on_same_calendar_day() throws {
+    func lookup_uses_deterministic_latest_diary_when_legacy_duplicates_exist() throws {
         let calendar = makeDiaryDayTestCalendar()
         let morning = try makeDiaryDayTestDate(
             day: kDiaryDayTestFirstDay,
@@ -116,34 +116,65 @@ struct DiaryDayUniquenessTests {
             hour: kDiaryDayTestEveningHour,
             calendar: calendar
         )
-        insertDiary(
+        let morningDiary = insertDiary(
             date: morning,
             note: "Morning"
         )
-        insertDiary(
+        let eveningDiary = insertDiary(
             date: evening,
             note: "Evening"
         )
 
-        do {
-            _ = try DiaryService.diary(
-                on: morning,
-                context: context,
-                calendar: calendar
-            )
-            Issue.record("Expected diary lookup to fail.")
-        } catch DiaryDayConflictError.multipleDiariesForDay {
-            // Expected failure.
-        } catch {
-            Issue.record(error)
-        }
+        let resolvedDiary = try DiaryService.diary(
+            on: morning,
+            context: context,
+            calendar: calendar
+        )
+
+        #expect(resolvedDiary === eveningDiary)
+        #expect(resolvedDiary !== morningDiary)
+    }
+
+    @Test
+    func update_allows_legacy_duplicate_to_keep_its_calendar_day() throws {
+        let calendar = makeDiaryDayTestCalendar()
+        let morning = try makeDiaryDayTestDate(
+            day: kDiaryDayTestFirstDay,
+            hour: kDiaryDayTestMorningHour,
+            calendar: calendar
+        )
+        let evening = try makeDiaryDayTestDate(
+            day: kDiaryDayTestFirstDay,
+            hour: kDiaryDayTestEveningHour,
+            calendar: calendar
+        )
+        let morningDiary = insertDiary(
+            date: morning,
+            note: "Morning"
+        )
+        _ = insertDiary(
+            date: evening,
+            note: "Evening"
+        )
+
+        try DiaryService.update(
+            context: context,
+            diary: morningDiary,
+            input: .init(
+                date: morning,
+                note: "Updated morning"
+            ),
+            calendar: calendar
+        )
+
+        #expect(morningDiary.note == "Updated morning")
     }
 
     private func insertDiary(
         date: Date,
         note: String
-    ) {
-        _ = Diary.create(
+    ) -> Diary {
+        Diary.create(
             context: context,
             content: .init(
                 date: date,

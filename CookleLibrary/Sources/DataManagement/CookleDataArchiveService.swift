@@ -102,13 +102,15 @@ enum CookleDataArchiveService {
     /// Encodes the current persisted user data as portable JSON backup data.
     static func encodedArchive(
         from context: ModelContext,
+        calendar: Calendar = .current,
         limits: CookleDataArchiveResourceLimits = .standard
     ) throws -> Data {
         let archive = try makeArchive(
             context: context
         )
-        try CookleDataArchiveResourceValidator.validate(
+        try validate(
             archive,
+            calendar: calendar,
             limits: limits
         )
         let data = try encoder.encode(
