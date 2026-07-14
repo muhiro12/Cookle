@@ -25,6 +25,7 @@ struct RecipeFormPhotosSection: View {
     @State private var pendingPhotoRemovalIndex: Int?
     @State private var isPhotoRemovalDialogPresented = false
     @State private var photoRowIDs: [UUID]
+    @State private var photoCompressionRequest: RecipeFormPhotoCompressionModifier.Request?
 
     var body: some View {
         Section {
@@ -37,6 +38,12 @@ struct RecipeFormPhotosSection: View {
                 photos: $photos,
                 isPhotosPickerPresented: $isPhotosPickerPresented,
                 loader: photoImportLoader
+            )
+        )
+        .modifier(
+            RecipeFormPhotoCompressionModifier(
+                photos: $photos,
+                request: $photoCompressionRequest
             )
         )
         .onAppear {
@@ -81,11 +88,9 @@ struct RecipeFormPhotosSection: View {
             isPresented: $isImagePlaygroundPresented,
             recipe: recipe
         ) { data in
-            photos.append(
-                .init(
-                    data: data.compressed(),
-                    source: .imagePlayground
-                )
+            queuePhotoCompression(
+                data: data,
+                source: .imagePlayground
             )
         }
     }
@@ -287,11 +292,19 @@ private extension RecipeFormPhotosSection {
     func appendCapturedPhoto(
         _ data: Data
     ) {
-        photos.append(
-            .init(
-                data: data.compressed(),
-                source: .photosPicker
-            )
+        queuePhotoCompression(
+            data: data,
+            source: .photosPicker
+        )
+    }
+
+    func queuePhotoCompression(
+        data: Data,
+        source: PhotoSource
+    ) {
+        photoCompressionRequest = .init(
+            data: data,
+            source: source
         )
     }
 

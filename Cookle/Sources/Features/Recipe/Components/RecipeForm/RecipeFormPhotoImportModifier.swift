@@ -243,12 +243,11 @@ private extension RecipeFormPhotoImportModifier {
                     return .cancelled
                 }
 
-                photos.append(
-                    .init(
-                        data: data.compressed(),
-                        source: .photosPicker
-                    )
-                )
+                guard try await appendImportedPhoto(
+                    data
+                ) else {
+                    return .cancelled
+                }
                 successfulCount += 1
             } catch is CancellationError {
                 guard Task.isCancelled == false,
@@ -278,6 +277,27 @@ private extension RecipeFormPhotoImportModifier {
                 failedCount: failedCount
             )
         )
+    }
+
+    @MainActor
+    private func appendImportedPhoto(
+        _ data: Data
+    ) async throws -> Bool {
+        let compressedData = try await CooklePhotoImageCompressor.compressedData(
+            from: data
+        )
+        guard Task.isCancelled == false,
+              isEnabled else {
+            return false
+        }
+
+        photos.append(
+            .init(
+                data: compressedData,
+                source: .photosPicker
+            )
+        )
+        return true
     }
 
     func finishImport(

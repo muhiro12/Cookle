@@ -1,3 +1,4 @@
+import CookleLibrary
 import CryptoKit
 import Foundation
 import UIKit
@@ -106,7 +107,9 @@ nonisolated private extension NotificationAttachmentStore {
               let jpegData = image.jpegData(compressionQuality: 1) else {
             return nil
         }
-        return jpegData.compressed()
+        return PhotoImageProcessor.compressedData(
+            from: jpegData
+        )
     }
 
     func attachmentFileURL(for stableIdentifier: String) -> URL {

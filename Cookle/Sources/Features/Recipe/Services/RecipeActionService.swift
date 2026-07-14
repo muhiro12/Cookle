@@ -96,11 +96,14 @@ final class RecipeActionService {
         recipe: Recipe,
         data: Data
     ) async throws -> MutationOutcome<Recipe> {
+        let compressedData = try await CooklePhotoImageCompressor.compressedData(
+            from: data
+        )
         let updatedDraft = recipeDraft(
             for: recipe,
             photos: [
                 .init(
-                    data: data.compressed(),
+                    data: compressedData,
                     source: .imagePlayground
                 )
             ]
@@ -121,6 +124,9 @@ final class RecipeActionService {
         data: Data,
         source: PhotoSource
     ) async throws -> MutationOutcome<Recipe> {
+        let compressedData = try await CooklePhotoImageCompressor.compressedData(
+            from: data
+        )
         let updatedDraft = recipeDraft(
             for: recipe,
             photos: recipe.orderedPhotos.map { photo in
@@ -130,7 +136,7 @@ final class RecipeActionService {
                 )
             } + [
                 .init(
-                    data: data.compressed(),
+                    data: compressedData,
                     source: source
                 )
             ]
