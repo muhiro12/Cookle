@@ -3,18 +3,22 @@ struct CookleDataArchiveResourceLimits: Sendable {
         static let bytesPerKibibyte = 1_024
         static let kibibytesPerMebibyte = 1_024
         static let maximumEncodedMebibytes = 64
+        static let maximumManifestMebibytes = 64
+        static let maximumPackageMebibytes = 320
         static let maximumTopLevelRecordCountPerCategory = 10_000
         static let maximumAggregateNestedRecordCount = 100_000
         static let maximumIdentifierKibibytes = 1
         static let maximumTextKibibytes = 64
-        static let maximumPhotoMebibytes = 10
-        static let maximumAggregatePhotoMebibytes = 40
+        static let maximumPhotoMebibytes = 32
+        static let maximumAggregatePhotoMebibytes = 256
 
         static let bytesPerMebibyte = bytesPerKibibyte * kibibytesPerMebibyte
     }
 
     static let standard: Self = .init(
         maximumEncodedByteCount: Standard.maximumEncodedMebibytes * Standard.bytesPerMebibyte,
+        maximumManifestByteCount: Standard.maximumManifestMebibytes * Standard.bytesPerMebibyte,
+        maximumPackageByteCount: Standard.maximumPackageMebibytes * Standard.bytesPerMebibyte,
         maximumTopLevelRecordCountPerCategory: Standard.maximumTopLevelRecordCountPerCategory,
         maximumAggregateNestedRecordCount: Standard.maximumAggregateNestedRecordCount,
         maximumIdentifierByteCount: Standard.maximumIdentifierKibibytes * Standard.bytesPerKibibyte,
@@ -24,6 +28,8 @@ struct CookleDataArchiveResourceLimits: Sendable {
     )
 
     let maximumEncodedByteCount: Int
+    let maximumManifestByteCount: Int
+    let maximumPackageByteCount: Int
     let maximumTopLevelRecordCountPerCategory: Int
     let maximumAggregateNestedRecordCount: Int
     let maximumIdentifierByteCount: Int

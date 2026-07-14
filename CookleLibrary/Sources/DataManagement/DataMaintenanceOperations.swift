@@ -8,6 +8,21 @@ public enum DataMaintenanceOperations {
     /// Maximum encoded backup payload accepted for restore.
     nonisolated public static let maximumEncodedArchiveByteCount: Int =
         CookleDataArchiveResourceLimits.standard.maximumEncodedByteCount
+    /// Maximum encoded manifest payload accepted in a version 2 package.
+    nonisolated public static let maximumArchiveManifestByteCount: Int =
+        CookleDataArchiveResourceLimits.standard.maximumManifestByteCount
+    /// Maximum combined manifest and photo payload accepted in a version 2 package.
+    nonisolated public static let maximumArchivePackageByteCount: Int =
+        CookleDataArchiveResourceLimits.standard.maximumPackageByteCount
+    /// Maximum individual photo payload accepted in a version 2 package.
+    nonisolated public static let maximumArchivePhotoByteCount: Int =
+        CookleDataArchiveResourceLimits.standard.maximumPhotoByteCount
+    /// Maximum combined photo payload accepted in a version 2 package.
+    nonisolated public static let maximumArchiveAggregatePhotoByteCount: Int =
+        CookleDataArchiveResourceLimits.standard.maximumAggregatePhotoByteCount
+    /// Maximum photo file count accepted in a version 2 package.
+    nonisolated public static let maximumArchivePhotoFileCount: Int =
+        CookleDataArchiveResourceLimits.standard.maximumTopLevelRecordCountPerCategory
 
     /// Encodes the current persisted user data as portable JSON backup data.
     public static func encodedArchive(
@@ -20,6 +35,17 @@ public enum DataMaintenanceOperations {
         )
     }
 
+    /// Builds a version 2 package with photo payloads stored outside its manifest.
+    public static func archivePackage(
+        from context: ModelContext,
+        calendar: Calendar = .current
+    ) async throws -> CookleDataArchivePackage {
+        try await CookleDataArchiveService.archivePackage(
+            from: context,
+            calendar: calendar
+        )
+    }
+
     /// Decodes and validates JSON backup data before restore confirmation.
     nonisolated public static func validatedArchive(
         from data: Data,
@@ -27,6 +53,17 @@ public enum DataMaintenanceOperations {
     ) throws -> CookleDataArchive {
         try CookleDataArchiveService.validatedArchive(
             from: data,
+            calendar: calendar
+        )
+    }
+
+    /// Validates a version 2 package before restore confirmation.
+    nonisolated public static func validatedArchive(
+        from package: CookleDataArchivePackage,
+        calendar: Calendar = .current
+    ) throws -> CookleDataArchive {
+        try CookleDataArchiveService.validatedArchive(
+            from: package,
             calendar: calendar
         )
     }

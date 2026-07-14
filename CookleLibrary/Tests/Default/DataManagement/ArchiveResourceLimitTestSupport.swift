@@ -4,6 +4,8 @@ import Foundation
 enum ArchiveResourceLimitTestSupport {
     static func makeLimits(
         maximumEncodedByteCount: Int = 1_000_000,
+        maximumManifestByteCount: Int = 1_000_000,
+        maximumPackageByteCount: Int = 2_000_000,
         maximumTopLevelRecordCountPerCategory: Int = 10,
         maximumAggregateNestedRecordCount: Int = 100,
         maximumIdentifierByteCount: Int = 128,
@@ -13,6 +15,8 @@ enum ArchiveResourceLimitTestSupport {
     ) -> CookleDataArchiveResourceLimits {
         .init(
             maximumEncodedByteCount: maximumEncodedByteCount,
+            maximumManifestByteCount: maximumManifestByteCount,
+            maximumPackageByteCount: maximumPackageByteCount,
             maximumTopLevelRecordCountPerCategory: maximumTopLevelRecordCountPerCategory,
             maximumAggregateNestedRecordCount: maximumAggregateNestedRecordCount,
             maximumIdentifierByteCount: maximumIdentifierByteCount,

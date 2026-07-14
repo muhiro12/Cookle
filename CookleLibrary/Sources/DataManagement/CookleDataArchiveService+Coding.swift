@@ -6,7 +6,7 @@ extension CookleDataArchiveService {
         static let firstIndexOffset = 1
     }
 
-    static var encoder: JSONEncoder {
+    nonisolated static var encoder: JSONEncoder {
         let jsonEncoder = JSONEncoder()
         jsonEncoder.dateEncodingStrategy = .iso8601
         jsonEncoder.outputFormatting = [
