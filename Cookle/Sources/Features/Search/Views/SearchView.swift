@@ -9,6 +9,10 @@ import SwiftData
 import SwiftUI
 
 struct SearchView: View {
+    private enum SearchTiming {
+        static let debounceMilliseconds = 250
+    }
+
     private enum DiscoverySheet: String, Identifiable {
         case ingredient
         case category
@@ -28,6 +32,8 @@ struct SearchView: View {
 
     @State private var recipes = [Recipe]()
     @State private var searchText = ""
+    @State private var searchErrorMessage: String?
+    @State private var isSearching = false
     @State private var isSearchPresented = false
     @State private var discoverySheet: DiscoverySheet?
     @State private var ingredientSelection: Ingredient?
@@ -75,8 +81,8 @@ struct SearchView: View {
                     }
                 }
             }
-            .onChange(of: searchText) {
-                performSearch()
+            .task(id: searchText) {
+                await performSearch()
             }
             .task {
                 applyIncomingSearchQueryIfNeeded()
@@ -87,7 +93,24 @@ struct SearchView: View {
     }
 
     @ViewBuilder var searchContent: some View {
-        if !recipes.isEmpty {
+        if isSearching {
+            ProgressView("Searching Recipes")
+        } else if let searchErrorMessage {
+            ContentUnavailableView {
+                Label(
+                    "Cannot Search Recipes",
+                    systemImage: "exclamationmark.triangle"
+                )
+            } description: {
+                Text(searchErrorMessage)
+            } actions: {
+                Button("Try Again") {
+                    Task {
+                        await performSearch(shouldDebounce: false)
+                    }
+                }
+            }
+        } else if !recipes.isEmpty {
             searchResults
         } else if !searchText.isEmpty {
             notFoundPlaceholder
@@ -164,22 +187,50 @@ private extension SearchView {
         searchText = incomingSearchQuery
         isSearchPresented = true
         self.incomingSearchQuery = nil
-        performSearch()
     }
 
-    func performSearch() {
-        guard !searchText.isEmpty else {
+    func performSearch(
+        shouldDebounce: Bool = true
+    ) async {
+        let query = searchText
+        guard !query.isEmpty else {
             recipes = []
+            searchErrorMessage = nil
+            isSearching = false
             return
         }
 
+        isSearching = true
+        defer {
+            if query == searchText {
+                isSearching = false
+            }
+        }
+
         do {
-            recipes = try RecipeOperations.search(
+            if shouldDebounce {
+                try await Task.sleep(
+                    for: .milliseconds(SearchTiming.debounceMilliseconds)
+                )
+            }
+            try Task.checkCancellation()
+            let results = try RecipeOperations.search(
                 context: context,
-                text: searchText
+                text: query
             )
+            guard query == searchText else {
+                return
+            }
+            recipes = results
+            searchErrorMessage = nil
+        } catch is CancellationError {
+            return
         } catch {
+            guard query == searchText else {
+                return
+            }
             recipes = []
+            searchErrorMessage = error.localizedDescription
         }
     }
 
