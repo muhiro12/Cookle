@@ -2,6 +2,7 @@ import SwiftUI
 
 struct RecipeFormPhotoThumbnailView: View {
     let photo: PhotoData
+    let photoID: UUID
     let index: Int
     let height: CGFloat
     let cornerRadius: CGFloat
@@ -11,16 +12,16 @@ struct RecipeFormPhotoThumbnailView: View {
     @Binding var isPhotoRemovalDialogPresented: Bool
 
     var body: some View {
-        if let image = UIImage(data: photo.data) {
-            ZStack(alignment: .topTrailing) {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
-                    .accessibilityLabel(Text("Selected Photo"))
-                    .frame(height: height)
-                    .clipShape(.rect(cornerRadius: cornerRadius))
-                photoRemovalMenu
-            }
+        ZStack(alignment: .topTrailing) {
+            CooklePhotoImage(
+                data: photo.data,
+                identity: .draft(photoID),
+                size: .thumbnail
+            )
+            .accessibilityLabel(Text("Selected Photo"))
+            .frame(height: height)
+            .clipShape(.rect(cornerRadius: cornerRadius))
+            photoRemovalMenu
         }
     }
 

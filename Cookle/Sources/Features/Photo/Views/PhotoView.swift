@@ -39,20 +39,20 @@ struct PhotoView: View {
 
     var previewSection: some View {
         Section {
-            if let image = UIImage(data: photo.data) {
-                Button {
-                    isPhotoDetailPresented = true
-                } label: {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFit()
-                        .accessibilityLabel(Text("Open Photo"))
-                        .frame(height: Layout.previewImageHeight)
-                        .cookleButtonRowContent(alignment: .center)
-                }
-                .buttonStyle(.plain)
-                .listRowBackground(EmptyView())
+            Button {
+                isPhotoDetailPresented = true
+            } label: {
+                CooklePhotoImage(
+                    data: photo.data,
+                    identity: .stored(photo.persistentModelID),
+                    size: .preview
+                )
+                .accessibilityLabel(Text("Open Photo"))
+                .frame(height: Layout.previewImageHeight)
+                .cookleButtonRowContent(alignment: .center)
             }
+            .buttonStyle(.plain)
+            .listRowBackground(EmptyView())
         }
     }
 

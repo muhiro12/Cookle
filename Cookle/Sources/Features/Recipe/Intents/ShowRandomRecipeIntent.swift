@@ -25,14 +25,15 @@ struct ShowRandomRecipeIntent: AppIntent {
         }
         return .result(dialog: .init(stringLiteral: recipe.name)) {
             VStack(alignment: .leading) {
-                if let photo = recipe.primaryPhoto,
-                   let image = UIImage(data: photo.data) {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: RecipePreviewLayout.imageHeight)
-                        .frame(maxWidth: .infinity)
-                        .clipShape(.rect(cornerRadius: RecipePreviewLayout.imageCornerRadius))
+                if let photo = recipe.primaryPhoto {
+                    CooklePhotoImage(
+                        data: photo.data,
+                        identity: .stored(photo.persistentModelID),
+                        size: .preview
+                    )
+                    .frame(height: RecipePreviewLayout.imageHeight)
+                    .frame(maxWidth: .infinity)
+                    .clipShape(.rect(cornerRadius: RecipePreviewLayout.imageCornerRadius))
                 }
                 RecipeIngredientsSection()
                 Divider()

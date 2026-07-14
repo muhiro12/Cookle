@@ -17,12 +17,13 @@ struct PhotoObjectView: View {
 
     var photoSection: some View {
         Section {
-            if let photo = object.photo,
-               let image = UIImage(data: photo.data) {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
-                    .accessibilityLabel(Text("Photo"))
+            if let photo = object.photo {
+                CooklePhotoImage(
+                    data: photo.data,
+                    identity: .stored(photo.persistentModelID),
+                    size: .preview
+                )
+                .accessibilityLabel(Text("Photo"))
             }
         } header: {
             Text("Photo")

@@ -58,17 +58,17 @@ private extension RecipePhotosSection {
 
     @ViewBuilder
     func photoTile(for photo: Photo) -> some View {
-        if let image = UIImage(data: photo.data) {
-            Button {
-                selectedPhoto = photo
-            } label: {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
-                    .accessibilityLabel(Text("Open Photo"))
-                    .frame(height: RecipePreviewLayout.imageHeight)
-                    .clipShape(.rect(cornerRadius: RecipePreviewLayout.imageCornerRadius))
-            }
+        Button {
+            selectedPhoto = photo
+        } label: {
+            CooklePhotoImage(
+                data: photo.data,
+                identity: .stored(photo.persistentModelID),
+                size: .preview
+            )
+            .accessibilityLabel(Text("Open Photo"))
+            .frame(height: RecipePreviewLayout.imageHeight)
+            .clipShape(.rect(cornerRadius: RecipePreviewLayout.imageCornerRadius))
         }
     }
 }

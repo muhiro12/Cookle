@@ -111,13 +111,13 @@ struct RecipeFormPhotosSection: View {
 
     var editModeContent: some View {
         ForEach(photoRows) { row in
-            if let image = UIImage(data: photos[row.index].data) {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
-                    .accessibilityLabel(Text("Selected Photo"))
-                    .frame(height: Layout.editModePhotoHeight)
-            }
+            CooklePhotoImage(
+                data: photos[row.index].data,
+                identity: .draft(row.id),
+                size: .thumbnail
+            )
+            .accessibilityLabel(Text("Selected Photo"))
+            .frame(height: Layout.editModePhotoHeight)
         }
         .onMove { sourceOffsets, destinationOffset in
             movePhotos(
@@ -257,6 +257,7 @@ private extension RecipeFormPhotosSection {
         ForEach(photoRows) { row in
             RecipeFormPhotoThumbnailView(
                 photo: photos[row.index],
+                photoID: row.id,
                 index: row.index,
                 height: height,
                 cornerRadius: designMetrics.cornerRadius.control,

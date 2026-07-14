@@ -34,12 +34,12 @@ struct DiaryLabel: View {
                     ForEach(
                         (diary.recipes ?? []).compactMap(\.primaryPhoto)
                     ) { photo in
-                        if let image = UIImage(data: photo.data) {
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFit()
-                                .accessibilityHidden(true)
-                        }
+                        CooklePhotoImage(
+                            data: photo.data,
+                            identity: .stored(photo.persistentModelID),
+                            size: .thumbnail
+                        )
+                        .accessibilityHidden(true)
                     }
                 }
                 Text(DiaryListSummary.text(

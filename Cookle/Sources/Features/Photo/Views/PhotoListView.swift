@@ -105,24 +105,24 @@ private extension PhotoListView {
 
     @ViewBuilder
     func photoButton(for rowPhoto: Photo) -> some View {
-        if let image = UIImage(data: rowPhoto.data) {
-            Button {
-                $photo.cookleSelectForNavigation(
-                    rowPhoto
+        Button {
+            $photo.cookleSelectForNavigation(
+                rowPhoto
+            )
+        } label: {
+            CooklePhotoImage(
+                data: rowPhoto.data,
+                identity: .stored(rowPhoto.persistentModelID),
+                size: .thumbnail
+            )
+            .accessibilityLabel(
+                Text(
+                    PhotoDisplayCopy.title(for: rowPhoto)
                 )
-            } label: {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
-                    .accessibilityLabel(
-                        Text(
-                            PhotoDisplayCopy.title(for: rowPhoto)
-                        )
-                    )
-                    .cookleButtonRowContent(alignment: .center)
-            }
-            .buttonStyle(.plain)
+            )
+            .cookleButtonRowContent(alignment: .center)
         }
+        .buttonStyle(.plain)
     }
 }
 

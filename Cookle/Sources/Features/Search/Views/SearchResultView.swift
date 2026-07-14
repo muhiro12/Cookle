@@ -9,15 +9,16 @@ struct SearchResultView: View {
             VStack(alignment: .leading) {
                 Text(recipe.name)
                     .font(.headline)
-                if let photo = recipe.primaryPhoto,
-                   let image = UIImage(data: photo.data) {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFit()
-                        .accessibilityLabel(Text("Recipe Photo"))
-                        .frame(height: RecipePreviewLayout.imageHeight)
-                        .frame(maxWidth: .infinity)
-                        .clipShape(.rect(cornerRadius: RecipePreviewLayout.imageCornerRadius))
+                if let photo = recipe.primaryPhoto {
+                    CooklePhotoImage(
+                        data: photo.data,
+                        identity: .stored(photo.persistentModelID),
+                        size: .preview
+                    )
+                    .accessibilityLabel(Text("Recipe Photo"))
+                    .frame(height: RecipePreviewLayout.imageHeight)
+                    .frame(maxWidth: .infinity)
+                    .clipShape(.rect(cornerRadius: RecipePreviewLayout.imageCornerRadius))
                 }
                 RecipeIngredientsSection()
                 Divider()

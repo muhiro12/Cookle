@@ -11,16 +11,16 @@ struct PhotoDetailView: View {
             ScrollView(.horizontal) {
                 LazyHStack(spacing: .zero) {
                     ForEach(photos) { photo in
-                        if let image = UIImage(data: photo.data) {
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFit()
-                                .accessibilityLabel(Text("Photo"))
-                                .frame(
-                                    width: geometry.size.width,
-                                    height: geometry.size.height
-                                )
-                        }
+                        CooklePhotoImage(
+                            data: photo.data,
+                            identity: .stored(photo.persistentModelID),
+                            size: .detail
+                        )
+                        .accessibilityLabel(Text("Photo"))
+                        .frame(
+                            width: geometry.size.width,
+                            height: geometry.size.height
+                        )
                     }
                 }
                 .scrollTargetLayout()

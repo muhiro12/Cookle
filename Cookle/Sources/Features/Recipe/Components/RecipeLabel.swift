@@ -29,12 +29,13 @@ struct RecipeLabel: View {
                     .lineLimit(1)
             }
         } icon: {
-            if let photo = recipe.primaryPhoto,
-               let image = UIImage(data: photo.data) {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
-                    .accessibilityHidden(true)
+            if let photo = recipe.primaryPhoto {
+                CooklePhotoImage(
+                    data: photo.data,
+                    identity: .stored(photo.persistentModelID),
+                    size: .thumbnail
+                )
+                .accessibilityHidden(true)
             } else {
                 Image(systemName: "photo")
                     .resizable()
