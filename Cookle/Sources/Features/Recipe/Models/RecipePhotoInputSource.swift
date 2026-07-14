@@ -14,7 +14,11 @@ extension RecipePhotoInputSource {
     var isAvailable: Bool {
         switch self {
         case .camera:
+            #if targetEnvironment(simulator)
+            false
+            #else
             UIImagePickerController.isSourceTypeAvailable(.camera)
+            #endif
         case .photoLibrary:
             true
         case .imagePlayground:
