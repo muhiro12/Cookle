@@ -201,7 +201,6 @@ private extension CookleAppBootstrapModel {
                 "error": error.localizedDescription
             ]
         )
-        assertionFailure(error.localizedDescription)
     }
 
     func makeLogger(

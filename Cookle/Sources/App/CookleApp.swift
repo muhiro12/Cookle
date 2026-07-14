@@ -29,7 +29,13 @@ struct CookleApp: App {
                 } else {
                     CookleStartupView(
                         failureMessage: bootstrapModel.failureMessage
-                    )
+                    ) {
+                        Task {
+                            await bootstrapModel.loadAssembly(
+                                isICloudOn: isICloudOn
+                            )
+                        }
+                    }
                 }
             }
             .task(id: isICloudOn) {
