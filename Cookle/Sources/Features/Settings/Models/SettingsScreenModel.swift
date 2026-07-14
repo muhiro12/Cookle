@@ -85,7 +85,7 @@ final class SettingsScreenModel {
     func prepareBackupRestore(
         from url: URL,
         settingsActionService: SettingsActionService
-    ) {
+    ) async {
         guard beginManageAction() else {
             return
         }
@@ -94,7 +94,7 @@ final class SettingsScreenModel {
         }
 
         do {
-            pendingRestoreArchive = try settingsActionService.validatedBackupArchive(
+            pendingRestoreArchive = try await settingsActionService.validatedBackupArchive(
                 from: url
             )
             isRestoreConfirmationPresented = true

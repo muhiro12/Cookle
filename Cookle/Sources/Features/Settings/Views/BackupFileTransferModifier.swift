@@ -24,10 +24,12 @@ struct BackupFileTransferModifier: ViewModifier {
             ) { result in
                 switch result {
                 case .success(let url):
-                    model.prepareBackupRestore(
-                        from: url,
-                        settingsActionService: settingsActionService
-                    )
+                    Task { @MainActor in
+                        await model.prepareBackupRestore(
+                            from: url,
+                            settingsActionService: settingsActionService
+                        )
+                    }
                 case .failure(let error):
                     model.errorMessage = error.localizedDescription
                 }

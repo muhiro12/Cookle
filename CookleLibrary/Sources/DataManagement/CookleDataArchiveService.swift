@@ -82,7 +82,7 @@ enum CookleDataArchiveService {
     }
 
     /// Decodes JSON backup data without applying it to the store.
-    static func decodedArchive(
+    nonisolated static func decodedArchive(
         from data: Data
     ) throws -> CookleDataArchive {
         try decoder.decode(
@@ -92,7 +92,7 @@ enum CookleDataArchiveService {
     }
 
     /// Decodes and validates JSON backup data before restore confirmation.
-    static func validatedArchive(
+    nonisolated static func validatedArchive(
         from data: Data
     ) throws -> CookleDataArchive {
         let archive = try decodedArchive(

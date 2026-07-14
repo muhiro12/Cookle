@@ -27,17 +27,31 @@ final class SettingsActionService {
         )
     }
 
-    func validatedBackupArchive(from url: URL) throws -> CookleDataArchive {
-        let didAccessSecurityScopedResource = url.startAccessingSecurityScopedResource()
-        defer {
-            if didAccessSecurityScopedResource {
-                url.stopAccessingSecurityScopedResource()
+    nonisolated func validatedBackupArchive(
+        from url: URL
+    ) async throws -> CookleDataArchive {
+        let validationTask = Task.detached(priority: .userInitiated) {
+            try Task.checkCancellation()
+            let didAccessSecurityScopedResource = url.startAccessingSecurityScopedResource()
+            defer {
+                if didAccessSecurityScopedResource {
+                    url.stopAccessingSecurityScopedResource()
+                }
             }
-        }
 
-        return try DataMaintenanceOperations.validatedArchive(
-            from: Data(contentsOf: url)
-        )
+            let data = try Data(contentsOf: url)
+            try Task.checkCancellation()
+            let archive = try DataMaintenanceOperations.validatedArchive(
+                from: data
+            )
+            try Task.checkCancellation()
+            return archive
+        }
+        return try await withTaskCancellationHandler {
+            try await validationTask.value
+        } onCancel: {
+            validationTask.cancel()
+        }
     }
 
     func restoreBackup(

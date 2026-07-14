@@ -1,5 +1,5 @@
 extension CookleDataArchiveService {
-    static func validate(
+    nonisolated static func validate(
         _ archive: CookleDataArchive
     ) throws {
         guard archive.formatVersion == CookleDataArchive.currentFormatVersion else {
@@ -35,7 +35,7 @@ extension CookleDataArchiveService {
         )
     }
 
-    static func uniqueIDs(
+    nonisolated static func uniqueIDs(
         _ identifiers: [String]
     ) throws -> Set<String> {
         var result = Set<String>()
@@ -47,7 +47,7 @@ extension CookleDataArchiveService {
         return result
     }
 
-    static func validateRecipeReferences(
+    nonisolated static func validateRecipeReferences(
         _ recipes: [CookleDataArchive.RecipeRecord],
         photoIDs: Set<String>,
         ingredientIDs: Set<String>,
@@ -66,7 +66,7 @@ extension CookleDataArchiveService {
         }
     }
 
-    static func validateDiaryReferences(
+    nonisolated static func validateDiaryReferences(
         _ diaries: [CookleDataArchive.DiaryRecord],
         recipeIDs: Set<String>
     ) throws {

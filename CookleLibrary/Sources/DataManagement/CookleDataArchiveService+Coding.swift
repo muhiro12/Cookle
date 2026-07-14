@@ -16,7 +16,7 @@ extension CookleDataArchiveService {
         return jsonEncoder
     }
 
-    static var decoder: JSONDecoder {
+    nonisolated static var decoder: JSONDecoder {
         let jsonDecoder = JSONDecoder()
         jsonDecoder.dateDecodingStrategy = .iso8601
         return jsonDecoder
