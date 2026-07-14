@@ -1,4 +1,5 @@
 import CookleLibrary
+import Foundation
 import SwiftData
 import WidgetKit
 
@@ -10,7 +11,7 @@ struct RecipeProvider: AppIntentTimelineProvider {
     func placeholder(in _: Context) -> RecipeEntry {
         .init(
             date: .now,
-            titleText: "Recipe",
+            titleText: String(localized: "Recipe"),
             image: nil,
             deepLinkURL: CookleDeepLinkURLBuilder.recipeURL()
         )
@@ -105,17 +106,17 @@ private extension RecipeProvider {
     func emptyTitle(for selection: RecipeWidgetSelection) -> String {
         switch selection {
         case .lastOpened:
-            return "Not Found"
+            return String(localized: "Not Found")
         case .latest,
              .random:
-            return "No Recipes"
+            return String(localized: "No Recipes")
         }
     }
 
     func makeErrorEntry(date: Date) -> RecipeEntry {
         .init(
             date: date,
-            titleText: "Error",
+            titleText: String(localized: "Error"),
             image: nil,
             deepLinkURL: CookleDeepLinkURLBuilder.recipeURL()
         )

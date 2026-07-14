@@ -8,6 +8,7 @@ struct MealRow: View {
         static let regularIconWidth: CGFloat = 22
     }
 
+    let mealName: LocalizedStringKey
     let title: String
     let systemImageName: String
     @Environment(\.widgetFamily)
@@ -27,6 +28,11 @@ struct MealRow: View {
                 .privacySensitive()
             Spacer(minLength: 0)
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(mealName))
+        .accessibilityValue(
+            title == "—" ? Text("None") : Text(verbatim: title)
+        )
     }
 
     private var isCompact: Bool {

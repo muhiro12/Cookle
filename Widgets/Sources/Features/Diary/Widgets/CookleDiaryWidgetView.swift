@@ -27,20 +27,7 @@ struct CookleDiaryWidgetView: View {
                 .allowsTightening(true)
                 .privacySensitive()
 
-            VStack(alignment: .leading, spacing: Layout.noteSpacing) {
-                MealRow(
-                    title: entry.breakfastText,
-                    systemImageName: "sunrise.fill"
-                )
-                MealRow(
-                    title: entry.lunchText,
-                    systemImageName: "sun.max.fill"
-                )
-                MealRow(
-                    title: entry.dinnerText,
-                    systemImageName: "moon.fill"
-                )
-            }
+            mealRows
 
             if shouldShowNote {
                 Divider()
@@ -57,6 +44,26 @@ struct CookleDiaryWidgetView: View {
 
     private var isCompact: Bool {
         widgetFamily == .systemSmall
+    }
+
+    private var mealRows: some View {
+        VStack(alignment: .leading, spacing: Layout.noteSpacing) {
+            MealRow(
+                mealName: "Breakfast",
+                title: entry.breakfastText,
+                systemImageName: "sunrise.fill"
+            )
+            MealRow(
+                mealName: "Lunch",
+                title: entry.lunchText,
+                systemImageName: "sun.max.fill"
+            )
+            MealRow(
+                mealName: "Dinner",
+                title: entry.dinnerText,
+                systemImageName: "moon.fill"
+            )
+        }
     }
 
     private var titleFont: Font {

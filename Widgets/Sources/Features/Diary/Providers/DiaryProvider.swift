@@ -1,4 +1,5 @@
 import CookleLibrary
+import Foundation
 import SwiftData
 import WidgetKit
 
@@ -11,7 +12,7 @@ struct DiaryProvider: AppIntentTimelineProvider {
     func placeholder(in _: Context) -> DiaryEntry {
         .init(
             date: .now,
-            titleText: "Today",
+            titleText: String(localized: "Today"),
             breakfastText: "—",
             lunchText: "—",
             dinnerText: "—",
@@ -124,7 +125,7 @@ private extension DiaryProvider {
             titleText = date.formatted(.dateTime.year().month().day().weekday())
         case .latest,
              .random:
-            titleText = "No Diaries"
+            titleText = String(localized: "No Diaries")
         }
 
         return .init(
@@ -141,7 +142,7 @@ private extension DiaryProvider {
     func makeErrorEntry(date: Date) -> DiaryEntry {
         .init(
             date: date,
-            titleText: "Error",
+            titleText: String(localized: "Error"),
             breakfastText: "—",
             lunchText: "—",
             dinnerText: "—",
