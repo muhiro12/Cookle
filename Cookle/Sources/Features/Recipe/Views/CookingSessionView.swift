@@ -15,6 +15,7 @@ struct CookingSessionView: View {
     private var cookingSessionStore
     @Environment(\.dismiss)
     private var dismiss
+    @State private var isEndSessionConfirmationPresented = false
 
     var body: some View {
         sessionContent
@@ -25,6 +26,19 @@ struct CookingSessionView: View {
                 }
             }
             .cookleIdleTimerDisabled()
+            .confirmationDialog(
+                "End Cooking Session?",
+                isPresented: $isEndSessionConfirmationPresented
+            ) {
+                Button("End Session", role: .destructive) {
+                    cookingSessionStore.endSession()
+                }
+                Button("Cancel", role: .cancel) {
+                    // Dismisses the confirmation dialog.
+                }
+            } message: {
+                Text("This stops the active cooking guide and any running timer.")
+            }
             .onChange(of: cookingSessionStore.activeSnapshot?.updatedAt) {
                 guard cookingSessionStore.activeSnapshot == nil else {
                     return
@@ -85,7 +99,7 @@ private extension CookingSessionView {
                     "End Session",
                     role: .destructive
                 ) {
-                    cookingSessionStore.endSession()
+                    isEndSessionConfirmationPresented = true
                 }
                 .cookleGlassButtonStyle(isProminent: true)
             }

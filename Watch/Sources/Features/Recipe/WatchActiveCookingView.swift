@@ -19,6 +19,7 @@ struct WatchActiveCookingView: View {
     }
 
     @EnvironmentObject private var cookingSessionStore: WatchCookingSessionStore
+    @State private var isEndSessionConfirmationPresented = false
 
     private let quickTimerMinutes = [
         TimerValue.oneMinute,
@@ -31,6 +32,19 @@ struct WatchActiveCookingView: View {
             .navigationTitle(
                 cookingSessionStore.activeSnapshot?.recipeName ?? "Cooking"
             )
+            .confirmationDialog(
+                "End Cooking Session?",
+                isPresented: $isEndSessionConfirmationPresented
+            ) {
+                Button("End Session", role: .destructive) {
+                    cookingSessionStore.endSession()
+                }
+                Button("Cancel", role: .cancel) {
+                    // Dismisses the confirmation dialog.
+                }
+            } message: {
+                Text("This stops the active cooking guide and any running timer.")
+            }
     }
 }
 
@@ -67,7 +81,7 @@ private extension WatchActiveCookingView {
                     "End Session",
                     role: .destructive
                 ) {
-                    cookingSessionStore.endSession()
+                    isEndSessionConfirmationPresented = true
                 }
                 .buttonStyle(.borderedProminent)
             }
