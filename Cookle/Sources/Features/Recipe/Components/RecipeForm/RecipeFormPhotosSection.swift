@@ -1,6 +1,5 @@
 import Foundation
 import MHDesign
-import PhotosUI
 import SwiftData
 import SwiftUI
 import TipKit
@@ -19,7 +18,7 @@ struct RecipeFormPhotosSection: View {
     private var editMode
     @Binding private var photos: [PhotoData]
     private let addPhotoTip: (any Tip)?
-    @State private var photosPickerItems = [PhotosPickerItem]()
+    private let photoImportLoader: RecipeFormPhotoImportModifier.Loader
     @State private var isPhotosPickerPresented = false
     @State private var isCameraPresented = false
     @State private var isImagePlaygroundPresented = false
@@ -33,9 +32,13 @@ struct RecipeFormPhotosSection: View {
         } header: {
             Text("Photos")
         }
-        .onChange(of: photosPickerItems) {
-            applySelectedPhotoItems()
-        }
+        .modifier(
+            RecipeFormPhotoImportModifier(
+                photos: $photos,
+                isPhotosPickerPresented: $isPhotosPickerPresented,
+                loader: photoImportLoader
+            )
+        )
         .onAppear {
             synchronizePhotoRowIDs()
         }
@@ -69,12 +72,6 @@ struct RecipeFormPhotosSection: View {
                 editModeContent
             }
         }
-        .photosPicker(
-            isPresented: $isPhotosPickerPresented,
-            selection: $photosPickerItems,
-            selectionBehavior: .ordered,
-            matching: .images
-        )
         .fullScreenCover(isPresented: $isCameraPresented) {
             CameraPicker { data in
                 appendCapturedPhoto(data)
@@ -153,10 +150,12 @@ struct RecipeFormPhotosSection: View {
 
     init(
         _ photos: Binding<[PhotoData]>,
-        addPhotoTip: (any Tip)? = nil
+        addPhotoTip: (any Tip)? = nil,
+        photoImportLoader: RecipeFormPhotoImportModifier.Loader = .live
     ) {
         _photos = photos
         self.addPhotoTip = addPhotoTip
+        self.photoImportLoader = photoImportLoader
         _photoRowIDs = State(
             initialValue: RecipeFormStableRowIDs.make(
                 count: photos.wrappedValue.count
@@ -268,30 +267,6 @@ private extension RecipeFormPhotosSection {
                 pendingPhotoRemovalIndex: $pendingPhotoRemovalIndex,
                 isPhotoRemovalDialogPresented: $isPhotoRemovalDialogPresented
             )
-        }
-    }
-
-    func applySelectedPhotoItems() {
-        guard !photosPickerItems.isEmpty else {
-            return
-        }
-
-        let selectedItems = photosPickerItems
-        photosPickerItems = []
-        Task {
-            for item in selectedItems {
-                guard let data = try? await item.loadTransferable(
-                    type: Data.self
-                ) else {
-                    continue
-                }
-                photos.append(
-                    .init(
-                        data: data.compressed(),
-                        source: .photosPicker
-                    )
-                )
-            }
         }
     }
 

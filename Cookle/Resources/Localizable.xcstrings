@@ -625,6 +625,74 @@
         }
       }
     },
+    "Added: %lld. Could not load: %lld. Try selecting the missing photos again." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Added: %1$lld. Could not load: %2$lld. Try selecting the missing photos again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se añadieron %1$lld. No se pudieron cargar %2$lld. Intenta seleccionar de nuevo las fotos que faltan."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Photos ajoutées : %1$lld. Impossible d’en charger %2$lld. Essayez de sélectionner à nouveau les photos manquantes."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld枚を追加しました。%2$lld枚を読み込めませんでした。読み込めなかった写真をもう一度選択してください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已添加 %1$lld 张。%2$lld 张无法加载。请重新选择缺少的照片。"
+          }
+        }
+      }
+    },
+    "Added: 0. Could not load: %lld. Try selecting the photos again." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Added: 0. Could not load: %lld. Try selecting the photos again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se añadieron 0. No se pudieron cargar %lld. Intenta seleccionar las fotos de nuevo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Photos ajoutées : 0. Impossible d’en charger %lld. Essayez de sélectionner à nouveau les photos."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "0枚を追加しました。%lld枚を読み込めませんでした。写真をもう一度選択してください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已添加 0 张。%lld 张无法加载。请重新选择照片。"
+          }
+        }
+      }
+    },
     "Allow notifications to get one recipe suggestion each day at your selected time." : {
       "localizations" : {
         "en" : {
@@ -1848,6 +1916,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "烹饪时间"
+          }
+        }
+      }
+    },
+    "Could Not Add Photos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could Not Add Photos"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudieron añadir las fotos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible d’ajouter les photos"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "写真を追加できませんでした"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法添加照片"
           }
         }
       }
@@ -7360,6 +7462,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "再次显示提示"
+          }
+        }
+      }
+    },
+    "Some Photos Could Not Be Added" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Some Photos Could Not Be Added"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algunas fotos no se pudieron añadir"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Certaines photos n’ont pas pu être ajoutées"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一部の写真を追加できませんでした"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "部分照片无法添加"
           }
         }
       }
