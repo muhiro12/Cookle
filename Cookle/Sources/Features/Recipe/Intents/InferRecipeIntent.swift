@@ -18,7 +18,7 @@ struct InferRecipeIntent: AppIntent {
     private var text: String
 
     @MainActor
-    func perform() async throws -> some IntentResult {
+    func perform() async throws -> some IntentResult & ReturnsValue<InferredRecipeEntity> {
         let inferred = try await RecipeFoundationModelInferenceOperations.infer(text: text)
         let entity = InferredRecipeEntity(inferred)
         return .result(value: entity)
