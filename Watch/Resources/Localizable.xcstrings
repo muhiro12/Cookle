@@ -69,6 +69,40 @@
         }
       }
     },
+    "Cancel": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "キャンセル"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelar"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annuler"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "取消"
+          }
+        }
+      }
+    },
     "Cancel Timer": {
       "localizations": {
         "en": {
@@ -99,6 +133,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "取消计时器"
+          }
+        }
+      }
+    },
+    "End Cooking Session?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "End Cooking Session?"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "調理セッションを終了しますか？"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Finalizar la sesión de cocina?"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminer la session de cuisine ?"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "要结束烹饪会话吗？"
           }
         }
       }
@@ -439,6 +507,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "建议：%lld 分钟"
+          }
+        }
+      }
+    },
+    "This stops the active cooking guide and any running timer.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This stops the active cooking guide and any running timer."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "進行中の調理ガイドと実行中のタイマーを停止します。"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esto detendrá la guía de cocina activa y cualquier temporizador en curso."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cette action arrête le guide de cuisine actif et tout minuteur en cours."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "这将停止当前的烹饪指南和正在运行的计时器。"
           }
         }
       }

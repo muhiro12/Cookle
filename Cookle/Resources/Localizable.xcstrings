@@ -1515,6 +1515,40 @@
         }
       }
     },
+    "Cannot Search Recipes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cannot Search Recipes"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピを検索できません"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pueden buscar recetas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de rechercher des recettes"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法搜索食谱"
+          }
+        }
+      }
+    },
     "Cannot Update" : {
       "localizations" : {
         "en" : {
@@ -2807,6 +2841,74 @@
         }
       }
     },
+    "Discard" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discard"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "破棄"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descartar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abandonner"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "丢弃"
+          }
+        }
+      }
+    },
+    "Discard Changes?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discard Changes?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "変更を破棄しますか？"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Descartar los cambios?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abandonner les modifications ?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "要丢弃更改吗？"
+          }
+        }
+      }
+    },
     "Done" : {
       "localizations" : {
         "en" : {
@@ -3041,6 +3143,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "启用高级功能"
+          }
+        }
+      }
+    },
+    "End Cooking Session?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "End Cooking Session?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "調理セッションを終了しますか？"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Finalizar la sesión de cocina?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminer la session de cuisine ?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "要结束烹饪会话吗？"
           }
         }
       }
@@ -3622,6 +3758,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "意大利语"
+          }
+        }
+      }
+    },
+    "Keep Editing" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep Editing"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "編集を続ける"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seguir editando"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuer la modification"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "继续编辑"
           }
         }
       }
@@ -4370,6 +4540,41 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "还没有食谱"
+          }
+        }
+      }
+    },
+    "No text was found in the photo. Try again with a photo that contains clear text." : {
+      "comment" : "Error shown when text recognition succeeds but finds no recipe text in a photo.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No text was found in the photo. Try again with a photo that contains clear text."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "写真にテキストが見つかりませんでした。文字がはっきり写っている写真でもう一度お試しください。"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró texto en la foto. Inténtalo de nuevo con una foto que contenga texto claro."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun texte n’a été trouvé sur la photo. Réessayez avec une photo contenant du texte bien lisible."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "照片中未找到文本。请使用文字清晰的照片重试。"
           }
         }
       }
@@ -6754,6 +6959,40 @@
         }
       }
     },
+    "Searching Recipes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Searching Recipes"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピを検索中"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscando recetas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recherche de recettes"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在搜索食谱"
+          }
+        }
+      }
+    },
     "Selected Photo" : {
       "localizations" : {
         "en" : {
@@ -7638,6 +7877,111 @@
         }
       }
     },
+    "Text recognition failed. Try again with a clearer photo." : {
+      "comment" : "Error shown when Vision fails to recognize recipe text in a photo.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text recognition failed. Try again with a clearer photo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "テキストを認識できませんでした。より鮮明な写真でもう一度お試しください。"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo reconocer el texto. Inténtalo de nuevo con una foto más clara."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La reconnaissance du texte a échoué. Réessayez avec une photo plus nette."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文本识别失败。请使用更清晰的照片重试。"
+          }
+        }
+      }
+    },
+    "The photo could not be read. Choose another photo and try again." : {
+      "comment" : "Error shown when the recipe text importer cannot decode the selected or captured image.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The photo could not be read. Choose another photo and try again."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "写真を読み取れませんでした。別の写真を選んでもう一度お試しください。"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo leer la foto. Elige otra foto e inténtalo de nuevo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de lire la photo. Choisissez-en une autre et réessayez."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法读取照片。请选择其他照片并重试。"
+          }
+        }
+      }
+    },
+    "The selected photo could not be loaded. Choose another photo and try again." : {
+      "comment" : "Error shown when the recipe text importer cannot load a photo library selection.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The selected photo could not be loaded. Choose another photo and try again."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選択した写真を読み込めませんでした。別の写真を選んでもう一度お試しください。"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo cargar la foto seleccionada. Elige otra foto e inténtalo de nuevo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de charger la photo sélectionnée. Choisissez-en une autre et réessayez."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法载入所选照片。请选择其他照片并重试。"
+          }
+        }
+      }
+    },
     "This permanently deletes all recipes, diaries, tags, and photos from this device. Export a backup first if you need to keep the data." : {
       "localizations" : {
         "en" : {
@@ -7702,6 +8046,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "此操作会永久删除所有食谱、日记、标签和照片。删除内容会同步到使用同一iCloud账户的其他设备。如果需要保留这些数据，请先导出备份。"
+          }
+        }
+      }
+    },
+    "This stops the active cooking guide and any running timer." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This stops the active cooking guide and any running timer."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "進行中の調理ガイドと実行中のタイマーを停止します。"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto detendrá la guía de cocina activa y cualquier temporizador en curso."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette action arrête le guide de cuisine actif et tout minuteur en cours."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这将停止当前的烹饪指南和正在运行的计时器。"
           }
         }
       }
@@ -7776,6 +8154,40 @@
     },
     "TipKit" : {
       "shouldTranslate" : false
+    },
+    "Try Again" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try Again"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "もう一度試す"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intentar de nuevo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réessayer"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重试"
+          }
+        }
+      }
     },
     "Try Shortcuts" : {
       "localizations" : {
@@ -8422,6 +8834,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在处理…"
+          }
+        }
+      }
+    },
+    "You will lose any unsaved changes." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You will lose any unsaved changes."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存していない変更は失われます。"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perderás los cambios que no hayas guardado."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les modifications non enregistrées seront perdues."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未保存的更改将会丢失。"
           }
         }
       }
