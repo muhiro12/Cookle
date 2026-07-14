@@ -1,4 +1,4 @@
-import ImageIO
+import CookleLibrary
 import UIKit
 import WidgetKit
 
@@ -9,30 +9,15 @@ enum RecipeWidgetImageLoader {
     }
 
     static func makeImage(from imageData: Data, family widgetFamily: WidgetFamily) -> UIImage? {
-        let sourceOptions: [CFString: Any] = [
-            kCGImageSourceShouldCache: false
-        ]
-        guard let imageSource = CGImageSourceCreateWithData(
-            imageData as CFData,
-            sourceOptions as CFDictionary
+        guard let image = PhotoImageProcessor.downsampledImage(
+            from: imageData,
+            maximumPixelSize: maximumPixelSize(
+                family: widgetFamily
+            )
         ) else {
             return nil
         }
-
-        let thumbnailOptions: [CFString: Any] = [
-            kCGImageSourceCreateThumbnailFromImageAlways: true,
-            kCGImageSourceCreateThumbnailWithTransform: true,
-            kCGImageSourceShouldCacheImmediately: false,
-            kCGImageSourceThumbnailMaxPixelSize: maximumPixelSize(family: widgetFamily)
-        ]
-        guard let coreGraphicsImage = CGImageSourceCreateThumbnailAtIndex(
-            imageSource,
-            .zero,
-            thumbnailOptions as CFDictionary
-        ) else {
-            return UIImage(data: imageData)
-        }
-        return UIImage(cgImage: coreGraphicsImage)
+        return .init(cgImage: image)
     }
 
     private static func maximumPixelSize(family widgetFamily: WidgetFamily) -> Int {
