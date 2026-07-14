@@ -3,10 +3,20 @@ import SwiftData
 
 @MainActor
 enum CookleMutationWorkflow {
-    // Domain values stay on the main actor; this carrier only satisfies the workflow result boundary.
-    private struct OperationResult<Value>: @unchecked Sendable {
-        let outcome: MutationOutcome<Value>
-        let effects: MutationEffect
+    @MainActor
+    private final class OutcomeBox<Value> {
+        private var outcome: MutationOutcome<Value>?
+
+        func store(_ outcome: MutationOutcome<Value>) {
+            self.outcome = outcome
+        }
+
+        func resolvedOutcome() -> MutationOutcome<Value> {
+            guard let outcome else {
+                preconditionFailure("Mutation workflow completed without an outcome.")
+            }
+            return outcome
+        }
     }
 
     static func run<Value>(
@@ -15,27 +25,23 @@ enum CookleMutationWorkflow {
         adapter: MHMutationAdapter<MutationEffect>,
         operation: @escaping @MainActor () throws -> MutationOutcome<Value>
     ) async throws -> MutationOutcome<Value> {
-        let result = try await MHMutationWorkflow.runThrowing(
+        let outcomeBox = OutcomeBox<Value>()
+        _ = try await MHMutationWorkflow.runThrowing(
             name: name,
             operation: {
                 do {
                     let outcome = try operation()
                     try context?.save()
-                    return OperationResult(
-                        outcome: outcome,
-                        effects: outcome.effects
-                    )
+                    outcomeBox.store(outcome)
+                    return outcome.effects
                 } catch {
                     context?.rollback()
                     throw error
                 }
             },
             adapter: adapter,
-            projection: .valueAndFollowUp(
-                value: \.self,
-                followUp: \.effects
-            )
+            projection: .identity
         )
-        return result.outcome
+        return outcomeBox.resolvedOutcome()
     }
 }
