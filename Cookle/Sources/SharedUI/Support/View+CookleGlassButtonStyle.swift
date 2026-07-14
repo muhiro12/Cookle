@@ -6,6 +6,7 @@ extension View {
             minWidth: CookleAccessibilityLayout.minimumHitTargetSize,
             minHeight: CookleAccessibilityLayout.minimumHitTargetSize
         )
+        .controlSize(.large)
         .modifier(
             CookleGlassButtonStyleModifier(
                 isProminent: isProminent

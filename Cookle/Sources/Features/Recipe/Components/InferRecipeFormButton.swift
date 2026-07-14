@@ -17,6 +17,10 @@ struct InferRecipeFormButton: View {
             isPresented = true
         } label: {
             Text("Infer Recipe From Text")
+                .frame(
+                    minHeight: CookleAccessibilityLayout.minimumHitTargetSize
+                )
+                .contentShape(Rectangle())
         }
         .sheet(isPresented: $isPresented) {
             InferRecipeFormNavigationView(
