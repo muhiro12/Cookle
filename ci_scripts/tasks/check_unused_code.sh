@@ -13,21 +13,58 @@ shared_index_store_path="$repository_root/.build/ci/shared/DerivedData/Index.noi
 index_store_path=""
 index_store_modified_at=0
 
+index_store_latest_modified_at() {
+  local candidate_path=$1
+  local latest_modified_at
+
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    if ! latest_modified_at=$(
+      find "$candidate_path" -path '*/units/*' -type f \
+        -exec stat -f '%m' {} + 2>/dev/null |
+        awk '
+          BEGIN { latest = 0 }
+          /^[0-9]+$/ && $1 > latest { latest = $1 }
+          END { print latest }
+        '
+    ); then
+      latest_modified_at=0
+    fi
+  else
+    if ! latest_modified_at=$(
+      find "$candidate_path" -path '*/units/*' -type f \
+        -exec stat -c '%Y' {} + 2>/dev/null |
+        awk '
+          BEGIN { latest = 0 }
+          /^[0-9]+$/ && $1 > latest { latest = $1 }
+          END { print latest }
+        '
+    ); then
+      latest_modified_at=0
+    fi
+  fi
+
+  if [[ "$latest_modified_at" =~ ^[0-9]+$ ]] &&
+    (( latest_modified_at > 0 )); then
+    printf '%s\n' "$latest_modified_at"
+    return 0
+  fi
+
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    stat -f '%m' "$candidate_path" 2>/dev/null || printf '0\n'
+  else
+    stat -c '%Y' "$candidate_path" 2>/dev/null || printf '0\n'
+  fi
+}
+
 consider_index_store() {
   local candidate_path=$1
-  local derived_data_path
   local candidate_modified_at
 
   if [[ ! -d "$candidate_path" ]]; then
     return 0
   fi
 
-  derived_data_path=${candidate_path%/Index.noindex/DataStore}
-  if [[ "$(uname -s)" == "Darwin" ]]; then
-    candidate_modified_at=$(stat -f '%m' "$derived_data_path" 2>/dev/null || printf '0\n')
-  else
-    candidate_modified_at=$(stat -c '%Y' "$derived_data_path" 2>/dev/null || printf '0\n')
-  fi
+  candidate_modified_at=$(index_store_latest_modified_at "$candidate_path")
   if [[ ! "$candidate_modified_at" =~ ^[0-9]+$ ]]; then
     candidate_modified_at=0
   fi

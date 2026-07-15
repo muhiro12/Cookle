@@ -330,8 +330,9 @@ brew install periphery
 
 Then build the `Cookle` scheme through the available Xcode-native integration.
 The audit task uses `PERIPHERY_INDEX_STORE_PATH` when set. Otherwise, it
-selects the most recently used index across the repository shared DerivedData
-location and matching directories under Xcode's default DerivedData root.
+selects the index with the most recently modified versioned unit artifacts
+across the repository shared DerivedData location and matching directories
+under Xcode's default DerivedData root.
 
 Run the audit after the Xcode-native build completes:
 
