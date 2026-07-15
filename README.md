@@ -238,22 +238,24 @@ are source-controlled production identifiers, not local-only credentials.
 - Repository-owned unit tests stay in `CookleLibrary/Tests/Default`.
 - `Cookle`, `Widgets`, and App Intents are verified through app builds plus
   shared-library tests instead of a separate app unit test target.
-- Use XcodeBuildMCP for Apple build, test, run, Simulator, runtime log,
-  screenshot, and UI snapshot verification.
-- For app compile checks, use XcodeBuildMCP `build_sim` with the `Cookle`
-  scheme.
-- For shared-library tests, use XcodeBuildMCP `test_sim` with the
-  `CookleLibrary` scheme.
-- For runtime or UI-sensitive checks, use XcodeBuildMCP `build_run_sim`,
-  `launch_app_sim`, `snapshot_ui`, and `screenshot` as appropriate.
-- Run retained repository rule checks after MCP build/test evidence:
+- Use the Xcode-native integration available in the agent environment for
+  Apple build, test, run, Simulator, runtime-log, Preview, live UI, and
+  screenshot evidence.
+- For app compile checks, use its build capability with project
+  `Cookle.xcodeproj`, scheme `Cookle`, and a discovered iOS Simulator
+  destination.
+- For shared-library tests, use its test capability with the `CookleLibrary`
+  scheme and a compatible discovered destination.
+- For runtime or UI-sensitive checks, add a targeted run, runtime-log review,
+  Preview rendering when appropriate, and live UI or screenshot evidence.
+- Run retained repository rule checks after Xcode-native build/test evidence:
 
   ```bash
   bash ci_scripts/tasks/check_repository_rules.sh
   ```
 
-- Run the manual unused code audit only after an MCP `build_sim` has refreshed
-  `.build/ci/shared/DerivedData`:
+- Run the manual unused code audit only after an Xcode-native build has
+  refreshed a supported DerivedData index:
 
   ```bash
   bash ci_scripts/tasks/check_unused_code.sh
@@ -264,26 +266,27 @@ are source-controlled production identifiers, not local-only credentials.
 - `ci_scripts/ci_post_clone.sh` adjusts Xcode defaults for plugin validation
   inside automated builds.
 
-The repository contract is MCP-first:
+The repository contract is Xcode-native-first:
 Direct entrypoints live in `ci_scripts/tasks/`, shared shell helpers live in
 `ci_scripts/lib/`, and `ci_scripts/ci_post_clone.sh` is reserved for external
 post-clone CI setup.
 
-- XcodeBuildMCP owns Apple build, test, run, Simulator, runtime log,
-  screenshot, and UI snapshot evidence.
+- The available Xcode-native integration owns Apple build, test, run,
+  Simulator, runtime-log, Preview, live UI, and screenshot evidence.
 - `bash ci_scripts/tasks/check_environment.sh --profile <swiftlint|rules>`
   diagnoses missing local prerequisites before retained shell checks.
 - `bash ci_scripts/tasks/format_swift.sh` is the explicit SwiftLint autofix
   step to run after Swift edits.
 - `bash ci_scripts/tasks/check_repository_rules.sh` runs retained SwiftLint and
-  static architecture checks that are not naturally covered by XcodeBuildMCP.
+  static architecture checks that are not naturally covered by the available
+  Xcode-native integration.
 - Xcode Cloud owns formal CI builds, tests, and archives.
 - Release UI smoke auditing is intentionally separate from the normal verify
   gate. Use the global `$xcode-ui-smoke-auditor` skill and the
   [release UI smoke audit guide](Designs/Architecture/release-ui-smoke-audit.md)
   when a release or UI-sensitive change needs live Simulator evidence.
 - `bash ci_scripts/tasks/check_unused_code.sh` runs the opt-in Periphery audit
-  after MCP `build_sim` has refreshed the shared index store.
+  after an Xcode-native build has refreshed a supported index store.
 
 SwiftLint is resolved from the `SimplyDanny/SwiftLintPlugins` package declared
 in `Cookle.xcodeproj`. The repository scripts do not require a separately
@@ -317,7 +320,7 @@ bash ci_scripts/tasks/lint_swift.sh
 ## Unused code audit (Periphery)
 
 Periphery is an opt-in manual audit tool in this repository. It is not part of
-the standard MCP build/test and retained-rule flow.
+the standard Xcode-native build/test and retained-rule flow.
 
 Install `periphery` manually before using the audit task. For example:
 
@@ -325,30 +328,32 @@ Install `periphery` manually before using the audit task. For example:
 brew install periphery
 ```
 
-Then refresh the shared index store with XcodeBuildMCP `build_sim` using the
-`Cookle` scheme and this DerivedData path:
+Then build the `Cookle` scheme through the available Xcode-native integration.
+The audit task uses `PERIPHERY_INDEX_STORE_PATH` when set. Otherwise, it
+selects the most recently used index across the repository shared DerivedData
+location and matching directories under Xcode's default DerivedData root.
 
-```text
-.build/ci/shared/DerivedData
-```
-
-Run the audit after the MCP build completes:
+Run the audit after the Xcode-native build completes:
 
 ```sh
 bash ci_scripts/tasks/check_unused_code.sh
 ```
 
-The repository keeps the scan options in `.periphery.yml` and reuses
-`.build/ci/shared/DerivedData/Index.noindex/DataStore` with `--skip-build`.
-This repository does not maintain a Periphery baseline file. Keep intentional
-framework entry points with `// periphery:ignore` when needed.
+The repository keeps stable scan options, including `skip_build`, in
+`.periphery.yml`; the task passes the selected index store explicitly. Set
+`PERIPHERY_INDEX_STORE_PATH` to an existing DataStore directory when Xcode
+uses another DerivedData location. Relative override paths are resolved from
+the repository root. This repository does not maintain a Periphery baseline
+file. Keep intentional framework entry points with `// periphery:ignore` when
+needed.
 
 ### Build output layout
 
 Cookle helper scripts may write disposable cache data under `.build/ci/shared/`.
-XcodeBuildMCP build and test logs are owned by XcodeBuildMCP, while the
-repository keeps `.build/ci/shared/DerivedData` as the shared DerivedData path
-for MCP builds and opt-in follow-up tools such as Periphery.
+Xcode-native build and test evidence is owned by the active integration. The
+repository keeps `.build/ci/shared/DerivedData` as a compatibility DerivedData
+location, while opt-in follow-up tools such as Periphery can also use Xcode's
+default DerivedData index.
 
 ## Screenshots
 

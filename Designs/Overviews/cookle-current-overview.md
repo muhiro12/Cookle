@@ -536,11 +536,11 @@ Views should not own:
 
 ## Operational Notes
 
-- Standard Apple build and test evidence is MCP-first: use XcodeBuildMCP
-  `build_sim` with the `Cookle` scheme and XcodeBuildMCP `test_sim` with the
-  `CookleLibrary` scheme.
+- Standard Apple build and test evidence is Xcode-native-first: use the
+  available integration's build capability with the `Cookle` scheme and its
+  test capability with the `CookleLibrary` scheme.
 - Retained shell checks are limited to SwiftLint, repository static rules, and
-  optional audits that XcodeBuildMCP does not naturally cover.
+  optional audits that the Xcode-native integration does not naturally cover.
 - Repository-owned unit tests stay concentrated in `CookleLibrary/Tests/Default`.
 - `Cookle` and `Widgets` are verified through app builds plus shared-library
   tests, without a separate app unit test target.
