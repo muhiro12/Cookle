@@ -1,6 +1,6 @@
 # September Release Readiness
 
-Temporary verification record, September 7-9, 2026. Remove or replace after
+Temporary verification record, September 7-10, 2026. Remove or replace after
 the release. The near-term development brief remains the execution instruction.
 
 ## Decision
@@ -8,12 +8,98 @@ the release. The near-term development brief remains the execution instruction.
 **Hold for release evidence.** Keep the September release ahead of full MHUI
 adoption. The MHDesign-only boundary, ADR 0008, and consumer checks agree with
 the brief. The initial September 7-8 review made no product, dependency,
-deployment-target, or schema change. The September 9 fix is recorded below.
+deployment-target, or schema change. The September 9 restore fix and
+September 10 subscription investigation are recorded below.
 
-The review now includes real iPhone screenshots, a public privacy-label
-comparison, and a dependency-level subscription concern. A blank backup file
-picker also needs a shipping-environment retest. These unresolved items prevent
-declaring the release complete or creating its release tag.
+The released subscription dependency has a reproduced entitlement defect. A
+fix is committed in StoreKitWrapper, but it is not published or adopted by the
+Cookle release candidate. The file picker now works on an iOS 18.6 iPhone;
+actual restore, shipping-toolchain, privacy, and consumer subscription evidence
+remain incomplete. Do not declare the release complete or create its tag.
+
+## September 10 Subscription Fix and Follow-Up
+
+The released StoreKitWrapper 1.2 source was exercised in an isolated macOS app
+host with Apple's `SKTestSession`. A verified local subscription remained in
+`Transaction.currentEntitlements` while an injected network error made
+`Product.products(for:)` fail. The original Product-based callback reported an
+empty set. The test failed before the fix. This is a reproduced SDK-boundary
+defect, not merely a source-level suspicion or a real-account test.
+
+StoreKitWrapper commit `30baaa6` separates verified purchased identifiers from
+catalog metadata. It adds an identifier callback, observable loading/errors,
+replacement/cancellation of owned observation, and a stop operation. The legacy
+Product callback waits for complete metadata instead of falsely reporting no
+purchase. Verified empty entitlements still report inactive. The package-owned
+subscription-section presentation and minimum OS versions remain unchanged.
+
+| Boundary | Current evidence |
+| --- | --- |
+| StoreKitWrapper unit tests | 9 passed, no failures/skips, Xcode-native macOS |
+| Shipping-compiler package tests | The same 9 passed with Xcode 26.6 on macOS |
+| iOS package compilation | Xcode-native iOS Simulator build passed |
+| Apple StoreKit host | 5 cases passed; catalog and purchase/refund coverage |
+| MHPlatform candidate | 328 tests passed on the dedicated iOS 18.6 Simulator |
+| Adopting applications | Candidate integration and StoreKit behavior unverified |
+
+The hosted tests use synthetic product identifiers and Apple's Xcode StoreKit
+environment. They prove neither production-account purchase restoration nor
+Cookle's iCloud preference retention. Two test functions produce five executed
+cases because one function has four parameter combinations.
+
+A local MHPlatform candidate forwards the identifier callback and skips StoreKit
+startup when no subscription identifiers are configured. Its tests passed after
+preserving the nonisolated view-building API in StoreKitWrapper. The adapter
+patch is retained in local verification artifacts, not applied to MHPlatform
+main. It requires a published StoreKitWrapper revision containing the new API
+and a corresponding dependency minimum before adoption.
+
+Incomes and Cookle consumer copies were prepared for isolated integration.
+Incomes built successfully with the existing released packages; source paths
+proved that this did not use the candidate. Workspace references did not
+activate the expected override. The standard Xcode Add Local flow then failed
+with an unresolved filesystem dependency graph. This is a concrete integration
+verification blocker, not a candidate consumer build pass. No package tags,
+pushes, or application dependency pins were changed.
+
+### File Picker, iPad, and Shipping Archive
+
+A dedicated, initially empty iPhone 16 Simulator running iOS 18.6 displayed the
+Japanese Diary, Settings, Restore Backup Files picker, and Settings again after
+Cancel. The picker contained search, tabs, and cancel controls; the earlier
+blank sheet did not reproduce. No backup file was selected or restored.
+The app process was stopped after observation. Existing devices and data were
+preserved. This does not clear shipping-toolchain or representative-data gates.
+
+A separate dedicated iPad Pro 11-inch Simulator running iOS 18.6 also showed
+landscape Diary, Settings, the native Files picker, and return after Cancel.
+No overlap or clipping was observed in those screens. The Settings Shortcuts
+button omitted the app name, rendering the Japanese suffix alone. Its runtime
+log reported AppIntents metadata extraction failure. This is a visible label
+and metadata follow-up with unconfirmed ownership; retest the shipping build
+and actual Shortcuts behavior before selecting a source fix.
+
+Xcode 26.6 (`17F113`) was explicitly selected for a generic-iOS-device Release
+archive attempt. Dependency resolution completed, but the archive stopped
+before compilation because the required iOS 26.5 platform component was not
+installed. No signed archive was produced. Xcode 27.0 beta (`27A5252f`) results
+remain separate from distribution evidence.
+
+The public privacy label still says Data Not Collected. Resolved Google Mobile
+Ads 12.14.0 and UMP 3.1.0 device-framework manifests were saved and hashed.
+Their declared behavior still requires reconciliation with actual app consent,
+network behavior, the archive privacy report, and App Store Connect answers.
+App Store Connect remained login-required; unpublished answers were not read
+or changed. Five localized What's New drafts were prepared, with no publication
+or assumed release date.
+
+The September 10 analyzer result for `3.8..ac5b2f2f` remains **75/100, Hold for
+review**. The confirmed, unadopted entitlement fix independently prevents
+release clearance; the heuristic score is not a defect probability. Local
+artifacts under `.build/release-completion-20260910/` contain before/after test
+results, the adapter patch, release-note drafts, screenshots, and the Japanese
+visual report. The pre-existing shared scheme metadata diff is excluded from
+this documentation change.
 
 ## September 9 Restore Rollback Fix
 
@@ -231,20 +317,20 @@ MHPlatform 1.12.0 maps that callback to inactive premium status. Cookle's
 `syncSubscriptionStateIfNeeded` can then persist both subscription and iCloud
 preferences as false during a lifecycle synchronization.
 
-This is a source-confirmed conditional path; the purchased-account plus
-metadata-failure condition was not reproduced in this Simulator session.
-Prioritize that StoreKit scenario before clearing paid-access and iCloud
-readiness. No speculative wrapper modernization, package update, or app-only
-workaround was applied.
+At the September 7-8 review, this was a source-confirmed conditional path and
+was not reproduced in that Simulator session. The September 10 hosted test
+above subsequently reproduced the defect. The Cookle dependency pin remains
+unchanged, so the original path is still relevant to its release candidate.
 
 ## Remaining Release Evidence
 
 1. Confirm the distribution Xcode, Xcode Cloud archive, and App Store Connect
    3.9 state. Reconcile the public privacy label and SDK behavior.
-2. Exercise unknown, inactive, active, restored, and product-metadata-failure
-   subscription states; observe ad suppression and iCloud preference retention.
-3. Retest the backup file picker. Upgrade representative existing data and
-   round-trip legacy JSON and package backups through Files or iCloud Drive.
+2. Complete StoreKitWrapper -> MHPlatform -> app adoption and verify the exact
+   candidate sources in consumer build logs. Exercise unknown, inactive,
+   active, restored, and product-metadata-failure subscription states; observe ad suppression and iCloud preference retention.
+3. Retest the backup file picker with the shipping toolchain. Upgrade
+   representative existing data and round-trip legacy JSON and package backups through Files or iCloud Drive.
    Compare records, photo bytes, and relationships; use two real devices where
    practical.
 4. Verify notification delivery and destinations after relevant mutations and
@@ -254,8 +340,9 @@ workaround was applied.
 7. Verify paired Watch cooking steps, timers, connectivity, and session end.
    No shared Watch scheme or live Watch evidence is available.
 
-No simulator data was erased or seeded. No purchase, real-device restore,
-account change, publication, or release tag was performed.
+No existing simulator data was erased or seeded. Only disposable test-host
+transactions were created and cleared. No production purchase, real-device
+restore, account change, publication, or release tag was performed.
 
 ## Full MHUI Adoption After Release
 
