@@ -15,14 +15,15 @@ enum DataResetService {
     static func deleteAllWithOutcome(
         context: ModelContext
     ) throws -> MutationOutcome<Void> {
-        try deleteAll(Diary.self, context: context)
+        // Delete owned rows before cascades invalidate their rollback snapshots.
         try deleteAll(DiaryObject.self, context: context)
+        try deleteAll(PhotoObject.self, context: context)
+        try deleteAll(IngredientObject.self, context: context)
+        try deleteAll(Diary.self, context: context)
         try deleteAll(Recipe.self, context: context)
         try deleteAll(Ingredient.self, context: context)
-        try deleteAll(IngredientObject.self, context: context)
         try deleteAll(Category.self, context: context)
         try deleteAll(Photo.self, context: context)
-        try deleteAll(PhotoObject.self, context: context)
         return .init(
             value: (),
             effects: [

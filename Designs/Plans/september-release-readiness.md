@@ -1,21 +1,60 @@
 # September Release Readiness
 
-Temporary verification record, September 7-8, 2026. Remove or replace after
+Temporary verification record, September 7-9, 2026. Remove or replace after
 the release. The near-term development brief remains the execution instruction.
 
 ## Decision
 
 **Hold for release evidence.** Keep the September release ahead of full MHUI
 adoption. The MHDesign-only boundary, ADR 0008, and consumer checks agree with
-the brief. No product, dependency, deployment-target, or schema change was
-made during this review.
+the brief. The initial September 7-8 review made no product, dependency,
+deployment-target, or schema change. The September 9 fix is recorded below.
 
 The review now includes real iPhone screenshots, a public privacy-label
 comparison, and a dependency-level subscription concern. A blank backup file
 picker also needs a shipping-environment retest. These unresolved items prevent
 declaring the release complete or creating its release tag.
 
-## Reviewed Candidate
+## September 9 Restore Rollback Fix
+
+A new disk-backed regression test reproduced a SwiftData crash when a backup
+replacement failed to save with existing photo, recipe, ingredient, category,
+and diary relationships. The isolated failure reached `context.rollback()`
+and reported:
+
+```text
+Unexpected backing data for snapshot creation:
+SwiftData._FullFutureBackingData<CookleLibrary.PhotoObject>
+```
+
+`DataResetService` previously deleted parents before fetching and deleting
+their owned child rows. It now deletes diary, photo, and ingredient child rows
+before parent records, preventing the reproduced rollback snapshot failure.
+No schema, public API, package, or deployment-target change was needed.
+
+`ArchivePersistentStoreTests` uses disposable SQLite stores with CloudKit
+disabled and a 1 MiB photo payload. It checks complete archived content after
+reopening the store, including bytes, relationships, ordering, and timestamps:
+
+- Legacy JSON export and restore into a populated destination store.
+- Package export and restore into a populated destination store.
+- Injected save failure preserving original content in the rollback context
+  and after opening a fresh container.
+
+The failure reproduced alone before the fix. Afterward, all 277 library test
+cases passed with no failures or skips. The Cookle native build, formatter,
+SwiftLint, retained repository rules, and `git diff --check` passed.
+Verification used Xcode 27.0 build `27A5252f` and iOS 27 Simulator.
+The original Cookle scheme and iPhone 17 Pro for Fluel destination were
+restored and confirmed; no application interaction session was started.
+
+This reduces a concrete failure-path risk. It does not establish behavior
+under actual disk exhaustion, the shipping OS/toolchain, Files/iCloud Drive
+selection, CloudKit synchronization, or paid subscription states. The earlier
+blank file picker is a separate unresolved observation. StoreKit failure
+injection remains the next independent reliability investigation.
+
+## September 7-8 Reviewed Candidate
 
 - Baseline: release tag `3.8`.
 - Candidate: `cdac2808`, marketing version `3.9`.
