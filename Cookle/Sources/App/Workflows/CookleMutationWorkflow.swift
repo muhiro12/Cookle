@@ -17,6 +17,11 @@ enum CookleMutationWorkflow {
             }
             return outcome
         }
+
+        nonisolated deinit {
+            // Avoid the Swift 6.3 optimizer crash in synthesized generic deinitializers.
+            // https://github.com/swiftlang/swift/issues/87462
+        }
     }
 
     static func run<Value>(
