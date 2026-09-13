@@ -73,7 +73,7 @@ repository contains the full iOS project together with its shared Swift package.
 - MHPlatform 1.x using the current consumer boundaries: the `Cookle` app target
   stays on the default `MHPlatform` umbrella, `CookleLibrary` stays on
   `MHPlatformCore`, and the repository keeps MHPlatform on the
-  `1.0.0..<2.0.0` range with a checked-in `1.9+` resolved baseline.
+  `1.13.0..<2.0.0` range to preserve verified subscription entitlement handling.
 - MHUI 1.x through the `MHDesign` product for metrics-only app presentation
   adoption. The full `MHUI` chrome product is not linked unless Cookle
   intentionally adopts package-owned styled primitives.

@@ -73,7 +73,7 @@ that use case.
 - `Widgets` and `Watch` call `CookleLibrary` first and stay off direct
   app-runtime umbrella adoption.
 - This repository intentionally uses the MHPlatform 1.x semver range
-  `1.0.0..<2.0.0` with a checked-in `1.9+` resolved baseline.
+  `1.13.0..<2.0.0` to preserve verified subscription entitlement handling.
 - `Cookle` adopts `MHDesign` from MHUI as a metrics-only presentation
   dependency for shared spacing and radius values.
 - `CookleLibrary` stays presentation-free and must not depend on MHUI or
