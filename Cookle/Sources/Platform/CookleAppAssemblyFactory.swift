@@ -224,9 +224,6 @@ private extension CookleAppAssemblyFactory {
     ) -> MHAppRuntimeLifecyclePlan {
         .init(
             commonTasks: [
-                .runtime(name: "syncSubscriptionState") { runtime in
-                    syncSubscriptionStateIfNeeded(runtime: runtime)
-                },
                 .init(name: "loadRemoteConfiguration") {
                     await remoteConfigurationService.load()
                 },
@@ -239,28 +236,5 @@ private extension CookleAppAssemblyFactory {
             ],
             skipFirstActivePhase: true
         )
-    }
-
-    static func syncSubscriptionStateIfNeeded(
-        runtime: MHAppRuntime
-    ) {
-        switch runtime.premiumStatus {
-        case .unknown:
-            return
-        case .inactive:
-            CooklePreferences.set(
-                false,
-                for: \.isSubscribeOn
-            )
-            CooklePreferences.set(
-                false,
-                for: \.isICloudOn
-            )
-        case .active:
-            CooklePreferences.set(
-                true,
-                for: \.isSubscribeOn
-            )
-        }
     }
 }

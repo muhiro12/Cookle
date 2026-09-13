@@ -55,6 +55,11 @@ extension View {
             assembly
         )
         .mhAppRuntimeBootstrap(assembly.bootstrap)
+        .modifier(
+            CookleSubscriptionStateModifier(
+                runtime: assembly.bootstrap.runtime
+            )
+        )
     }
 
     func cooklePreviewAppAssembly(
