@@ -211,16 +211,20 @@ Universal Links require Apple App Site Association (AASA) deployment for
 ## Monetization, sync, and configuration
 
 - A StoreKit subscription unlocks premium features such as iCloud sync, and the
-  app updates local state whenever the store inventory changes.
+  app observes the runtime's verified entitlement state independently of product
+  catalog metadata. Unknown state preserves existing preferences; active state
+  preserves the user's iCloud choice, and inactive state disables iCloud sync.
 - Settings surfaces the subscription paywall, iCloud toggle, and bulk delete
   controls while guarding destructive actions behind confirmation dialogs.
 - Remote configuration is loaded from GitHub to determine whether the current
   build must force an update before the main UI is shown.
-- Root lifecycle tasks refresh subscription state, remote configuration,
-  notification schedules, and pending routes during launch and foreground
-  re-entry.
+- Root lifecycle tasks refresh remote configuration, notification schedules,
+  and pending routes during launch and foreground re-entry. Subscription changes
+  update local preferences as soon as the runtime publishes a resolved state.
 - Google Mobile Ads native placements are embedded through the shared runtime so
-  ad units can be refreshed from a single place.
+  ad units can be refreshed from a single place. Placements use `MHNativeAdSize`
+  and omit the whole section when the cached subscription or runtime availability
+  suppresses ads.
 
 ## Getting started
 

@@ -281,11 +281,16 @@ Cookle uses adaptive tab navigation.
 
 ### Monetization, Sync, and Configuration
 
-- Subscription state is resolved from StoreKit product membership at launch.
+- Subscription state follows verified purchased product identifiers through the
+  shared runtime, independently of product catalog metadata. Runtime state
+  changes update local preferences without waiting for another foreground event.
+- Unknown subscription state preserves cached subscription and iCloud settings.
+- An active subscription preserves the user's existing iCloud sync choice.
 - When the subscription is inactive, Cookle automatically turns off the local
   iCloud sync preference.
 - Native ads are shown in diary and recipe flows for non-subscribers.
-- Premium users do not see those ad sections.
+- Premium users do not see those ad sections. Placements also omit the section
+  when the shared runtime reports that ads are unavailable.
 - The app fetches remote configuration from GitHub and can require an update
   only during a positive activation window no longer than 72 hours.
 - Update enforcement also requires an App Store lookup that matches Cookle's
@@ -293,9 +298,8 @@ Cookle uses adaptive tab navigation.
   minimum version cannot exceed the confirmed public version.
 - Playgrounds builds, malformed or expired policies, version mismatches,
   network failures, and App Store lookup failures leave the main app available.
-- A shared runtime lifecycle plan refreshes subscription state, remote
-  configuration, notification schedules, and pending routes during initial load
-  and foreground transitions.
+- A shared runtime lifecycle plan refreshes remote configuration, notification
+  schedules, and pending routes during initial load and foreground transitions.
 
 ### Debug and Preview Support
 

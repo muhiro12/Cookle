@@ -10,40 +10,29 @@ import MHPlatform
 import SwiftUI
 
 struct AdvertisementSection {
-    enum Size: String {
-        case small = "Small"
-        case medium = "Medium"
-    }
-
     @Environment(\.mhDesignMetrics)
     private var designMetrics
     @Environment(MHAppRuntime.self)
     private var appRuntime
 
-    private let size: Size
+    @AppStorage(\.isSubscribeOn)
+    private var isSubscribeOn
 
-    init(_ size: Size) {
+    private let size: MHNativeAdSize
+
+    init(_ size: MHNativeAdSize) {
         self.size = size
     }
 }
 
 extension AdvertisementSection: View {
     var body: some View {
-        Section {
-            appRuntime.nativeAdView(size: size.runtimeSize)
-                .frame(maxWidth: .infinity)
-                .padding(designMetrics.spacing.inline)
-        }
-    }
-}
-
-private extension AdvertisementSection.Size {
-    var runtimeSize: MHNativeAdSize {
-        switch self {
-        case .small:
-            .small
-        case .medium:
-            .medium
+        if !isSubscribeOn, appRuntime.adsAvailability == .available {
+            Section {
+                appRuntime.nativeAdView(size: size)
+                    .frame(maxWidth: .infinity)
+                    .padding(designMetrics.spacing.inline)
+            }
         }
     }
 }
@@ -52,4 +41,13 @@ private extension AdvertisementSection.Size {
     List {
         AdvertisementSection(.medium)
     }
+}
+
+#Preview("Ads not configured") {
+    List {
+        Text(verbatim: "Content before ad")
+        AdvertisementSection(.medium)
+        Text(verbatim: "Content after ad")
+    }
+    .environment(MHAppRuntime(runtimeOnly: .init()))
 }

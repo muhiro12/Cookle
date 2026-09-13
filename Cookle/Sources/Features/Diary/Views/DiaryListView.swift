@@ -20,9 +20,6 @@ struct DiaryListView: View {
     @Environment(CookleTipController.self)
     private var tipController
 
-    @AppStorage(\.isSubscribeOn)
-    private var isSubscribeOn
-
     @Query(.diaries(.all))
     private var diaries: [Diary]
     @Query(.recipes(.all))
@@ -107,9 +104,7 @@ struct DiaryListView: View {
                     .buttonStyle(.plain)
                 }
             }
-            if !isSubscribeOn {
-                AdvertisementSection(.small)
-            }
+            AdvertisementSection(.small)
         }
     }
 

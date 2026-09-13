@@ -19,8 +19,6 @@ struct RecipeView: View {
     @Environment(CookleAppLogging.self)
     private var logging
 
-    @AppStorage(\.isSubscribeOn)
-    private var isSubscribeOn
     @State private var isCookingPresented = false
 
     var body: some View {
@@ -81,9 +79,7 @@ private extension RecipeView {
         RecipeCookingTimeSection()
         RecipeIngredientsSection()
         RecipeStepsSection()
-        if !isSubscribeOn {
-            AdvertisementSection(.medium)
-        }
+        AdvertisementSection(.medium)
         RecipeCategoriesSection()
         RecipeNoteSection()
         RecipeDiariesSection()
