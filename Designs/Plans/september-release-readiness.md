@@ -1,21 +1,68 @@
 # September Release Readiness
 
-Temporary verification record, September 7-10, 2026. Remove or replace after
-the release. The near-term development brief remains the execution instruction.
+Temporary verification record, September 7-13, 2026. Retained for the transition
+to post-release work. The near-term development brief remains the execution
+instruction. Dated review sections below preserve their original evidence and
+decisions; this current decision supersedes their release holds.
 
 ## Decision
 
-**Hold for release evidence.** Keep the September release ahead of full MHUI
-adoption. The MHDesign-only boundary, ADR 0008, and consumer checks agree with
-the brief. The initial September 7-8 review made no product, dependency,
-deployment-target, or schema change. The September 9 restore fix and
-September 10 subscription investigation are recorded below.
+**Cookle 3.9 is released. Proceed to post-release preparation.** The release
+milestone in the near-term brief is complete. Existing defects and unverified
+scenarios remain follow-up work rather than reasons to treat the published
+release as still pending. Full MHUI adoption still requires visual approval;
+ADR 0008 and the MHDesign-only consumer boundary remain in force.
 
-The released subscription dependency has a reproduced entitlement defect. A
-fix is committed in StoreKitWrapper, but it is not published or adopted by the
-Cookle release candidate. The file picker now works on an iOS 18.6 iPhone;
-actual restore, shipping-toolchain, privacy, and consumer subscription evidence
-remain incomplete. Do not declare the release complete or create its tag.
+## September 13 Release Confirmation
+
+The public Apple lookup returned Cookle 3.9 for `com.muhiro12.Cookle`, with a
+release timestamp of September 13, 2026 at 09:47:43 JST. The published Japanese
+release notes match the finalized notes, including removal of the backup
+prerequisite paragraph.
+
+[GitHub Release 3.9][release-39] is published, not a draft or prerelease. Its
+remote tag resolves to `816df9df32c65e638af7e881d9a876114f2b1aee`, matching the
+verified candidate and remote main at the time of this check. The tag was
+fetched locally without changing its target.
+
+| Evidence | Result | Scope |
+| --- | --- | --- |
+| Public App Store | Version 3.9 available | Japanese storefront |
+| GitHub release and tag | Published; candidate commit matches | Tag 3.9 |
+| Cloud Build 459 | Tests, archive, exports, TestFlight passed | Same commit |
+| Cloud library tests | 1,108 executions passed on four destinations | Simulator |
+| Production recipe sync | Updated iPhone to updated iPad passed | User-reported |
+
+The user created a recipe in the released iPhone app and viewed it in the
+released iPad app. This provides real-device production evidence for that
+recipe creation and synchronization path. It was not independently repeated
+by the agent and does not establish reverse synchronization, photo fidelity,
+offline recovery, purchase restoration, or destructive backup behavior.
+
+Cloud evidence from September 10 was reused after checking its commit and
+retained artifact hashes. No fresh build or test run was necessary for this
+release-metadata and documentation check. The public lookup does not expose
+the production build number; that number was not independently retrieved from
+App Store Connect during this check.
+
+The September 12 source comparison found no stored-property, relationship,
+schema-version, migration-stage, entitlement, or persistence-key definition
+change from 3.8. The new backup package format remains a file-compatibility
+responsibility for future versions.
+
+### Follow-Up Scope
+
+- The subscription catalog-failure defect also exists in 3.8. This release
+  does not adopt its fix; successful normal synchronization does not prove
+  the failure path fixed. Track package adoption as separate follow-up work.
+- Privacy declarations still need comparison with actual SDK configuration
+  and communication. No new privacy reconciliation was performed here.
+- Same-day duplicate diaries are rejected by the new backup export and
+  restore validation. Preserve this compatibility limitation as a follow-up;
+  it is not evidence of automatic data loss on upgrade.
+- Begin the next phase with fresh representative Cookle screens and visual
+  acceptance criteria. Broad MHUI adoption follows approval and must include
+  the ADR, documentation, and consumer-boundary updates in the brief.
 
 ## September 10 Subscription Fix and Follow-Up
 
@@ -322,7 +369,11 @@ was not reproduced in that Simulator session. The September 10 hosted test
 above subsequently reproduced the defect. The Cookle dependency pin remains
 unchanged, so the original path is still relevant to its release candidate.
 
-## Remaining Release Evidence
+## Historical Remaining Evidence on September 10
+
+This was the checklist at the earlier review. The September 13 confirmation
+above supersedes its publication and shipping-archive gaps. Other entries
+describe unverified scenarios, not a new hold on post-release preparation.
 
 1. Confirm the distribution Xcode, Xcode Cloud archive, and App Store Connect
    3.9 state. Reconcile the public privacy label and SDK behavior.
@@ -340,14 +391,15 @@ unchanged, so the original path is still relevant to its release candidate.
 7. Verify paired Watch cooking steps, timers, connectivity, and session end.
    No shared Watch scheme or live Watch evidence is available.
 
-No existing simulator data was erased or seeded. Only disposable test-host
-transactions were created and cleared. No production purchase, real-device
-restore, account change, publication, or release tag was performed.
+During those September 7-10 checks, no existing simulator data was erased or
+seeded. Only disposable test-host transactions were created and cleared. Those
+checks did not perform a production purchase, real-device restore, account
+change, publication, or release tag creation.
 
 ## Full MHUI Adoption After Release
 
-1. Confirm the September release is complete.
-2. Capture a fresh baseline from current main after release. Today's audit
+1. The September release is complete, as confirmed on September 13.
+2. Capture a fresh baseline from current main after release. Earlier audit
    images are not the migration's accepted before-state.
 3. Agree visual criteria for representative recipe, diary, cooking, search,
    and settings screens. Approve the package direction and one small Cookle
@@ -359,9 +411,10 @@ restore, account change, publication, or release tag was performed.
    accessibility, size classes, and appearance modes. Keep CookleLibrary,
    Widgets, and Watch presentation-free unless separately justified.
 
-The sequence remains conditional. No visual direction or full migration was
-approved by this review.
+The release prerequisite is satisfied. No visual direction or full migration
+was approved by this review.
 
 [store]: https://apps.apple.com/jp/app/cookle-%E3%83%AC%E3%82%B7%E3%83%94/id6483363226
 [apple-privacy]: https://developer.apple.com/app-store/app-privacy-details/
 [google-privacy]: https://developers.google.com/admob/ios/privacy/data-disclosure
+[release-39]: https://github.com/muhiro12/Cookle/releases/tag/3.9
