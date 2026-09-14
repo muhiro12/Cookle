@@ -40,10 +40,13 @@ focus is personal cooking organization:
 
 The main app now links full MHUI 1.18 with a standard root theme. Recipe
 Detail uses composed MHUI screen, section, row, ingredient-value, and action
-presentation while retaining the same recipe content and operations. Broader
-main-app adoption is the selected direction; other lists, forms, search,
-settings, cooking, and media surfaces still need focused treatment and checks.
-Native containers and specialized media/system UI remain valid choices.
+presentation while retaining the same recipe content and operations. Lists,
+forms, search, settings, and diagnostics use native-container chrome. Cooking
+uses shared sections, stable surfaces, and semantic actions; the photo grid
+uses screen spacing and section headers; detached editors use input chrome.
+Specialized media and system UI retain their native presentation. The
+[rollout record](../Plans/mhui-app-rollout.md) separates implementation from
+the runtime states and size/appearance combinations actually verified.
 CookleLibrary, Watch, and Widgets remain outside the adoption. See
 [ADR 0009](../Decisions/0009-adopt-full-mhui-in-main-app.md).
 

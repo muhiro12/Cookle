@@ -11,10 +11,11 @@ decisions; this current decision supersedes their release holds.
 milestone in the near-term brief is complete. Existing defects and unverified
 scenarios remain follow-up work rather than reasons to treat the published
 release as still pending. On September 14 the expanded MHUI Recipe Detail
-comparison was accepted. The root and first screen now adopt full MHUI under
-[ADR 0009](../Decisions/0009-adopt-full-mhui-in-main-app.md); the remaining
-main-app rollout is separate from the completed Cookle 3.9 release. Dated
-entries below preserve their historical evidence and gates.
+comparison was accepted. Main-app adoption proceeds under
+[ADR 0009](../Decisions/0009-adopt-full-mhui-in-main-app.md), with the broader
+[screen rollout and evidence](mhui-app-rollout.md) kept separate from the
+completed Cookle 3.9 release. Dated entries below preserve their historical
+evidence and gates.
 
 ## September 13 Release Confirmation
 

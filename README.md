@@ -75,9 +75,11 @@ repository contains the full iOS project together with its shared Swift package.
   stays on the default `MHPlatform` umbrella, `CookleLibrary` stays on
   `MHPlatformCore`, and the repository keeps MHPlatform on the
   `1.13.0..<2.0.0` range to preserve verified subscription entitlement handling.
-- MHUI `1.18.0..<2.0.0` through the full `MHUI` product. The root theme and
-  composed Recipe Detail are adopted; remaining screens receive explicit
-  presentation choices during rollout, including native List/Form chrome.
+- MHUI `1.18.0..<2.0.0` through the full `MHUI` product. The main app uses
+  the standard root theme, composed recipe/cooking/photo screens, native
+  List/Form chrome, and detached input chrome. See the
+  [screen rollout record](Designs/Plans/mhui-app-rollout.md) for presentation
+  exceptions and verification coverage.
 - Cookle does not keep a generic utility package dependency. Small app-owned
   helper behavior stays local, while generic utilities and thin host-app
   presentation shortcuts remain outside MHUI.

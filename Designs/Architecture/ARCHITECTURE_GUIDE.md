@@ -71,7 +71,7 @@ symmetry with sibling apps.
   selected presentation primitives. Existing metrics use MHUI's MHDesign
   re-export, without a separate direct MHDesign product link.
   [ADR 0009](../Decisions/0009-adopt-full-mhui-in-main-app.md) records the
-  accepted composition and staged rollout.
+  accepted main-app presentation boundary.
 - `Widgets`, `Watch`, and App Intents call Cookle shared APIs first. They stay
   off app-runtime and presentation package umbrellas by default.
 - Cookle does not keep a generic utility package dependency. Small app-owned
@@ -85,12 +85,16 @@ adaptive ingredient values, and semantic action styles. Cookle retains all
 content, ordering, routes, action handlers, and native presentations. Shared
 recipe sections default to native presentation for search and Intent snippets.
 
-Other app screens still need an explicit treatment. Native List and Form
-chrome are complete adoption routes where selection, swipe actions, editing,
-fields, focus, or keyboard behavior make those containers appropriate. Media,
-system, and package-owned presentations can retain their native appearance.
-App-owned composition and behavior remain local; MHUI is a presentation
-dependency, not a home for business logic or generic utilities.
+Recipe browsing and editing, diaries, search, tags, settings, photo metadata,
+and diagnostics use native List and Form chrome. These are complete adoption
+routes that preserve selection, swipe actions, fields, focus, and keyboard
+behavior. Cooking and the photo collection use screen composition; detached
+recipe editors use input chrome on their native keyboard-resizing canvas.
+Media, system, and package-owned presentations retain their native appearance.
+The [main-app rollout record](../Plans/mhui-app-rollout.md) documents these
+choices and their verification limits. App-owned composition and behavior
+remain local; MHUI is a presentation dependency, not a home for business logic
+or generic utilities.
 
 ## Testing Boundary
 

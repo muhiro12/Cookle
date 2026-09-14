@@ -47,10 +47,13 @@ requires changing the product's information architecture.
 
 ## Rollout and Verification
 
-The application root and expanded Recipe Detail are the first implemented
-slice. Other lists, forms, search, settings, cooking, and media surfaces still
-need an explicit presentation choice and focused before/after verification.
-Root linkage alone does not complete the app-wide rollout.
+The application root and expanded Recipe Detail establish the first slice.
+The [main-app rollout](../Plans/mhui-app-rollout.md) records subsequent
+screen choices, semantic commits, before/after evidence, and verification
+gaps. Native lists and forms use container chrome; cooking and the photo
+collection use composed layout; detached editors use input chrome.
+Root linkage alone does not complete adoption, and implementation does not
+replace the screen-level verification recorded there.
 
 Repository checks require the actual Cookle MHUI product and Frameworks edges,
 validate the remote minimum, and reject separate MHDesign links and excluded

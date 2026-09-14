@@ -79,8 +79,10 @@ that use case.
 - `Cookle` adopts full MHUI on `1.18.0..<2.0.0` for its root theme and
   selected presentation primitives, using the MHDesign re-export for metrics.
   [ADR 0009](../Decisions/0009-adopt-full-mhui-in-main-app.md) records the
-  expanded Recipe Detail slice and remaining rollout. App Intent
-  implementations remain free of MHUI/MHDesign imports.
+  accepted main-app presentation boundary; the
+  [rollout record](../Plans/mhui-app-rollout.md) lists the screen treatments
+  and verification limits. App Intent implementations remain free of
+  MHUI/MHDesign imports.
 - `CookleLibrary` stays presentation-free and must not depend on MHUI or
   MHDesign.
 - `Widgets` and `Watch` stay off MHUI and MHDesign by default; they should call

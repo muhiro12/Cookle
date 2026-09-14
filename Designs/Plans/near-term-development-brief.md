@@ -41,13 +41,15 @@ product in the main Cookle app. Cookle 3.9 shipped on September 13. The
 expanded Recipe Detail direction was accepted on September 14, satisfying
 the release and representative-screen approval gates.
 
-The root theme, full product linkage, and expanded Recipe Detail are now the
-first implemented slice under
-[ADR 0009](../Decisions/0009-adopt-full-mhui-in-main-app.md). Lists, forms,
-search, settings, cooking, and media remain rollout work. Apply the broader
-direction using screen-appropriate MHUI composition or native-container
-chrome; preserve existing content and operations. New features and diary-list
-information architecture remain separate.
+The root theme, full product linkage, and expanded Recipe Detail established
+the first slice under
+[ADR 0009](../Decisions/0009-adopt-full-mhui-in-main-app.md). Broader main-app
+implementation now includes lists, forms, search, settings, cooking, photos,
+and detached editors. The [rollout record](mhui-app-rollout.md) tracks semantic
+commits, screen-appropriate MHUI composition or native-container chrome,
+and the remaining verification coverage. Existing content and operations are
+preserved. New features and diary-list information architecture remain
+separate.
 
 Adoption requirements (the first slice now satisfies items 1, 2, and 4):
 

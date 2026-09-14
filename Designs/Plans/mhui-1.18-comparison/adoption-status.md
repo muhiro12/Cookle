@@ -92,25 +92,14 @@ Local verification artifacts are retained under
 No new library behavior tests or companion-specific builds are required by
 this app-only slice.
 
-## Remaining Main-App Rollout
+## Subsequent Main-App Rollout
 
-Broader adoption is the selected direction. The root and Recipe Detail are
-implemented; other screens are not yet converted. Each next screen retains
-the same content and operations and gets focused before/after verification.
+The root and Recipe Detail are the first slice described above. Subsequent
+implementation extends MHUI to native lists/forms, search, settings,
+diagnostics, cooking, photos, and detached editors. The
+[main-app rollout record](../mhui-app-rollout.md) contains the screen choices,
+semantic commits, new before/after evidence, explicit native exceptions, and
+remaining verification coverage.
 
-<!-- markdownlint-disable MD013 -->
-| Surface | Presentation decision to apply and verify |
-| --- | --- |
-| Recipe, diary, and tag lists | Select native chrome, headers, and row styling; preserve existing interactions |
-| Recipe, diary, and tag forms | Select native Form, header, and key-value styling; preserve fields and drafts |
-| Search and settings | Style the actual app-owned containers and existing groups |
-| Cooking guide | Select MHUI surfaces and actions around the existing pager and timer |
-| Detached editors | Evaluate input chrome around existing native editors |
-| Photo collection and metadata | Preserve grid, carousel, selection, and navigation |
-| Full-screen media and system UI | Retain explicit native or owning-package presentation |
-<!-- markdownlint-enable MD013 -->
-
-This slice does not complete app-wide adoption or establish release readiness.
 New features and diary-list information architecture remain separate work.
-VoiceOver and remaining appearance, size-class, and production-flow checks
-must be recorded for the screens they actually exercise.
+Implementation and simulator evidence do not establish release readiness.

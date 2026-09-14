@@ -1,8 +1,9 @@
 # Cookle MHUI 1.18 Adoption Review
 
 > Status: Expanded direction accepted on September 14, 2026. The root and
-> Recipe Detail are now the first production-source adoption slice. See
-> [implementation status](mhui-1.18-comparison/adoption-status.md) and
+> Recipe Detail established the first production-source adoption slice. See
+> [first-slice status](mhui-1.18-comparison/adoption-status.md), the broader
+> [main-app rollout](mhui-app-rollout.md), and
 > [ADR 0009](../Decisions/0009-adopt-full-mhui-in-main-app.md).
 
 The follow-up [three-way comparison][three-way] adds an expanded MHUI option.
