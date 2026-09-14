@@ -44,9 +44,10 @@ SwiftData schema, app lifecycle wiring, or visible UI behavior are affected.
   destination.
 - For Widgets target changes, use the same build capability with the `Widgets`
   scheme and a discovered iOS Simulator destination.
-- The repository currently has a Watch target but no shared Watch scheme; if
-  Watch-specific code changes, report that verification gap unless a concrete
-  Watch scheme is added or selected.
+- For Watch target changes, use the same build capability with the shared
+  `Watch` scheme and a discovered watchOS Simulator destination. For Watch
+  product linkage changes, also build `Cookle` to verify the embedding target.
+  Paired-device delivery remains separate runtime evidence.
 - For runtime or UI-sensitive changes, add a targeted Xcode-native run,
   runtime-log review, Preview rendering when appropriate, and live UI or
   screenshot evidence.

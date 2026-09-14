@@ -30,6 +30,15 @@ final class WatchCookingSessionStore: NSObject, ObservableObject, WCSessionDeleg
         self.session?.activate()
     }
 
+    #if DEBUG
+    convenience init(
+        previewSnapshot: CookingSessionSnapshot?
+    ) {
+        self.init(session: nil)
+        self.snapshot = previewSnapshot
+    }
+    #endif
+
     func setCurrentStepIndex(
         _ stepIndex: Int,
         updatedAt: Date = .now
