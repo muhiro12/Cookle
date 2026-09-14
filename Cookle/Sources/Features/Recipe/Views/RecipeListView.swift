@@ -1,4 +1,5 @@
 import Foundation
+import MHUI
 import SwiftData
 import SwiftUI
 import TipKit
@@ -81,6 +82,7 @@ private extension RecipeListView {
                 recipeRow(for: recipe)
             }
         }
+        .mhListChrome()
     }
 
     var emptyStateView: some View {

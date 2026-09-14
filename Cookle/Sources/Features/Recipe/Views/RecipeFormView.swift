@@ -6,6 +6,7 @@
 //
 
 import MHPlatform
+import MHUI
 import SwiftData
 import SwiftUI
 import TipKit
@@ -45,6 +46,7 @@ struct RecipeFormView: View {
         Form {
             formSections
         }
+        .mhFormChrome()
         .disabled(model.isSaving)
         .environment(\.editMode, $editMode)
         .navigationTitle(editMode == .inactive ? Text("Recipe") : Text("Editing..."))
