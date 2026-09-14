@@ -1,0 +1,2 @@
+# Unified diff context markers must preserve source indentation and blank lines.
+*.patch -whitespace

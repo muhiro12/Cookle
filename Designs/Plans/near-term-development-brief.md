@@ -1,6 +1,6 @@
 # Near-Term Release and iOS 27 Transition
 
-> Status: Temporary execution brief, current as of August 22, 2026. Use it
+> Status: Temporary execution brief, updated September 14, 2026. Use it
 > through Cookle's first post-iOS 27 release, then remove or replace it.
 
 ## Mission
@@ -37,11 +37,19 @@ they materially improve Cookle's recipe, diary, search, cooking, automation,
 or companion experiences.
 
 The first post-iOS 27 release should intentionally adopt the full `MHUI`
-product in the main Cookle app. The current `MHDesign`-only boundary remains in
-force until that migration begins; this brief is not permission to link MHUI
-early or to accept its current output without review.
+product in the main Cookle app. Cookle 3.9 shipped on September 13. The
+expanded Recipe Detail direction was accepted on September 14, satisfying
+the release and representative-screen approval gates.
 
-Before broad migration:
+The root theme, full product linkage, and expanded Recipe Detail are now the
+first implemented slice under
+[ADR 0009](../Decisions/0009-adopt-full-mhui-in-main-app.md). Lists, forms,
+search, settings, cooking, and media remain rollout work. Apply the broader
+direction using screen-appropriate MHUI composition or native-container
+chrome; preserve existing content and operations. New features and diary-list
+information architecture remain separate.
+
+Adoption requirements (the first slice now satisfies items 1, 2, and 4):
 
 1. Agree on visual acceptance criteria using representative Cookle screens and
    capture a fresh before-state from current `main`.

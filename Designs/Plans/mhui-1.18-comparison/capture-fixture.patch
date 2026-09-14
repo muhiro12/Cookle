@@ -1,0 +1,182 @@
+--- a/Cookle.xcodeproj/project.pbxproj
++++ b/Cookle.xcodeproj/project.pbxproj
+@@ -754,7 +754,7 @@
+ 			repositoryURL = "https://github.com/muhiro12/MHUI";
+ 			requirement = {
+ 				kind = upToNextMajorVersion;
+-				minimumVersion = 1.0.0;
++				minimumVersion = 1.18.0;
+ 			};
+ 		};
+ 		B00000012F7A000100000017 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */ = {
+--- a/Cookle/Sources/App/CookleApp.swift
++++ b/Cookle/Sources/App/CookleApp.swift
+@@ -1,62 +1,52 @@
+-//
+-//  CookleApp.swift
+-//  Cookle
+-//
+-//  Created by Hiromu Nakano on 2024/05/20.
+-//
+-
+ import MHPlatform
++import SwiftData
+ import SwiftUI
+ 
+ @main
+ struct CookleApp: App {
+-    @AppStorage(\.isICloudOn)
+-    private var isICloudOn
+-    @AppStorage(\.isDebugOn)
+-    private var isDebugOn
+-    @AppStorage(\.lastLaunchedAppVersion, default: "")
+-    private var lastLaunchedAppVersion
+-
+-    @State private var bootstrapModel = CookleAppBootstrapModel()
++    private let assembly: CookleAppAssembly
++    private let reviewRuntime = MHAppRuntime(runtimeOnly: .init())
++    private let reviewCookingSessionStore = CookingSessionStore(
++        persistsSnapshot: false
++    )
+ 
+     var body: some Scene {
+         WindowGroup {
+-            Group {
+-                if let appAssembly = bootstrapModel.appAssembly {
+-                    ContentView()
+-                        .id(isICloudOn)
+-                        .cookleAppAssembly(appAssembly)
+-                } else {
+-                    CookleStartupView(
+-                        failureMessage: bootstrapModel.failureMessage
+-                    ) {
+-                        Task {
+-                            await bootstrapModel.loadAssembly(
+-                                isICloudOn: isICloudOn
+-                            )
+-                        }
+-                    }
+-                }
+-            }
+-            .task(id: isICloudOn) {
+-                await bootstrapModel.loadAssembly(
+-                    isICloudOn: isICloudOn
+-                )
+-            }
++            CookleMHUIReviewScreen()
++                .environment(reviewRuntime)
++                .environment(reviewCookingSessionStore)
++                .cooklePreviewAppAssembly(assembly)
++                .environment(\.locale, Locale(identifier: "ja_JP"))
++                .preferredColorScheme(reviewColorScheme)
++                .environment(\.dynamicTypeSize, reviewDynamicTypeSize)
+         }
+     }
+ 
+     init() {
+-        #if DEBUG
+-        isDebugOn = true
+-        #endif
+-
+-        updateLastLaunchedVersion()
++        assembly = CookleSampleDataContext.makeSharedContext()
+     }
+ 
+-    func updateLastLaunchedVersion() {
+-        if let currentAppVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+-            lastLaunchedAppVersion = currentAppVersion
++    private var reviewColorScheme: ColorScheme {
++        ProcessInfo.processInfo.environment["COOKLE_REVIEW_APPEARANCE"] == "dark"
++            ? .dark : .light
++    }
++
++    private var reviewDynamicTypeSize: DynamicTypeSize {
++        ProcessInfo.processInfo.environment["COOKLE_REVIEW_LARGE_TEXT"] == "1"
++            ? .accessibility1 : .large
++    }
++}
++
++private struct CookleMHUIReviewScreen: View {
++    @Query(sort: \Recipe.name)
++    private var recipes: [Recipe]
++
++    var body: some View {
++        NavigationStack {
++            if let recipe = recipes.first {
++                RecipeView()
++                    .environment(recipe)
++            }
+         }
+     }
+ }
+--- a/Cookle/Sources/Features/Debug/Models/CookleSampleData.swift
++++ b/Cookle/Sources/Features/Debug/Models/CookleSampleData.swift
+@@ -3,8 +3,10 @@
+ struct CookleSampleData: PreviewModifier {
+     typealias Context = CookleAppAssembly
+ 
+-    static func makeSharedContext() -> Context {
+-        CookleSampleDataContext.makeSharedContext()
++    static func makeSharedContext() async -> Context {
++        await MainActor.run {
++            CookleSampleDataContext.makeSharedContext()
++        }
+     }
+ 
+     func body(content: Content, context: Context) -> some View {
+--- a/Cookle/Sources/Features/Debug/Models/CooklePreviewStore+RemoteImages.swift
++++ b/Cookle/Sources/Features/Debug/Models/CooklePreviewStore+RemoteImages.swift
+@@ -31,7 +31,7 @@
+     }
+ 
+     func photoDataFromSystemImage(named systemImageName: String) -> Data {
+-        let tintColor = adjustedTintColor(seed: systemImageName.hashValue)
++        let tintColor = adjustedTintColor(seed: systemImageName.utf8.reduce(0) { $0 + Int($1) })
+         if let imageData = UIImage(systemName: systemImageName)?
+             .withTintColor(tintColor)
+             .jpegData(compressionQuality: 1) {
+--- a/Cookle/Sources/Features/Debug/Models/CooklePreviewStore.swift
++++ b/Cookle/Sources/Features/Debug/Models/CooklePreviewStore.swift
+@@ -144,6 +144,6 @@
+                 * PreviewConstants.minutesPerHour
+                 * PreviewConstants.secondsPerMinute
+         )
+-        return .now.addingTimeInterval(offsetSeconds)
++        return Date(timeIntervalSince1970: 1_789_257_600).addingTimeInterval(offsetSeconds)
+     }
+ }
+--- a/Cookle/Sources/Features/Debug/Models/CooklePreviewStore+Recipes.swift
++++ b/Cookle/Sources/Features/Debug/Models/CooklePreviewStore+Recipes.swift
+@@ -22,7 +22,7 @@
+ 
+     func cookSpaghettiCarbonara(
+         _ context: ModelContext,
+-        remotePhotoDataMap: [SamplePhotoAsset: Data]
++        remotePhotoDataMap _: [SamplePhotoAsset: Data]
+     ) throws -> Recipe {
+         .create(
+             context: context,
+@@ -32,11 +32,7 @@
+                     table: "SampleData",
+                     bundle: .main
+                 ),
+-                photos: try createPhotoObjects(
+-                    context,
+-                    assets: [.spaghettiCarbonara1, .spaghettiCarbonara2],
+-                    remotePhotoDataMap: remotePhotoDataMap
+-                ),
++                photos: [],
+                 servingSize: RecipeConstants.firstServingSize,
+                 cookingTime: RecipeConstants.mediumCookingTime,
+                 ingredients: try ingredientObjects(
+--- a/Cookle/Sources/Features/Recipe/Views/RecipeView.swift
++++ b/Cookle/Sources/Features/Recipe/Views/RecipeView.swift
+@@ -60,7 +60,7 @@
+ }
+ 
+ #Preview(traits: .modifier(CookleSampleData())) {
+-    @Previewable @Query var recipes: [Recipe]
++    @Previewable @Query(sort: \Recipe.name) var recipes: [Recipe]
+     NavigationStack {
+         RecipeView()
+             .environment(recipes[0])

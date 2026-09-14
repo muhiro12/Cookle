@@ -10,8 +10,11 @@ decisions; this current decision supersedes their release holds.
 **Cookle 3.9 is released. Proceed to post-release preparation.** The release
 milestone in the near-term brief is complete. Existing defects and unverified
 scenarios remain follow-up work rather than reasons to treat the published
-release as still pending. Full MHUI adoption still requires visual approval;
-ADR 0008 and the MHDesign-only consumer boundary remain in force.
+release as still pending. On September 14 the expanded MHUI Recipe Detail
+comparison was accepted. The root and first screen now adopt full MHUI under
+[ADR 0009](../Decisions/0009-adopt-full-mhui-in-main-app.md); the remaining
+main-app rollout is separate from the completed Cookle 3.9 release. Dated
+entries below preserve their historical evidence and gates.
 
 ## September 13 Release Confirmation
 
@@ -25,6 +28,7 @@ remote tag resolves to `816df9df32c65e638af7e881d9a876114f2b1aee`, matching the
 verified candidate and remote main at the time of this check. The tag was
 fetched locally without changing its target.
 
+<!-- markdownlint-disable MD013 -->
 | Evidence | Result | Scope |
 | --- | --- | --- |
 | Public App Store | Version 3.9 available | Japanese storefront |
@@ -32,6 +36,7 @@ fetched locally without changing its target.
 | Cloud Build 459 | Tests, archive, exports, TestFlight passed | Same commit |
 | Cloud library tests | 1,108 executions passed on four destinations | Simulator |
 | Production recipe sync | Updated iPhone to updated iPad passed | User-reported |
+<!-- markdownlint-enable MD013 -->
 
 The user created a recipe in the released iPhone app and viewed it in the
 released iPad app. This provides real-device production evidence for that
@@ -80,6 +85,7 @@ Product callback waits for complete metadata instead of falsely reporting no
 purchase. Verified empty entitlements still report inactive. The package-owned
 subscription-section presentation and minimum OS versions remain unchanged.
 
+<!-- markdownlint-disable MD013 -->
 | Boundary | Current evidence |
 | --- | --- |
 | StoreKitWrapper unit tests | 9 passed, no failures/skips, Xcode-native macOS |
@@ -88,6 +94,7 @@ subscription-section presentation and minimum OS versions remain unchanged.
 | Apple StoreKit host | 5 cases passed; catalog and purchase/refund coverage |
 | MHPlatform candidate | 328 tests passed on the dedicated iOS 18.6 Simulator |
 | Adopting applications | Candidate integration and StoreKit behavior unverified |
+<!-- markdownlint-enable MD013 -->
 
 The hosted tests use synthetic product identifiers and Apple's Xcode StoreKit
 environment. They prove neither production-account purchase restoration nor
@@ -379,9 +386,11 @@ describe unverified scenarios, not a new hold on post-release preparation.
    3.9 state. Reconcile the public privacy label and SDK behavior.
 2. Complete StoreKitWrapper -> MHPlatform -> app adoption and verify the exact
    candidate sources in consumer build logs. Exercise unknown, inactive,
-   active, restored, and product-metadata-failure subscription states; observe ad suppression and iCloud preference retention.
+   active, restored, and product-metadata-failure subscription states; observe
+   ad suppression and iCloud preference retention.
 3. Retest the backup file picker with the shipping toolchain. Upgrade
-   representative existing data and round-trip legacy JSON and package backups through Files or iCloud Drive.
+   representative existing data and round-trip legacy JSON and package backups
+   through Files or iCloud Drive.
    Compare records, photo bytes, and relationships; use two real devices where
    practical.
 4. Verify notification delivery and destinations after relevant mutations and
@@ -399,20 +408,20 @@ change, publication, or release tag creation.
 ## Full MHUI Adoption After Release
 
 1. The September release is complete, as confirmed on September 13.
-2. Capture a fresh baseline from current main after release. Earlier audit
-   images are not the migration's accepted before-state.
-3. Agree visual criteria for representative recipe, diary, cooking, search,
-   and settings screens. Approve the package direction and one small Cookle
-   vertical slice before broad conversion.
-4. Adopt full MHUI in the main app together with an ADR superseding the
-   app-target portion of ADR 0008, README and architecture updates, and
-   `check_package_consumer_boundaries.sh`.
-5. Verify package tests/rules, before-and-after visuals, native behavior,
-   accessibility, size classes, and appearance modes. Keep CookleLibrary,
-   Widgets, and Watch presentation-free unless separately justified.
+2. A fresh Recipe Detail baseline and two MHUI alternatives were captured
+   from commit `0a9eda1`. The expanded option was selected on September 14.
+3. The root and expanded Recipe Detail are implemented together with
+   ADR 0009, README and architecture updates, and the consumer-boundary checks.
+4. Continue broader adoption with screen-specific presentation decisions and
+   focused before/after verification. Lists, forms, diary, cooking, search,
+   settings, and media are not completed by the first slice.
+5. Verify the affected package and app boundaries, native behavior,
+   accessibility, size classes, and appearance modes. CookleLibrary,
+   Widgets, and Watch remain outside this adoption.
 
-The release prerequisite is satisfied. No visual direction or full migration
-was approved by this review.
+The release and representative-screen approval gates are satisfied. See
+[adoption status](mhui-1.18-comparison/adoption-status.md) for actual implemented
+scope and verification; it does not establish readiness of the next release.
 
 [store]: https://apps.apple.com/jp/app/cookle-%E3%83%AC%E3%82%B7%E3%83%94/id6483363226
 [apple-privacy]: https://developer.apple.com/app-store/app-privacy-details/

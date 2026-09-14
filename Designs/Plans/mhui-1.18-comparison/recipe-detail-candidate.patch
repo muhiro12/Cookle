@@ -1,0 +1,211 @@
+--- a/Cookle.xcodeproj/project.pbxproj
++++ b/Cookle.xcodeproj/project.pbxproj
+@@ -13,7 +13,7 @@
+ 		AD2781342E844E0400B4AC19 /* CookleLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AD2781332E844E0400B4AC19 /* CookleLibrary */; };
+ 		AD51C0012FA3000000000001 /* CookleLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AD51C0002FA3000000000001 /* CookleLibrary */; };
+ 		AD7F5C0E2F5B3186008D91F3 /* MHPlatform in Frameworks */ = {isa = PBXBuildFile; productRef = AD7F5C0D2F5B3186008D91F3 /* MHPlatform */; };
+-		ADB8BF9D2F8FE0DF00C59D93 /* MHDesign in Frameworks */ = {isa = PBXBuildFile; productRef = ADB8BF9C2F8FE0DF00C59D93 /* MHDesign */; };
++		ADB8BF9D2F8FE0DF00C59D93 /* MHUI in Frameworks */ = {isa = PBXBuildFile; productRef = ADB8BF9C2F8FE0DF00C59D93 /* MHUI */; };
+ 		ADB8C6262F9293B700C59D93 /* Watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = ADB8C61C2F9293B500C59D93 /* Watch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+ 		ADF13D702E8233A7002572CD /* CookleLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = ADF13D6F2E8233A7002572CD /* CookleLibrary */; };
+ /* End PBXBuildFile section */
+@@ -109,7 +109,7 @@
+ 			files = (
+ 				AD7F5C0E2F5B3186008D91F3 /* MHPlatform in Frameworks */,
+ 				ADF13D702E8233A7002572CD /* CookleLibrary in Frameworks */,
+-				ADB8BF9D2F8FE0DF00C59D93 /* MHDesign in Frameworks */,
++				ADB8BF9D2F8FE0DF00C59D93 /* MHUI in Frameworks */,
+ 			);
+ 			runOnlyForDeploymentPostprocessing = 0;
+ 		};
+@@ -204,7 +204,7 @@
+ 			packageProductDependencies = (
+ 				AD7F5C0D2F5B3186008D91F3 /* MHPlatform */,
+ 				ADF13D6F2E8233A7002572CD /* CookleLibrary */,
+-				ADB8BF9C2F8FE0DF00C59D93 /* MHDesign */,
++				ADB8BF9C2F8FE0DF00C59D93 /* MHUI */,
+ 			);
+ 			productName = Cookle;
+ 			productReference = AD8C8E682BFABEE200872BF2 /* Cookle.app */;
+@@ -781,10 +781,10 @@
+ 			package = AD7F5C0F2F5B3186008D91F3 /* XCRemoteSwiftPackageReference "MHPlatform" */;
+ 			productName = MHPlatform;
+ 		};
+-		ADB8BF9C2F8FE0DF00C59D93 /* MHDesign */ = {
++		ADB8BF9C2F8FE0DF00C59D93 /* MHUI */ = {
+ 			isa = XCSwiftPackageProductDependency;
+ 			package = ADB8BF9B2F8FE0DF00C59D93 /* XCRemoteSwiftPackageReference "MHUI" */;
+-			productName = MHDesign;
++			productName = MHUI;
+ 		};
+ 		ADF13D6F2E8233A7002572CD /* CookleLibrary */ = {
+ 			isa = XCSwiftPackageProductDependency;
+--- a/Cookle/Sources/App/CookleApp.swift
++++ b/Cookle/Sources/App/CookleApp.swift
+@@ -6,6 +6,7 @@
+ //
+ 
+ import MHPlatform
++import MHUI
+ import SwiftUI
+ 
+ @main
+@@ -38,6 +39,7 @@
+                     }
+                 }
+             }
++            .mhTheme(.standard)
+             .task(id: isICloudOn) {
+                 await bootstrapModel.loadAssembly(
+                     isICloudOn: isICloudOn
+--- a/Cookle/Sources/Features/Recipe/Views/RecipeView.swift
++++ b/Cookle/Sources/Features/Recipe/Views/RecipeView.swift
+@@ -6,6 +6,7 @@
+ //
+ 
+ import MHPlatform
++import MHUI
+ import SwiftData
+ import SwiftUI
+ 
+@@ -26,6 +27,7 @@
+             recipeSections
+             recipeActionSection
+         }
++        .mhListChrome()
+         .navigationTitle(recipe.name)
+         .cookleIdleTimerDisabled()
+         .fullScreenCover(isPresented: $isCookingPresented) {
+--- a/Cookle/Sources/Features/Recipe/Components/Recipe/RecipeCategoriesSection.swift
++++ b/Cookle/Sources/Features/Recipe/Components/Recipe/RecipeCategoriesSection.swift
+@@ -5,6 +5,7 @@
+ //  Created by Hiromu Nakano on 9/17/24.
+ //
+ 
++import MHUI
+ import SwiftData
+ import SwiftUI
+ 
+@@ -28,7 +29,7 @@
+                     .buttonStyle(.plain)
+                 }
+             } header: {
+-                Text("Categories")
++                MHSectionHeader("Categories")
+             }
+         }
+     }
+--- a/Cookle/Sources/Features/Recipe/Components/Recipe/RecipeCookingTimeSection.swift
++++ b/Cookle/Sources/Features/Recipe/Components/Recipe/RecipeCookingTimeSection.swift
+@@ -5,6 +5,7 @@
+ //  Created by Hiromu Nakano on 9/17/24.
+ //
+ 
++import MHUI
+ import SwiftData
+ import SwiftUI
+ 
+@@ -17,7 +18,7 @@
+             Section {
+                 Text(recipe.cookingTime.description + " minutes")
+             } header: {
+-                Text("Cooking Time")
++                MHSectionHeader("Cooking Time")
+             }
+         }
+     }
+--- a/Cookle/Sources/Features/Recipe/Components/Recipe/RecipeDiariesSection.swift
++++ b/Cookle/Sources/Features/Recipe/Components/Recipe/RecipeDiariesSection.swift
+@@ -5,6 +5,7 @@
+ //  Created by Hiromu Nakano on 9/17/24.
+ //
+ 
++import MHUI
+ import SwiftData
+ import SwiftUI
+ 
+@@ -30,7 +31,7 @@
+                     .buttonStyle(.plain)
+                 }
+             } header: {
+-                Text("Diaries")
++                MHSectionHeader("Diaries")
+             }
+         }
+     }
+--- a/Cookle/Sources/Features/Recipe/Components/Recipe/RecipeIngredientsSection.swift
++++ b/Cookle/Sources/Features/Recipe/Components/Recipe/RecipeIngredientsSection.swift
+@@ -5,6 +5,7 @@
+ //  Created by Hiromu Nakano on 9/17/24.
+ //
+ 
++import MHUI
+ import SwiftData
+ import SwiftUI
+ 
+@@ -22,7 +23,7 @@
+                     ingredientRow(for: object)
+                 }
+             } header: {
+-                Text("Ingredients")
++                MHSectionHeader("Ingredients")
+             }
+         }
+     }
+--- a/Cookle/Sources/Features/Recipe/Components/Recipe/RecipeNoteSection.swift
++++ b/Cookle/Sources/Features/Recipe/Components/Recipe/RecipeNoteSection.swift
+@@ -5,6 +5,7 @@
+ //  Created by Hiromu Nakano on 9/17/24.
+ //
+ 
++import MHUI
+ import SwiftData
+ import SwiftUI
+ 
+@@ -17,7 +18,7 @@
+             Section {
+                 Text(recipe.note)
+             } header: {
+-                Text("Note")
++                MHSectionHeader("Note")
+             }
+         }
+     }
+--- a/Cookle/Sources/Features/Recipe/Components/Recipe/RecipeServingSizeSection.swift
++++ b/Cookle/Sources/Features/Recipe/Components/Recipe/RecipeServingSizeSection.swift
+@@ -5,6 +5,7 @@
+ //  Created by Hiromu Nakano on 9/17/24.
+ //
+ 
++import MHUI
+ import SwiftData
+ import SwiftUI
+ 
+@@ -17,7 +18,7 @@
+             Section {
+                 Text(recipe.servingSize.description + " servings")
+             } header: {
+-                Text("Serving Size")
++                MHSectionHeader("Serving Size")
+             }
+         }
+     }
+--- a/Cookle/Sources/Features/Recipe/Components/Recipe/RecipeStepsSection.swift
++++ b/Cookle/Sources/Features/Recipe/Components/Recipe/RecipeStepsSection.swift
+@@ -5,6 +5,7 @@
+ //  Created by Hiromu Nakano on 9/17/24.
+ //
+ 
++import MHUI
+ import SwiftData
+ import SwiftUI
+ 
+@@ -24,7 +25,7 @@
+                     }
+                 }
+             } header: {
+-                Text("Steps")
++                MHSectionHeader("Steps")
+             }
+         }
+     }
