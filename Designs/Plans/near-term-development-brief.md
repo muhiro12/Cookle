@@ -57,9 +57,11 @@ Adoption requirements (the first slice now satisfies items 1, 2, and 4):
    capture a fresh before-state from current `main`.
 2. Establish an accepted MHUI direction in the package and a small Cookle
    vertical slice before converting the rest of the app.
-3. Keep `CookleLibrary`, Widgets, and Watch presentation-free. Only the main
-   app target becomes a full MHUI adopter unless a later surface-specific need
-   proves otherwise.
+3. Evaluate companion surfaces independently under
+   [ADR 0010](../Decisions/0010-evaluate-mhui-for-companion-surfaces.md).
+   `CookleLibrary` remains presentation-free, Widgets retains native WidgetKit
+   composition, and Watch adoption awaits a readable shared surface. The
+   original companion exclusion no longer limits future adoption.
 4. In the adoption change, add a new ADR that supersedes the app-target portion
    of ADR 0008. Update the README, architecture documents, and
    `check_package_consumer_boundaries.sh` to express the new contract.

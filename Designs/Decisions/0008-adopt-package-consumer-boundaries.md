@@ -6,6 +6,10 @@
   2026-09-14: only the Cookle app presentation bullets. All other boundaries
   remain in force. The decision below records the original adoption state.
 
+[ADR 0010](0010-evaluate-mhui-for-companion-surfaces.md) records the later
+companion evaluation. Current non-adoption follows each surface's role and
+verified limitations rather than a blanket exclusion from future work.
+
 ## Context
 
 MHPlatform 1.9 and MHUI 1.5 clarified consumer boundaries for the shared package

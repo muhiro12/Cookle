@@ -85,9 +85,12 @@ that use case.
   MHUI/MHDesign imports.
 - `CookleLibrary` stays presentation-free and must not depend on MHUI or
   MHDesign.
-- `Widgets` and `Watch` stay off MHUI and MHDesign by default; they should call
-  shared Operations APIs first and add direct presentation package dependencies
-  only for an explicit surface-level reason.
+- `Widgets` retains native WidgetKit composition. Watch retains its existing
+  presentation because the MHUI 1.18 standard surface failed the watchOS
+  readability comparison. These dependency decisions follow
+  [ADR 0010](../Decisions/0010-evaluate-mhui-for-companion-surfaces.md);
+  companion targets are evaluated individually rather than excluded from
+  future adoption. Their adapters continue to call shared Operations first.
 - Cookle does not keep a generic utility package dependency. Generic utilities
   should not be treated as an MHUI migration target unless a utility becomes a
   stable platform-foundation contract.

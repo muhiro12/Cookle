@@ -23,6 +23,7 @@ shared_service_design="Designs/Architecture/shared-service-design.md"
 # - CookleLibrary uses MHPlatformCore and must stay off app runtime products.
 # - Cookle adopts full MHUI and consumes MHDesign through its re-export.
 # - Shared logic and delivery-surface adapters stay off MHUI/MHDesign.
+# - ADR 0010 retains native Widgets and defers Watch until its surface is readable.
 
 presentation_import_pattern='^\s*(?:@\w+(?:\([^)]*\))?\s+)*(?:(?:public|internal|package|private|fileprivate)\s+)?import\s+(?:(?:struct|class|enum|protocol|func|var|let|typealias)\s+)?(?:MHUI|MHDesign)(?:\.|\s|$)'
 
@@ -225,11 +226,11 @@ if grep -Eq '/\* MHPlatform \*/|productName = MHPlatform;' <<<"$watch_target_blo
 fi
 
 if grep -Eq '/\* MHUI \*/|/\* MHDesign \*/|productName = MHUI;|productName = MHDesign;' <<<"$widgets_target_block"; then
-  append_error "Widgets must use CookleLibrary first and must not link MHUI or MHDesign by default."
+  append_error "Widgets retains WidgetKit presentation and must not link MHUI or MHDesign."
 fi
 
 if grep -Eq '/\* MHUI \*/|/\* MHDesign \*/|productName = MHUI;|productName = MHDesign;' <<<"$watch_target_block"; then
-  append_error "Watch must use CookleLibrary first and must not link MHUI or MHDesign by default."
+  append_error "Watch MHUI linkage awaits a readable watchOS surface under ADR 0010."
 fi
 
 if rg -nP '^\s*(?:@preconcurrency\s+)?import\s+MHPlatform\s*$' Widgets >/dev/null; then
@@ -241,7 +242,7 @@ if rg -nP '^\s*(?:@preconcurrency\s+)?import\s+MHPlatform\s*$' Watch >/dev/null;
 fi
 
 if rg -nP "$presentation_import_pattern" Widgets Watch >/dev/null; then
-  append_error "Widgets and Watch must not import MHUI or MHDesign by default."
+  append_error "Widgets and Watch remain free of MHUI/MHDesign imports under ADR 0010."
 fi
 
 if rg -n 'MHAppRuntimeCore' \

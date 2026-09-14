@@ -100,6 +100,7 @@ Primary records:
 - [ADR 0007](Designs/Decisions/0007-adapt-incomes-june-boundaries.md)
 - [ADR 0008](Designs/Decisions/0008-adopt-package-consumer-boundaries.md)
 - [ADR 0009](Designs/Decisions/0009-adopt-full-mhui-in-main-app.md)
+- [ADR 0010](Designs/Decisions/0010-evaluate-mhui-for-companion-surfaces.md)
 
 - `CookleLibrary` owns shared SwiftData models, public `*Operations` facades,
   predicates, queries, validation, mutations, migrations, and route helpers.
@@ -107,8 +108,10 @@ Primary records:
   umbrella-app adopter, `CookleLibrary` stays on `MHPlatformCore`, and
   `Widgets`/`Watch` stay off the umbrella.
 - MHUI consumer boundaries are explicit: only `Cookle` adopts full MHUI.
-  `CookleLibrary` stays presentation-free; `Widgets`, `Watch`, and App Intent
-  implementations stay off MHUI/MHDesign imports and presentation dependencies.
+  `CookleLibrary` stays presentation-free and Widgets retains native WidgetKit
+  composition. Watch adoption is deferred after a failed MHUI 1.18 readability
+  comparison. Companion targets and App Intent implementations currently stay
+  off MHUI/MHDesign dependencies; future adoption is evaluated per surface.
 - `MHAppRuntime` remains available as an advanced app-root surface, but this
   repo does not use it as the default adoption path.
 - Repository-owned unit tests stay concentrated in `CookleLibrary/Tests/Default`.
@@ -253,6 +256,8 @@ are source-controlled production identifiers, not local-only credentials.
   destination.
 - For shared-library tests, use its test capability with the `CookleLibrary`
   scheme and a compatible discovered destination.
+- For Watch builds and previews, use the shared `Watch` scheme and a
+  discovered watchOS Simulator destination. Verify paired delivery separately.
 - For runtime or UI-sensitive checks, add a targeted run, runtime-log review,
   Preview rendering when appropriate, and live UI or screenshot evidence.
 - Run retained repository rule checks after Xcode-native build/test evidence:

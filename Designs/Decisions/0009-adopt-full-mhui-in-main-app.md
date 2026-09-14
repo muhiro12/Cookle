@@ -4,6 +4,10 @@
 - Date: 2026-09-14
 - Supersedes: Only the Cookle app presentation bullets of ADR 0008
 
+The companion exclusion below describes this original rollout only.
+[ADR 0010](0010-evaluate-mhui-for-companion-surfaces.md) evaluates those
+surfaces independently for later adoption.
+
 ## Context
 
 Cookle 3.9 has shipped. The post-release presentation review compared the

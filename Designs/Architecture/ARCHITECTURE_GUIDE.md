@@ -73,7 +73,10 @@ symmetry with sibling apps.
   [ADR 0009](../Decisions/0009-adopt-full-mhui-in-main-app.md) records the
   accepted main-app presentation boundary.
 - `Widgets`, `Watch`, and App Intents call Cookle shared APIs first. They stay
-  off app-runtime and presentation package umbrellas by default.
+  off app-runtime umbrellas. The companion presentation evaluation in
+  [ADR 0010](../Decisions/0010-evaluate-mhui-for-companion-surfaces.md) retains
+  native WidgetKit composition and defers Watch MHUI adoption because its
+  standard surface failed the watchOS readability comparison.
 - Cookle does not keep a generic utility package dependency. Small app-owned
   helper behavior stays local, while generic utilities and thin host-app
   presentation shortcuts remain outside MHUI.

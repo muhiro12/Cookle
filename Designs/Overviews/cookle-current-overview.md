@@ -47,8 +47,11 @@ uses screen spacing and section headers; detached editors use input chrome.
 Specialized media and system UI retain their native presentation. The
 [rollout record](../Plans/mhui-app-rollout.md) separates implementation from
 the runtime states and size/appearance combinations actually verified.
-CookleLibrary, Watch, and Widgets remain outside the adoption. See
-[ADR 0009](../Decisions/0009-adopt-full-mhui-in-main-app.md).
+CookleLibrary remains presentation-free, and Widgets retains native WidgetKit
+composition. Watch adoption is deferred after the MHUI 1.18 standard surface
+failed a readability comparison. See
+[ADR 0009](../Decisions/0009-adopt-full-mhui-in-main-app.md) and the
+[companion evaluation](../Decisions/0010-evaluate-mhui-for-companion-surfaces.md).
 
 ## Main Navigation Model
 
