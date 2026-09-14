@@ -117,9 +117,11 @@ and launch-configuration errors, and candidate logs also retained
 CoreAnimation and BoardServices errors. These were not error-free runs;
 no claim is made that all diagnostics are harmless or fixed. The final native
 interaction run retained 15 error-level and one fault-level log entry across
-CoreAnimation, CoreUI, and AXAutomation. The fault originated in automation;
-the app continued to display and respond. This does not establish that every
-log diagnostic is unrelated to product behavior.
+CoreAnimation, CoreUI, and AXAutomation. The fault was a CoreUI theme
+registration message during the native End Session confirmation; AXAutomation
+type-mismatch messages were error-level entries. The app continued to display
+and respond. This does not establish that every log diagnostic is unrelated
+to product behavior.
 
 All verification runs and interaction sessions were ended. The isolated
 workspace was closed, the dedicated 42mm simulator and the used Preview
