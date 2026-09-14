@@ -1,4 +1,5 @@
 import MHPlatform
+import MHUI
 import SwiftUI
 
 struct StoreListView: View {
@@ -9,6 +10,7 @@ struct StoreListView: View {
         List {
             appRuntime.subscriptionSectionView()
         }
+        .mhListChrome()
         .navigationTitle(Text("Subscription"))
     }
 }

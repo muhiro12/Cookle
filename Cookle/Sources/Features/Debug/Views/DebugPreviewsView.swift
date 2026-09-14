@@ -6,6 +6,7 @@
 //
 
 import MHPlatform
+import MHUI
 import SwiftUI
 
 struct DebugPreviewsView: View {
@@ -19,6 +20,7 @@ struct DebugPreviewsView: View {
             AdvertisementSection(.small)
             ShortcutsLinkSection()
         }
+        .mhListChrome()
         .navigationTitle(Text("Previews"))
     }
 }

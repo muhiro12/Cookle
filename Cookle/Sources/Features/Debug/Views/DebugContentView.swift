@@ -1,3 +1,4 @@
+import MHUI
 import SwiftData
 import SwiftUI
 
@@ -26,6 +27,7 @@ struct DebugContentView<Model: PersistentModel>: View {
                 }
             }
         }
+        .mhListChrome()
         .navigationTitle(Text("Content"))
     }
 

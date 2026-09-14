@@ -6,6 +6,7 @@
 //
 
 import MHPlatform
+import MHUI
 import SwiftData
 import SwiftUI
 import TipKit
@@ -145,6 +146,7 @@ struct SettingsSidebarView: View {
             Layout.bottomContentMargin,
             for: .scrollContent
         )
+        .mhListChrome()
     }
 
     @ViewBuilder var subscriptionSection: some View {

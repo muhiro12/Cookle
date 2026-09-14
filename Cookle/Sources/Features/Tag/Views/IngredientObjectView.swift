@@ -1,3 +1,4 @@
+import MHUI
 import SwiftData
 import SwiftUI
 
@@ -38,6 +39,7 @@ struct IngredientObjectView: View {
                 Text("Updated At")
             }
         }
+        .mhListChrome()
     }
 }
 

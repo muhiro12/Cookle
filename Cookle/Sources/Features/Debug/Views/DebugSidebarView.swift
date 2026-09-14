@@ -1,4 +1,5 @@
 import MHPlatform
+import MHUI
 import SwiftData
 import SwiftUI
 import TipKit
@@ -64,6 +65,7 @@ struct DebugSidebarView: View {
             previewSection
             modelSection
         }
+        .mhListChrome()
     }
 
     var appStorageSection: some View {

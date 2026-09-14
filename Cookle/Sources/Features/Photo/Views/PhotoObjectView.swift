@@ -1,3 +1,4 @@
+import MHUI
 import SwiftData
 import SwiftUI
 
@@ -13,6 +14,7 @@ struct PhotoObjectView: View {
             createdAtSection
             updatedAtSection
         }
+        .mhListChrome()
     }
 
     var photoSection: some View {
