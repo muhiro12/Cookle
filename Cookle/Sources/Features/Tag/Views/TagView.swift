@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2024/04/15.
 //
 
+import MHUI
 import SwiftData
 import SwiftUI
 
@@ -22,6 +23,7 @@ struct TagView<T: Tag>: View {
             updatedAtSection
             actionSection
         }
+        .mhListChrome()
         .navigationTitle(tag.value)
         .toolbar {
             ToolbarItem {

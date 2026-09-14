@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2024/05/10.
 //
 
+import MHUI
 import SwiftData
 import SwiftUI
 
@@ -61,6 +62,7 @@ private extension TagListView {
         List(filteredTags) { rowTag in
             tagRow(for: rowTag)
         }
+        .mhListChrome()
     }
 
     @ViewBuilder var emptyStateView: some View {

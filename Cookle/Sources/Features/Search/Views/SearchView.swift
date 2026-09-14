@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 9/18/24.
 //
 
+import MHUI
 import SwiftData
 import SwiftUI
 
@@ -133,6 +134,7 @@ struct SearchView: View {
             }
             .buttonStyle(.plain)
         }
+        .mhListChrome()
     }
 
     var notFoundPlaceholder: some View {

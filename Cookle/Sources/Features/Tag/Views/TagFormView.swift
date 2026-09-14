@@ -1,3 +1,4 @@
+import MHUI
 import SwiftData
 import SwiftUI
 
@@ -36,6 +37,7 @@ struct TagFormView<T: Tag>: View {
                 Text("Recipes")
             }
         }
+        .mhFormChrome()
         .navigationTitle("Edit " + tag.value)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
