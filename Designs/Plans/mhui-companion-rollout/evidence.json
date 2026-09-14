@@ -1,0 +1,65 @@
+{
+  "date": "2026-09-14",
+  "baseline_commit": "dbf196108d67fdbbead421d56bc84ed39de22579",
+  "decision_commit": "f9344331cdc8d3181754aeeb64b6b4bf1fbe27a7",
+  "mhui_candidate": {
+    "version": "1.18.0",
+    "revision": "5e9841f77b770184ea560cec4831adacc1e0fdb6",
+    "outcome": "Rejected: unreadable white card; product and source changes removed"
+  },
+  "toolchain": {
+    "xcode": "27.0",
+    "build": "27A266a",
+    "watchos": "27.0 Simulator"
+  },
+  "scope": {
+    "normal_runtime": "Synthetic snapshot injected only at the isolated DEBUG app root; WatchConnectivity disabled",
+    "runtime_viewport_points": [
+      187,
+      223
+    ],
+    "previews": "46mm simulator; standalone states only; whole-screen Preview crashed"
+  },
+  "source_sha256": {
+    "Cookle.xcodeproj/project.pbxproj": "e25ccaf17d8d5eba89f0b05895cbc594d772e5f180a631fa254b377a8b0c5034",
+    "Watch/Sources/App/ContentView.swift": "c4df736985662528ea762922de1abff4561699383bb1645f5939c445abd0cd27",
+    "Watch/Sources/App/CookleLibrary.swift": "45d074ff9dc27026ba2b19eb6bb8c67b573cf6496bb4c1f9ffb6abaecf5260e8",
+    "Watch/Sources/App/CookleWatchApp.swift": "e43ae4c789ab6f8d081357ff46c345f99c9564fd5335db2e5458676acd84568a",
+    "Watch/Sources/Features/Recipe/WatchActiveCookingView.swift": "ab86561f5e1814d6cf06c978bfbb6135355b6a8bcc3fdc897f84b8f03426659e",
+    "Watch/Sources/Features/Recipe/WatchCookingTimerSection.swift": "09e5dc565f53cd39ebc03e55c3d8cf3bb50c8d9997609e6dd77ff79775673a76",
+    "Watch/Sources/Platform/Sync/WatchCookingSessionStore.swift": "a9b5ab6dc0601a01545d0e94dbca028a5c0bc7fe95e658e8fb45413b08158033",
+    "Watch/Sources/Preview/WatchCookingPreviews.swift": "21eb89894d5cdecdfde47e318e2f168fcbad6991500521fc38ccd192d3ddc4f9"
+  },
+  "screenshots": [
+    {
+      "path": "images/watch-native-expired-preview.png",
+      "sha256": "79db8e40a09a49877401ce42873c3053f1a88feaf3373c1417735aaa4afceb2d"
+    },
+    {
+      "path": "images/watch-native-idle-ax1-preview.png",
+      "sha256": "bc2a40ec98b4cf66725b1fd8abf9fa70db7a01afb3aca9abc9f19ed241cf9558"
+    },
+    {
+      "path": "images/watch-native-long-step.png",
+      "sha256": "c7d283f8a130a0ad996110f3b91a162c3d242b0112785e3fb47b284d948f626f"
+    },
+    {
+      "path": "images/watch-native-top.png",
+      "sha256": "fd02e37e0ed7721d10eaf17d9bc23795883a345ea71b94aea4fbc85a3aea33f3"
+    },
+    {
+      "path": "images/watch-rejected-mhui-top.png",
+      "sha256": "b216dce4cf673bbe2eea3f686117ad4ec008ade34c0744a6757b8b890dd3aef6"
+    }
+  ],
+  "final_boundary_cases": {
+    "passed": 53,
+    "failed": 0
+  },
+  "not_verified": [
+    "Paired iPhone-to-Watch delivery",
+    "VoiceOver",
+    "Physical Watch display",
+    "Shipping toolchain"
+  ]
+}

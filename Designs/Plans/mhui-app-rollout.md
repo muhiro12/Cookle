@@ -2,6 +2,10 @@
 
 Updated September 14, 2026.
 
+This record covers the main-app step. The subsequent
+[companion rollout](mhui-companion-rollout.md) evaluates Watch, Widgets, and
+CookleLibrary independently; the exclusions below describe this earlier step.
+
 ## Scope
 
 [ADR 0009](../Decisions/0009-adopt-full-mhui-in-main-app.md) records the
