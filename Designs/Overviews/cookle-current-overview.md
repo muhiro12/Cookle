@@ -1,6 +1,8 @@
 # Cookle Product and Architecture Overview
 
 Implementation snapshot based on the repository state on July 14, 2026.
+The presentation adoption note below was updated on September 14, 2026; other
+sections retain their original snapshot scope.
 
 ## Purpose
 
@@ -33,6 +35,17 @@ focus is personal cooking organization:
 - Watch companion target: `Watch`
 - Optional premium capabilities: iCloud sync and ad removal
 - Remote configuration can require an app update before the main UI continues
+
+## Presentation Adoption Update
+
+The main app now links full MHUI 1.18 with a standard root theme. Recipe
+Detail uses composed MHUI screen, section, row, ingredient-value, and action
+presentation while retaining the same recipe content and operations. Broader
+main-app adoption is the selected direction; other lists, forms, search,
+settings, cooking, and media surfaces still need focused treatment and checks.
+Native containers and specialized media/system UI remain valid choices.
+CookleLibrary, Watch, and Widgets remain outside the adoption. See
+[ADR 0009](../Decisions/0009-adopt-full-mhui-in-main-app.md).
 
 ## Main Navigation Model
 
@@ -386,6 +399,7 @@ descriptor catalog to remove unknown keys from the standard app domain and the
 shared suite. In other words, the app-owned preference surface is intentionally
 closed: only declared descriptors survive cleanup.
 
+<!-- markdownlint-disable MD013 -->
 | Key group | Backing domain | Purpose | Safe to lose? | Cleanup target? |
 | --- | --- | --- | --- | --- |
 | `MHPreferenceDescriptors` bool descriptors | `standard` | UI and product-control flags | Yes | Yes |
@@ -396,6 +410,7 @@ closed: only declared descriptors survive cleanup.
 | `loggingCurrentSession`, `loggingPreviousSession` | `standard` | Diagnostic log snapshots | Yes | Yes |
 | `diaryFormSnapshot`, `recipeFormSnapshot` | `standard` | Create-flow draft snapshots | Yes | Yes |
 | `preferenceLifecycleState` | `standard` | Cleanup bookkeeping state | Yes | Yes |
+<!-- markdownlint-enable MD013 -->
 
 Recent cleanup intentionally does not rescue several retired keys:
 

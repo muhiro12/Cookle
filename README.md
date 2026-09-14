@@ -49,8 +49,9 @@ repository contains the full iOS project together with its shared Swift package.
   intentionally adopts the default `MHPlatform` umbrella surface, while
   `CookleLibrary` stays on `MHPlatformCore` for core-safe shared logic.
 - `MHUI` / `MHDesign` – shared presentation package family. `Cookle` adopts
-  `MHDesign` as a metrics-only dependency for shared spacing and radius values,
-  while product-specific screen composition stays in the app target.
+  full MHUI for its root theme and selected presentation primitives, with
+  existing metrics accessed through the MHDesign re-export. Product-specific
+  screen composition stays in the app target.
 - `Designs/Architecture/` – current architecture rules and placement guidance.
 - `Designs/Decisions/` – architecture decision records that capture why major
   design choices were made.
@@ -74,9 +75,9 @@ repository contains the full iOS project together with its shared Swift package.
   stays on the default `MHPlatform` umbrella, `CookleLibrary` stays on
   `MHPlatformCore`, and the repository keeps MHPlatform on the
   `1.13.0..<2.0.0` range to preserve verified subscription entitlement handling.
-- MHUI 1.x through the `MHDesign` product for metrics-only app presentation
-  adoption. The full `MHUI` chrome product is not linked unless Cookle
-  intentionally adopts package-owned styled primitives.
+- MHUI `1.18.0..<2.0.0` through the full `MHUI` product. The root theme and
+  composed Recipe Detail are adopted; remaining screens receive explicit
+  presentation choices during rollout, including native List/Form chrome.
 - Cookle does not keep a generic utility package dependency. Small app-owned
   helper behavior stays local, while generic utilities and thin host-app
   presentation shortcuts remain outside MHUI.
@@ -96,16 +97,16 @@ Primary records:
 - [Deletion policy audit](Designs/Overviews/cookle-data-deletion-policy-audit.md)
 - [ADR 0007](Designs/Decisions/0007-adapt-incomes-june-boundaries.md)
 - [ADR 0008](Designs/Decisions/0008-adopt-package-consumer-boundaries.md)
+- [ADR 0009](Designs/Decisions/0009-adopt-full-mhui-in-main-app.md)
 
 - `CookleLibrary` owns shared SwiftData models, public `*Operations` facades,
   predicates, queries, validation, mutations, migrations, and route helpers.
 - MHPlatform consumer boundaries are explicit in this repo: `Cookle` is the
   umbrella-app adopter, `CookleLibrary` stays on `MHPlatformCore`, and
   `Widgets`/`Watch` stay off the umbrella.
-- MHUI consumer boundaries are explicit in this repo: `Cookle` currently adopts
-  `MHDesign` for shared metrics only, `CookleLibrary` stays presentation-free,
-  and `Widgets`/`Watch` call app shared APIs before adding presentation package
-  dependencies.
+- MHUI consumer boundaries are explicit: only `Cookle` adopts full MHUI.
+  `CookleLibrary` stays presentation-free; `Widgets`, `Watch`, and App Intent
+  implementations stay off MHUI/MHDesign imports and presentation dependencies.
 - `MHAppRuntime` remains available as an advanced app-root surface, but this
   repo does not use it as the default adoption path.
 - Repository-owned unit tests stay concentrated in `CookleLibrary/Tests/Default`.

@@ -1,5 +1,5 @@
 import AppIntents
-import MHDesign
+import MHUI
 import PhotosUI
 import SwiftUI
 import UIKit

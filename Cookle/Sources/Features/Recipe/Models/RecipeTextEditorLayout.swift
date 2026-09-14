@@ -1,5 +1,5 @@
 import CoreGraphics
-import MHDesign
+import MHUI
 
 enum RecipeTextEditorLayout {
     static let placeholderHorizontalPadding: CGFloat = 6

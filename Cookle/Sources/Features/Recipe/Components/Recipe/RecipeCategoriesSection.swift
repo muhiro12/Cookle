@@ -14,10 +14,12 @@ struct RecipeCategoriesSection: View {
     @Environment(CookleRouteNavigator.self)
     private var routeNavigator
 
+    var presentation: RecipeSectionPresentation = .native
+
     var body: some View {
         if let categories = recipe.categories,
            !categories.isEmpty {
-            Section {
+            RecipeContentSection("Categories", presentation: presentation) {
                 ForEach(categories) { category in
                     Button {
                         openCategory(category)
@@ -27,8 +29,6 @@ struct RecipeCategoriesSection: View {
                     }
                     .buttonStyle(.plain)
                 }
-            } header: {
-                Text("Categories")
             }
         }
     }

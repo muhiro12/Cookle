@@ -21,8 +21,10 @@ shared_service_design="Designs/Architecture/shared-service-design.md"
 # Cookle follows current MHPlatform/MHUI consumer boundaries:
 # - Cookle is the full-app MHPlatform adopter.
 # - CookleLibrary uses MHPlatformCore and must stay off app runtime products.
-# - Cookle uses MHDesign as a metrics-only presentation dependency.
+# - Cookle adopts full MHUI and consumes MHDesign through its re-export.
 # - Shared logic and delivery-surface adapters stay off MHUI/MHDesign.
+
+presentation_import_pattern='^\s*(?:@\w+(?:\([^)]*\))?\s+)*(?:(?:public|internal|package|private|fileprivate)\s+)?import\s+(?:(?:struct|class|enum|protocol|func|var|let|typealias)\s+)?(?:MHUI|MHDesign)(?:\.|\s|$)'
 
 declare -a errors=()
 
@@ -158,8 +160,8 @@ else
     append_error "MHUI resolved state must not contain branch tracking in $package_resolved."
   fi
 
-  if ! grep -Eq '"version"\s*:\s*"1\.([5-9]|[1-9][0-9]+)\.[0-9]+"' <<<"$mhui_resolved_pin_block"; then
-    append_error "MHUI resolved state must contain a semantic version in the 1.5.0..<2.0.0 range in $package_resolved."
+  if ! grep -Eq '"version"\s*:\s*"1\.(1[8-9]|[2-9][0-9]|[1-9][0-9]{2,})\.[0-9]+"' <<<"$mhui_resolved_pin_block"; then
+    append_error "MHUI resolved state must contain a semantic version in the 1.18.0..<2.0.0 range in $package_resolved."
   fi
 fi
 
@@ -167,7 +169,7 @@ mhplatform_remote_package_block=$(remote_package_block "MHPlatform")
 mhui_remote_package_block=$(remote_package_block "MHUI")
 
 check_project_package_reference "MHPlatform" "$mhplatform_remote_package_block" "1.13.0"
-check_project_package_reference "MHUI" "$mhui_remote_package_block" "1.0.0"
+check_project_package_reference "MHUI" "$mhui_remote_package_block" "1.18.0"
 
 if rg -n 'XCLocalSwiftPackageReference "MHPlatform"|relativePath = .*MHPlatform' "$project_file" >/dev/null; then
   append_error "MHPlatform must not be referenced as a local Xcode package in $project_file."
@@ -185,12 +187,13 @@ if ! grep -Eq '/\* MHPlatform \*/' <<<"$cookle_target_block"; then
   append_error "Cookle must keep the MHPlatform umbrella linked in $project_file."
 fi
 
-if ! grep -Eq '/\* MHDesign \*/' <<<"$cookle_target_block"; then
-  append_error "Cookle must keep the MHDesign metrics product linked in $project_file."
+if ! python3 "$repository_root/ci_scripts/lib/check_mhui_project_links.py" "$project_file"; then
+  append_error "MHUI target linkage must follow the Cookle-only adoption contract."
 fi
 
-if grep -Eq '/\* MHUI \*/|productName = MHUI;' <<<"$cookle_target_block"; then
-  append_error "Cookle currently uses MHDesign as a metrics-only adopter and must not link the full MHUI product."
+if rg -nP "$presentation_import_pattern" \
+  Cookle/Sources/App/Intents Cookle/Sources/Features/*/Intents >/dev/null; then
+  append_error "App Intent implementations must not import MHUI or MHDesign."
 fi
 
 if rg -nP '^\s*(?:@preconcurrency\s+)?import\s+MHPlatform\s*$' CookleLibrary/Sources CookleLibrary/Tests >/dev/null; then
@@ -201,7 +204,7 @@ if rg -n 'name:\s*"MHPlatform",\s*package:\s*"MHPlatform"|productName = MHPlatfo
   append_error "CookleLibrary must not depend on the full MHPlatform umbrella."
 fi
 
-if rg -nP '^\s*(?:@preconcurrency\s+)?import\s+(?:MHUI|MHDesign)\s*$' CookleLibrary/Sources CookleLibrary/Tests >/dev/null; then
+if rg -nP "$presentation_import_pattern" CookleLibrary/Sources CookleLibrary/Tests >/dev/null; then
   append_error "CookleLibrary must not import MHUI or MHDesign."
 fi
 
@@ -237,7 +240,7 @@ if rg -nP '^\s*(?:@preconcurrency\s+)?import\s+MHPlatform\s*$' Watch >/dev/null;
   append_error "Watch must not import the full MHPlatform umbrella."
 fi
 
-if rg -nP '^\s*(?:@preconcurrency\s+)?import\s+(?:MHUI|MHDesign)\s*$' Widgets Watch >/dev/null; then
+if rg -nP "$presentation_import_pattern" Widgets Watch >/dev/null; then
   append_error "Widgets and Watch must not import MHUI or MHDesign by default."
 fi
 

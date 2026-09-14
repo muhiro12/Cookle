@@ -82,6 +82,8 @@ check_swiftlint_environment() {
 check_rules_environment() {
   check_swiftlint_environment
   ensure_command "rg" "Install ripgrep so repository rule checks can scan source files."
+  ensure_command "plutil" "Run repository rules on macOS with Apple's property-list tools."
+  ensure_command "python3" "Install the Xcode command-line tools with Python 3 support."
 }
 
 case "$profile" in

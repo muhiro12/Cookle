@@ -22,12 +22,14 @@ operation must work across the iOS app, widgets, and App Intents.
 
 ## Responsibility Boundaries
 
+<!-- markdownlint-disable MD013 -->
 | Concern | Lives in | Examples |
 | --- | --- | --- |
 | Shared domain logic | `CookleLibrary` | `Recipe`, `Diary`, `Tag`, predicates, `RecipeOperations`, `RecipeFormOperations`, `DiaryOperations`, `TagOperations`, `DataMaintenanceOperations` |
 | Apple framework adapters | `Cookle`, `Widgets`, `Watch` | `NotificationService`, App Intent types, widget timeline/provider types, `WatchCookingSessionStore` |
 | App-side platform support | `Cookle/Sources/Platform` | `CookleAppAssemblyFactory`, `MHAppRuntimeBootstrap` assembly, `MHAppRoutePipeline<CookleRoute>` assembly |
 | Presentation orchestration | `Cookle`, `Widgets`, `Watch` | SwiftUI views, widget view composition, `MainNavigationRouter`, `RecipeFormModel`, `RecipeFormSaveCoordinator`, `DiaryFormModel`, `DiaryFormSaveCoordinator`, `SettingsScreenModel`, `WatchActiveCookingView` |
+<!-- markdownlint-enable MD013 -->
 
 ## Source Layout
 
@@ -74,8 +76,11 @@ that use case.
   app-runtime umbrella adoption.
 - This repository intentionally uses the MHPlatform 1.x semver range
   `1.13.0..<2.0.0` to preserve verified subscription entitlement handling.
-- `Cookle` adopts `MHDesign` from MHUI as a metrics-only presentation
-  dependency for shared spacing and radius values.
+- `Cookle` adopts full MHUI on `1.18.0..<2.0.0` for its root theme and
+  selected presentation primitives, using the MHDesign re-export for metrics.
+  [ADR 0009](../Decisions/0009-adopt-full-mhui-in-main-app.md) records the
+  expanded Recipe Detail slice and remaining rollout. App Intent
+  implementations remain free of MHUI/MHDesign imports.
 - `CookleLibrary` stays presentation-free and must not depend on MHUI or
   MHDesign.
 - `Widgets` and `Watch` stay off MHUI and MHDesign by default; they should call

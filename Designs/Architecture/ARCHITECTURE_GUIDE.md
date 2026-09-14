@@ -18,11 +18,13 @@ Related documents:
 
 ## Responsibility Boundaries
 
+<!-- markdownlint-disable MD013 -->
 | Layer | Owns | Must not own |
 | --- | --- | --- |
 | Domain (`CookleLibrary`) | SwiftData schema, public `*Operations` facades, internal mutation/query collaborators, predicates, route helpers, validation, canonical mutations, canonical search, mutation effect hints | Widget reloads, notification registration, review prompts, deep-link delivery, App Intent result shaping, SwiftUI presentation state |
 | Adapter (`Cookle`, `Widgets`, `Watch`, App Intents) | Parameter parsing, platform API calls, dependency wiring, route intake, follow-up orchestration after shared mutations, App Intent result mapping | Re-implementing recipe, diary, tag, or reset mutation rules |
 | View (SwiftUI) | Focus state, sheets, dialogs, navigation state, screen-scoped `@Observable` models, display formatting, view composition | Canonical business validation, mutation rules, notification scheduling, widget reload coordination |
+<!-- markdownlint-enable MD013 -->
 
 ## Source Layout
 
@@ -65,14 +67,30 @@ symmetry with sibling apps.
 - `CookleLibrary` adopts `MHPlatformCore` for core-safe route, preference,
   persistence-maintenance, and logging contracts. It must not depend on
   `MHPlatform`, `MHAppRuntime`, app-runtime split products, MHUI, or MHDesign.
-- `Cookle` adopts `MHDesign` as a metrics-only MHUI dependency for shared
-  spacing and corner-radius values. Cookle does not link the full `MHUI`
-  product until it intentionally adopts package-owned styled primitives.
+- `Cookle` adopts full `MHUI` on `1.18.0..<2.0.0` for its root theme and
+  selected presentation primitives. Existing metrics use MHUI's MHDesign
+  re-export, without a separate direct MHDesign product link.
+  [ADR 0009](../Decisions/0009-adopt-full-mhui-in-main-app.md) records the
+  accepted composition and staged rollout.
 - `Widgets`, `Watch`, and App Intents call Cookle shared APIs first. They stay
   off app-runtime and presentation package umbrellas by default.
 - Cookle does not keep a generic utility package dependency. Small app-owned
   helper behavior stays local, while generic utilities and thin host-app
   presentation shortcuts remain outside MHUI.
+
+## Presentation Adoption
+
+Recipe Detail uses MHUI screen scrolling, composed sections, grouped rows,
+adaptive ingredient values, and semantic action styles. Cookle retains all
+content, ordering, routes, action handlers, and native presentations. Shared
+recipe sections default to native presentation for search and Intent snippets.
+
+Other app screens still need an explicit treatment. Native List and Form
+chrome are complete adoption routes where selection, swipe actions, editing,
+fields, focus, or keyboard behavior make those containers appropriate. Media,
+system, and package-owned presentations can retain their native appearance.
+App-owned composition and behavior remain local; MHUI is a presentation
+dependency, not a home for business logic or generic utilities.
 
 ## Testing Boundary
 
@@ -119,7 +137,8 @@ screen-local sequencing into a broader router.
 
 ## Canonical Mutation Flow
 
-`View or App Intent -> app adapter/service -> CookleLibrary Operations -> MutationOutcome<Value> -> app-side follow-up`
+`View or App Intent` -> `app adapter/service` -> `CookleLibrary Operations` ->
+`MutationOutcome<Value>` -> `app-side follow-up`
 
 The current app-side mutation adapters are:
 
@@ -139,7 +158,8 @@ App Intents are adapters, not a second domain layer.
 
 Preferred flow:
 
-`App Intent parameter parsing -> same app adapter/service -> same CookleLibrary Operations API`
+`App Intent parameter parsing` -> `same app adapter/service` ->
+`same CookleLibrary Operations API`
 
 App Intent files may:
 

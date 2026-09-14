@@ -1,5 +1,5 @@
 import Foundation
-import MHDesign
+import MHUI
 import SwiftData
 import SwiftUI
 import TipKit

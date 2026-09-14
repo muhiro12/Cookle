@@ -6,6 +6,7 @@
 //
 
 import MHPlatform
+import MHUI
 import SwiftData
 import SwiftUI
 
@@ -19,13 +20,17 @@ struct RecipeView: View {
     @Environment(CookleAppLogging.self)
     private var logging
 
+    @Environment(\.mhTheme)
+    private var theme
+
     @State private var isCookingPresented = false
 
     var body: some View {
-        List {
+        VStack(alignment: .leading, spacing: theme.spacing.section) {
             recipeSections
             recipeActionSection
         }
+        .mhScreen()
         .navigationTitle(recipe.name)
         .cookleIdleTimerDisabled()
         .fullScreenCover(isPresented: $isCookingPresented) {
@@ -75,28 +80,31 @@ struct RecipeView: View {
 private extension RecipeView {
     @ViewBuilder var recipeSections: some View {
         RecipePhotosSection()
-        RecipeServingSizeSection()
-        RecipeCookingTimeSection()
-        RecipeIngredientsSection()
-        RecipeStepsSection()
+        RecipeServingSizeSection(presentation: .mhui)
+        RecipeCookingTimeSection(presentation: .mhui)
+        RecipeIngredientsSection(presentation: .mhui)
+        RecipeStepsSection(presentation: .mhui)
         AdvertisementSection(.medium)
-        RecipeCategoriesSection()
-        RecipeNoteSection()
-        RecipeDiariesSection()
-        RecipeCreatedAtSection()
-        RecipeUpdatedAtSection()
+        RecipeCategoriesSection(presentation: .mhui)
+        RecipeNoteSection(presentation: .mhui)
+        RecipeDiariesSection(presentation: .mhui)
+        RecipeCreatedAtSection(presentation: .mhui)
+        RecipeUpdatedAtSection(presentation: .mhui)
     }
 
     var recipeActionSection: some View {
-        Section {
-            startCookingButton
-            ShareRecipeLinkButton()
-            AddRecipeToTodayDiaryButton()
-            EditRecipeButton()
-            DuplicateRecipeButton()
-            DeleteRecipeButton()
-        } footer: {
-            Text(shareRecipeLinkFooter)
+        VStack(alignment: .leading, spacing: theme.spacing.content) {
+            MHActionGroup(layout: .vertical) {
+                startCookingButton
+                    .buttonStyle(.mhPrimary)
+                ShareRecipeLinkButton()
+                AddRecipeToTodayDiaryButton()
+                EditRecipeButton()
+                DuplicateRecipeButton()
+                DeleteRecipeButton()
+                    .buttonStyle(.mhDestructive)
+            }
+            MHSectionFooter(Text(shareRecipeLinkFooter))
         }
     }
 

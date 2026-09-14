@@ -12,9 +12,11 @@ struct RecipeStepsSection: View {
     @Environment(Recipe.self)
     private var recipe
 
+    var presentation: RecipeSectionPresentation = .native
+
     var body: some View {
         if !recipe.steps.isEmpty {
-            Section {
+            RecipeContentSection("Steps", presentation: presentation) {
                 ForEach(Array(recipe.steps.enumerated()), id: \.offset) { values in
                     HStack(alignment: .top) {
                         Text((values.offset + RecipeStepLayout.stepNumberOffset).description + ".")
@@ -23,8 +25,6 @@ struct RecipeStepsSection: View {
                         Text(values.element)
                     }
                 }
-            } header: {
-                Text("Steps")
             }
         }
     }

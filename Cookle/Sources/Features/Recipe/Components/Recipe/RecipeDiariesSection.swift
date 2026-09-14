@@ -14,10 +14,12 @@ struct RecipeDiariesSection: View {
     @Environment(CookleRouteNavigator.self)
     private var routeNavigator
 
+    var presentation: RecipeSectionPresentation = .native
+
     var body: some View {
         if let diaries = recipe.diaries,
            !diaries.isEmpty {
-            Section {
+            RecipeContentSection("Diaries", presentation: presentation) {
                 ForEach(diaries.sorted { lhs, rhs in
                     lhs.date > rhs.date
                 }) { diary in
@@ -29,8 +31,6 @@ struct RecipeDiariesSection: View {
                     }
                     .buttonStyle(.plain)
                 }
-            } header: {
-                Text("Diaries")
             }
         }
     }

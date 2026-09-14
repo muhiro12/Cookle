@@ -5,8 +5,8 @@
 //  Created by Hiromu Nakano on 2022/01/17.
 //
 
-import MHDesign
 import MHPlatform
+import MHUI
 import SwiftUI
 
 struct AdvertisementSection {

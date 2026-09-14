@@ -12,12 +12,12 @@ struct RecipeNoteSection: View {
     @Environment(Recipe.self)
     private var recipe
 
+    var presentation: RecipeSectionPresentation = .native
+
     var body: some View {
         if !recipe.note.isEmpty {
-            Section {
+            RecipeContentSection("Note", presentation: presentation) {
                 Text(recipe.note)
-            } header: {
-                Text("Note")
             }
         }
     }

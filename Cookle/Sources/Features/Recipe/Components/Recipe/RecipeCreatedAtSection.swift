@@ -12,11 +12,11 @@ struct RecipeCreatedAtSection: View {
     @Environment(Recipe.self)
     private var recipe
 
+    var presentation: RecipeSectionPresentation = .native
+
     var body: some View {
-        Section {
+        RecipeContentSection("Created At", presentation: presentation) {
             Text(recipe.createdTimestamp.formatted(.dateTime.year().month().day()))
-        } header: {
-            Text("Created At")
         }
     }
 }

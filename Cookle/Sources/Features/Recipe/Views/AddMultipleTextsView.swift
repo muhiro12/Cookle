@@ -1,4 +1,4 @@
-import MHDesign
+import MHUI
 import SwiftUI
 
 struct AddMultipleTextsView: View {

@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 9/17/24.
 //
 
+import MHUI
 import SwiftData
 import SwiftUI
 
@@ -14,15 +15,15 @@ struct RecipeIngredientsSection: View {
     @Environment(CookleRouteNavigator.self)
     private var routeNavigator
 
+    var presentation: RecipeSectionPresentation = .native
+
     var body: some View {
         if let objects = recipe.ingredientObjects,
            !objects.isEmpty {
-            Section {
+            RecipeContentSection("Ingredients", presentation: presentation) {
                 ForEach(objects.sorted()) { object in
                     ingredientRow(for: object)
                 }
-            } header: {
-                Text("Ingredients")
             }
         }
     }
@@ -50,15 +51,25 @@ private extension RecipeIngredientsSection {
         }
     }
 
+    @ViewBuilder
     func ingredientLabel(
         name: String,
         amount: String
     ) -> some View {
-        HStack {
-            Text(name)
-            Spacer()
-            Text(amount)
-                .foregroundStyle(.secondary)
+        if presentation == .mhui {
+            LabeledContent {
+                Text(amount)
+            } label: {
+                Text(name)
+            }
+            .labeledContentStyle(.mhKeyValue)
+        } else {
+            HStack {
+                Text(name)
+                Spacer()
+                Text(amount)
+                    .foregroundStyle(.secondary)
+            }
         }
     }
 
