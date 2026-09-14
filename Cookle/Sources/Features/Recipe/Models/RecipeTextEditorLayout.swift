@@ -9,10 +9,4 @@ enum RecipeTextEditorLayout {
     ) -> CGFloat {
         metrics.spacing.inline
     }
-
-    static func cornerRadius(
-        metrics: MHDesignMetrics
-    ) -> CGFloat {
-        metrics.cornerRadius.control
-    }
 }

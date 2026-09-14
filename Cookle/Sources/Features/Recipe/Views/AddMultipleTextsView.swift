@@ -10,12 +10,14 @@ struct AddMultipleTextsView: View {
     @Binding private var texts: [String]
 
     @State private var text: String
+    @FocusState private var isTextFocused: Bool
 
     private let title: LocalizedStringKey
     private let placeholder: LocalizedStringKey
 
     var body: some View {
         TextEditor(text: $text)
+            .focused($isTextFocused)
             .accessibilityLabel(Text(title))
             .accessibilityValue(Text(verbatim: text))
             .overlay(alignment: .topLeading) {
@@ -37,16 +39,8 @@ struct AddMultipleTextsView: View {
                         .accessibilityHidden(true)
                 }
             }
-            .padding()
             .scrollContentBackground(.hidden)
-            .background(Color(.secondarySystemGroupedBackground))
-            .clipShape(
-                .rect(
-                    cornerRadius: RecipeTextEditorLayout.cornerRadius(
-                        metrics: designMetrics
-                    )
-                )
-            )
+            .mhInputChrome(state: isTextFocused ? .focused : .normal)
             .padding()
             .background(Color(.systemGroupedBackground))
             .navigationTitle(title)

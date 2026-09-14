@@ -86,6 +86,7 @@ struct InferRecipeFormView: View {
     @State private var isPhotoPickerPresented = false
     @State private var isCameraPickerPresented = false
     @State private var errorMessage = ""
+    @FocusState private var isTextFocused: Bool
 
     private let placeholder: LocalizedStringKey = .init(
         """
@@ -97,21 +98,14 @@ struct InferRecipeFormView: View {
 
     var body: some View {
         TextEditor(text: $text)
+            .focused($isTextFocused)
             .accessibilityLabel(Text("Recipe Text"))
             .accessibilityValue(Text(verbatim: text))
             .overlay(alignment: .topLeading) {
                 placeholderOverlay
             }
-            .padding()
             .scrollContentBackground(.hidden)
-            .background(Color(.secondarySystemGroupedBackground))
-            .clipShape(
-                .rect(
-                    cornerRadius: RecipeTextEditorLayout.cornerRadius(
-                        metrics: designMetrics
-                    )
-                )
-            )
+            .mhInputChrome(state: isTextFocused ? .focused : .normal)
             .padding()
             .background(Color(.systemGroupedBackground))
             .navigationTitle(Text("Recipe Text"))
