@@ -1,11 +1,7 @@
+import MHUI
 import SwiftUI
 
 struct CookingSessionTimerSection: View {
-    private enum Layout {
-        static let buttonSpacing: CGFloat = 12
-        static let sectionSpacing: CGFloat = 16
-    }
-
     private enum TimerValue {
         static let oneMinute = 1
         static let fiveMinutes = 5
@@ -16,6 +12,8 @@ struct CookingSessionTimerSection: View {
 
     @Environment(CookingSessionStore.self)
     private var cookingSessionStore
+    @Environment(\.mhTheme)
+    private var theme
 
     @State private var timerRefreshDate = Date.now
 
@@ -28,14 +26,11 @@ struct CookingSessionTimerSection: View {
     ]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
-            Text("Quick Timers")
-                .font(.headline)
-            timerContent(
-                at: timerDisplayDate
-            )
-        }
+        timerContent(
+            at: timerDisplayDate
+        )
         .frame(maxWidth: .infinity, alignment: .leading)
+        .mhSection("Quick Timers")
     }
 
     init(
@@ -83,7 +78,7 @@ private extension CookingSessionTimerSection {
     }
 
     var idleTimerContent: some View {
-        VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
+        VStack(alignment: .leading, spacing: theme.spacing.content) {
             if let suggestedTimer {
                 Text(
                     String(
@@ -98,13 +93,8 @@ private extension CookingSessionTimerSection {
     }
 
     var timerButtons: some View {
-        ViewThatFits(in: .horizontal) {
-            HStack(spacing: Layout.buttonSpacing) {
-                timerButtonRow
-            }
-            VStack(spacing: Layout.buttonSpacing) {
-                timerButtonRow
-            }
+        MHActionGroup {
+            timerButtonRow
         }
     }
 
@@ -118,16 +108,11 @@ private extension CookingSessionTimerSection {
     }
 
     var expiredTimerContent: some View {
-        VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
+        VStack(alignment: .leading, spacing: theme.spacing.content) {
             Label("Timer Finished", systemImage: "bell.fill")
                 .font(.headline)
-            ViewThatFits(in: .horizontal) {
-                HStack(spacing: Layout.buttonSpacing) {
-                    expiredActionButtons
-                }
-                VStack(spacing: Layout.buttonSpacing) {
-                    expiredActionButtons
-                }
+            MHActionGroup {
+                expiredActionButtons
             }
         }
     }
@@ -136,19 +121,19 @@ private extension CookingSessionTimerSection {
         Button("Repeat") {
             cookingSessionStore.repeatTimer()
         }
-        .cookleGlassButtonStyle(isProminent: true)
+        .buttonStyle(.mhPrimary)
 
         if snapshot.hasNextStep {
             Button("Next Step") {
                 cookingSessionStore.advanceFromTimerFollowUp()
             }
-            .cookleGlassButtonStyle()
+            .buttonStyle(.mhSecondary)
         }
 
         Button("Cancel Timer") {
             cookingSessionStore.cancelTimer()
         }
-        .cookleGlassButtonStyle()
+        .buttonStyle(.mhSecondary)
     }
 
     @ViewBuilder
@@ -182,9 +167,8 @@ private extension CookingSessionTimerSection {
                 )
             } label: {
                 Text("\(minutes) min")
-                    .frame(maxWidth: .infinity)
             }
-            .cookleGlassButtonStyle(isProminent: true)
+            .buttonStyle(.mhPrimary)
         } else {
             Button {
                 cookingSessionStore.startTimer(
@@ -192,16 +176,15 @@ private extension CookingSessionTimerSection {
                 )
             } label: {
                 Text("\(minutes) min")
-                    .frame(maxWidth: .infinity)
             }
-            .cookleGlassButtonStyle()
+            .buttonStyle(.mhSecondary)
         }
     }
 
     func runningTimerContent(
         remainingSeconds: Int
     ) -> some View {
-        VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
+        VStack(alignment: .leading, spacing: theme.spacing.content) {
             Text("Timer Running")
                 .font(.headline)
             Text(
@@ -223,7 +206,7 @@ private extension CookingSessionTimerSection {
             ) {
                 cookingSessionStore.cancelTimer()
             }
-            .cookleGlassButtonStyle()
+            .buttonStyle(.mhDestructive)
         }
     }
 

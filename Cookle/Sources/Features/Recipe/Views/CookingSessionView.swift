@@ -1,20 +1,17 @@
+import MHUI
 import SwiftUI
 
 struct CookingSessionView: View {
     private enum Layout {
-        static let contentSpacing: CGFloat = 24
-        static let screenPadding: CGFloat = 20
-        static let progressSpacing: CGFloat = 8
         static let stepCardHeight: CGFloat = 320
-        static let sectionCornerRadius: CGFloat = 24
-        static let sectionPadding: CGFloat = 20
-        static let buttonSpacing: CGFloat = 12
     }
 
     @Environment(CookingSessionStore.self)
     private var cookingSessionStore
     @Environment(\.dismiss)
     private var dismiss
+    @Environment(\.mhTheme)
+    private var theme
     @State private var isEndSessionConfirmationPresented = false
 
     var body: some View {
@@ -77,42 +74,37 @@ private extension CookingSessionView {
     func activeSessionContent(
         snapshot: CookingSessionSnapshot
     ) -> some View {
-        ScrollView {
-            VStack(spacing: Layout.contentSpacing) {
-                progressSection(
-                    snapshot: snapshot
-                )
-                stepPager(
-                    snapshot: snapshot
-                )
-                sectionContainer {
-                    CookingSessionTimerSection(
-                        snapshot: snapshot
-                    )
-                }
-                sectionContainer {
-                    stepNavigationSection(
-                        snapshot: snapshot
-                    )
-                }
+        VStack(spacing: theme.spacing.section) {
+            progressSection(
+                snapshot: snapshot
+            )
+            stepPager(
+                snapshot: snapshot
+            )
+            CookingSessionTimerSection(
+                snapshot: snapshot
+            )
+            stepNavigationSection(
+                snapshot: snapshot
+            )
+            MHActionGroup(layout: .vertical) {
                 Button(
                     "End Session",
                     role: .destructive
                 ) {
                     isEndSessionConfirmationPresented = true
                 }
-                .cookleGlassButtonStyle(isProminent: true)
+                .buttonStyle(.mhDestructive)
             }
-            .padding(Layout.screenPadding)
         }
-        .background(Color(.systemGroupedBackground))
+        .mhScreen()
         .navigationTitle(snapshot.recipeName)
     }
 
     func progressSection(
         snapshot: CookingSessionSnapshot
     ) -> some View {
-        VStack(alignment: .leading, spacing: Layout.progressSpacing) {
+        VStack(alignment: .leading, spacing: theme.spacing.inline) {
             Text(
                 String(
                     localized: "Step \(snapshot.currentStepNumber) of \(snapshot.stepCount)"
@@ -164,7 +156,7 @@ private extension CookingSessionView {
         stepText: String
     ) -> some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: Layout.buttonSpacing) {
+            VStack(alignment: .leading, spacing: theme.spacing.content) {
                 Text(
                     String(
                         localized: "Step \(stepNumber) of \(stepCount)"
@@ -175,37 +167,21 @@ private extension CookingSessionView {
                     .font(.title3)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding(Layout.sectionPadding)
+            .mhSurfaceInset()
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .cookleGlassSurface(
-            in: RoundedRectangle(
-                cornerRadius: Layout.sectionCornerRadius,
-                style: .continuous
-            )
-        )
+        .mhSurface()
     }
 
     func stepNavigationSection(
         snapshot: CookingSessionSnapshot
     ) -> some View {
-        VStack(alignment: .leading, spacing: Layout.buttonSpacing) {
-            Text("Step Navigation")
-                .font(.headline)
-            ViewThatFits(in: .horizontal) {
-                HStack(spacing: Layout.buttonSpacing) {
-                    stepNavigationButtons(
-                        snapshot: snapshot
-                    )
-                }
-                VStack(spacing: Layout.buttonSpacing) {
-                    stepNavigationButtons(
-                        snapshot: snapshot
-                    )
-                }
-            }
+        MHActionGroup {
+            stepNavigationButtons(
+                snapshot: snapshot
+            )
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .mhSection("Step Navigation")
     }
 
     @ViewBuilder
@@ -215,27 +191,14 @@ private extension CookingSessionView {
         Button("Previous Step") {
             cookingSessionStore.returnToPreviousStep()
         }
-        .cookleGlassButtonStyle()
+        .buttonStyle(.mhSecondary)
         .disabled(snapshot.hasPreviousStep == false)
 
         Button("Next Step") {
             cookingSessionStore.advanceToNextStep()
         }
-        .cookleGlassButtonStyle(isProminent: true)
+        .buttonStyle(.mhPrimary)
         .disabled(snapshot.hasNextStep == false)
-    }
-
-    func sectionContainer<Content: View>(
-        @ViewBuilder content: () -> Content
-    ) -> some View {
-        content()
-            .padding(Layout.sectionPadding)
-            .cookleGlassSurface(
-                in: RoundedRectangle(
-                    cornerRadius: Layout.sectionCornerRadius,
-                    style: .continuous
-                )
-            )
     }
 }
 
