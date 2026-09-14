@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2024/04/17.
 //
 
+import MHUI
 import SwiftData
 import SwiftUI
 
@@ -35,6 +36,7 @@ struct DiaryFormView: View {
             mealSection(type: .dinner, recipes: $model.dinners)
             noteSection
         }
+        .mhFormChrome()
         .disabled(model.isSaving)
         .navigationDestination(for: DiaryObjectType.self) { type in
             destinationView(for: type)

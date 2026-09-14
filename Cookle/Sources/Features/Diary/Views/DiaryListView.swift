@@ -6,6 +6,7 @@
 //
 
 import MHPlatform
+import MHUI
 import SwiftData
 import SwiftUI
 import TipKit
@@ -72,6 +73,7 @@ struct DiaryListView: View {
         List {
             diaryListContent
         }
+        .mhListChrome()
     }
 
     @ViewBuilder var diaryListContent: some View {

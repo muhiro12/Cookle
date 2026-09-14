@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 9/30/24.
 //
 
+import MHUI
 import SwiftData
 import SwiftUI
 
@@ -73,6 +74,7 @@ private extension DiaryFormRecipeListView {
                 .tag(recipe)
                 .environment(recipe)
         }
+        .mhListChrome()
     }
 
     @ViewBuilder var emptyStateView: some View {
