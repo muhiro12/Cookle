@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2024/06/26.
 //
 
+import MHUI
 import SwiftData
 import SwiftUI
 
@@ -15,6 +16,8 @@ struct PhotoListView: View {
 
     @Environment(\.isPresented)
     private var isPresented
+    @Environment(\.mhTheme)
+    private var theme
 
     @Query(.photos(.sourceIs(.photosPicker)))
     private var photos: [Photo]
@@ -45,11 +48,12 @@ struct PhotoListView: View {
 
 private extension PhotoListView {
     var photoSectionsView: some View {
-        ScrollView {
+        VStack(spacing: theme.spacing.section) {
             ForEach(groupedPhotos, id: \.source.rawValue) { group in
                 photoSection(for: group)
             }
         }
+        .mhScreen()
     }
 
     var emptyStateView: some View {
@@ -89,12 +93,8 @@ private extension PhotoListView {
     func photoSection(
         for group: (source: PhotoSource, photos: [Photo])
     ) -> some View {
-        VStack {
-            Text(group.source.description)
-                .font(.headline)
-                .foregroundStyle(.secondary)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding()
+        VStack(alignment: .leading, spacing: theme.spacing.content) {
+            MHSectionHeader(title: Text(group.source.description))
             LazyVGrid(columns: [.init(.adaptive(minimum: Layout.photoGridMinimum))]) {
                 ForEach(group.photos) { photo in
                     photoButton(for: photo)

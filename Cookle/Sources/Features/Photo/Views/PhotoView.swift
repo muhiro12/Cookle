@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2024/06/26.
 //
 
+import MHUI
 import SwiftData
 import SwiftUI
 
@@ -29,6 +30,7 @@ struct PhotoView: View {
             updatedAtSection
             actionSection
         }
+        .mhListChrome()
         .navigationTitle(
             PhotoDisplayCopy.title(for: photo)
         )
