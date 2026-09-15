@@ -10,6 +10,22 @@ struct RecipeConfigurationAppIntent: WidgetConfigurationIntent {
         "Configure which recipe to show."
     }
 
+    static var parameterSummary: some ParameterSummary {
+        When(\.$selection, .equalTo, .selected) {
+            Summary {
+                \.$selection
+                \.$recipe
+            }
+        } otherwise: {
+            Summary {
+                \.$selection
+            }
+        }
+    }
+
     @Parameter(title: "Selection", default: .lastOpened)
     var selection: RecipeWidgetSelection
+
+    @Parameter(title: "Recipe")
+    var recipe: RecipeWidgetEntity?
 }

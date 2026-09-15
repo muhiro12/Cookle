@@ -24,7 +24,8 @@ struct RecipeProvider: AppIntentTimelineProvider {
                 date: .now,
                 context: modelContext,
                 family: context.family,
-                selection: configuration.selection
+                selection: configuration.selection,
+                selectedRecipeID: configuration.recipe?.id
             )
         } catch {
             return makeErrorEntry(date: .now)
@@ -40,7 +41,8 @@ struct RecipeProvider: AppIntentTimelineProvider {
                     date: now,
                     context: modelContext,
                     family: context.family,
-                    selection: configuration.selection
+                    selection: configuration.selection,
+                    selectedRecipeID: configuration.recipe?.id
                 )
             } catch {
                 return makeErrorEntry(date: now)
@@ -62,8 +64,9 @@ private extension RecipeProvider {
     func makeEntry(date: Date,
                    context: ModelContext,
                    family: WidgetFamily,
-                   selection: RecipeWidgetSelection) throws -> RecipeEntry {
-        if let recipe = try recipe(for: selection, context: context) {
+                   selection: RecipeWidgetSelection,
+                   selectedRecipeID: String?) throws -> RecipeEntry {
+        if let recipe = try recipe(for: selection, selectedRecipeID: selectedRecipeID, context: context) {
             let image = recipe.primaryPhotoData.flatMap { data in
                 RecipeWidgetImageLoader.makeImage(from: data, family: family)
             }
@@ -86,14 +89,23 @@ private extension RecipeProvider {
         }
         return .init(
             date: date,
-            titleText: emptyTitle(for: selection),
+            titleText: emptyTitle(for: selection, selectedRecipeID: selectedRecipeID),
             image: nil,
             deepLinkURL: CookleDeepLinkURLBuilder.recipeURL()
         )
     }
 
-    func recipe(for selection: RecipeWidgetSelection, context: ModelContext) throws -> Recipe? {
+    func recipe(
+        for selection: RecipeWidgetSelection,
+        selectedRecipeID: String?,
+        context: ModelContext
+    ) throws -> Recipe? {
         switch selection {
+        case .selected:
+            guard let selectedRecipeID else {
+                return nil
+            }
+            return try RecipeStableIdentifierCodec.recipe(from: selectedRecipeID, context: context)
         case .latest:
             return try RecipeOperations.latestRecipe(context: context)
         case .lastOpened:
@@ -103,8 +115,12 @@ private extension RecipeProvider {
         }
     }
 
-    func emptyTitle(for selection: RecipeWidgetSelection) -> String {
+    func emptyTitle(for selection: RecipeWidgetSelection, selectedRecipeID: String?) -> String {
         switch selection {
+        case .selected:
+            return selectedRecipeID == nil
+                ? String(localized: "Choose a Recipe")
+                : String(localized: "Recipe Unavailable")
         case .lastOpened:
             return String(localized: "Not Found")
         case .latest,

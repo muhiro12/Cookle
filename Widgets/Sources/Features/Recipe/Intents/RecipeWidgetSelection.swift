@@ -4,6 +4,7 @@ enum RecipeWidgetSelection: String, AppEnum {
     case lastOpened
     case latest
     case random
+    case selected
 
     static var typeDisplayRepresentation: TypeDisplayRepresentation {
         .init(name: "Recipe Selection")
@@ -13,7 +14,8 @@ enum RecipeWidgetSelection: String, AppEnum {
         [
             .lastOpened: .init(title: "Last Opened"),
             .latest: .init(title: "Latest"),
-            .random: .init(title: "Random")
+            .random: .init(title: "Random"),
+            .selected: .init(title: "Selected Recipe")
         ]
     }
 }

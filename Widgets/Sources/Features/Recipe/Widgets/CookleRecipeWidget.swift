@@ -15,7 +15,7 @@ struct CookleRecipeWidget: Widget {
                 .widgetURL(entry.deepLinkURL)
         }
         .configurationDisplayName("Recipe")
-        .description("Shows a recipe by selection: Latest, Last Opened, or Random.")
+        .description("Show a chosen recipe, or use Last Opened, Latest, or Random.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
