@@ -13,12 +13,24 @@ struct RecipePhotosSection: View {
     private var recipe
 
     @State private var selectedPhoto: Photo?
+    @State private var isPhotoEditorPresented = false
 
     var body: some View {
         let orderedPhotoObjects = recipe.orderedPhotoObjects
         let orderedPhotos = recipe.orderedPhotos
 
-        if !orderedPhotos.isEmpty {
+        if orderedPhotos.isEmpty {
+            Button {
+                isPhotoEditorPresented = true
+            } label: {
+                Label("Add Photo", systemImage: "photo.badge.plus")
+                    .cookleButtonRowContent()
+            }
+            .sheet(isPresented: $isPhotoEditorPresented) {
+                RecipeFormNavigationView(type: .edit)
+                    .environment(recipe)
+            }
+        } else {
             Section {
                 ScrollView(.horizontal) {
                     LazyHStack {
@@ -79,4 +91,24 @@ private extension RecipePhotosSection {
         RecipePhotosSection()
             .environment(recipes[0])
     }
+}
+
+#Preview("No Photos") {
+    let container: ModelContainer = {
+        do {
+            return try ModelContainer(
+                for: Recipe.self,
+                configurations: .init(isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+            )
+        } catch {
+            fatalError("Failed to prepare photo preview: \(error)")
+        }
+    }()
+    let recipe = Recipe.create(context: container.mainContext, content: .init(name: "野菜スープ"))
+    NavigationStack {
+        RecipePhotosSection()
+            .environment(recipe)
+            .navigationTitle(recipe.name)
+    }
+    .cooklePreviewAppAssembly(CookleAppAssemblyFactory.preview(modelContainer: container))
 }
