@@ -21,6 +21,7 @@ struct DiaryFormRecipeListView: View {
     @State private var temporarySelection = Set<Recipe>()
     @State private var searchText = ""
     @State private var isSearchPresented = false
+    @State private var isRegistrationPresented = false
 
     private let type: DiaryObjectType
 
@@ -36,7 +37,17 @@ struct DiaryFormRecipeListView: View {
             )
             .textInputAutocapitalization(.never)
             .autocorrectionDisabled()
+            .sheet(isPresented: $isRegistrationPresented) {
+                DiaryRecipeRegistrationView { recipe in
+                    temporarySelection.insert(recipe)
+                }
+            }
             .toolbar {
+                ToolbarItem(placement: .bottomBar) {
+                    Button("Register New Recipe", systemImage: "plus") {
+                        isRegistrationPresented = true
+                    }
+                }
                 ToolbarItem {
                     Button {
                         selection = temporarySelection
