@@ -4406,6 +4406,40 @@
         }
       }
     },
+    "Start a recipe with just a name, then add photos when you are ready." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start a recipe with just a name, then add photos when you are ready."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empieza una receta solo con un nombre y añade fotos cuando quieras."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commencez une recette avec un simple nom, puis ajoutez des photos quand vous le souhaitez."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "まずは名前だけでレシピを登録。写真は後から追加できます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "先用名称创建食谱，之后随时添加照片。"
+          }
+        }
+      }
+    },
     "The recipe stays in your collection even if you cancel the Diary." : {
       "localizations" : {
         "en" : {

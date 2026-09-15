@@ -31,7 +31,7 @@ struct PhotoListView: View {
             .cookleTopLevelNavigationChrome("Photos")
             .toolbar {
                 ToolbarItem {
-                    AddRecipeButton()
+                    AddRecipeButton(showsTitle: true)
                 }
                 ToolbarItem {
                     if isPresented {
@@ -60,7 +60,7 @@ private extension PhotoListView {
         ContentUnavailableView {
             Label("No Photos Yet", systemImage: "photo.on.rectangle")
         } description: {
-            Text("Add photos to browse them here.")
+            Text("Start a recipe with just a name, then add photos when you are ready.")
         } actions: {
             AddRecipeButton()
         }
@@ -131,3 +131,17 @@ private extension PhotoListView {
         PhotoListView()
     }
 }
+
+#if DEBUG
+#Preview("Empty photo collection") {
+    if let container = try? ModelContainer(
+        for: Recipe.self,
+        configurations: .init(isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+    ) {
+        NavigationStack {
+            PhotoListView()
+        }
+        .cooklePreviewAppAssembly(CookleAppAssemblyFactory.preview(modelContainer: container))
+    }
+}
+#endif

@@ -13,6 +13,7 @@ struct AddRecipeButton: View {
     @Environment(CookleAppLogging.self)
     private var logging
 
+    private let showsTitle: Bool
     private let action: (() -> Void)?
 
     var body: some View {
@@ -28,11 +29,15 @@ struct AddRecipeButton: View {
                 isPresented = true
             }
         } label: {
-            Label {
+            if showsTitle {
                 Text("Add Recipe")
-            } icon: {
-                Image(systemName: "plus")
-                    .accessibilityHidden(true)
+            } else {
+                Label {
+                    Text("Add Recipe")
+                } icon: {
+                    Image(systemName: "plus")
+                        .accessibilityHidden(true)
+                }
             }
         }
         .sheet(isPresented: $isPresented) {
@@ -40,7 +45,8 @@ struct AddRecipeButton: View {
         }
     }
 
-    init(action: (() -> Void)? = nil) {
+    init(showsTitle: Bool = false, action: (() -> Void)? = nil) {
+        self.showsTitle = showsTitle
         self.action = action
     }
 }
