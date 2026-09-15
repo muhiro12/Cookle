@@ -57,53 +57,90 @@ struct DiaryFormRecipeListView: View {
 
 private extension DiaryFormRecipeListView {
     @ViewBuilder var contentView: some View {
-        if !filteredRecipes.isEmpty {
-            recipeList
-        } else {
-            emptyStateView
-        }
-    }
-
-    var recipeList: some View {
-        List(
-            filteredRecipes,
-            selection: $temporarySelection
-        ) { recipe in
-            RecipeLabel()
-                .labelStyle(.titleAndLargeIcon)
-                .tag(recipe)
-                .environment(recipe)
-        }
-        .mhListChrome()
-    }
-
-    @ViewBuilder var emptyStateView: some View {
-        if !recipes.isEmpty {
-            ContentUnavailableView.search(text: searchText)
-        } else {
+        if recipes.isEmpty {
             ContentUnavailableView {
                 Label("No Recipes Yet", systemImage: "book.pages")
             } description: {
                 Text("Add a recipe to start building your collection.")
             }
+        } else {
+            recipeList
         }
     }
 
-    var filteredRecipes: [Recipe] {
+    var recipeList: some View {
+        List(selection: $temporarySelection) {
+            Section {
+                if selectedRecipes.isEmpty {
+                    Text("Choose recipes from the list below.")
+                        .foregroundStyle(.secondary)
+                } else {
+                    recipeRows(selectedRecipes)
+                }
+            } header: {
+                Text("Selected (\(selectedRecipes.count))")
+            }
+
+            Section {
+                if candidateRecipes.isEmpty {
+                    if searchText.isEmpty {
+                        Text("All recipes are selected.")
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Text("No matching recipes.")
+                            .foregroundStyle(.secondary)
+                    }
+                } else {
+                    recipeRows(candidateRecipes)
+                }
+            } header: {
+                Text("Add Recipes")
+            }
+        }
+        .mhListChrome()
+    }
+
+    var selectedRecipes: [Recipe] {
         recipes.filter { recipe in
+            temporarySelection.contains(recipe)
+        }
+    }
+
+    var candidateRecipes: [Recipe] {
+        recipes.filter { recipe in
+            guard !temporarySelection.contains(recipe) else {
+                return false
+            }
             guard !searchText.isEmpty else {
                 return true
             }
             return recipe.name.normalizedContains(searchText)
         }
     }
-}
 
-#Preview(traits: .modifier(CookleSampleData())) {
-    NavigationStack {
-        DiaryFormRecipeListView(
-            selection: .constant([]),
-            type: .dinner
-        )
+    func recipeRows(_ recipes: [Recipe]) -> some View {
+        ForEach(recipes) { recipe in
+            RecipeLabel()
+                .labelStyle(.titleAndLargeIcon)
+                .tag(recipe)
+                .environment(recipe)
+        }
     }
 }
+
+#if DEBUG
+#Preview("No selection") {
+    DiaryRecipeSelectionPreview(selectedCount: 0)
+        .cooklePreviewAppAssembly(DiaryRecipeSelectionPreview.assembly)
+}
+
+#Preview("Selected recipes") {
+    DiaryRecipeSelectionPreview(selectedCount: 2)
+        .cooklePreviewAppAssembly(DiaryRecipeSelectionPreview.assembly)
+}
+
+#Preview("All selected") {
+    DiaryRecipeSelectionPreview(selectedCount: 5)
+        .cooklePreviewAppAssembly(DiaryRecipeSelectionPreview.assembly)
+}
+#endif
