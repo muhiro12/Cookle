@@ -323,7 +323,7 @@ private extension InferRecipeFormView {
             note = RecipeWebsiteImportOperations.note(inference.note, sourceURL: sourceURL)
             dismiss()
         } catch {
-            guard !Task.isCancelled else {
+            guard !Task.isCancelled, !(error is CancellationError) else {
                 return
             }
             errorMessage = error.localizedDescription

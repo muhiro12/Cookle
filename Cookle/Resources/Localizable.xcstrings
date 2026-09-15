@@ -1,6 +1,181 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "This recipe text is too long to process. Keep only the recipe details and try again." : {
+      "comment" : "Recipe inference exceeded the model context limit.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This recipe text is too long to process. Keep only the recipe details and try again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El texto de la receta es demasiado largo. Conserva solo los detalles de la receta e inténtalo de nuevo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le texte est trop long. Ne gardez que les détails de la recette, puis réessayez."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピの文章が長すぎて処理できません。レシピに必要な部分だけを残して、もう一度お試しください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "食谱文本过长，无法处理。请仅保留食谱内容后重试。"
+          }
+        }
+      }
+    },
+    "Apple Intelligence cannot process this recipe's language. You can enter the recipe manually." : {
+      "comment" : "Recipe inference does not support the input language.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence cannot process this recipe's language. You can enter the recipe manually."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence no puede procesar el idioma de esta receta. Puedes introducirla manualmente."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence ne peut pas traiter la langue de cette recette. Vous pouvez la saisir manuellement."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligenceはこのレシピの言語を処理できません。レシピを手動で入力できます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence无法处理此食谱的语言。你可以手动输入食谱。"
+          }
+        }
+      }
+    },
+    "Apple Intelligence could not process this text. You can edit it or enter the recipe manually." : {
+      "comment" : "Recipe inference was refused or blocked by model guardrails.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence could not process this text. You can edit it or enter the recipe manually."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence no pudo procesar este texto. Puedes editarlo o introducir la receta manualmente."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence n’a pas pu traiter ce texte. Vous pouvez le modifier ou saisir la recette manuellement."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligenceでこの文章を処理できませんでした。文章を編集するか、レシピを手動で入力できます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence无法处理此文本。你可以编辑文本或手动输入食谱。"
+          }
+        }
+      }
+    },
+    "Apple Intelligence is currently unavailable. Try again later or enter the recipe manually." : {
+      "comment" : "The model became unavailable during recipe inference.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence is currently unavailable. Try again later or enter the recipe manually."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence no está disponible actualmente. Inténtalo más tarde o introduce la receta manualmente."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence est indisponible pour le moment. Réessayez plus tard ou saisissez la recette manuellement."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "現在Apple Intelligenceを利用できません。時間をおいて再度試すか、レシピを手動で入力してください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence暂时不可用。请稍后重试或手动输入食谱。"
+          }
+        }
+      }
+    },
+    "The recipe could not be generated. Try again or enter the recipe manually." : {
+      "comment" : "Recipe inference failed without producing a usable response.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The recipe could not be generated. Try again or enter the recipe manually."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo generar la receta. Inténtalo de nuevo o introdúcela manualmente."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La recette n’a pas pu être générée. Réessayez ou saisissez-la manuellement."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピを作成できませんでした。もう一度試すか、レシピを手動で入力してください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法生成食谱。请重试或手动输入食谱。"
+          }
+        }
+      }
+    },
     "Recipe URL" : {
       "localizations" : {
         "en" : {

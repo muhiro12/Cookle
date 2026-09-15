@@ -44,6 +44,7 @@ enum RecipeFoundationModelInferenceOperations {
         }
 
         let session = LanguageModelSession(
+            model: model,
             instructions: inferenceInstructions
         )
 
@@ -52,16 +53,20 @@ enum RecipeFoundationModelInferenceOperations {
                 to: inferencePrompt(
                     text: normalizedText
                 ),
-                generating: InferredRecipe.self
+                generating: InferredRecipe.self,
+                options: .init(samplingMode: .greedy)
             ).content
             try Task.checkCancellation()
             let sanitized = RecipeInferenceOperations.sanitizedInference(inferred.recipeInferenceResult)
             if RecipeInferenceOperations.isMeaningfulInference(sanitized) {
                 return sanitized
             }
+        } catch is CancellationError {
+            throw CancellationError()
         } catch {
             try Task.checkCancellation()
-            // Fall back to deterministic extraction below.
+            // A failed generation must not masquerade as a successfully extracted recipe.
+            throw RecipeModelInferenceError(error: error)
         }
 
         guard RecipeInferenceOperations.isMeaningfulInference(fallback) else {
