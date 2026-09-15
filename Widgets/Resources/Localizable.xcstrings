@@ -1,960 +1,961 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "%@" : {},
-    "Breakfast" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Breakfast"
+  "sourceLanguage": "en",
+  "strings": {
+    "Breakfast": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Breakfast"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Desayuno"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desayuno"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Petit-déjeuner"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Petit-déjeuner"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "朝食"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "朝食"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "早餐"
-          }
-        }
-      }
-    },
-    "Configure which diary to show." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configure which diary to show."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configura qué diario mostrar."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configurez le journal à afficher."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "表示する日記を設定します。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "配置要显示的日记。"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "早餐"
           }
         }
       }
     },
-    "Configure which recipe to show." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configure which recipe to show."
+    "Configure which diary to show.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configure which diary to show."
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configura qué receta mostrar."
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configura qué diario mostrar."
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configurez la recette à afficher."
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configurez le journal à afficher."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "表示するレシピを設定します。"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "表示する日記を設定します。"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "配置要显示的食谱。"
-          }
-        }
-      }
-    },
-    "Diary" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Diary"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Diario"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Journal"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "日記"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "日记"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "配置要显示的日记。"
           }
         }
       }
     },
-    "Diary Configuration" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Diary Configuration"
+    "Configure which recipe to show.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configure which recipe to show."
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configuración del diario"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configura qué receta mostrar."
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configuration du journal"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configurez la recette à afficher."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "日記の設定"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "表示するレシピを設定します。"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "日记配置"
-          }
-        }
-      }
-    },
-    "Diary Selection" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Diary Selection"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Selección de diario"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sélection du journal"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "日記の選択"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "日记选择"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "配置要显示的食谱。"
           }
         }
       }
     },
-    "Dinner" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dinner"
+    "Diary": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diary"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cena"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diario"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dîner"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Journal"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "夕食"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日記"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "晚餐"
-          }
-        }
-      }
-    },
-    "Error" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Error"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Error"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erreur"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "エラー"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "错误"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日记"
           }
         }
       }
     },
-    "Last Opened" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Last Opened"
+    "Diary Configuration": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diary Configuration"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Última abierta"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configuración del diario"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dernière recette ouverte"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configuration du journal"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "最後に開いたレシピ"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日記の設定"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "上次打开"
-          }
-        }
-      }
-    },
-    "Latest" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Latest"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Más reciente"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Plus récent"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "最新"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "最新"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日记配置"
           }
         }
       }
     },
-    "Lunch" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lunch"
+    "Diary Selection": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diary Selection"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Almuerzo"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selección de diario"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Déjeuner"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sélection du journal"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "昼食"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日記の選択"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "午餐"
-          }
-        }
-      }
-    },
-    "No Diaries" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No Diaries"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No hay diarios"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucun journal"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "日記がありません"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "没有日记"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日记选择"
           }
         }
       }
     },
-    "No Recipes" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No Recipes"
+    "Dinner": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dinner"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No hay recetas"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cena"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune recette"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dîner"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピがありません"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "夕食"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "没有食谱"
-          }
-        }
-      }
-    },
-    "None" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "None"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ninguno"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucun"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "なし"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "晚餐"
           }
         }
       }
     },
-    "Not Found" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not Found"
+    "Error": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Error"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No se encontró"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Error"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Introuvable"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erreur"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "見つかりません"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "エラー"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "未找到"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "错误"
           }
         }
       }
     },
-    "Random" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Random"
+    "Last Opened": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last Opened"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aleatorio"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Última abierta"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aléatoire"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dernière recette ouverte"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ランダム"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最後に開いたレシピ"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "随机"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上次打开"
           }
         }
       }
     },
-    "Recipe" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recipe"
+    "Latest": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Latest"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Receta"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Más reciente"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recette"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plus récent"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピ"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最新"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "食谱"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最新"
           }
         }
       }
     },
-    "Recipe Configuration" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recipe Configuration"
+    "Lunch": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lunch"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configuración de la receta"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Almuerzo"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configuration de la recette"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Déjeuner"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピの設定"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "昼食"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "食谱配置"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "午餐"
           }
         }
       }
     },
-    "Recipe Photo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recipe Photo"
+    "No Diaries": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Diaries"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Foto de la receta"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No hay diarios"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Photo de la recette"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun journal"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピの写真"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日記がありません"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "食谱照片"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有日记"
           }
         }
       }
     },
-    "Recipe Selection" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recipe Selection"
+    "No Recipes": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Recipes"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Selección de receta"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No hay recetas"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sélection de la recette"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune recette"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピの選択"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "レシピがありません"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "食谱选择"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有食谱"
           }
         }
       }
     },
-    "Recipe Unavailable" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recipe Unavailable"
+    "None": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "None"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Receta no disponible"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ninguno"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recette indisponible"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピを表示できません"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "なし"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "食谱不可用"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无"
           }
         }
       }
     },
-    "Selected Recipe" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Selected Recipe"
+    "Not Found": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not Found"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Receta elegida"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se encontró"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recette choisie"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Introuvable"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "指定したレシピ"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "見つかりません"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "指定食谱"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未找到"
           }
         }
       }
     },
-    "Selection" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Selection"
+    "Random": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Random"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Selección"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aleatorio"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sélection"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aléatoire"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "選択"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ランダム"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "选择"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "随机"
           }
         }
       }
     },
-    "Show a chosen recipe, or use Last Opened, Latest, or Random." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show a chosen recipe, or use Last Opened, Latest, or Random."
+    "Recipe": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recipe"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Muestra una receta elegida, la última abierta, la más reciente o una al azar."
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receta"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Affichez une recette choisie, la dernière consultée, la plus récente ou une recette aléatoire."
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recette"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "指定したレシピ、最後に開いたレシピ、最新、ランダムから表示を選べます。"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "レシピ"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "显示指定食谱，或选择最近打开、最新或随机食谱。"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "食谱"
           }
         }
       }
     },
-    "Shows a recipe by selection: Latest, Last Opened, or Random." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shows a recipe by selection: Latest, Last Opened, or Random."
+    "Recipe Configuration": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recipe Configuration"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Muestra una receta según la selección: la más reciente, la última abierta o una al azar."
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configuración de la receta"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Affiche une recette selon la sélection : la plus récente, la dernière ouverte ou une recette aléatoire."
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configuration de la recette"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "選択に応じて、最新、最後に開いた、またはランダムなレシピを表示します。"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "レシピの設定"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "根据选择显示最新、上次打开或随机食谱。"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "食谱配置"
           }
         }
       }
     },
-    "Shows diary by selection: Latest, Today, or Random." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shows diary by selection: Latest, Today, or Random."
+    "Recipe Photo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recipe Photo"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Muestra un diario según la selección: el más reciente, el de hoy o uno al azar."
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Foto de la receta"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Affiche un journal selon la sélection : le plus récent, celui d’aujourd’hui ou un journal aléatoire."
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photo de la recette"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "選択に応じて、最新、今日、またはランダムな日記を表示します。"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "レシピの写真"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "根据选择显示最新、今天或随机日记。"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "食谱照片"
           }
         }
       }
     },
-    "Today" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Today"
+    "Recipe Selection": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recipe Selection"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hoy"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selección de receta"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aujourd’hui"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sélection de la recette"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "今日"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "レシピの選択"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "今天"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "食谱选择"
           }
         }
       }
     },
-    "Choose a Recipe" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choose a Recipe"
+    "Selection": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selection"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Elige una receta"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selección"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choisir une recette"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sélection"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピを選択"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "選択"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "选择食谱"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择"
+          }
+        }
+      }
+    },
+    "Shows a recipe by selection: Latest, Last Opened, or Random.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shows a recipe by selection: Latest, Last Opened, or Random."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Muestra una receta según la selección: la más reciente, la última abierta o una al azar."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Affiche une recette selon la sélection : la plus récente, la dernière ouverte ou une recette aléatoire."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "選択に応じて、最新、最後に開いた、またはランダムなレシピを表示します。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "根据选择显示最新、上次打开或随机食谱。"
+          }
+        }
+      }
+    },
+    "Shows diary by selection: Latest, Today, or Random.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shows diary by selection: Latest, Today, or Random."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Muestra un diario según la selección: el más reciente, el de hoy o uno al azar."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Affiche un journal selon la sélection : le plus récent, celui d’aujourd’hui ou un journal aléatoire."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "選択に応じて、最新、今日、またはランダムな日記を表示します。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "根据选择显示最新、今天或随机日记。"
+          }
+        }
+      }
+    },
+    "Today": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hoy"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aujourd’hui"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今日"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今天"
+          }
+        }
+      }
+    },
+    "%@": {
+      "shouldTranslate": false
+    },
+    "Choose a Recipe": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a Recipe"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elige una receta"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisir une recette"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "レシピを選択"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择食谱"
+          }
+        }
+      }
+    },
+    "Recipe Unavailable": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recipe Unavailable"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receta no disponible"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recette indisponible"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "レシピを表示できません"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "食谱不可用"
+          }
+        }
+      }
+    },
+    "Selected Recipe": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selected Recipe"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receta elegida"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recette choisie"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "指定したレシピ"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "指定食谱"
+          }
+        }
+      }
+    },
+    "Show a chosen recipe, or use Last Opened, Latest, or Random.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show a chosen recipe, or use Last Opened, Latest, or Random."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Muestra una receta elegida, la última abierta, la más reciente o una al azar."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Affichez une recette choisie, la dernière consultée, la plus récente ou une recette aléatoire."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "指定したレシピ、最後に開いたレシピ、最新、ランダムから表示を選べます。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "显示指定食谱，或选择最近打开、最新或随机食谱。"
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }
