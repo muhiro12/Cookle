@@ -1,0 +1,126 @@
+# Cookle release tools
+
+This isolated macOS SwiftPM package pins Apogee **1.0.0** for Cookle release
+preparation. The published tag is `1.0`, resolved by SwiftPM as `1.0.0` at
+`ced812230149a1c2db7155e054a02af18c6d21c9`. Commit `Package.resolved` with any
+intentional dependency update. No app, library, Widget, or Watch target links
+Apogee.
+
+Xcode Cloud remains responsible for formal builds, tests, and archives.
+A successful release-tool command does not qualify the app for distribution.
+
+## Setup
+
+Run from the repository root using the selected Xcode toolchain:
+
+```sh
+xcode-select -p
+xcodebuild -version
+swift package --package-path Tools/Release resolve
+swift package --package-path Tools/Release plugin \
+  --allow-network-connections all apogee -- --help
+```
+
+SwiftPM builds the pinned command plugin and executable on first invocation.
+The plugin runs in `Tools/Release`, where it discovers `apogee.json`.
+Configuration-relative metadata paths resolve beside that JSON file; explicit
+CLI paths resolve from the plugin's working directory. Use absolute CLI paths
+to avoid ambiguity.
+
+## Prepare and validate metadata
+
+Keep version-specific inputs in ignored `AppStore/Metadata/`, or another private
+directory. Use actual App Store Connect locale identifiers, not Xcode language
+codes. Confirm the selected version's locales before any remote write.
+
+For example, a metadata directory can contain:
+
+```text
+<version>/
+  en-US/release_notes.txt
+  es-ES/release_notes.txt
+  fr-FR/release_notes.txt
+  ja/release_notes.txt
+  zh-Hans/release_notes.txt
+```
+
+Validate the intended input before configuring credentials:
+
+```sh
+export RELEASE_METADATA_PATH="/absolute/private/path/to/intended-version"
+swift package --package-path Tools/Release plugin \
+  --allow-network-connections all apogee validate-metadata \
+  --metadata-path "$RELEASE_METADATA_PATH" --release-notes-only
+```
+
+Validation checks local UTF-8 files and safe paths without credentials or App
+Store Connect requests. SwiftPM may fetch dependencies. It does not establish
+Apple's locale support, field length limits, account permissions, or editability.
+Omit files for unchanged fields; an empty file requests clearing that field.
+Do not use temporary text or an invented version for a remote rehearsal.
+
+## Authentication and read-only status
+
+Apogee 1.0 uses an App Store Connect team API key. Store its private key outside
+the repository with owner-only access. Configure the execution shell locally:
+
+```sh
+export ASC_KEY_ID="YOUR_TEAM_KEY_ID"
+export ASC_ISSUER_ID="YOUR_TEAM_ISSUER_ID"
+export ASC_PRIVATE_KEY_PATH="/absolute/private/path/to/AuthKey_YOUR_TEAM_KEY_ID.p8"
+```
+
+Apogee does not load `.env` files automatically. A nonempty
+`ASC_PRIVATE_KEY_BASE64` overrides `ASC_PRIVATE_KEY_PATH`. Keep credentials,
+tokens, account output, and unpublished metadata out of Git and public issues.
+The configured app ID selects Cookle; it does not restrict the key's permissions.
+See [Apple's API key setup][api-keys].
+
+Read an explicitly selected existing version:
+
+```sh
+export RELEASE_VERSION="ACTUAL_EXISTING_VERSION"
+swift package --package-path Tools/Release plugin \
+  --allow-network-connections all apogee release-status \
+  --app-id 6483363226 --platform IOS --version "$RELEASE_VERSION"
+```
+
+Confirm the version, attached build, review state, and release timing against
+App Store Connect. Read-only status does not prove write access.
+
+## Review and apply release notes
+
+Select the actual editable version and complete localized text. Preserve the
+current remote values in private storage, then inspect the diff:
+
+```sh
+swift package --package-path Tools/Release plugin \
+  --allow-network-connections all apogee update-release-notes \
+  --app-id 6483363226 --platform IOS --version "$RELEASE_VERSION" \
+  --metadata-path "$RELEASE_METADATA_PATH" --dry-run
+```
+
+For the approved operation, replace `--dry-run` with `--apply`. Read back every
+selected field, then rerun the same dry-run and confirm no remaining changes.
+Do not overwrite unrelated fields or locales. Keep raw plans in ignored
+`AppStore/Plans/` or other private storage.
+
+Build attachment and review submission are separate release decisions. Record
+the exact candidate commit, Cloud toolchain/build, tests, signed archive,
+TestFlight checks, metadata, and remaining product gates before submission.
+Apogee 1.0 does not apply screenshot uploads or manage Xcode Cloud workflows;
+use App Store Connect for those operations.
+
+After release, review availability, crash/sync reports, and user feedback for
+the selected version. Pause a phased release where appropriate and prepare a
+corrective release if needed. Do not assume that a previous binary can read a
+newer SwiftData schema.
+
+## Remaining qualification
+
+Package resolution, plugin execution, and offline validation are the initial
+adoption boundary. Account access, remote metadata write/read-back, and the
+full release rehearsal remain tracked in [Cookle #125][release-issue].
+
+[api-keys]: https://developer.apple.com/help/app-store-connect/get-started/app-store-connect-api/
+[release-issue]: https://github.com/muhiro12/Cookle/issues/125

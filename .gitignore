@@ -18,3 +18,10 @@ xcuserdata/
 
 **/*.playground/playground.xcworkspace/xcshareddata/*
 !**/*.playground/playground.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
+
+# Release credentials and private metadata
+.env
+.env.*
+*.p8
+AppStore/Metadata/
+AppStore/Plans/
