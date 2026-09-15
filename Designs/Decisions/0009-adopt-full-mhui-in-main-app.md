@@ -27,10 +27,12 @@ requires changing the product's information architecture.
   `1.19.0..<2.0.0` and applies `.mhTheme(.standard)` at its application root.
   It accesses existing MHDesign metrics through MHUI's re-export, without a
   separate direct MHDesign product dependency or metric-value changes.
-- Recipe Detail uses `mhScreen`, nine `mhSection` groups, `MHGroupedRows`,
-  adaptive ingredient `mhKeyValue` layout, and a vertical `MHActionGroup`.
-  Cooking is primary and deletion is destructive. Existing facts, conditions,
-  section and action order, handlers, navigation, and confirmations remain.
+- Recipe Detail uses `mhScreen` with a leading photo and compact recipe facts,
+  followed by cooking and diary actions. Ingredients, categories, and diaries
+  use grouped surfaces; steps and notes use unframed reading sections.
+  Dates and secondary actions form the quieter closing area. Cooking is
+  primary and deletion is destructive. Existing facts, conditions, handlers,
+  navigation, and confirmations remain; Edit stays in the native toolbar.
 - Adopt MHUI broadly at app-owned screen boundaries. Choose composed reading
   surfaces or native List/Form chrome according to the screen's interaction
   needs. Native selection, swipe actions, reordering, fields, focus, and
@@ -55,6 +57,9 @@ The dependency baseline advanced to MHUI 1.19 on 2026-09-15. Cookle inherits
 its revised semantic palette, typography, surface borders, and heading
 decoration removal through the standard components and theme. The app does
 not use removed heading-cue APIs or override package-owned theme values.
+The subsequent composition refinement applies the SDK's visual hierarchy:
+reading content gains emphasis through alignment and spacing, while surfaces
+group related rows and action styles identify the next useful operation.
 
 The application root and expanded Recipe Detail establish the first slice.
 The [main-app rollout](../Plans/mhui-app-rollout.md) records subsequent
@@ -77,11 +82,12 @@ checks. The original adoption left the approved MHUI 1.18 package unchanged.
 
 ## Consequences
 
-Recipe Detail delegates more layout and action styling to MHUI. Additional
-insets and adaptive layout can increase wrapping and scroll length. The
-selected comparison accepts that tradeoff while preserving the recipe data
-and available operations. Native-container adoption remains a complete route
-for screens with different interaction needs.
+Recipe Detail delegates shared spacing, typography, and action styling to
+MHUI while Cookle chooses the reading order and where grouped surfaces help.
+Unframed prose and compact facts reduce repeated card boundaries. Adaptive
+layout can still increase wrapping and scroll length while preserving recipe
+data and available operations. Native-container adoption remains a complete
+route for screens with different interaction needs.
 
 ADR 0008 remains authoritative for all unaffected package, library, adapter,
 Operations, and test-posture boundaries.

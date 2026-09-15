@@ -27,8 +27,22 @@ struct RecipeView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: theme.spacing.section) {
+            RecipePhotosSection()
+            RecipeOverview(
+                servingSize: recipe.servingSize,
+                cookingTime: recipe.cookingTime
+            )
+            MHActionGroup {
+                startCookingButton
+                    .buttonStyle(.mhPrimary)
+                AddRecipeToTodayDiaryButton()
+            }
             recipeSections
-            recipeActionSection
+            RecipeProvenance(
+                createdAt: recipe.createdTimestamp,
+                updatedAt: recipe.modifiedTimestamp
+            )
+            RecipeSecondaryActions()
         }
         .mhScreen()
         .navigationTitle(recipe.name)
@@ -79,33 +93,12 @@ struct RecipeView: View {
 
 private extension RecipeView {
     @ViewBuilder var recipeSections: some View {
-        RecipePhotosSection()
-        RecipeServingSizeSection(presentation: .mhui)
-        RecipeCookingTimeSection(presentation: .mhui)
         RecipeIngredientsSection(presentation: .mhui)
-        RecipeStepsSection(presentation: .mhui)
+        RecipeStepsSection(presentation: .reading)
         AdvertisementSection(.medium)
         RecipeCategoriesSection(presentation: .mhui)
-        RecipeNoteSection(presentation: .mhui)
+        RecipeNoteSection(presentation: .reading)
         RecipeDiariesSection(presentation: .mhui)
-        RecipeCreatedAtSection(presentation: .mhui)
-        RecipeUpdatedAtSection(presentation: .mhui)
-    }
-
-    var recipeActionSection: some View {
-        VStack(alignment: .leading, spacing: theme.spacing.content) {
-            MHActionGroup(layout: .vertical) {
-                startCookingButton
-                    .buttonStyle(.mhPrimary)
-                ShareRecipeLinkButton()
-                AddRecipeToTodayDiaryButton()
-                EditRecipeButton()
-                DuplicateRecipeButton()
-                DeleteRecipeButton()
-                    .buttonStyle(.mhDestructive)
-            }
-            MHSectionFooter(Text(shareRecipeLinkFooter))
-        }
     }
 
     @ViewBuilder var startCookingButton: some View {
@@ -129,10 +122,6 @@ private extension RecipeView {
         )
         ? String(localized: "Resume Cooking")
         : String(localized: "Start Cooking")
-    }
-
-    var shareRecipeLinkFooter: String {
-        String(localized: "recipe.shareLink.footer")
     }
 
     func startOrResumeCooking() {

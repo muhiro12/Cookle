@@ -2,6 +2,9 @@ import MHUI
 import SwiftUI
 
 struct RecipeContentSection<Content: View>: View {
+    @Environment(\.mhTheme)
+    private var theme
+
     private let title: LocalizedStringKey
     private let presentation: RecipeSectionPresentation
     private let content: Content
@@ -19,6 +22,14 @@ struct RecipeContentSection<Content: View>: View {
                 content
             }
             .mhSection(title)
+        case .reading:
+            VStack(alignment: .leading, spacing: theme.spacing.content) {
+                MHSectionHeader(title: Text(title))
+                VStack(alignment: .leading, spacing: theme.spacing.content) {
+                    content
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
         }
     }
 

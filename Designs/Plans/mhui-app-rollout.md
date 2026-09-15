@@ -14,8 +14,9 @@ The root and Recipe Detail implementation is committed as `5f247dfa`; the
 original comparison and first adoption evidence are committed as `9d09bf76`.
 This record follows the subsequent screen-by-screen implementation.
 
-Existing content, order, routes, fields, actions, and persistence stay in the
-app. New features and diary-list information architecture are separate work.
+Existing content, routes, fields, actions, and persistence stay in the app.
+Reading and action order are app-owned presentation decisions. New features
+and diary-list information architecture are separate work.
 CookleLibrary, Watch, Widgets, App Intent implementations, and the MHUI
 package remain outside this change.
 
@@ -28,9 +29,9 @@ resolved-pin guardrails reject the previous 1.18 baseline.
 
 The standard theme and components supply the revised low-chroma palette,
 softer text and surface treatment, motion timing, and removal of heading rules.
-Cookle uses none of the removed heading-cue APIs. Its existing native
-List/Form and composed-screen routes follow the updated adoption guide, so
-no app Swift changes or theme overrides are required for this update.
+Cookle uses none of the removed heading-cue APIs. The initial compatibility
+pass required no app Swift changes or theme overrides. The subsequent
+composition pass below applies the design intent to app-owned layouts.
 
 The Cookle Simulator build and retained repository checks pass, with no
 build warnings or errors. Verification uses Xcode 27.0 (`27A266a`) and iOS
@@ -65,6 +66,29 @@ Current-run images, logs, and coverage are retained locally under
 `.build/ci/mhui-1.19/`. The historical rollout evidence below remains scoped
 to MHUI 1.18. Its destructive-action contrast review remains open; this
 dependency update does not establish VoiceOver or release acceptance.
+
+### Recipe Composition
+
+The pinned SDK's [visual principles][mhui-visual-principles] distinguish a
+quiet content plane, important controls, and selective emphasis for photos
+and summaries. Cookle
+applies those roles to Recipe Detail instead of assigning every field the
+same framed section treatment.
+
+- The photo leads into serving size and cooking time, followed by the primary
+  cooking entry and the action to add the recipe to today's diary.
+- Recipe facts share one compact row and stack at accessibility text sizes.
+- Ingredients, categories, and diary history retain grouped surfaces. Steps
+  and notes use shared typography and headers on an unframed reading plane.
+- Creation and update dates form a compact metadata footer. Share and
+  Duplicate use quiet actions; deletion retains its destructive style and
+  confirmation. Edit remains available in the native toolbar.
+
+The standard theme, SDK metrics, recipe data, action handlers, and native
+list/form routes are unchanged. Native search and Intent snippet reuse keeps
+its existing section presentation.
+
+[mhui-visual-principles]: https://github.com/muhiro12/MHUI/blob/81f48d1784ad85aadf4fccdf1e4e85606ac5c142/Designs/Guides/VISUAL_DESIGN_PRINCIPLES.md
 
 ## Presentation Choices
 

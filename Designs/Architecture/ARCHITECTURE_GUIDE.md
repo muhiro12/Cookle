@@ -83,10 +83,12 @@ symmetry with sibling apps.
 
 ## Presentation Adoption
 
-Recipe Detail uses MHUI screen scrolling, composed sections, grouped rows,
-adaptive ingredient values, and semantic action styles. Cookle retains all
-content, ordering, routes, action handlers, and native presentations. Shared
-recipe sections default to native presentation for search and Intent snippets.
+Recipe Detail places the photo, compact facts, and cooking entry before the
+ingredients and unframed instructions. MHUI supplies screen spacing, reading
+headers, grouped rows, adaptive ingredient values, and semantic action styles.
+Dates and secondary actions occupy the closing area. Cookle retains content,
+routes, action handlers, and native presentations. Shared recipe sections
+default to native presentation for search and Intent snippets.
 
 Recipe browsing and editing, diaries, search, tags, settings, photo metadata,
 and diagnostics use native List and Form chrome. These are complete adoption

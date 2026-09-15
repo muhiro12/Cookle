@@ -39,8 +39,10 @@ focus is personal cooking organization:
 ## Presentation Adoption Update
 
 The main app now links full MHUI 1.19 with a standard root theme. Recipe
-Detail uses composed MHUI screen, section, row, ingredient-value, and action
-presentation while retaining the same recipe content and operations. Lists,
+Detail leads with its photo, compact facts, and cooking entry. Ingredients
+and related records use grouped surfaces, while steps and notes use unframed
+reading sections. Dates and secondary actions close the page. The recipe
+content and operations remain the same. Lists,
 forms, search, settings, and diagnostics use native-container chrome. Cooking
 uses shared sections, stable surfaces, and semantic actions; the photo grid
 uses screen spacing and section headers; detached editors use input chrome.
