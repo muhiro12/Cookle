@@ -29,6 +29,8 @@ struct RecipeFormView: View {
     @AppStorage(\.isDebugOn)
     private var isDebugOn
 
+    @State private var activeImportSource: RecipeImportSource?
+
     @State private var editMode = EditMode.inactive
     @State private var isDebugAlertPresented = false
     @State private var isRestoreDraftConfirmationPresented = false
@@ -50,6 +52,21 @@ struct RecipeFormView: View {
         .navigationTitle(editMode == .inactive ? Text("Recipe") : Text("Editing..."))
         .toolbar {
             toolbarItems
+        }
+        .sheet(item: $activeImportSource) { source in
+            if #available(iOS 26.0, *) {
+                InferRecipeFormNavigationView(
+                    name: $model.name,
+                    servingSize: $model.servingSize,
+                    cookingTime: $model.cookingTime,
+                    ingredients: $model.ingredients,
+                    steps: $model.steps,
+                    categories: $model.categories,
+                    note: $model.note,
+                    source: source
+                )
+                .interactiveDismissDisabled()
+            }
         }
         .interactiveDismissDisabled()
         .confirmationDialog(
@@ -108,7 +125,8 @@ struct RecipeFormView: View {
         }
     }
 
-    init(type: RecipeFormType) {
+    init(type: RecipeFormType, initialImportSource: RecipeImportSource? = nil) {
+        _activeImportSource = State(initialValue: initialImportSource)
         self.type = type
         _model = State(
             initialValue: RecipeFormModel(
@@ -119,6 +137,10 @@ struct RecipeFormView: View {
 }
 
 extension RecipeFormView {
+    var importSourceSelection: Binding<RecipeImportSource?> {
+        $activeImportSource
+    }
+
     var formModel: RecipeFormModel {
         model
     }

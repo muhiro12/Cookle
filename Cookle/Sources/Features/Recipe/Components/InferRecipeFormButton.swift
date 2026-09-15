@@ -2,53 +2,16 @@ import SwiftUI
 
 @available(iOS 26.0, *)
 struct InferRecipeFormButton: View {
-    @Binding private var name: String
-    @Binding private var servingSize: String
-    @Binding private var cookingTime: String
-    @Binding private var ingredients: [RecipeFormIngredient]
-    @Binding private var steps: [String]
-    @Binding private var categories: [String]
-    @Binding private var note: String
-
-    @State private var isPresented = false
+    let source: RecipeImportSource
+    @Binding var selection: RecipeImportSource?
 
     var body: some View {
         Button {
-            isPresented = true
+            selection = source
         } label: {
-            Text("Infer Recipe From Text")
-                .frame(
-                    minHeight: CookleAccessibilityLayout.minimumHitTargetSize
-                )
+            Label(source.title, systemImage: source.systemImage)
+                .frame(minHeight: CookleAccessibilityLayout.minimumHitTargetSize)
                 .contentShape(Rectangle())
         }
-        .sheet(isPresented: $isPresented) {
-            InferRecipeFormNavigationView(
-                name: $name,
-                servingSize: $servingSize,
-                cookingTime: $cookingTime,
-                ingredients: $ingredients,
-                steps: $steps,
-                categories: $categories,
-                note: $note
-            )
-            .interactiveDismissDisabled()
-        }
-    }
-
-    init(name: Binding<String>,
-         servingSize: Binding<String>,
-         cookingTime: Binding<String>,
-         ingredients: Binding<[RecipeFormIngredient]>,
-         steps: Binding<[String]>,
-         categories: Binding<[String]>,
-         note: Binding<String>) {
-        self._name = name
-        self._servingSize = servingSize
-        self._cookingTime = cookingTime
-        self._ingredients = ingredients
-        self._steps = steps
-        self._categories = categories
-        self._note = note
     }
 }

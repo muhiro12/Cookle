@@ -23,6 +23,7 @@ struct RecipeWebsiteImportView: View {
     @State private var errorMessage = ""
     @State private var readTask: Task<Void, Never>?
 
+    var dismissAfterImport = true
     let onImport: (RecipeWebsiteSource, URL) -> Void
 
     var body: some View {
@@ -118,7 +119,9 @@ struct RecipeWebsiteImportView: View {
                 let content = try await reader.read()
                 try Task.checkCancellation()
                 onImport(content.source, content.url)
-                dismiss()
+                if dismissAfterImport {
+                    dismiss()
+                }
             } catch is CancellationError {
                 // Dismissal must never update the underlying recipe text.
             } catch {

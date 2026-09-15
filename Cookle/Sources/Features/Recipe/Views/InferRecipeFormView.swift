@@ -7,66 +7,12 @@ import UIKit
 
 @available(iOS 26.0, *)
 struct InferRecipeFormView: View {
-    private enum RecipeTextImporter {
-        static func recognize(in data: Data) async throws -> String {
-            try await Task.detached(priority: .userInitiated) {
-                guard let image = UIImage(data: data) else {
-                    throw RecipeTextImportError.imageDecodingFailed
-                }
-
-                let recognizedText: String
-                do {
-                    recognizedText = try TextRecognitionService.recognize(in: image)
-                } catch {
-                    throw RecipeTextImportError.textRecognitionFailed
-                }
-
-                let trimmedText = recognizedText.trimmingCharacters(
-                    in: .whitespacesAndNewlines
-                )
-                guard trimmedText.isEmpty == false else {
-                    throw RecipeTextImportError.noRecognizedText
-                }
-                return trimmedText
-            }.value
-        }
-    }
-
-    private enum RecipeTextImportError: LocalizedError, Sendable {
-        case photoDataUnavailable
-        case imageDecodingFailed
-        case textRecognitionFailed
-        case noRecognizedText
-
-        var errorDescription: String? {
-            switch self {
-            case .photoDataUnavailable:
-                String(
-                    localized: "The selected photo could not be loaded. Choose another photo and try again.",
-                    comment: "Error shown when the recipe text importer cannot load a photo library selection."
-                )
-            case .imageDecodingFailed:
-                String(
-                    localized: "The photo could not be read. Choose another photo and try again.",
-                    comment: "Error shown when the recipe text importer cannot decode the selected or captured image."
-                )
-            case .textRecognitionFailed:
-                String(
-                    localized: "Text recognition failed. Try again with a clearer photo.",
-                    comment: "Error shown when Vision fails to recognize recipe text in a photo."
-                )
-            case .noRecognizedText:
-                String(
-                    localized: "No text was found in the photo. Try again with a photo that contains clear text.",
-                    comment: "Error shown when text recognition succeeds but finds no recipe text in a photo."
-                )
-            }
-        }
-    }
-
     private enum Layout {
         static let loadingOverlayOpacity = 0.2
     }
+
+    private let source: RecipeImportSource
+    private let initialPhotoData: Data?
 
     @Environment(\.dismiss)
     private var dismiss
@@ -81,6 +27,7 @@ struct InferRecipeFormView: View {
     @Binding private var categories: [String]
     @Binding private var note: String
 
+    @State private var hasOpenedSource = false
     @State private var text = ""
     @State private var sourceURL: URL?
     @State private var websiteSource: RecipeWebsiteSource?
@@ -116,7 +63,7 @@ struct InferRecipeFormView: View {
             .mhInputChrome(state: isTextFocused ? .focused : .normal)
             .padding()
             .background(Color(.systemGroupedBackground))
-            .navigationTitle(Text("Recipe Text"))
+            .navigationTitle(Text("Review Recipe Text"))
             .toolbar {
                 toolbarItems
             }
@@ -165,6 +112,27 @@ struct InferRecipeFormView: View {
             } message: {
                 Text("Replace the current text with the recipe from this page?")
             }
+            .task {
+                guard !hasOpenedSource else {
+                    return
+                }
+                hasOpenedSource = true
+                if let initialPhotoData {
+                    isLoading = true
+                    defer {
+                        isLoading = false
+                    }
+                    do {
+                        try await appendRecognizedText(from: initialPhotoData)
+                    } catch {
+                        if !Task.isCancelled {
+                            errorMessage = error.localizedDescription
+                        }
+                    }
+                } else if source == .text {
+                    isTextFocused = true
+                }
+            }
             .onDisappear {
                 operationTask?.cancel()
             }
@@ -199,7 +167,7 @@ struct InferRecipeFormView: View {
                     await applyInference()
                 }
             } label: {
-                Text("Done")
+                Text("Create Draft")
             }
             .disabled(isLoading || text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
@@ -250,8 +218,17 @@ struct InferRecipeFormView: View {
         ingredients: Binding<[RecipeFormIngredient]>,
         steps: Binding<[String]>,
         categories: Binding<[String]>,
-        note: Binding<String>
+        note: Binding<String>,
+        source: RecipeImportSource,
+        initialWebsiteSource: RecipeWebsiteSource? = nil,
+        initialSourceURL: URL? = nil,
+        initialPhotoData: Data? = nil
     ) {
+        self.initialPhotoData = initialPhotoData
+        _text = State(initialValue: initialWebsiteSource?.text ?? "")
+        _websiteSource = State(initialValue: initialWebsiteSource)
+        _sourceURL = State(initialValue: initialSourceURL)
+        self.source = source
         self._name = name
         self._servingSize = servingSize
         self._cookingTime = cookingTime

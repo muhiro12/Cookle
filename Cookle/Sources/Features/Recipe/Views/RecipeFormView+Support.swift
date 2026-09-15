@@ -12,6 +12,15 @@ extension RecipeFormView {
                 showsQuickCaptureHint: bindableModel.isCreateFlow
             )
         }
+        if #available(iOS 26.0, *) {
+            RecipeFormInferSection(
+                selection: importSourceSelection,
+                tip: currentRecipeFormTip(
+                    for: inferRecipeFromTextTip,
+                    isEligible: bindableModel.shouldShowInferRecipeFromTextTip
+                )
+            )
+        }
         RecipeFormPhotosSection(
             $bindableModel.photos,
             addPhotoTip: currentRecipeFormTip(
@@ -19,21 +28,6 @@ extension RecipeFormView {
                 isEligible: bindableModel.shouldShowImagePlaygroundTip
             )
         )
-        if #available(iOS 26.0, *) {
-            RecipeFormInferSection(
-                name: $bindableModel.name,
-                servingSize: $bindableModel.servingSize,
-                cookingTime: $bindableModel.cookingTime,
-                ingredients: $bindableModel.ingredients,
-                steps: $bindableModel.steps,
-                categories: $bindableModel.categories,
-                note: $bindableModel.note,
-                tip: currentRecipeFormTip(
-                    for: inferRecipeFromTextTip,
-                    isEligible: bindableModel.shouldShowInferRecipeFromTextTip
-                )
-            )
-        }
         if currentEditMode != .active {
             RecipeFormServingSizeSection($bindableModel.servingSize)
             RecipeFormCookingTimeSection($bindableModel.cookingTime)
