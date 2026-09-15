@@ -318,3 +318,30 @@ Registration cancellation creates nothing. The post-cooking Diary form also
 keeps its unsaved draft in memory so it cannot overwrite or clear a separately
 saved Diary draft. Ordinary Diary entry retains its existing draft persistence;
 an explicit Diary save still creates the normal database record.
+
+## Primary destinations and explicit entry routes
+
+Ordinary launch and the home route open Diary. Diary is the place to record and
+revisit meals; its presentation can evolve without changing that entry policy.
+Do not persist a last-selected tab as a side effect of visual improvements.
+
+Explicit destinations take precedence over the ordinary launch default:
+
+| Entry | Destination and behavior |
+| --- | --- |
+| Recipe tab, recipe-list link | Browse saved recipes without creating a Diary |
+| Recipe detail link, Recipe Widget, Open Recipe intent | Open the requested recipe |
+| Cooking view | Read steps; optionally end and review a Diary draft |
+| Diary tab, Diary link or Widget | Open the Diary list or requested entry |
+| Photo tab or photo link | Browse saved photos or open the requested photo |
+| Search or tag link | Open search or the requested category/ingredient |
+| Settings link | Open the requested settings destination |
+
+Photos remains a browsing surface. Its recipe-creation entry must say that it
+adds a recipe; a name-only recipe can be enriched with photos later. Independent
+photo capture and attach-later flows need a separate product decision.
+
+Keep contextual recipe discovery and optional Diary recording available without
+requiring either activity before the other. Route vocabulary and execution stay
+in CookleLibrary; MainNavigationRouter selects the app destination. Changes to
+system entry behavior require their own compatibility verification.
