@@ -187,7 +187,7 @@ struct SettingsSidebarView: View {
     }
 
     var notificationSection: some View {
-        Section("Recipe Suggestion Notifications") {
+        Section {
             Toggle("Daily recipe suggestions", isOn: $isDailyRecipeSuggestionNotificationOn)
                 .cooklePopoverTip(
                     currentSettingsTip(
@@ -196,9 +196,6 @@ struct SettingsSidebarView: View {
                     ),
                     arrowEdge: .top
                 )
-            Text(notificationStatusDescription)
-                .font(.footnote)
-                .foregroundStyle(.secondary)
             if notificationService.authorizationStatus == .denied {
                 Button("Open Notification Settings") {
                     openNotificationSettings()
@@ -214,6 +211,10 @@ struct SettingsSidebarView: View {
                     sendTestNotificationButton
                 }
             }
+        } header: {
+            Text("Recipe Suggestion Notifications")
+        } footer: {
+            Text(notificationStatusDescription)
         }
     }
 

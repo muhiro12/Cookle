@@ -11,8 +11,6 @@ struct DiaryRecipeInspirationSection: View {
     var body: some View {
         Section {
             if recipes.isEmpty {
-                Text("Save a recipe to find inspiration here. A name is enough to start.")
-                    .foregroundStyle(.secondary)
                 AddRecipeButton()
             } else {
                 ForEach(candidates) { recipe in
@@ -36,7 +34,9 @@ struct DiaryRecipeInspirationSection: View {
         } header: {
             Text("What Sounds Good Today?")
         } footer: {
-            if !recipes.isEmpty {
+            if recipes.isEmpty {
+                Text("Save a recipe to find inspiration here. A name is enough to start.")
+            } else {
                 Text("From your saved recipes, starting with recently updated ones.")
             }
         }

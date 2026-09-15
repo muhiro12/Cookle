@@ -11,6 +11,7 @@ struct RecipeFormNameSection: View {
     @Binding private var name: String
 
     private let showsQuickCaptureHint: Bool
+    private let additionalFooter: LocalizedStringKey?
 
     var body: some View {
         Section {
@@ -30,12 +31,20 @@ struct RecipeFormNameSection: View {
             if showsQuickCaptureHint {
                 Text("Start with a name. Add photos, ingredients, and steps later.")
             }
+            if let additionalFooter {
+                Text(additionalFooter)
+            }
         }
     }
 
-    init(_ name: Binding<String>, showsQuickCaptureHint: Bool = false) {
+    init(
+        _ name: Binding<String>,
+        showsQuickCaptureHint: Bool = false,
+        additionalFooter: LocalizedStringKey? = nil
+    ) {
         _name = name
         self.showsQuickCaptureHint = showsQuickCaptureHint
+        self.additionalFooter = additionalFooter
     }
 }
 

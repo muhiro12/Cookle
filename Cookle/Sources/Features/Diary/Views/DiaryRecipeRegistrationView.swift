@@ -19,11 +19,11 @@ struct DiaryRecipeRegistrationView: View {
     var body: some View {
         NavigationStack {
             Form {
-                RecipeFormNameSection($name, showsQuickCaptureHint: true)
-                Section {
-                    Text("The recipe stays in your collection even if you cancel the Diary.")
-                        .foregroundStyle(.secondary)
-                }
+                RecipeFormNameSection(
+                    $name,
+                    showsQuickCaptureHint: true,
+                    additionalFooter: "The recipe stays in your collection even if you cancel the Diary."
+                )
             }
             .mhFormChrome()
             .disabled(isSaving)
