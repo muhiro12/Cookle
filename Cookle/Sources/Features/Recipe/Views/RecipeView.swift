@@ -38,11 +38,11 @@ struct RecipeView: View {
                 AddRecipeToTodayDiaryButton()
             }
             recipeSections
+            RecipeSecondaryActions()
             RecipeProvenance(
                 createdAt: recipe.createdTimestamp,
                 updatedAt: recipe.modifiedTimestamp
             )
-            RecipeSecondaryActions()
         }
         .mhScreen()
         .navigationTitle(recipe.name)

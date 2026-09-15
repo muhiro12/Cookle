@@ -15,6 +15,7 @@ struct DuplicateRecipeButton: View {
     @State private var isPresented = false
 
     private let action: (() -> Void)?
+    private let showsRecipeName: Bool
 
     var body: some View {
         Button {
@@ -25,7 +26,11 @@ struct DuplicateRecipeButton: View {
             }
         } label: {
             Label {
-                Text("Duplicate \(recipe.name)")
+                if showsRecipeName {
+                    Text("Duplicate \(recipe.name)")
+                } else {
+                    Text("Duplicate")
+                }
             } icon: {
                 Image(systemName: "document.on.document")
                     .accessibilityHidden(true)
@@ -36,7 +41,8 @@ struct DuplicateRecipeButton: View {
         }
     }
 
-    init(action: (() -> Void)? = nil) {
+    init(showsRecipeName: Bool = true, action: (() -> Void)? = nil) {
+        self.showsRecipeName = showsRecipeName
         self.action = action
     }
 }

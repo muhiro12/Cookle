@@ -14,6 +14,7 @@ struct DeleteRecipeButton: View {
     @State private var errorMessage = ""
 
     private let action: (() -> Void)?
+    private let showsRecipeName: Bool
 
     var body: some View {
         Button(role: .destructive) {
@@ -24,7 +25,11 @@ struct DeleteRecipeButton: View {
             }
         } label: {
             Label {
-                Text("Delete \(recipe.name)")
+                if showsRecipeName {
+                    Text("Delete \(recipe.name)")
+                } else {
+                    Text("Delete")
+                }
             } icon: {
                 Image(systemName: "trash")
                     .accessibilityHidden(true)
@@ -65,7 +70,8 @@ struct DeleteRecipeButton: View {
         }
     }
 
-    init(action: (() -> Void)? = nil) {
+    init(showsRecipeName: Bool = true, action: (() -> Void)? = nil) {
+        self.showsRecipeName = showsRecipeName
         self.action = action
     }
 }
