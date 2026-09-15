@@ -45,9 +45,6 @@ final class RecipeFormModel {
     }
 
     var errorMessage: String?
-    var savedRecipe: Recipe?
-    var isPhotoConfirmationPresented = false
-    var isImagePlaygroundPresented = false
     var isInferRecipeFromTextTipEligible = false
     var isImagePlaygroundTipEligible = false
     var hasRestorableSnapshot = false
@@ -249,7 +246,7 @@ private extension RecipeFormModel {
         draft: RecipeFormDraft,
         recipeActionService: RecipeActionService
     ) async throws -> Bool {
-        let result = try await RecipeFormSaveCoordinator.save(
+        _ = try await RecipeFormSaveCoordinator.save(
             context: context,
             type: type,
             recipe: recipe,
@@ -257,27 +254,9 @@ private extension RecipeFormModel {
             recipeActionService: recipeActionService
         )
 
-        return handleSaveResult(result)
-    }
-
-    func handleSaveResult(
-        _ result: RecipeFormSaveCoordinator.Result
-    ) -> Bool {
         acceptCurrentChanges()
-
-        switch result {
-        case .created(let createdRecipe):
-            savedRecipe = createdRecipe
-            clearSnapshot()
-            guard createdRecipe.photos?.isEmpty == false else {
-                isPhotoConfirmationPresented = true
-                return false
-            }
-            return true
-        case .updated:
-            clearSnapshot()
-            return true
-        }
+        clearSnapshot()
+        return true
     }
 }
 

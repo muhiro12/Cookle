@@ -33,8 +33,6 @@ struct RecipeFormView: View {
     @State private var isDebugAlertPresented = false
     @State private var isRestoreDraftConfirmationPresented = false
     @State private var isDiscardChangesConfirmationPresented = false
-    @State private var isQuickAddCameraPresented = false
-    @State private var isQuickAddPhotoLibraryPresented = false
 
     let type: RecipeFormType
     let inferRecipeFromTextTip = InferRecipeFromTextTip()
@@ -74,21 +72,6 @@ struct RecipeFormView: View {
             Text("Are you really going to use DebugMode?")
         }
         .confirmationDialog(
-            Text("Add a photo?"),
-            isPresented: $model.isPhotoConfirmationPresented
-        ) {
-            ForEach(postCreatePhotoInputSources) { source in
-                Button {
-                    presentPostCreatePhotoInputSource(source)
-                } label: {
-                    source.titleText
-                }
-            }
-            Button("Later", role: .cancel) {
-                dismiss()
-            }
-        }
-        .confirmationDialog(
             Text("Restore Draft"),
             isPresented: $isRestoreDraftConfirmationPresented
         ) {
@@ -110,58 +93,6 @@ struct RecipeFormView: View {
             }
         } message: {
             Text(model.errorMessage ?? "")
-        }
-        .fullScreenCover(isPresented: $isQuickAddCameraPresented) {
-            CameraPicker { data in
-                appendPostCreatePhoto(
-                    data,
-                    source: .camera
-                )
-            } cancellationHandler: {
-                dismiss()
-            }
-        }
-        .fullScreenCover(isPresented: $isQuickAddPhotoLibraryPresented) {
-            SinglePhotoLibraryPicker { data in
-                appendPostCreatePhoto(
-                    data,
-                    source: .photoLibrary
-                )
-            } cancellationHandler: {
-                dismiss()
-            }
-        }
-        .cookleImagePlayground(
-            isPresented: $model.isImagePlaygroundPresented,
-            recipe: model.savedRecipe
-        ) { photoData in
-            Task {
-                guard model.isSaving == false else {
-                    return
-                }
-                model.isSaving = true
-                defer {
-                    model.isSaving = false
-                }
-
-                guard let savedRecipe = model.savedRecipe else {
-                    model.errorMessage = CookleActionError.recipeNotFound.localizedDescription
-                    return
-                }
-
-                do {
-                    try await recipeActionService.replaceGeneratedPhoto(
-                        context: context,
-                        recipe: savedRecipe,
-                        data: photoData
-                    )
-                    dismiss()
-                } catch {
-                    model.errorMessage = error.localizedDescription
-                }
-            }
-        } onCancellation: {
-            dismiss()
         }
         .task {
             model.applyRecipeIfNeeded(recipe)
@@ -225,24 +156,6 @@ extension RecipeFormView {
         }
         nonmutating set {
             isDiscardChangesConfirmationPresented = newValue
-        }
-    }
-
-    var isQuickAddCameraCoverPresented: Bool {
-        get {
-            isQuickAddCameraPresented
-        }
-        nonmutating set {
-            isQuickAddCameraPresented = newValue
-        }
-    }
-
-    var isQuickAddPhotoLibraryCoverPresented: Bool {
-        get {
-            isQuickAddPhotoLibraryPresented
-        }
-        nonmutating set {
-            isQuickAddPhotoLibraryPresented = newValue
         }
     }
 }

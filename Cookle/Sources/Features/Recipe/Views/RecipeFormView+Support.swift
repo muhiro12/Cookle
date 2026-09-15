@@ -7,7 +7,10 @@ extension RecipeFormView {
         @Bindable var bindableModel = formModel
 
         if currentEditMode != .active {
-            RecipeFormNameSection($bindableModel.name)
+            RecipeFormNameSection(
+                $bindableModel.name,
+                showsQuickCaptureHint: bindableModel.isCreateFlow
+            )
         }
         RecipeFormPhotosSection(
             $bindableModel.photos,
@@ -139,10 +142,6 @@ extension RecipeFormView {
         }
     }
 
-    var postCreatePhotoInputSources: [RecipePhotoInputSource] {
-        RecipePhotoInputSource.allCases.filter(\.isAvailable)
-    }
-
     var isErrorPresentedBinding: Binding<Bool> {
         .init(
             get: {
@@ -172,51 +171,6 @@ extension RecipeFormView {
         }
 
         return nil
-    }
-
-    func presentPostCreatePhotoInputSource(
-        _ source: RecipePhotoInputSource
-    ) {
-        switch source {
-        case .camera:
-            isQuickAddCameraCoverPresented = true
-        case .photoLibrary:
-            isQuickAddPhotoLibraryCoverPresented = true
-        case .imagePlayground:
-            formModel.isImagePlaygroundPresented = true
-        }
-    }
-
-    func appendPostCreatePhoto(
-        _ data: Data,
-        source: RecipePhotoInputSource
-    ) {
-        Task {
-            guard formModel.isSaving == false else {
-                return
-            }
-            formModel.isSaving = true
-            defer {
-                formModel.isSaving = false
-            }
-
-            guard let recipe = formModel.savedRecipe else {
-                formModel.errorMessage = CookleActionError.recipeNotFound.localizedDescription
-                return
-            }
-
-            do {
-                try await recipeActionService.appendPhoto(
-                    context: context,
-                    recipe: recipe,
-                    data: data,
-                    source: source.persistedPhotoSource
-                )
-                dismiss()
-            } catch {
-                formModel.errorMessage = error.localizedDescription
-            }
-        }
     }
 
     func observeInferRecipeFromTextTipEligibility() async {

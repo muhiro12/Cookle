@@ -10,6 +10,8 @@ import SwiftUI
 struct RecipeFormNameSection: View {
     @Binding private var name: String
 
+    private let showsQuickCaptureHint: Bool
+
     var body: some View {
         Section {
             TextField("Name", text: $name, prompt: Text("Spaghetti Carbonara"))
@@ -24,16 +26,21 @@ struct RecipeFormNameSection: View {
                     .foregroundStyle(.secondary)
                     .textCase(nil)
             }
+        } footer: {
+            if showsQuickCaptureHint {
+                Text("Start with a name. Add photos, ingredients, and steps later.")
+            }
         }
     }
 
-    init(_ name: Binding<String>) {
+    init(_ name: Binding<String>, showsQuickCaptureHint: Bool = false) {
         _name = name
+        self.showsQuickCaptureHint = showsQuickCaptureHint
     }
 }
 
 #Preview {
     Form {
-        RecipeFormNameSection(.constant("Name"))
+        RecipeFormNameSection(.constant(""), showsQuickCaptureHint: true)
     }
 }
