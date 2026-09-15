@@ -7,11 +7,7 @@ struct ShareRecipeLinkButton: View {
     private var recipe
 
     var body: some View {
-        ShareLink(
-            item: shareURL,
-            subject: Text(recipe.name),
-            message: Text(shareMessage)
-        ) {
+        ShareLink(item: shareURL) {
             Label {
                 Text("Share Recipe Link")
             } icon: {
@@ -23,13 +19,6 @@ struct ShareRecipeLinkButton: View {
 }
 
 private extension ShareRecipeLinkButton {
-    var shareMessage: String {
-        String.localizedStringWithFormat(
-            String(localized: "recipe.shareLink.message"),
-            recipe.name
-        )
-    }
-
     var shareURL: URL {
         CookleDeepLinkURLBuilder.preferredRecipeDetailURL(
             for: RecipeStableIdentifierCodec.stableIdentifier(
