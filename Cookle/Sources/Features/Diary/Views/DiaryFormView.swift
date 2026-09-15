@@ -187,10 +187,13 @@ private extension DiaryFormView {
     ) -> some View {
         Section {
             NavigationLink(value: type) {
-                Text(type.title)
+                DiaryMealSelectionLabel(
+                    type: type,
+                    recipeNames: recipes.wrappedValue.map(\.name).sorted { firstName, secondName in
+                        firstName.localizedStandardCompare(secondName) == .orderedAscending
+                    }
+                )
             }
-        } footer: {
-            Text(recipes.wrappedValue.map(\.name).joined(separator: ", "))
         }
     }
 
