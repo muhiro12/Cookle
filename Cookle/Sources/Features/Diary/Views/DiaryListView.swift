@@ -1,51 +1,53 @@
-//
-//  DiaryListView.swift
-//
-//
-//  Created by Hiromu Nakano on 2024/05/12.
-//
-
 import MHPlatform
 import MHUI
 import SwiftData
 import SwiftUI
-import TipKit
 
 struct DiaryListView: View {
+    private static let recentDiaryCount = 3
+
+    @Environment(\.scenePhase)
+    private var scenePhase
     @Environment(\.isPresented)
     private var isPresented
-    @Environment(\.modelContext)
-    private var context
     @Environment(MainNavigationModel.self)
     private var navigationModel
-    @Environment(CookleTipController.self)
-    private var tipController
 
     @Query(.diaries(.all))
     private var diaries: [Diary]
-    @Query(.recipes(.all))
+    @Query(sort: [SortDescriptor(\Recipe.modifiedTimestamp, order: .reverse), SortDescriptor(\Recipe.name)])
     private var recipes: [Recipe]
 
     @Binding private var diary: Diary?
-    @State private var isSuggestedDiaryPresented = false
-    @State private var suggestedDiaryPrefill: DiaryFormPrefill?
-
-    private let addDiaryTip = AddDiaryTip()
+    @State private var currentDate = Date.now
 
     var body: some View {
-        Group {
-            if !diaries.isEmpty {
-                diaryList
-            } else {
-                emptyStateView
+        List {
+            DuplicateDiaryRepairSection()
+            DiaryTodaySection(
+                diaries: todayDiaries(on: currentDate),
+                date: currentDate,
+                selection: $diary
+            )
+            DiaryRecipeInspirationSection(recipes: recipes) { recipe in
+                navigationModel.selectedRecipe = recipe
+                navigationModel.selectedTab = .recipe
+            }
+            historySections(on: currentDate)
+        }
+        .mhListChrome()
+        .onAppear {
+            currentDate = .now
+        }
+        .onChange(of: scenePhase) {
+            if scenePhase == .active {
+                currentDate = .now
             }
         }
-        .cookleTopLevelNavigationChrome("Diaries")
-        .sheet(isPresented: $isSuggestedDiaryPresented) {
-            DiaryFormNavigationView(
-                prefill: suggestedDiaryPrefill
-            )
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
+            currentDate = .now
         }
+        .cookleTopLevelNavigationChrome("Diaries")
         .toolbar {
             ToolbarItem {
                 AddDiaryButton()
@@ -58,161 +60,66 @@ struct DiaryListView: View {
         }
     }
 
-    var groupedDiaries: [(key: String, value: [Diary])] {
-        Array(
-            Dictionary(grouping: diaries) { diary in
-                diary.date.formatted(.dateTime.year().month())
-            }
-            .sorted { lhs, rhs in
-                lhs.value[0].date > rhs.value[0].date
-            }
+    init(selection: Binding<Diary?> = .constant(nil)) {
+        _diary = selection
+    }
+}
+
+private extension DiaryListView {
+    func todayDiaries(on date: Date) -> [Diary] {
+        diaries.filter { Calendar.current.isDate($0.date, inSameDayAs: date) }
+    }
+
+    @ViewBuilder
+    func historySections(on date: Date) -> some View {
+        let history = diaries.filter { !Calendar.current.isDate($0.date, inSameDayAs: date) }
+        let recent = Array(
+            history.filter { $0.date < Calendar.current.startOfDay(for: date) }
+                .prefix(Self.recentDiaryCount)
         )
-    }
-
-    var diaryList: some View {
-        List {
-            diaryListContent
-        }
-        .mhListChrome()
-    }
-
-    @ViewBuilder var diaryListContent: some View {
-        DuplicateDiaryRepairSection()
-
-        if let topSuggestion {
-            Section {
-                DiaryTopSuggestionButton(
-                    suggestion: topSuggestion
-                ) {
-                    presentSuggestedDiary(
-                        for: topSuggestion
-                    )
-                }
+        let recentIDs = Set(recent.map(\.id))
+        let remainingIDs = Set(history.filter { !recentIDs.contains($0.id) }.map(\.id))
+        let groups = Dictionary(grouping: diaries) { $0.date.formatted(.dateTime.year().month()) }
+            .sorted { $0.value[0].date > $1.value[0].date }
+        if !recent.isEmpty {
+            Section("Recent Meals") {
+                diaryRows(recent)
             }
         }
-
-        ForEach(groupedDiaries, id: \.key) { section in
-            Section(section.key) {
-                ForEach(section.value) { diary in
-                    Button {
-                        $diary.cookleSelectForNavigation(
-                            diary
-                        )
-                    } label: {
-                        DiaryLabel()
-                            .environment(diary)
-                            .cookleButtonRowContent()
-                    }
-                    .buttonStyle(.plain)
+        ForEach(groups, id: \.key) { group in
+            let rows = group.value.filter { remainingIDs.contains($0.id) }
+            if !rows.isEmpty {
+                Section(group.key) {
+                    diaryRows(rows)
                 }
             }
             AdvertisementSection(.small)
         }
     }
 
-    var emptyStateView: some View {
-        ContentUnavailableView {
-            Label(
-                recipes.isEmpty ? "No Diaries Yet" : "Ready To Add A Diary",
-                systemImage: recipes.isEmpty ? "book.closed" : "fork.knife"
-            )
-        } description: {
-            Text(
-                "Create a diary entry to record what you cooked."
-            )
-        } actions: {
-            if recipes.isEmpty {
-                AddDiaryButton()
-                    .cooklePopoverTip(
-                        addDiaryTip,
-                        arrowEdge: .top
-                    )
-                Button {
-                    navigationModel.selectedTab = .recipe
-                } label: {
-                    Text("Open Recipes")
-                }
-            } else if let topSuggestion {
-                Button {
-                    presentSuggestedDiary(
-                        for: topSuggestion
-                    )
-                } label: {
-                    topSuggestion.actionTitle
-                }
-                AddDiaryButton()
-            } else {
-                AddDiaryButton()
-                    .cooklePopoverTip(
-                        addDiaryTip,
-                        arrowEdge: .top
-                    )
+    func diaryRows(_ rows: [Diary]) -> some View {
+        ForEach(rows) { row in
+            Button {
+                $diary.cookleSelectForNavigation(row)
+            } label: {
+                DiaryLabel()
+                    .environment(row)
+                    .cookleButtonRowContent()
             }
+            .buttonStyle(.plain)
         }
-    }
-
-    init(selection: Binding<Diary?> = .constant(nil)) {
-        _diary = selection
     }
 }
 
-#Preview(traits: .modifier(CookleSampleData())) {
+#if DEBUG
+#Preview("Diary landing") {
     NavigationStack {
         DiaryListView()
     }
+    .cooklePreviewAppAssembly(DiaryRecipeSelectionPreview.assembly)
 }
-
-private extension DiaryListView {
-    var topSuggestion: DiaryTopSuggestion? {
-        do {
-            return try DiaryOperations.topSuggestion(
-                context: context
-            )
-        } catch {
-            return nil
-        }
-    }
-
-    func presentSuggestedDiary(
-        for renderedSuggestion: DiaryTopSuggestion
-    ) {
-        suggestedDiaryPrefill = suggestedPrefill(
-            for: renderedSuggestion
-        )
-        tipController.donateDidOpenDiaryForm()
-        isSuggestedDiaryPresented = true
-    }
-
-    func suggestedPrefill(
-        for renderedSuggestion: DiaryTopSuggestion
-    ) -> DiaryFormPrefill? {
-        do {
-            guard let freshSuggestion = try DiaryOperations.topSuggestion(
-                context: context
-            ) else {
-                return nil
-            }
-
-            guard freshSuggestion == renderedSuggestion else {
-                return nil
-            }
-
-            guard let recipe = try RecipeStableIdentifierCodec.recipe(
-                from: renderedSuggestion.recipeStableIdentifier,
-                context: context
-            ) else {
-                return nil
-            }
-
-            return .init(
-                date: renderedSuggestion.date,
-                breakfasts: renderedSuggestion.mealType == .breakfast ? [recipe] : [],
-                lunches: renderedSuggestion.mealType == .lunch ? [recipe] : [],
-                dinners: renderedSuggestion.mealType == .dinner ? [recipe] : [],
-                note: ""
-            )
-        } catch {
-            return nil
-        }
-    }
+#Preview("Diary landing in app navigation") {
+    MainView()
+        .cooklePreviewAppAssembly(DiaryRecipeSelectionPreview.assembly)
 }
+#endif

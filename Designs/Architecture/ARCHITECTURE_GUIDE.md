@@ -345,3 +345,22 @@ Keep contextual recipe discovery and optional Diary recording available without
 requiring either activity before the other. Route vocabulary and execution stay
 in CookleLibrary; MainNavigationRouter selects the app destination. Changes to
 system entry behavior require their own compatibility verification.
+
+### Diary landing and recipe inspiration
+
+The Diary landing screen separates today's saved record, recipe inspiration,
+and chronological history. No record does not mean a meal is undecided, and a
+recipe candidate is not evidence of a meal eaten. Opening a candidate navigates
+to Recipe; only an explicit Diary save records a meal.
+
+Candidates are a presentation window of up to three saved recipes, ordered by
+modification date descending and name. Other Ideas advances the window; its
+position stays in memory and resets when the ordered identifiers change. There
+is no inferred nutrition, ingredient availability, meal plan, or cooked status.
+
+Today uses the current calendar and refreshes on appearance, app activation,
+and the system significant-time-change notification (including midnight).
+Recent Meals contains up to three past records, with the remaining entries in
+month groups. Today and recent records are not duplicated in the month groups;
+future-dated records remain accessible there. Existing draft restoration and
+explicit save behavior stay in the normal Diary form.
