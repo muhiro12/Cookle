@@ -10,7 +10,7 @@ import SwiftData
 import SwiftUI
 
 struct DiaryFormView: View {
-    @State private var model = DiaryFormModel()
+    @State private var model: DiaryFormModel
     @State private var isDiscardChangesConfirmationPresented = false
     @State private var isRestoreDraftConfirmationPresented = false
 
@@ -157,9 +157,11 @@ struct DiaryFormView: View {
     }
 
     init(
-        prefill: DiaryFormPrefill? = nil
+        prefill: DiaryFormPrefill? = nil,
+        persistsDraft: Bool = true
     ) {
         self.prefill = prefill
+        _model = .init(initialValue: DiaryFormModel(persistsSnapshot: persistsDraft))
     }
 }
 

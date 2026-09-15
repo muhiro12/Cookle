@@ -290,3 +290,31 @@ API style decision:
    Minimal plan:
    - keep payload decoding and delivery in notification adapters
    - keep route vocabulary and parsing shared in `CookleLibrary`
+
+## Cooking interaction and transient state
+
+Cooking on iPhone and iPad is reading-first: show the surrounding numbered
+steps together, with materials alongside them when space permits. Selecting a
+step supplies timer and Watch context; it is not a completion checkbox or a
+requirement to reveal the next step. A focused presentation can still be useful
+on constrained surfaces such as Apple Watch. Evaluate each surface separately.
+
+Keep screen-only state in memory: the material list copied when a cooking view
+opens, pending Diary prefill, presentation flags, and unsaved quick-registration
+input. Do not add a persisted cooked status or per-step completion flags for
+these interactions. The material copy may differ from an older resumed step
+snapshot; closing and reopening the view refreshes materials from the recipe.
+It is not a new cross-device material snapshot contract.
+
+The existing cooking session snapshot remains separate. It persists to
+UserDefaults and participates in Watch synchronization; ending it clears its
+timer and sets its existing active flag to false. Do not remove or change that
+storage/wire contract merely to change the reading UI. Future storage changes
+must explicitly address relaunch recovery, stale updates and paired devices.
+
+Registering a recipe from Diary selection is an explicit independent save.
+Before saving, explain that the recipe survives cancellation of the later Diary.
+Registration cancellation creates nothing. The post-cooking Diary form also
+keeps its unsaved draft in memory so it cannot overwrite or clear a separately
+saved Diary draft. Ordinary Diary entry retains its existing draft persistence;
+an explicit Diary save still creates the normal database record.

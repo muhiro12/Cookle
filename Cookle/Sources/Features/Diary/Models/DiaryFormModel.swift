@@ -36,6 +36,7 @@ final class DiaryFormModel {
 
     private let snapshotStore: FormSnapshotStore<DiaryFormSnapshot>
     private let calendar: Calendar
+    private let allowsSnapshotPersistence: Bool
     private var hasAppliedInitialValues = false
     private var initialChangeSnapshot: DiaryFormChangeSnapshot?
     private var initialDate = Date.now
@@ -77,10 +78,12 @@ final class DiaryFormModel {
 
     init(
         snapshotStore: FormSnapshotStore<DiaryFormSnapshot> = .init(),
-        calendar: Calendar = .current
+        calendar: Calendar = .current,
+        persistsSnapshot: Bool = true
     ) {
         self.snapshotStore = snapshotStore
         self.calendar = calendar
+        allowsSnapshotPersistence = persistsSnapshot
     }
 
     func applyInitialValues(
@@ -136,7 +139,7 @@ final class DiaryFormModel {
     func activateSnapshotPersistence(
         diary: Diary?
     ) {
-        isSnapshotPersistenceEnabled = diary == nil
+        isSnapshotPersistenceEnabled = allowsSnapshotPersistence && diary == nil
         refreshSnapshotAvailability()
     }
 

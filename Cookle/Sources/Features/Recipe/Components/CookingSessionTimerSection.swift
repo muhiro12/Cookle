@@ -88,6 +88,9 @@ private extension CookingSessionTimerSection {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
             }
+            Text("Step \(snapshot.currentStepNumber) of \(snapshot.stepCount)")
+                .font(.caption)
+                .foregroundStyle(.secondary)
             timerButtons
         }
     }
@@ -122,13 +125,6 @@ private extension CookingSessionTimerSection {
             cookingSessionStore.repeatTimer()
         }
         .buttonStyle(.mhPrimary)
-
-        if snapshot.hasNextStep {
-            Button("Next Step") {
-                cookingSessionStore.advanceFromTimerFollowUp()
-            }
-            .buttonStyle(.mhSecondary)
-        }
 
         Button("Cancel Timer") {
             cookingSessionStore.cancelTimer()
