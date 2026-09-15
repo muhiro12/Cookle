@@ -1,4 +1,5 @@
 import AppIntents
+import CookleLibrary
 import MHUI
 import PhotosUI
 import SwiftUI
@@ -81,6 +82,12 @@ struct InferRecipeFormView: View {
     @Binding private var note: String
 
     @State private var text = ""
+    @State private var sourceURL: URL?
+    @State private var websiteSource: RecipeWebsiteSource?
+    @State private var isWebsiteImporterPresented = false
+    @State private var pendingWebsiteText: RecipeWebsiteSource?
+    @State private var pendingWebsiteURL: URL?
+    @State private var operationTask: Task<Void, Never>?
     @State private var isLoading = false
     @State private var photoPickerItem: PhotosPickerItem?
     @State private var isPhotoPickerPresented = false
@@ -99,6 +106,7 @@ struct InferRecipeFormView: View {
     var body: some View {
         TextEditor(text: $text)
             .focused($isTextFocused)
+            .disabled(isLoading)
             .accessibilityLabel(Text("Recipe Text"))
             .accessibilityValue(Text(verbatim: text))
             .overlay(alignment: .topLeading) {
@@ -122,6 +130,44 @@ struct InferRecipeFormView: View {
                     handleCapturedPhoto(data)
                 }
             }
+            .sheet(isPresented: $isWebsiteImporterPresented) {
+                RecipeWebsiteImportView { importedText, url in
+                    if text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        text = importedText.text
+                        websiteSource = importedText
+                        sourceURL = url
+                    } else {
+                        pendingWebsiteText = importedText
+                        pendingWebsiteURL = url
+                    }
+                }
+            }
+            .confirmationDialog("Replace Recipe Text?", isPresented: .init(
+                get: { pendingWebsiteText != nil && !isWebsiteImporterPresented },
+                set: { isPresented in
+                    if !isPresented {
+                        pendingWebsiteText = nil
+                        pendingWebsiteURL = nil
+                    }
+                }
+            )) {
+                Button("Replace", role: .destructive) {
+                    text = pendingWebsiteText?.text ?? text
+                    websiteSource = pendingWebsiteText
+                    sourceURL = pendingWebsiteURL
+                    pendingWebsiteText = nil
+                    pendingWebsiteURL = nil
+                }
+                Button("Cancel", role: .cancel) {
+                    pendingWebsiteText = nil
+                    pendingWebsiteURL = nil
+                }
+            } message: {
+                Text("Replace the current text with the recipe from this page?")
+            }
+            .onDisappear {
+                operationTask?.cancel()
+            }
             .onChange(of: photoPickerItem) {
                 handlePhotoPickerChange()
             }
@@ -137,30 +183,10 @@ struct InferRecipeFormView: View {
             }
     }
 
-    @ViewBuilder var placeholderOverlay: some View {
-        if text.isEmpty {
-            Text(placeholder)
-                .font(.body)
-                .foregroundStyle(.placeholder)
-                .padding(
-                    .vertical,
-                    RecipeTextEditorLayout.placeholderVerticalPadding(
-                        metrics: designMetrics
-                    )
-                )
-                .padding(
-                    .horizontal,
-                    RecipeTextEditorLayout.placeholderHorizontalPadding
-                )
-                .allowsHitTesting(false)
-                .accessibilityHidden(true)
-        }
-    }
-
     @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
             Button {
-                text = ""
+                operationTask?.cancel()
                 dismiss()
             } label: {
                 Text("Cancel")
@@ -169,7 +195,7 @@ struct InferRecipeFormView: View {
         ToolbarItem(placement: .confirmationAction) {
             Button {
                 isLoading = true
-                Task {
+                operationTask = Task { @MainActor in
                     await applyInference()
                 }
             } label: {
@@ -193,6 +219,11 @@ struct InferRecipeFormView: View {
 
     var importTextMenu: some View {
         Menu {
+            Button {
+                isWebsiteImporterPresented = true
+            } label: {
+                Label("Import from Website", systemImage: "link")
+            }
             if RecipePhotoInputSource.camera.isAvailable {
                 Button {
                     isCameraPickerPresented = true
@@ -233,6 +264,26 @@ struct InferRecipeFormView: View {
 
 @available(iOS 26.0, *)
 private extension InferRecipeFormView {
+    @ViewBuilder var placeholderOverlay: some View {
+        if text.isEmpty {
+            Text(placeholder)
+                .font(.body)
+                .foregroundStyle(.placeholder)
+                .padding(
+                    .vertical,
+                    RecipeTextEditorLayout.placeholderVerticalPadding(
+                        metrics: designMetrics
+                    )
+                )
+                .padding(
+                    .horizontal,
+                    RecipeTextEditorLayout.placeholderHorizontalPadding
+                )
+                .allowsHitTesting(false)
+                .accessibilityHidden(true)
+        }
+    }
+
     var isInferenceErrorPresented: Binding<Bool> {
         .init(
             get: {
@@ -253,7 +304,11 @@ private extension InferRecipeFormView {
         }
 
         do {
-            let inference = try await RecipeFoundationModelInferenceOperations.infer(text: text)
+            var inference = try await RecipeFoundationModelInferenceOperations.infer(text: text)
+            if let websiteSource, websiteSource.text == text {
+                inference = websiteSource.grounding(inference)
+            }
+            try Task.checkCancellation()
             name = inference.name
             servingSize = inference.servingSize == .zero ? "" : inference.servingSize.description
             cookingTime = inference.cookingTime == .zero ? "" : inference.cookingTime.description
@@ -265,9 +320,12 @@ private extension InferRecipeFormView {
             } + [.init(ingredient: "", amount: "")]
             steps = inference.steps + [""]
             categories = inference.categories + [""]
-            note = inference.note
+            note = RecipeWebsiteImportOperations.note(inference.note, sourceURL: sourceURL)
             dismiss()
         } catch {
+            guard !Task.isCancelled else {
+                return
+            }
             errorMessage = error.localizedDescription
         }
     }
@@ -277,8 +335,11 @@ private extension InferRecipeFormView {
             return
         }
         self.photoPickerItem = nil
-        Task {
-            isLoading = true
+        guard !isLoading else {
+            return
+        }
+        isLoading = true
+        operationTask = Task { @MainActor in
             defer {
                 isLoading = false
             }
@@ -291,16 +352,25 @@ private extension InferRecipeFormView {
                 }
                 try await appendRecognizedText(from: data)
             } catch let error as RecipeTextImportError {
+                guard !Task.isCancelled else {
+                    return
+                }
                 errorMessage = error.localizedDescription
             } catch {
+                guard !Task.isCancelled else {
+                    return
+                }
                 errorMessage = RecipeTextImportError.photoDataUnavailable.localizedDescription
             }
         }
     }
 
     func handleCapturedPhoto(_ data: Data) {
-        Task {
-            isLoading = true
+        guard !isLoading else {
+            return
+        }
+        isLoading = true
+        operationTask = Task { @MainActor in
             defer {
                 isLoading = false
             }
@@ -308,8 +378,14 @@ private extension InferRecipeFormView {
             do {
                 try await appendRecognizedText(from: data)
             } catch let error as RecipeTextImportError {
+                guard !Task.isCancelled else {
+                    return
+                }
                 errorMessage = error.localizedDescription
             } catch {
+                guard !Task.isCancelled else {
+                    return
+                }
                 errorMessage = RecipeTextImportError.textRecognitionFailed.localizedDescription
             }
         }
@@ -317,6 +393,7 @@ private extension InferRecipeFormView {
 
     func appendRecognizedText(from data: Data) async throws {
         let recognizedText = try await RecipeTextImporter.recognize(in: data)
+        try Task.checkCancellation()
         text += (text.isEmpty ? "" : "\n") + recognizedText
     }
 }

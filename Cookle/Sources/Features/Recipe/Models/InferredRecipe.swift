@@ -35,7 +35,7 @@ public struct InferredRecipe {
     public var ingredients: [InferredRecipeIngredient]
     /// Cooking steps.
     @Guide(
-        description: "Preparation steps in their original order. Keep each step short and avoid adding new steps."
+        description: "Source steps in order, retaining warnings, equipment settings, and durations."
     )
     public var steps: [String]
     /// Category labels.
