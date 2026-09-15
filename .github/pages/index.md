@@ -28,7 +28,7 @@ table.gallery img {
 
 <div class="hero">
   <h1>Cookle</h1>
-  <p>Keep your favorite recipes organised across all your devices.</p>
+  <p>Keep your favorite recipes and cooking memories together.</p>
   <p>
     <a href="https://apps.apple.com/app/id6483363226">
       <img src="https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-app-store/black/en-us?releaseDate=1717113600" alt="Download on the App Store" width="160">
@@ -36,7 +36,8 @@ table.gallery img {
   </p>
 </div>
 
-Cookle is a lightweight recipe manager built entirely with SwiftUI.
+Save your recipes, follow their cooking steps, and record what you made in your
+cooking diary. Find a familiar meal or return to a recipe you want to cook again.
 
 <div class="features">
   <div class="feature">
@@ -55,9 +56,11 @@ Cookle is a lightweight recipe manager built entirely with SwiftUI.
 
 ## More Features
 
-- App Shortcuts for search and showing the last opened recipe
-- Optional iCloud synchronisation and subscription support
-- Google Mobile Ads integration
+- Follow cooking steps with built-in timers and active-session controls on
+  Apple Watch.
+- Open recipes and your cooking diary from widgets and App Shortcuts.
+- Export your recipes, diary, and photos as a backup, and restore it in Settings.
+- An optional subscription enables iCloud sync and removes advertisements.
 
 ## Accessibility
 
@@ -85,8 +88,8 @@ Cookle is a lightweight recipe manager built entirely with SwiftUI.
 </tr>
 </table>
 
-## Development
+## Support and Privacy
 
-The project uses **Swift 6** with **Xcode 26.3** project settings and a
-minimum deployment target of **iOS 18.0**. After cloning the repository, open
-`Cookle.xcodeproj` in Xcode and build the `Cookle` scheme.
+Read the [privacy policy](privacy.html) for information about stored data,
+iCloud, advertising, and deletion. For questions about Cookle,
+[contact the developer](https://twitter.com/muhiro_12).
