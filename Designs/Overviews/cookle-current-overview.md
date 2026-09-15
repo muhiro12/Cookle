@@ -38,7 +38,7 @@ focus is personal cooking organization:
 
 ## Presentation Adoption Update
 
-The main app now links full MHUI 1.18 with a standard root theme. Recipe
+The main app now links full MHUI 1.19 with a standard root theme. Recipe
 Detail uses composed MHUI screen, section, row, ingredient-value, and action
 presentation while retaining the same recipe content and operations. Lists,
 forms, search, settings, and diagnostics use native-container chrome. Cooking
