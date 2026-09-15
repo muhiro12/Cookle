@@ -35,6 +35,8 @@ if [[ "$force_update_count" != "1" ]]; then
   exit 1
 fi
 
-xcrun swift "$validator" "$configuration_file"
+module_cache_directory="${CI_SHARED_DIR:-$CI_TASK_REPOSITORY_ROOT/.build/ci/shared}/ModuleCache"
+mkdir -p "$module_cache_directory"
+xcrun swift -module-cache-path "$module_cache_directory" "$validator" "$configuration_file"
 
 echo "Remote update configuration guardrails passed."
