@@ -134,24 +134,16 @@ private extension RecipeSuggestionNotificationComposer {
         var segments = [String]()
 
         if snapshot.cookingTime > 0 {
-            segments.append("\(snapshot.cookingTime) min")
+            segments.append(String(localized: "\(snapshot.cookingTime) min"))
         }
 
         if snapshot.servingSize > 0 {
-            if snapshot.servingSize == 1 {
-                segments.append("1 serving")
-            } else {
-                segments.append("\(snapshot.servingSize) \(String(localized: "servings"))")
-            }
+            segments.append(String(localized: "Servings: \(snapshot.servingSize)"))
         }
 
         let ingredientCount = snapshot.ingredientCount
         if ingredientCount > 0 {
-            if ingredientCount == 1 {
-                segments.append("1 ingredient")
-            } else {
-                segments.append("\(ingredientCount) ingredients")
-            }
+            segments.append(String(localized: "Ingredients: \(ingredientCount)"))
         }
 
         return segments.joined(separator: " | ")

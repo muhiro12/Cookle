@@ -36,7 +36,7 @@ enum NotificationConstants {
         actions: [
             .init(
                 identifier: browseRecipesActionIdentifier,
-                title: "Browse Recipes"
+                title: String(localized: "Browse Recipes")
             )
         ]
     )

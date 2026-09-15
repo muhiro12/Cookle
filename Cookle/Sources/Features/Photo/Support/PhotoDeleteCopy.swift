@@ -1,19 +1,19 @@
 import CookleLibrary
+import Foundation
 
 enum PhotoDeleteCopy {
     static func title(for _: Photo) -> String {
-        "Delete Photo"
+        String(localized: "Delete Photo")
     }
 
     static func message(for photo: Photo) -> String {
         let affectedRowCount = (photo.objects ?? []).count
-        let rowLabel = affectedRowCount == 1 ? "recipe photo row" : "recipe photo rows"
-
         if affectedRowCount == 0 {
-            return "This removes the stored photo asset. No recipe photo rows will be removed."
+            return String(localized: "This permanently deletes the photo. No recipes will be changed.")
         }
 
-        return "This removes the stored photo asset and \(affectedRowCount) linked " +
-            "\(rowLabel). Recipes stay saved."
+        return String(localized: """
+        This deletes the photo from \(affectedRowCount) recipe entries. The recipes stay saved.
+        """)
     }
 }
