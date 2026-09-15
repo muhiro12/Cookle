@@ -20,7 +20,7 @@ public struct InferredRecipeIngredient {
     public var ingredient: String
     /// Human-readable amount.
     @Guide(
-        description: "Amount or measurement written next to the ingredient. Use an empty string if missing."
+        description: "Exact source quantity and unit, retaining ranges and qualifiers. Leave empty if missing."
     )
     public var amount: String
 

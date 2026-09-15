@@ -15,12 +15,12 @@ import FoundationModels
 public struct InferredRecipe {
     /// Recipe name.
     @Guide(
-        description: "Recipe title exactly as written or clearly implied by the input. Leave empty if unknown."
+        description: "Recipe or dish name stated in the input. Leave empty if unknown."
     )
     public var name: String
     /// Number of servings.
     @Guide(
-        description: "Serving count only when explicitly stated. Use 0 if unknown."
+        description: "Explicit single serving count. Use 0 for unknown counts, ranges, or yield in items."
     )
     public var servingSize: Int
     /// Cooking time in minutes.
