@@ -53,8 +53,8 @@ requires changing the product's information architecture.
 
 The dependency baseline advanced to MHUI 1.19 on 2026-09-15. Cookle inherits
 its revised semantic palette, typography, surface borders, and heading
-decoration removal through the standard theme. The app does not use the
-removed heading-cue APIs or override package-owned theme values.
+decoration removal through the standard components and theme. The app does
+not use removed heading-cue APIs or override package-owned theme values.
 
 The application root and expanded Recipe Detail establish the first slice.
 The [main-app rollout](../Plans/mhui-app-rollout.md) records subsequent
@@ -73,7 +73,7 @@ content, routes, actions, size classes, appearance, and accessibility. Existing
 comparison captures establish the selected phone direction; they do not prove
 production navigation, photo behavior, VoiceOver, or distribution readiness.
 Package behavior changes require package verification and affected-consumer
-checks. This adoption leaves the approved MHUI 1.18 package unchanged.
+checks. The original adoption left the approved MHUI 1.18 package unchanged.
 
 ## Consequences
 

@@ -1,6 +1,6 @@
 # MHUI Main-App Rollout
 
-Updated September 14, 2026.
+Updated September 15, 2026.
 
 This record covers the main-app step. The subsequent
 [companion rollout](mhui-companion-rollout.md) evaluates Watch, Widgets, and
@@ -18,6 +18,53 @@ Existing content, order, routes, fields, actions, and persistence stay in the
 app. New features and diary-list information architecture are separate work.
 CookleLibrary, Watch, Widgets, App Intent implementations, and the MHUI
 package remain outside this change.
+
+## MHUI 1.19 Refresh
+
+Commit `a239626b` advances the remote minimum and resolved dependency to MHUI
+1.19.0 at `81f48d1784ad85aadf4fccdf1e4e85606ac5c142`. The built Xcode
+checkout and workspace resolution match that published tag. The project and
+resolved-pin guardrails reject the previous 1.18 baseline.
+
+The standard theme and components supply the revised low-chroma palette,
+softer text and surface treatment, motion timing, and removal of heading rules.
+Cookle uses none of the removed heading-cue APIs. Its existing native
+List/Form and composed-screen routes follow the updated adoption guide, so
+no app Swift changes or theme overrides are required for this update.
+
+The Cookle Simulator build and retained repository checks pass, with no
+build warnings or errors. Verification uses Xcode 27.0 (`27A266a`) and iOS
+27.0 Simulator; it does not establish shipping-Xcode or device evidence.
+Shared models, Operations, persistence, and companion linkage are unchanged,
+so this update does not add a separate shared-library test result.
+
+Native runtime verification on iPhone 18 Pro covers the existing recipe
+list, detail sections through the lower actions, and opening and cancelling
+the edit form. The app remained running throughout, with no new visible
+layout or navigation regression in those routes. The run did not edit or
+save fields, delete records, or operate the existing cooking session.
+An initial device-session timeout recovered after session reinitialization.
+Runtime logs contain Simulator, networking, and Watch-pairing diagnostics,
+but no app fatal error or CoreData/SwiftData exception in this flow.
+The verification run and interaction sessions were stopped, and the original
+Xcode scheme and destination were restored and confirmed.
+
+Three direct native Preview captures cover the first viewport of the
+new-recipe form and active cooking screen in Light, plus cooking in Dark
+with AX 5 text. The visible content remains readable; lower actions are not
+covered by those captures. Recipe Detail's updated direct Preview failed
+with a `swift_task_dealloc`/SwiftUI abort during injection. The 1.18 baseline
+returned a screenshot but also logged a later CoreData/SwiftData abort.
+These failures remain Preview/runtime diagnostics, not an isolated MHUI
+regression or proof of stable Preview execution.
+The separate iPad cooking Preview timed out and supplies no iPad evidence.
+These are two failed 1.19 Preview attempts; the edit-form Preview was not
+attempted because its existing production route was selected for interaction.
+
+Current-run images, logs, and coverage are retained locally under
+`.build/ci/mhui-1.19/`. The historical rollout evidence below remains scoped
+to MHUI 1.18. Its destructive-action contrast review remains open; this
+dependency update does not establish VoiceOver or release acceptance.
 
 ## Presentation Choices
 
