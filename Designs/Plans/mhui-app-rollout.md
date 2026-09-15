@@ -123,6 +123,10 @@ The End Session confirmation was cancelled, and no timer was started.
 The sample returned to step 1 with no timer and its original Light/Large
 settings. The final runtime log filter found no fatal, SwiftData/CoreData
 exception, abort, or crash messages in the exercised flow.
+The retrieved error/fault log tail includes a `glassEffect()` multiple-update
+diagnostic also observed in the earlier 1.19 dependency and recipe runs.
+The observed controls and screenshots remained usable; these observations
+do not isolate its cause or establish warning-free runtime behavior.
 
 The iPad landscape check used its existing synthetic recipe with a long name
 and note. It covered the grouped ingredients and closing metadata/actions;
@@ -146,6 +150,9 @@ Local before/after captures, hierarchies, and runtime logs are retained under
 `.build/ci/mhui-composition-20260915/`. No recipe fields were saved or records
 deleted during the interaction checks. Physical devices, VoiceOver, and a
 shipping-Xcode build remain separate evidence.
+Verification runs and interaction sessions were stopped. The original scheme,
+destination, and Simulator settings were restored and confirmed, and the
+workspace opened for this verification was closed.
 
 ## Presentation Choices
 
