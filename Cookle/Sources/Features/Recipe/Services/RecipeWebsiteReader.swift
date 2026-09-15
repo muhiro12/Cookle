@@ -137,7 +137,7 @@ final class RecipeWebsiteReader: NSObject, WKNavigationDelegate {
     func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction,
-        decisionHandler: (WKNavigationActionPolicy) -> Void
+        decisionHandler: @MainActor (WKNavigationActionPolicy) -> Void
     ) {
         guard let url = navigationAction.request.url,
               RecipeWebsiteImportOperations.websiteURL(from: url.absoluteString) != nil else {
@@ -161,7 +161,7 @@ final class RecipeWebsiteReader: NSObject, WKNavigationDelegate {
     func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationResponse: WKNavigationResponse,
-        decisionHandler: (WKNavigationResponsePolicy) -> Void
+        decisionHandler: @MainActor (WKNavigationResponsePolicy) -> Void
     ) {
         guard navigationResponse.isForMainFrame else {
             decisionHandler(.allow)
