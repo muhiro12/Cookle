@@ -44,7 +44,8 @@ and related records use grouped surfaces, while steps and notes use unframed
 reading sections. Dates and secondary actions close the page. The recipe
 content and operations remain the same. Lists,
 forms, search, settings, and diagnostics use native-container chrome. Cooking
-uses shared sections, stable surfaces, and semantic actions; the photo grid
+places the current instruction and step actions before the grouped timer
+controls; accessibility text uses the screen's natural scrolling. The photo grid
 uses screen spacing and section headers; detached editors use input chrome.
 Specialized media and system UI retain their native presentation. The
 [rollout record](../Plans/mhui-app-rollout.md) separates implementation from

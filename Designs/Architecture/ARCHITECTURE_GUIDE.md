@@ -95,6 +95,10 @@ and diagnostics use native List and Form chrome. These are complete adoption
 routes that preserve selection, swipe actions, fields, focus, and keyboard
 behavior. Cooking and the photo collection use screen composition; detached
 recipe editors use input chrome on their native keyboard-resizing canvas.
+Cooking presents one progress indicator and an unframed current instruction,
+followed by step navigation and the grouped timer controls. Standard text
+sizes retain native paging; accessibility sizes use natural-height text in
+the screen scroll view and return to the instruction after a step change.
 Media, system, and package-owned presentations retain their native appearance.
 The [main-app rollout record](../Plans/mhui-app-rollout.md) documents these
 choices and their verification limits. App-owned composition and behavior

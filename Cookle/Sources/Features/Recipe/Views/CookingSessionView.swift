@@ -2,12 +2,14 @@ import MHUI
 import SwiftUI
 
 struct CookingSessionView: View {
-    private enum Layout {
-        static let stepCardHeight: CGFloat = 320
+    private enum ScrollTarget: Hashable {
+        case currentStep
     }
 
     @Environment(CookingSessionStore.self)
     private var cookingSessionStore
+    @Environment(\.dynamicTypeSize)
+    private var dynamicTypeSize
     @Environment(\.dismiss)
     private var dismiss
     @Environment(\.mhTheme)
@@ -74,30 +76,36 @@ private extension CookingSessionView {
     func activeSessionContent(
         snapshot: CookingSessionSnapshot
     ) -> some View {
-        VStack(spacing: theme.spacing.section) {
-            progressSection(
-                snapshot: snapshot
-            )
-            stepPager(
-                snapshot: snapshot
-            )
-            CookingSessionTimerSection(
-                snapshot: snapshot
-            )
-            stepNavigationSection(
-                snapshot: snapshot
-            )
-            MHActionGroup(layout: .vertical) {
-                Button(
-                    "End Session",
-                    role: .destructive
-                ) {
-                    isEndSessionConfirmationPresented = true
+        ScrollViewReader { proxy in
+            VStack(alignment: .leading, spacing: theme.spacing.section) {
+                progressSection(
+                    snapshot: snapshot
+                )
+                .id(ScrollTarget.currentStep)
+                CookingStepPager(snapshot: snapshot)
+                stepNavigationSection(
+                    snapshot: snapshot
+                )
+                CookingSessionTimerSection(
+                    snapshot: snapshot
+                )
+                MHActionGroup(layout: .vertical) {
+                    Button(
+                        "End Session",
+                        role: .destructive
+                    ) {
+                        isEndSessionConfirmationPresented = true
+                    }
+                    .buttonStyle(.mhDestructive)
                 }
-                .buttonStyle(.mhDestructive)
+            }
+            .mhScreen()
+            .onChange(of: snapshot.currentStepIndex) {
+                if dynamicTypeSize.isAccessibilitySize {
+                    proxy.scrollTo(ScrollTarget.currentStep, anchor: .top)
+                }
             }
         }
-        .mhScreen()
         .navigationTitle(snapshot.recipeName)
     }
 
@@ -110,67 +118,13 @@ private extension CookingSessionView {
                     localized: "Step \(snapshot.currentStepNumber) of \(snapshot.stepCount)"
                 )
             )
-            .font(.headline)
+            .mhTextStyle(.metadata, colorRole: .secondaryText)
             ProgressView(
                 value: Double(snapshot.currentStepNumber),
                 total: Double(max(snapshot.stepCount, 1))
             )
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    func stepPager(
-        snapshot: CookingSessionSnapshot
-    ) -> some View {
-        TabView(
-            selection: Binding(
-                get: {
-                    snapshot.currentStepIndex
-                },
-                set: { stepIndex in
-                    cookingSessionStore.setCurrentStepIndex(
-                        stepIndex
-                    )
-                }
-            )
-        ) {
-            ForEach(
-                Array(snapshot.steps.enumerated()),
-                id: \.offset
-            ) { values in
-                stepPage(
-                    stepNumber: values.offset + 1,
-                    stepCount: snapshot.stepCount,
-                    stepText: values.element
-                )
-                .tag(values.offset)
-            }
-        }
-        .tabViewStyle(.page(indexDisplayMode: .never))
-        .frame(height: Layout.stepCardHeight)
-    }
-
-    func stepPage(
-        stepNumber: Int,
-        stepCount: Int,
-        stepText: String
-    ) -> some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: theme.spacing.content) {
-                Text(
-                    String(
-                        localized: "Step \(stepNumber) of \(stepCount)"
-                    )
-                )
-                .font(.headline)
-                Text(stepText)
-                    .font(.title3)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .mhSurfaceInset()
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .mhSurface()
     }
 
     func stepNavigationSection(
@@ -181,7 +135,8 @@ private extension CookingSessionView {
                 snapshot: snapshot
             )
         }
-        .mhSection("Step Navigation")
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(Text("Step Navigation"))
     }
 
     @ViewBuilder

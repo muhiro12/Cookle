@@ -69,11 +69,12 @@ dependency update does not establish VoiceOver or release acceptance.
 
 ### Recipe Composition
 
+Commit `91ddaba5` applies the recipe composition refinement.
+
 The pinned SDK's [visual principles][mhui-visual-principles] distinguish a
 quiet content plane, important controls, and selective emphasis for photos
-and summaries. Cookle
-applies those roles to Recipe Detail instead of assigning every field the
-same framed section treatment.
+and summaries. Cookle applies those roles to Recipe Detail through compact
+facts, unframed prose, and selective use of grouped surfaces.
 
 - The photo leads into serving size and cooking time, followed by the primary
   cooking entry and the action to add the recipe to today's diary.
@@ -89,6 +90,62 @@ list/form routes are unchanged. Native search and Intent snippet reuse keeps
 its existing section presentation.
 
 [mhui-visual-principles]: https://github.com/muhiro12/MHUI/blob/81f48d1784ad85aadf4fccdf1e4e85606ac5c142/Designs/Guides/VISUAL_DESIGN_PRINCIPLES.md
+
+### Cooking Composition
+
+Cooking applies the same hierarchy to a focused task. Progress appears once,
+the current instruction uses unframed reading space, and Previous/Next sit
+before the grouped timer controls. The separate Step Navigation surface and
+repeated step number are removed. Existing timer actions, lifecycle behavior,
+and the End Session confirmation remain.
+
+Standard text sizes retain native horizontal paging with a scaled reading
+height. At accessibility sizes, the current instruction takes its natural
+height in the screen's scroll view. Changing steps returns the viewport to
+the progress and instruction so reading can restart from the beginning.
+
+### Composition Verification
+
+The recipe composition passed a Cookle Simulator build and retained rules.
+Native interaction covered the iPhone overview, ingredients, unframed steps
+and note, diary history, dates, and secondary actions. Edit/Cancel, the
+Add-to-Today confirmation and dismissal, Resume/Close, and the deletion
+confirmation and dismissal preserved the existing record and cooking session.
+Dark appearance with AX 5 text showed stacked facts, wrapping primary actions,
+and readable instructions in the captured viewports.
+
+The final combined app installed and ran through Xcode's native integration;
+its build log reported success with no warnings. In the existing iPhone
+cooking session, Next/Previous and horizontal paging each advanced and
+returned successfully. At Dark AX 5, scrolling past the progress indicator
+and selecting Next returned the next instruction and progress to the top.
+The End Session confirmation was cancelled, and no timer was started.
+The sample returned to step 1 with no timer and its original Light/Large
+settings. The final runtime log filter found no fatal, SwiftData/CoreData
+exception, abort, or crash messages in the exercised flow.
+
+The iPad landscape check used its existing synthetic recipe with a long name
+and note. It covered the grouped ingredients and closing metadata/actions;
+that record had no photos, summary facts, steps, categories, or diary history.
+One native device-session timeout recovered after reinitialization. These
+captures establish the exercised wide layout, not every populated iPad state.
+
+An intermediate native borderless Delete treatment exposed a 21-22 pt target
+height. The implementation uses the SDK's destructive style, which supplies
+the shared minimum target, and keeps the existing confirmation. The final
+iPhone check measured a 354 by 45.7 pt button and successfully opened and
+dismissed the confirmation without deleting the recipe.
+
+Two native cooking Previews succeeded on iPhone: Light with standard text,
+and Dark with AX 5 text. They show the same isolated active-timer fixture.
+The current iPad cooking Preview timed out with
+`PreviewsFoundationHost.TaskTimeoutError` and returned no screenshot. This
+remains a Preview coverage gap, separate from the recipe's iPad runtime check.
+
+Local before/after captures, hierarchies, and runtime logs are retained under
+`.build/ci/mhui-composition-20260915/`. No recipe fields were saved or records
+deleted during the interaction checks. Physical devices, VoiceOver, and a
+shipping-Xcode build remain separate evidence.
 
 ## Presentation Choices
 
