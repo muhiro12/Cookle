@@ -168,7 +168,7 @@ struct SearchView: View {
                 discoverySheet = .category
             }
         } label: {
-            Label("Browse Tags", systemImage: "line.3.horizontal.decrease.circle")
+            Label("Browse Tags", systemImage: "line.3.horizontal.decrease")
         }
     }
 

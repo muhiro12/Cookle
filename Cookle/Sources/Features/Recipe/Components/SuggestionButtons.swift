@@ -15,15 +15,7 @@ struct SuggestionButtons<T: Tag>: View {
 
     var body: some View {
         ScrollView(.horizontal) {
-            if #available(iOS 26.0, *) {
-                GlassEffectContainer(
-                    spacing: SuggestionButtonsLayout.buttonSpacing
-                ) {
-                    suggestionButtonRow
-                }
-            } else {
-                suggestionButtonRow
-            }
+            suggestionButtonRow
         }
         .scrollIndicators(.hidden)
     }
@@ -60,7 +52,8 @@ private extension SuggestionButtons {
                 .contentShape(
                     Capsule(style: .continuous)
                 )
-                .cookleGlassControl(
+                .background(
+                    .thinMaterial,
                     in: Capsule(style: .continuous)
                 )
             }

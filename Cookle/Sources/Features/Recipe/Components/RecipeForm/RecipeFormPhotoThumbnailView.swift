@@ -38,7 +38,7 @@ struct RecipeFormPhotoThumbnailView: View {
                     )
                 }
             } label: {
-                Image(systemName: "ellipsis.circle.fill")
+                Image(systemName: "ellipsis")
                     .font(.title3)
                     .foregroundStyle(.primary)
                     .padding(actionButtonPadding)
