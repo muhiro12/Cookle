@@ -38,6 +38,19 @@ Cookle may use network access for advertisements, StoreKit purchases,
 subscription status, iCloud sync, and remote configuration checks such as
 whether the current app version must be updated.
 
+When you choose to open a recipe website in Cookle, your device connects to that
+website and may load its embedded third-party resources. Those providers receive
+normal web requests and handle them under their own privacy policies. Cookle uses
+a nonpersistent web browsing data store for this flow.
+
+You can review and edit the extracted recipe text before creating a draft. Cookle
+uses Apple's on-device language model, when available, to help fill the recipe
+form. There is no developer-operated AI server receiving this text. Saving uses
+the normal recipe form; the source address is included in the editable recipe
+note. Saved recipes follow the device-storage and optional iCloud behavior
+described above. Cookle does not automatically attach images from the source
+website to the recipe.
+
 ## Data Deletion
 
 You can delete Cookle's locally stored app data from inside the app where data
@@ -58,7 +71,7 @@ collect personal information from children under 13.
 This policy may be updated from time to time. Updates are published on this
 page.
 
-Effective date: 2026-07-14
+Effective date: 2026-09-16
 
 ## Contact
 
