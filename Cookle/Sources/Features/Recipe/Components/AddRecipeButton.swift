@@ -8,15 +8,18 @@
 import SwiftUI
 
 struct AddRecipeButton: View {
-    @State private var isPresented = false
+    private struct Presentation: Identifiable {
+        let id = UUID()
+        let source: RecipeImportSource?
+    }
+
+    @State private var presentation: Presentation?
 
     @Environment(CookleAppLogging.self)
     private var logging
 
     private let showsTitle: Bool
     private let action: (() -> Void)?
-
-    @State private var importSource: RecipeImportSource?
 
     var body: some View {
         Group {
@@ -43,8 +46,8 @@ struct AddRecipeButton: View {
                 }
             }
         }
-        .sheet(isPresented: $isPresented) {
-            RecipeFormNavigationView(type: .create, initialImportSource: importSource)
+        .sheet(item: $presentation) { presentation in
+            RecipeFormNavigationView(type: .create, initialImportSource: presentation.source)
         }
     }
 
@@ -69,8 +72,7 @@ private extension AddRecipeButton {
         if let action {
             action()
         } else {
-            importSource = source
-            isPresented = true
+            presentation = .init(source: source)
         }
     }
 }
