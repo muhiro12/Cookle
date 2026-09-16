@@ -28,7 +28,8 @@ public enum RecipeWebsiteImportOperations {
         knownIngredients: [RecipeInferenceIngredient] = [],
         equipment: [String] = [],
         knownSteps: [String] = [],
-        sourceNotes: [String] = []
+        sourceNotes: [String] = [],
+        servingText: String = ""
     ) throws -> RecipeWebsiteSource {
         guard structuredData.reduce(0, { $0 + $1.utf8.count }) <= maximumStructuredBytes else {
             throw RecipeWebsiteImportError.contentTooLarge
@@ -48,7 +49,7 @@ public enum RecipeWebsiteImportOperations {
         let recipe = recipes.first ?? [:]
         let structuredSteps = instructionSteps(recipe["recipeInstructions"])
         let steps = structuredSteps.isEmpty ? knownSteps : structuredSteps
-        let supplements = sourceNotes + equipment + (structuredSteps.isEmpty ? knownSteps : [])
+        let supplements = sourceNotes + equipment + [servingText] + (structuredSteps.isEmpty ? knownSteps : [])
         let text = (texts.first.map { metadata in
             ([metadata] + supplements).filter { !$0.isEmpty }.joined(separator: "\n\n")
         } ?? visibleText).trimmingCharacters(in: .whitespacesAndNewlines)
@@ -67,7 +68,7 @@ public enum RecipeWebsiteImportOperations {
             ingredients: (recipe["recipeIngredient"] as? [Any] ?? []).map { plainText($0, depth: 0) },
             knownIngredients: recipes.isEmpty ? knownIngredients : [],
             steps: steps,
-            yield: plainText(recipe["recipeYield"], depth: 0),
+            yield: resolvedYield(plainText(recipe["recipeYield"], depth: 0), servingText: servingText),
             cookingDuration: plainText(recipe["cookTime"], depth: 0),
             attribution: plainText(recipe["author"], depth: 0),
             details: details.filter { !$0.isEmpty }.joined(separator: "\n\n"),
@@ -106,6 +107,22 @@ private extension RecipeWebsiteImportOperations {
                 collectRecipes(in: graph, depth: depth + 1, into: &recipes)
             }
         }
+    }
+
+    static func resolvedYield(_ metadata: String, servingText: String) -> String {
+        guard !metadata.isEmpty else {
+            return servingText
+        }
+        // Numeric metadata alone does not establish that a yield describes servings.
+        guard let value = Double(metadata), !servingText.isEmpty else {
+            return metadata
+        }
+        let pattern = #/(?i)(?:serves\s+)?([0-9]+)(?:\s*(?:人分|人前|servings?|people|persons?))?/#
+        let count = servingText.wholeMatch(of: pattern)
+        guard let count, Double(count.1) == value else {
+            return metadata
+        }
+        return servingText
     }
 
     static func instructionSteps(_ value: Any?) -> [String] {

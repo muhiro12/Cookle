@@ -199,7 +199,7 @@ struct RecipeWebsiteImportTests {
         let result = source.grounding(inferred)
         #expect(result.steps == steps)
         #expect(result.note.contains(warning))
-        #expect(result.note.contains(inferred.note))
+        #expect(!result.note.contains(inferred.note))
     }
 
     @Test

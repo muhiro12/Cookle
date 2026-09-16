@@ -77,7 +77,8 @@ final class RecipeWebsiteReader: NSObject, WKNavigationDelegate {
                 },
                 equipment: content.equipment,
                 knownSteps: content.steps,
-                sourceNotes: content.notes
+                sourceNotes: content.notes,
+                servingText: content.servingText
             ),
             url
         )
@@ -195,6 +196,7 @@ private extension RecipeWebsiteReader {
         let equipment: [String]
         let steps: [String]
         let notes: [String]
+        let servingText: String
     }
 
     // Use an isolated JavaScript world. Page text is untrusted input, never executable instructions.
@@ -209,11 +211,14 @@ private extension RecipeWebsiteReader {
         }
         const root = document.querySelector('main, article, [role="main"]') || document.body;
         if (!root) return JSON.stringify({structuredData, visibleText: '',
-        ingredients: [], equipment: [], steps: [], notes: []});
+        ingredients: [], equipment: [], steps: [], notes: [], servingText: ''});
         const lines = [];
+        const headerLines = [];
         let length = 0;
         const excluded = 'script,style,nav,header,footer,iframe,button,select,textarea,svg,'
-        + '[hidden],[aria-hidden="true"]';
+        + '[hidden],[aria-hidden="true"],[role="button"],a:not([href]),a[href^="javascript:"]';
+        const ingredientsHeading = [...root.querySelectorAll('h1,h2,h3,h4,h5,h6')].find(h =>
+        /^(材料|食材|ingredients|ingredientes|ingrédients)/i.test(h.innerText));
         const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
         while (walker.nextNode()) {
         const node = walker.currentNode;
@@ -224,15 +229,23 @@ private extension RecipeWebsiteReader {
         const text = node.textContent.trim();
         if (!text) continue;
         lines.push(text);
+        if (ingredientsHeading && (ingredientsHeading.contains(node)
+        || (ingredientsHeading.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_PRECEDING))) {
+        headerLines.push(text);
+        }
         length += text.length + 1;
         if (length > 16000) break;
         }
         const headings = [...root.querySelectorAll('h1,h2,h3,h4,h5,h6')];
-        const ingredientsHeading = headings.find(h =>
-        /^(材料|食材|ingredients|ingredientes|ingrédients)/i.test(h.innerText));
+
         const stepsHeading = headings.find(h =>
         (!ingredientsHeading || (ingredientsHeading.compareDocumentPosition(h) & Node.DOCUMENT_POSITION_FOLLOWING))
         && /^(作りかた|作り方|手順|steps|directions|instructions|method|préparation|preparación)/i.test(h.innerText));
+        const headerText = headerLines.join('\n');
+        const servingPattern = /(?:^|\n)(?:材料[：:]\s*)?(\d+\s*(?:人分|人前|servings?|people|persons?))(?:$|\n)/i;
+        const servingMatch = headerText.match(servingPattern)
+        || headerText.match(/(?:^|\n)(serves\s+\d+)(?:$|\n)/i);
+        const servingText = (servingMatch?.[1] || '').replace(/\s+/g, ' ');
         const ingredients = [];
         const notes = [];
         const steps = [];
@@ -309,7 +322,7 @@ private extension RecipeWebsiteReader {
         .map(button => button.innerText.trim())
         .filter(text => /^[A-Z]{1,5}-[A-Z0-9-]{2,20}$/.test(text));
         const visibleText = [...equipment, ...lines].join('\n');
-        return JSON.stringify({structuredData, ingredients, equipment, visibleText, steps, notes});
+        return JSON.stringify({structuredData, ingredients, equipment, visibleText, steps, notes, servingText});
         })()
     """#
 
