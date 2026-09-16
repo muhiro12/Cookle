@@ -24,6 +24,8 @@ final class RecipeWebsiteReader: NSObject, WKNavigationDelegate {
     private(set) var errorMessage = ""
     private var navigationCount = 0
     private var pendingRead: PendingRead?
+    private var navigationIdentifier = UUID()
+    private var navigationTimeout: Task<Void, Never>?
 
     override init() {
         let configuration = WKWebViewConfiguration()
@@ -35,6 +37,7 @@ final class RecipeWebsiteReader: NSObject, WKNavigationDelegate {
     }
 
     func load(_ url: URL) {
+        stop()
         errorMessage = ""
         isReady = false
         navigationCount = 0
@@ -42,6 +45,10 @@ final class RecipeWebsiteReader: NSObject, WKNavigationDelegate {
     }
 
     func stop() {
+        navigationIdentifier = UUID()
+        navigationTimeout?.cancel()
+        navigationTimeout = nil
+        isReady = false
         if let pendingRead {
             finishRead(pendingRead.identifier, result: .failure(CancellationError()))
         }
@@ -49,11 +56,12 @@ final class RecipeWebsiteReader: NSObject, WKNavigationDelegate {
     }
 
     func read() async throws -> (source: RecipeWebsiteSource, url: URL) {
-        guard isReady, let url = webView.url,
+        guard isReady, pendingRead == nil, let url = webView.url,
               RecipeWebsiteImportOperations.websiteURL(from: url.absoluteString) != nil else {
             throw RecipeWebsiteImportError.noContent
         }
         let identifier = UUID()
+        let readNavigationIdentifier = navigationIdentifier
         let string = try await withTaskCancellationHandler {
             try Task.checkCancellation()
             return try await evaluatePage(identifier)
@@ -63,7 +71,7 @@ final class RecipeWebsiteReader: NSObject, WKNavigationDelegate {
             }
         }
         try Task.checkCancellation()
-        guard isReady, url == webView.url,
+        guard isReady, readNavigationIdentifier == navigationIdentifier, url == webView.url,
               let data = string.data(using: .utf8),
               let content = try? JSONDecoder().decode(PageContent.self, from: data) else {
             throw RecipeWebsiteImportError.noContent
@@ -117,11 +125,32 @@ final class RecipeWebsiteReader: NSObject, WKNavigationDelegate {
     }
 
     func webView(_: WKWebView, didFinish _: WKNavigation?) {
-        isReady = true
+        navigationTimeout?.cancel()
+        navigationTimeout = nil
+        isReady = errorMessage.isEmpty
     }
 
     func webView(_: WKWebView, didStartProvisionalNavigation _: WKNavigation?) {
         isReady = false
+        errorMessage = ""
+        navigationIdentifier = UUID()
+        if let pendingRead {
+            finishRead(pendingRead.identifier, result: .failure(CancellationError()))
+        }
+        navigationTimeout?.cancel()
+        let identifier = navigationIdentifier
+        navigationTimeout = Task { @MainActor [weak self] in
+            do {
+                try await Task.sleep(for: .seconds(Limits.timeout))
+                guard let self, identifier == navigationIdentifier else {
+                    return
+                }
+                stop()
+                webViewWebContentProcessDidTerminate(webView)
+            } catch {
+                // Completion, replacement, or dismissal cancelled this navigation's deadline.
+            }
+        }
     }
 
     func webView(_: WKWebView, didFail _: WKNavigation?, withError error: any Error) {
@@ -133,6 +162,8 @@ final class RecipeWebsiteReader: NSObject, WKNavigationDelegate {
     }
 
     func webViewWebContentProcessDidTerminate(_: WKWebView) {
+        navigationTimeout?.cancel()
+        navigationTimeout = nil
         isReady = false
         errorMessage = String(localized: "The page could not be loaded. Try again or paste the recipe text.")
     }
@@ -330,6 +361,8 @@ private extension RecipeWebsiteReader {
         guard (error as NSError).code != NSURLErrorCancelled else {
             return
         }
+        navigationTimeout?.cancel()
+        navigationTimeout = nil
         isReady = false
         errorMessage = String(localized: "The page could not be loaded. Try again or paste the recipe text.")
     }
