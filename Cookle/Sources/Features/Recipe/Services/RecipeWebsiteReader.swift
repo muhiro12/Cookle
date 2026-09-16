@@ -229,14 +229,18 @@ private extension RecipeWebsiteReader {
         (ingredientsHeading.compareDocumentPosition(h) & Node.DOCUMENT_POSITION_FOLLOWING)
         && /^(作りかた|作り方|手順|steps|directions|instructions|method|préparation|preparación)/i.test(h.innerText));
         const ingredients = [];
-        let ingredientGroup = '';
         if (ingredientsHeading && stepsHeading) {
         for (const row of root.querySelectorAll('dl')) {
         if (!(ingredientsHeading.compareDocumentPosition(row) & Node.DOCUMENT_POSITION_FOLLOWING)
         || !(stepsHeading.compareDocumentPosition(row) & Node.DOCUMENT_POSITION_PRECEDING)) continue;
         const name = row.querySelector('dt')?.innerText.trim();
         const amount = row.querySelector('dd')?.innerText.trim();
-        if (name && amount) ingredients.push({ingredient: name, amount});
+        const siblings = [...row.parentElement.children];
+        const firstRow = siblings.findIndex(element => element.tagName === 'DL');
+        const group = siblings.slice(0, firstRow).map(element => element.innerText.trim())
+        .filter(text => /^[A-ZＡ-Ｚ★☆◎●○◯①-⑳]$/.test(text)).join('');
+        const ingredient = group ? `[${group}] ${name}` : name;
+        if (name && amount) ingredients.push({ingredient, amount});
         }
         }
         const equipment = [...document.querySelectorAll('button')]

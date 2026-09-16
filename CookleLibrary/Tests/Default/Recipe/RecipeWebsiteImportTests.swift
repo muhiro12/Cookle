@@ -126,6 +126,35 @@ struct RecipeWebsiteImportTests {
     }
 
     @Test
+    func grounding_preserves_verified_quantity_first_ingredients() throws {
+        let source = try RecipeWebsiteImportOperations.source(
+            structuredData: [#"""
+                {"@type":"Recipe","recipeIngredient":["3 tbsp olive oil","300g beef mince","50g cheese grated"]}
+            """#],
+            visibleText: ""
+        )
+        let inferred = RecipeInferenceResult(
+            name: "Pasta",
+            servingSize: 0,
+            cookingTime: 0,
+            ingredients: [
+                .init(ingredient: "olive oil", amount: "3 tbsp"),
+                .init(ingredient: "beef mince", amount: "300g"),
+                .init(ingredient: "cheese", amount: "50g, grated")
+            ],
+            steps: [],
+            categories: [],
+            note: ""
+        )
+        let result = source.grounding(inferred)
+        #expect(result.ingredients == [
+            .init(ingredient: "olive oil", amount: "3 tbsp"),
+            .init(ingredient: "beef mince", amount: "300g"),
+            .init(ingredient: "50g cheese grated", amount: "")
+        ])
+    }
+
+    @Test
     func rendered_ingredient_rows_protect_quantities_without_overriding_other_fields() throws {
         let source = try RecipeWebsiteImportOperations.source(
             structuredData: [],

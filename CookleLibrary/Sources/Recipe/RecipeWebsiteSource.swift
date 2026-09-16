@@ -26,6 +26,7 @@ public struct RecipeWebsiteSource: Sendable {
             result.ingredients = ingredients.map { source in
                 if let match = inference.ingredients.first(where: { ingredient in
                     normalized(ingredient.ingredient + ingredient.amount) == normalized(source)
+                        || normalized(ingredient.amount + ingredient.ingredient) == normalized(source)
                 }) {
                     return match
                 }
