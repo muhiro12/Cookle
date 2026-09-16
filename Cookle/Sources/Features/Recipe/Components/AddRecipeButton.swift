@@ -22,7 +22,7 @@ struct AddRecipeButton: View {
         Group {
             if #available(iOS 26.0, *), action == nil {
                 Menu {
-                    Button("Register with a Name", systemImage: "pencil") {
+                    Button("Enter Manually", systemImage: "pencil") {
                         beginRegistration()
                     }
                     ForEach(RecipeImportSource.allCases) { source in

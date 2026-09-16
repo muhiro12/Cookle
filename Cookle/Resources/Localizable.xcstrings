@@ -171,36 +171,36 @@
         }
       }
     },
-    "Register with a Name" : {
+    "Enter Manually" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Register with a Name"
+            "value" : "Enter Manually"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "名前だけで登録"
+            "value" : "自分で入力"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Guardar solo con un nombre"
+            "value" : "Introducir manualmente"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enregistrer avec un nom"
+            "value" : "Saisir manuellement"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "仅用名称保存"
+            "value" : "手动输入"
           }
         }
       }

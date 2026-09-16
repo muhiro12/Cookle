@@ -12,15 +12,6 @@ extension RecipeFormView {
                 showsQuickCaptureHint: bindableModel.isCreateFlow
             )
         }
-        if #available(iOS 26.0, *) {
-            RecipeFormInferSection(
-                selection: importSourceSelection,
-                tip: currentRecipeFormTip(
-                    for: inferRecipeFromTextTip,
-                    isEligible: bindableModel.shouldShowInferRecipeFromTextTip
-                )
-            )
-        }
         RecipeFormPhotosSection(
             $bindableModel.photos,
             addPhotoTip: currentRecipeFormTip(
@@ -90,8 +81,35 @@ extension RecipeFormView {
                 }
             }
         default:
+            importToolbarItem
             restoreToolbarItem
             confirmationToolbarItem
+        }
+    }
+
+    @ToolbarContentBuilder var importToolbarItem: some ToolbarContent {
+        if #available(iOS 26.0, *) {
+            ToolbarItem(placement: .bottomBar) {
+                Menu {
+                    ForEach(RecipeImportSource.allCases) { source in
+                        Button {
+                            importSourceSelection.wrappedValue = source
+                        } label: {
+                            Label(source.title, systemImage: source.systemImage)
+                        }
+                    }
+                } label: {
+                    Label("Import Recipe", systemImage: "square.and.arrow.down")
+                }
+                .disabled(formModel.isSaving)
+                .cooklePopoverTip(
+                    currentRecipeFormTip(
+                        for: inferRecipeFromTextTip,
+                        isEligible: formModel.shouldShowInferRecipeFromTextTip
+                    ),
+                    arrowEdge: .bottom
+                )
+            }
         }
     }
 
