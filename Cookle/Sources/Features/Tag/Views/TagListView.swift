@@ -33,11 +33,8 @@ struct TagListView<T: Tag>: View {
             .textInputAutocapitalization(.never)
             .autocorrectionDisabled()
             .toolbar {
-                ToolbarItem {
-                    AddRecipeButton()
-                }
-                ToolbarItem {
-                    if isPresented {
+                if isPresented {
+                    ToolbarItem(placement: .cancellationAction) {
                         CloseButton()
                     }
                 }
@@ -79,7 +76,7 @@ private extension TagListView {
             } description: {
                 Text("Tags appear after recipes create them.")
             } actions: {
-                AddRecipeButton()
+                AddRecipeButton(showsTitle: true)
             }
         }
     }

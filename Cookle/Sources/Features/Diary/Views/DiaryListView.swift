@@ -49,11 +49,11 @@ struct DiaryListView: View {
         }
         .cookleTopLevelNavigationChrome("Diaries")
         .toolbar {
-            ToolbarItem {
+            ToolbarItem(placement: .primaryAction) {
                 AddDiaryButton()
             }
-            ToolbarItem {
-                if isPresented {
+            if isPresented {
+                ToolbarItem(placement: .cancellationAction) {
                     CloseButton()
                 }
             }

@@ -11,7 +11,7 @@ struct DiaryRecipeInspirationSection: View {
     var body: some View {
         Section {
             if recipes.isEmpty {
-                AddRecipeButton()
+                AddRecipeButton(showsTitle: true)
             } else {
                 ForEach(candidates) { recipe in
                     Button {

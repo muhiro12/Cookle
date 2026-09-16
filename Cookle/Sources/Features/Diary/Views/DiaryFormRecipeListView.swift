@@ -44,11 +44,11 @@ struct DiaryFormRecipeListView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
-                    Button("Register New Recipe", systemImage: "plus") {
+                    Button("Register New Recipe") {
                         isRegistrationPresented = true
                     }
                 }
-                ToolbarItem {
+                ToolbarItem(placement: .confirmationAction) {
                     Button {
                         selection = temporarySelection
                         dismiss()

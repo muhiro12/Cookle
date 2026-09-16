@@ -42,15 +42,15 @@ struct RecipeListView: View {
             }
             .toolbar {
                 if !allRecipes.isEmpty {
-                    ToolbarItem {
+                    ToolbarItem(placement: .topBarTrailing) {
                         sortMenu
                     }
+                    ToolbarItem(placement: .primaryAction) {
+                        AddRecipeButton()
+                    }
                 }
-                ToolbarItem {
-                    AddRecipeButton()
-                }
-                ToolbarItem {
-                    if isPresented {
+                if isPresented {
+                    ToolbarItem(placement: .cancellationAction) {
                         CloseButton()
                     }
                 }
@@ -91,7 +91,7 @@ private extension RecipeListView {
         } description: {
             Text("Add a recipe to start building your collection.")
         } actions: {
-            AddRecipeButton()
+            AddRecipeButton(showsTitle: true)
                 .cooklePopoverTip(
                     addRecipeTip,
                     arrowEdge: .top
@@ -182,7 +182,7 @@ private extension RecipeListView {
 
             Toggle("Ascending", isOn: recipeBrowseSortAscendingBinding)
         } label: {
-            Label("Sort", systemImage: "arrow.up.arrow.down.circle")
+            Label("Sort", systemImage: "arrow.up.arrow.down")
         }
     }
 

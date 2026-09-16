@@ -30,11 +30,8 @@ struct PhotoListView: View {
         contentView()
             .cookleTopLevelNavigationChrome("Photos")
             .toolbar {
-                ToolbarItem {
-                    AddRecipeButton(showsTitle: true)
-                }
-                ToolbarItem {
-                    if isPresented {
+                if isPresented {
+                    ToolbarItem(placement: .cancellationAction) {
                         CloseButton()
                     }
                 }
@@ -62,7 +59,7 @@ private extension PhotoListView {
         } description: {
             Text("Start a recipe with just a name, then add photos when you are ready.")
         } actions: {
-            AddRecipeButton()
+            AddRecipeButton(showsTitle: true)
         }
     }
 
