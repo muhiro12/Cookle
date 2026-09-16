@@ -5,7 +5,10 @@ enum CookleSampleDataContext {
         do {
             let modelContainer = try ModelContainer(
                 for: Recipe.self,
-                configurations: .init(isStoredInMemoryOnly: true)
+                configurations: .init(
+                    isStoredInMemoryOnly: true,
+                    cloudKitDatabase: .none
+                )
             )
             let previewStore = CooklePreviewStore()
             try previewStore.prepare(modelContainer.mainContext)
