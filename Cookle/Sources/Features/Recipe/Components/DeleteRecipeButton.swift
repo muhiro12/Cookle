@@ -35,7 +35,7 @@ struct DeleteRecipeButton: View {
                     .accessibilityHidden(true)
             }
         }
-        .confirmationDialog(
+        .alert(
             Text(RecipeDeleteCopy.title(for: recipe)),
             isPresented: $isPresented
         ) {
@@ -53,7 +53,7 @@ struct DeleteRecipeButton: View {
                 }
             }
             Button("Cancel", role: .cancel) {
-                // Dismisses the confirmation dialog.
+                // Dismisses the alert.
             }
         } message: {
             Text(RecipeDeleteCopy.message(for: recipe))

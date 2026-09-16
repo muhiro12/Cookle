@@ -10,7 +10,7 @@ struct DeleteAllConfirmationDialogModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .confirmationDialog(
+            .alert(
                 Text("Delete All"),
                 isPresented: $model.isDeleteAllConfirmationPresented
             ) {
@@ -25,7 +25,7 @@ struct DeleteAllConfirmationDialogModifier: ViewModifier {
                     Text("Delete")
                 }
                 Button(role: .cancel) {
-                    // Dismisses the confirmation dialog.
+                    // Dismisses the alert.
                 } label: {
                     Text("Cancel")
                 }

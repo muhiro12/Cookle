@@ -1,6 +1,6 @@
 enum RecipeDeleteCopy {
     static func title(for recipe: Recipe) -> String {
-        "Delete \(recipe.name)"
+        String(localized: "Delete \(recipe.name)")
     }
 
     static func confirmationDialog(for recipe: Recipe) -> String {
@@ -9,17 +9,27 @@ enum RecipeDeleteCopy {
 
     static func message(for recipe: Recipe) -> String {
         let affectedMealRowCount = (recipe.diaryObjects ?? []).count
-        let mealRowLabel = affectedMealRowCount == 1 ? "meal row" : "meal rows"
-
         if affectedMealRowCount == 0 {
-            return "This removes the recipe. No diary meal rows will be removed."
+            return String(
+                localized: "This removes the recipe. No diary meal rows will be removed."
+            )
         }
 
-        return "This removes the recipe and \(affectedMealRowCount) diary " +
-            "\(mealRowLabel). The related diary entries stay saved."
+        if affectedMealRowCount == 1 {
+            return String(
+                localized: "This removes the recipe and one diary meal row. The related diary entry stays saved."
+            )
+        }
+
+        return String(
+            localized: """
+            This removes the recipe and \(affectedMealRowCount) diary meal rows. \
+            The related diary entries stay saved.
+            """
+        )
     }
 
     static func successDialog(for recipe: Recipe) -> String {
-        "Deleted \(recipe.name)"
+        String(localized: "Deleted \(recipe.name)")
     }
 }

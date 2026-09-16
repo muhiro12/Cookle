@@ -4275,6 +4275,40 @@
         }
       }
     },
+    "Deleted %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se eliminó %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suppression de %@ terminée"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@を削除しました"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已删除 %@"
+          }
+        }
+      }
+    },
     "Detail" : {
       "localizations" : {
         "en" : {
@@ -10909,6 +10943,108 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "此操作会永久删除所有食谱、日记、标签和照片。删除内容会同步到使用同一iCloud账户的其他设备。如果需要保留这些数据，请先导出备份。"
+          }
+        }
+      }
+    },
+    "This removes the recipe and %lld diary meal rows. The related diary entries stay saved." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This removes the recipe and %lld diary meal rows. The related diary entries stay saved."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto elimina la receta y %lld filas de comidas del diario. Las entradas del diario relacionadas se conservarán."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette action supprime la recette et %lld lignes de repas du journal. Les entrées de journal associées resteront enregistrées."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピと日記の食事データ%lld件を削除します。関連する日記は残ります。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这将删除该食谱和 %lld 条日记餐食记录。相关日记仍会保留。"
+          }
+        }
+      }
+    },
+    "This removes the recipe and one diary meal row. The related diary entry stays saved." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This removes the recipe and one diary meal row. The related diary entry stays saved."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto elimina la receta y una fila de comida del diario. La entrada del diario relacionada se conservará."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette action supprime la recette et une ligne de repas du journal. L’entrée de journal associée restera enregistrée."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピと日記の食事データ1件を削除します。関連する日記は残ります。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这将删除该食谱和 1 条日记餐食记录。相关日记仍会保留。"
+          }
+        }
+      }
+    },
+    "This removes the recipe. No diary meal rows will be removed." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This removes the recipe. No diary meal rows will be removed."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto elimina la receta. No se eliminará ninguna fila de comida del diario."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette action supprime la recette. Aucune ligne de repas du journal ne sera supprimée."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピを削除します。日記の食事データは削除されません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这将删除该食谱。不会删除任何日记餐食记录。"
           }
         }
       }
