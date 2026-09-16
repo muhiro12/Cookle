@@ -68,6 +68,26 @@ extension RecipeService {
         )
     }
 
+    static func groundedInference(
+        _ inference: RecipeInferenceResult,
+        sourceText: String
+    ) -> RecipeInferenceResult {
+        var result = sanitizedInference(inference)
+        guard let servingRange = explicitServingRange(in: sourceText) else {
+            return result
+        }
+
+        result.servingSize = .zero
+        if result.note.contains(servingRange) == false {
+            result.note = [result.note, servingRange]
+                .filter { value in
+                    value.isEmpty == false
+                }
+                .joined(separator: "\n\n")
+        }
+        return result
+    }
+
     /// Returns whether inference output contains enough data to create a recipe.
     static func isMeaningfulInference(
         _ inference: RecipeInferenceResult
@@ -94,6 +114,24 @@ extension RecipeService {
             return ""
         }
         return RecipeBlurbService.collapsedWhitespace(trimmedValue)
+    }
+
+    static func explicitServingRange(in text: String) -> String? {
+        let pattern = #/
+                (?ix)
+                (?:
+                serves \s* [:：]? \s*
+                [0-9０-９]+ \s* [-–—〜～~] \s* [0-9０-９]+
+                (?: \s* (?: people | persons? ) )?
+                |
+                [0-9０-９]+ \s* [-–—〜～~] \s* [0-9０-９]+ \s*
+                (?: 人分 | 人前 | servings? | people | persons? )
+                )
+                /#
+        guard let match = text.firstMatch(of: pattern) else {
+            return nil
+        }
+        return String(match.output)
     }
 
     /// Extracts basic recipe fields with deterministic local parsing.

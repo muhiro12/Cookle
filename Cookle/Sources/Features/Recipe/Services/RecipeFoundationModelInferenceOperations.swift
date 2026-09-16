@@ -35,8 +35,9 @@ enum RecipeFoundationModelInferenceOperations {
         case .available:
             break
         case .unavailable:
-            let fallback = RecipeInferenceOperations.sanitizedInference(
-                RecipeInferenceOperations.fallbackInference(from: normalizedText)
+            let fallback = RecipeInferenceOperations.groundedInference(
+                RecipeInferenceOperations.fallbackInference(from: normalizedText),
+                sourceText: normalizedText
             )
             guard RecipeInferenceOperations.isMeaningfulInference(fallback) else {
                 throw RecipeInferenceError.modelUnavailable
@@ -58,9 +59,12 @@ enum RecipeFoundationModelInferenceOperations {
                 options: .init(samplingMode: .greedy)
             ).content
             try Task.checkCancellation()
-            let sanitized = RecipeInferenceOperations.sanitizedInference(inferred.recipeInferenceResult)
-            if RecipeInferenceOperations.isMeaningfulInference(sanitized) {
-                return sanitized
+            let grounded = RecipeInferenceOperations.groundedInference(
+                inferred.recipeInferenceResult,
+                sourceText: normalizedText
+            )
+            if RecipeInferenceOperations.isMeaningfulInference(grounded) {
+                return grounded
             }
         } catch is CancellationError {
             throw CancellationError()

@@ -14,6 +14,17 @@ public enum RecipeInferenceOperations {
         RecipeService.sanitizedInference(inference)
     }
 
+    /// Returns sanitized inference with ambiguous serving ranges preserved as source notes.
+    public static func groundedInference(
+        _ inference: RecipeInferenceResult,
+        sourceText: String
+    ) -> RecipeInferenceResult {
+        RecipeService.groundedInference(
+            inference,
+            sourceText: sourceText
+        )
+    }
+
     /// Returns whether an inference result contains enough user-meaningful content.
     public static func isMeaningfulInference(
         _ inference: RecipeInferenceResult
