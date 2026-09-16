@@ -177,4 +177,70 @@ struct RecipeWebsiteImportTests {
         #expect(result.cookingTime == 20)
         #expect(result.steps == inferred.steps)
     }
+    @Test
+    func rendered_steps_and_warnings_survive_model_summarization() throws {
+        let steps = ["Put 1 in the pot.", "Select menu 42 → Start. Do not attach the stirring unit."]
+        let warning = "Use a heat-resistant bag. Refrigerate and consume within 1–2 days."
+        let source = try RecipeWebsiteImportOperations.source(
+            structuredData: [],
+            visibleText: (steps + [warning]).joined(separator: "\n"),
+            knownSteps: steps,
+            sourceNotes: [warning]
+        )
+        let inferred = RecipeInferenceResult(
+            name: "Chicken",
+            servingSize: 0,
+            cookingTime: 0,
+            ingredients: [],
+            steps: ["Cook the chicken."],
+            categories: [],
+            note: "Rest before slicing."
+        )
+        let result = source.grounding(inferred)
+        #expect(result.steps == steps)
+        #expect(result.note.contains(warning))
+        #expect(result.note.contains(inferred.note))
+    }
+
+    @Test
+    func rendered_warnings_supplement_metadata_and_missing_steps() throws {
+        let warning = "Do not leave food in the pot."
+        let step = "Select mode 2 → Start."
+        for metadata in [
+            #"{"@type":"Recipe","name":"Soup"}"#,
+            #"{"@type":"Recipe","name":"Soup","recipeInstructions":["Original metadata step."]}"#
+        ] {
+            let source = try RecipeWebsiteImportOperations.source(
+                structuredData: [metadata],
+                visibleText: "Page text",
+                knownSteps: [step],
+                sourceNotes: [warning]
+            )
+            let inferred = RecipeInferenceResult(
+                name: "Soup",
+                servingSize: 0,
+                cookingTime: 0,
+                ingredients: [],
+                steps: ["Invented step."],
+                categories: [],
+                note: "Invented warning."
+            )
+            let result = source.grounding(inferred)
+            #expect(source.text.contains(warning))
+            #expect(result.note == warning)
+            #expect(result.steps == (metadata.contains("recipeInstructions")
+                                        ? ["Original metadata step."] : [step]))
+        }
+    }
+
+    @Test
+    func oversized_rendered_facts_are_rejected_without_truncation() {
+        #expect(throws: RecipeWebsiteImportError.contentTooLarge) {
+            try RecipeWebsiteImportOperations.source(
+                structuredData: [],
+                visibleText: "Short page",
+                sourceNotes: [String(repeating: "x", count: RecipeWebsiteImportOperations.maximumTextLength + 1)]
+            )
+        }
+    }
 }

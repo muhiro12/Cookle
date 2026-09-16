@@ -75,7 +75,9 @@ final class RecipeWebsiteReader: NSObject, WKNavigationDelegate {
                 knownIngredients: content.ingredients.map { ingredient in
                     .init(ingredient: ingredient.ingredient, amount: ingredient.amount)
                 },
-                equipment: content.equipment
+                equipment: content.equipment,
+                knownSteps: content.steps,
+                sourceNotes: content.notes
             ),
             url
         )
@@ -191,6 +193,8 @@ private extension RecipeWebsiteReader {
         let visibleText: String
         let ingredients: [PageIngredient]
         let equipment: [String]
+        let steps: [String]
+        let notes: [String]
     }
 
     // Use an isolated JavaScript world. Page text is untrusted input, never executable instructions.
@@ -204,7 +208,8 @@ private extension RecipeWebsiteReader {
         structuredData.push(script.textContent);
         }
         const root = document.querySelector('main, article, [role="main"]') || document.body;
-        if (!root) return JSON.stringify({structuredData, visibleText: '', ingredients: [], equipment: []});
+        if (!root) return JSON.stringify({structuredData, visibleText: '',
+        ingredients: [], equipment: [], steps: [], notes: []});
         const lines = [];
         let length = 0;
         const excluded = 'script,style,nav,header,footer,iframe,button,select,textarea,svg,'
@@ -225,10 +230,29 @@ private extension RecipeWebsiteReader {
         const headings = [...root.querySelectorAll('h1,h2,h3,h4,h5,h6')];
         const ingredientsHeading = headings.find(h =>
         /^(材料|食材|ingredients|ingredientes|ingrédients)/i.test(h.innerText));
-        const stepsHeading = ingredientsHeading && headings.find(h =>
-        (ingredientsHeading.compareDocumentPosition(h) & Node.DOCUMENT_POSITION_FOLLOWING)
+        const stepsHeading = headings.find(h =>
+        (!ingredientsHeading || (ingredientsHeading.compareDocumentPosition(h) & Node.DOCUMENT_POSITION_FOLLOWING))
         && /^(作りかた|作り方|手順|steps|directions|instructions|method|préparation|preparación)/i.test(h.innerText));
         const ingredients = [];
+        const notes = [];
+        const steps = [];
+        const visible = element => !element.closest(excluded)
+        && element.getClientRects().length > 0 && getComputedStyle(element).visibility !== 'hidden';
+        const between = (element, start, end) => visible(element)
+        && (start.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_FOLLOWING)
+        && (!end || (end.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_PRECEDING));
+        const readText = element => {
+        // Keep inline references together, but retain block boundaries and line breaks.
+        const visit = node => {
+        if (node.nodeType === Node.TEXT_NODE) return node.textContent;
+        if (node.nodeType !== Node.ELEMENT_NODE || !visible(node)) return '';
+        if (node.tagName === 'BR') return '\n';
+        const text = [...node.childNodes].map(visit).join('');
+        return getComputedStyle(node).display.startsWith('inline') ? text : '\n' + text + '\n';
+        };
+        return visit(element).replace(/[ \t]+/g, ' ').replace(/ *\n */g, '\n')
+        .replace(/\n{3,}/g, '\n\n').trim();
+        };
         if (ingredientsHeading && stepsHeading) {
         for (const row of root.querySelectorAll('dl')) {
         if (!(ingredientsHeading.compareDocumentPosition(row) & Node.DOCUMENT_POSITION_FOLLOWING)
@@ -240,14 +264,52 @@ private extension RecipeWebsiteReader {
         const group = siblings.slice(0, firstRow).map(element => element.innerText.trim())
         .filter(text => /^[A-ZＡ-Ｚ★☆◎●○◯①-⑳]$/.test(text)).join('');
         const ingredient = group ? `[${group}] ${name}` : name;
-        if (name && amount) ingredients.push({ingredient, amount});
+        if (visible(row) && name && amount) ingredients.push({ingredient, amount});
+        else if (visible(row) && name && amount === '') notes.push(name);
+        }
+        }
+        for (const paragraph of root.querySelectorAll('p')) {
+        if (ingredientsHeading && stepsHeading && between(paragraph, ingredientsHeading, stepsHeading)
+        && !paragraph.closest('dl') && !paragraph.parentElement.closest('p')) {
+        const text = readText(paragraph);
+        if (text) notes.push(text);
+        }
+        }
+        if (stepsHeading) {
+        const end = headings.find(h => Number(h.tagName.slice(1)) <= Number(stepsHeading.tagName.slice(1))
+        && (stepsHeading.compareDocumentPosition(h) & Node.DOCUMENT_POSITION_FOLLOWING));
+        const lists = [...root.querySelectorAll('ol')].filter(list =>
+        between(list, stepsHeading, end) && !list.parentElement.closest('ol'));
+        // Multiple independent lists are ambiguous; leave their interpretation to the editable input.
+        if (lists.length === 1) {
+        const rows = [...lists[0].children].filter(row => row.tagName === 'LI' && visible(row));
+        const marker = row => row.firstElementChild?.tagName === 'DIV'
+        ? readText(row.firstElementChild) : '';
+        const explicitlyNumbered = rows.length >= 2 && marker(rows[0]) === '1' && marker(rows[1]) === '2';
+        for (const row of rows) {
+        const number = marker(row);
+        let text = readText(row);
+        if (explicitlyNumbered && /^\d+$/.test(number)) {
+        text = text.replace(/^\d+\s*\n/, '').trim();
+        steps.push(text);
+        } else if (text) {
+        (explicitlyNumbered ? notes : steps).push(text);
+        }
+        }
+        }
+        for (const paragraph of root.querySelectorAll('p')) {
+        if (between(paragraph, stepsHeading, end) && !paragraph.closest('ol,ul')
+        && !paragraph.parentElement.closest('p')) {
+        const text = readText(paragraph);
+        if (text) notes.push(text);
+        }
         }
         }
         const equipment = [...document.querySelectorAll('button')]
         .map(button => button.innerText.trim())
         .filter(text => /^[A-Z]{1,5}-[A-Z0-9-]{2,20}$/.test(text));
         const visibleText = [...equipment, ...lines].join('\n');
-        return JSON.stringify({structuredData, ingredients, equipment, visibleText});
+        return JSON.stringify({structuredData, ingredients, equipment, visibleText, steps, notes});
         })()
     """#
 

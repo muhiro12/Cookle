@@ -26,7 +26,9 @@ public enum RecipeWebsiteImportOperations {
         structuredData: [String],
         visibleText: String,
         knownIngredients: [RecipeInferenceIngredient] = [],
-        equipment: [String] = []
+        equipment: [String] = [],
+        knownSteps: [String] = [],
+        sourceNotes: [String] = []
     ) throws -> RecipeWebsiteSource {
         guard structuredData.reduce(0, { $0 + $1.utf8.count }) <= maximumStructuredBytes else {
             throw RecipeWebsiteImportError.contentTooLarge
@@ -43,25 +45,32 @@ public enum RecipeWebsiteImportOperations {
         guard texts.count <= 1 else {
             throw RecipeWebsiteImportError.multipleRecipes
         }
-        let text = (texts.first ?? visibleText).trimmingCharacters(in: .whitespacesAndNewlines)
+        let recipe = recipes.first ?? [:]
+        let structuredSteps = instructionSteps(recipe["recipeInstructions"])
+        let steps = structuredSteps.isEmpty ? knownSteps : structuredSteps
+        let supplements = sourceNotes + equipment + (structuredSteps.isEmpty ? knownSteps : [])
+        let text = (texts.first.map { metadata in
+            ([metadata] + supplements).filter { !$0.isEmpty }.joined(separator: "\n\n")
+        } ?? visibleText).trimmingCharacters(in: .whitespacesAndNewlines)
         guard !text.isEmpty else {
             throw RecipeWebsiteImportError.noContent
         }
-        guard text.count <= maximumTextLength else {
+        guard text.count <= maximumTextLength,
+              supplements.joined(separator: "\n").count <= maximumTextLength else {
             throw RecipeWebsiteImportError.contentTooLarge
         }
-        let recipe = recipes.first ?? [:]
+        let details = [plainText(recipe["description"], depth: 0), plainText(recipe["tool"], depth: 0)]
+            + equipment + sourceNotes
         return .init(
             text: text,
             name: plainText(recipe["name"], depth: 0),
             ingredients: (recipe["recipeIngredient"] as? [Any] ?? []).map { plainText($0, depth: 0) },
             knownIngredients: recipes.isEmpty ? knownIngredients : [],
-            steps: instructionSteps(recipe["recipeInstructions"]),
+            steps: steps,
             yield: plainText(recipe["recipeYield"], depth: 0),
             cookingDuration: plainText(recipe["cookTime"], depth: 0),
             attribution: plainText(recipe["author"], depth: 0),
-            details: ([plainText(recipe["description"], depth: 0), plainText(recipe["tool"], depth: 0)] + equipment)
-                .filter { !$0.isEmpty }.joined(separator: "\n\n"),
+            details: details.filter { !$0.isEmpty }.joined(separator: "\n\n"),
             hasStructuredRecipe: !recipes.isEmpty
         )
     }

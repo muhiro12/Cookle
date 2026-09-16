@@ -42,12 +42,12 @@ public struct RecipeWebsiteSource: Sendable {
                 return .init(ingredient: source, amount: "")
             }
         }
+        if !steps.isEmpty {
+            result.steps = steps
+        }
         guard hasStructuredRecipe else {
             result.note = [inference.note, details].filter { !$0.isEmpty }.joined(separator: "\n\n")
             return result
-        }
-        if !steps.isEmpty {
-            result.steps = steps
         }
         result.servingSize = servingCount
         result.cookingTime = cookingMinutes
