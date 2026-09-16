@@ -273,9 +273,11 @@ private extension RecipeWebsiteReader {
         (!ingredientsHeading || (ingredientsHeading.compareDocumentPosition(h) & Node.DOCUMENT_POSITION_FOLLOWING))
         && /^(作りかた|作り方|手順|steps|directions|instructions|method|préparation|preparación)/i.test(h.innerText));
         const headerText = headerLines.join('\n');
-        const servingPattern = /(?:^|\n)(?:材料[：:]\s*)?(\d+\s*(?:人分|人前|servings?|people|persons?))(?:$|\n)/i;
-        const servingMatch = headerText.match(servingPattern)
-        || headerText.match(/(?:^|\n)(serves\s+\d+)(?:$|\n)/i);
+        const countPattern = /\d+(?:\s*[〜～~-]\s*\d+)?/.source;
+        const servingPattern = new RegExp(String.raw`(?:^|\n)(?:材料[：:]\s*)?(${countPattern}`
+        + String.raw`\s*(?:人分|人前|servings?|people|persons?))(?:$|\n)`, 'i');
+        const servesPattern = new RegExp(String.raw`(?:^|\n)(serves\s+${countPattern})(?:$|\n)`, 'i');
+        const servingMatch = headerText.match(servingPattern) || headerText.match(servesPattern);
         const servingText = (servingMatch?.[1] || '').replace(/\s+/g, ' ');
         const ingredients = [];
         const notes = [];

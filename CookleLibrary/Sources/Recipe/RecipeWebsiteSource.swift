@@ -33,8 +33,9 @@ public struct RecipeWebsiteSource: Sendable {
             // Accept extra notes only as source excerpts, and do not repeat retained source facts.
             let note = inference.note.trimmingCharacters(in: .whitespacesAndNewlines)
             let isSourceExcerpt = !note.isEmpty && normalized(text).contains(normalized(note))
-            let isRetainedFact = normalized(details).contains(normalized(note))
-            result.note = [isSourceExcerpt && !isRetainedFact ? note : "", details]
+            let remainingYield = servingCount == 0 ? yield : ""
+            let isRetainedFact = normalized(details + remainingYield).contains(normalized(note))
+            result.note = [isSourceExcerpt && !isRetainedFact ? note : "", details, remainingYield]
                 .filter { !$0.isEmpty }.joined(separator: "\n\n")
             return result
         }

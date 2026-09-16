@@ -7,7 +7,7 @@ struct RecipeWebsiteSourceFactsTests {
         for (metadata, label, count) in [
             ("4.0", "Serves 4", 4), ("4", "4 servings", 4),
             ("4", "Serves 2", 0), ("12 cookies", "Serves 4", 0),
-            ("", "4人分", 4), ("", "2〜3人分", 0), ("", "", 0)
+            ("", "4人分", 4), ("", "2〜3人分", 0), ("", "Serves 2-3", 0), ("", "", 0)
         ] {
             let source = try RecipeWebsiteImportOperations.source(
                 structuredData: metadata.isEmpty ? [] : ["{\"@type\":\"Recipe\",\"recipeYield\":\"\(metadata)\"}"],
@@ -18,6 +18,9 @@ struct RecipeWebsiteSourceFactsTests {
                 name: "Soup", servingSize: 9, cookingTime: 0, ingredients: [], steps: [], categories: [], note: ""
             )
             #expect(source.grounding(inferred).servingSize == count)
+            if metadata.isEmpty, count == 0, !label.isEmpty {
+                #expect(source.grounding(inferred).note.contains(label))
+            }
         }
     }
 
