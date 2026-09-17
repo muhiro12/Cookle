@@ -67,6 +67,9 @@ struct AddMultipleTextsView: View {
                 }
             }
             .font(nil)
+            .task {
+                isTextFocused = true
+            }
     }
 
     init(texts: Binding<[String]>, title: LocalizedStringKey, placeholder: LocalizedStringKey) {

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RecipeFormNameSection: View {
     @Binding private var name: String
+    @FocusState private var isNameFocused: Bool
 
     private let showsQuickCaptureHint: Bool
     private let additionalFooter: LocalizedStringKey?
@@ -16,6 +17,7 @@ struct RecipeFormNameSection: View {
     var body: some View {
         Section {
             TextField("Name", text: $name, prompt: Text("Spaghetti Carbonara"))
+                .focused($isNameFocused)
                 .accessibilityValue(
                     name.isEmpty ? Text(verbatim: "") : Text(verbatim: name)
                 )
@@ -33,6 +35,11 @@ struct RecipeFormNameSection: View {
             }
             if let additionalFooter {
                 Text(additionalFooter)
+            }
+        }
+        .task {
+            if showsQuickCaptureHint, name.isEmpty {
+                isNameFocused = true
             }
         }
     }

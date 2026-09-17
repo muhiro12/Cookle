@@ -23,6 +23,7 @@ struct RecipeWebsiteImportView: View {
     @State private var isReading = false
     @State private var errorMessage = ""
     @State private var readTask: Task<Void, Never>?
+    @FocusState private var isAddressFocused: Bool
 
     var dismissAfterImport = true
     let onImport: (RecipeWebsiteSource, URL) -> Void
@@ -82,6 +83,7 @@ struct RecipeWebsiteImportView: View {
     private var pageContent: some View {
         VStack(spacing: 0) {
             TextField("Recipe URL", text: $address)
+                .focused($isAddressFocused)
                 .keyboardType(.URL)
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled()
@@ -104,6 +106,11 @@ struct RecipeWebsiteImportView: View {
                 Text(reader.errorMessage)
                     .font(.callout)
                     .padding()
+            }
+        }
+        .task {
+            if address.isEmpty {
+                isAddressFocused = true
             }
         }
     }

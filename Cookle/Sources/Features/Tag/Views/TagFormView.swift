@@ -16,11 +16,13 @@ struct TagFormView<T: Tag>: View {
     @State private var value = ""
     @State private var errorMessage = ""
     @State private var isErrorPresented = false
+    @FocusState private var isValueFocused: Bool
 
     var body: some View {
         Form {
             Section {
                 TextField("Value", text: $value, prompt: Text("Spaghetti"))
+                    .focused($isValueFocused)
             } header: {
                 Text("Value")
             }
@@ -82,6 +84,7 @@ struct TagFormView<T: Tag>: View {
         }
         .task {
             value = tag.value
+            isValueFocused = true
         }
     }
 }
