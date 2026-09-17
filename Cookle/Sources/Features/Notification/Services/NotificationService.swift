@@ -152,35 +152,6 @@ final class NotificationService: NSObject {
     }
 }
 
-extension NotificationService: UNUserNotificationCenterDelegate {
-    nonisolated func userNotificationCenter(
-        _: UNUserNotificationCenter,
-        willPresent _: UNNotification
-    ) async -> UNNotificationPresentationOptions {
-        await Task.yield()
-        return [.sound, .list, .banner]
-    }
-
-    nonisolated func userNotificationCenter(_: UNUserNotificationCenter,
-                                            didReceive response: UNNotificationResponse) async {
-        await handleNotificationResponse(response)
-    }
-
-    nonisolated func userNotificationCenter(_: UNUserNotificationCenter,
-                                            openSettingsFor _: UNNotification?) {
-        let settingsURL = CookleDeepLinkURLBuilder.preferredURL(for: .settings)
-        Task { @MainActor in
-            routeLogger.info(
-                "notification settings route requested",
-                metadata: [
-                    "route_url": settingsURL.absoluteString
-                ]
-            )
-            await routeInbox.replacePendingURL(settingsURL)
-        }
-    }
-}
-
 extension NotificationService {
     var isAuthorizationGranted: Bool {
         isAuthorizationGranted(
