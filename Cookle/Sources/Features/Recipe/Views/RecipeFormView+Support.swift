@@ -128,7 +128,7 @@ extension RecipeFormView {
         ToolbarItem(placement: .confirmationAction) {
             Button {
                 Task {
-                    let shouldDismiss = await formModel.save(
+                    guard let result = await formModel.save(
                         context: context,
                         recipe: recipe,
                         recipeActionService: recipeActionService,
@@ -136,10 +136,14 @@ extension RecipeFormView {
                             category: "RecipeDraft",
                             source: #fileID
                         )
-                    )
-                    if shouldDismiss {
-                        dismiss()
+                    ) else {
+                        return
                     }
+                    if case .created(let createdRecipe) = result {
+                        navigationModel.selectedRecipe = createdRecipe
+                        navigationModel.selectedTab = .recipe
+                    }
+                    dismiss()
                 }
             } label: {
                 switch type {

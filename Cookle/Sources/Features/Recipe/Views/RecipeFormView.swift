@@ -25,6 +25,8 @@ struct RecipeFormView: View {
     var recipeActionService
     @Environment(CookleAppLogging.self)
     var logging
+    @Environment(MainNavigationModel.self)
+    var navigationModel
 
     @AppStorage(\.isDebugOn)
     private var isDebugOn

@@ -176,9 +176,9 @@ final class RecipeFormModel {
         recipe: Recipe?,
         recipeActionService: RecipeActionService,
         draftLogger: MHLogger
-    ) async -> Bool {
+    ) async -> RecipeFormSaveCoordinator.Result? {
         guard beginSaving() else {
-            return false
+            return nil
         }
         defer {
             isSaving = false
@@ -213,7 +213,7 @@ final class RecipeFormModel {
                 error: error
             )
             errorMessage = error.localizedDescription
-            return false
+            return nil
         }
     }
 }
@@ -245,8 +245,8 @@ private extension RecipeFormModel {
         recipe: Recipe?,
         draft: RecipeFormDraft,
         recipeActionService: RecipeActionService
-    ) async throws -> Bool {
-        _ = try await RecipeFormSaveCoordinator.save(
+    ) async throws -> RecipeFormSaveCoordinator.Result {
+        let result = try await RecipeFormSaveCoordinator.save(
             context: context,
             type: type,
             recipe: recipe,
@@ -256,7 +256,7 @@ private extension RecipeFormModel {
 
         acceptCurrentChanges()
         clearSnapshot()
-        return true
+        return result
     }
 }
 
