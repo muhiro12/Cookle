@@ -67,7 +67,7 @@ struct RecipeWebsiteImportTests {
     }
 
     @Test
-    func grounding_keeps_group_markers_and_rejects_invented_time_or_servings() throws {
+    func grounding_keeps_symbol_markers_and_rejects_invented_time_or_servings() throws {
         let source = try RecipeWebsiteImportOperations.source(
             structuredData: [#"""
                 {"@type":"Recipe",
@@ -171,9 +171,8 @@ struct RecipeWebsiteImportTests {
             note: ""
         )
         let result = source.grounding(inferred)
-        #expect(result.ingredients.first?.ingredient == "Potatoes (cut into 4 pieces)"
-        )
-        #expect(result.ingredients.first?.amount == "300g")
+        #expect(result.ingredients.first?.ingredient == "Potatoes")
+        #expect(result.ingredients.first?.amount == "300g(cut into 4 pieces)")
         #expect(result.cookingTime == 20)
         #expect(result.steps == inferred.steps)
     }

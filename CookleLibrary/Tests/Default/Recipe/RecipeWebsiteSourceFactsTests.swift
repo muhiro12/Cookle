@@ -96,4 +96,53 @@ struct RecipeWebsiteSourceFactsTests {
             .init(ingredient: "cheese finely grated", amount: "50g")
         ])
     }
+
+    @Test
+    func website_ingredients_keep_group_meaning_without_polluting_reusable_names() throws {
+        let source = try RecipeWebsiteImportOperations.source(
+            structuredData: [#"{"@type":"Recipe","recipeIngredient":["A 醤油 大さじ1","A 砂糖 小さじ1","B マヨネーズ 大さじ2","B 七味 少々"],"recipeInstructions":["Aを加える。","仕上げにBをかける。"]}"#],
+            visibleText: ""
+        )
+        let inferred = RecipeInferenceResult(
+            name: "たれ",
+            servingSize: 0,
+            cookingTime: 0,
+            ingredients: [
+                .init(ingredient: "A 醤油", amount: "大さじ1"),
+                .init(ingredient: "A 砂糖", amount: "小さじ1"),
+                .init(ingredient: "B マヨネーズ", amount: "大さじ2"),
+                .init(ingredient: "B 七味", amount: "少々")
+            ],
+            steps: [],
+            categories: [],
+            note: ""
+        )
+
+        let result = source.grounding(inferred)
+
+        #expect(result.ingredients.map(\.ingredient) == ["醤油", "砂糖", "マヨネーズ", "七味"])
+        #expect(result.steps == ["Aを加える。", "仕上げにBをかける。"])
+        #expect(result.note == "A: 醤油, 砂糖\nB: マヨネーズ, 七味")
+    }
+
+    @Test
+    func website_ingredients_move_preparation_qualifiers_to_amounts() throws {
+        let source = try RecipeWebsiteImportOperations.source(
+            structuredData: [#"{"@type":"Recipe","recipeIngredient":["人参（角切り） 1/2個"]}"#],
+            visibleText: ""
+        )
+        let inferred = RecipeInferenceResult(
+            name: "煮物",
+            servingSize: 0,
+            cookingTime: 0,
+            ingredients: [.init(ingredient: "人参", amount: "1/2個（角切り）")],
+            steps: [],
+            categories: [],
+            note: ""
+        )
+
+        #expect(source.grounding(inferred).ingredients == [
+            .init(ingredient: "人参", amount: "1/2個（角切り）")
+        ])
+    }
 }

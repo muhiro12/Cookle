@@ -37,13 +37,13 @@ public struct RecipeWebsiteSource: Sendable {
             let isRetainedFact = normalized(details + remainingYield).contains(normalized(note))
             result.note = [isSourceExcerpt && !isRetainedFact ? note : "", details, remainingYield]
                 .filter { !$0.isEmpty }.joined(separator: "\n\n")
-            return result
+            return RecipeInferenceIngredientNormalization.applying(to: result)
         }
         result.servingSize = servingCount
         result.cookingTime = cookingMinutes
         let facts = [details, yield, attribution].filter { !$0.isEmpty }
         result.note = facts.joined(separator: "\n\n")
-        return result
+        return RecipeInferenceIngredientNormalization.applying(to: result)
     }
 }
 
@@ -84,20 +84,30 @@ private extension RecipeWebsiteSource {
         }
         let candidates = inference.ingredients.sorted { $0.amount.count > $1.amount.count }
         for ingredient in candidates where !ingredient.amount.isEmpty {
-            if source.hasPrefix(ingredient.amount) {
-                let remainder = source.dropFirst(ingredient.amount.count)
-                if remainder.first?.isWhitespace == true {
-                    return .init(
-                        ingredient: remainder.trimmingCharacters(in: .whitespacesAndNewlines),
-                        amount: ingredient.amount
-                    )
+            let amountCandidates = [
+                ingredient.amount,
+                RecipeInferenceIngredientNormalization.amountWithoutPreparationQualifier(ingredient.amount)
+            ].reduce(into: [String]()) { result, amount in
+                if !amount.isEmpty, !result.contains(amount) {
+                    result.append(amount)
                 }
             }
-            if source.hasSuffix(ingredient.amount) {
-                let ingredientName = source.dropLast(ingredient.amount.count)
-                    .trimmingCharacters(in: .whitespacesAndNewlines)
-                if !ingredientName.isEmpty {
-                    return .init(ingredient: ingredientName, amount: ingredient.amount)
+            for amount in amountCandidates {
+                if source.hasPrefix(amount) {
+                    let remainder = source.dropFirst(amount.count)
+                    if remainder.first?.isWhitespace == true {
+                        return .init(
+                            ingredient: remainder.trimmingCharacters(in: .whitespacesAndNewlines),
+                            amount: amount
+                        )
+                    }
+                }
+                if source.hasSuffix(amount) {
+                    let ingredientName = source.dropLast(amount.count)
+                        .trimmingCharacters(in: .whitespacesAndNewlines)
+                    if !ingredientName.isEmpty {
+                        return .init(ingredient: ingredientName, amount: amount)
+                    }
                 }
             }
         }

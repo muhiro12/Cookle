@@ -38,7 +38,7 @@ extension RecipeService {
     static func sanitizedInference(
         _ inference: RecipeInferenceResult
     ) -> RecipeInferenceResult {
-        .init(
+        let result: RecipeInferenceResult = .init(
             name: sanitizedInferenceLine(inference.name),
             servingSize: max(inference.servingSize, .zero),
             cookingTime: max(inference.cookingTime, .zero),
@@ -66,6 +66,7 @@ extension RecipeService {
             },
             note: sanitizedInferenceLine(inference.note)
         )
+        return RecipeInferenceIngredientNormalization.applying(to: result)
     }
 
     static func groundedInference(
