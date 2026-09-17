@@ -68,8 +68,9 @@ symmetry with sibling apps.
   persistence-maintenance, and logging contracts. It must not depend on
   `MHPlatform`, `MHAppRuntime`, app-runtime split products, MHUI, or MHDesign.
 - `Cookle` adopts full `MHUI` on `1.20.0..<2.0.0` for its root theme and
-  selected presentation primitives. Existing metrics use MHUI's MHDesign
-  re-export, without a separate direct MHDesign product link.
+  selected presentation primitives. It selects the standard Mist palette once
+  at the app root. Existing metrics use MHUI's MHDesign re-export, without a
+  separate direct MHDesign product link.
   [ADR 0009](../Decisions/0009-adopt-full-mhui-in-main-app.md) records the
   accepted main-app presentation boundary.
 - `Widgets`, `Watch`, and App Intents call Cookle shared APIs first. They stay
@@ -92,14 +93,17 @@ default to native presentation for search and Intent snippets.
 
 Recipe browsing and editing, diaries, search, tags, settings, photo metadata,
 and diagnostics use native List and Form chrome. These are complete adoption
-routes that preserve selection, swipe actions, fields, focus, and keyboard
-behavior. Cooking and the photo collection use screen composition; detached
+routes that preserve native rows, sections, selection, swipe actions, fields,
+focus, and keyboard behavior. Cooking and the photo collection use screen
+composition; detached
 recipe editors use input chrome on their native keyboard-resizing canvas.
 Cooking presents one progress indicator and an unframed current instruction,
 followed by step navigation and the grouped timer controls. Standard text
 sizes retain native paging; accessibility sizes use natural-height text in
 the screen scroll view and return to the instruction after a step change.
 Media, system, and package-owned presentations retain their native appearance.
+Ordinary content actions retain MHUI's non-glass default. Liquid Glass is an
+explicit opt-in reserved for a bounded floating functional layer.
 The [main-app rollout record](../Plans/mhui-app-rollout.md) documents these
 choices and their verification limits. App-owned composition and behavior
 remain local; MHUI is a presentation dependency, not a home for business logic

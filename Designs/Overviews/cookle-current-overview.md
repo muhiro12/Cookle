@@ -38,8 +38,9 @@ focus is personal cooking organization:
 
 ## Presentation Adoption Update
 
-The main app now links full MHUI 1.20 with a standard root theme. Recipe
-Detail leads with its photo, compact facts, and cooking entry. Ingredients
+The main app now links full MHUI 1.20 with the standard Mist palette selected
+once at the application root. Recipe Detail leads with its photo, compact
+facts, and cooking entry. Ingredients
 and related records use grouped surfaces, while steps and notes use unframed
 reading sections. Dates and secondary actions close the page. The recipe
 content and operations remain the same. Lists,
@@ -50,6 +51,8 @@ uses screen spacing and section headers; detached editors use input chrome.
 Specialized media and system UI retain their native presentation. The
 [rollout record](../Plans/mhui-app-rollout.md) separates implementation from
 the runtime states and size/appearance combinations actually verified.
+Ordinary content actions keep MHUI's non-glass default. A future floating
+action opts into Liquid Glass only at that bounded control layer.
 CookleLibrary remains presentation-free, and Widgets retains native WidgetKit
 composition. Watch adoption is deferred after the MHUI 1.18 standard surface
 failed a readability comparison. See

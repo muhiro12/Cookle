@@ -143,7 +143,6 @@ private extension CookingSessionView {
             }
         }
         .mhScreen()
-        .mhGlassPolicy(.disabled)
         .navigationTitle(snapshot.recipeName)
         .task(id: snapshot.recipeID) {
             loadIngredients(for: snapshot.recipeID)

@@ -45,7 +45,6 @@ struct RecipeView: View {
             )
         }
         .mhScreen()
-        .mhGlassPolicy(.disabled)
         .navigationTitle(recipe.name)
         .cookleIdleTimerDisabled()
         .fullScreenCover(isPresented: $isCookingPresented) {

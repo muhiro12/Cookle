@@ -76,8 +76,10 @@ repository contains the full iOS project together with its shared Swift package.
   `MHPlatformCore`, and the repository keeps MHPlatform on the
   `1.13.0..<2.0.0` range to preserve verified subscription entitlement handling.
 - MHUI `1.20.0..<2.0.0` through the full `MHUI` product. The main app uses
-  the standard root theme, composed recipe/cooking/photo screens, native
-  List/Form chrome, and detached input chrome. See the
+  the standard root theme with an explicit Mist palette, composed
+  recipe/cooking/photo screens, native List/Form chrome, and detached input
+  chrome. Content actions keep MHUI's non-glass default; any floating action
+  opts into Liquid Glass only at its bounded control layer. See the
   [screen rollout record](Designs/Plans/mhui-app-rollout.md) for presentation
   exceptions and verification coverage.
 - Cookle does not keep a generic utility package dependency. Small app-owned
