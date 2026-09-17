@@ -68,9 +68,9 @@ symmetry with sibling apps.
   persistence-maintenance, and logging contracts. It must not depend on
   `MHPlatform`, `MHAppRuntime`, app-runtime split products, MHUI, or MHDesign.
 - `Cookle` adopts full `MHUI` on `1.20.0..<2.0.0` for its root theme and
-  selected presentation primitives. It selects the standard Mist palette once
-  at the app root. Existing metrics use MHUI's MHDesign re-export, without a
-  separate direct MHDesign product link.
+  selected presentation primitives. It selects the standard Linen palette once
+  at the app root, preserving the app-owned orange accent. Existing metrics use
+  MHUI's MHDesign re-export, without a separate direct MHDesign product link.
   [ADR 0009](../Decisions/0009-adopt-full-mhui-in-main-app.md) records the
   accepted main-app presentation boundary.
 - `Widgets`, `Watch`, and App Intents call Cookle shared APIs first. They stay
@@ -102,6 +102,10 @@ followed by step navigation and the grouped timer controls. Standard text
 sizes retain native paging; accessibility sizes use natural-height text in
 the screen scroll view and return to the instruction after a step change.
 Media, system, and package-owned presentations retain their native appearance.
+Core app journeys use MHUI presentation primitives where they improve a
+product-owned surface. Specialized and less-traveled system surfaces inherit
+the root theme while retaining native containers and controls rather than
+forcing an MHUI treatment that obscures platform behavior.
 Ordinary content actions retain MHUI's non-glass default. Liquid Glass is an
 explicit opt-in reserved for a bounded floating functional layer.
 The [main-app rollout record](../Plans/mhui-app-rollout.md) documents these

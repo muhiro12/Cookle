@@ -38,8 +38,9 @@ focus is personal cooking organization:
 
 ## Presentation Adoption Update
 
-The main app now links full MHUI 1.20 with the standard Mist palette selected
-once at the application root. Recipe Detail leads with its photo, compact
+The main app now links full MHUI 1.20 with the standard Linen palette selected
+once at the application root. This keeps Cookle's orange accent while using
+MHUI's warm neutral surfaces. Recipe Detail leads with its photo, compact
 facts, and cooking entry. Ingredients
 and related records use grouped surfaces, while steps and notes use unframed
 reading sections. Dates and secondary actions close the page. The recipe

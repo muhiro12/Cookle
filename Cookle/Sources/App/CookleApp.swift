@@ -39,7 +39,7 @@ struct CookleApp: App {
                     }
                 }
             }
-            .mhTheme(.standard(palette: .mist))
+            .mhTheme(.standard(palette: .linen))
             .task(id: isICloudOn) {
                 await bootstrapModel.loadAssembly(
                     isICloudOn: isICloudOn
