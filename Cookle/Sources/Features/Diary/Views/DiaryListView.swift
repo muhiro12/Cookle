@@ -4,8 +4,6 @@ import SwiftData
 import SwiftUI
 
 struct DiaryListView: View {
-    private static let recentDiaryCount = 3
-
     @Environment(\.scenePhase)
     private var scenePhase
     @Environment(\.isPresented)
@@ -73,25 +71,11 @@ private extension DiaryListView {
     @ViewBuilder
     func historySections(on date: Date) -> some View {
         let history = diaries.filter { !Calendar.current.isDate($0.date, inSameDayAs: date) }
-        let recent = Array(
-            history.filter { $0.date < Calendar.current.startOfDay(for: date) }
-                .prefix(Self.recentDiaryCount)
-        )
-        let recentIDs = Set(recent.map(\.id))
-        let remainingIDs = Set(history.filter { !recentIDs.contains($0.id) }.map(\.id))
-        let groups = Dictionary(grouping: diaries) { $0.date.formatted(.dateTime.year().month()) }
+        let groups = Dictionary(grouping: history) { $0.date.formatted(.dateTime.year().month()) }
             .sorted { $0.value[0].date > $1.value[0].date }
-        if !recent.isEmpty {
-            Section("Recent Meals") {
-                diaryRows(recent)
-            }
-        }
         ForEach(groups, id: \.key) { group in
-            let rows = group.value.filter { remainingIDs.contains($0.id) }
-            if !rows.isEmpty {
-                Section(group.key) {
-                    diaryRows(rows)
-                }
+            Section(group.key) {
+                diaryRows(group.value)
             }
             AdvertisementSection(.small)
         }
