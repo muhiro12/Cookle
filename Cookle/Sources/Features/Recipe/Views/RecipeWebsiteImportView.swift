@@ -19,6 +19,7 @@ struct RecipeWebsiteImportView: View {
     private var dismiss
     @State private var reader: RecipeWebsiteReader?
     @State private var address = ""
+    @State private var loadedURL: URL?
     @State private var isReading = false
     @State private var errorMessage = ""
     @State private var readTask: Task<Void, Never>?
@@ -29,7 +30,7 @@ struct RecipeWebsiteImportView: View {
     var body: some View {
         NavigationStack {
             pageContent
-                .navigationTitle("Import from Website")
+                .navigationTitle("Website Import")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar { toolbarItems }
                 .overlay {
@@ -60,25 +61,33 @@ struct RecipeWebsiteImportView: View {
             }
         }
         ToolbarItem(placement: .confirmationAction) {
-            Button("Use Recipe Text", action: readPage)
-                .disabled(reader?.isReady != true || isReading)
+            if isCurrentPageReady {
+                Button("Review Text", action: readPage)
+                    .disabled(isReading)
+            } else {
+                Button("Load", action: openPage)
+                    .accessibilityLabel(Text("Load Page"))
+                    .disabled(enteredURL == nil || reader?.isLoading == true || isReading)
+            }
+        }
+        if isCurrentPageReady {
+            ToolbarItem(placement: .bottomBar) {
+                Button("Reload Page", systemImage: "arrow.clockwise", action: reloadPage)
+                    .disabled(isReading)
+            }
         }
     }
 
     private var pageContent: some View {
         VStack(spacing: 0) {
-            HStack {
-                TextField("Recipe URL", text: $address)
-                    .keyboardType(.URL)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled()
-                    .submitLabel(.go)
-                    .onSubmit(openPage)
-                Button("Open", action: openPage)
-                    .disabled(RecipeWebsiteImportOperations.websiteURL(from: address) == nil)
-            }
-            .padding()
-            .disabled(isReading)
+            TextField("Recipe URL", text: $address)
+                .keyboardType(.URL)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .submitLabel(.go)
+                .onSubmit(openPage)
+                .padding()
+                .disabled(isReading)
             Divider()
             if let reader {
                 WebsiteView(webView: reader.webView)
@@ -98,14 +107,30 @@ struct RecipeWebsiteImportView: View {
         }
     }
 
+    private var enteredURL: URL? {
+        RecipeWebsiteImportOperations.websiteURL(from: address)
+    }
+
+    private var isCurrentPageReady: Bool {
+        reader?.isReady == true && enteredURL == loadedURL
+    }
+
     private func openPage() {
-        guard !isReading, let url = RecipeWebsiteImportOperations.websiteURL(from: address) else {
+        guard !isReading, reader?.isLoading != true, let url = enteredURL else {
             return
         }
         if reader == nil {
             reader = .init()
         }
+        loadedURL = url
         reader?.load(url)
+    }
+
+    private func reloadPage() {
+        guard !isReading else {
+            return
+        }
+        reader?.reload()
     }
 
     private func readPage() {

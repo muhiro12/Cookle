@@ -21,6 +21,7 @@ final class RecipeWebsiteReader: NSObject, WKNavigationDelegate {
 
     let webView: WKWebView
     private(set) var isReady = false
+    private(set) var isLoading = false
     private(set) var errorMessage = ""
     private var navigationCount = 0
     private var pendingRead: PendingRead?
@@ -40,8 +41,16 @@ final class RecipeWebsiteReader: NSObject, WKNavigationDelegate {
         stop()
         errorMessage = ""
         isReady = false
+        isLoading = true
         navigationCount = 0
         webView.load(URLRequest(url: url, timeoutInterval: Limits.timeout))
+    }
+
+    func reload() {
+        guard let url = webView.url else {
+            return
+        }
+        load(url)
     }
 
     func stop() {
@@ -49,6 +58,7 @@ final class RecipeWebsiteReader: NSObject, WKNavigationDelegate {
         navigationTimeout?.cancel()
         navigationTimeout = nil
         isReady = false
+        isLoading = false
         if let pendingRead {
             finishRead(pendingRead.identifier, result: .failure(CancellationError()))
         }
@@ -127,11 +137,13 @@ final class RecipeWebsiteReader: NSObject, WKNavigationDelegate {
     func webView(_: WKWebView, didFinish _: WKNavigation?) {
         navigationTimeout?.cancel()
         navigationTimeout = nil
+        isLoading = false
         isReady = errorMessage.isEmpty
     }
 
     func webView(_: WKWebView, didStartProvisionalNavigation _: WKNavigation?) {
         isReady = false
+        isLoading = true
         errorMessage = ""
         navigationIdentifier = UUID()
         if let pendingRead {
@@ -165,6 +177,7 @@ final class RecipeWebsiteReader: NSObject, WKNavigationDelegate {
         navigationTimeout?.cancel()
         navigationTimeout = nil
         isReady = false
+        isLoading = false
         errorMessage = String(localized: "The page could not be loaded. Try again or paste the recipe text.")
     }
 
@@ -366,6 +379,7 @@ private extension RecipeWebsiteReader {
         navigationTimeout?.cancel()
         navigationTimeout = nil
         isReady = false
+        isLoading = false
         errorMessage = String(localized: "The page could not be loaded. Try again or paste the recipe text.")
     }
 }
