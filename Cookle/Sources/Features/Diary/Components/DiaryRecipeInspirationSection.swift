@@ -1,3 +1,4 @@
+import MHUI
 import SwiftUI
 
 struct DiaryRecipeInspirationSection: View {
@@ -9,7 +10,7 @@ struct DiaryRecipeInspirationSection: View {
     let openRecipe: (Recipe) -> Void
 
     var body: some View {
-        Section {
+        MHGroupedRows {
             if recipes.isEmpty {
                 AddRecipeButton(showsTitle: true)
             } else {
@@ -31,15 +32,20 @@ struct DiaryRecipeInspirationSection: View {
                     }
                 }
             }
-        } header: {
-            Text("What Sounds Good Today?")
-        } footer: {
-            if recipes.isEmpty {
-                Text("Save a recipe to find inspiration here. A name is enough to start.")
-            } else {
-                Text("From your saved recipes, starting with recently updated ones.")
-            }
         }
+        .mhSection(
+            title: Text("What Sounds Good Today?"),
+            accessory: {
+                EmptyView()
+            },
+            footer: {
+                if recipes.isEmpty {
+                    Text("Save a recipe to find inspiration here. A name is enough to start.")
+                } else {
+                    Text("From your saved recipes, starting with recently updated ones.")
+                }
+            }
+        )
         .onChange(of: recipes.map(\.id)) {
             offset = 0
         }

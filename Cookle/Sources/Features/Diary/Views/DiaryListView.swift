@@ -10,6 +10,8 @@ struct DiaryListView: View {
     private var isPresented
     @Environment(MainNavigationModel.self)
     private var navigationModel
+    @Environment(\.mhTheme)
+    private var theme
 
     @Query(.diaries(.all))
     private var diaries: [Diary]
@@ -20,7 +22,7 @@ struct DiaryListView: View {
     @State private var currentDate = Date.now
 
     var body: some View {
-        List {
+        VStack(spacing: theme.spacing.section) {
             DuplicateDiaryRepairSection()
             DiaryTodaySection(
                 diaries: todayDiaries(on: currentDate),
@@ -33,7 +35,7 @@ struct DiaryListView: View {
             }
             historySections(on: currentDate)
         }
-        .mhListChrome()
+        .mhScreen()
         .onAppear {
             currentDate = .now
         }
@@ -74,9 +76,10 @@ private extension DiaryListView {
         let groups = Dictionary(grouping: history) { $0.date.formatted(.dateTime.year().month()) }
             .sorted { $0.value[0].date > $1.value[0].date }
         ForEach(groups, id: \.key) { group in
-            Section(group.key) {
+            MHGroupedRows {
                 diaryRows(group.value)
             }
+            .mhSection(title: Text(group.key))
             AdvertisementSection(.small)
         }
     }

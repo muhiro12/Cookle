@@ -15,21 +15,14 @@ struct DiaryTodaySection: View {
     @Binding var selection: Diary?
 
     var body: some View {
-        Section {
-            VStack(alignment: .leading, spacing: theme.spacing.inline) {
-                Text(date, format: .dateTime.month().day().weekday())
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                Text("Today's Table")
-                    .font(.title2.weight(.semibold))
-                    .accessibilityAddTraits(.isHeader)
-                if diaries.isEmpty {
+        MHGroupedRows {
+            if diaries.isEmpty {
+                VStack(alignment: .leading, spacing: theme.spacing.inline) {
                     Text("A dish name or a few words is enough to start.")
                         .foregroundStyle(.secondary)
                     AddDiaryButton()
                 }
             }
-            .padding(.vertical, theme.spacing.inline)
             ForEach(diaries) { diary in
                 Button {
                     $selection.cookleSelectForNavigation(diary)
@@ -40,6 +33,13 @@ struct DiaryTodaySection: View {
                 .buttonStyle(.plain)
             }
         }
+        .mhSection(
+            title: Text("Today's Table"),
+            supporting: Text(
+                date,
+                format: .dateTime.month().day().weekday()
+            )
+        )
     }
 }
 

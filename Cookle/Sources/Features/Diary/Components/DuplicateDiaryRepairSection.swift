@@ -1,3 +1,4 @@
+import MHUI
 import SwiftData
 import SwiftUI
 
@@ -57,7 +58,7 @@ struct DuplicateDiaryRepairSection: View {
 
 private extension DuplicateDiaryRepairSection {
     var repairSection: some View {
-        Section {
+        MHGroupedRows {
             VStack(alignment: .leading, spacing: Layout.contentSpacing) {
                 Label {
                     Text("Duplicate Diaries Found")
@@ -86,9 +87,8 @@ private extension DuplicateDiaryRepairSection {
                 isConfirmationPresented = true
             }
             .disabled(isRepairInProgress)
-        } header: {
-            Text("Data Repair")
         }
+        .mhSection("Data Repair")
     }
 
     var hasDuplicateDays: Bool {
