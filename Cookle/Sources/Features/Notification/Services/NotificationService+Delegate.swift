@@ -1,5 +1,10 @@
 import UserNotifications
 
+nonisolated private struct NotificationResponseDelivery: @unchecked Sendable {
+    let response: UNNotificationResponse
+    let completionHandler: () -> Void
+}
+
 extension NotificationService: UNUserNotificationCenterDelegate {
     nonisolated func userNotificationCenter(
         _: UNUserNotificationCenter,
@@ -35,9 +40,4 @@ extension NotificationService: UNUserNotificationCenterDelegate {
             await routeInbox.replacePendingURL(settingsURL)
         }
     }
-}
-
-private nonisolated struct NotificationResponseDelivery: @unchecked Sendable {
-    let response: UNNotificationResponse
-    let completionHandler: () -> Void
 }
