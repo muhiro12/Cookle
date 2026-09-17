@@ -39,9 +39,9 @@ def check_project(project_path):
             requirement = package.get("requirement", {})
             if requirement != {
                 "kind": "upToNextMajorVersion",
-                "minimumVersion": "1.19.0",
+                "minimumVersion": "1.20.0",
             }:
-                errors.append("Linked MHUI must require 1.19.0..<2.0.0.")
+                errors.append("Linked MHUI must require 1.20.0..<2.0.0.")
         return name
 
     for target_name in ("Cookle", "Widgets", "Watch"):

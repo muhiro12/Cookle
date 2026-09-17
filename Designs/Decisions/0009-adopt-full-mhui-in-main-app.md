@@ -24,7 +24,7 @@ requires changing the product's information architecture.
 ## Decision
 
 - `Cookle` links the full `MHUI` product with the remote version requirement
-  `1.19.0..<2.0.0` and applies `.mhTheme(.standard)` at its application root.
+  `1.20.0..<2.0.0` and applies one standard theme at its application root.
   It accesses existing MHDesign metrics through MHUI's re-export, without a
   separate direct MHDesign product dependency or metric-value changes.
 - Recipe Detail uses `mhScreen` with a leading photo and compact recipe facts,
@@ -57,6 +57,10 @@ The dependency baseline advanced to MHUI 1.19 on 2026-09-15. Cookle inherits
 its revised semantic palette, typography, surface borders, and heading
 decoration removal through the standard components and theme. The app does
 not use removed heading-cue APIs or override package-owned theme values.
+The baseline advanced again to MHUI 1.20 on 2026-09-17. The update preserves
+the established source contract while adding app-wide palette selection,
+native-container ownership guidance, and explicit Liquid Glass opt-in for
+floating actions.
 The subsequent composition refinement applies the SDK's visual hierarchy:
 reading content gains emphasis through alignment and spacing, while surfaces
 group related rows and action styles identify the next useful operation.

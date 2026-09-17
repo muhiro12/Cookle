@@ -161,8 +161,8 @@ else
     append_error "MHUI resolved state must not contain branch tracking in $package_resolved."
   fi
 
-  if ! grep -Eq '"version"\s*:\s*"1\.(19|[2-9][0-9]|[1-9][0-9]{2,})\.[0-9]+"' <<<"$mhui_resolved_pin_block"; then
-    append_error "MHUI resolved state must contain a semantic version in the 1.19.0..<2.0.0 range in $package_resolved."
+  if ! grep -Eq '"version"\s*:\s*"1\.(2[0-9]|[3-9][0-9]|[1-9][0-9]{2,})\.[0-9]+"' <<<"$mhui_resolved_pin_block"; then
+    append_error "MHUI resolved state must contain a semantic version in the 1.20.0..<2.0.0 range in $package_resolved."
   fi
 fi
 
@@ -170,7 +170,7 @@ mhplatform_remote_package_block=$(remote_package_block "MHPlatform")
 mhui_remote_package_block=$(remote_package_block "MHUI")
 
 check_project_package_reference "MHPlatform" "$mhplatform_remote_package_block" "1.13.0"
-check_project_package_reference "MHUI" "$mhui_remote_package_block" "1.19.0"
+check_project_package_reference "MHUI" "$mhui_remote_package_block" "1.20.0"
 
 if rg -n 'XCLocalSwiftPackageReference "MHPlatform"|relativePath = .*MHPlatform' "$project_file" >/dev/null; then
   append_error "MHPlatform must not be referenced as a local Xcode package in $project_file."

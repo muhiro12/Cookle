@@ -38,7 +38,7 @@ focus is personal cooking organization:
 
 ## Presentation Adoption Update
 
-The main app now links full MHUI 1.19 with a standard root theme. Recipe
+The main app now links full MHUI 1.20 with a standard root theme. Recipe
 Detail leads with its photo, compact facts, and cooking entry. Ingredients
 and related records use grouped surfaces, while steps and notes use unframed
 reading sections. Dates and secondary actions close the page. The recipe

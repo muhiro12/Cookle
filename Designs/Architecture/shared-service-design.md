@@ -76,7 +76,7 @@ that use case.
   app-runtime umbrella adoption.
 - This repository intentionally uses the MHPlatform 1.x semver range
   `1.13.0..<2.0.0` to preserve verified subscription entitlement handling.
-- `Cookle` adopts full MHUI on `1.19.0..<2.0.0` for its root theme and
+- `Cookle` adopts full MHUI on `1.20.0..<2.0.0` for its root theme and
   selected presentation primitives, using the MHDesign re-export for metrics.
   [ADR 0009](../Decisions/0009-adopt-full-mhui-in-main-app.md) records the
   accepted main-app presentation boundary; the

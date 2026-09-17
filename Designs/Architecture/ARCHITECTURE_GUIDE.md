@@ -67,7 +67,7 @@ symmetry with sibling apps.
 - `CookleLibrary` adopts `MHPlatformCore` for core-safe route, preference,
   persistence-maintenance, and logging contracts. It must not depend on
   `MHPlatform`, `MHAppRuntime`, app-runtime split products, MHUI, or MHDesign.
-- `Cookle` adopts full `MHUI` on `1.19.0..<2.0.0` for its root theme and
+- `Cookle` adopts full `MHUI` on `1.20.0..<2.0.0` for its root theme and
   selected presentation primitives. Existing metrics use MHUI's MHDesign
   re-export, without a separate direct MHDesign product link.
   [ADR 0009](../Decisions/0009-adopt-full-mhui-in-main-app.md) records the
