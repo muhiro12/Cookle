@@ -1,6 +1,6 @@
 import Foundation
 
-enum RecipeInferenceIngredientNormalization {
+enum RecipeInferenceNormalization {
     private struct NormalizedIngredient {
         let ingredient: RecipeInferenceIngredient
         let group: String?
@@ -25,6 +25,9 @@ enum RecipeInferenceIngredientNormalization {
 
         var result = inference
         result.ingredients = ingredients
+        result.categories = inference.categories.filter { category in
+            isIngredientGroupMarker(category) == false
+        }
         let groupNotes = groups.map { group in
             "\(group.name): \(group.ingredients.joined(separator: ", "))"
         }
@@ -50,7 +53,7 @@ enum RecipeInferenceIngredientNormalization {
     }
 }
 
-private extension RecipeInferenceIngredientNormalization {
+private extension RecipeInferenceNormalization {
     private static func normalize(
         _ ingredient: RecipeInferenceIngredient
     ) -> NormalizedIngredient {
@@ -68,14 +71,34 @@ private extension RecipeInferenceIngredientNormalization {
     static func removingGroupMarker(
         from ingredient: String
     ) -> (ingredient: String, group: String?) {
-        let pattern = #/^([A-ZＡ-Ｚ])(?:[\s:：.．、)）\]】]+)(.+)$/#
-        guard let match = ingredient.wholeMatch(of: pattern) else {
-            return (ingredient, nil)
+        let bracketedPattern = #/^[\[［【(（]\s*([A-ZＡ-Ｚ])\s*[\]］】)）]\s*(.+)$/#
+        if let match = ingredient.wholeMatch(of: bracketedPattern) {
+            return (
+                String(match.2).trimmingCharacters(in: .whitespacesAndNewlines),
+                normalizedGroupName(String(match.1))
+            )
         }
-        return (
-            String(match.2).trimmingCharacters(in: .whitespacesAndNewlines),
-            String(match.1)
-        )
+
+        let plainPattern = #/^([A-ZＡ-Ｚ])(?:[\s:：.．、)）\]】]+)(.+)$/#
+        if let match = ingredient.wholeMatch(of: plainPattern) {
+            return (
+                String(match.2).trimmingCharacters(in: .whitespacesAndNewlines),
+                normalizedGroupName(String(match.1))
+            )
+        }
+
+        return (ingredient, nil)
+    }
+
+    static func isIngredientGroupMarker(_ category: String) -> Bool {
+        let barePattern = #/^[A-ZＡ-Ｚ]$/#
+        let bracketedPattern = #/^[\[［【(（]\s*[A-ZＡ-Ｚ]\s*[\]］】)）]$/#
+        return category.wholeMatch(of: barePattern) != nil
+            || category.wholeMatch(of: bracketedPattern) != nil
+    }
+
+    static func normalizedGroupName(_ group: String) -> String {
+        group.applyingTransform(.fullwidthToHalfwidth, reverse: false) ?? group
     }
 
     static func movingPreparationQualifier(

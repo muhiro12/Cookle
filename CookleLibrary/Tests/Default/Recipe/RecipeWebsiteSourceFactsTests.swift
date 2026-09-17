@@ -102,7 +102,7 @@ struct RecipeWebsiteSourceFactsTests {
         let source = try RecipeWebsiteImportOperations.source(
             structuredData: [#"""
                 {"@type":"Recipe",
-                "recipeIngredient":["A 醤油 大さじ1","A 砂糖 小さじ1","B マヨネーズ 大さじ2","B 七味 少々"],
+                "recipeIngredient":["[A] 醤油 大さじ1","[A] 砂糖 小さじ1","[B] マヨネーズ 大さじ2","[B] 七味 少々"],
                 "recipeInstructions":["Aを加える。","仕上げにBをかける。"]}
             """#],
             visibleText: ""
@@ -112,13 +112,13 @@ struct RecipeWebsiteSourceFactsTests {
             servingSize: 0,
             cookingTime: 0,
             ingredients: [
-                .init(ingredient: "A 醤油", amount: "大さじ1"),
-                .init(ingredient: "A 砂糖", amount: "小さじ1"),
-                .init(ingredient: "B マヨネーズ", amount: "大さじ2"),
-                .init(ingredient: "B 七味", amount: "少々")
+                .init(ingredient: "[A] 醤油", amount: "大さじ1"),
+                .init(ingredient: "[A] 砂糖", amount: "小さじ1"),
+                .init(ingredient: "[B] マヨネーズ", amount: "大さじ2"),
+                .init(ingredient: "[B] 七味", amount: "少々")
             ],
             steps: [],
-            categories: [],
+            categories: ["A", "[B]", "Stew"],
             note: ""
         )
 
@@ -127,6 +127,7 @@ struct RecipeWebsiteSourceFactsTests {
         #expect(result.ingredients.map(\.ingredient) == ["醤油", "砂糖", "マヨネーズ", "七味"])
         #expect(result.steps == ["Aを加える。", "仕上げにBをかける。"])
         #expect(result.note == "A: 醤油, 砂糖\nB: マヨネーズ, 七味")
+        #expect(result.categories == ["Stew"])
     }
 
     @Test

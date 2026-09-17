@@ -37,13 +37,13 @@ public struct RecipeWebsiteSource: Sendable {
             let isRetainedFact = normalized(details + remainingYield).contains(normalized(note))
             result.note = [isSourceExcerpt && !isRetainedFact ? note : "", details, remainingYield]
                 .filter { !$0.isEmpty }.joined(separator: "\n\n")
-            return RecipeInferenceIngredientNormalization.applying(to: result)
+            return RecipeInferenceNormalization.applying(to: result)
         }
         result.servingSize = servingCount
         result.cookingTime = cookingMinutes
         let facts = [details, yield, attribution].filter { !$0.isEmpty }
         result.note = facts.joined(separator: "\n\n")
-        return RecipeInferenceIngredientNormalization.applying(to: result)
+        return RecipeInferenceNormalization.applying(to: result)
     }
 }
 
@@ -86,7 +86,7 @@ private extension RecipeWebsiteSource {
         for ingredient in candidates where !ingredient.amount.isEmpty {
             let amountCandidates = [
                 ingredient.amount,
-                RecipeInferenceIngredientNormalization.amountWithoutPreparationQualifier(ingredient.amount)
+                RecipeInferenceNormalization.amountWithoutPreparationQualifier(ingredient.amount)
             ].reduce(into: [String]()) { result, amount in
                 if !amount.isEmpty, !result.contains(amount) {
                     result.append(amount)

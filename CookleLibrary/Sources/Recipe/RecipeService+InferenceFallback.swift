@@ -66,7 +66,7 @@ extension RecipeService {
             },
             note: sanitizedInferenceLine(inference.note)
         )
-        return RecipeInferenceIngredientNormalization.applying(to: result)
+        return RecipeInferenceNormalization.applying(to: result)
     }
 
     static func groundedInference(

@@ -40,7 +40,10 @@ public struct InferredRecipe {
     public var steps: [String]
     /// Category labels.
     @Guide(
-        description: "Short recipe categories only when clearly provided in the input. Otherwise return an empty array."
+        description: """
+        Short recipe categories only when clearly provided in the input. Ingredient group markers such as A or B \
+        are not categories. Otherwise return an empty array.
+        """
     )
     public var categories: [String]
     /// Free-form note.

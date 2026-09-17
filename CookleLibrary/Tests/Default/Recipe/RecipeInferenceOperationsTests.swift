@@ -62,15 +62,17 @@ struct RecipeInferenceOperationsTests {
             inference(
                 ingredients: [
                     .init(ingredient: "A 醤油", amount: "大さじ1"),
-                    .init(ingredient: "A 砂糖", amount: "小さじ1"),
-                    .init(ingredient: "B マヨネーズ", amount: "大さじ2"),
-                    .init(ingredient: "B 七味", amount: "少々")
-                ]
+                    .init(ingredient: "[A] 砂糖", amount: "小さじ1"),
+                    .init(ingredient: "【B】マヨネーズ", amount: "大さじ2"),
+                    .init(ingredient: "（Ｂ） 七味", amount: "少々")
+                ],
+                categories: ["A", "[B]", "Dinner"]
             )
         )
 
         #expect(result.ingredients.map(\.ingredient) == ["醤油", "砂糖", "マヨネーズ", "七味"])
         #expect(result.note == "A: 醤油, 砂糖\nB: マヨネーズ, 七味")
+        #expect(result.categories == ["Dinner"])
     }
 
     @Test
@@ -99,7 +101,8 @@ private extension RecipeInferenceOperationsTests {
         note: String = "",
         ingredients: [RecipeInferenceIngredient] = [
             .init(ingredient: "Onion", amount: "1")
-        ]
+        ],
+        categories: [String] = []
     ) -> RecipeInferenceResult {
         .init(
             name: "Soup",
@@ -107,7 +110,7 @@ private extension RecipeInferenceOperationsTests {
             cookingTime: 0,
             ingredients: ingredients,
             steps: ["Cook."],
-            categories: [],
+            categories: categories,
             note: note
         )
     }
