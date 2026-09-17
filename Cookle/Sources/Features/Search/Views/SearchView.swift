@@ -96,6 +96,10 @@ struct SearchView: View {
     @ViewBuilder var searchContent: some View {
         if isSearching {
             ProgressView("Searching Recipes")
+                .frame(maxWidth: .infinity)
+                .mhSurfaceInset()
+                .mhSurface()
+                .mhScreen()
         } else if let searchErrorMessage {
             ContentUnavailableView {
                 Label(
@@ -111,8 +115,15 @@ struct SearchView: View {
                     }
                 }
             }
+            .mhEmptyStateLayout()
+            .mhSurfaceInset()
+            .mhSurface()
+            .mhScreen()
         } else if !recipes.isEmpty {
-            searchResults
+            SearchResultsView(
+                recipes: recipes,
+                selection: $recipe
+            )
         } else if !searchText.isEmpty {
             notFoundPlaceholder
         } else {
@@ -120,25 +131,12 @@ struct SearchView: View {
         }
     }
 
-    var searchResults: some View {
-        List(recipes) { rowRecipe in
-            Button {
-                $recipe.cookleSelectForNavigation(
-                    rowRecipe
-                )
-            } label: {
-                RecipeLabel()
-                    .labelStyle(.titleAndLargeIcon)
-                    .environment(rowRecipe)
-                    .cookleButtonRowContent()
-            }
-            .buttonStyle(.plain)
-        }
-        .mhListChrome()
-    }
-
     var notFoundPlaceholder: some View {
         ContentUnavailableView.search(text: searchText)
+            .mhEmptyStateLayout()
+            .mhSurfaceInset()
+            .mhSurface()
+            .mhScreen()
     }
 
     var searchPromptPlaceholder: some View {
@@ -157,6 +155,10 @@ struct SearchView: View {
                 discoverySheet = .category
             }
         }
+        .mhEmptyStateLayout()
+        .mhSurfaceInset()
+        .mhSurface()
+        .mhScreen()
     }
 
     var discoveryMenu: some View {
