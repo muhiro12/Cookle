@@ -1,6 +1,6 @@
 # MHUI Main-App Rollout
 
-Updated September 15, 2026.
+Updated September 17, 2026.
 
 This record covers the main-app step. The subsequent
 [companion rollout](mhui-companion-rollout.md) evaluates Watch, Widgets, and
@@ -156,17 +156,27 @@ workspace opened for this verification was closed.
 
 ## Presentation Choices
 
-MHUI 1.18 treats native List/Form chrome as a complete adoption route.
-Reading composition is used where screen-owned layout benefits from shared
-spacing and hierarchy. No List, Form, or screen-level ScrollView is nested
+MHUI 1.20 treats native List/Form chrome and app-owned composition as complete
+adoption routes. Current main browsing surfaces prefer shared spacing and
+hierarchy; native containers remain where they supply concrete system
+interaction behavior. No List, Form, or screen-level ScrollView is nested
 inside `mhScreen`.
+
+The September 17 refinement is implemented by `b9133ecf`, `5292ccd6`, and
+`99c26972`. It moves Recipe browsing, Search results and states, and the Diary
+landing screen to composed MHUI surfaces without changing their routes or data
+operations. Recipe Detail remains the reference composition rather than being
+flattened back toward a generic native list.
 
 <!-- markdownlint-disable MD013 -->
 | Surface | Choice | Preserved behavior |
 | --- | --- | --- |
-| Recipe list and form | Native List/Form chrome | Resume entry, sort, recipe rows, fields, photo controls, reordering, drafts, Save and Cancel |
-| Diary list, detail, form, recipe selection | Native List/Form chrome | Month and meal groups, suggestions, date picker, selected recipe sets, notes and actions |
-| Search and ingredient/category tags | Native List/Form chrome | Search state, discovery routes, result rows, rename and merge/delete conditions |
+| Recipe list | MHUI screen and grouped-row surfaces | Resume entry, sort, recipe rows, navigation and context actions |
+| Recipe form | Native Form chrome | Fields, photo controls, reordering, drafts, Save and Cancel |
+| Diary landing | MHUI screen and sections | Today, suggestions, chronological month groups and navigation |
+| Diary detail, form and recipe selection | Native List/Form chrome | Date picker, selected recipe sets, notes and actions |
+| Search | Native searchable field with MHUI result and state surfaces | Search activation, discovery routes, result navigation and keyboard behavior |
+| Ingredient/category tags | Native List/Form chrome | Selection, rename and merge/delete conditions |
 | Settings and subscription host | Native List chrome | Native settings controls and MHPlatform-owned subscription content |
 | Photo collection | MHUI screen and section headers around the existing adaptive grid | Source groups, image order, minimum thumbnail width and navigation |
 | Photo metadata | Native List chrome | Preview size, recipe associations, dates, full-screen route and deletion confirmation |
@@ -179,11 +189,12 @@ inside `mhScreen`.
 
 Full-screen photo paging retains its native black media canvas. Horizontal
 recipe photo carousels and form photo strips retain native scrolling. System
-navigation, tabs, toolbars, search, empty/loading states, alerts, sheets,
-pickers, camera, sharing, TipKit, and startup/update presentations retain
-their native or owning-package presentation. Subscription, advertisements,
-licenses, and logs remain owned by MHPlatform. App-owned host containers may
-use MHUI without restyling the package's controls.
+navigation, tabs, toolbars, searchable fields, empty/loading controls, alerts,
+sheets, pickers, camera, sharing, TipKit, and startup/update presentations
+retain their native or owning-package behavior. App-owned result and state
+hosts may use MHUI layout without reimplementing those controls. Subscription,
+advertisements, licenses, and logs remain owned by MHPlatform. App-owned host
+containers may use MHUI without restyling the package's controls.
 
 Compact form suggestion chips and photo-overlay controls retain their
 existing native interaction chrome. App Intent search snippets keep the

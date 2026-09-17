@@ -89,13 +89,15 @@ ingredients and unframed instructions. MHUI supplies screen spacing, reading
 headers, grouped rows, adaptive ingredient values, and semantic action styles.
 Dates and secondary actions occupy the closing area. Cookle retains content,
 routes, action handlers, and native presentations. Shared recipe sections
-default to native presentation for search and Intent snippets.
+default to native presentation for Intent snippets.
 
-Recipe browsing and editing, diaries, search, tags, settings, photo metadata,
-and diagnostics use native List and Form chrome. These are complete adoption
-routes that preserve native rows, sections, selection, swipe actions, fields,
-focus, and keyboard behavior. Cooking and the photo collection use screen
-composition; detached
+Recipe browsing, the Diary landing screen, Search results, cooking, and the
+photo collection use MHUI screen composition. Search keeps the system
+searchable field and activation behavior. Editing, Diary detail and selection,
+tags, settings, photo metadata, and diagnostics use native List and Form chrome
+where the container supplies selection, swipe actions, fields, focus, keyboard
+behavior, or another concrete system interaction benefit. Native controls can
+otherwise live within app-owned MHUI composition. Detached
 recipe editors use input chrome on their native keyboard-resizing canvas.
 Cooking presents one progress indicator and an unframed current instruction,
 followed by step navigation and the grouped timer controls. Standard text
@@ -368,7 +370,7 @@ is no inferred nutrition, ingredient availability, meal plan, or cooked status.
 
 Today uses the current calendar and refreshes on appearance, app activation,
 and the system significant-time-change notification (including midnight).
-Recent Meals contains up to three past records, with the remaining entries in
-month groups. Today and recent records are not duplicated in the month groups;
-future-dated records remain accessible there. Existing draft restoration and
-explicit save behavior stay in the normal Diary form.
+Past records appear once in reverse-chronological month groups, so the newest
+entry naturally leads the history without a duplicate recent section.
+Future-dated records remain accessible in those groups. Existing draft
+restoration and explicit save behavior stay in the normal Diary form.

@@ -16,7 +16,7 @@ composition with identical content, ordering, navigation, and actions.
 The expanded composition was selected for Recipe Detail and establishes the
 direction for broader adoption in the main app.
 
-MHUI 1.18 supports both native List/Form chrome and composed reading screens.
+MHUI 1.20 supports both native List/Form chrome and composed reading screens.
 Stally demonstrates the native-container route; Cookle's Recipe Detail
 comparison supplies the evidence for the composed route. Neither route
 requires changing the product's information architecture.
@@ -34,10 +34,11 @@ requires changing the product's information architecture.
   Dates and secondary actions form the quieter closing area. Cooking is
   primary and deletion is destructive. Existing facts, conditions, handlers,
   navigation, and confirmations remain; Edit stays in the native toolbar.
-- Adopt MHUI broadly at app-owned screen boundaries. Choose composed reading
-  surfaces or native List/Form chrome according to the screen's interaction
-  needs. Native selection, swipe actions, reordering, fields, focus, and
-  keyboard behavior remain reasons to retain native containers.
+- Adopt MHUI broadly at app-owned screen boundaries. App-owned browsing and
+  reading surfaces use composed MHUI hierarchy by default. Retain a native
+  List or Form when the container supplies a concrete interaction benefit,
+  such as selection semantics, swipe actions, reordering, fields, focus, or
+  keyboard behavior. Native controls do not require a native container.
 - Cookle owns screen composition, wording, accent assets, routes, state, and
   behavior. MHUI owns its theme and selected presentation primitives. Do not
   move domain behavior, generic helpers, or screen models into MHUI.
@@ -47,7 +48,7 @@ requires changing the product's information architecture.
 - `CookleLibrary`, `Watch`, and `Widgets` remain outside this adoption and gain
   no MHUI/MHDesign dependencies. App Intent implementations remain behavior
   adapters without presentation-package imports. Reused recipe sections
-  default to native presentation for search results and Intent snippets.
+  default to native presentation for Intent snippets.
 - This decision does not change MHPlatform boundaries, Operations contracts,
   deployment support, persistence, or release policy. New features and
   diary-list information architecture are separate work.
@@ -71,10 +72,14 @@ reading content gains emphasis through alignment and spacing, while surfaces
 group related rows and action styles identify the next useful operation.
 
 The application root and expanded Recipe Detail establish the first slice.
+Recipe browsing, the Diary landing screen, and Search results subsequently
+adopt the same composed screen, grouped-row, and surface vocabulary. Search
+keeps the native searchable field and activation behavior.
 The [main-app rollout](../Plans/mhui-app-rollout.md) records subsequent
 screen choices, semantic commits, before/after evidence, and verification
-gaps. Native lists and forms use container chrome; cooking and the photo
-collection use composed layout; detached editors use input chrome.
+gaps. Native lists and forms remain where their container behavior is useful;
+cooking, browsing, Diary landing, Search results, and the photo collection use
+composed layout; detached editors use input chrome.
 Root linkage alone does not complete adoption, and implementation does not
 replace the screen-level verification recorded there.
 
@@ -95,8 +100,10 @@ Recipe Detail delegates shared spacing, typography, and action styling to
 MHUI while Cookle chooses the reading order and where grouped surfaces help.
 Unframed prose and compact facts reduce repeated card boundaries. Adaptive
 layout can still increase wrapping and scroll length while preserving recipe
-data and available operations. Native-container adoption remains a complete
-route for screens with different interaction needs.
+data and available operations. Main browsing surfaces now approach Recipe
+Detail through the same visual language instead of weakening the detail
+screen. Native-container adoption remains a complete route when a screen has
+specific system interaction needs.
 
 ADR 0008 remains authoritative for all unaffected package, library, adapter,
 Operations, and test-posture boundaries.
