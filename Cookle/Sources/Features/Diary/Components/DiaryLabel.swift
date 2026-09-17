@@ -28,87 +28,100 @@ struct DiaryLabel: View {
     @State private var errorMessage = ""
 
     var body: some View {
-        Label {
-            VStack(alignment: .leading) {
-                LazyVGrid(columns: [.init(.adaptive(minimum: Layout.photoGridMinimum))], alignment: .leading) {
-                    ForEach(
-                        (diary.recipes ?? []).compactMap(\.primaryPhoto)
-                    ) { photo in
-                        CooklePhotoImage(
-                            data: photo.data,
-                            identity: .stored(photo.persistentModelID),
-                            size: .thumbnail
-                        )
-                        .accessibilityHidden(true)
-                    }
+        rowContent
+            .contextMenu {
+                EditDiaryButton {
+                    isEditPresented = true
                 }
-                Text(DiaryListSummary.text(
-                    recipeNames: (diary.recipes ?? []).map(\.name),
-                    note: diary.note
-                ))
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .lineLimit(Layout.titleLineLimit)
-            }
-        } icon: {
-            VStack {
-                Text(diary.date.formatted(.dateTime.weekday()))
-                    .font(.caption.bold().monospaced())
-                    .textCase(.uppercase)
-                    .foregroundStyle(.tint)
-                Text(diary.date.formatted(.dateTime.day(.twoDigits).locale(.init(identifier: "en_US"))))
-                    .font(.title2.monospacedDigit())
-                    .lineLimit(1)
-                    .fixedSize(horizontal: true, vertical: false)
-            }
-            .frame(width: Layout.iconWidth)
-            .foregroundStyle(Color(uiColor: .label))
-        }
-        .contextMenu {
-            EditDiaryButton {
-                isEditPresented = true
-            }
-            DeleteDiaryButton {
-                isDeletePresented = true
-            }
-        }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(accessibilitySummary))
-        .confirmationDialog(
-            Text(DiaryDeleteCopy.title(for: diary)),
-            isPresented: $isDeletePresented
-        ) {
-            Button("Delete", role: .destructive) {
-                Task {
-                    do {
-                        try await diaryActionService.delete(
-                            context: context,
-                            diary: diary
-                        )
-                    } catch {
-                        errorMessage = error.localizedDescription
-                        isErrorPresented = true
-                    }
+                DeleteDiaryButton {
+                    isDeletePresented = true
                 }
             }
-            Button("Cancel", role: .cancel) {
-                // Dismisses the confirmation dialog.
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text(accessibilitySummary))
+            .confirmationDialog(
+                Text(DiaryDeleteCopy.title(for: diary)),
+                isPresented: $isDeletePresented
+            ) {
+                Button("Delete", role: .destructive) {
+                    Task {
+                        do {
+                            try await diaryActionService.delete(
+                                context: context,
+                                diary: diary
+                            )
+                        } catch {
+                            errorMessage = error.localizedDescription
+                            isErrorPresented = true
+                        }
+                    }
+                }
+                Button("Cancel", role: .cancel) {
+                    // Dismisses the confirmation dialog.
+                }
+            } message: {
+                Text(DiaryDeleteCopy.message(for: diary))
             }
-        } message: {
-            Text(DiaryDeleteCopy.message(for: diary))
-        }
-        .alert(
-            Text("Cannot Delete Diary"),
-            isPresented: $isErrorPresented
-        ) {
-            Button("OK", role: .cancel) {
-                // Dismisses the alert.
+            .alert(
+                Text("Cannot Delete Diary"),
+                isPresented: $isErrorPresented
+            ) {
+                Button("OK", role: .cancel) {
+                    // Dismisses the alert.
+                }
+            } message: {
+                Text(errorMessage)
             }
-        } message: {
-            Text(errorMessage)
+            .sheet(isPresented: $isEditPresented) {
+                DiaryFormNavigationView()
+            }
+    }
+}
+
+private extension DiaryLabel {
+    var rowContent: some View {
+        HStack(alignment: .top) {
+            dateContent
+            summaryContent
         }
-        .sheet(isPresented: $isEditPresented) {
-            DiaryFormNavigationView()
+    }
+
+    var dateContent: some View {
+        VStack {
+            Text(diary.date.formatted(.dateTime.weekday()))
+                .font(.caption.bold().monospaced())
+                .textCase(.uppercase)
+                .foregroundStyle(.tint)
+            Text(diary.date.formatted(.dateTime.day(.twoDigits).locale(.init(identifier: "en_US"))))
+                .font(.title2.monospacedDigit())
+                .lineLimit(1)
+                .fixedSize(horizontal: true, vertical: false)
+        }
+        .frame(width: Layout.iconWidth)
+        .foregroundStyle(Color(uiColor: .label))
+    }
+
+    var summaryContent: some View {
+        VStack(alignment: .leading) {
+            LazyVGrid(columns: [.init(.adaptive(minimum: Layout.photoGridMinimum))], alignment: .leading) {
+                ForEach(
+                    (diary.recipes ?? []).compactMap(\.primaryPhoto)
+                ) { photo in
+                    CooklePhotoImage(
+                        data: photo.data,
+                        identity: .stored(photo.persistentModelID),
+                        size: .thumbnail
+                    )
+                    .accessibilityHidden(true)
+                }
+            }
+            Text(DiaryListSummary.text(
+                recipeNames: (diary.recipes ?? []).map(\.name),
+                note: diary.note
+            ))
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
+            .lineLimit(Layout.titleLineLimit)
         }
     }
 }
