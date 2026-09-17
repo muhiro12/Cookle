@@ -46,6 +46,7 @@ struct RecipeFormView: View {
         Form {
             formSections
         }
+        .scrollDismissesKeyboard(.immediately)
         .mhFormChrome()
         .disabled(model.isSaving)
         .environment(\.editMode, $editMode)

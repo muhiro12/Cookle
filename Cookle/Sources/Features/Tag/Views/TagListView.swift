@@ -24,6 +24,7 @@ struct TagListView<T: Tag>: View {
     var body: some View {
         contentView
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .scrollDismissesKeyboard(.immediately)
             .cookleTopLevelNavigationChrome(T.title)
             .searchable(
                 text: $searchText,

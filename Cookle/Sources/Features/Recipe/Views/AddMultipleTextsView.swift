@@ -40,6 +40,7 @@ struct AddMultipleTextsView: View {
                 }
             }
             .scrollContentBackground(.hidden)
+            .scrollDismissesKeyboard(.immediately)
             .mhInputChrome(state: isTextFocused ? .focused : .normal)
             .padding()
             .background(Color(.systemGroupedBackground))

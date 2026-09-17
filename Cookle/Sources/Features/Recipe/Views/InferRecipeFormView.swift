@@ -1,9 +1,7 @@
 import AppIntents
 import CookleLibrary
 import MHUI
-import PhotosUI
 import SwiftUI
-import UIKit
 
 @available(iOS 26.0, *)
 struct InferRecipeFormView: View {
@@ -31,14 +29,8 @@ struct InferRecipeFormView: View {
     @State private var text = ""
     @State private var sourceURL: URL?
     @State private var websiteSource: RecipeWebsiteSource?
-    @State private var isWebsiteImporterPresented = false
-    @State private var pendingWebsiteText: RecipeWebsiteSource?
-    @State private var pendingWebsiteURL: URL?
     @State private var operationTask: Task<Void, Never>?
     @State private var isLoading = false
-    @State private var photoPickerItem: PhotosPickerItem?
-    @State private var isPhotoPickerPresented = false
-    @State private var isCameraPickerPresented = false
     @State private var errorMessage = ""
     @FocusState private var isTextFocused: Bool
 
@@ -60,6 +52,7 @@ struct InferRecipeFormView: View {
                 placeholderOverlay
             }
             .scrollContentBackground(.hidden)
+            .scrollDismissesKeyboard(.immediately)
             .mhInputChrome(state: isTextFocused ? .focused : .normal)
             .padding()
             .background(Color(.systemGroupedBackground))
@@ -70,47 +63,6 @@ struct InferRecipeFormView: View {
             .font(nil)
             .overlay {
                 loadingOverlay
-            }
-            .photosPicker(isPresented: $isPhotoPickerPresented, selection: $photoPickerItem, matching: .images)
-            .fullScreenCover(isPresented: $isCameraPickerPresented) {
-                CameraPicker { data in
-                    handleCapturedPhoto(data)
-                }
-            }
-            .sheet(isPresented: $isWebsiteImporterPresented) {
-                RecipeWebsiteImportView { importedText, url in
-                    if text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                        text = importedText.text
-                        websiteSource = importedText
-                        sourceURL = url
-                    } else {
-                        pendingWebsiteText = importedText
-                        pendingWebsiteURL = url
-                    }
-                }
-            }
-            .confirmationDialog("Replace Recipe Text?", isPresented: .init(
-                get: { pendingWebsiteText != nil && !isWebsiteImporterPresented },
-                set: { isPresented in
-                    if !isPresented {
-                        pendingWebsiteText = nil
-                        pendingWebsiteURL = nil
-                    }
-                }
-            )) {
-                Button("Replace", role: .destructive) {
-                    text = pendingWebsiteText?.text ?? text
-                    websiteSource = pendingWebsiteText
-                    sourceURL = pendingWebsiteURL
-                    pendingWebsiteText = nil
-                    pendingWebsiteURL = nil
-                }
-                Button("Cancel", role: .cancel) {
-                    pendingWebsiteText = nil
-                    pendingWebsiteURL = nil
-                }
-            } message: {
-                Text("Replace the current text with the recipe from this page?")
             }
             .task {
                 guard !hasOpenedSource else {
@@ -135,9 +87,6 @@ struct InferRecipeFormView: View {
             }
             .onDisappear {
                 operationTask?.cancel()
-            }
-            .onChange(of: photoPickerItem) {
-                handlePhotoPickerChange()
             }
             .alert(
                 Text("Cannot Infer Recipe"),
@@ -171,9 +120,6 @@ struct InferRecipeFormView: View {
             }
             .disabled(isLoading || text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
-        ToolbarItem(placement: .bottomBar) {
-            importTextMenu
-        }
     }
 
     @ViewBuilder var loadingOverlay: some View {
@@ -183,32 +129,6 @@ struct InferRecipeFormView: View {
                 ProgressView()
             }
         }
-    }
-
-    var importTextMenu: some View {
-        Menu {
-            Button {
-                isWebsiteImporterPresented = true
-            } label: {
-                Label("Import from Website", systemImage: "link")
-            }
-            if RecipePhotoInputSource.camera.isAvailable {
-                Button {
-                    isCameraPickerPresented = true
-                } label: {
-                    RecipePhotoInputSource.camera.label
-                }
-            }
-            Button {
-                isPhotoPickerPresented = true
-            } label: {
-                RecipePhotoInputSource.photoLibrary.label
-            }
-        } label: {
-            Image(systemName: "text.viewfinder")
-                .accessibilityLabel(Text("Import Text"))
-        }
-        .disabled(isLoading)
     }
 
     init(
@@ -304,67 +224,6 @@ private extension InferRecipeFormView {
                 return
             }
             errorMessage = error.localizedDescription
-        }
-    }
-
-    func handlePhotoPickerChange() {
-        guard let photoPickerItem else {
-            return
-        }
-        self.photoPickerItem = nil
-        guard !isLoading else {
-            return
-        }
-        isLoading = true
-        operationTask = Task { @MainActor in
-            defer {
-                isLoading = false
-            }
-
-            do {
-                guard let data = try await photoPickerItem.loadTransferable(
-                    type: Data.self
-                ) else {
-                    throw RecipeTextImportError.photoDataUnavailable
-                }
-                try await appendRecognizedText(from: data)
-            } catch let error as RecipeTextImportError {
-                guard !Task.isCancelled else {
-                    return
-                }
-                errorMessage = error.localizedDescription
-            } catch {
-                guard !Task.isCancelled else {
-                    return
-                }
-                errorMessage = RecipeTextImportError.photoDataUnavailable.localizedDescription
-            }
-        }
-    }
-
-    func handleCapturedPhoto(_ data: Data) {
-        guard !isLoading else {
-            return
-        }
-        isLoading = true
-        operationTask = Task { @MainActor in
-            defer {
-                isLoading = false
-            }
-
-            do {
-                try await appendRecognizedText(from: data)
-            } catch let error as RecipeTextImportError {
-                guard !Task.isCancelled else {
-                    return
-                }
-                errorMessage = error.localizedDescription
-            } catch {
-                guard !Task.isCancelled else {
-                    return
-                }
-                errorMessage = RecipeTextImportError.textRecognitionFailed.localizedDescription
-            }
         }
     }
 

@@ -4687,6 +4687,7 @@
       }
     },
     "Import Text" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -8301,6 +8302,7 @@
       }
     },
     "Replace" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -8335,6 +8337,7 @@
       }
     },
     "Replace Recipe Text?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -8403,6 +8406,7 @@
       }
     },
     "Replace the current text with the recipe from this page?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

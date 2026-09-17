@@ -28,6 +28,7 @@ struct DiaryFormRecipeListView: View {
     var body: some View {
         contentView
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .scrollDismissesKeyboard(.immediately)
             .environment(\.editMode, .constant(.active))
             .navigationTitle(type.title)
             .searchable(

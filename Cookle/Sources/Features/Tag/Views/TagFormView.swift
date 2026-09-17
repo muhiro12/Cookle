@@ -37,6 +37,7 @@ struct TagFormView<T: Tag>: View {
                 Text("Recipes")
             }
         }
+        .scrollDismissesKeyboard(.immediately)
         .mhFormChrome()
         .navigationTitle("Edit " + tag.value)
         .toolbar {

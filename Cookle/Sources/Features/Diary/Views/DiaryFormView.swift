@@ -36,6 +36,7 @@ struct DiaryFormView: View {
             mealSection(type: .dinner, recipes: $model.dinners)
             noteSection
         }
+        .scrollDismissesKeyboard(.immediately)
         .mhFormChrome()
         .disabled(model.isSaving)
         .navigationDestination(for: DiaryObjectType.self) { type in

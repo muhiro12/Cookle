@@ -30,6 +30,7 @@ struct RecipeWebsiteImportView: View {
     var body: some View {
         NavigationStack {
             pageContent
+                .scrollDismissesKeyboard(.immediately)
                 .navigationTitle("Website Import")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar { toolbarItems }
