@@ -35,15 +35,16 @@ struct MainTabView: View {
 
     @ViewBuilder var tabView: some View {
         if #available(iOS 18, *) {
-            TabView(selection: $selection) {
-                ForEach(tabs) { tab in
-                    Tab(value: tab, role: tab.role) {
-                        rootView(for: tab)
-                    } label: {
-                        tab.label
-                    }
-                }
+            #if compiler(>=6.4)
+            if #available(iOS 27, *) {
+                roleBasedTabView
+                    .tabViewSearchActivation(.searchTabSelection)
+            } else {
+                roleBasedTabView
             }
+            #else
+            roleBasedTabView
+            #endif
         } else {
             TabView(selection: $selection) {
                 ForEach(tabs) { tab in
@@ -52,6 +53,19 @@ struct MainTabView: View {
                         .tabItem {
                             tab.label
                         }
+                }
+            }
+        }
+    }
+
+    @available(iOS 18, *)
+    var roleBasedTabView: some View {
+        TabView(selection: $selection) {
+            ForEach(tabs) { tab in
+                Tab(value: tab, role: tab.role) {
+                    rootView(for: tab)
+                } label: {
+                    tab.label
                 }
             }
         }
