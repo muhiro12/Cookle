@@ -27,6 +27,7 @@ struct RecipeView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: theme.spacing.section) {
+            RecipeNameTitle(recipe.name)
             RecipePhotosSection()
             RecipeOverview(
                 servingSize: recipe.servingSize,
@@ -45,7 +46,8 @@ struct RecipeView: View {
             )
         }
         .mhScreen()
-        .navigationTitle(recipe.name)
+        .navigationTitle("Recipe")
+        .navigationBarTitleDisplayMode(.inline)
         .cookleIdleTimerDisabled()
         .fullScreenCover(isPresented: $isCookingPresented) {
             NavigationStack {

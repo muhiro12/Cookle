@@ -122,6 +122,7 @@ private extension CookingSessionView {
         snapshot: CookingSessionSnapshot
     ) -> some View {
         VStack(alignment: .leading, spacing: theme.spacing.section) {
+            RecipeNameTitle(snapshot.recipeName)
             readingLayout {
                 if !ingredients.isEmpty {
                     VStack(alignment: .leading, spacing: theme.spacing.inline) {
@@ -143,7 +144,7 @@ private extension CookingSessionView {
             }
         }
         .mhScreen()
-        .navigationTitle(snapshot.recipeName)
+        .navigationTitle("Cooking")
         .task(id: snapshot.recipeID) {
             loadIngredients(for: snapshot.recipeID)
         }
