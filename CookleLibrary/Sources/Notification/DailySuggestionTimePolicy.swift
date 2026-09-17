@@ -5,7 +5,7 @@ public enum DailySuggestionTimePolicy {
     /// Lower bound for hour/minute components.
     public static let minimumTimeComponent = 0
     /// Default hour used when no value is stored.
-    public static let defaultHour = 20
+    public static let defaultHour = 18
     /// Upper bound for hour component.
     public static let maximumHour = 23
     /// Upper bound for minute component.

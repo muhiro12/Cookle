@@ -4,6 +4,12 @@ import Testing
 
 struct DailySuggestionTimePolicyTests {
     @Test
+    func default_time_is_six_pm() {
+        #expect(DailySuggestionTimePolicy.defaultHour == 18)
+        #expect(DailySuggestionTimePolicy.minimumTimeComponent == 0)
+    }
+
+    @Test
     func normalized_clamps_out_of_range_components() {
         let normalized = DailySuggestionTimePolicy.normalized(
             hour: 99,
