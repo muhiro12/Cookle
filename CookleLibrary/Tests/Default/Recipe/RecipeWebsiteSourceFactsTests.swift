@@ -100,7 +100,11 @@ struct RecipeWebsiteSourceFactsTests {
     @Test
     func website_ingredients_keep_group_meaning_without_polluting_reusable_names() throws {
         let source = try RecipeWebsiteImportOperations.source(
-            structuredData: [#"{"@type":"Recipe","recipeIngredient":["A 醤油 大さじ1","A 砂糖 小さじ1","B マヨネーズ 大さじ2","B 七味 少々"],"recipeInstructions":["Aを加える。","仕上げにBをかける。"]}"#],
+            structuredData: [#"""
+                {"@type":"Recipe",
+                "recipeIngredient":["A 醤油 大さじ1","A 砂糖 小さじ1","B マヨネーズ 大さじ2","B 七味 少々"],
+                "recipeInstructions":["Aを加える。","仕上げにBをかける。"]}
+            """#],
             visibleText: ""
         )
         let inferred = RecipeInferenceResult(
