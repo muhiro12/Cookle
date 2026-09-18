@@ -33,6 +33,20 @@ enum CookleAppAssemblyFactory {
             logging: .preview()
         )
     }
+
+    #if DEBUG
+    /// Builds a capture assembly without an ad unit so screenshots never contain test ads.
+    static func capture(
+        modelContainer: ModelContainer
+    ) -> CookleAppAssembly {
+        makeAssembly(
+            modelContainer: modelContainer,
+            nativeAdUnitID: nil,
+            logging: .preview(),
+            isolatesCookingSession: true
+        )
+    }
+    #endif
 }
 
 private extension CookleAppAssemblyFactory {
@@ -46,13 +60,17 @@ private extension CookleAppAssemblyFactory {
 
     static func makeAssembly(
         modelContainer: ModelContainer,
-        nativeAdUnitID: String,
-        logging: CookleAppLogging
+        nativeAdUnitID: String?,
+        logging: CookleAppLogging,
+        isolatesCookingSession: Bool = false
     ) -> CookleAppAssembly {
         let navigationModel = MainNavigationModel()
-        let cookingSessionStore = CookingSessionStore()
+        let cookingSessionStore = CookingSessionStore(
+            persistsSnapshot: !isolatesCookingSession
+        )
         let cookingSessionWatchSyncService = makeCookingSessionWatchSyncService(
-            cookingSessionStore: cookingSessionStore
+            cookingSessionStore: cookingSessionStore,
+            isIsolated: isolatesCookingSession
         )
         let services = makeServiceGraph(
             modelContainer: modelContainer,
@@ -98,7 +116,7 @@ private extension CookleAppAssemblyFactory {
     }
 
     static func makeBootstrap<Route: Sendable>(
-        nativeAdUnitID: String,
+        nativeAdUnitID: String?,
         remoteConfigurationService: RemoteConfigurationService,
         notificationService: NotificationService,
         routePipeline: MHAppRoutePipeline<Route>
@@ -142,9 +160,16 @@ private extension CookleAppAssemblyFactory {
     }
 
     static func makeCookingSessionWatchSyncService(
-        cookingSessionStore: CookingSessionStore
+        cookingSessionStore: CookingSessionStore,
+        isIsolated: Bool
     ) -> CookingSessionWatchSyncService {
-        .init(
+        if isIsolated {
+            return .init(
+                cookingSessionStore: cookingSessionStore,
+                session: nil
+            )
+        }
+        return .init(
             cookingSessionStore: cookingSessionStore
         )
     }
@@ -205,7 +230,7 @@ private extension CookleAppAssemblyFactory {
     }
 
     static func makeRuntimeConfiguration(
-        nativeAdUnitID: String
+        nativeAdUnitID: String?
     ) -> MHAppConfiguration {
         .init(
             subscriptionProductIDs: [

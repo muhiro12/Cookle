@@ -24,9 +24,7 @@ struct CookleApp: App {
         WindowGroup {
             Group {
                 if let appAssembly = bootstrapModel.appAssembly {
-                    ContentView()
-                        .id(isICloudOn)
-                        .cookleAppAssembly(appAssembly)
+                    rootView(appAssembly: appAssembly)
                 } else {
                     CookleStartupView(
                         failureMessage: bootstrapModel.failureMessage
@@ -50,10 +48,30 @@ struct CookleApp: App {
 
     init() {
         #if DEBUG
-        isDebugOn = true
+        isDebugOn = !CookleCaptureConfiguration.isEnabled
         #endif
 
         updateLastLaunchedVersion()
+    }
+
+    @ViewBuilder
+    func rootView(appAssembly: CookleAppAssembly) -> some View {
+        #if DEBUG
+        if CookleCaptureConfiguration.isEnabled {
+            ContentView()
+                .cooklePreviewAppAssembly(appAssembly)
+        } else {
+            liveRootView(appAssembly: appAssembly)
+        }
+        #else
+        liveRootView(appAssembly: appAssembly)
+        #endif
+    }
+
+    func liveRootView(appAssembly: CookleAppAssembly) -> some View {
+        ContentView()
+            .id(isICloudOn)
+            .cookleAppAssembly(appAssembly)
     }
 
     func updateLastLaunchedVersion() {

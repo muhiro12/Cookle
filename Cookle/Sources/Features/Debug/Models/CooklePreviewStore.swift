@@ -31,6 +31,16 @@ final class CooklePreviewStore {
     private var hasPreparedPreviewData = false
     var remotePhotoDataCache = [SamplePhotoAsset: Data]()
 
+    /// Reference date for generated diary entries. Capture runs pin this for deterministic dates.
+    var baseDate = Date.now
+
+    /// Directory holding local sample photo files, used instead of remote downloads when set.
+    var localPhotoDirectoryURL: URL?
+
+    /// Recipes created by the most recent preparation, in deterministic creation order.
+    private(set) var preparedRecipes = [Recipe]()
+    private(set) var preparedDiaries = [Diary]()
+
     let remoteImageSession: URLSession = {
         let configuration: URLSessionConfiguration = .ephemeral
         configuration.timeoutIntervalForRequest = PreviewConstants.requestTimeout
@@ -40,7 +50,7 @@ final class CooklePreviewStore {
 
     func prepare(_ context: ModelContext) throws {
         if !hasPreparedPreviewData {
-            _ = try createPreviewDiaries(context)
+            preparedDiaries = try createPreviewDiaries(context)
             hasPreparedPreviewData = true
         }
     }
@@ -48,7 +58,7 @@ final class CooklePreviewStore {
     func createPreviewDiaries(_ context: ModelContext) throws -> [Diary] {
         try createPreviewDiaries(
             context,
-            remotePhotoDataMap: .init()
+            remotePhotoDataMap: localPhotoDataMap()
         )
     }
 
@@ -76,6 +86,13 @@ private extension CooklePreviewStore {
             context,
             remotePhotoDataMap: remotePhotoDataMap
         )
+        preparedRecipes = [
+            recipes.spaghettiCarbonara,
+            recipes.beefStew,
+            recipes.chickenStirFry,
+            recipes.vegetableSoup,
+            recipes.pancakes
+        ]
         return try Array(.zero..<PreviewConstants.diaryCount).map { dayOffset in
             try makePreviewDiary(
                 context,
@@ -136,6 +153,24 @@ private extension CooklePreviewStore {
         ).value
     }
 
+    func localPhotoDataMap() -> [SamplePhotoAsset: Data] {
+        guard let localPhotoDirectoryURL else {
+            return .init()
+        }
+        return SamplePhotoAsset.allCases.reduce(
+            into: [SamplePhotoAsset: Data]()
+        ) { photoDataMap, samplePhotoAsset in
+            let photoFileURL = localPhotoDirectoryURL.appending(
+                path: samplePhotoAsset.fileName
+            )
+            guard let photoData = try? Data(contentsOf: photoFileURL),
+                  !photoData.isEmpty else {
+                return
+            }
+            photoDataMap[samplePhotoAsset] = photoData
+        }
+    }
+
     func previewDate(for dayOffset: Int) -> Date {
         let offsetSeconds = TimeInterval(
             -dayOffset
@@ -144,6 +179,6 @@ private extension CooklePreviewStore {
                 * PreviewConstants.minutesPerHour
                 * PreviewConstants.secondsPerMinute
         )
-        return .now.addingTimeInterval(offsetSeconds)
+        return baseDate.addingTimeInterval(offsetSeconds)
     }
 }

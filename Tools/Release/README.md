@@ -160,6 +160,26 @@ the selected version. Pause a phased release where appropriate and prepare a
 corrective release if needed. Do not assume that a previous binary can read a
 newer SwiftData schema.
 
+## Screenshot capture fixtures
+
+Debug builds can open production screens with isolated sample content by setting
+`COOKLE_CAPTURE_MODE=1`. The capture assembly uses an in-memory store, disables
+CloudKit, cooking-session persistence, Watch synchronization, and runtime service
+startup, and loads the existing localized sample records.
+
+- `COOKLE_CAPTURE_PHOTO_DIRECTORY`: absolute path to the repository's `.Resources`
+  directory, containing the sample cooking photos.
+- `COOKLE_CAPTURE_BASE_DATE`: ISO 8601 reference date for sample diary entries.
+- `COOKLE_CAPTURE_SCREEN`: `diary`, `diaryDetail`, `recipe`, `recipeDetail`, or
+  `photo`. Use selected detail screens on iPad to avoid empty selection columns.
+
+Use a dedicated Simulator. Set its system language and region as well as the
+app language; iPad status-bar dates follow the system settings. With `simctl`,
+prefix these environment variables with `SIMCTL_CHILD_` when launching the app.
+Inspect every original-resolution capture before creating opaque upload files.
+Keep captures, manifests, and recovery originals in private storage. Capture
+fixtures do not qualify navigation, purchases, synchronization, or distribution.
+
 ## Remaining qualification
 
 Package resolution, plugin execution, offline validation, version-creation

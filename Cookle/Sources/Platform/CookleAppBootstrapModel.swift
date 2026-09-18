@@ -34,6 +34,16 @@ final class CookleAppBootstrapModel {
         startupLogger.notice("app startup began")
 
         let startupStartedAt = Date.timeIntervalSinceReferenceDate
+
+        #if DEBUG
+        if loadCaptureAssemblyIfNeeded(
+            startupStartedAt: startupStartedAt,
+            startupLogger: startupLogger
+        ) {
+            return
+        }
+        #endif
+
         let preferenceLifecycleStartedAt = Date.timeIntervalSinceReferenceDate
         let lifecycleOutcome = await CooklePreferenceLifecycle.run()
         logPreferenceLifecycleOutcome(
@@ -84,6 +94,24 @@ private extension CookleAppBootstrapModel {
             ) * StartupConstants.millisecondsPerSecond
         )
     }
+
+    #if DEBUG
+    /// Loads the isolated capture assembly and reports whether capture mode handled startup.
+    func loadCaptureAssemblyIfNeeded(
+        startupStartedAt: TimeInterval,
+        startupLogger: MHLogger
+    ) -> Bool {
+        guard CookleCaptureConfiguration.isEnabled else {
+            return false
+        }
+        finalizeStartup(
+            assembly: CookleSampleDataContext.makeCaptureContext(),
+            startupStartedAt: startupStartedAt,
+            startupLogger: startupLogger
+        )
+        return true
+    }
+    #endif
 
     func loadModelContainer(
         cloudKitDatabase: ModelConfiguration.CloudKitDatabase,
