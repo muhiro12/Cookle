@@ -3,6 +3,13 @@
 - Status: Accepted
 - Date: 2026-06-12
 
+## Current Verification Guidance
+
+Updated 2026-09-18: the XcodeBuildMCP references below record the original
+June integration. Current verification follows the Xcode-native contract in
+[AGENTS.md](../../AGENTS.md), which owns tool selection, required evidence,
+and restoration of the original scheme and destination.
+
 ## Context
 
 Incomes' June 2026 design cleanup clarified three reusable portfolio patterns:
