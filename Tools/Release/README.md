@@ -1,8 +1,8 @@
 # Cookle release tools
 
-This isolated macOS SwiftPM package pins Apogee **1.2.0** for Cookle release
+This isolated macOS SwiftPM package pins Apogee **1.3.0** for Cookle release
 preparation. The published tag resolves to
-`90b2a6c4dfe046fe9e1716da18321a78ee06bd90`. Commit `Package.resolved` with any
+`e72fee32a7f3a4ea288e1ed1b69798deee7bfe92`. Commit `Package.resolved` with any
 intentional dependency update. No app, library, Widget, or Watch target links
 Apogee.
 
@@ -61,7 +61,7 @@ Do not use temporary text or an invented version for a remote rehearsal.
 
 ## Authentication and read-only status
 
-Apogee 1.2 uses an App Store Connect team API key. Store its private key outside
+Apogee 1.3 uses an App Store Connect team API key. Store its private key outside
 the repository with owner-only access. Configure the execution shell locally:
 
 ```sh
@@ -148,7 +148,12 @@ the exact candidate commit, Cloud toolchain/build, tests, signed archive,
 TestFlight checks, metadata, and remaining product gates before submission.
 Treat screenshot updates and version-setting writes as separate release
 decisions. Follow Apogee's dry-run, private recovery, and read-back requirements
-before applying them. Apogee does not manage Xcode Cloud workflows.
+before applying them. `--allow-unrecoverable-replacement` gives up the previous
+screenshot composition, so decide it separately and keep the replaced images
+elsewhere. `build-feedback --export-path` downloads tester crash logs and
+screenshots, which can contain personal data; write them to a private
+owner-only directory outside the repository and delete them after review.
+Apogee does not manage Xcode Cloud workflows.
 
 After release, review availability, crash/sync reports, and user feedback for
 the selected version. Pause a phased release where appropriate and prepare a
