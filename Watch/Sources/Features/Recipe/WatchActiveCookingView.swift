@@ -9,6 +9,7 @@ struct WatchActiveCookingView: View {
         static let sectionSpacing: CGFloat = 8
         static let stepPageBackgroundOpacity = 0.2
         static let stepPageCornerRadius: CGFloat = 16
+        static let timerSectionID = "timerSection"
     }
 
     @EnvironmentObject private var cookingSessionStore: WatchCookingSessionStore
@@ -16,6 +17,7 @@ struct WatchActiveCookingView: View {
     private var stepPagerHeight = Layout.baseStepPagerHeight
 
     @State private var isEndSessionConfirmationPresented = false
+    @State private var scrollPosition = ScrollPosition()
 
     var body: some View {
         sessionContent()
@@ -70,6 +72,7 @@ private extension WatchActiveCookingView {
                 WatchCookingTimerSection(
                     snapshot: snapshot
                 )
+                .id(Layout.timerSectionID)
                 stepNavigationSection(
                     snapshot: snapshot
                 )
@@ -82,6 +85,24 @@ private extension WatchActiveCookingView {
             }
             .padding(Layout.contentInset)
         }
+        .scrollPosition($scrollPosition)
+        .task {
+            scrollToCaptureSectionIfNeeded()
+        }
+    }
+
+    /// Places the capture run at the timer controls without simulated user interaction.
+    func scrollToCaptureSectionIfNeeded() {
+        #if DEBUG
+        guard WatchCaptureConfiguration.isEnabled,
+              WatchCaptureConfiguration.screen.scrollsToTimerSection else {
+            return
+        }
+        scrollPosition.scrollTo(
+            id: Layout.timerSectionID,
+            anchor: .top
+        )
+        #endif
     }
 
     func inactiveSessionContent() -> some View {

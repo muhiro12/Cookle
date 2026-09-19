@@ -25,6 +25,11 @@ struct RecipeView: View {
 
     @State private var isCookingPresented = false
 
+    #if DEBUG
+    /// Opens the edit form for a capture run without simulated user interaction.
+    @State private var isCaptureRecipeFormPresented = CookleCaptureConfiguration.presentsRecipeForm
+    #endif
+
     var body: some View {
         VStack(alignment: .leading, spacing: theme.spacing.section) {
             RecipeNameTitle(recipe.name)
@@ -54,6 +59,11 @@ struct RecipeView: View {
                 CookingSessionView()
             }
         }
+        #if DEBUG
+        .sheet(isPresented: $isCaptureRecipeFormPresented) {
+            RecipeFormNavigationView(type: .edit)
+        }
+        #endif
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 EditRecipeButton()

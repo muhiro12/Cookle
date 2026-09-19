@@ -50,6 +50,11 @@ enum CookleCaptureConfiguration {
         return captureScreen
     }
 
+    /// Indicates whether the capture run opens the recipe edit form over the recipe detail.
+    static var presentsRecipeForm: Bool {
+        isEnabled && screen.presentsRecipeForm
+    }
+
     private static func environmentValue(for key: String) -> String? {
         guard let value = ProcessInfo.processInfo.environment[key],
               !value.isEmpty else {

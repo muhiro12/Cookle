@@ -170,8 +170,19 @@ startup, and loads the existing localized sample records.
 - `COOKLE_CAPTURE_PHOTO_DIRECTORY`: absolute path to the repository's `.Resources`
   directory, containing the sample cooking photos.
 - `COOKLE_CAPTURE_BASE_DATE`: ISO 8601 reference date for sample diary entries.
-- `COOKLE_CAPTURE_SCREEN`: `diary`, `diaryDetail`, `recipe`, `recipeDetail`, or
-  `photo`. Use selected detail screens on iPad to avoid empty selection columns.
+- `COOKLE_CAPTURE_SCREEN`: `diary`, `diaryDetail`, `diaryDetailWithRecipe`,
+  `recipe`, `recipeDetail`, `recipeForm`, or `photo`. `diaryDetail` selects only
+  the diary, so a compact iPhone layout shows the diary entry;
+  `diaryDetailWithRecipe` also selects a recipe for the iPad three-column layout.
+  `recipeForm` opens the recipe edit sheet over the recipe detail.
+
+The Watch app reads the same `COOKLE_CAPTURE_MODE=1` switch and replaces its
+WatchConnectivity session with a fixed cooking session.
+
+- `COOKLE_CAPTURE_SCREEN`: `cookingStep`, `cookingTimers`, or `cookingEmpty`.
+  `cookingTimers` starts scrolled to the quick timers and step navigation.
+- `COOKLE_CAPTURE_SNAPSHOT`: JSON `CookingSessionSnapshot`, encoded exactly like
+  the payload the companion app delivers. `cookingEmpty` ignores it.
 
 Use a dedicated Simulator. Set its system language and region as well as the
 app language; iPad status-bar dates follow the system settings. With `simctl`,

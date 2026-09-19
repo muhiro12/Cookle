@@ -12,6 +12,8 @@ import SwiftUI
 import TipKit
 
 struct RecipeFormView: View {
+    static let ingredientsSectionID = "recipeFormIngredientsSection"
+
     @State private var model: RecipeFormModel
 
     @Environment(\.dismiss)
@@ -45,8 +47,15 @@ struct RecipeFormView: View {
     var body: some View {
         @Bindable var model = model
 
-        Form {
-            formSections
+        ScrollViewReader { scrollProxy in
+            Form {
+                formSections
+            }
+            .task(id: model.ingredients.count) {
+                await scrollToCaptureSectionIfNeeded(
+                    using: scrollProxy
+                )
+            }
         }
         .scrollDismissesKeyboard(.immediately)
         .mhFormChrome()

@@ -24,6 +24,7 @@ extension RecipeFormView {
             RecipeFormCookingTimeSection($bindableModel.cookingTime)
         }
         RecipeFormIngredientsSection($bindableModel.ingredients)
+            .id(Self.ingredientsSectionID)
         RecipeFormStepsSection($bindableModel.steps)
         RecipeFormCategoriesSection($bindableModel.categories)
         if currentEditMode != .active {
@@ -169,6 +170,23 @@ extension RecipeFormView {
                 }
             }
         )
+    }
+
+    /// Places the capture run at the editable ingredients and steps without user interaction.
+    func scrollToCaptureSectionIfNeeded(
+        using scrollProxy: ScrollViewProxy
+    ) async {
+        #if DEBUG
+        guard CookleCaptureConfiguration.presentsRecipeForm,
+              !formModel.ingredients.isEmpty else {
+            return
+        }
+        try? await Task.sleep(for: .seconds(1))
+        scrollProxy.scrollTo(
+            Self.ingredientsSectionID,
+            anchor: .top
+        )
+        #endif
     }
 
     func currentRecipeFormTip<T: Tip>(
