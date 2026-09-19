@@ -3,6 +3,7 @@ import SwiftUI
 struct WatchActiveCookingView: View {
     private enum Layout {
         static let baseStepPagerHeight: CGFloat = 150
+        static let contentInset: CGFloat = 10
         static let contentSpacing: CGFloat = 12
         static let minimumHitTargetHeight: CGFloat = 44
         static let sectionSpacing: CGFloat = 8
@@ -79,7 +80,7 @@ private extension WatchActiveCookingView {
                 }
                 .buttonStyle(.borderedProminent)
             }
-            .padding()
+            .padding(Layout.contentInset)
         }
     }
 
@@ -140,10 +141,12 @@ private extension WatchActiveCookingView {
                     stepCount: snapshot.stepCount,
                     stepText: values.element
                 )
+                .padding(.horizontal, Layout.contentInset)
                 .tag(values.offset)
             }
         }
         .frame(height: stepPagerHeight)
+        .padding(.horizontal, -Layout.contentInset)
     }
 
     func stepPage(
