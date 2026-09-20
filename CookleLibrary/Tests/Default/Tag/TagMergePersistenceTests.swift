@@ -109,6 +109,82 @@ struct TagMergePersistenceTests {
     }
 
     @Test
+    func category_merge_survives_a_store_reopen_and_keeps_every_recipe() throws {
+        try withDiskStore { url in
+            let writer = try makeContext(at: url)
+            let parent = makeCategory(context: writer, value: "Dinner")
+            let child = makeCategory(context: writer, value: "dinner")
+            let bothRecipe = makeRecipe(context: writer, name: "Curry", ingredients: [])
+            bothRecipe.updateCategories([parent, child])
+            let childOnlyRecipe = makeRecipe(context: writer, name: "Stew", ingredients: [])
+            childOnlyRecipe.updateCategories([child])
+            try writer.save()
+
+            _ = try TagOperations.mergeDuplicatesWithOutcome(
+                context: writer,
+                keeping: parent
+            )
+            try writer.save()
+
+            let reopened = try makeContext(at: url)
+            let categories = try reopened.fetch(.categories(.all))
+            let recipes = try reopened.fetch(.recipes(.all))
+                .sorted { $0.name < $1.name }
+            let survivor = try #require(categories.first)
+
+            // A recipe that carried both tags must end with one, not a
+            // duplicated entry, and a recipe that carried only the child must
+            // still be categorized at all.
+            #expect(categories.map(\.value) == ["Dinner"])
+            #expect(recipes.map(\.name) == ["Curry", "Stew"])
+            #expect(recipes.allSatisfy { ($0.categories ?? []).map(\.value) == ["Dinner"] })
+            #expect((survivor.recipes ?? []).count == 2)
+        }
+    }
+
+    @Test
+    func category_merge_absorbs_a_recipe_another_context_categorized_late() throws {
+        try withDiskStore { url in
+            let writer = try makeContext(at: url)
+            let parent = makeCategory(context: writer, value: "Dessert")
+            let child = makeCategory(context: writer, value: "dessert")
+            let firstRecipe = makeRecipe(context: writer, name: "Pudding", ingredients: [])
+            firstRecipe.updateCategories([parent])
+            _ = child
+            try writer.save()
+
+            // Another editor tags a new recipe with the duplicate before the
+            // merge is applied.
+            let other = try makeContext(at: url)
+            let otherChild = try #require(
+                try other.fetch(.categories(.valueIs("dessert"))).first
+            )
+            let lateRecipe = makeRecipe(context: other, name: "Sorbet", ingredients: [])
+            lateRecipe.updateCategories([otherChild])
+            try other.save()
+
+            let merger = try makeContext(at: url)
+            let survivor = try #require(
+                try merger.fetch(.categories(.valueIs("Dessert"))).first
+            )
+            _ = try TagOperations.mergeDuplicatesWithOutcome(
+                context: merger,
+                keeping: survivor
+            )
+            try merger.save()
+
+            let reopened = try makeContext(at: url)
+            let categories = try reopened.fetch(.categories(.all))
+            let recipes = try reopened.fetch(.recipes(.all))
+                .sorted { $0.name < $1.name }
+
+            #expect(categories.map(\.value) == ["Dessert"])
+            #expect(recipes.map(\.name) == ["Pudding", "Sorbet"])
+            #expect(recipes.allSatisfy { ($0.categories ?? []).map(\.value) == ["Dessert"] })
+        }
+    }
+
+    @Test
     func merge_abandoned_by_a_rollback_leaves_both_tags_in_the_store() throws {
         try withDiskStore { url in
             let writer = try makeContext(at: url)
@@ -179,6 +255,15 @@ private extension TagMergePersistenceTests {
 
     func makeIngredient(context: ModelContext, value: String) -> Ingredient {
         Ingredient.restore(
+            context: context,
+            value: value,
+            createdTimestamp: .now,
+            modifiedTimestamp: .now
+        )
+    }
+
+    func makeCategory(context: ModelContext, value: String) -> CookleSchemaV1.Category {
+        CookleSchemaV1.Category.restore(
             context: context,
             value: value,
             createdTimestamp: .now,
