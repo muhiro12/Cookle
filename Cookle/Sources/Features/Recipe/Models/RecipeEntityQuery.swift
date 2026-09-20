@@ -2,6 +2,10 @@ import AppIntents
 import SwiftData
 
 struct RecipeEntityQuery: EntityStringQuery {
+    // Picker candidates are bounded so a large collection cannot be loaded whole
+    // into an App Intents process. Matches the Widgets query's existing limit.
+    private static let suggestionLimit = 50
+
     @Dependency private var modelContainer: ModelContainer
 
     @MainActor
@@ -23,17 +27,17 @@ struct RecipeEntityQuery: EntityStringQuery {
 
     @MainActor
     func entities(matching string: String) throws -> [RecipeEntity] {
-        let recipes = try modelContainer.mainContext.fetch(
-            .recipes(.nameContains(string))
-        )
+        var descriptor = FetchDescriptor<Recipe>.recipes(.nameContains(string))
+        descriptor.fetchLimit = Self.suggestionLimit
+        let recipes = try modelContainer.mainContext.fetch(descriptor)
         return recipes.compactMap(RecipeEntity.init)
     }
 
     @MainActor
     func suggestedEntities() throws -> [RecipeEntity] {
-        let recipes = try modelContainer.mainContext.fetch(
-            .recipes(.all)
-        )
+        var descriptor = FetchDescriptor<Recipe>.recipes(.all)
+        descriptor.fetchLimit = Self.suggestionLimit
+        let recipes = try modelContainer.mainContext.fetch(descriptor)
         return recipes.compactMap(RecipeEntity.init)
     }
 }
