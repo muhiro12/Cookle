@@ -30,6 +30,7 @@ struct ShowSearchResultIntent: AppIntent {
         }
         return .result(dialog: "Result") {
             SearchResultView(.anyTextMatches(searchText))
+                .environment(CookleRouteNavigator.disabled)
                 .safeAreaPadding()
                 .modelContainer(modelContainer)
         }
