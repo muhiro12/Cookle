@@ -91,7 +91,7 @@ private extension PhotoListView {
         for group: (source: PhotoSource, photos: [Photo])
     ) -> some View {
         VStack(alignment: .leading, spacing: theme.spacing.content) {
-            MHSectionHeader(title: Text(group.source.description))
+            MHSectionHeader(title: group.source.sectionTitle)
             LazyVGrid(columns: [.init(.adaptive(minimum: Layout.photoGridMinimum))]) {
                 ForEach(group.photos) { photo in
                     photoButton(for: photo)
