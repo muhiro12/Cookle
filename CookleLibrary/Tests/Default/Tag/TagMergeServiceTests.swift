@@ -120,6 +120,88 @@ struct TagMergeServiceTests {
             ]
         })
     }
+
+    @Test
+    func mergeDuplicateIngredients_preserves_amounts_and_row_order() throws {
+        let parent = Ingredient.restore(
+            context: context,
+            value: "Olive Oil",
+            createdTimestamp: .now,
+            modifiedTimestamp: .now
+        )
+        let child = Ingredient.restore(
+            context: context,
+            value: "olive  oil",
+            createdTimestamp: .now,
+            modifiedTimestamp: .now
+        )
+        makeRecipe(
+            name: "Dressing",
+            ingredients: [
+                makeIngredientObject(ingredient: parent, amount: "1 tbsp", order: 0),
+                makeIngredientObject(ingredient: child, amount: "2 tbsp", order: 1)
+            ]
+        )
+
+        _ = try TagService.mergeDuplicatesWithOutcome(
+            context: context,
+            keeping: parent
+        )
+        try context.save()
+
+        let objects = try context.fetch(FetchDescriptor<IngredientObject>())
+            .sorted { $0.order < $1.order }
+
+        // Merging changes which Ingredient the rows point at; it must not
+        // rewrite the quantities the user typed or reshuffle the rows.
+        #expect(objects.map(\.amount) == ["1 tbsp", "2 tbsp"])
+        #expect(objects.map(\.order) == [0, 1])
+        #expect(objects.allSatisfy { $0.ingredient === parent })
+    }
+
+    @Test
+    func mergeDuplicates_is_a_no_op_once_the_duplicates_are_gone() throws {
+        let parent = Ingredient.restore(
+            context: context,
+            value: "Eggs",
+            createdTimestamp: .now,
+            modifiedTimestamp: .now
+        )
+        let child = Ingredient.restore(
+            context: context,
+            value: " eggs ",
+            createdTimestamp: .now,
+            modifiedTimestamp: .now
+        )
+        makeRecipe(
+            name: "Omelette",
+            ingredients: [
+                makeIngredientObject(ingredient: parent, amount: "1"),
+                makeIngredientObject(ingredient: child, amount: "2")
+            ]
+        )
+
+        _ = try TagService.mergeDuplicatesWithOutcome(
+            context: context,
+            keeping: parent
+        )
+        try context.save()
+
+        // Re-running against an already merged tag must not delete the survivor
+        // or disturb the rows that were reassigned to it.
+        _ = try TagService.mergeDuplicatesWithOutcome(
+            context: context,
+            keeping: parent
+        )
+        try context.save()
+
+        let ingredients = try context.fetch(.ingredients(.all))
+        let objects = try context.fetch(FetchDescriptor<IngredientObject>())
+
+        #expect(ingredients.map(\.value) == ["Eggs"])
+        #expect(objects.count == 2)
+        #expect(objects.allSatisfy { $0.ingredient === parent })
+    }
 }
 
 private extension TagMergeServiceTests {
@@ -131,13 +213,14 @@ private extension TagMergeServiceTests {
 
     func makeIngredientObject(
         ingredient: Ingredient,
-        amount: String
+        amount: String,
+        order: Int = TestValues.firstOrder
     ) -> IngredientObject {
         IngredientObject.restore(
             context: context,
             ingredient: ingredient,
             amount: amount,
-            order: TestValues.firstOrder,
+            order: order,
             timestamps: .init(
                 created: .now,
                 modified: .now
