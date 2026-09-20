@@ -41,6 +41,41 @@ struct MutationRollbackPersistenceTests {
         }
     }
 
+    // The diary counterpart of the photo case below: an edit that keeps the
+    // recipe it already referenced, so the same row is reached twice while its
+    // previous `DiaryObject` is deleted. `DiaryObject.create` does not write to
+    // the recipe, so the parent never becomes dirty and rollback stays safe.
+    @Test
+    func rolled_back_diary_update_that_keeps_the_same_recipe_is_safe() throws {
+        try withDiskStore { url in
+            let context = try makeContext(at: url)
+            let recipe = makeRecipe(context: context, name: "Curry")
+            _ = try DiaryOperations.createWithOutcome(
+                context: context,
+                input: .init(date: Self.day, dinners: [recipe], note: "Original note")
+            )
+            try context.save()
+
+            let editing = try makeContext(at: url)
+            let stored = try #require(try editing.fetch(.diaries(.all)).first)
+            let storedRecipe = try #require(try editing.fetch(.recipes(.all)).first)
+            _ = try DiaryOperations.updateWithOutcome(
+                context: editing,
+                diary: stored,
+                input: .init(date: Self.day, lunches: [storedRecipe], note: "Moved to lunch")
+            )
+            editing.rollback()
+
+            let reopened = try makeContext(at: url)
+            let diary = try #require(try reopened.fetch(.diaries(.all)).first)
+            let rows = diary.objects ?? []
+            #expect(diary.note == "Original note")
+            #expect(rows.map(\.type) == [.dinner])
+            #expect(rows.map { $0.recipe?.name } == ["Curry"])
+            #expect(try reopened.fetchCount(FetchDescriptor<DiaryObject>()) == 1)
+        }
+    }
+
     // Before `CascadeDeletionSupport`, this did not fail — it trapped inside
     // `rollback()` and aborted the whole test process.
     @Test
