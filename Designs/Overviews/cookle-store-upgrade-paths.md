@@ -101,17 +101,31 @@ this route: the user sees the failure and the file stays as it was. Deleting
 persisted data requires the explicit Settings action
 (`SettingsActionService.deleteAllData`).
 
-## 6) Downgrade is not supported
+## 6) Downgrade silently drops what the newer schema owned
 
-Once a store has been opened and migrated by a newer schema, an older build
-**cannot** open it. SwiftData provides no reverse migration, Cookle defines no
-downgrade stage, and none is planned.
+SwiftData provides no reverse migration and Cookle defines no downgrade stage.
+What actually happens when a released build opens a store a newer build wrote
+was **measured**, not assumed, and it is worse than a refusal would be.
+`StoreRecoveryTests` pins it:
+
+- The released build **does not refuse** the store. It opens it and returns a
+  container.
+- Records whose entity both schemas share **survive**, and the released build
+  can add more.
+- Records belonging to an entity only the newer schema declared are **gone**,
+  and reinstalling the newer build does not bring them back.
+
+There is no error and no prompt at any point in that sequence. So the rule to
+work from is not "an older build cannot open a newer store" — it is:
+
+> Running an older build against a newer store is a silent, one-way data loss
+> for anything the older build does not know about.
 
 The consequences worth stating plainly:
 
-- A TestFlight or development build that introduces a V2 makes the user's
-  store unreadable to the App Store build. That is not recoverable in
-  place.
+- A TestFlight or development build that introduces a V2 leaves a store that
+  the App Store build will open and quietly strip. Reinstalling the newer build
+  does not recover it.
 - The only route back is restoring a backup taken before the upgrade, which is
   https://github.com/muhiro12/Cookle/issues/133's subject. A backup is a
   portable archive, not a store file, so it restores into whatever schema the
