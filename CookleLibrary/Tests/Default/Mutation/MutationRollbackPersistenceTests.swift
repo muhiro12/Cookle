@@ -189,6 +189,65 @@ struct MutationRollbackPersistenceTests {
             #expect(try reopened.fetchCount(FetchDescriptor<IngredientObject>()) == 2)
         }
     }
+
+    // `rollback()` is context-wide, not mutation-scoped: it discards every
+    // pending change, including ones the failed mutation never touched. Cookle
+    // shares one main context across the app, so this pins the boundary the
+    // form models depend on by holding drafts in value types rather than as
+    // live edits on the stored objects.
+    @Test
+    func rollback_discards_unrelated_pending_edits_in_the_same_context() throws {
+        try withDiskStore { url in
+            let context = try makeContext(at: url)
+            let editedRecipe = makeRecipe(context: context, name: "Curry")
+            let deletedRecipe = makeRecipe(context: context, name: "Salad")
+            try context.save()
+
+            // Another editor's unsaved change, unrelated to the mutation below.
+            editedRecipe.update(
+                content: makeContent(name: "Curry", note: "Edited elsewhere")
+            )
+
+            _ = RecipeOperations.deleteWithOutcome(
+                context: context,
+                recipe: deletedRecipe
+            )
+            context.rollback()
+
+            let reopened = try makeContext(at: url)
+            let notes = try reopened.fetch(.recipes(.all))
+                .sorted { $0.name < $1.name }
+                .map(\.note)
+            #expect(notes == ["", ""])
+        }
+    }
+
+    @Test
+    func rollback_keeps_unrelated_edits_that_were_already_saved() throws {
+        try withDiskStore { url in
+            let context = try makeContext(at: url)
+            let editedRecipe = makeRecipe(context: context, name: "Curry")
+            let deletedRecipe = makeRecipe(context: context, name: "Salad")
+            try context.save()
+
+            editedRecipe.update(
+                content: makeContent(name: "Curry", note: "Saved elsewhere")
+            )
+            try context.save()
+
+            _ = RecipeOperations.deleteWithOutcome(
+                context: context,
+                recipe: deletedRecipe
+            )
+            context.rollback()
+
+            let reopened = try makeContext(at: url)
+            let recipes = try reopened.fetch(.recipes(.all))
+                .sorted { $0.name < $1.name }
+            #expect(recipes.map(\.name) == ["Curry", "Salad"])
+            #expect(recipes.first?.note == "Saved elsewhere")
+        }
+    }
 }
 
 private extension MutationRollbackPersistenceTests {
@@ -273,19 +332,23 @@ private extension MutationRollbackPersistenceTests {
         )
     }
 
+    func makeContent(name: String, note: String = "") -> RecipeContent {
+        .init(
+            name: name,
+            photos: [],
+            servingSize: TestValues.servingSize,
+            cookingTime: TestValues.cookingTimeMinutes,
+            ingredients: [],
+            steps: [],
+            categories: [],
+            note: note
+        )
+    }
+
     func makeRecipe(context: ModelContext, name: String) -> Recipe {
         Recipe.create(
             context: context,
-            content: .init(
-                name: name,
-                photos: [],
-                servingSize: TestValues.servingSize,
-                cookingTime: TestValues.cookingTimeMinutes,
-                ingredients: [],
-                steps: [],
-                categories: [],
-                note: ""
-            )
+            content: makeContent(name: name)
         )
     }
 }
