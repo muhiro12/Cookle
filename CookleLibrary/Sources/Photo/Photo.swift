@@ -49,8 +49,12 @@ extension CookleSchemaV1 {
                 context.insert(photo)
                 return photo
             }
-            photo.data = photoData.data
-            photo.sourceID = photoData.source.rawValue
+            if photo.data != photoData.data {
+                photo.data = photoData.data
+            }
+            if photo.sourceID != photoData.source.rawValue {
+                photo.sourceID = photoData.source.rawValue
+            }
             return photo
         }
 
