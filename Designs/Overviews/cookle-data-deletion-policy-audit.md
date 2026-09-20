@@ -1,15 +1,22 @@
 # Cookle Data Deletion Policy Audit
 
-Current as of July 14, 2026.
+Historical audit as of July 14, 2026.
+
+Startup cleanup policy was superseded on September 20, 2026 by
+[ADR 0011](../Decisions/0011-preserve-swiftdata-storage-contracts.md).
+Statements below about one-time detached-row deletion describe the audited
+July behavior, not current startup. A missing parent can represent an incomplete
+CloudKit import; current startup preserves such rows. Explicit owned-row
+replacement and confirmed deletion policies remain in effect.
 
 ## Purpose
 
 This note records how persisted Cookle data is deleted after the conservative
-deletion-policy refactor. It also acts as the source of truth for future
-deletion work, so it distinguishes between current implementation facts and the
-forward design policy.
+deletion-policy refactor. It distinguishes the implementation evidence captured
+at that time from the forward design policy. Consult subsequent decisions for
+current behavior.
 
-The current working rule is:
+The working rule at the time was:
 
 - keep non-Object persisted records conservatively
 - delete parent-owned Object rows when they lose their parent

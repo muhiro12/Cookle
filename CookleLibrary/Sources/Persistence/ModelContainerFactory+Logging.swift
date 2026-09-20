@@ -83,6 +83,12 @@ extension ModelContainerFactory {
             logger: logger
         )
 
+        try protectPopulatedDestination(
+            fileManager: fileManager,
+            legacyURL: legacyURL,
+            currentURL: currentURL
+        )
+
         return try DatabaseMigrator.migrateStoreFilesIfNeeded(
             fileManager: fileManager,
             legacyURL: legacyURL,
@@ -211,7 +217,6 @@ extension ModelContainerFactory {
         attachLegacyCounts(
             to: &metadata,
             legacyURL: context.legacyURL,
-            cloudKitDatabase: context.cloudKitDatabase,
             currentCounts: currentCounts
         )
 
@@ -272,14 +277,10 @@ private extension ModelContainerFactory {
     static func attachLegacyCounts(
         to metadata: inout [String: String],
         legacyURL: URL,
-        cloudKitDatabase: ModelConfiguration.CloudKitDatabase,
         currentCounts: StoreEntityCounts?
     ) {
         do {
-            let legacyContainer = try makeModelContainer(
-                url: legacyURL,
-                cloudKitDatabase: cloudKitDatabase
-            )
+            let legacyContainer = try makeReadOnlyContainer(url: legacyURL)
             let legacyCounts = try countSummary(
                 in: .init(legacyContainer)
             )

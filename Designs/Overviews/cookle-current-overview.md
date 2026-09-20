@@ -365,7 +365,9 @@ Important modeling choices:
   parent-owned disposable rows, while root and shared records default to
   conservative retention unless a delete surface explicitly says otherwise.
 - Timestamps are stored on all primary and sub-object records.
-- The migration plan is versioned as schema `1.0.0`.
+- The eight model definitions belong to `CookleSchemaV1` (`1.0.0`), with public
+  aliases preserving the existing model names. `currentSchema` selects the
+  destination independently of the app release number.
 
 ## Persistence
 
@@ -561,8 +563,14 @@ Views should not own:
 - The main app builds its model container through `ModelContainerFactory`.
 - Legacy store files are relocated through `MHPlatform` persistence maintenance
   before the current container is used.
-- The relocated store is validated by opening a `ModelContainer` before legacy
-  files are deleted.
+- The relocated store is validated locally with CloudKit disabled before legacy
+  files are deleted. A populated or unreadable destination is preserved and
+  blocks relocation instead of being overwritten.
+- Widgets open an existing read-only store without a migration plan or CloudKit.
+  The app owns migration and optional synchronization.
+- Startup retains detached rows because their parent links may still be arriving
+  through CloudKit. See [ADR 0011](../Decisions/0011-preserve-swiftdata-storage-contracts.md)
+  for the storage contract and historical-store verification limits.
 - Shared preferences use an app-group-backed store when cross-target access is
   needed.
 

@@ -8,9 +8,9 @@ public enum ModelContainerFactory {
         static let millisecondsPerSecond: TimeInterval = 1_000
     }
 
-    /// Returns the shared model container configuration.
+    /// Opens the existing shared store for extension reads without migrating or syncing it.
     public static func shared() throws -> ModelContainer {
-        try makeModelContainer()
+        try makeReadOnlyContainer(url: Database.url)
     }
 
     /// Creates the model container used by the main app and validates migrated data.
@@ -19,9 +19,21 @@ public enum ModelContainerFactory {
         cloudKitDatabase: ModelConfiguration.CloudKitDatabase,
         logger: MHLogger? = nil
     ) throws -> ModelContainer {
+        try makeAppContainer(
+            legacyURL: Database.legacyURL,
+            currentURL: Database.url,
+            cloudKitDatabase: cloudKitDatabase,
+            logger: logger
+        )
+    }
+
+    static func makeAppContainer(
+        legacyURL: URL,
+        currentURL: URL,
+        cloudKitDatabase: ModelConfiguration.CloudKitDatabase,
+        logger: MHLogger? = nil
+    ) throws -> ModelContainer {
         let storePreparationStartedAt = Date.timeIntervalSinceReferenceDate
-        let legacyURL = Database.legacyURL
-        let currentURL = Database.url
         let fileManager: FileManager = .default
         let migrationOutcome = try prepareStoreFilesIfNeeded(
             fileManager: fileManager,
@@ -38,14 +50,11 @@ public enum ModelContainerFactory {
             logger: logger
         )
         let currentContainer = try makeModelContainer(
+            url: currentURL,
             cloudKitDatabase: cloudKitDatabase
         )
-        let cleanupContext = ModelContext(
-            currentContainer
-        )
-        _ = try DetachedObjectCleanupService.runIfNeeded(
-            context: cleanupContext
-        )
+        // A missing parent may be a relationship that CloudKit has not imported yet.
+        // Startup must not delete rows based on a temporarily incomplete graph.
         let cleanupOutcome = try cleanupLegacyStoreFilesIfNeeded(
             fileManager: fileManager,
             legacyURL: legacyURL,
@@ -74,13 +83,23 @@ public enum ModelContainerFactory {
         .init(try shared())
     }
 
+    static func makeReadOnlyContainer(url: URL) throws -> ModelContainer {
+        guard FileManager.default.fileExists(atPath: url.path) else {
+            throw CocoaError(.fileReadNoSuchFile)
+        }
+        return try ModelContainer(
+            for: .init(versionedSchema: CookleMigrationPlan.currentSchema),
+            configurations: .init(url: url, allowsSave: false, cloudKitDatabase: .none)
+        )
+    }
+
     static func makeModelContainer(
         url: URL? = nil,
         cloudKitDatabase: ModelConfiguration.CloudKitDatabase = .none
     ) throws -> ModelContainer {
         if let url {
             return try ModelContainer(
-                for: .init(versionedSchema: CookleMigrationPlan.schemas[0]),
+                for: .init(versionedSchema: CookleMigrationPlan.currentSchema),
                 migrationPlan: CookleMigrationPlan.self,
                 configurations: .init(
                     url: url,
@@ -89,7 +108,7 @@ public enum ModelContainerFactory {
             )
         }
         return try ModelContainer(
-            for: .init(versionedSchema: CookleMigrationPlan.schemas[0]),
+            for: .init(versionedSchema: CookleMigrationPlan.currentSchema),
             migrationPlan: CookleMigrationPlan.self,
             configurations: .init(
                 cloudKitDatabase: cloudKitDatabase
@@ -115,7 +134,7 @@ public enum ModelContainerFactory {
         do {
             let currentContainer = try makeModelContainer(
                 url: currentStoreURL,
-                cloudKitDatabase: cloudKitDatabase
+                cloudKitDatabase: .none
             )
             logValidationSnapshot(
                 .init(

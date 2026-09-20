@@ -16,7 +16,7 @@ func makeTestContext() -> ModelContext {
         Photo.self,
         PhotoObject.self
     ])
-    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
     let container: ModelContainer
     do {
         container = try ModelContainer(
