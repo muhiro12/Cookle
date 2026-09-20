@@ -16,8 +16,11 @@ struct CookingStepList: View {
                     cookingSessionStore.setCurrentStepIndex(step.offset)
                 } label: {
                     HStack(alignment: .top, spacing: theme.spacing.inline) {
+                        // The number is how a cook keeps their place in the full
+                        // step list, so it uses the primary label role. As
+                        // secondary it measured 3.43:1 in light appearance,
+                        // below the 4.5:1 WCAG AA threshold for normal text.
                         Text((step.offset + 1).description + ".")
-                            .foregroundStyle(.secondary)
                             .fixedSize()
                         Text(verbatim: step.element)
                             .frame(maxWidth: .infinity, alignment: .leading)
