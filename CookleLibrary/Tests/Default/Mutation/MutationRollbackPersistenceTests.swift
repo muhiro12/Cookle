@@ -139,6 +139,42 @@ struct MutationRollbackPersistenceTests {
             #expect(try reopened.fetchCount(FetchDescriptor<PhotoObject>()) == 1)
         }
     }
+
+    @Test
+    func rolled_back_recipe_creation_leaves_no_partial_records() throws {
+        try withDiskStore { url in
+            let context = try makeContext(at: url)
+            let draft = try RecipeFormOperations.makeDraft(
+                input: .init(
+                    name: "Curry",
+                    photos: [],
+                    servingSize: "2",
+                    cookingTime: "30",
+                    ingredients: [
+                        .init(ingredient: "Onion", amount: "1"),
+                        .init(ingredient: "Rice", amount: "2 cups")
+                    ],
+                    steps: ["Chop.", "Simmer."],
+                    categories: ["Dinner"],
+                    note: "Weeknight"
+                )
+            )
+            _ = try RecipeFormOperations.createWithOutcome(
+                context: context,
+                draft: draft
+            )
+            context.rollback()
+
+            // Creating a recipe also creates Ingredient and Category records as a
+            // side effect. An abandoned save must not leave those behind to
+            // pollute the user's tag lists.
+            let reopened = try makeContext(at: url)
+            #expect(try reopened.fetch(.recipes(.all)).isEmpty)
+            #expect(try reopened.fetch(.ingredients(.all)).isEmpty)
+            #expect(try reopened.fetch(.categories(.all)).isEmpty)
+            #expect(try reopened.fetchCount(FetchDescriptor<IngredientObject>()) == .zero)
+        }
+    }
 }
 
 private extension MutationRollbackPersistenceTests {
