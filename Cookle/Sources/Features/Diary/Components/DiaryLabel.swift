@@ -137,7 +137,7 @@ private extension DiaryLabel {
 private extension DiaryLabel {
     var accessibilitySummary: String {
         [
-            "Diary: \(accessibilityDate)",
+            String(localized: "Diary: \(accessibilityDate)"),
             DiaryListSummary.text(
                 recipeNames: (diary.recipes ?? []).map(\.name),
                 note: diary.note

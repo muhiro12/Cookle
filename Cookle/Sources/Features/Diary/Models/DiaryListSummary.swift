@@ -3,7 +3,6 @@ import Foundation
 enum DiaryListSummary {
     private enum Constants {
         static let maxLength = 80
-        static let fallbackText = "No recipes or note yet"
     }
 
     static func text(
@@ -22,7 +21,7 @@ enum DiaryListSummary {
             )
         }
 
-        return Constants.fallbackText
+        return String(localized: "No recipes or note yet")
     }
 }
 

@@ -3833,6 +3833,40 @@
         }
       }
     },
+    "Diary: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diary: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diario: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Journal : %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日記: %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日记：%@"
+          }
+        }
+      }
+    },
     "Dinner" : {
       "localizations" : {
         "en" : {
@@ -6184,6 +6218,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "还没有照片"
+          }
+        }
+      }
+    },
+    "No recipes or note yet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No recipes or note yet"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aún no hay recetas ni notas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune recette ni note pour l’instant"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピもメモもまだありません"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "尚无食谱或备注"
           }
         }
       }
@@ -11094,6 +11162,108 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "食谱文本过长，无法处理。请仅保留食谱内容后重试。"
+          }
+        }
+      }
+    },
+    "This removes the category from %lld recipes. The recipes stay saved." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This removes the category from %lld recipes. The recipes stay saved."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto quita la categoría de %lld recetas. Las recetas se conservan."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette action retire la catégorie de %lld recettes. Les recettes restent enregistrées."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld件のレシピからカテゴリを外します。レシピは保存されたままです。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这将从 %lld 个食谱中移除该分类。食谱仍会保留。"
+          }
+        }
+      }
+    },
+    "This removes the category from one recipe. The recipe stays saved." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This removes the category from one recipe. The recipe stays saved."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto quita la categoría de una receta. La receta se conserva."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette action retire la catégorie d’une recette. La recette reste enregistrée."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1件のレシピからカテゴリを外します。レシピは保存されたままです。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这将从 1 个食谱中移除该分类。食谱仍会保留。"
+          }
+        }
+      }
+    },
+    "This removes the category. No recipe relations will be removed." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This removes the category. No recipe relations will be removed."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto elimina la categoría. No se eliminará ninguna relación con recetas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette action supprime la catégorie. Aucune relation avec les recettes ne sera supprimée."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カテゴリを削除します。レシピとの関連は削除されません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这将删除该分类。不会删除任何食谱关联。"
           }
         }
       }
