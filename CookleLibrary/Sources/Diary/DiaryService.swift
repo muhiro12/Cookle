@@ -241,6 +241,7 @@ enum DiaryService {
         context: ModelContext,
         diary: Diary
     ) -> MutationOutcome<Void> {
+        CascadeDeletionSupport.materialize(diary.objects ?? [])
         context.delete(diary)
         return .init(
             value: (),

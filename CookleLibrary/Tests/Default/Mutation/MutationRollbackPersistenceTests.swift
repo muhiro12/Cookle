@@ -41,11 +41,9 @@ struct MutationRollbackPersistenceTests {
         }
     }
 
-    // Disabled because it does not fail — it traps. SwiftData raises
-    // `Fatal error: Unexpected backing data for snapshot creation:
-    // _FullFutureBackingData<DiaryObject>` inside `rollback()`, which aborts the
-    // whole test process. Kept as the reproduction for #129; re-enable with the fix.
-    @Test(.disabled("Traps inside SwiftData rollback; reproduction for #129"))
+    // Before `CascadeDeletionSupport`, this did not fail — it trapped inside
+    // `rollback()` and aborted the whole test process.
+    @Test
     func rolled_back_diary_deletion_leaves_the_reopened_store_unchanged() throws {
         try withDiskStore { url in
             let context = try makeContext(at: url)
@@ -81,7 +79,7 @@ struct MutationRollbackPersistenceTests {
             _ = Diary.create(
                 context: context,
                 content: .init(
-                    date: Self.day.addingTimeInterval(60),
+                    date: Self.day.addingTimeInterval(TestValues.duplicateDayOffset),
                     objects: [],
                     note: "Second"
                 )
@@ -100,10 +98,58 @@ struct MutationRollbackPersistenceTests {
             #expect(notes == ["First", "Second"])
         }
     }
+
+    @Test
+    func rolled_back_recipe_deletion_leaves_the_reopened_store_unchanged() throws {
+        try withDiskStore { url in
+            let context = try makeContext(at: url)
+            let recipe = makeRecipe(context: context, name: "Curry")
+            _ = try DiaryOperations.createWithOutcome(
+                context: context,
+                input: .init(date: Self.day, dinners: [recipe], note: "Cooked it")
+            )
+            try context.save()
+
+            let reloaded = try makeContext(at: url)
+            let stored = try #require(try reloaded.fetch(.recipes(.all)).first)
+            _ = RecipeOperations.deleteWithOutcome(context: reloaded, recipe: stored)
+            reloaded.rollback()
+
+            let reopened = try makeContext(at: url)
+            #expect(try reopened.fetch(.recipes(.all)).map(\.name) == ["Curry"])
+            #expect(try reopened.fetch(.diaries(.all)).first?.recipes?.count == 1)
+            #expect(try reopened.fetchCount(FetchDescriptor<DiaryObject>()) == 1)
+        }
+    }
+
+    @Test
+    func rolled_back_photo_deletion_leaves_the_reopened_store_unchanged() throws {
+        try withDiskStore { url in
+            let context = try makeContext(at: url)
+            try seedPhotographedRecipe(context: context)
+            try context.save()
+
+            let reloaded = try makeContext(at: url)
+            let stored = try #require(try reloaded.fetch(FetchDescriptor<Photo>()).first)
+            _ = PhotoOperations.deleteWithOutcome(context: reloaded, photo: stored)
+            reloaded.rollback()
+
+            let reopened = try makeContext(at: url)
+            #expect(try reopened.fetchCount(FetchDescriptor<Photo>()) == 1)
+            #expect(try reopened.fetchCount(FetchDescriptor<PhotoObject>()) == 1)
+        }
+    }
 }
 
 private extension MutationRollbackPersistenceTests {
-    static let day = Date(timeIntervalSinceReferenceDate: 800_000_000)
+    enum TestValues {
+        static let dayReference: TimeInterval = 800_000_000
+        static let duplicateDayOffset: TimeInterval = 60
+        static let servingSize = 1
+        static let cookingTimeMinutes = 10
+    }
+
+    static let day = Date(timeIntervalSinceReferenceDate: TestValues.dayReference)
 
     func withDiskStore(_ body: (URL) throws -> Void) throws {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
@@ -132,14 +178,41 @@ private extension MutationRollbackPersistenceTests {
         return context
     }
 
+    func seedPhotographedRecipe(context: ModelContext) throws {
+        let photo = try Photo.create(
+            context: context,
+            photoData: .init(data: Data("photo".utf8), source: .photosPicker)
+        )
+        let photoObject = PhotoObject.restore(
+            context: context,
+            photo: photo,
+            order: .zero,
+            createdTimestamp: .now,
+            modifiedTimestamp: .now
+        )
+        _ = Recipe.create(
+            context: context,
+            content: .init(
+                name: "Curry",
+                photos: [photoObject],
+                servingSize: TestValues.servingSize,
+                cookingTime: TestValues.cookingTimeMinutes,
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
+        )
+    }
+
     func makeRecipe(context: ModelContext, name: String) -> Recipe {
         Recipe.create(
             context: context,
             content: .init(
                 name: name,
                 photos: [],
-                servingSize: 1,
-                cookingTime: 10,
+                servingSize: TestValues.servingSize,
+                cookingTime: TestValues.cookingTimeMinutes,
                 ingredients: [],
                 steps: [],
                 categories: [],

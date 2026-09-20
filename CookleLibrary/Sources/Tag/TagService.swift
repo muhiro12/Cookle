@@ -85,6 +85,7 @@ enum TagService {
             throw TagOperationsError.ingredientInUse(ingredient.value)
         }
 
+        CascadeDeletionSupport.materialize(ingredient.objects ?? [])
         context.delete(ingredient)
         return .init(
             value: (),

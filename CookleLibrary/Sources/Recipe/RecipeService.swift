@@ -127,6 +127,9 @@ enum RecipeService {
         context: ModelContext,
         recipe: Recipe
     ) -> MutationOutcome<Void> {
+        CascadeDeletionSupport.materialize(recipe.ingredientObjects ?? [])
+        CascadeDeletionSupport.materialize(recipe.photoObjects ?? [])
+        CascadeDeletionSupport.materialize(recipe.diaryObjects ?? [])
         context.delete(recipe)
         return .init(
             value: (),

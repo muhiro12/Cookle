@@ -9,6 +9,7 @@ enum PhotoService {
         context: ModelContext,
         photo: Photo
     ) -> MutationOutcome<Void> {
+        CascadeDeletionSupport.materialize(photo.objects ?? [])
         context.delete(photo)
         return .init(
             value: (),
