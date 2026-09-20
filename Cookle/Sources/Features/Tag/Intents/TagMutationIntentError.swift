@@ -29,9 +29,9 @@ enum TagMutationIntentError: LocalizedError {
                 value
             )
         case .categoryNotFound:
-            return "Category not found."
+            return String(localized: "Category not found.")
         case .ingredientNotFound:
-            return "Ingredient not found."
+            return String(localized: "Ingredient not found.")
         }
     }
 }

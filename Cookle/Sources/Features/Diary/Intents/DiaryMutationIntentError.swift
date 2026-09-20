@@ -6,7 +6,7 @@ enum DiaryMutationIntentError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .diaryNotFound:
-            return "Diary not found."
+            return String(localized: "Diary not found.")
         }
     }
 }

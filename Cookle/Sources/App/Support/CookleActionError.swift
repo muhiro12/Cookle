@@ -8,7 +8,10 @@ enum CookleActionError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .recipeNotFound:
-            return "Recipe not found."
+            return String(localized: "Recipe not found.")
+        // The remaining cases guard invariants that only break through a
+        // programming mistake, and they report Swift type and entity names,
+        // so translating them would tell a reader less than the raw text.
         case .unsupportedTagType(let tagType):
             return "Unsupported tag type: \(tagType)."
         case .missingMutationResult(let entityName):

@@ -7,9 +7,9 @@ enum RecipeMutationIntentError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .recipeNotFound:
-            return "Recipe not found."
+            return String(localized: "Recipe not found.")
         case .failedToBuildEntity:
-            return "Failed to build the recipe result."
+            return String(localized: "Failed to build the recipe result.")
         }
     }
 }
