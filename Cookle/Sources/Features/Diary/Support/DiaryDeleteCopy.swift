@@ -2,7 +2,7 @@ import Foundation
 
 enum DiaryDeleteCopy {
     static func title(for diary: Diary) -> String {
-        "Delete diary for \(formattedDate(for: diary))"
+        String(localized: "Delete diary for \(formattedDate(for: diary))")
     }
 
     static func confirmationDialog(for diary: Diary) -> String {
@@ -11,13 +11,19 @@ enum DiaryDeleteCopy {
 
     static func message(for diary: Diary) -> String {
         let mealRowCount = (diary.objects ?? []).count
-        let mealRowLabel = mealRowCount == 1 ? "meal row" : "meal rows"
+        if mealRowCount == 1 {
+            return String(
+                localized: "This removes the diary and its one meal row. Recipes stay saved."
+            )
+        }
 
-        return "This removes the diary and its \(mealRowCount) \(mealRowLabel). Recipes stay saved."
+        return String(
+            localized: "This removes the diary and its \(mealRowCount) meal rows. Recipes stay saved."
+        )
     }
 
     static func successDialog(for diary: Diary) -> String {
-        "Deleted diary for \(formattedDate(for: diary))"
+        String(localized: "Deleted diary for \(formattedDate(for: diary))")
     }
 }
 

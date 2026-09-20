@@ -1962,6 +1962,40 @@
         }
       }
     },
+    "Cannot delete %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cannot delete %@."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede eliminar %@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de supprimer %@."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@を削除できません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法删除%@。"
+          }
+        }
+      }
+    },
     "Categories" : {
       "localizations" : {
         "en" : {
@@ -3425,6 +3459,108 @@
         }
       }
     },
+    "Delete diary for %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete diary for %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar el diario del %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer le journal du %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@の日記を削除"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除%@的日记"
+          }
+        }
+      }
+    },
+    "Delete is available only when no recipes use this ingredient. %@ is still used by %lld recipes." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete is available only when no recipes use this ingredient. %@ is still used by %lld recipes."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo se puede eliminar cuando ninguna receta usa este ingrediente. %@ todavía se usa en %lld recetas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La suppression n’est possible que si aucune recette n’utilise cet ingrédient. %@ est encore utilisé par %lld recettes."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この材料を使っているレシピがない場合のみ削除できます。%@は%lld件のレシピで使われています。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仅当没有食谱使用该食材时才能删除。%@仍被 %lld 个食谱使用。"
+          }
+        }
+      }
+    },
+    "Delete is available only when no recipes use this ingredient. %@ is still used by one recipe." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete is available only when no recipes use this ingredient. %@ is still used by one recipe."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo se puede eliminar cuando ninguna receta usa este ingrediente. %@ todavía se usa en una receta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La suppression n’est possible que si aucune recette n’utilise cet ingrédient. %@ est encore utilisé par une recette."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この材料を使っているレシピがない場合のみ削除できます。%@は1件のレシピで使われています。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仅当没有食谱使用该食材时才能删除。%@仍被 1 个食谱使用。"
+          }
+        }
+      }
+    },
     "Deleted %@" : {
       "localizations" : {
         "en" : {
@@ -3455,6 +3591,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已删除 %@"
+          }
+        }
+      }
+    },
+    "Deleted diary for %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted diary for %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diario del %@ eliminado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Journal du %@ supprimé"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@の日記を削除しました"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已删除%@的日记"
           }
         }
       }
@@ -10928,6 +11098,74 @@
         }
       }
     },
+    "This removes the diary and its %lld meal rows. Recipes stay saved." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This removes the diary and its %lld meal rows. Recipes stay saved."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto elimina el diario y sus %lld filas de comida. Las recetas se mantienen guardadas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette action supprime le journal et ses %lld lignes de repas. Les recettes restent enregistrées."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日記と%lld件の食事データを削除します。レシピは保存されたままです。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这将删除该日记及其 %lld 条餐食记录。食谱仍会保留。"
+          }
+        }
+      }
+    },
+    "This removes the diary and its one meal row. Recipes stay saved." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This removes the diary and its one meal row. Recipes stay saved."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto elimina el diario y su única fila de comida. Las recetas se mantienen guardadas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette action supprime le journal et sa seule ligne de repas. Les recettes restent enregistrées."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日記と1件の食事データを削除します。レシピは保存されたままです。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这将删除该日记及其 1 条餐食记录。食谱仍会保留。"
+          }
+        }
+      }
+    },
     "This removes the recipe and %lld diary meal rows. The related diary entries stay saved." : {
       "localizations" : {
         "en" : {
@@ -11030,6 +11268,40 @@
         }
       }
     },
+    "This removes the unused ingredient record. No recipe ingredient rows will be removed." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This removes the unused ingredient record. No recipe ingredient rows will be removed."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto elimina el registro de ingrediente sin usar. No se eliminará ninguna fila de ingrediente de receta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette action supprime la fiche d’ingrédient inutilisée. Aucune ligne d’ingrédient de recette ne sera supprimée."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使われていない材料の記録を削除します。レシピの材料行は削除されません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这将删除未使用的食材记录。不会删除任何食谱的食材行。"
+          }
+        }
+      }
+    },
     "This stops the active cooking guide and any running timer." : {
       "localizations" : {
         "en" : {
@@ -11060,6 +11332,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "这将停止当前的烹饪指南和正在运行的计时器。"
+          }
+        }
+      }
+    },
+    "This will reassign recipes from %lld matching tags to %@, then delete the duplicate tags." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This will reassign recipes from %lld matching tags to %@, then delete the duplicate tags."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto reasignará las recetas de %lld etiquetas coincidentes a %@ y después eliminará las etiquetas duplicadas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette action réaffecte les recettes de %lld étiquettes correspondantes à %@, puis supprime les étiquettes en double."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一致する%lld件のタグからレシピを%@に付け替えたうえで、重複したタグを削除します。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这会将 %lld 个匹配标签的食谱改为使用%@，然后删除重复的标签。"
+          }
+        }
+      }
+    },
+    "This will reassign recipes from one matching tag to %@, then delete the duplicate tag." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This will reassign recipes from one matching tag to %@, then delete the duplicate tag."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto reasignará las recetas de una etiqueta coincidente a %@ y después eliminará la etiqueta duplicada."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette action réaffecte les recettes d’une étiquette correspondante à %@, puis supprime l’étiquette en double."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一致する1件のタグからレシピを%@に付け替えたうえで、重複したタグを削除します。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这会将 1 个匹配标签的食谱改为使用%@，然后删除重复的标签。"
           }
         }
       }
