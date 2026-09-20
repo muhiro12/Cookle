@@ -202,6 +202,46 @@ struct TagMergeServiceTests {
         #expect(objects.count == 2)
         #expect(objects.allSatisfy { $0.ingredient === parent })
     }
+
+    @Test
+    func mergeDuplicates_tolerates_a_duplicate_that_was_already_deleted() throws {
+        let parent = Ingredient.restore(
+            context: context,
+            value: "Eggs",
+            createdTimestamp: .now,
+            modifiedTimestamp: .now
+        )
+        let child = Ingredient.restore(
+            context: context,
+            value: " eggs ",
+            createdTimestamp: .now,
+            modifiedTimestamp: .now
+        )
+        makeRecipe(
+            name: "Omelette",
+            ingredients: [
+                makeIngredientObject(ingredient: parent, amount: "1")
+            ]
+        )
+        try context.save()
+
+        // Another editor, or a sync, removed the duplicate before the merge ran.
+        context.delete(child)
+        try context.save()
+
+        _ = try TagService.mergeDuplicatesWithOutcome(
+            context: context,
+            keeping: parent
+        )
+        try context.save()
+
+        let ingredients = try context.fetch(.ingredients(.all))
+        let objects = try context.fetch(FetchDescriptor<IngredientObject>())
+
+        #expect(ingredients.map(\.value) == ["Eggs"])
+        #expect(objects.count == 1)
+        #expect(objects.allSatisfy { $0.ingredient === parent })
+    }
 }
 
 private extension TagMergeServiceTests {
