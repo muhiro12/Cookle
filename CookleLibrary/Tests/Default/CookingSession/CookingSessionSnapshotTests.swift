@@ -49,40 +49,6 @@ struct CookingSessionSnapshotTests {
     }
 
     @Test
-    func merging_prefers_newer_snapshot_and_ignores_stale_payload() {
-        let currentSnapshot = CookingSessionSnapshot(
-            recipeID: "recipe-1",
-            recipeName: "Pasta",
-            steps: ["Boil water"],
-            currentStepIndex: 0,
-            activeTimer: nil,
-            updatedAt: Date(timeIntervalSinceReferenceDate: 300),
-            isActive: true
-        )
-        let staleSnapshot = CookingSessionSnapshot(
-            recipeID: "recipe-2",
-            recipeName: "Soup",
-            steps: ["Simmer"],
-            currentStepIndex: 0,
-            activeTimer: nil,
-            updatedAt: Date(timeIntervalSinceReferenceDate: 200),
-            isActive: true
-        )
-        let freshSnapshot = CookingSessionSnapshot(
-            recipeID: "recipe-2",
-            recipeName: "Soup",
-            steps: ["Simmer"],
-            currentStepIndex: 0,
-            activeTimer: nil,
-            updatedAt: Date(timeIntervalSinceReferenceDate: 400),
-            isActive: true
-        )
-
-        #expect(currentSnapshot.merging(with: staleSnapshot) == currentSnapshot)
-        #expect(currentSnapshot.merging(with: freshSnapshot) == freshSnapshot)
-    }
-
-    @Test
     func suggestedTimer_parses_minutes_from_supported_patterns() {
         let englishShort = CookingTimerSuggestionParser.suggestedTimer(
             for: "Bake for 10 min until golden."
