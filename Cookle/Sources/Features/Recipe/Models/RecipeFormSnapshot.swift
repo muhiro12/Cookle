@@ -46,6 +46,17 @@ nonisolated struct RecipeFormSnapshot: Codable, Equatable, Sendable {
         ingredients.map(\.formIngredient)
     }
 
+    /// Indicates the draft holds nothing worth restoring.
+    var isEmpty: Bool {
+        let values = [name, servingSize, cookingTime, note]
+        return values.allSatisfy { value in
+            value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        }
+        && ingredients.isEmpty
+        && steps.isEmpty
+        && categories.isEmpty
+    }
+
     init(
         name: String,
         servingSize: String,

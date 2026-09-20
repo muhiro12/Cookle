@@ -304,6 +304,14 @@ private extension DiaryFormModel {
             return
         }
 
+        // Opening the form settles its bindings and writes the empty state
+        // before the user can reach Restore Draft. Persisting that would
+        // destroy the very draft the button exists to recover.
+        guard !isFormNearlyEmpty else {
+            refreshSnapshotAvailability()
+            return
+        }
+
         snapshotStore.saveSnapshot(
             snapshot
         )
