@@ -126,7 +126,7 @@ private extension RecipeLabel {
 
     var accessibilitySummary: String {
         [
-            "Recipe: \(recipe.name)",
+            String(localized: "Recipe: \(recipe.name)"),
             accessibilityIngredientsText,
             accessibilityCategoriesText
         ]
@@ -135,17 +135,17 @@ private extension RecipeLabel {
 
     var accessibilityIngredientsText: String {
         guard ingredientsText.isEmpty == false else {
-            return "No ingredients"
+            return String(localized: "No ingredients")
         }
 
-        return "Ingredients: \(ingredientsText)"
+        return String(localized: "Ingredients: \(ingredientsText)")
     }
 
     var accessibilityCategoriesText: String {
         guard categoriesText.isEmpty == false else {
-            return "No categories"
+            return String(localized: "No categories")
         }
 
-        return "Categories: \(categoriesText)"
+        return String(localized: "Categories: \(categoriesText)")
     }
 }

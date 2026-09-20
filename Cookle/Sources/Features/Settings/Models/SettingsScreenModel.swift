@@ -243,14 +243,16 @@ private extension SettingsScreenModel {
     }
 
     static func restoreMessage(_ summary: CookleDataRestoreSummary) -> String {
-        [
-            "Restored \(summary.recipeCount) recipes",
-            "\(summary.diaryCount) diaries",
-            "\(summary.categoryCount) categories",
-            "\(summary.ingredientCount) ingredients",
-            "\(summary.photoCount) photos."
-        ]
-        .joined(separator: ", ")
+        // One sentence rather than joined fragments: word order and the
+        // position of each count differ per language, so the pieces cannot be
+        // translated separately.
+        String(
+            localized: """
+            Restored \(summary.recipeCount) recipes, \(summary.diaryCount) diaries, \
+            \(summary.categoryCount) categories, \(summary.ingredientCount) ingredients, \
+            \(summary.photoCount) photos.
+            """
+        )
     }
 
     func beginManageAction() -> Bool {

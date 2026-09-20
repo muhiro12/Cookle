@@ -91,7 +91,6 @@ private extension TagListView {
 
     func usageText(for tag: T) -> String {
         let recipeCount = (tag.recipes ?? []).count
-        let recipeLabel = recipeCount == 1 ? "recipe" : "recipes"
         let duplicateCount = TagOperations.duplicateTags(
             matching: tag,
             in: tags
@@ -99,13 +98,20 @@ private extension TagListView {
 
         if recipeCount == 0 {
             return duplicateUsageText(
-                baseText: "Unused",
+                baseText: String(localized: "Unused"),
+                duplicateCount: duplicateCount
+            )
+        }
+
+        if recipeCount == 1 {
+            return duplicateUsageText(
+                baseText: String(localized: "Used by one recipe"),
                 duplicateCount: duplicateCount
             )
         }
 
         return duplicateUsageText(
-            baseText: "Used by \(recipeCount) \(recipeLabel)",
+            baseText: String(localized: "Used by \(recipeCount) recipes"),
             duplicateCount: duplicateCount
         )
     }
@@ -135,7 +141,7 @@ private extension TagListView {
             return baseText
         }
 
-        return "\(baseText) · \(duplicateCount) possible duplicates"
+        return String(localized: "\(baseText) · \(duplicateCount) possible duplicates")
     }
 }
 

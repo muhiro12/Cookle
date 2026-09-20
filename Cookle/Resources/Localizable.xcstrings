@@ -7,6 +7,40 @@
     "%@" : {
       "shouldTranslate" : false
     },
+    "%@ · %lld possible duplicates" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$lld possible duplicates"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$lld posibles duplicados"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$lld doublons possibles"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · 重複の可能性が%2$lld件"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$lld 个可能的重复项"
+          }
+        }
+      }
+    },
     "%@: %@" : {
       "localizations" : {
         "en" : {
@@ -1146,6 +1180,40 @@
         }
       }
     },
+    "Back to last opened recipe" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back to last opened recipe"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volver a la última receta abierta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revenir à la dernière recette ouverte"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最後に開いたレシピに戻る"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "返回最近打开的食谱"
+          }
+        }
+      }
+    },
     "Boil water in a large pot and add salt." : {
       "localizations" : {
         "en" : {
@@ -2026,6 +2094,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "类别"
+          }
+        }
+      }
+    },
+    "Categories: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Categories: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Categorías: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Catégories : %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カテゴリ: %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分类：%@"
           }
         }
       }
@@ -5267,6 +5369,40 @@
         }
       }
     },
+    "Ingredients: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingredients: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingredientes: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingrédients : %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "材料: %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "食材：%@"
+          }
+        }
+      }
+    },
     "Ingredients: %lld" : {
       "localizations" : {
         "en" : {
@@ -6221,6 +6357,40 @@
         }
       }
     },
+    "No categories" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No categories"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin categorías"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune catégorie"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カテゴリなし"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无分类"
+          }
+        }
+      }
+    },
     "No Diaries Yet" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -6286,6 +6456,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "今天没有日记"
+          }
+        }
+      }
+    },
+    "No ingredients" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No ingredients"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin ingredientes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun ingrédient"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "材料なし"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无食材"
           }
         }
       }
@@ -8266,6 +8470,40 @@
         }
       }
     },
+    "Recipe: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recipe: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Receta: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recette : %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピ: %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "食谱：%@"
+          }
+        }
+      }
+    },
     "recipe.shareLink.footer" : {
       "localizations" : {
         "en" : {
@@ -9018,6 +9256,40 @@
         }
       }
     },
+    "Restored %lld recipes, %lld diaries, %lld categories, %lld ingredients, %lld photos." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restored %1$lld recipes, %2$lld diaries, %3$lld categories, %4$lld ingredients, %5$lld photos."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se restauraron %1$lld recetas, %2$lld diarios, %3$lld categorías, %4$lld ingredientes, %5$lld fotos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld recettes, %2$lld journaux, %3$lld catégories, %4$lld ingrédients et %5$lld photos restaurés."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld件のレシピ、%2$lld件の日記、%3$lld件のカテゴリ、%4$lld件の材料、%5$lld件の写真を復元しました。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已恢复 %1$lld 个食谱、%2$lld 篇日记、%3$lld 个分类、%4$lld 种食材、%5$lld 张照片。"
+          }
+        }
+      }
+    },
     "Restoring a backup replaces all current recipes, diaries, tags, and photos on this device. Export a backup first if you need to keep the current data." : {
       "localizations" : {
         "en" : {
@@ -9116,6 +9388,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "结果"
+          }
+        }
+      }
+    },
+    "Resume cooking" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resume cooking"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reanudar la cocción"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reprendre la cuisson"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "調理を再開"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "继续烹饪"
           }
         }
       }
@@ -12053,6 +12359,40 @@
         }
       }
     },
+    "Unused" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unused"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin uso"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inutilisé"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未使用"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未使用"
+          }
+        }
+      }
+    },
     "Update" : {
       "localizations" : {
         "en" : {
@@ -12393,6 +12733,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "使用 Siri 或快捷指令可以更快打开食谱和设置。"
+          }
+        }
+      }
+    },
+    "Used by %lld recipes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used by %lld recipes"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usado por %lld recetas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisé par %lld recettes"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld件のレシピで使用中"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "被 %lld 个食谱使用"
+          }
+        }
+      }
+    },
+    "Used by one recipe" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used by one recipe"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usado por una receta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisé par une recette"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1件のレシピで使用中"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "被 1 个食谱使用"
           }
         }
       }

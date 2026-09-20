@@ -53,9 +53,9 @@ private extension RecipeTopReturnTarget {
     var accessibilityTitle: String {
         switch kind {
         case .activeCookingSession:
-            return "Resume cooking"
+            return String(localized: "Resume cooking")
         case .lastOpenedRecipe:
-            return "Back to last opened recipe"
+            return String(localized: "Back to last opened recipe")
         }
     }
 }
