@@ -64,13 +64,44 @@ struct CookleWidgetTimelineRefreshPolicyTests {
             refreshDate.timeIntervalSince(calendar.startOfDay(for: inputDate)) == 25 * 60 * 60
         )
     }
+
+    @Test
+    func startOfNextDay_is_tied_to_the_calendar_it_was_computed_with() throws {
+        let pacific = try pacificCalendar()
+        let tokyo = try calendar(identifier: "Asia/Tokyo")
+        let inputDate = try date(
+            year: 2_026,
+            month: 6,
+            day: 1,
+            hour: 12,
+            calendar: pacific
+        )
+
+        let refreshDate = try #require(
+            CookleWidgetTimelineRefreshPolicy.startOfNextDay(
+                after: inputDate,
+                calendar: pacific
+            )
+        )
+
+        // The returned instant is midnight in the calendar it was computed with,
+        // and is some other local time everywhere else. A widget timeline
+        // scheduled before the device changes time zone therefore fires at the
+        // wrong local moment until the next timeline request recomputes it.
+        #expect(refreshDate == pacific.startOfDay(for: refreshDate))
+        #expect(refreshDate != tokyo.startOfDay(for: refreshDate))
+    }
 }
 
 private extension CookleWidgetTimelineRefreshPolicyTests {
     func pacificCalendar() throws -> Calendar {
+        try calendar(identifier: "America/Los_Angeles")
+    }
+
+    func calendar(identifier timeZoneIdentifier: String) throws -> Calendar {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = try #require(
-            TimeZone(identifier: "America/Los_Angeles")
+            TimeZone(identifier: timeZoneIdentifier)
         )
         return calendar
     }
