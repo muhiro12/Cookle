@@ -64,6 +64,37 @@ struct TagDuplicateNormalizationTests {
     }
 
     @Test
+    func duplicateTags_does_not_match_half_width_kana_carrying_a_voicing_mark() {
+        // Width folding widens the base kana but leaves a half-width dakuten or
+        // handakuten as a character of its own, so `ﾆﾝｼﾞﾝ` folds to `ニンシﾞン`
+        // rather than `ニンジン`. Half-width katakana therefore reaches its
+        // full-width form only while it stays unvoiced, as `ﾄﾏﾄ` above does.
+        //
+        // Voiced kana is common in Japanese ingredient names, so this is the
+        // normalization gap a Japanese-first store actually runs into.
+        let unmatchedPairs = [
+            ("ﾆﾝｼﾞﾝ", "ニンジン"),
+            ("ﾀﾏﾈｷﾞ", "タマネギ"),
+            ("ﾊﾟﾝ", "パン")
+        ]
+
+        for (halfWidthValue, fullWidthValue) in unmatchedPairs {
+            let halfWidth = makeIngredient(value: halfWidthValue)
+            let fullWidth = makeIngredient(value: fullWidthValue)
+
+            let duplicates = TagService.duplicateTags(
+                matching: halfWidth,
+                in: [halfWidth, fullWidth]
+            )
+
+            #expect(
+                duplicates.map(\.value) == [halfWidthValue],
+                "\(halfWidthValue) and \(fullWidthValue) are not grouped today"
+            )
+        }
+    }
+
+    @Test
     func duplicateTags_groups_only_values_that_repeat() {
         let first = makeIngredient(value: "Eggs")
         let second = makeIngredient(value: "eggs")
