@@ -21,6 +21,7 @@ enum CookleSampleDataContext {
         MainActor.assumeIsolated {
             CookleCaptureConfiguration.screen.apply(
                 to: preparedContext.assembly.navigationModel,
+                cookingSessionStore: preparedContext.assembly.cookingSessionStore,
                 recipes: preparedContext.recipes,
                 diaries: preparedContext.diaries
             )

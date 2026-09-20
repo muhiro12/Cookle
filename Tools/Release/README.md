@@ -171,10 +171,12 @@ startup, and loads the existing localized sample records.
   directory, containing the sample cooking photos.
 - `COOKLE_CAPTURE_BASE_DATE`: ISO 8601 reference date for sample diary entries.
 - `COOKLE_CAPTURE_SCREEN`: `diary`, `diaryDetail`, `diaryDetailWithRecipe`,
-  `recipe`, `recipeDetail`, `recipeForm`, or `photo`. `diaryDetail` selects only
-  the diary, so a compact iPhone layout shows the diary entry;
+  `recipe`, `recipeDetail`, `recipeForm`, `cooking`, or `photo`. `diaryDetail`
+  selects only the diary, so a compact iPhone layout shows the diary entry;
   `diaryDetailWithRecipe` also selects a recipe for the iPad three-column layout.
-  `recipeForm` opens the recipe edit sheet over the recipe detail.
+  `recipeForm` opens the recipe edit sheet over the recipe detail. `cooking`
+  starts a session for the first sample recipe and opens the cooking screen over
+  the recipe detail.
 
 The Watch app reads the same `COOKLE_CAPTURE_MODE=1` switch and replaces its
 WatchConnectivity session with a fixed cooking session.

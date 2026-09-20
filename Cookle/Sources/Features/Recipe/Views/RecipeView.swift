@@ -23,7 +23,12 @@ struct RecipeView: View {
     @Environment(\.mhTheme)
     private var theme
 
+    #if DEBUG
+    /// Opens the cooking session for a capture run without simulated user interaction.
+    @State private var isCookingPresented = CookleCaptureConfiguration.presentsCooking
+    #else
     @State private var isCookingPresented = false
+    #endif
 
     #if DEBUG
     /// Opens the edit form for a capture run without simulated user interaction.

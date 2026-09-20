@@ -7,11 +7,17 @@ enum CookleCaptureScreen: String {
     case recipe
     case recipeDetail
     case recipeForm
+    case cooking
     case photo
 
     /// Indicates whether the capture run opens the recipe edit form over the recipe detail.
     var presentsRecipeForm: Bool {
         self == .recipeForm
+    }
+
+    /// Indicates whether the capture run opens the cooking session over the recipe detail.
+    var presentsCooking: Bool {
+        self == .cooking
     }
 
     /// Opens the same lunch recipe the diary lists, so the detail column is not a duplicate.
@@ -27,6 +33,7 @@ enum CookleCaptureScreen: String {
     @MainActor
     func apply(
         to navigationModel: MainNavigationModel,
+        cookingSessionStore: CookingSessionStore,
         recipes: [Recipe],
         diaries: [Diary]
     ) {
@@ -48,6 +55,14 @@ enum CookleCaptureScreen: String {
              .recipeForm:
             navigationModel.selectedTab = .recipe
             navigationModel.selectedRecipe = recipes.first
+        case .cooking:
+            navigationModel.selectedTab = .recipe
+            navigationModel.selectedRecipe = recipes.first
+            // The cooking screen is presented over the recipe detail, so the
+            // session has to exist before the view appears.
+            if let recipe = recipes.first {
+                cookingSessionStore.startSession(for: recipe)
+            }
         case .photo:
             navigationModel.selectedTab = .photo
         }
