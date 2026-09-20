@@ -144,24 +144,9 @@ struct MutationRollbackPersistenceTests {
     func rolled_back_recipe_creation_leaves_no_partial_records() throws {
         try withDiskStore { url in
             let context = try makeContext(at: url)
-            let draft = try RecipeFormOperations.makeDraft(
-                input: .init(
-                    name: "Curry",
-                    photos: [],
-                    servingSize: "2",
-                    cookingTime: "30",
-                    ingredients: [
-                        .init(ingredient: "Onion", amount: "1"),
-                        .init(ingredient: "Rice", amount: "2 cups")
-                    ],
-                    steps: ["Chop.", "Simmer."],
-                    categories: ["Dinner"],
-                    note: "Weeknight"
-                )
-            )
             _ = try RecipeFormOperations.createWithOutcome(
                 context: context,
-                draft: draft
+                draft: try makeCurryDraft()
             )
             context.rollback()
 
@@ -173,6 +158,35 @@ struct MutationRollbackPersistenceTests {
             #expect(try reopened.fetch(.ingredients(.all)).isEmpty)
             #expect(try reopened.fetch(.categories(.all)).isEmpty)
             #expect(try reopened.fetchCount(FetchDescriptor<IngredientObject>()) == .zero)
+        }
+    }
+
+    @Test
+    func retrying_after_a_rolled_back_creation_does_not_duplicate_records() throws {
+        try withDiskStore { url in
+            let context = try makeContext(at: url)
+
+            // First attempt: create, then abandon it the way a failed save does.
+            _ = try RecipeFormOperations.createWithOutcome(
+                context: context,
+                draft: try makeCurryDraft()
+            )
+            context.rollback()
+
+            // Retry the identical draft and let this one land.
+            _ = try RecipeFormOperations.createWithOutcome(
+                context: context,
+                draft: try makeCurryDraft()
+            )
+            try context.save()
+
+            let reopened = try makeContext(at: url)
+            // The abandoned attempt must leave nothing for the retry to collide
+            // with: one recipe, and one tag record per distinct name.
+            #expect(try reopened.fetch(.recipes(.all)).map(\.name) == ["Curry"])
+            #expect(try reopened.fetch(.ingredients(.all)).map(\.value).sorted() == ["Onion", "Rice"])
+            #expect(try reopened.fetch(.categories(.all)).map(\.value) == ["Dinner"])
+            #expect(try reopened.fetchCount(FetchDescriptor<IngredientObject>()) == 2)
         }
     }
 }
@@ -237,6 +251,24 @@ private extension MutationRollbackPersistenceTests {
                 steps: [],
                 categories: [],
                 note: ""
+            )
+        )
+    }
+
+    func makeCurryDraft() throws -> RecipeFormDraft {
+        try RecipeFormOperations.makeDraft(
+            input: .init(
+                name: "Curry",
+                photos: [],
+                servingSize: "2",
+                cookingTime: "30",
+                ingredients: [
+                    .init(ingredient: "Onion", amount: "1"),
+                    .init(ingredient: "Rice", amount: "2 cups")
+                ],
+                steps: ["Chop.", "Simmer."],
+                categories: ["Dinner"],
+                note: "Weeknight"
             )
         )
     }
