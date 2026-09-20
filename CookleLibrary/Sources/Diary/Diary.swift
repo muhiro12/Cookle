@@ -9,56 +9,63 @@ import Foundation
 import SwiftData
 
 /// Persisted day-level meal log that groups recipes and notes for one calendar date.
-@Model
-nonisolated public final class Diary {
-    /// Calendar date represented by this diary entry.
-    public private(set) var date = Date.now
-    /// Meal rows stored for the day, including section and display order.
-    @Relationship(deleteRule: .cascade)
-    public private(set) var objects = [DiaryObject]?.some([])
-    /// Flattened recipe relation maintained from `objects` for quick lookup.
-    @Relationship public private(set) var recipes = [Recipe]?.some([])
-    /// Free-form note attached to the day.
-    public private(set) var note = ""
+public typealias Diary = CookleSchemaV1.Diary
 
-    /// Timestamp captured when the diary is first inserted.
-    public private(set) var createdTimestamp = Date.now
-    /// Timestamp refreshed whenever the diary date, rows, or note changes.
-    public private(set) var modifiedTimestamp = Date.now
+// SwiftData macros require explicit public access on the model declaration.
+// swiftlint:disable:next extension_access_modifier
+extension CookleSchemaV1 {
+    /// Frozen V1 model; evolve stored properties in a new schema version.
+    @Model
+    nonisolated public final class Diary {
+        /// Calendar date represented by this diary entry.
+        public private(set) var date = Date.now
+        /// Meal rows stored for the day, including section and display order.
+        @Relationship(deleteRule: .cascade)
+        public private(set) var objects = [DiaryObject]?.some([])
+        /// Flattened recipe relation maintained from `objects` for quick lookup.
+        @Relationship public private(set) var recipes = [Recipe]?.some([])
+        /// Free-form note attached to the day.
+        public private(set) var note = ""
 
-    private init() {
-        // SwiftData-managed initializer.
-    }
+        /// Timestamp captured when the diary is first inserted.
+        public private(set) var createdTimestamp = Date.now
+        /// Timestamp refreshed whenever the diary date, rows, or note changes.
+        public private(set) var modifiedTimestamp = Date.now
 
-    /// Inserts a diary and snapshots the supplied meal rows and derived recipe links.
-    static func create(
-        context: ModelContext,
-        content: DiaryContent
-    ) -> Diary {
-        let diary = Diary()
-        context.insert(diary)
-        diary.apply(content)
-        return diary
-    }
+        private init() {
+            // SwiftData-managed initializer.
+        }
 
-    static func restore(
-        context: ModelContext,
-        content: DiaryContent,
-        timestamps: PersistentTimestamps
-    ) -> Diary {
-        let diary = create(
-            context: context,
-            content: content
-        )
-        diary.createdTimestamp = timestamps.created
-        diary.modifiedTimestamp = timestamps.modified
-        return diary
-    }
+        /// Inserts a diary and snapshots the supplied meal rows and derived recipe links.
+        static func create(
+            context: ModelContext,
+            content: DiaryContent
+        ) -> Diary {
+            let diary = Diary()
+            context.insert(diary)
+            diary.apply(content)
+            return diary
+        }
 
-    /// Replaces the stored date, meal rows, and note, then refreshes `modifiedTimestamp`.
-    func update(content: DiaryContent) {
-        apply(content)
-        self.modifiedTimestamp = .now
+        static func restore(
+            context: ModelContext,
+            content: DiaryContent,
+            timestamps: PersistentTimestamps
+        ) -> Diary {
+            let diary = create(
+                context: context,
+                content: content
+            )
+            diary.createdTimestamp = timestamps.created
+            diary.modifiedTimestamp = timestamps.modified
+            return diary
+        }
+
+        /// Replaces the stored date, meal rows, and note, then refreshes `modifiedTimestamp`.
+        func update(content: DiaryContent) {
+            apply(content)
+            self.modifiedTimestamp = .now
+        }
     }
 }
 

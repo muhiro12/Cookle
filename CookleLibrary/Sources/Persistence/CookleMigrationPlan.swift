@@ -1,42 +1,17 @@
-//
-//  CookleMigrationPlan.swift
-//  Cookle Playgrounds
-//
-//  Created by Hiromu Nakano on 2025/03/31.
-//
-
-import Foundation
 import SwiftData
 
+/// Ordered history of Cookle's persistent schemas.
 public enum CookleMigrationPlan: SchemaMigrationPlan {
+    /// Schema used by all current app and extension containers.
+    public static var currentSchema: any VersionedSchema.Type {
+        CookleSchemaV1.self
+    }
+
     public static var schemas: [any VersionedSchema.Type] {
-        [
-            CookleSchemaV1.self
-        ]
+        [CookleSchemaV1.self]
     }
 
     public static var stages: [MigrationStage] {
         []
-    }
-}
-
-private extension CookleMigrationPlan {
-    enum CookleSchemaV1: VersionedSchema {
-        static var models: [any PersistentModel.Type] {
-            [
-                Diary.self,
-                DiaryObject.self,
-                Photo.self,
-                PhotoObject.self,
-                Recipe.self,
-                Category.self,
-                Ingredient.self,
-                IngredientObject.self
-            ]
-        }
-
-        static var versionIdentifier: Schema.Version {
-            .init(1, 0, 0)
-        }
     }
 }

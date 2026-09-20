@@ -9,59 +9,66 @@ import Foundation
 import SwiftData
 
 /// Persisted category tag used to group and filter recipes.
-@Model
-nonisolated public final class Category: Tag {
-    /// Canonical category label shown in forms, filters, and recipe detail.
-    public private(set) var value = ""
+public typealias Category = CookleSchemaV1.Category
 
-    /// Recipes currently assigned to this category.
-    @Relationship(inverse: \Recipe.categories)
-    public private(set) var recipes = [Recipe]?.some([])
+// SwiftData macros require explicit public access on the model declaration.
+// swiftlint:disable:next extension_access_modifier
+extension CookleSchemaV1 {
+    /// Frozen V1 model; evolve stored properties in a new schema version.
+    @Model
+    nonisolated public final class Category: Tag {
+        /// Canonical category label shown in forms, filters, and recipe detail.
+        public private(set) var value = ""
 
-    /// Timestamp captured when the category is first inserted.
-    public private(set) var createdTimestamp = Date.now
-    /// Timestamp refreshed whenever the category label changes.
-    public private(set) var modifiedTimestamp = Date.now
+        /// Recipes currently assigned to this category.
+        @Relationship(inverse: \Recipe.categories)
+        public private(set) var recipes = [Recipe]?.some([])
 
-    private init() {
-        // SwiftData-managed initializer.
-    }
+        /// Timestamp captured when the category is first inserted.
+        public private(set) var createdTimestamp = Date.now
+        /// Timestamp refreshed whenever the category label changes.
+        public private(set) var modifiedTimestamp = Date.now
 
-    /// Returns an existing category for `value`, or inserts a new one when needed.
-    ///
-    /// - Throws: An error when SwiftData cannot search for an existing category.
-    public static func create(context: ModelContext, value: String) throws -> Self {
-        try DeduplicatedModelCreation.resolve {
-            guard let existingCategory = try context.fetchFirst(.categories(.valueIs(value))) else {
-                return nil
+        private init() {
+            // SwiftData-managed initializer.
+        }
+
+        /// Returns an existing category for `value`, or inserts a new one when needed.
+        ///
+        /// - Throws: An error when SwiftData cannot search for an existing category.
+        public static func create(context: ModelContext, value: String) throws -> Self {
+            try DeduplicatedModelCreation.resolve {
+                guard let existingCategory = try context.fetchFirst(.categories(.valueIs(value))) else {
+                    return nil
+                }
+                return existingCategory as? Self
+            } createNew: {
+                let category: Self = .init()
+                context.insert(category)
+                category.value = value
+                return category
             }
-            return existingCategory as? Self
-        } createNew: {
-            let category: Self = .init()
+        }
+
+        static func restore(
+            context: ModelContext,
+            value: String,
+            createdTimestamp: Date,
+            modifiedTimestamp: Date
+        ) -> Category {
+            let category = Category()
             context.insert(category)
             category.value = value
+            category.createdTimestamp = createdTimestamp
+            category.modifiedTimestamp = modifiedTimestamp
             return category
         }
-    }
 
-    static func restore(
-        context: ModelContext,
-        value: String,
-        createdTimestamp: Date,
-        modifiedTimestamp: Date
-    ) -> Category {
-        let category = Category()
-        context.insert(category)
-        category.value = value
-        category.createdTimestamp = createdTimestamp
-        category.modifiedTimestamp = modifiedTimestamp
-        return category
-    }
-
-    /// Replaces the stored category label and refreshes `modifiedTimestamp`.
-    public func update(value: String) {
-        self.value = value
-        self.modifiedTimestamp = .now
+        /// Replaces the stored category label and refreshes `modifiedTimestamp`.
+        public func update(value: String) {
+            self.value = value
+            self.modifiedTimestamp = .now
+        }
     }
 }
 

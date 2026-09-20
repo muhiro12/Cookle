@@ -9,59 +9,66 @@ import Foundation
 import SwiftData
 
 /// Persisted photo asset that can be shared across recipe photo rows.
-@Model
-nonisolated public final class Photo {
-    /// Binary image data stored for the asset.
-    public private(set) var data = Data()
-    /// Persisted source identifier used to recover a typed `PhotoSource`.
-    public private(set) var sourceID = PhotoSource.defaultValue.rawValue
+public typealias Photo = CookleSchemaV1.Photo
 
-    /// Recipe photo rows that reference this asset.
-    @Relationship(deleteRule: .cascade, inverse: \PhotoObject.photo)
-    public private(set) var objects = [PhotoObject]?.some([])
-    /// Recipes that currently reference this asset.
-    @Relationship(inverse: \Recipe.photos)
-    public private(set) var recipes = [Recipe]?.some([])
+// SwiftData macros require explicit public access on the model declaration.
+// swiftlint:disable:next extension_access_modifier
+extension CookleSchemaV1 {
+    /// Frozen V1 model; evolve stored properties in a new schema version.
+    @Model
+    nonisolated public final class Photo {
+        /// Binary image data stored for the asset.
+        public private(set) var data = Data()
+        /// Persisted source identifier used to recover a typed `PhotoSource`.
+        public private(set) var sourceID = PhotoSource.defaultValue.rawValue
 
-    /// Timestamp captured when the asset is first inserted.
-    public private(set) var createdTimestamp = Date.now
-    /// Timestamp retained for recency-based queries on photo assets.
-    public private(set) var modifiedTimestamp = Date.now
+        /// Recipe photo rows that reference this asset.
+        @Relationship(deleteRule: .cascade, inverse: \PhotoObject.photo)
+        public private(set) var objects = [PhotoObject]?.some([])
+        /// Recipes that currently reference this asset.
+        @Relationship(inverse: \Recipe.photos)
+        public private(set) var recipes = [Recipe]?.some([])
 
-    private init() {
-        // SwiftData-managed initializer.
-    }
+        /// Timestamp captured when the asset is first inserted.
+        public private(set) var createdTimestamp = Date.now
+        /// Timestamp retained for recency-based queries on photo assets.
+        public private(set) var modifiedTimestamp = Date.now
 
-    /// Returns an existing asset for matching binary data, or inserts a new one and stores its source.
-    ///
-    /// - Throws: An error when SwiftData cannot search for matching binary data.
-    public static func create(context: ModelContext, photoData: PhotoData) throws -> Photo {
-        let photo = try DeduplicatedModelCreation.resolve {
-            try context.fetchFirst(.photos(.dataIs(photoData.data)))
-        } createNew: {
-            let photo = Photo()
-            context.insert(photo)
+        private init() {
+            // SwiftData-managed initializer.
+        }
+
+        /// Returns an existing asset for matching binary data, or inserts a new one and stores its source.
+        ///
+        /// - Throws: An error when SwiftData cannot search for matching binary data.
+        public static func create(context: ModelContext, photoData: PhotoData) throws -> Photo {
+            let photo = try DeduplicatedModelCreation.resolve {
+                try context.fetchFirst(.photos(.dataIs(photoData.data)))
+            } createNew: {
+                let photo = Photo()
+                context.insert(photo)
+                return photo
+            }
+            photo.data = photoData.data
+            photo.sourceID = photoData.source.rawValue
             return photo
         }
-        photo.data = photoData.data
-        photo.sourceID = photoData.source.rawValue
-        return photo
-    }
 
-    static func restore(
-        context: ModelContext,
-        data: Data,
-        sourceID: String,
-        createdTimestamp: Date,
-        modifiedTimestamp: Date
-    ) -> Photo {
-        let photo = Photo()
-        context.insert(photo)
-        photo.data = data
-        photo.sourceID = sourceID
-        photo.createdTimestamp = createdTimestamp
-        photo.modifiedTimestamp = modifiedTimestamp
-        return photo
+        static func restore(
+            context: ModelContext,
+            data: Data,
+            sourceID: String,
+            createdTimestamp: Date,
+            modifiedTimestamp: Date
+        ) -> Photo {
+            let photo = Photo()
+            context.insert(photo)
+            photo.data = data
+            photo.sourceID = sourceID
+            photo.createdTimestamp = createdTimestamp
+            photo.modifiedTimestamp = modifiedTimestamp
+            return photo
+        }
     }
 }
 

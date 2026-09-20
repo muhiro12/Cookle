@@ -8,51 +8,59 @@
 import Foundation
 import SwiftData
 
-@Model
-nonisolated public final class PhotoObject: SubObject {
-    @Relationship public private(set) var photo = Photo?.none
-    public private(set) var order = Int.zero
+/// Persisted ordered reference to a shared photo asset.
+public typealias PhotoObject = CookleSchemaV1.PhotoObject
 
-    @Relationship(inverse: \Recipe.photoObjects)
-    public private(set) var recipe = Recipe?.none
+// SwiftData macros require explicit public access on the model declaration.
+// swiftlint:disable:next extension_access_modifier
+extension CookleSchemaV1 {
+    /// Frozen V1 model; evolve stored properties in a new schema version.
+    @Model
+    nonisolated public final class PhotoObject: SubObject {
+        @Relationship public private(set) var photo = Photo?.none
+        public private(set) var order = Int.zero
 
-    public private(set) var createdTimestamp = Date.now
-    public private(set) var modifiedTimestamp = Date.now
+        @Relationship(inverse: \Recipe.photoObjects)
+        public private(set) var recipe = Recipe?.none
 
-    private init(photo: Photo) {
-        self.photo = photo
-    }
+        public private(set) var createdTimestamp = Date.now
+        public private(set) var modifiedTimestamp = Date.now
 
-    /// Inserts a row while reusing an existing photo with matching binary data.
-    ///
-    /// - Throws: An error when SwiftData cannot search for a matching photo.
-    public static func create(
-        context: ModelContext,
-        photoData: PhotoData,
-        order: Int
-    ) throws -> PhotoObject {
-        let object = PhotoObject(
-            photo: try .create(context: context, photoData: photoData)
-        )
-        context.insert(object)
-        object.order = order
-        return object
-    }
+        private init(photo: Photo) {
+            self.photo = photo
+        }
 
-    static func restore(
-        context: ModelContext,
-        photo: Photo,
-        order: Int,
-        createdTimestamp: Date,
-        modifiedTimestamp: Date
-    ) -> PhotoObject {
-        let object = PhotoObject(
-            photo: photo
-        )
-        context.insert(object)
-        object.order = order
-        object.createdTimestamp = createdTimestamp
-        object.modifiedTimestamp = modifiedTimestamp
-        return object
+        /// Inserts a row while reusing an existing photo with matching binary data.
+        ///
+        /// - Throws: An error when SwiftData cannot search for a matching photo.
+        public static func create(
+            context: ModelContext,
+            photoData: PhotoData,
+            order: Int
+        ) throws -> PhotoObject {
+            let object = PhotoObject(
+                photo: try .create(context: context, photoData: photoData)
+            )
+            context.insert(object)
+            object.order = order
+            return object
+        }
+
+        static func restore(
+            context: ModelContext,
+            photo: Photo,
+            order: Int,
+            createdTimestamp: Date,
+            modifiedTimestamp: Date
+        ) -> PhotoObject {
+            let object = PhotoObject(
+                photo: photo
+            )
+            context.insert(object)
+            object.order = order
+            object.createdTimestamp = createdTimestamp
+            object.modifiedTimestamp = modifiedTimestamp
+            return object
+        }
     }
 }

@@ -9,63 +9,70 @@ import Foundation
 import SwiftData
 
 /// Persisted ingredient tag reused across recipe forms, search, and filtering.
-@Model
-nonisolated public final class Ingredient: Tag {
-    /// Canonical ingredient label shown in recipe forms and search results.
-    public private(set) var value = ""
+public typealias Ingredient = CookleSchemaV1.Ingredient
 
-    /// Recipe rows that attach amounts and ordering metadata to this ingredient.
-    @Relationship(deleteRule: .cascade, inverse: \IngredientObject.ingredient)
-    public private(set) var objects = [IngredientObject]?.some([])
+// SwiftData macros require explicit public access on the model declaration.
+// swiftlint:disable:next extension_access_modifier
+extension CookleSchemaV1 {
+    /// Frozen V1 model; evolve stored properties in a new schema version.
+    @Model
+    nonisolated public final class Ingredient: Tag {
+        /// Canonical ingredient label shown in recipe forms and search results.
+        public private(set) var value = ""
 
-    /// Recipes that currently reference this ingredient.
-    @Relationship(inverse: \Recipe.ingredients)
-    public private(set) var recipes = [Recipe]?.some([])
+        /// Recipe rows that attach amounts and ordering metadata to this ingredient.
+        @Relationship(deleteRule: .cascade, inverse: \IngredientObject.ingredient)
+        public private(set) var objects = [IngredientObject]?.some([])
 
-    /// Timestamp captured when the ingredient is first inserted.
-    public private(set) var createdTimestamp = Date.now
-    /// Timestamp refreshed whenever the ingredient label changes.
-    public private(set) var modifiedTimestamp = Date.now
+        /// Recipes that currently reference this ingredient.
+        @Relationship(inverse: \Recipe.ingredients)
+        public private(set) var recipes = [Recipe]?.some([])
 
-    private init() {
-        // SwiftData-managed initializer.
-    }
+        /// Timestamp captured when the ingredient is first inserted.
+        public private(set) var createdTimestamp = Date.now
+        /// Timestamp refreshed whenever the ingredient label changes.
+        public private(set) var modifiedTimestamp = Date.now
 
-    /// Returns an existing ingredient for `value`, or inserts a new one when needed.
-    ///
-    /// - Throws: An error when SwiftData cannot search for an existing ingredient.
-    public static func create(context: ModelContext, value: String) throws -> Self {
-        try DeduplicatedModelCreation.resolve {
-            guard let existingIngredient = try context.fetchFirst(.ingredients(.valueIs(value))) else {
-                return nil
+        private init() {
+            // SwiftData-managed initializer.
+        }
+
+        /// Returns an existing ingredient for `value`, or inserts a new one when needed.
+        ///
+        /// - Throws: An error when SwiftData cannot search for an existing ingredient.
+        public static func create(context: ModelContext, value: String) throws -> Self {
+            try DeduplicatedModelCreation.resolve {
+                guard let existingIngredient = try context.fetchFirst(.ingredients(.valueIs(value))) else {
+                    return nil
+                }
+                return existingIngredient as? Self
+            } createNew: {
+                let ingredient: Self = .init()
+                context.insert(ingredient)
+                ingredient.value = value
+                return ingredient
             }
-            return existingIngredient as? Self
-        } createNew: {
-            let ingredient: Self = .init()
+        }
+
+        static func restore(
+            context: ModelContext,
+            value: String,
+            createdTimestamp: Date,
+            modifiedTimestamp: Date
+        ) -> Ingredient {
+            let ingredient = Ingredient()
             context.insert(ingredient)
             ingredient.value = value
+            ingredient.createdTimestamp = createdTimestamp
+            ingredient.modifiedTimestamp = modifiedTimestamp
             return ingredient
         }
-    }
 
-    static func restore(
-        context: ModelContext,
-        value: String,
-        createdTimestamp: Date,
-        modifiedTimestamp: Date
-    ) -> Ingredient {
-        let ingredient = Ingredient()
-        context.insert(ingredient)
-        ingredient.value = value
-        ingredient.createdTimestamp = createdTimestamp
-        ingredient.modifiedTimestamp = modifiedTimestamp
-        return ingredient
-    }
-
-    /// Replaces the stored ingredient label and refreshes `modifiedTimestamp`.
-    public func update(value: String) {
-        self.value = value
-        self.modifiedTimestamp = .now
+        /// Replaces the stored ingredient label and refreshes `modifiedTimestamp`.
+        public func update(value: String) {
+            self.value = value
+            self.modifiedTimestamp = .now
+        }
     }
 }
 

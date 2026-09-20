@@ -9,52 +9,64 @@ import Foundation
 import SwiftData
 
 /// Persisted meal row that places a recipe into a diary section and order slot.
-@Model
-nonisolated public final class DiaryObject: SubObject {
-    /// Recipe shown by this meal row.
-    @Relationship public private(set) var recipe = Recipe?.none
-    /// Meal section this row belongs to.
-    public private(set) var type = DiaryObjectType?.none
-    /// Position of the row within the selected meal section.
-    public private(set) var order = Int.zero
+public typealias DiaryObject = CookleSchemaV1.DiaryObject
 
-    /// Diary that owns this meal row.
-    @Relationship(inverse: \Diary.objects)
-    public private(set) var diary = Diary?.none
+// SwiftData macros require explicit public access on the model declaration.
+// swiftlint:disable:next extension_access_modifier
+extension CookleSchemaV1 {
+    /// Frozen V1 model; evolve stored properties in a new schema version.
+    @Model
+    nonisolated public final class DiaryObject: SubObject {
+        /// Recipe shown by this meal row.
+        @Relationship public private(set) var recipe = Recipe?.none
+        /// Meal section this row belongs to.
+        public private(set) var type = DiaryObjectType?.none
+        /// Position of the row within the selected meal section.
+        public private(set) var order = Int.zero
 
-    /// Timestamp captured when the meal row is first inserted.
-    public private(set) var createdTimestamp = Date.now
-    /// Timestamp initialized with the row for recency-based queries.
-    public private(set) var modifiedTimestamp = Date.now
+        /// Diary that owns this meal row.
+        @Relationship(inverse: \Diary.objects)
+        public private(set) var diary = Diary?.none
 
-    private init(recipe: Recipe, type: DiaryObjectType) {
-        self.recipe = recipe
-        self.type = type
-    }
+        /// Timestamp captured when the meal row is first inserted.
+        public private(set) var createdTimestamp = Date.now
+        /// Timestamp initialized with the row for recency-based queries.
+        public private(set) var modifiedTimestamp = Date.now
 
-    /// Inserts a meal row for a recipe in the supplied section and order.
-    public static func create(context: ModelContext, recipe: Recipe, type: DiaryObjectType, order: Int) -> DiaryObject {
-        let object = DiaryObject(recipe: recipe, type: type)
-        context.insert(object)
-        object.order = order
-        return object
-    }
+        private init(recipe: Recipe, type: DiaryObjectType) {
+            self.recipe = recipe
+            self.type = type
+        }
 
-    static func restore(
-        context: ModelContext,
-        recipe: Recipe,
-        type: DiaryObjectType,
-        order: Int,
-        timestamps: PersistentTimestamps
-    ) -> DiaryObject {
-        let object = DiaryObject(
-            recipe: recipe,
-            type: type
-        )
-        context.insert(object)
-        object.order = order
-        object.createdTimestamp = timestamps.created
-        object.modifiedTimestamp = timestamps.modified
-        return object
+        /// Inserts a meal row for a recipe in the supplied section and order.
+        public static func create(
+            context: ModelContext,
+            recipe: Recipe,
+            type: DiaryObjectType,
+            order: Int
+        ) -> DiaryObject {
+            let object = DiaryObject(recipe: recipe, type: type)
+            context.insert(object)
+            object.order = order
+            return object
+        }
+
+        static func restore(
+            context: ModelContext,
+            recipe: Recipe,
+            type: DiaryObjectType,
+            order: Int,
+            timestamps: PersistentTimestamps
+        ) -> DiaryObject {
+            let object = DiaryObject(
+                recipe: recipe,
+                type: type
+            )
+            context.insert(object)
+            object.order = order
+            object.createdTimestamp = timestamps.created
+            object.modifiedTimestamp = timestamps.modified
+            return object
+        }
     }
 }
