@@ -84,7 +84,7 @@ struct OperationsMutationEffectPropagationTests {
     }
 
     @Test
-    func diaryMutationsReturnDiaryEffectHint() throws {
+    func diaryMutationsReturnDiaryAndNotificationHints() throws {
         let recipe = Recipe.create(
             context: context,
             content: .init(
@@ -120,9 +120,9 @@ struct OperationsMutationEffectPropagationTests {
             diary: createOutcome.value
         )
 
-        #expect(createOutcome.effects == [.diaryDataChanged])
-        #expect(addOutcome.effects == [.diaryDataChanged])
-        #expect(deleteOutcome.effects == [.diaryDataChanged])
+        #expect(createOutcome.effects == [.diaryDataChanged, .notificationPlanChanged])
+        #expect(addOutcome.effects == [.diaryDataChanged, .notificationPlanChanged])
+        #expect(deleteOutcome.effects == [.diaryDataChanged, .notificationPlanChanged])
     }
 
     @Test

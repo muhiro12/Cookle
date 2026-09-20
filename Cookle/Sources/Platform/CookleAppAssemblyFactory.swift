@@ -104,7 +104,7 @@ private extension CookleAppAssemblyFactory {
             photoActionService: makePhotoActionService(
                 notificationService: services.notificationService
             ),
-            diaryActionService: DiaryActionService(),
+            diaryActionService: DiaryActionService(notificationService: services.notificationService),
             tagActionService: TagActionService(
                 notificationService: services.notificationService
             ),

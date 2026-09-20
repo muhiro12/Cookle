@@ -8,8 +8,13 @@ import SwiftData
 final class DiaryActionService {
     private let effectAdapter: MHMutationAdapter<MutationEffect>
 
-    init() {
-        effectAdapter = CookleMutationEffectAdapter.make()
+    init(notificationService: NotificationService) {
+        let synchronizeNotifications: CookleMutationEffectAdapter.NotificationSynchronizer = {
+            await notificationService.synchronizeScheduledSuggestions()
+        }
+        effectAdapter = CookleMutationEffectAdapter.make(
+            synchronizeNotifications: synchronizeNotifications
+        )
     }
 
     @discardableResult

@@ -257,8 +257,11 @@ private extension DiaryService {
     }
 
     static var diaryMutationEffects: MutationEffect {
+        // Diary rows are the source of each recipe's made count and last cooked
+        // date, so changing them also invalidates the scheduled suggestion plan.
         [
-            .diaryDataChanged
+            .diaryDataChanged,
+            .notificationPlanChanged
         ]
     }
 
