@@ -118,6 +118,40 @@
     "200g" : {
       "shouldTranslate" : false
     },
+    "A diary already exists for this calendar day." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A diary already exists for this calendar day."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ya existe un diario para este día."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un journal existe déjà pour ce jour."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この日の日記はすでにあります。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这一天已经有日记了。"
+          }
+        }
+      }
+    },
     "A dish name or a few words is enough to start." : {
       "localizations" : {
         "en" : {
