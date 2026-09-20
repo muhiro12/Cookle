@@ -25,6 +25,10 @@ struct AddRecipeToTodayDiaryIntent: AppIntent {
             recipe: model,
             type: type.diaryType
         )
-        return .result(dialog: "Added to today's diary")
+        return .result(
+            dialog: .init(
+                stringLiteral: String(localized: "Added to today's diary")
+            )
+        )
     }
 }

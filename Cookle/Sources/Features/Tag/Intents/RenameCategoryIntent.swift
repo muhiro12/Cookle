@@ -28,6 +28,10 @@ struct RenameCategoryIntent: AppIntent {
             category: category,
             value: newValue
         )
-        return .result(dialog: "Renamed category")
+        return .result(
+            dialog: .init(
+                stringLiteral: String(localized: "Renamed category")
+            )
+        )
     }
 }

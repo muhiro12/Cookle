@@ -18,7 +18,11 @@ struct ShowDiaryIntent: AppIntent {
             on: date,
             context: modelContainer.mainContext
         ) else {
-            return .result(dialog: "Diary not found")
+            return .result(
+                dialog: .init(
+                    stringLiteral: String(localized: "Diary not found")
+                )
+            )
         }
 
         let dialog = diary.date.formatted(.dateTime.year().month().day().weekday())

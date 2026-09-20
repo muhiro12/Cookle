@@ -21,7 +21,11 @@ struct ShowRandomRecipeIntent: AppIntent {
         guard let recipe = try RecipeOperations.randomRecipe(
             context: modelContainer.mainContext
         ) else {
-            return .result(dialog: "Not Found")
+            return .result(
+                dialog: .init(
+                    stringLiteral: String(localized: "Not Found")
+                )
+            )
         }
         return .result(dialog: .init(stringLiteral: recipe.name)) {
             VStack(alignment: .leading) {

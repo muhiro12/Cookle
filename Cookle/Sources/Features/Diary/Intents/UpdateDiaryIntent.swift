@@ -47,6 +47,10 @@ struct UpdateDiaryIntent: AppIntent {
             throw DiaryMutationIntentError.diaryNotFound
         }
 
-        return .result(dialog: "Updated diary")
+        return .result(
+            dialog: .init(
+                stringLiteral: String(localized: "Updated diary")
+            )
+        )
     }
 }

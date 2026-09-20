@@ -20,6 +20,10 @@ struct ShowTodayDiaryIntent: AppIntent {
                     .modelContainer(modelContainer)
             }
         }
-        return .result(dialog: "No diary for today")
+        return .result(
+            dialog: .init(
+                stringLiteral: String(localized: "No diary for today")
+            )
+        )
     }
 }
