@@ -100,7 +100,6 @@ struct StoreRecoveryTests {
             let legacyURL = directory.appendingPathComponent("legacy.store")
             let currentURL = directory.appendingPathComponent("current.store")
             try seedCurrentStore(at: legacyURL)
-            let legacyBytes = try Data(contentsOf: legacyURL)
             try Data("not a sqlite file".utf8).write(to: currentURL)
 
             // Validation runs before the legacy copy is deleted. A destination
@@ -112,7 +111,16 @@ struct StoreRecoveryTests {
                     legacyURL: legacyURL
                 )
             }
-            #expect(try Data(contentsOf: legacyURL) == legacyBytes)
+            // Reopened rather than compared byte for byte: SQLite may checkpoint
+            // the file after the seeding container closes, so the bytes are not
+            // stable even when nothing was lost.
+            let reopened = ModelContext(
+                try ModelContainerFactory.makeModelContainer(
+                    url: legacyURL,
+                    cloudKitDatabase: .none
+                )
+            )
+            #expect(try reopened.fetch(.recipes(.all)).map(\.name) == ["Curry"])
         }
     }
 }
