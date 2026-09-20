@@ -1,0 +1,247 @@
+# Cookle Mutation Semantics
+
+Current behavior as of September 21, 2026.
+
+## Purpose
+
+This note records what Cookle's rename, merge, delete, and edit paths actually
+do today, so that impact review, stale-data handling, and recovery work can be
+designed against stated semantics rather than re-read from source each time.
+
+It is a description of current behavior, not a proposal. Where a behavior looks
+like an open question rather than a settled rule, it is marked **Open** and left
+for the owning issue to decide.
+
+Deletion is covered here only where it interacts with rename, merge, or edit.
+The July 2026 model-by-model deletion inventory remains in
+[the deletion policy audit](cookle-data-deletion-policy-audit.md), and the
+storage contracts it was superseded by are in
+[ADR 0011](../Decisions/0011-preserve-swiftdata-storage-contracts.md).
+
+Evidence labels:
+
+- `[runtime confirmed]`: asserted by a named repository test
+- `[source confirmed]`: read directly from models, services, or operations
+
+Primary sources:
+
+- `CookleLibrary/Sources/Tag/TagService.swift`
+- `CookleLibrary/Sources/Tag/TagOperations.swift`
+- `CookleLibrary/Sources/Recipe/RecipeFormService.swift`
+- `CookleLibrary/Sources/Recipe/RecipeService.swift`
+- `CookleLibrary/Sources/Diary/DiaryService.swift`
+- `CookleLibrary/Sources/Persistence/CascadeDeletionSupport.swift`
+- `CookleLibrary/Sources/Persistence/DeduplicatedModelCreation.swift`
+
+## 1) Two different notions of "the same value"
+
+Cookle compares tag values two ways, and they do not agree.
+
+**Creation reuse — exact equality.** `Ingredient.create` and `Category.create`
+go through `DeduplicatedModelCreation.resolve`, whose lookup is
+`.valueIs(value)`: a byte-exact match on the stored string. Saving a recipe that
+names `sugar` when `Sugar` already exists therefore creates a **second**
+record. `[runtime confirmed]` — `ingredient_create_reuses_existing_value`,
+`category_create_reuses_existing_value`.
+
+**Duplicate detection — normalized equality.** `TagService.duplicateKey` trims
+the value, collapses internal whitespace runs to a single space, and applies
+`folding(options: [.caseInsensitive, .diacriticInsensitive, .widthInsensitive],
+locale: .current)`. `Sugar`, `sugar`, `ｓｕｇａｒ`, `sugár`, and `  sugar  `
+all land in one group. `[runtime confirmed]` —
+`duplicateTags_matches_case_width_diacritic_and_spacing_variants`,
+`duplicateTags_keeps_distinct_values_separate`.
+
+The consequence is deliberate in shape and worth stating plainly: **Cookle
+never merges on its own, it only offers to.** Creation stays conservative so a
+save cannot silently fold a user's distinct label into an existing one, and
+detection stays generous so the merge affordance can find what a user would
+call a duplicate.
+
+Two properties follow that callers need to know:
+
+- The grouping key is **locale-sensitive** (`locale: .current`). The same pair
+  of values can group on one device and not on another.
+- A rename is not checked against either notion, so renaming a tag onto an
+  existing value is a supported way to *produce* a duplicate group.
+
+## 2) Ingredient and Category
+
+### Rename
+
+`TagService.renameWithOutcome` trims whitespace and newlines, rejects an empty
+result with `TagOperationsError.emptyValue`, and assigns the value.
+`[runtime confirmed]` — `rename_updates_ingredient_value`,
+`rename_updates_category_value`.
+
+The row keeps its identity. Every `IngredientObject`, every recipe relation, and
+every past diary that reaches the tag therefore shows the **new** label
+immediately; nothing captures the old one. `[source confirmed]`
+
+No uniqueness check runs. Renaming onto an existing value leaves two records
+that duplicate detection will group. `[source confirmed]`
+
+### Delete
+
+`Ingredient` deletion is **guarded**: `deleteWithOutcome(ingredient:)` throws
+`TagOperationsError.ingredientInUse(value)` unless `ingredient.recipes` is
+empty, so only an unused ingredient can be removed.
+`[runtime confirmed]` — `delete_unused_ingredient_removes_only_the_root_record`,
+`delete_in_use_ingredient_is_rejected`.
+
+`Category` deletion is **not** guarded. `Category.recipes` is the inverse of
+`Recipe.categories`, which carries the default nullify rule, so deleting a
+category detaches it from every recipe and leaves the recipes intact.
+`[runtime confirmed]` — `delete_category_removes_recipe_relation_but_keeps_recipe`.
+
+Both paths publish `.notificationPlanChanged`. `[source confirmed]`
+
+### Merge
+
+`mergeDuplicatesWithOutcome(keeping:)` fetches all tags of that kind, takes the
+duplicate group of the supplied tag, and drops the kept tag from the children.
+Anything not in the group is untouched, and merging a group that no longer has
+duplicates is a no-op. `[runtime confirmed]` —
+`mergeDuplicates_is_a_no_op_once_the_duplicates_are_gone`,
+`mergeDuplicates_tolerates_a_duplicate_that_was_already_deleted`.
+
+**Ingredient merge** re-points each child's `IngredientObject` rows at the kept
+ingredient with `object.update(ingredient: parent, amount: object.amount, order:
+object.order)` — the amount text and the display order are carried across
+explicitly — then calls `recipe.refreshIngredients()` on each affected
+recipe to rebuild its flattened relation, then deletes the children.
+Because the rows are re-pointed *before* the delete, the child's cascade no
+longer owns them.
+`[runtime confirmed]` —
+`mergeDuplicateIngredients_reassignsIngredientObjectsAndDeletesChildren`,
+`mergeDuplicateIngredients_preserves_amounts_and_row_order`.
+
+**Category merge** rewrites each affected recipe's category list: child
+categories are filtered out, and the kept category is appended if it was not
+already present. `[runtime confirmed]` —
+`mergeDuplicateCategories_reassignsRecipesAndDeletesChildren`.
+
+**Open.** Because the kept category is *appended*, a recipe that carried only a
+child category ends up with the survivor at the end of its list rather than in
+the position the child held. Categories have no user-visible ordering today, so
+this has no effect now; it would if ordering were ever surfaced.
+
+## 3) Recipe edit
+
+`RecipeFormService.makeDraft` validates before anything is written:
+
+- an empty name throws `RecipeFormValidationError.emptyName`
+- serving size and cooking time accept full-width digits via
+  `.fullwidthToHalfwidth`; empty becomes `0`; anything else throws
+  `invalidServingSize` / `invalidCookingTime`
+- ingredient rows with an empty name, empty steps, and empty category values are
+  dropped, and the surviving rows keep their relative order
+
+`[runtime confirmed]` — `makeDraft_converts_fullwidth_numbers`,
+`makeDraft_removes_empty_rows_but_preserves_order`,
+`makeDraft_throws_validation_error_for_invalid_values`.
+
+### Ordered child rows are replaced, not mutated
+
+`updateWithOutcome` captures the existing `photoObjects` and
+`ingredientObjects`, builds an entirely **new** row for every entry in the draft
+with `order = index + 1`, assigns the new set through `recipe.update(content:)`,
+and only then deletes the previous rows. `[source confirmed]`
+
+So, for any edit that saves:
+
+- `IngredientObject` and `PhotoObject` **identity does not survive**. Anything
+  holding one of those rows across a save is holding a deleted object.
+- The shared `Ingredient`, `Category`, and `Photo` records **do** survive, and
+  are reused when their key matches — value equality for tags, image data
+  equality for photos. `[runtime confirmed]` —
+  `preview_style_recipe_creation_reuses_existing_tags`,
+  `create_reusesExistingBinaryData`.
+- `order` is re-derived from array position on every save, so it is always
+  1-based and dense.
+- `modifiedTimestamp` is refreshed; `createdTimestamp` is not.
+
+`[runtime confirmed]` — `create_and_update_keep_order_and_refresh_modified_timestamp`,
+`update_rebuilds_photos_in_draft_order`.
+
+### Removing one photo
+
+`RecipeService.removePhotoWithOutcome` is the exception to the rule above: it
+deletes the single `PhotoObject` and re-applies the remaining rows as they are.
+
+- The shared `Photo` asset is **never** deleted, only unlinked, whether or not
+  anything else still references it. `RecipePhotoRemovalBehavior`
+  currently ignores both of its count arguments and always returns
+  `.removeFromRecipe`. `[runtime confirmed]` —
+  `removePhotoWithOutcome_keepsSharedPhotoAssetWhenAnotherReferenceExists`,
+  `removePhotoWithOutcome_keepsPhotoAssetWhenItBecomesUnlinked`.
+- The surviving rows keep their original `order` values, so this path leaves a
+  **gap** in the sequence. A later full edit renumbers them.
+  `[source confirmed]`
+
+**Open.** Unlinked `Photo` rows are never collected. That is the conservative
+choice ADR 0011 asks for, but nothing currently reports how many accumulate.
+
+## 4) Linked Diary history
+
+A `DiaryObject` holds a live `@Relationship` to a `Recipe`, and no recipe edit
+path touches `recipe.diaries` or `recipe.diaryObjects`. `[source confirmed]`
+
+Therefore **editing a recipe retroactively changes what past diary entries
+show.** A diary from six months ago displays the recipe's current name and
+current content, not what was cooked that day. Cookle stores no historical
+snapshot of recipe content.
+
+Deleting a recipe behaves differently, because `Recipe.diaryObjects` carries
+`deleteRule: .cascade`: the recipe's **meal rows are removed** from every diary
+that referenced it, while the `Diary` entries themselves — their date and
+note — survive. `[source confirmed]`
+
+`RecipeDeleteCopy.message` states this to the user accurately, with separate
+wording for zero, one, and many affected meal rows. `[source confirmed]`
+
+**Open.** Whether live reference semantics are the intended product behavior is
+the explicit subject of an acceptance item on
+https://github.com/muhiro12/Cookle/issues/132 and is not settled here.
+
+## 5) Diary edit and delete
+
+`DiaryService.updateWithOutcome` uses the same replace-then-delete shape as
+recipe edit: new `DiaryObject` rows per meal type with `order = index + 1`,
+assigned before the previous rows are deleted. `[source confirmed]`
+
+Moving a diary to a day that another diary already occupies throws
+`DiaryDayConflictError.dayAlreadyOccupied`; keeping the same calendar day skips
+the check entirely. `[source confirmed]`
+
+`deleteWithOutcome(diary:)` cascades to the diary's meal rows through
+`Diary.objects` and leaves every referenced recipe intact. `[source confirmed]`
+
+## 6) Why deletes materialize their rows first
+
+Every delete path that owns cascade rows calls
+`CascadeDeletionSupport.materialize` before `context.delete`. This is not
+bookkeeping: a row owned by two cascade relationships — which `DiaryObject`,
+`IngredientObject`, and `PhotoObject` all are — makes SwiftData `fatalError`
+inside `ModelContext.rollback()` if it is still a fault when its parent is
+deleted. A failed save would then take the process down instead of recovering.
+Reading a stored property first gives each row real backing data;
+`persistentModelID`, `isDeleted`, and the description are not enough.
+
+The reasoning and the trap text are recorded on the type itself, and the
+behavior is pinned by `MutationRollbackPersistenceTests`.
+
+## 7) Follow-up effects
+
+Every mutation returns a `MutationOutcome` carrying the effects a caller must
+publish. `[source confirmed]`
+
+| Mutation | Effects |
+| --- | --- |
+| Tag rename / delete / merge | `.notificationPlanChanged` |
+| Recipe create / update / delete / photo removal | `.recipeDataChanged`, `.notificationPlanChanged` |
+| Diary create / update / delete | `.diaryDataChanged`, `.notificationPlanChanged` |
+
+Diary rows are the source of each recipe's made count and last-cooked date,
+which is why a diary change invalidates the scheduled suggestion plan as well.
+Propagation is pinned by `OperationsMutationEffectPropagationTests`.
