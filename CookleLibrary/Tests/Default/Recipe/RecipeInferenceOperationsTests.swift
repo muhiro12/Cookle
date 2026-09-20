@@ -27,6 +27,31 @@ struct RecipeInferenceOperationsTests {
     }
 
     @Test
+    func grounding_recovers_the_reported_japanese_serving_range_fixture() {
+        // The exact free-form input reported in #126, where the model returned
+        // servingSize 2 for a 2〜3 range. The ingredient line also contains a
+        // range (1〜2本), which must not be mistaken for a serving count.
+        let sourceText = """
+        きゅうりのあえ物
+        2〜3人分
+        材料
+        きゅうり 1〜2本
+        塩 少々
+        手順
+        きゅうりを薄切りにする。
+        塩をまぶしてあえる。
+        """
+
+        let result = RecipeInferenceOperations.groundedInference(
+            inference(servingSize: 2),
+            sourceText: sourceText
+        )
+
+        #expect(result.servingSize == .zero)
+        #expect(result.note.contains("2〜3人分"))
+    }
+
+    @Test
     func grounding_does_not_duplicate_a_retained_serving_range() {
         let servingRange = "2〜3人分"
         let inference = inference(
