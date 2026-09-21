@@ -46,6 +46,10 @@ struct RecipeFormIngredientsSection: View {
             }
         }
         .onAppear {
+            // A create form starts with an empty array, and `.onChange` never
+            // fires for it, so the trailing placeholder row this section relies
+            // on has to be seeded here as well.
+            normalizeIngredients()
             synchronizeIngredientRowIDs()
         }
         .onChange(of: ingredients) {
