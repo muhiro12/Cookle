@@ -18,6 +18,8 @@ struct DiaryNavigationView: View {
             if let diary {
                 DiaryView(selection: $recipe)
                     .environment(diary)
+            } else {
+                SplitContentPlaceholder("No Diary Selected")
             }
         } detail: {
             if let recipe {

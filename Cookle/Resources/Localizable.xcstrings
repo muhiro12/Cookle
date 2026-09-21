@@ -6596,6 +6596,40 @@
         }
       }
     },
+    "No Diary Selected" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Diary Selected"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ningún diario seleccionado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun journal sélectionné"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日記が選択されていません"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未选择日记"
+          }
+        }
+      }
+    },
     "No ingredients" : {
       "localizations" : {
         "en" : {
@@ -6660,6 +6694,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "没有匹配的食谱。"
+          }
+        }
+      }
+    },
+    "No Photo Selected" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Photo Selected"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ninguna foto seleccionada"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune photo sélectionnée"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "写真が選択されていません"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未选择照片"
           }
         }
       }
@@ -6933,6 +7001,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "注释"
+          }
+        }
+      }
+    },
+    "Nothing Selected" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing Selected"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada seleccionado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune sélection"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "何も選択されていません"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未选择任何项目"
           }
         }
       }
@@ -12937,6 +13039,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "使用 Siri 或快捷指令可以更快打开食谱和设置。"
+          }
+        }
+      }
+    },
+    "Use the sidebar button to choose from the list." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use the sidebar button to choose from the list."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usa el botón de la barra lateral para elegir de la lista."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisez le bouton de barre latérale pour choisir dans la liste."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "サイドバーボタンから一覧を開いて選んでください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用边栏按钮从列表中选择。"
           }
         }
       }

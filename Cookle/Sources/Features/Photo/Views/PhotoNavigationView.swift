@@ -21,6 +21,8 @@ struct PhotoNavigationView: View {
                     recipeSelection: $recipe
                 )
                 .environment(photo)
+            } else {
+                SplitContentPlaceholder("No Photo Selected")
             }
         } detail: {
             if let recipe {
