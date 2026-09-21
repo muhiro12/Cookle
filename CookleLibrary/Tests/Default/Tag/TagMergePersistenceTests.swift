@@ -52,32 +52,8 @@ struct TagMergePersistenceTests {
     @Test
     func merge_keeps_a_row_another_context_attached_to_the_duplicate() throws {
         try withDiskStore { url in
-            let writer = try makeContext(at: url)
-            let parent = makeIngredient(context: writer, value: "Eggs")
-            let child = makeIngredient(context: writer, value: "eggs")
-            makeRecipe(
-                context: writer,
-                name: "Omelette",
-                ingredients: [
-                    makeIngredientObject(context: writer, ingredient: parent, amount: "2", order: 1)
-                ]
-            )
-            try writer.save()
-
-            // Another editor adds a recipe that uses the duplicate, after the
-            // merge preview was built but before the merge is applied.
-            let other = try makeContext(at: url)
-            let otherChild = try #require(
-                try other.fetch(.ingredients(.valueIs("eggs"))).first
-            )
-            makeRecipe(
-                context: other,
-                name: "Custard",
-                ingredients: [
-                    makeIngredientObject(context: other, ingredient: otherChild, amount: "3", order: 1)
-                ]
-            )
-            try other.save()
+            try seedOmeletteWithDuplicateIngredient(at: url)
+            try addLateRecipeUsingDuplicate(at: url)
 
             let merger = try makeContext(at: url)
             let survivor = try #require(
@@ -226,6 +202,49 @@ private extension TagMergePersistenceTests {
     enum TestValues {
         static let servingSize = 1
         static let cookingTimeMinutes = 10
+    }
+
+    /// Seeds "Eggs" plus its lowercase duplicate, with one recipe on the
+    /// survivor.
+    func seedOmeletteWithDuplicateIngredient(at url: URL) throws {
+        let writer = try makeContext(at: url)
+        let parent = makeIngredient(context: writer, value: "Eggs")
+        _ = makeIngredient(context: writer, value: "eggs")
+        makeRecipe(
+            context: writer,
+            name: "Omelette",
+            ingredients: [
+                makeIngredientObject(
+                    context: writer,
+                    ingredient: parent,
+                    amount: "2",
+                    order: 1
+                )
+            ]
+        )
+        try writer.save()
+    }
+
+    /// Adds a recipe that uses the duplicate from a separate context, standing
+    /// in for another editor writing after the merge preview was built.
+    func addLateRecipeUsingDuplicate(at url: URL) throws {
+        let other = try makeContext(at: url)
+        let duplicate = try #require(
+            try other.fetch(.ingredients(.valueIs("eggs"))).first
+        )
+        makeRecipe(
+            context: other,
+            name: "Custard",
+            ingredients: [
+                makeIngredientObject(
+                    context: other,
+                    ingredient: duplicate,
+                    amount: "3",
+                    order: 1
+                )
+            ]
+        )
+        try other.save()
     }
 
     func withDiskStore(_ body: (URL) throws -> Void) throws {

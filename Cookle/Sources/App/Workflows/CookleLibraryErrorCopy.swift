@@ -20,16 +20,16 @@ import Foundation
 ///   error and can call this directly from their own `catch`.
 nonisolated enum CookleLibraryErrorCopy {
     static func description(for error: any Error) -> String {
-        if let error = error as? DiaryDayConflictError {
-            return description(for: error)
+        if let conflict = error as? DiaryDayConflictError {
+            return description(for: conflict)
         }
 
-        if let error = error as? RecipeInferenceError {
-            return description(for: error)
+        if let inference = error as? RecipeInferenceError {
+            return description(for: inference)
         }
 
-        if let error = error as? TagOperationsError {
-            return description(for: error)
+        if let tag = error as? TagOperationsError {
+            return description(for: tag)
         }
 
         return error.localizedDescription

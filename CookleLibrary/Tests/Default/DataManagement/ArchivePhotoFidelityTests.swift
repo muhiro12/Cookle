@@ -101,12 +101,21 @@ struct ArchivePhotoFidelityTests {
 }
 
 private extension ArchivePhotoFidelityTests {
+    enum Value {
+        static let timestampInterval: TimeInterval = 1_700_000_000
+        static let firstOrder = 1
+        static let secondOrder = 2
+        static let thirdOrder = 3
+        static let servingSize = 2
+        static let cookingTime = 30
+    }
+
     static let pickedData = Data("picked".utf8)
     static let generatedData = Data("generated".utf8)
     static let firstData = Data("first".utf8)
     static let secondData = Data("second".utf8)
     static let thirdData = Data("third".utf8)
-    static let timestamp = Date(timeIntervalSince1970: 1_700_000_000)
+    static let timestamp = Date(timeIntervalSince1970: Value.timestampInterval)
 
     static func archiveWithBothSources() -> CookleDataArchive {
         let photos = [
@@ -131,9 +140,9 @@ private extension ArchivePhotoFidelityTests {
             photos: photos,
             // Listed out of sequence on purpose; `order` is the contract.
             recipePhotos: [
-                recipePhotoRecord(photoID: "third", order: 3),
-                recipePhotoRecord(photoID: "first", order: 1),
-                recipePhotoRecord(photoID: "second", order: 2)
+                recipePhotoRecord(photoID: "third", order: Value.thirdOrder),
+                recipePhotoRecord(photoID: "first", order: Value.firstOrder),
+                recipePhotoRecord(photoID: "second", order: Value.secondOrder)
             ]
         )
     }
@@ -145,7 +154,7 @@ private extension ArchivePhotoFidelityTests {
                 photoRecord(id: "generated", data: generatedData, source: .imagePlayground)
             ],
             recipePhotos: [
-                recipePhotoRecord(photoID: "picked", order: 1)
+                recipePhotoRecord(photoID: "picked", order: Value.firstOrder)
             ]
         )
     }
@@ -165,8 +174,8 @@ private extension ArchivePhotoFidelityTests {
                     id: "recipe",
                     name: "Curry",
                     photos: recipePhotos,
-                    servingSize: 2,
-                    cookingTime: 30,
+                    servingSize: Value.servingSize,
+                    cookingTime: Value.cookingTime,
                     ingredients: [],
                     steps: [],
                     categoryIDs: [],

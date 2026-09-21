@@ -126,24 +126,8 @@ struct StoreRecoveryTests {
 }
 
 private extension StoreRecoveryTests {
-    /// A schema Cookle has never released, standing in for a future version.
-    enum FutureSchemaV2: VersionedSchema {
-        @Model
-        final class FutureNote {
-            var body = ""
-
-            init() {
-                // Fixture values are assigned before saving.
-            }
-        }
-
-        static var versionIdentifier: Schema.Version {
-            .init(2, 0, 0)
-        }
-
-        static var models: [any PersistentModel.Type] {
-            CookleSchemaV1.models + [FutureNote.self]
-        }
+    enum Value {
+        static let cookingTime = 10
     }
 
     static var curryContent: RecipeContent {
@@ -159,7 +143,7 @@ private extension StoreRecoveryTests {
             name: name,
             photos: [],
             servingSize: 1,
-            cookingTime: 10,
+            cookingTime: Value.cookingTime,
             ingredients: [],
             steps: [],
             categories: [],

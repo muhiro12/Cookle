@@ -122,7 +122,10 @@ private extension RejectedRestorePreservationTests {
         static let unsupportedFormatVersion = 999
         static let oversizedPhotoByteCount = 512
         static let tightEncodedByteCount = 8
+        static let truncationDivisor = 2
     }
+
+    static let baseArchive = Support.archive()
 
     func rejectedAsExpected(
         _ error: any Error,
@@ -187,10 +190,10 @@ private extension RejectedRestorePreservationTests {
     }
 
     func isResourceLimitError(_ error: any Error) -> Bool {
-        guard let error = archiveError(error) else {
+        guard let archiveError = archiveError(error) else {
             return false
         }
-        return switch error {
+        return switch archiveError {
         case .resourceByteCountExceeded, .resourceCountExceeded:
             true
         default:
@@ -244,31 +247,37 @@ private extension RejectedRestorePreservationTests {
     }
 
     func archive(for value: RejectedArchiveValue) -> CookleDataArchive {
-        let base = Support.archive()
-        return switch value {
-        case .unsupportedFormatVersion:
-            replacing(base, formatVersion: Value.unsupportedFormatVersion)
-        case .duplicateIdentifier:
-            replacing(base, ingredients: base.ingredients + base.ingredients)
-        case .duplicateDiaryDay:
-            replacing(base, diaries: base.diaries + duplicatedDay(base.diaries))
-        case .missingReference:
-            replacing(base, categories: [])
-        case .oversizedPhoto:
-            replacing(
-                base,
-                photos: base.photos.map { photo in
-                    .init(
-                        id: photo.id,
-                        data: Data(
-                            repeating: .zero,
-                            count: Value.oversizedPhotoByteCount
-                        ),
-                        sourceID: photo.sourceID,
-                        createdTimestamp: photo.createdTimestamp,
-                        modifiedTimestamp: photo.modifiedTimestamp
-                    )
-                }
+        let base = Self.baseArchive
+        return replacing(
+            formatVersion: value == .unsupportedFormatVersion
+                ? Value.unsupportedFormatVersion
+                : base.formatVersion,
+            ingredients: value == .duplicateIdentifier
+                ? base.ingredients + base.ingredients
+                : base.ingredients,
+            // Dropping the categories the recipe still points at is what makes
+            // the reference dangle.
+            categories: value == .missingReference ? [] : base.categories,
+            photos: value == .oversizedPhoto ? oversizedPhotos(base.photos) : base.photos,
+            diaries: value == .duplicateDiaryDay
+                ? base.diaries + duplicatedDay(base.diaries)
+                : base.diaries
+        )
+    }
+
+    func oversizedPhotos(
+        _ photos: [CookleDataArchive.PhotoRecord]
+    ) -> [CookleDataArchive.PhotoRecord] {
+        photos.map { photo in
+            .init(
+                id: photo.id,
+                data: Data(
+                    repeating: .zero,
+                    count: Value.oversizedPhotoByteCount
+                ),
+                sourceID: photo.sourceID,
+                createdTimestamp: photo.createdTimestamp,
+                modifiedTimestamp: photo.modifiedTimestamp
             )
         }
     }
@@ -289,26 +298,25 @@ private extension RejectedRestorePreservationTests {
     }
 
     func replacing(
-        _ archive: CookleDataArchive,
-        formatVersion: Int? = nil,
-        ingredients: [CookleDataArchive.IngredientRecord]? = nil,
-        categories: [CookleDataArchive.CategoryRecord]? = nil,
-        photos: [CookleDataArchive.PhotoRecord]? = nil,
-        diaries: [CookleDataArchive.DiaryRecord]? = nil
+        formatVersion: Int,
+        ingredients: [CookleDataArchive.IngredientRecord],
+        categories: [CookleDataArchive.CategoryRecord],
+        photos: [CookleDataArchive.PhotoRecord],
+        diaries: [CookleDataArchive.DiaryRecord]
     ) -> CookleDataArchive {
         .init(
-            formatVersion: formatVersion ?? archive.formatVersion,
-            exportedAt: archive.exportedAt,
-            ingredients: ingredients ?? archive.ingredients,
-            categories: categories ?? archive.categories,
-            photos: photos ?? archive.photos,
-            recipes: archive.recipes,
-            diaries: diaries ?? archive.diaries
+            formatVersion: formatVersion,
+            exportedAt: Self.baseArchive.exportedAt,
+            ingredients: ingredients,
+            categories: categories,
+            photos: photos,
+            recipes: Self.baseArchive.recipes,
+            diaries: diaries
         )
     }
 
     func truncated(_ data: Data) -> Data {
-        data.prefix(data.count / 2)
+        data.prefix(data.count / Value.truncationDivisor)
     }
 
     func makeDirectory() throws -> URL {

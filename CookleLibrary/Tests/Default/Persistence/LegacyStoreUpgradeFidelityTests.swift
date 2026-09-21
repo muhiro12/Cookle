@@ -99,9 +99,29 @@ struct LegacyStoreUpgradeFidelityTests {
 }
 
 private extension LegacyStoreUpgradeFidelityTests {
-    static let firstPhoto = Data([1, 1, 1])
-    static let secondPhoto = Data([2, 2, 2])
-    static let diaryDate = Date(timeIntervalSince1970: 1_700_000_000)
+    enum Value {
+        static let photoByte: UInt8 = 1
+        static let secondPhotoByte: UInt8 = 2
+        static let photoByteCount = 3
+        static let diaryDateInterval: TimeInterval = 1_700_000_000
+        static let servingSize = 4
+        static let cookingTime = 45
+        static let firstOrder = 1
+        static let secondOrder = 2
+        static let thirdOrder = 3
+    }
+
+    static let firstPhoto = Data(
+        repeating: Value.photoByte,
+        count: Value.photoByteCount
+    )
+    static let secondPhoto = Data(
+        repeating: Value.secondPhotoByte,
+        count: Value.photoByteCount
+    )
+    static let diaryDate = Date(
+        timeIntervalSince1970: Value.diaryDateInterval
+    )
 
     /// Seeds a 2.7-shaped store, reopens it with the current schema, and hands
     /// the upgraded context to the caller.
@@ -133,19 +153,26 @@ private extension LegacyStoreUpgradeFidelityTests {
             configurations: .init(url: url, cloudKitDatabase: .none)
         )
         let context = ModelContext(container)
+        let recipe = seedLegacyRecipe(in: context)
+        seedLegacyDiary(in: context, recipe: recipe)
+        try context.save()
+    }
 
+    func seedLegacyRecipe(
+        in context: ModelContext
+    ) -> ReleasedSchemaV0.Recipe {
         let recipe = ReleasedSchemaV0.Recipe()
         context.insert(recipe)
         recipe.name = "Shortbread"
-        recipe.servingSize = 4
-        recipe.cookingTime = 45
+        recipe.servingSize = Value.servingSize
+        recipe.cookingTime = Value.cookingTime
         recipe.note = "Rest the dough overnight."
         recipe.steps = ["Cream the butter.", "Fold in the flour.", "Bake."]
 
         let ingredientRows = [
-            ("Flour", "200g", 1),
-            ("Butter", "80g", 2),
-            ("Sugar", "50g", 3)
+            ("Flour", "200g", Value.firstOrder),
+            ("Butter", "80g", Value.secondOrder),
+            ("Sugar", "50g", Value.thirdOrder)
         ]
         .map { value, amount, order in
             let ingredient = ReleasedSchemaV0.Ingredient()
@@ -164,8 +191,8 @@ private extension LegacyStoreUpgradeFidelityTests {
         recipe.categories = [category]
 
         let photoRows = [
-            (Self.firstPhoto, 1),
-            (Self.secondPhoto, 2)
+            (Self.firstPhoto, Value.firstOrder),
+            (Self.secondPhoto, Value.secondOrder)
         ]
         .map { data, order in
             let photo = ReleasedSchemaV0.Photo()
@@ -178,6 +205,13 @@ private extension LegacyStoreUpgradeFidelityTests {
         recipe.photos = photoRows.map(\.0)
         recipe.photoObjects = photoRows.map(\.1)
 
+        return recipe
+    }
+
+    func seedLegacyDiary(
+        in context: ModelContext,
+        recipe: ReleasedSchemaV0.Recipe
+    ) {
         let diary = ReleasedSchemaV0.Diary()
         context.insert(diary)
         diary.date = Self.diaryDate
@@ -192,7 +226,5 @@ private extension LegacyStoreUpgradeFidelityTests {
                 row.order = offset + 1
                 return row
             }
-
-        try context.save()
     }
 }
