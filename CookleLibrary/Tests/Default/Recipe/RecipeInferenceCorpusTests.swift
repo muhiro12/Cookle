@@ -15,8 +15,11 @@ import Testing
 // Expectations here were recorded from the implementation's actual output
 // rather than assumed. The most important thing they document is what this
 // layer deliberately does **not** do: it never splits an amount out of an
-// ingredient line, and it only reads a serving count or a time when the text
-// spells them in English.
+// ingredient line, it never interprets or normalises a unit, and it only reads
+// a serving count or a time when the text spells them in English.
+//
+// `RecipeInferenceLanguageCorpusTests` carries the language and unit
+// boundaries; this file covers the shape of an extraction.
 @MainActor
 struct RecipeInferenceCorpusTests {
     @Test
