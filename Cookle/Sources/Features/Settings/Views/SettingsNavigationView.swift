@@ -54,7 +54,7 @@ private extension SettingsNavigationView {
         case .license:
             LicenseView()
         case .none:
-            EmptyView()
+            SplitContentPlaceholder("Nothing Selected")
         }
     }
 

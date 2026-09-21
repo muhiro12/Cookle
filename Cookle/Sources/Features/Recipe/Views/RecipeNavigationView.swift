@@ -23,6 +23,8 @@ struct RecipeNavigationView: View {
             if let recipe {
                 RecipeView()
                     .environment(recipe)
+            } else {
+                SplitContentPlaceholder("No Recipe Selected")
             }
         }
         .task {
