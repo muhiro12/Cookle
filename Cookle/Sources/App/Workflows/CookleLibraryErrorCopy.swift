@@ -28,6 +28,10 @@ nonisolated enum CookleLibraryErrorCopy {
             return description(for: error)
         }
 
+        if let error = error as? TagOperationsError {
+            return description(for: error)
+        }
+
         return error.localizedDescription
     }
 }
@@ -38,6 +42,19 @@ nonisolated private extension CookleLibraryErrorCopy {
         case .dayAlreadyOccupied:
             String(
                 localized: "A diary already exists for this calendar day."
+            )
+        }
+    }
+
+    static func description(for error: TagOperationsError) -> String {
+        switch error {
+        case .emptyValue:
+            String(
+                localized: "Value must not be empty."
+            )
+        case .ingredientInUse(let value):
+            String(
+                localized: "Ingredient \(value) is still used by recipes and cannot be deleted."
             )
         }
     }

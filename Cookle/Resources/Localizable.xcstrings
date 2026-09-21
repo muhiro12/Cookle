@@ -5403,6 +5403,40 @@
         }
       }
     },
+    "Ingredient %@ is still used by recipes and cannot be deleted." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingredient %@ is still used by recipes and cannot be deleted."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El ingrediente %@ a\u00fan se usa en recetas y no se puede eliminar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L\u2019ingr\u00e9dient %@ est encore utilis\u00e9 par des recettes et ne peut pas \u00eatre supprim\u00e9."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "材料「%@」はレシピで使われているため削除できません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "食材 %@ 仍被食谱使用，无法删除。"
+          }
+        }
+      }
+    },
     "Ingredient not found." : {
       "localizations" : {
         "en" : {
@@ -13073,6 +13107,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "值"
+          }
+        }
+      }
+    },
+    "Value must not be empty." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Value must not be empty."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El valor no puede estar vac\u00edo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La valeur ne peut pas \u00eatre vide."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "値を空にはできません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "值不能为空。"
           }
         }
       }
