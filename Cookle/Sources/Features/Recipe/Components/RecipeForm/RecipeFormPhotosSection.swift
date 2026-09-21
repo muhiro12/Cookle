@@ -229,7 +229,9 @@ private extension RecipeFormPhotosSection {
         guard pendingPhotoRemovalBehavior != nil else {
             return ""
         }
-        return "Remove from Recipe"
+        return String(
+            localized: "Remove from Recipe"
+        )
     }
 
     var photoRemovalMessage: String {
@@ -241,10 +243,12 @@ private extension RecipeFormPhotosSection {
             return ""
         }
 
-        return """
+        return String(
+            localized: """
             This removes the photo from \(recipe.name) and keeps the stored photo \
             in Photos.
             """
+        )
     }
 
     var pendingPhotoRemovalBehavior: RecipePhotoRemovalBehavior? {

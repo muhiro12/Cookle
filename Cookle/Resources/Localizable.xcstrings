@@ -11982,6 +11982,40 @@
         }
       }
     },
+    "This removes the photo from %@ and keeps the stored photo in Photos." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This removes the photo from %@ and keeps the stored photo in Photos."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto quita la foto de %@ y conserva la foto guardada en Fotos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cela retire la photo de %@ et conserve la photo enregistr\u00e9e dans Photos."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「%@」から写真を外します。写真アプリに保存された写真はそのままです。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这会从「%@」中移除照片，照片仍保留在“照片”中。"
+          }
+        }
+      }
+    },
     "This removes the recipe and %lld diary meal rows. The related diary entries stay saved." : {
       "localizations" : {
         "en" : {
