@@ -5,6 +5,12 @@ import SwiftUI
 struct ShowTodayDiaryIntent: AppIntent {
     static var title: LocalizedStringResource { "Show Today's Diary" }
 
+    // This returns the whole diary — meals and the person's own notes — as a
+    // snippet. The default policy would render that on a locked device.
+    static var authenticationPolicy: IntentAuthenticationPolicy {
+        .requiresAuthentication
+    }
+
     @Dependency private var modelContainer: ModelContainer
 
     @MainActor

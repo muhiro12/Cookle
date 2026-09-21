@@ -7,6 +7,11 @@ struct ShowDiaryIntent: AppIntent {
         "Show Diary"
     }
 
+    // Same reason as `ShowTodayDiaryIntent`: the snippet carries diary notes.
+    static var authenticationPolicy: IntentAuthenticationPolicy {
+        .requiresAuthentication
+    }
+
     @Parameter(title: "Date")
     private var date: Date
 
