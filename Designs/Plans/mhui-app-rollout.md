@@ -369,4 +369,46 @@ The [iPad ingredient form](mhui-app-rollout/images/ipad-recipe-form-ingredients.
 records native sheet layout and long-name wrapping with a separate existing
 synthetic recipe.
 
+## Destructive Contrast Measurement
+
+Measured 2026-09-21 on the current build, replacing the earlier estimate the
+audit flagged as unusable. Surface: the cooking session's running-timer card,
+whose Cancel Timer label is the app's only destructive text in that flow.
+Devices: iPhone 18 Pro (402x874 pt, 3x) and iPad 11" (834x1210 pt, 2x), both
+iOS 27.0. Values are sampled from the screenshots by luminance, taking the
+darkest and lightest pixel inside the label's glyph band, and the ratio is the
+WCAG relative-luminance formula.
+
+<!-- markdownlint-disable MD013 -->
+| Appearance | Label | Background | Ratio |
+| --- | --- | --- | --- |
+| Light | `#FF383C` | `#FFFDFA` | 3.52:1 |
+| Light + Increase Contrast | `#E9152D` | `#FFFFFF` | 4.56:1 |
+| Dark | `#FF4245` | `#25221E` | 4.61:1 |
+| Dark + Increase Contrast | `#FF6165` | `#0C0E0F` | 6.59:1 |
+<!-- markdownlint-enable MD013 -->
+
+Phone and tablet produce identical values, so this is a colour result rather
+than a layout one.
+
+The label's glyph band measures 41 px at 3x and 26 px at 2x, so roughly 13 pt,
+and it is not bold. WCAG's large-text allowance of 3:1 therefore does not
+apply and the threshold is 4.5:1. **Light appearance without Increase Contrast
+is the one condition below it.** Dark appearance, either Increase Contrast
+setting, and any accessibility text size all clear the threshold; at
+`accessibility-extra-large` the same colours pass only because the 34 pt glyphs
+do qualify as large text.
+
+Reduce Transparency was enabled through Settings and the cooking screen
+recaptured. The glass close control lightens from `#F0EEE8` to `#F5F5F3` and
+the navigation bar gains a separator, so the control layer does respond. The
+step card interior is byte-identical at `#FAF8F3`, confirming that content
+surfaces are already opaque and carry no glass to reduce. The destructive
+ratio is unchanged at 3.52:1, so Reduce Transparency is not a mitigation here.
+
+This is a measurement, not an accepted visual direction. Choosing between a
+darker destructive tint, a filled treatment, and leaving the system colour as
+Apple supplies it remains open on
+https://github.com/muhiro12/Cookle/issues/119.
+
 [hig-accessibility]: https://developer.apple.com/design/human-interface-guidelines/accessibility
