@@ -136,6 +136,22 @@ enum CookleDataArchivePackageTestSupport {
         )
     }
 
+    static func replacingArchiveFormatVersion(
+        _ manifest: CookleDataArchivePackageManifest,
+        with archiveFormatVersion: Int
+    ) -> CookleDataArchivePackageManifest {
+        .init(
+            packageFormatVersion: manifest.packageFormatVersion,
+            archiveFormatVersion: archiveFormatVersion,
+            exportedAt: manifest.exportedAt,
+            ingredients: manifest.ingredients,
+            categories: manifest.categories,
+            photos: manifest.photos,
+            recipes: manifest.recipes,
+            diaries: manifest.diaries
+        )
+    }
+
     static func replacingPhotos(
         _ manifest: CookleDataArchivePackageManifest,
         with photos: [CookleDataArchivePackageManifest.PhotoRecord]
