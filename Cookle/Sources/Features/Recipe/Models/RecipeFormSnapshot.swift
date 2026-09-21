@@ -47,14 +47,19 @@ nonisolated struct RecipeFormSnapshot: Codable, Equatable, Sendable {
     }
 
     /// Indicates the draft holds nothing worth restoring.
+    ///
+    /// The form always keeps a trailing blank row for ingredients and steps, so
+    /// these lists are never actually empty. Treating a list of placeholders as
+    /// content would let a form that has only just opened overwrite the draft
+    /// the Restore Draft button exists to bring back.
     var isEmpty: Bool {
         let values = [name, servingSize, cookingTime, note]
-        return values.allSatisfy { value in
-            value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        }
-        && ingredients.isEmpty
-        && steps.isEmpty
-        && categories.isEmpty
+        return values.allSatisfy(Self.isBlank)
+            && ingredients.allSatisfy { ingredient in
+                Self.isBlank(ingredient.ingredient) && Self.isBlank(ingredient.amount)
+            }
+            && steps.allSatisfy(Self.isBlank)
+            && categories.allSatisfy(Self.isBlank)
     }
 
     init(
@@ -85,5 +90,11 @@ extension FormSnapshotStore where Snapshot == RecipeFormSnapshot {
             descriptor: RecipeFormSnapshot.preferenceDescriptor,
             userDefaults: userDefaults
         )
+    }
+}
+
+nonisolated private extension RecipeFormSnapshot {
+    static func isBlank(_ value: String) -> Bool {
+        value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 }
