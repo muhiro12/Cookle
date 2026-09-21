@@ -78,7 +78,7 @@ struct InferRecipeFormView: View {
                         try await appendRecognizedText(from: initialPhotoData)
                     } catch {
                         if !Task.isCancelled {
-                            errorMessage = error.localizedDescription
+                            errorMessage = CookleLibraryErrorCopy.description(for: error)
                         }
                     }
                 } else if source == .text {
@@ -223,7 +223,7 @@ private extension InferRecipeFormView {
             guard !Task.isCancelled, !(error is CancellationError) else {
                 return
             }
-            errorMessage = error.localizedDescription
+            errorMessage = CookleLibraryErrorCopy.description(for: error)
         }
     }
 

@@ -1075,6 +1075,40 @@
         }
       }
     },
+    "Apple Intelligence is not available right now." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence is not available right now."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence no est\u00e1 disponible ahora mismo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence n\u2019est pas disponible pour le moment."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence は現在利用できません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence 当前不可用。"
+          }
+        }
+      }
+    },
     "AppStorage" : {
       "shouldTranslate" : false
     },
@@ -2842,6 +2876,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无法添加照片"
+          }
+        }
+      }
+    },
+    "Couldn't extract enough recipe details from the text.\nTry including the title, ingredients, or steps." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't extract enough recipe details from the text.\nTry including the title, ingredients, or steps."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudieron extraer suficientes detalles de la receta del texto.\nIntenta incluir el t\u00edtulo, los ingredientes o los pasos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible d\u2019extraire assez de d\u00e9tails de la recette \u00e0 partir du texte.\nEssayez d\u2019inclure le titre, les ingr\u00e9dients ou les \u00e9tapes."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文章からレシピの情報を十分に読み取れませんでした。\n料理名・材料・手順を含めてみてください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法从文本中提取足够的食谱信息。\n请尝试包含菜名、食材或步骤。"
           }
         }
       }
@@ -7716,6 +7784,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "其他灵感"
+          }
+        }
+      }
+    },
+    "Paste or import some recipe text first." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paste or import some recipe text first."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pega o importa primero el texto de una receta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Collez ou importez d\u2019abord le texte d\u2019une recette."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "先にレシピの文章を貼り付けるか読み込んでください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请先粘贴或导入食谱文本。"
           }
         }
       }

@@ -46,7 +46,7 @@ enum CookleMutationWorkflow {
             },
             adapter: adapter,
             projection: .identity,
-            operationErrorDescription: CookleMutationErrorCopy.description
+            operationErrorDescription: CookleLibraryErrorCopy.description
         )
         return outcomeBox.resolvedOutcome()
     }
