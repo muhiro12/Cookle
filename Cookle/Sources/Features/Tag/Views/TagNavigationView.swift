@@ -56,6 +56,8 @@ struct TagNavigationView<T: Tag & Identifiable>: View {
             if let recipe {
                 RecipeView()
                     .environment(recipe)
+            } else {
+                SplitContentPlaceholder("No Recipe Selected")
             }
         }
         .task {
