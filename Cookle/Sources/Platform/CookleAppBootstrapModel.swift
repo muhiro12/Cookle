@@ -15,11 +15,82 @@ final class CookleAppBootstrapModel {
     private(set) var failureMessage: String?
 
     private let logging: CookleAppLogging
+    /// The iCloud setting the current `appAssembly` was built for, so the
+    /// scene's `.task(id:)` can tell a real toggle from its first run. Only
+    /// meaningful while `appAssembly` is non-nil.
+    private var assembledICloudSetting = false
 
     init(
         logging: CookleAppLogging = .live()
     ) {
         self.logging = logging
+    }
+
+    /// Builds the assembly and registers App Intents dependencies without an
+    /// `await`, for `CookleApp.init()`.
+    ///
+    /// An intent invoked while the app is not running launches the process
+    /// without connecting a scene, so `body` never evaluates and the scene's
+    /// `.task` never fires. Registering there left every dependent intent
+    /// failing with "Failed to retrieve dependency of type ModelContainer".
+    /// This mirrors the startup shape Incomes uses for the same reason.
+    func loadAssemblySynchronously() {
+        let startupLogger = makeLogger(
+            category: "AppStartup"
+        )
+        startupLogger.notice("app startup began")
+
+        let startupStartedAt = Date.timeIntervalSinceReferenceDate
+
+        #if DEBUG
+        if loadCaptureAssemblyIfNeeded(
+            startupStartedAt: startupStartedAt,
+            startupLogger: startupLogger
+        ) {
+            return
+        }
+        #endif
+
+        let preferenceLifecycleStartedAt = Date.timeIntervalSinceReferenceDate
+        let lifecycleOutcome = CooklePreferenceLifecycle.runSynchronously()
+        logPreferenceLifecycleOutcome(
+            lifecycleOutcome,
+            startedAt: preferenceLifecycleStartedAt,
+            startupLogger: startupLogger
+        )
+
+        // Read from the preference store rather than `@AppStorage`: the view
+        // layer this would normally come from does not exist yet.
+        let isICloudOn = CooklePreferences.bool(for: \.isICloudOn)
+
+        do {
+            let modelContainer = try CookleAppAssemblyFactory.prepareLiveModelContainer(
+                cloudKitDatabase: isICloudOn ? .automatic : .none,
+                logger: makeLogger(category: "StoreMigration")
+            )
+            let assembly = makeAssembly(
+                modelContainer: modelContainer,
+                startupStartedAt: startupStartedAt,
+                startupLogger: startupLogger
+            )
+            finalizeStartup(
+                assembly: assembly,
+                startupStartedAt: startupStartedAt,
+                startupLogger: startupLogger
+            )
+            assembledICloudSetting = isICloudOn
+        } catch {
+            handleStartupFailure(
+                error,
+                startupLogger: startupLogger
+            )
+        }
+    }
+
+    /// Reports whether a scene-driven reload would repeat work `init()` already
+    /// did for the same iCloud setting.
+    func isAssembled(forICloudSetting isICloudOn: Bool) -> Bool {
+        appAssembly != nil && assembledICloudSetting == isICloudOn
     }
 
     func loadAssembly(
@@ -72,6 +143,7 @@ final class CookleAppBootstrapModel {
                 startupStartedAt: startupStartedAt,
                 startupLogger: startupLogger
             )
+            assembledICloudSetting = isICloudOn
         } catch is CancellationError {
             return
         } catch {

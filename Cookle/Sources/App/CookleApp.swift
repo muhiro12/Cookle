@@ -18,7 +18,7 @@ struct CookleApp: App {
     @AppStorage(\.lastLaunchedAppVersion, default: "")
     private var lastLaunchedAppVersion
 
-    @State private var bootstrapModel = CookleAppBootstrapModel()
+    @State private var bootstrapModel: CookleAppBootstrapModel
 
     var body: some Scene {
         WindowGroup {
@@ -39,6 +39,11 @@ struct CookleApp: App {
             }
             .mhTheme(.standard(palette: .linen))
             .task(id: isICloudOn) {
+                // `init()` already assembled for the stored setting; only a
+                // real toggle needs the store reopened.
+                guard !bootstrapModel.isAssembled(forICloudSetting: isICloudOn) else {
+                    return
+                }
                 await bootstrapModel.loadAssembly(
                     isICloudOn: isICloudOn
                 )
@@ -46,7 +51,15 @@ struct CookleApp: App {
         }
     }
 
+    @MainActor
     init() {
+        // Must happen here, not in the scene: an App Intent can launch this
+        // process without a scene, and its dependencies have to be registered
+        // before `perform()` runs.
+        let model = CookleAppBootstrapModel()
+        model.loadAssemblySynchronously()
+        _bootstrapModel = State(wrappedValue: model)
+
         #if DEBUG
         isDebugOn = !CookleCaptureConfiguration.isEnabled
         #endif
