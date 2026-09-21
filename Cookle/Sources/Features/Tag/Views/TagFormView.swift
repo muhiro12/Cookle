@@ -41,7 +41,7 @@ struct TagFormView<T: Tag>: View {
         }
         .scrollDismissesKeyboard(.immediately)
         .mhFormChrome()
-        .navigationTitle("Edit " + tag.value)
+        .navigationTitle(Text("Edit \(tag.value)"))
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button {
