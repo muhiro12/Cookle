@@ -7,6 +7,8 @@ source "$script_directory/../lib/task_utils.sh"
 ci_task_require_no_arguments "$@"
 ci_task_enter_repository "${BASH_SOURCE[0]}"
 
+ci_task_require_command "rg" "Install ripgrep so repository rule checks can scan source files."
+
 configuration_file=".config.json"
 validator="ci_scripts/tools/RemoteUpdateConfigurationValidator.swift"
 

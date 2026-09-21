@@ -28,6 +28,19 @@ ci_task_enter_repository() {
   fi
 }
 
+ci_task_require_command() {
+  local command_name=$1
+  local install_hint=$2
+
+  if command -v "$command_name" >/dev/null 2>&1; then
+    return 0
+  fi
+
+  echo "Missing required command: $command_name" >&2
+  echo "$install_hint" >&2
+  exit 1
+}
+
 ci_task_should_skip_environment_check() {
   [[ "${CI_SKIP_ENV_CHECK:-0}" == "1" || "${CI_SKIP_ENV_CHECK:-}" == "true" ]]
 }

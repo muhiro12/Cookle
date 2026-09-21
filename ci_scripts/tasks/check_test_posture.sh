@@ -11,6 +11,10 @@ script_directory=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 repository_root=$(cd "$script_directory/../.." && pwd)
 cd "$repository_root"
 
+source "$script_directory/../lib/task_utils.sh"
+
+ci_task_require_command "rg" "Install ripgrep so repository rule checks can scan source files."
+
 declare -a errors=()
 
 append_error() {
