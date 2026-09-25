@@ -1,6 +1,6 @@
 # Cookle Store Upgrade Paths
 
-Current behavior as of September 21, 2026.
+Source review updated September 26, 2026.
 
 ## Purpose
 
@@ -101,46 +101,43 @@ this route: the user sees the failure and the file stays as it was. Deleting
 persisted data requires the explicit Settings action
 (`SettingsActionService.deleteAllData`).
 
-## 6) Downgrade silently drops what the newer schema owned
+## 6) Synthetic downgrade exposes a data-loss risk
 
-SwiftData provides no reverse migration and Cookle defines no downgrade stage.
-What actually happens when a released build opens a store a newer build wrote
-was **measured**, not assumed, and it is worse than a refusal would be.
-`StoreRecoveryTests` pins it:
+Cookle defines no reverse migration stage. `StoreRecoveryTests` creates a
+**synthetic** `FutureSchemaV2` using the current SDK: it contains the current
+V1 model types plus a `FutureNote` entity. The test opens that store with the
+current V1 factory, saves another recipe, then opens it with the synthetic V2
+again. The expected observations are:
 
-- The released build **does not refuse** the store. It opens it and returns a
-  container.
-- Records whose entity both schemas share **survive**, and the released build
-  can add more.
-- Records belonging to an entity only the newer schema declared are **gone**,
-  and reinstalling the newer build does not bring them back.
+- V1 opens this fixture rather than rejecting it.
+- The shared recipe records remain readable, including the recipe added by V1.
+- The synthetic V2-only `FutureNote` records are no longer returned.
 
-There is no error and no prompt at any point in that sequence. So the rule to
-work from is not "an older build cannot open a newer store" — it is:
+This is a regression characterization of one local schema shape on the test
+runtime. It is **not** a run of an older released binary, a real future schema,
+or a CloudKit-backed store. The schema/container lifetimes in the test also do
+not reproduce separate app processes. It does not establish that every schema
+downgrade behaves this way, or that every future V2 is readable by V1.
 
-> Running an older build against a newer store is a silent, one-way data loss
-> for anything the older build does not know about.
+The practical boundary is that downgrade safety is **not guaranteed**. Before
+shipping a schema change, verify the actual old/new binaries and stores and
+preserve an independently readable recovery copy. A portable archive is a
+separate compatibility contract: restoring it into an older app also depends
+on that app accepting the archive version and representing its contents.
 
-The consequences worth stating plainly:
-
-- A TestFlight or development build that introduces a V2 leaves a store that
-  the App Store build will open and quietly strip. Reinstalling the newer build
-  does not recover it.
-- The only route back is restoring a backup taken before the upgrade, which is
-  https://github.com/muhiro12/Cookle/issues/133's subject. A backup is a
-  portable archive, not a store file, so it restores into whatever schema the
-  running app has.
-- Nothing currently prompts for a backup before a schema change, because there
-  has not been one.
+Nothing currently prompts for a backup before a schema change, because no
+schema transition has shipped. Recovery planning is tracked in
+<https://github.com/muhiro12/Cookle/issues/133>.
 
 ## 7) Open questions
 
 - **Minimum supported app version.** The code supports one relocation and one
-  schema, so in practice any released Cookle store opens. Which released
-  versions are *declared* supported — and therefore which must be tested before
-  a schema change — has not been decided.
+  current schema. Reconstructed legacy fixtures provide bounded compatibility
+  evidence; they do not prove that every released store opens. Which released
+  versions are *declared* supported, and which historical binaries/stores must
+  be tested before a schema change, has not been decided.
 - **Pre-upgrade backup.** Whether a schema change should require or offer a
-  backup first, given that downgrade is impossible.
+  backup first, given that safe downgrade is not guaranteed.
 - **Low storage and interruption.** The relocation is ordered safely, but
   behavior under a disk-full copy or a kill mid-relocation is not covered by a
   test today.
