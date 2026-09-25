@@ -1,4 +1,5 @@
 import MHPlatform
+import MHUI
 import SwiftData
 import SwiftUI
 
@@ -69,6 +70,7 @@ extension View {
             assembly
         )
         .mhAppRuntimeEnvironment(assembly.bootstrap)
+        .mhTheme(.standard)
     }
 
     private func cookleSharedEnvironment(

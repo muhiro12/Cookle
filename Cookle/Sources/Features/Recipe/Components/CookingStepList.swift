@@ -36,11 +36,10 @@ struct CookingStepList: View {
                 .buttonStyle(.plain)
                 .accessibilityAddTraits(snapshot.currentStepIndex == step.offset ? .isSelected : [])
             }
-            Text("Select a step for timer suggestions and Apple Watch.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .mhSection("Steps")
+        .mhSectionWithFooter("Steps") {
+            Text("Select a step for timer suggestions and Apple Watch.")
+        }
     }
 }

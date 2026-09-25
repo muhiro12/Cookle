@@ -38,17 +38,17 @@ focus is personal cooking organization:
 
 ## Presentation Adoption Update
 
-The main app now links full MHUI 1.20 with the standard Linen palette selected
-once at the application root. This keeps Cookle's orange accent while using
-MHUI's warm neutral surfaces. Recipe Detail leads with its photo, compact
-facts, and cooking entry. Ingredients
-and related records use grouped surfaces, while steps and notes use unframed
-reading sections. Dates and secondary actions close the page. The recipe
-content and operations remain the same. Lists,
-forms, search, settings, and diagnostics use native-container chrome. Cooking
-places the current instruction and step actions before the grouped timer
-controls; accessibility text uses the screen's natural scrolling. The photo grid
-uses screen spacing and section headers; detached editors use input chrome.
+The main app now links full MHUI 2.0 with the neutral standard theme and its
+navigation title appearance configured once at startup. Cookle keeps its
+orange accent. Recipe Detail and Cooking name the recipe in the native
+navigation title. Recipe Detail leads with its photo, compact facts, and
+cooking entry, followed by open-canvas ingredient, step, category, note, and
+diary sections. Dates and secondary actions close the page. The recipe
+content and operations remain the same. Recipe, tag, and search collections,
+diary, tag, and photo details, and recipe, diary, and tag editors use MHUI
+content List/Form presentation. Settings, subscription, and diagnostics keep
+native presentation. The Diary landing, cooking, and photo grid use stack
+composition; detached editors use input chrome.
 Specialized media and system UI retain their native presentation. The
 [rollout record](../Plans/mhui-app-rollout.md) separates implementation from
 the runtime states and size/appearance combinations actually verified.

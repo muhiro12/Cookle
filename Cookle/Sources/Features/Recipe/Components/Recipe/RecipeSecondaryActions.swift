@@ -7,12 +7,11 @@ struct RecipeSecondaryActions: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: theme.spacing.section) {
-            VStack(alignment: .leading, spacing: theme.spacing.inline) {
-                ShareRecipeLinkButton()
-                    .buttonStyle(.mhQuiet)
-                MHSectionFooter(Text("recipe.shareLink.footer"))
-            }
-            .mhSection("Sharing")
+            ShareRecipeLinkButton()
+                .buttonStyle(.mhQuiet)
+                .mhSectionWithFooter("Sharing") {
+                    MHSectionFooter(Text("recipe.shareLink.footer"))
+                }
 
             MHActionGroup(layout: .vertical) {
                 DuplicateRecipeButton(showsRecipeName: false)

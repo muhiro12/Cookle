@@ -3,13 +3,10 @@ import SwiftData
 import SwiftUI
 
 struct DuplicateDiaryRepairSection: View {
-    private enum Layout {
-        static let contentSpacing: CGFloat = 6
-        static let verticalPadding: CGFloat = 4
-    }
-
     @Environment(\.modelContext)
     private var context
+    @Environment(\.mhTheme)
+    private var theme
     @Environment(DiaryActionService.self)
     private var diaryActionService
 
@@ -59,7 +56,7 @@ struct DuplicateDiaryRepairSection: View {
 private extension DuplicateDiaryRepairSection {
     var repairSection: some View {
         MHGroupedRows {
-            VStack(alignment: .leading, spacing: Layout.contentSpacing) {
+            VStack(alignment: .leading, spacing: theme.spacing.inline) {
                 Label {
                     Text("Duplicate Diaries Found")
                 } icon: {
@@ -76,7 +73,6 @@ private extension DuplicateDiaryRepairSection {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
             }
-            .padding(.vertical, Layout.verticalPadding)
             .accessibilityElement(children: .combine)
 
             Button(

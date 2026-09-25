@@ -16,7 +16,7 @@ composition with identical content, ordering, navigation, and actions.
 The expanded composition was selected for Recipe Detail and establishes the
 direction for broader adoption in the main app.
 
-MHUI 1.20 supports both native List/Form chrome and composed reading screens.
+MHUI supports both native List/Form containers and composed reading screens.
 Stally demonstrates the native-container route; Cookle's Recipe Detail
 comparison supplies the evidence for the composed route. Neither route
 requires changing the product's information architecture.
@@ -24,21 +24,22 @@ requires changing the product's information architecture.
 ## Decision
 
 - `Cookle` links the full `MHUI` product with the remote version requirement
-  `1.20.0..<2.0.0` and applies the standard Linen palette once at its
-  application root.
+  `2.0.0..<3.0.0`, applies the neutral standard theme once at its application
+  root, and configures the same theme's navigation title appearance at startup.
   It accesses existing MHDesign metrics through MHUI's re-export, without a
-  separate direct MHDesign product dependency or metric-value changes.
-- Recipe Detail uses `mhScreen` with a leading photo and compact recipe facts,
-  followed by cooking and diary actions. Ingredients, categories, and diaries
-  use grouped surfaces; steps and notes use unframed reading sections.
+  separate direct MHDesign product dependency or app-local metric overrides.
+- Recipe Detail uses `mhScreen` with the recipe name as its native navigation
+  title, a leading photo, and compact recipe facts, followed by cooking and
+  diary actions. Ingredients, categories, and diaries use grouped rows and
+  steps and notes use reading sections, all on the open canvas.
   Dates and secondary actions form the quieter closing area. Cooking is
   primary and deletion is destructive. Existing facts, conditions, handlers,
   navigation, and confirmations remain; Edit stays in the native toolbar.
-- Adopt MHUI broadly at app-owned screen boundaries. App-owned browsing and
-  reading surfaces use composed MHUI hierarchy by default. Retain a native
-  List or Form when the container supplies a concrete interaction benefit,
-  such as selection semantics, swipe actions, reordering, fields, focus, or
-  keyboard behavior. Native controls do not require a native container.
+- Adopt MHUI broadly at app-owned screen boundaries. Product collections and
+  editors use MHUI content presentation inside native List and Form containers.
+  Freely arranged reading and task screens use stack composition. Settings and
+  utilities retain native presentation. Choose the route by screen purpose while
+  preserving selection, editing, focus, keyboard, and navigation behavior.
 - Cookle owns screen composition, wording, accent assets, routes, state, and
   behavior. MHUI owns its theme and selected presentation primitives. Do not
   move domain behavior, generic helpers, or screen models into MHUI.
@@ -67,18 +68,26 @@ with the app-owned orange accent, keeps native List/Form rows and sections
 platform-owned, and relies
 on the non-glass content-action default instead of disabling Glass across
 complete recipe and cooking screens.
-The subsequent composition refinement applies the SDK's visual hierarchy:
+The baseline advanced to MHUI 2.0 on 2026-09-26. The Linen palette is removed
+upstream, so Cookle applies the neutral standard theme and keeps its accent.
+Because 2.0 no-argument container chrome selects MHUI content presentation,
+every List and Form now chooses its route explicitly: product collections,
+details, and editors use content presentation, and settings, subscription, and
+diagnostics use native presentation. Screen names move to native navigation
+titles, sections and grouped rows sit on the open canvas, and empty and search
+states drop their surface frames.
+The earlier composition refinement applied the SDK's visual hierarchy:
 reading content gains emphasis through alignment and spacing, while surfaces
 group related rows and action styles identify the next useful operation.
 
-The application root and expanded Recipe Detail establish the first slice.
+The application root and expanded Recipe Detail established the first slice.
 Recipe browsing, the Diary landing screen, and Search results subsequently
-adopt the same composed screen, grouped-row, and surface vocabulary. Search
-keeps the native searchable field and activation behavior.
+adopted the same composed screen, grouped-row, and surface vocabulary. The 2.0
+update moves Recipe browsing and Search results to content List presentation;
+Search keeps the native searchable field and activation behavior.
 The [main-app rollout](../Plans/mhui-app-rollout.md) records subsequent
 screen choices, semantic commits, before/after evidence, and verification
-gaps. Native lists and forms remain where their container behavior is useful;
-cooking, browsing, Diary landing, Search results, and the photo collection use
+gaps. Cooking, Recipe Detail, Diary landing, and the photo collection retain
 composed layout; detached editors use input chrome.
 Root linkage alone does not complete adoption, and implementation does not
 replace the screen-level verification recorded there.

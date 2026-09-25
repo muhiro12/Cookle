@@ -17,8 +17,6 @@ struct RecipeListView: View {
     private var isPresented
     @Environment(\.modelContext)
     private var context
-    @Environment(\.mhTheme)
-    private var theme
 
     @Query(.recipes(.all))
     private var allRecipes: [Recipe]
@@ -69,28 +67,26 @@ struct RecipeListView: View {
 
 private extension RecipeListView {
     var recipeListView: some View {
-        VStack(spacing: theme.spacing.section) {
-            if let topReturnTarget {
-                MHGroupedRows {
-                    RecipeTopReturnButton(
-                        target: topReturnTarget
-                    ) {
-                        handleTopReturnTap()
+        List {
+            MHContainerContent {
+                if let topReturnTarget {
+                    Section {
+                        RecipeTopReturnButton(
+                            target: topReturnTarget
+                        ) {
+                            handleTopReturnTap()
+                        }
                     }
                 }
-                .mhSurfaceInset()
-                .mhSurface()
-            }
 
-            MHGroupedRows {
-                ForEach(sortedRecipes) { recipe in
-                    recipeRow(for: recipe)
+                Section {
+                    ForEach(sortedRecipes) { recipe in
+                        recipeRow(for: recipe)
+                    }
                 }
             }
-            .mhSurfaceInset()
-            .mhSurface()
         }
-        .mhScreen()
+        .mhListChrome(.content)
     }
 
     var emptyStateView: some View {
@@ -106,8 +102,6 @@ private extension RecipeListView {
                 )
         }
         .mhEmptyStateLayout()
-        .mhSurfaceInset()
-        .mhSurface()
         .mhScreen()
     }
 

@@ -39,7 +39,7 @@ struct DiaryObjectView: View {
                 Text("Updated At")
             }
         }
-        .mhListChrome()
+        .mhListChrome(.native)
     }
 }
 

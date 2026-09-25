@@ -1,3 +1,4 @@
+import MHUI
 import SwiftUI
 
 struct RecipeTopReturnButton: View {
@@ -11,9 +12,9 @@ struct RecipeTopReturnButton: View {
             Label {
                 VStack(alignment: .leading) {
                     target.title
+                        .mhRowTitle()
                     Text(target.recipeName)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .mhRowSupporting()
                         .lineLimit(1)
                 }
             } icon: {

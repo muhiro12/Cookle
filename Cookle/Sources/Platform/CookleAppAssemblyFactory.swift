@@ -1,4 +1,5 @@
 import MHPlatform
+import MHUI
 import SwiftData
 
 @MainActor
@@ -27,7 +28,10 @@ enum CookleAppAssemblyFactory {
     static func preview(
         modelContainer: ModelContainer
     ) -> CookleAppAssembly {
-        makeAssembly(
+        // Previews skip `CookleApp.init()`, so they configure the same
+        // navigation title appearance before returning their hierarchy.
+        MHTheme.standard.configureNavigationTitleAppearance()
+        return makeAssembly(
             modelContainer: modelContainer,
             nativeAdUnitID: CookleMonetizationConfiguration.nativeAdUnitIDDev,
             logging: .preview()

@@ -65,7 +65,7 @@ struct DebugSidebarView: View {
             previewSection
             modelSection
         }
-        .mhListChrome()
+        .mhListChrome(.native)
     }
 
     var appStorageSection: some View {

@@ -58,7 +58,7 @@ struct RecipeFormView: View {
             }
         }
         .scrollDismissesKeyboard(.immediately)
-        .mhFormChrome()
+        .mhFormChrome(.content)
         .disabled(model.isSaving)
         .environment(\.editMode, $editMode)
         .navigationTitle(editMode == .inactive ? Text("Recipe") : Text("Editing..."))

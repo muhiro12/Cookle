@@ -20,27 +20,29 @@ struct TagFormView<T: Tag>: View {
 
     var body: some View {
         Form {
-            Section {
-                TextField("Value", text: $value, prompt: Text("Spaghetti"))
-                    .focused($isValueFocused)
-            } header: {
-                Text("Value")
-            }
-            Section {
-                if (tag.recipes ?? []).isEmpty {
-                    Text("Not used in any recipe.")
-                        .foregroundStyle(.secondary)
-                } else {
-                    ForEach((tag.recipes ?? [])) { recipe in
-                        Text(recipe.name)
-                    }
+            MHContainerContent {
+                Section {
+                    TextField("Value", text: $value, prompt: Text("Spaghetti"))
+                        .focused($isValueFocused)
+                } header: {
+                    MHSectionHeader("Value")
                 }
-            } header: {
-                Text("Recipes")
+                Section {
+                    if (tag.recipes ?? []).isEmpty {
+                        Text("Not used in any recipe.")
+                            .foregroundStyle(.secondary)
+                    } else {
+                        ForEach((tag.recipes ?? [])) { recipe in
+                            Text(recipe.name)
+                        }
+                    }
+                } header: {
+                    MHSectionHeader("Recipes")
+                }
             }
         }
         .scrollDismissesKeyboard(.immediately)
-        .mhFormChrome()
+        .mhFormChrome(.content)
         .navigationTitle(Text("Edit \(tag.value)"))
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {

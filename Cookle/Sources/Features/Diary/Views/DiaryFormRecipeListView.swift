@@ -82,34 +82,36 @@ private extension DiaryFormRecipeListView {
 
     var recipeList: some View {
         List(selection: $temporarySelection) {
-            Section {
-                if selectedRecipes.isEmpty {
-                    Text("Choose recipes from the list below.")
-                        .foregroundStyle(.secondary)
-                } else {
-                    recipeRows(selectedRecipes)
-                }
-            } header: {
-                Text("Selected (\(selectedRecipes.count))")
-            }
-
-            Section {
-                if candidateRecipes.isEmpty {
-                    if searchText.isEmpty {
-                        Text("All recipes are selected.")
+            MHContainerContent {
+                Section {
+                    if selectedRecipes.isEmpty {
+                        Text("Choose recipes from the list below.")
                             .foregroundStyle(.secondary)
                     } else {
-                        Text("No matching recipes.")
-                            .foregroundStyle(.secondary)
+                        recipeRows(selectedRecipes)
                     }
-                } else {
-                    recipeRows(candidateRecipes)
+                } header: {
+                    MHSectionHeader("Selected (\(selectedRecipes.count))")
                 }
-            } header: {
-                Text("Add Recipes")
+
+                Section {
+                    if candidateRecipes.isEmpty {
+                        if searchText.isEmpty {
+                            Text("All recipes are selected.")
+                                .foregroundStyle(.secondary)
+                        } else {
+                            Text("No matching recipes.")
+                                .foregroundStyle(.secondary)
+                        }
+                    } else {
+                        recipeRows(candidateRecipes)
+                    }
+                } header: {
+                    MHSectionHeader("Add Recipes")
+                }
             }
         }
-        .mhListChrome()
+        .mhListChrome(.content)
     }
 
     var selectedRecipes: [Recipe] {

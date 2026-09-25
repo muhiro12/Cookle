@@ -24,7 +24,6 @@ struct CookingSessionView: View {
 
     var body: some View {
         sessionContent
-            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     CloseButton()
@@ -100,6 +99,7 @@ private extension CookingSessionView {
             )
         }
         .navigationTitle("Cooking")
+        .navigationBarTitleDisplayMode(.inline)
     }
 
     var readingLayout: AnyLayout {
@@ -122,7 +122,6 @@ private extension CookingSessionView {
         snapshot: CookingSessionSnapshot
     ) -> some View {
         VStack(alignment: .leading, spacing: theme.spacing.section) {
-            RecipeNameTitle(snapshot.recipeName)
             readingLayout {
                 if !ingredients.isEmpty {
                     VStack(alignment: .leading, spacing: theme.spacing.inline) {
@@ -140,11 +139,9 @@ private extension CookingSessionView {
                 Button("End Session") {
                     isEndSessionConfirmationPresented = true
                 }
-                .buttonStyle(.mhSecondary)
             }
         }
-        .mhScreen()
-        .navigationTitle("Cooking")
+        .mhScreen(title: Text(snapshot.recipeName))
         .task(id: snapshot.recipeID) {
             loadIngredients(for: snapshot.recipeID)
         }

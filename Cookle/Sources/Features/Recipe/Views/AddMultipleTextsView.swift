@@ -43,7 +43,6 @@ struct AddMultipleTextsView: View {
             .scrollDismissesKeyboard(.immediately)
             .mhInputChrome(state: isTextFocused ? .focused : .normal)
             .padding()
-            .background(Color(.systemGroupedBackground))
             .navigationTitle(title)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

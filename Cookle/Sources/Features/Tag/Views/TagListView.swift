@@ -57,10 +57,14 @@ private extension TagListView {
     }
 
     var tagList: some View {
-        List(filteredTags) { rowTag in
-            tagRow(for: rowTag)
+        List {
+            MHContainerContent {
+                ForEach(filteredTags) { rowTag in
+                    tagRow(for: rowTag)
+                }
+            }
         }
-        .mhListChrome()
+        .mhListChrome(.content)
     }
 
     @ViewBuilder var emptyStateView: some View {
@@ -124,9 +128,9 @@ private extension TagListView {
         } label: {
             VStack(alignment: .leading) {
                 Text(rowTag.value)
+                    .mhRowTitle()
                 Text(usageText(for: rowTag))
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .mhRowSupporting()
             }
             .cookleButtonRowContent()
         }

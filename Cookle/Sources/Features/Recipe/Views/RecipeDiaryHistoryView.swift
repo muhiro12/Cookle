@@ -1,3 +1,4 @@
+import MHUI
 import SwiftData
 import SwiftUI
 
@@ -10,14 +11,17 @@ struct RecipeDiaryHistoryView: View {
             lhs.date > rhs.date
         }
         List {
-            Section {
-                ForEach(diaries) { diary in
-                    RecipeDiaryRow(diary: diary)
+            MHContainerContent {
+                Section {
+                    ForEach(diaries) { diary in
+                        RecipeDiaryRow(diary: diary)
+                    }
+                } header: {
+                    MHSectionHeader("Diaries (\(diaries.count))")
                 }
-            } header: {
-                Text("Diaries (\(diaries.count))")
             }
         }
+        .mhListChrome(.content)
         .navigationTitle("Diaries")
         .navigationBarTitleDisplayMode(.inline)
     }

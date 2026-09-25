@@ -85,12 +85,10 @@ private extension CookingSessionTimerSection {
                         localized: "Suggested from this step: \(suggestedTimer.minutes) min"
                     )
                 )
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .mhTextStyle(.supporting, colorRole: .secondaryText)
             }
             Text("Step \(snapshot.currentStepNumber) of \(snapshot.stepCount)")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .mhTextStyle(.caption, colorRole: .secondaryText)
             timerButtons
         }
     }
@@ -113,7 +111,7 @@ private extension CookingSessionTimerSection {
     var expiredTimerContent: some View {
         VStack(alignment: .leading, spacing: theme.spacing.content) {
             Label("Timer Finished", systemImage: "bell.fill")
-                .font(.headline)
+                .mhTextStyle(.bodyStrong)
             MHActionGroup {
                 expiredActionButtons
             }
@@ -129,7 +127,6 @@ private extension CookingSessionTimerSection {
         Button("Cancel Timer") {
             cookingSessionStore.cancelTimer()
         }
-        .buttonStyle(.mhSecondary)
     }
 
     @ViewBuilder
@@ -173,7 +170,6 @@ private extension CookingSessionTimerSection {
             } label: {
                 Text("\(minutes) min")
             }
-            .buttonStyle(.mhSecondary)
         }
     }
 
@@ -182,7 +178,7 @@ private extension CookingSessionTimerSection {
     ) -> some View {
         VStack(alignment: .leading, spacing: theme.spacing.content) {
             Text("Timer Running")
-                .font(.headline)
+                .mhTextStyle(.bodyStrong)
             Text(
                 formattedDuration(
                     remainingSeconds: remainingSeconds

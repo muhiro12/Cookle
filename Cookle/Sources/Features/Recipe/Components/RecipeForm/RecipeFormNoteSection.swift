@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 9/21/24.
 //
 
+import MHUI
 import SwiftUI
 
 struct RecipeFormNoteSection: View {
@@ -21,8 +22,9 @@ struct RecipeFormNoteSection: View {
             .accessibilityValue(
                 note.isEmpty ? Text(verbatim: "") : Text(verbatim: note)
             )
+            .mhRow()
         } header: {
-            Text("Note")
+            MHSectionHeader("Note")
         }
     }
 

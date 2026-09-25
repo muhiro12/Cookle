@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import MHUI
 import SwiftData
 import SwiftUI
 
@@ -25,6 +26,7 @@ struct RecipeFormCategoriesSection: View {
                     axis: .vertical
                 )
                 .focused($focusedRowID, equals: row.id)
+                .mhRow()
                 .toolbar {
                     ToolbarItem(placement: .keyboard) {
                         if focusedRowID == row.id {
@@ -39,7 +41,7 @@ struct RecipeFormCategoriesSection: View {
                 deleteCategories(atOffsets: offsets)
             }
         } header: {
-            Text("Categories")
+            MHSectionHeader("Categories")
         }
         .onAppear {
             // A create form starts with an empty array, and `.onChange` never

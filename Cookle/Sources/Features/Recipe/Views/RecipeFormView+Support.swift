@@ -1,4 +1,5 @@
 import MHPlatform
+import MHUI
 import SwiftUI
 import TipKit
 
@@ -39,6 +40,7 @@ extension RecipeFormView {
                 currentEditMode == .inactive ? Text("Change Order or Delete Row") : Text("Done Edit")
             }
             .cookleButtonRowContent(alignment: .center)
+            .mhRow()
         }
         .environment(\.editMode, .constant(.inactive))
     }

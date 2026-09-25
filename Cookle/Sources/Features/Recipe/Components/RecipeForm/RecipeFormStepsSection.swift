@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import MHUI
 import SwiftData
 import SwiftUI
 
@@ -29,6 +30,7 @@ struct RecipeFormStepsSection: View {
                     )
                     .focused($focusedRowID, equals: row.id)
                 }
+                .mhRow()
             }
             .onMove { sourceOffsets, destinationOffset in
                 moveSteps(
@@ -40,12 +42,9 @@ struct RecipeFormStepsSection: View {
                 deleteSteps(atOffsets: offsets)
             }
         } header: {
-            HStack {
-                Text("Steps")
-                Spacer()
+            MHSectionHeader("Steps") {
                 AddMultipleStepsButton(steps: $steps)
                     .font(.caption)
-                    .textCase(nil)
             }
         }
         .onAppear {

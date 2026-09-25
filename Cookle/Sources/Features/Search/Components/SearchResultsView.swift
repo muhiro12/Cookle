@@ -6,21 +6,21 @@ struct SearchResultsView: View {
     @Binding var selection: Recipe?
 
     var body: some View {
-        MHGroupedRows {
-            ForEach(recipes) { recipe in
-                Button {
-                    $selection.cookleSelectForNavigation(recipe)
-                } label: {
-                    RecipeLabel()
-                        .labelStyle(.titleAndLargeIcon)
-                        .environment(recipe)
-                        .cookleButtonRowContent()
+        List {
+            MHContainerContent {
+                ForEach(recipes) { recipe in
+                    Button {
+                        $selection.cookleSelectForNavigation(recipe)
+                    } label: {
+                        RecipeLabel()
+                            .labelStyle(.titleAndLargeIcon)
+                            .environment(recipe)
+                            .cookleButtonRowContent()
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
             }
         }
-        .mhSurfaceInset()
-        .mhSurface()
-        .mhScreen()
+        .mhListChrome(.content)
     }
 }

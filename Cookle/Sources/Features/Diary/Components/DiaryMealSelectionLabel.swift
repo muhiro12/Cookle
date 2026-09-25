@@ -28,26 +28,28 @@ struct DiaryMealSelectionLabel: View {
 #Preview("Meal selections") {
     NavigationStack {
         Form {
-            Section {
-                NavigationLink(value: DiaryObjectType.breakfast) {
-                    DiaryMealSelectionLabel(type: .breakfast, recipeNames: [])
+            MHContainerContent {
+                Section {
+                    NavigationLink(value: DiaryObjectType.breakfast) {
+                        DiaryMealSelectionLabel(type: .breakfast, recipeNames: [])
+                    }
                 }
-            }
-            Section {
-                NavigationLink(value: DiaryObjectType.lunch) {
-                    DiaryMealSelectionLabel(type: .lunch, recipeNames: ["野菜スープ"])
+                Section {
+                    NavigationLink(value: DiaryObjectType.lunch) {
+                        DiaryMealSelectionLabel(type: .lunch, recipeNames: ["野菜スープ"])
+                    }
                 }
-            }
-            Section {
-                NavigationLink(value: DiaryObjectType.dinner) {
-                    DiaryMealSelectionLabel(
-                        type: .dinner,
-                        recipeNames: ["スパゲッティ・カルボナーラ", "野菜スープ"]
-                    )
+                Section {
+                    NavigationLink(value: DiaryObjectType.dinner) {
+                        DiaryMealSelectionLabel(
+                            type: .dinner,
+                            recipeNames: ["スパゲッティ・カルボナーラ", "野菜スープ"]
+                        )
+                    }
                 }
             }
         }
-        .mhFormChrome()
+        .mhFormChrome(.content)
         .navigationTitle("Diary")
     }
 }

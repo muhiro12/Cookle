@@ -30,14 +30,16 @@ struct DiaryFormView: View {
         @Bindable var model = model
 
         Form {
-            dateSection
-            mealSection(type: .breakfast, recipes: $model.breakfasts)
-            mealSection(type: .lunch, recipes: $model.lunches)
-            mealSection(type: .dinner, recipes: $model.dinners)
-            noteSection
+            MHContainerContent {
+                dateSection
+                mealSection(type: .breakfast, recipes: $model.breakfasts)
+                mealSection(type: .lunch, recipes: $model.lunches)
+                mealSection(type: .dinner, recipes: $model.dinners)
+                noteSection
+            }
         }
         .scrollDismissesKeyboard(.immediately)
-        .mhFormChrome()
+        .mhFormChrome(.content)
         .disabled(model.isSaving)
         .navigationDestination(for: DiaryObjectType.self) { type in
             destinationView(for: type)
@@ -89,6 +91,7 @@ struct DiaryFormView: View {
         return Section {
             DatePicker("Date", selection: $model.date, displayedComponents: .date)
                 .datePickerStyle(.graphical)
+                .labeledContentStyle(.automatic)
         }
     }
 
@@ -106,7 +109,7 @@ struct DiaryFormView: View {
                 model.note.isEmpty ? Text(verbatim: "") : Text(verbatim: model.note)
             )
         } header: {
-            Text("Note")
+            MHSectionHeader("Note")
         }
     }
 

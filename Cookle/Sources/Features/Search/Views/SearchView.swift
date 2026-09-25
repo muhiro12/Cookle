@@ -97,8 +97,6 @@ struct SearchView: View {
         if isSearching {
             ProgressView("Searching Recipes")
                 .frame(maxWidth: .infinity)
-                .mhSurfaceInset()
-                .mhSurface()
                 .mhScreen()
         } else if let searchErrorMessage {
             ContentUnavailableView {
@@ -116,8 +114,6 @@ struct SearchView: View {
                 }
             }
             .mhEmptyStateLayout()
-            .mhSurfaceInset()
-            .mhSurface()
             .mhScreen()
         } else if !recipes.isEmpty {
             SearchResultsView(
@@ -134,8 +130,6 @@ struct SearchView: View {
     var notFoundPlaceholder: some View {
         ContentUnavailableView.search(text: searchText)
             .mhEmptyStateLayout()
-            .mhSurfaceInset()
-            .mhSurface()
             .mhScreen()
     }
 
@@ -156,8 +150,6 @@ struct SearchView: View {
             }
         }
         .mhEmptyStateLayout()
-        .mhSurfaceInset()
-        .mhSurface()
         .mhScreen()
     }
 

@@ -55,7 +55,6 @@ struct InferRecipeFormView: View {
             .scrollDismissesKeyboard(.immediately)
             .mhInputChrome(state: isTextFocused ? .focused : .normal)
             .padding()
-            .background(Color(.systemGroupedBackground))
             .navigationTitle(Text("Review Recipe Text"))
             .toolbar {
                 toolbarItems

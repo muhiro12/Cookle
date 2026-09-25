@@ -24,12 +24,10 @@ struct RecipeContentSection<Content: View>: View {
             .mhSection(title)
         case .reading:
             VStack(alignment: .leading, spacing: theme.spacing.content) {
-                MHSectionHeader(title: Text(title))
-                VStack(alignment: .leading, spacing: theme.spacing.content) {
-                    content
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
+                content
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .mhSection(title)
         }
     }
 

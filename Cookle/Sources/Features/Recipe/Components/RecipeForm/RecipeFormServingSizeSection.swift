@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 9/21/24.
 //
 
+import MHUI
 import SwiftUI
 
 struct RecipeFormServingSizeSection: View {
@@ -20,8 +21,9 @@ struct RecipeFormServingSizeSection: View {
                     )
                 Text("servings")
             }
+            .mhRow()
         } header: {
-            Text("Serving Size")
+            MHSectionHeader("Serving Size")
         }
     }
 

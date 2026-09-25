@@ -1,3 +1,4 @@
+import MHUI
 import SwiftData
 import SwiftUI
 
@@ -19,13 +20,12 @@ struct RecipeLabel: View {
         Label {
             VStack(alignment: .leading) {
                 Text(recipe.name)
+                    .mhRowTitle()
                 Text(ingredientsText)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .mhRowSupporting()
                     .lineLimit(1)
                 Text(categoriesText)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .mhRowSupporting()
                     .lineLimit(1)
             }
         } icon: {

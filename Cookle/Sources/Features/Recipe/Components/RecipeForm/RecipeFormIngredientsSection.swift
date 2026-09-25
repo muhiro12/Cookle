@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import MHUI
 import SwiftData
 import SwiftUI
 
@@ -23,6 +24,7 @@ struct RecipeFormIngredientsSection: View {
         Section {
             ForEach(ingredientRows) { row in
                 ingredientRow(for: row)
+                    .mhRow()
                     .toolbar {
                         ingredientSuggestionToolbarItem(for: row)
                     }
@@ -37,12 +39,9 @@ struct RecipeFormIngredientsSection: View {
                 deleteIngredients(atOffsets: offsets)
             }
         } header: {
-            HStack {
-                Text("Ingredients")
-                Spacer()
+            MHSectionHeader("Ingredients") {
                 AddMultipleIngredientsButton(ingredients: $ingredients)
                     .font(.caption)
-                    .textCase(nil)
             }
         }
         .onAppear {

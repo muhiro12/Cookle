@@ -25,7 +25,7 @@ struct DiaryRecipeRegistrationView: View {
                     additionalFooter: "The recipe stays in your collection even if you cancel the Diary."
                 )
             }
-            .mhFormChrome()
+            .mhFormChrome(.content)
             .disabled(isSaving)
             .navigationTitle("New Recipe")
             .interactiveDismissDisabled(!name.isEmpty || isSaving)

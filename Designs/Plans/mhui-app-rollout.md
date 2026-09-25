@@ -1,6 +1,6 @@
 # MHUI Main-App Rollout
 
-Updated September 17, 2026.
+Updated September 26, 2026.
 
 This record covers the main-app step. The subsequent
 [companion rollout](mhui-companion-rollout.md) evaluates Watch, Widgets, and
@@ -19,6 +19,80 @@ Reading and action order are app-owned presentation decisions. New features
 and diary-list information architecture are separate work.
 CookleLibrary, Watch, Widgets, App Intent implementations, and the MHUI
 package remain outside this change.
+
+## MHUI 2.0 Adoption
+
+The remote requirement advances to `2.0.0..<3.0.0`, resolved to MHUI 2.0.0 at
+`8bd30c7c9b6149d7034fe76ab9675ef3822c4d42`. The project-link and resolved-pin
+guardrails reject the 1.x baseline.
+
+The app root applies the neutral standard theme, and the app initializer
+configures the same theme's navigation title appearance before any scene is
+created. Previews apply the same theme and title configuration through the
+shared preview assembly. Cookle keeps its orange accent and adds no palette or
+base-color overrides.
+
+MHUI 2.0 changes no-argument `mhListChrome()` and `mhFormChrome()` from native
+rows on the MHUI canvas to content presentation, so every container now
+states its route; the table below lists the choices. The recipe form keeps its
+specialized native sections (reordering, deletion, edit mode, section-level
+dialogs and import modifiers) and opts each row into `mhRow()` explicitly
+instead of recomposing sections through `MHContainerContent`.
+The graphical date picker opts into automatic labeled-content styling to avoid
+inheriting the compact key-value column intended for ordinary metadata.
+The isolated sample factories save their in-memory contexts before navigation
+or selection retains model identifiers. This prevents temporary identifiers
+from changing after the sample UI has captured them; live stores are unaffected.
+
+Recipe Detail and Cooking move the recipe name from a custom content heading
+into the native navigation title. Sections and grouped rows follow the 2.0
+open canvas, so ingredient, category, and diary groups no longer draw
+surfaces. Empty, loading, and search states drop their surface frames, redundant
+secondary button styles inside action groups are removed, and footer-only
+sections use `mhSectionWithFooter`. Detached editors no longer paint a grouped
+background behind their input chrome. Watch, Widgets, and CookleLibrary still
+do not link MHUI, so the 2.0 metrics do not affect them.
+
+### MHUI 2.0 Verification
+
+The Swift formatter and retained repository rules pass. The Xcode-native Cookle
+build succeeds with no errors or warnings on Xcode 27.0 and the iOS 27.1
+Simulator SDK; it compiles the MHUI 2.0.0 checkout and the embedded Watch and
+Widgets targets. No shared-library logic changed, so no library tests ran.
+
+Runtime evidence uses the existing isolated capture fixture on iPhone 18 Pro
+(iOS 27.0). It covers the recipe list, sort menu, Recipe Detail with its
+collapsed title and lower actions, diary history, Cooking with step selection
+and a dismissed End Session confirmation, the recipe form in view and edit
+modes followed by Cancel, the Diary landing and detail, Search prompt,
+no-result and result states, Settings, the photo grid, and photo detail.
+Dark appearance with accessibility text covers Recipe Detail and the recipe
+list, and the iPad review simulator covers the recipe split view. No user records
+were saved or deleted, and no purchases or cloud synchronization were performed.
+Local captures and the filtered
+runtime log are retained under `.build/ci/mhui-2.0-adoption/`.
+
+Independent follow-up verifies the corrected full-width graphical date picker
+and tag edit cancellation without changing its name.
+
+Workspace interaction sessions were lost during verification. After reproducing
+the tool gap, an explicit isolated-fixture launch through official simulator
+tooling with native UI interaction completed the follow-up checks. Verification
+runs and sessions were stopped, simulator overrides were restored, and the
+original Cookle scheme and iPhone 18 Pro destination were confirmed.
+
+The native large title truncates long recipe names on iPhone, most visibly at
+accessibility sizes; the captured collapsed inline title shows the full sample
+name. VoiceOver behavior remains unverified. MHUI's compact key-value value
+column is 120 points, so detail dates use
+the stacked key-value layout. Earlier captures omitted Cooking's ingredient
+list while the in-memory fixture still held temporary identifiers; the sample
+factories now save before creating navigation and cooking state. Cooking was
+not recaptured after this fixture correction. Runtime logs
+retain three SwiftUI `glassEffect()` multiple-update
+faults and simulator system messages, with no Cookle crash or SwiftData
+exception. VoiceOver, Increase Contrast, physical devices, and every iPad
+route remain unverified.
 
 ## MHUI 1.19 Refresh
 
@@ -156,33 +230,37 @@ workspace opened for this verification was closed.
 
 ## Presentation Choices
 
-MHUI 1.20 treats native List/Form chrome and app-owned composition as complete
-adoption routes. Current main browsing surfaces prefer shared spacing and
-hierarchy; native containers remain where they supply concrete system
-interaction behavior. No List, Form, or screen-level ScrollView is nested
-inside `mhScreen`.
+MHUI 2.0 chooses each screen route explicitly: content List/Form presentation
+for product collections, details, and editors, stack composition for freely
+arranged reading and task screens, and native presentation for settings,
+subscription, and diagnostics. No List, Form, or screen-level ScrollView is
+nested inside `mhScreen`. The table reflects the 2.0 routes; the earlier
+refinement history below describes the preceding baseline.
 
 The September 17 refinement is implemented by `b9133ecf`, `5292ccd6`, and
-`99c26972`. It moves Recipe browsing, Search results and states, and the Diary
+`99c26972`. It moved Recipe browsing, Search results and states, and the Diary
 landing screen to composed MHUI surfaces without changing their routes or data
-operations. Recipe Detail remains the reference composition rather than being
-flattened back toward a generic native list.
+operations. The 2.0 update follows the released package guidance for content
+List presentation while retaining the composed Recipe Detail route.
 
 <!-- markdownlint-disable MD013 -->
 | Surface | Choice | Preserved behavior |
 | --- | --- | --- |
-| Recipe list | MHUI screen and grouped-row surfaces | Resume entry, sort, recipe rows, navigation and context actions |
-| Recipe form | Native Form chrome | Fields, photo controls, reordering, drafts, Save and Cancel |
-| Diary landing | MHUI screen and sections | Today, suggestions, chronological month groups and navigation |
-| Diary detail, form and recipe selection | Native List/Form chrome | Date picker, selected recipe sets, notes and actions |
-| Search | Native searchable field with MHUI result and state surfaces | Search activation, discovery routes, result navigation and keyboard behavior |
-| Ingredient/category tags | Native List/Form chrome | Selection, rename and merge/delete conditions |
-| Settings and subscription host | Native List chrome | Native settings controls and MHPlatform-owned subscription content |
-| Photo collection | MHUI screen and section headers around the existing adaptive grid | Source groups, image order, minimum thumbnail width and navigation |
-| Photo metadata | Native List chrome | Preview size, recipe associations, dates, full-screen route and deletion confirmation |
+| Recipe list | Content List with `MHContainerContent`; unframed empty state | Resume entry, sort, recipe rows, custom selection routing and context actions |
+| Recipe Detail | `mhScreen` with native title, open-canvas sections and grouped rows | Photos, facts, cooking and diary actions, tag and diary routes, sharing, duplicate and delete |
+| Recipe diary history | Content List with `MHContainerContent` | Chronological diary rows and diary routes |
+| Recipe form | Content Form with explicit `mhRow()` rows and MHUI headers | Fields, photo controls, reordering, deletion, drafts, Save and Cancel |
+| Diary landing | `mhScreen` and sections | Today, suggestions, chronological month groups and navigation |
+| Diary detail and recipe selection | Content List with `MHContainerContent` | Meal groups, recipe routes, multi-selection, search, notes and actions |
+| Diary form and new-recipe registration | Content Form | Date picker, meal selection routes, note, validation, Save and Cancel |
+| Search | Native searchable field; content List results; unframed states | Search activation, discovery routes, result navigation and keyboard behavior |
+| Ingredient/category tags | Content List/Form with `MHContainerContent` | Search, selection, rename and merge/delete conditions |
+| Settings and subscription host | Native List | Native settings controls and MHPlatform-owned subscription content |
+| Photo collection | `mhScreen` and section headers around the existing adaptive grid | Source groups, image order, minimum thumbnail width and navigation |
+| Photo detail | Content List with `MHContainerContent` | Preview size, recipe associations, dates, full-screen route and deletion confirmation |
 | Detached recipe editors | MHUI input chrome around the existing TextEditor | Full-height native editor, placeholder, keyboard, text conversion, inference and Cancel |
-| Cooking | MHUI screen, sections, stable surfaces and semantic actions | Native step pager, long-step scrolling, progress, timer state and all handlers |
-| Debug lists and object inspectors | Native List chrome | Existing diagnostic content, model routes and native swipe behavior |
+| Cooking | `mhScreen` with native title, sections and semantic actions | Step list and selection, timers, End Session and diary continuation |
+| Debug lists and object inspectors | Native List | Existing diagnostic content, model routes and native swipe behavior |
 <!-- markdownlint-enable MD013 -->
 
 ## Native and Owning-Package Presentations

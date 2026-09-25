@@ -18,12 +18,13 @@ struct TagView<T: Tag>: View {
 
     var body: some View {
         List {
-            recipeSection
-            createdAtSection
-            updatedAtSection
-            actionSection
+            MHContainerContent {
+                recipeSection
+                datesSection
+                actionSection
+            }
         }
-        .mhListChrome()
+        .mhListChrome(.content)
         .navigationTitle(tag.value)
         .toolbar {
             ToolbarItem {
@@ -63,23 +64,20 @@ private extension TagView {
                 }
             }
         } header: {
-            Text("Recipes")
+            MHSectionHeader("Recipes")
         }
     }
 
-    var createdAtSection: some View {
+    var datesSection: some View {
         Section {
-            Text(tag.createdTimestamp.formatted(.dateTime.year().month().day()))
-        } header: {
-            Text("Created At")
-        }
-    }
-
-    var updatedAtSection: some View {
-        Section {
-            Text(tag.modifiedTimestamp.formatted(.dateTime.year().month().day()))
-        } header: {
-            Text("Updated At")
+            LabeledContent("Created At") {
+                Text(tag.createdTimestamp, format: .dateTime.year().month().day())
+            }
+            .mhKeyValueLayout(.vertical)
+            LabeledContent("Updated At") {
+                Text(tag.modifiedTimestamp, format: .dateTime.year().month().day())
+            }
+            .mhKeyValueLayout(.vertical)
         }
     }
 
@@ -88,8 +86,6 @@ private extension TagView {
             MergeDuplicateTagButton<T>()
             EditTagButton<T>()
             deleteSectionButton
-        } header: {
-            Spacer()
         }
     }
 

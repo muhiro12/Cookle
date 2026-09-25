@@ -24,13 +24,14 @@ struct PhotoView: View {
 
     var body: some View {
         List {
-            previewSection
-            recipeSection
-            createdAtSection
-            updatedAtSection
-            actionSection
+            MHContainerContent {
+                previewSection
+                recipeSection
+                datesSection
+                actionSection
+            }
         }
-        .mhListChrome()
+        .mhListChrome(.content)
         .navigationTitle(
             PhotoDisplayCopy.title(for: photo)
         )
@@ -79,23 +80,20 @@ struct PhotoView: View {
                 }
             }
         } header: {
-            Text("Recipes")
+            MHSectionHeader("Recipes")
         }
     }
 
-    var createdAtSection: some View {
+    var datesSection: some View {
         Section {
-            Text(photo.createdTimestamp.formatted(.dateTime.year().month().day()))
-        } header: {
-            Text("Created At")
-        }
-    }
-
-    var updatedAtSection: some View {
-        Section {
-            Text(photo.modifiedTimestamp.formatted(.dateTime.year().month().day()))
-        } header: {
-            Text("Updated At")
+            LabeledContent("Created At") {
+                Text(photo.createdTimestamp, format: .dateTime.year().month().day())
+            }
+            .mhKeyValueLayout(.vertical)
+            LabeledContent("Updated At") {
+                Text(photo.modifiedTimestamp, format: .dateTime.year().month().day())
+            }
+            .mhKeyValueLayout(.vertical)
         }
     }
 
@@ -104,8 +102,6 @@ struct PhotoView: View {
             DeletePhotoButton {
                 photoSelection = nil
             }
-        } header: {
-            Spacer()
         }
     }
 

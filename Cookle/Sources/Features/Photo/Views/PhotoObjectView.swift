@@ -14,7 +14,7 @@ struct PhotoObjectView: View {
             createdAtSection
             updatedAtSection
         }
-        .mhListChrome()
+        .mhListChrome(.native)
     }
 
     var photoSection: some View {

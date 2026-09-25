@@ -17,13 +17,14 @@ struct DiaryView: View {
 
     var body: some View {
         List {
-            mealSections
-            noteSection
-            createdAtSection
-            updatedAtSection
-            actionSection
+            MHContainerContent {
+                mealSections
+                noteSection
+                datesSection
+                actionSection
+            }
         }
-        .mhListChrome()
+        .mhListChrome(.content)
         .navigationTitle(diary.date.formatted(.dateTime.year().month().day().weekday()))
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
@@ -51,7 +52,7 @@ struct DiaryView: View {
                         .buttonStyle(.plain)
                     }
                 } header: {
-                    Text(type.title)
+                    MHSectionHeader(title: Text(type.title))
                 }
             }
         }
@@ -62,24 +63,21 @@ struct DiaryView: View {
             Section {
                 Text(diary.note)
             } header: {
-                Text("Note")
+                MHSectionHeader("Note")
             }
         }
     }
 
-    var createdAtSection: some View {
+    var datesSection: some View {
         Section {
-            Text(diary.createdTimestamp.formatted(.dateTime.year().month().day()))
-        } header: {
-            Text("Created At")
-        }
-    }
-
-    var updatedAtSection: some View {
-        Section {
-            Text(diary.modifiedTimestamp.formatted(.dateTime.year().month().day()))
-        } header: {
-            Text("Updated At")
+            LabeledContent("Created At") {
+                Text(diary.createdTimestamp, format: .dateTime.year().month().day())
+            }
+            .mhKeyValueLayout(.vertical)
+            LabeledContent("Updated At") {
+                Text(diary.modifiedTimestamp, format: .dateTime.year().month().day())
+            }
+            .mhKeyValueLayout(.vertical)
         }
     }
 
@@ -87,8 +85,6 @@ struct DiaryView: View {
         Section {
             EditDiaryButton()
             DeleteDiaryButton()
-        } header: {
-            Spacer()
         }
     }
 

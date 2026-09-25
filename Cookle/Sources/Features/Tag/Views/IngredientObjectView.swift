@@ -39,7 +39,7 @@ struct IngredientObjectView: View {
                 Text("Updated At")
             }
         }
-        .mhListChrome()
+        .mhListChrome(.native)
     }
 }
 

@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 9/21/24.
 //
 
+import MHUI
 import SwiftUI
 
 struct RecipeFormNameSection: View {
@@ -21,13 +22,11 @@ struct RecipeFormNameSection: View {
                 .accessibilityValue(
                     name.isEmpty ? Text(verbatim: "") : Text(verbatim: name)
                 )
+                .mhRow()
         } header: {
-            HStack {
-                Text("Name")
+            MHSectionHeader("Name") {
                 Text("Required")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .textCase(nil)
+                    .mhTextStyle(.caption, colorRole: .secondaryText)
             }
         } footer: {
             if showsQuickCaptureHint {

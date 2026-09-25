@@ -27,7 +27,7 @@ struct DebugContentView<Model: PersistentModel>: View {
                 }
             }
         }
-        .mhListChrome()
+        .mhListChrome(.native)
         .navigationTitle(Text("Content"))
     }
 

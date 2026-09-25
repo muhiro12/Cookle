@@ -31,7 +31,7 @@ struct RecipeFormPhotosSection: View {
         Section {
             photoSectionContent
         } header: {
-            Text("Photos")
+            MHSectionHeader("Photos")
         }
         .modifier(
             RecipeFormPhotoImportModifier(
@@ -112,6 +112,7 @@ struct RecipeFormPhotosSection: View {
                 .scrollTargetBehavior(.viewAligned)
             }
         }
+        .mhRow()
     }
 
     var editModeContent: some View {
@@ -123,6 +124,7 @@ struct RecipeFormPhotosSection: View {
             )
             .accessibilityLabel(Text("Selected Photo"))
             .frame(height: Layout.editModePhotoHeight)
+            .mhRow()
         }
         .onMove { sourceOffsets, destinationOffset in
             movePhotos(

@@ -37,7 +37,7 @@ struct CookleApp: App {
                     }
                 }
             }
-            .mhTheme(.standard(palette: .linen))
+            .mhTheme(.standard)
             .task(id: isICloudOn) {
                 // `init()` already assembled for the stored setting; only a
                 // real toggle needs the store reopened.
@@ -53,6 +53,10 @@ struct CookleApp: App {
 
     @MainActor
     init() {
+        // Navigation bars read this UIKit default when they are created, so it
+        // has to be configured before any scene builds its hierarchy.
+        MHTheme.standard.configureNavigationTitleAppearance()
+
         // Must happen here, not in the scene: an App Intent can launch this
         // process without a scene, and its dependencies have to be registered
         // before `perform()` runs.

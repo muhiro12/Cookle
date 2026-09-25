@@ -10,7 +10,7 @@ struct StoreListView: View {
         List {
             appRuntime.subscriptionSectionView()
         }
-        .mhListChrome()
+        .mhListChrome(.native)
         .navigationTitle(Text("Subscription"))
     }
 }

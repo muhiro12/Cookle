@@ -20,7 +20,7 @@ struct DebugPreviewsView: View {
             AdvertisementSection(.small)
             ShortcutsLinkSection()
         }
-        .mhListChrome()
+        .mhListChrome(.native)
         .navigationTitle(Text("Previews"))
     }
 }

@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 9/21/24.
 //
 
+import MHUI
 import SwiftUI
 
 struct RecipeFormCookingTimeSection: View {
@@ -20,8 +21,9 @@ struct RecipeFormCookingTimeSection: View {
                     )
                 Text("minutes")
             }
+            .mhRow()
         } header: {
-            Text("Cooking Time")
+            MHSectionHeader("Cooking Time")
         }
     }
 

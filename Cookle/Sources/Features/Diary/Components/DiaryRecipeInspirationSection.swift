@@ -33,19 +33,13 @@ struct DiaryRecipeInspirationSection: View {
                 }
             }
         }
-        .mhSection(
-            title: Text("What Sounds Good Today?"),
-            accessory: {
-                EmptyView()
-            },
-            footer: {
-                if recipes.isEmpty {
-                    Text("Save a recipe to find inspiration here. A name is enough to start.")
-                } else {
-                    Text("From your saved recipes, starting with recently updated ones.")
-                }
+        .mhSectionWithFooter(title: Text("What Sounds Good Today?")) {
+            if recipes.isEmpty {
+                Text("Save a recipe to find inspiration here. A name is enough to start.")
+            } else {
+                Text("From your saved recipes, starting with recently updated ones.")
             }
-        )
+        }
         .onChange(of: recipes.map(\.id)) {
             offset = 0
         }

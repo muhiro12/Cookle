@@ -146,7 +146,7 @@ struct SettingsSidebarView: View {
             Layout.bottomContentMargin,
             for: .scrollContent
         )
-        .mhListChrome()
+        .mhListChrome(.native)
     }
 
     @ViewBuilder var subscriptionSection: some View {
