@@ -22,9 +22,7 @@ struct ShowRandomRecipeIntent: AppIntent {
             context: modelContainer.mainContext
         ) else {
             return .result(
-                dialog: .init(
-                    stringLiteral: String(localized: "Not Found")
-                )
+                dialog: .init("Not Found")
             )
         }
         return .result(dialog: .init(stringLiteral: recipe.name)) {

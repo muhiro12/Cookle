@@ -27,9 +27,7 @@ struct ShowTodayDiaryIntent: AppIntent {
             }
         }
         return .result(
-            dialog: .init(
-                stringLiteral: String(localized: "No diary for today")
-            )
+            dialog: .init("No diary for today")
         )
     }
 }

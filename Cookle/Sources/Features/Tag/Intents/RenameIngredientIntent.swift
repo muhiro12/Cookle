@@ -29,9 +29,7 @@ struct RenameIngredientIntent: AppIntent {
             value: newValue
         )
         return .result(
-            dialog: .init(
-                stringLiteral: String(localized: "Renamed ingredient")
-            )
+            dialog: .init("Renamed ingredient")
         )
     }
 }

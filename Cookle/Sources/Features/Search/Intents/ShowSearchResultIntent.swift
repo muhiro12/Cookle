@@ -27,15 +27,11 @@ struct ShowSearchResultIntent: AppIntent {
         )
         guard !results.isEmpty else {
             return .result(
-                dialog: .init(
-                    stringLiteral: String(localized: "Not Found")
-                )
+                dialog: .init("Not Found")
             )
         }
         return .result(
-            dialog: .init(
-                stringLiteral: String(localized: "Result")
-            )
+            dialog: .init("Result")
         ) {
             SearchResultView(.anyTextMatches(searchText))
                 .environment(CookleRouteNavigator.disabled)

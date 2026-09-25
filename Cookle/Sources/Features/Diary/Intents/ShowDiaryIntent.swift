@@ -24,9 +24,7 @@ struct ShowDiaryIntent: AppIntent {
             context: modelContainer.mainContext
         ) else {
             return .result(
-                dialog: .init(
-                    stringLiteral: String(localized: "Diary not found")
-                )
+                dialog: .init("Diary not found")
             )
         }
 

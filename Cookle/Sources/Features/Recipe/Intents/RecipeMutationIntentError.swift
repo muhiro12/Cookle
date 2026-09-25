@@ -1,15 +1,19 @@
 import Foundation
 
-enum RecipeMutationIntentError: LocalizedError {
+enum RecipeMutationIntentError: LocalizedError, CustomLocalizedStringResourceConvertible {
     case recipeNotFound
     case failedToBuildEntity
 
     var errorDescription: String? {
+        String(localized: localizedStringResource)
+    }
+
+    var localizedStringResource: LocalizedStringResource {
         switch self {
         case .recipeNotFound:
-            return String(localized: "Recipe not found.")
+            return "Recipe not found."
         case .failedToBuildEntity:
-            return String(localized: "Failed to build the recipe result.")
+            return "Failed to build the recipe result."
         }
     }
 }

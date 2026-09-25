@@ -48,9 +48,7 @@ struct UpdateDiaryIntent: AppIntent {
         }
 
         return .result(
-            dialog: .init(
-                stringLiteral: String(localized: "Updated diary")
-            )
+            dialog: .init("Updated diary")
         )
     }
 }

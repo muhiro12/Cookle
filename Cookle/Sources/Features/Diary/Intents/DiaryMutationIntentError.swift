@@ -1,12 +1,16 @@
 import Foundation
 
-enum DiaryMutationIntentError: LocalizedError {
+enum DiaryMutationIntentError: LocalizedError, CustomLocalizedStringResourceConvertible {
     case diaryNotFound
 
     var errorDescription: String? {
+        String(localized: localizedStringResource)
+    }
+
+    var localizedStringResource: LocalizedStringResource {
         switch self {
         case .diaryNotFound:
-            return String(localized: "Diary not found.")
+            return "Diary not found."
         }
     }
 }

@@ -1,37 +1,31 @@
 import Foundation
 
-enum TagMutationIntentError: LocalizedError {
+enum TagMutationIntentError: LocalizedError, CustomLocalizedStringResourceConvertible {
     case ambiguousCategory(String)
     case ambiguousIngredient(String)
     case categoryNotFound
     case ingredientNotFound
 
     var errorDescription: String? {
+        String(localized: localizedStringResource)
+    }
+
+    var localizedStringResource: LocalizedStringResource {
         switch self {
         case .ambiguousCategory(let value):
-            return String.localizedStringWithFormat(
-                String(
-                    localized: """
-                    Cookle has multiple categories named %@. Open Cookle and merge the duplicates before \
-                    running this shortcut again.
-                    """
-                ),
-                value
-            )
+            return """
+                Cookle has multiple categories named \(value). Open Cookle and merge the duplicates before \
+                running this shortcut again.
+                """
         case .ambiguousIngredient(let value):
-            return String.localizedStringWithFormat(
-                String(
-                    localized: """
-                    Cookle has multiple ingredients named %@. Open Cookle and merge the duplicates before \
-                    running this shortcut again.
-                    """
-                ),
-                value
-            )
+            return """
+                Cookle has multiple ingredients named \(value). Open Cookle and merge the duplicates before \
+                running this shortcut again.
+                """
         case .categoryNotFound:
-            return String(localized: "Category not found.")
+            return "Category not found."
         case .ingredientNotFound:
-            return String(localized: "Ingredient not found.")
+            return "Ingredient not found."
         }
     }
 }
