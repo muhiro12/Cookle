@@ -53,6 +53,10 @@ extension CookleSchemaV1 {
                 photo.data = photoData.data
             }
             if photo.sourceID != photoData.source.rawValue {
+                // Snapshot the existing cascade rows before changing the asset.
+                // A recipe edit may replace these rows in the same transaction;
+                // leaving them as faults makes a later rollback trap.
+                CascadeDeletionSupport.materialize(photo.objects ?? [])
                 photo.sourceID = photoData.source.rawValue
             }
             return photo

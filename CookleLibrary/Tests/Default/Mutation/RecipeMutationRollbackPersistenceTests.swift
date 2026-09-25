@@ -88,6 +88,46 @@ struct RecipeMutationRollbackPersistenceTests: MutationRollbackTestSupport {
     }
 
     @Test
+    func rolled_back_photo_source_change_restores_the_asset_and_recipe() throws {
+        let draft = try RecipeFormOperations.makeDraft(
+            input: .init(
+                name: "Renamed",
+                photos: [.init(data: Data("only".utf8), source: .imagePlayground)],
+                servingSize: "2",
+                cookingTime: "30",
+                ingredients: [],
+                steps: [],
+                categories: [],
+                note: ""
+            )
+        )
+        try withDiskStore { url in
+            let context = try makeContext(at: url)
+            _ = try RecipeFormOperations.createWithOutcome(
+                context: context,
+                draft: try makePhotoDraft(photoNames: ["only"])
+            )
+            try context.save()
+
+            let editing = try makeContext(at: url)
+            let recipe = try #require(try editing.fetch(.recipes(.all)).first)
+            _ = try RecipeFormOperations.updateWithOutcome(
+                context: editing,
+                recipe: recipe,
+                draft: draft
+            )
+            editing.rollback()
+
+            let reopened = try makeContext(at: url)
+            let stored = try #require(try reopened.fetch(.recipes(.all)).first)
+            #expect(stored.name == "Curry")
+            #expect(stored.orderedPhotos.map(\.source) == [.photosPicker])
+            #expect(try reopened.fetchCount(FetchDescriptor<Photo>()) == 1)
+            #expect(try reopened.fetchCount(FetchDescriptor<PhotoObject>()) == 1)
+        }
+    }
+
+    @Test
     func rolled_back_photo_reorder_leaves_the_original_order_on_disk() throws {
         try withDiskStore { url in
             let context = try makeContext(at: url)
