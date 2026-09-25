@@ -57,6 +57,8 @@ private extension CookleSampleDataContext {
                 previewStore.baseDate = baseDate
             }
             try previewStore.prepare(modelContainer.mainContext)
+            // Stabilize identifiers before navigation and selection retain models.
+            try modelContainer.mainContext.save()
             return MainActor.assumeIsolated {
                 .init(
                     assembly: makeAssembly(modelContainer),

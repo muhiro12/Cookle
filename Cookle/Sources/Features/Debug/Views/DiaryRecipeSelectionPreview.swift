@@ -13,6 +13,7 @@ struct DiaryRecipeSelectionPreview: View {
                 )
             )
             try CooklePreviewStore().prepare(container.mainContext)
+            try container.mainContext.save()
             return CookleAppAssemblyFactory.preview(modelContainer: container)
         } catch {
             fatalError("Failed to prepare recipe selection preview: \(error)")
