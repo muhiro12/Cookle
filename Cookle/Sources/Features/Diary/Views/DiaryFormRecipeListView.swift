@@ -81,7 +81,7 @@ private extension DiaryFormRecipeListView {
     }
 
     var recipeList: some View {
-        List(selection: $temporarySelection) {
+        List(selection: selectedRecipeIDs) {
             MHContainerContent {
                 Section {
                     if selectedRecipes.isEmpty {
@@ -114,6 +114,19 @@ private extension DiaryFormRecipeListView {
         .mhListChrome(.content)
     }
 
+    var selectedRecipeIDs: Binding<Set<PersistentIdentifier>> {
+        .init(
+            get: {
+                Set(temporarySelection.map(\.persistentModelID))
+            },
+            set: { identifiers in
+                temporarySelection = Set(recipes.filter { recipe in
+                    identifiers.contains(recipe.persistentModelID)
+                })
+            }
+        )
+    }
+
     var selectedRecipes: [Recipe] {
         recipes.filter { recipe in
             temporarySelection.contains(recipe)
@@ -136,7 +149,7 @@ private extension DiaryFormRecipeListView {
         ForEach(recipes) { recipe in
             RecipeLabel()
                 .labelStyle(.titleAndLargeIcon)
-                .tag(recipe)
+                .tag(recipe.persistentModelID)
                 .environment(recipe)
         }
     }

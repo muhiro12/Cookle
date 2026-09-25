@@ -73,7 +73,23 @@ Local captures and the filtered
 runtime log are retained under `.build/ci/mhui-2.0-adoption/`.
 
 Independent follow-up verifies the corrected full-width graphical date picker
-and tag edit cancellation without changing its name.
+and tag edit cancellation without changing its name. The initial diary
+selection defect predates this migration: exact Cookle commit `78eb27ad` with
+MHUI 1.20.0 reproduces an empty selection circle at a selected count of one.
+The first tap also fails to deselect that row; earlier checks only exercised
+selection after adding another recipe, so they missed this initial-state defect.
+
+Removing MHUI's container and chrome while retaining the current saved sample
+fixture reproduces the same behavior. Cookle previously bound native selection
+to `Set<Recipe>` while `ForEach` identifies rows by `PersistentIdentifier`.
+The app now projects its draft selection into those same persistent identifiers
+and tags rows accordingly. With MHUI 2.0 content presentation retained, initial
+selection is correctly checked and the first tap changes the count from one to
+zero. Selecting a different recipe, confirming it into the draft, reopening the
+selector, and cancelling/discarding the draft also pass; the original diary
+retains its recipe. No MHUI package change or model/schema change is needed.
+The comparison artifacts are under the local runtime directory's
+`review/selection-investigation`.
 
 Workspace interaction sessions were lost during verification. After reproducing
 the tool gap, an explicit isolated-fixture launch through official simulator
