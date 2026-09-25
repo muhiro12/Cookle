@@ -10,8 +10,8 @@ import Testing
 /// their store with. These tests pin the entity and property names so that the
 /// drift fails here rather than at a user's first launch after an update.
 ///
-/// A deliberate V2 is expected to update these expectations in the same commit
-/// that adds the migration stage.
+/// A deliberate V2 must preserve these V1 expectations and add its own schema
+/// coverage alongside the migration stage.
 struct SchemaIdentityTests {
     @Test
     func released_schema_version_identifier_is_unchanged() {
