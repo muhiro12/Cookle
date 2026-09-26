@@ -96,7 +96,7 @@ extension RecipeFormView {
                 Menu {
                     ForEach(RecipeImportSource.allCases) { source in
                         Button {
-                            importSourceSelection.wrappedValue = source
+                            formModel.importSource = source
                         } label: {
                             Label(source.title, systemImage: source.systemImage)
                         }
@@ -133,7 +133,6 @@ extension RecipeFormView {
                 Task {
                     guard let result = await formModel.save(
                         context: context,
-                        recipe: recipe,
                         recipeActionService: recipeActionService,
                         draftLogger: logging.logger(
                             category: "RecipeDraft",

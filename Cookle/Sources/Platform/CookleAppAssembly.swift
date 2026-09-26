@@ -66,11 +66,12 @@ extension View {
     func cooklePreviewAppAssembly(
         _ assembly: CookleAppAssembly
     ) -> some View {
-        cookleSharedEnvironment(
-            assembly
-        )
-        .mhAppRuntimeEnvironment(assembly.bootstrap)
-        .mhTheme(.standard)
+        recipeFormPresentationHost()
+            .cookleSharedEnvironment(
+                assembly
+            )
+            .mhAppRuntimeEnvironment(assembly.bootstrap)
+            .mhTheme(.standard)
     }
 
     private func cookleSharedEnvironment(

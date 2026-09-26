@@ -11,9 +11,10 @@ import SwiftUI
 struct RecipePhotosSection: View {
     @Environment(Recipe.self)
     private var recipe
+    @Environment(RecipeFormPresenter.self)
+    private var recipeFormPresenter
 
     @State private var selectedPhoto: Photo?
-    @State private var isPhotoEditorPresented = false
 
     var body: some View {
         let orderedPhotoObjects = recipe.orderedPhotoObjects
@@ -21,14 +22,13 @@ struct RecipePhotosSection: View {
 
         if orderedPhotos.isEmpty {
             Button {
-                isPhotoEditorPresented = true
+                recipeFormPresenter.present(
+                    .edit,
+                    recipe: recipe
+                )
             } label: {
                 Label("Add Photo", systemImage: "photo.badge.plus")
                     .cookleButtonRowContent()
-            }
-            .sheet(isPresented: $isPhotoEditorPresented) {
-                RecipeFormNavigationView(type: .edit)
-                    .environment(recipe)
             }
         } else {
             Section {

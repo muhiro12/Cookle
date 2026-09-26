@@ -14,13 +14,11 @@ import TipKit
 struct RecipeFormView: View {
     static let ingredientsSectionID = "recipeFormIngredientsSection"
 
-    @State private var model: RecipeFormModel
+    private let model: RecipeFormModel
 
     @Environment(\.dismiss)
     var dismiss
 
-    @Environment(Recipe.self)
-    var recipe: Recipe?
     @Environment(\.modelContext)
     var context
     @Environment(RecipeActionService.self)
@@ -32,8 +30,6 @@ struct RecipeFormView: View {
 
     @AppStorage(\.isDebugOn)
     private var isDebugOn
-
-    @State private var activeImportSource: RecipeImportSource?
 
     @State private var editMode = EditMode.inactive
     @State private var isDebugAlertPresented = false
@@ -65,7 +61,7 @@ struct RecipeFormView: View {
         .toolbar {
             toolbarItems
         }
-        .sheet(item: $activeImportSource) { source in
+        .sheet(item: $model.importSource) { source in
             if #available(iOS 26.0, *) {
                 InferRecipeFormNavigationView(
                     name: $model.name,
@@ -124,10 +120,8 @@ struct RecipeFormView: View {
             Text(model.errorMessage ?? "")
         }
         .task {
-            model.applyRecipeIfNeeded(recipe)
-            model.activateSnapshotPersistence(
-                recipe: recipe
-            )
+            model.applyRecipeIfNeeded()
+            model.activateSnapshotPersistence()
         }
         .task {
             await observeInferRecipeFromTextTipEligibility()
@@ -137,22 +131,13 @@ struct RecipeFormView: View {
         }
     }
 
-    init(type: RecipeFormType, initialImportSource: RecipeImportSource? = nil) {
-        _activeImportSource = State(initialValue: initialImportSource)
-        self.type = type
-        _model = State(
-            initialValue: RecipeFormModel(
-                type: type
-            )
-        )
+    init(model: RecipeFormModel) {
+        self.model = model
+        type = model.type
     }
 }
 
 extension RecipeFormView {
-    var importSourceSelection: Binding<RecipeImportSource?> {
-        $activeImportSource
-    }
-
     var formModel: RecipeFormModel {
         model
     }
@@ -195,11 +180,16 @@ extension RecipeFormView {
 }
 
 #Preview(traits: .modifier(CookleSampleData())) {
-    RecipeFormNavigationView(type: .create)
+    @Previewable @State var model = RecipeFormModel(type: .create)
+    RecipeFormNavigationView(model: model)
 }
 
 #Preview(traits: .modifier(CookleSampleData())) {
     @Previewable @Query var recipes: [Recipe]
-    RecipeFormNavigationView(type: .edit)
-        .environment(recipes[0])
+    RecipeFormNavigationView(
+        model: .init(
+            type: .edit,
+            recipe: recipes[0]
+        )
+    )
 }

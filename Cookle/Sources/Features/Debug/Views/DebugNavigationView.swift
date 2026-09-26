@@ -48,6 +48,7 @@ struct DebugNavigationView: View {
         .onChange(of: hasDetailSelection) {
             syncPreferredCompactColumn()
         }
+        .recipeFormPresentationHost()
     }
 }
 

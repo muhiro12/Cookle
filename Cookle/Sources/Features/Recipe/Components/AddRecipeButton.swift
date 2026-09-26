@@ -8,15 +8,10 @@
 import SwiftUI
 
 struct AddRecipeButton: View {
-    private struct Presentation: Identifiable {
-        let id = UUID()
-        let source: RecipeImportSource?
-    }
-
-    @State private var presentation: Presentation?
-
     @Environment(CookleAppLogging.self)
     private var logging
+    @Environment(RecipeFormPresenter.self)
+    private var recipeFormPresenter
 
     private let showsTitle: Bool
     private let action: (() -> Void)?
@@ -46,9 +41,6 @@ struct AddRecipeButton: View {
                 }
             }
         }
-        .sheet(item: $presentation) { presentation in
-            RecipeFormNavigationView(type: .create, initialImportSource: presentation.source)
-        }
     }
 
     @ViewBuilder private var buttonLabel: some View {
@@ -72,7 +64,10 @@ private extension AddRecipeButton {
         if let action {
             action()
         } else {
-            presentation = .init(source: source)
+            recipeFormPresenter.present(
+                .create,
+                importSource: source
+            )
         }
     }
 }
@@ -80,4 +75,5 @@ private extension AddRecipeButton {
 #Preview {
     AddRecipeButton()
         .environment(CookleAppLogging.preview())
+        .recipeFormPresentationHost()
 }

@@ -11,19 +11,17 @@ import SwiftUI
 struct DuplicateRecipeButton: View {
     @Environment(Recipe.self)
     private var recipe
+    @Environment(RecipeFormPresenter.self)
+    private var recipeFormPresenter
 
-    @State private var isPresented = false
-
-    private let action: (() -> Void)?
     private let showsRecipeName: Bool
 
     var body: some View {
         Button {
-            if let action {
-                action()
-            } else {
-                isPresented = true
-            }
+            recipeFormPresenter.present(
+                .duplicate,
+                recipe: recipe
+            )
         } label: {
             Label {
                 if showsRecipeName {
@@ -36,14 +34,10 @@ struct DuplicateRecipeButton: View {
                     .accessibilityHidden(true)
             }
         }
-        .sheet(isPresented: $isPresented) {
-            RecipeFormNavigationView(type: .duplicate)
-        }
     }
 
-    init(showsRecipeName: Bool = true, action: (() -> Void)? = nil) {
+    init(showsRecipeName: Bool = true) {
         self.showsRecipeName = showsRecipeName
-        self.action = action
     }
 }
 

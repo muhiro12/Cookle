@@ -12,11 +12,16 @@ struct TagNavigationView<T: Tag & Identifiable>: View {
     @State private var hasAppliedInitialCompactColumn = false
 
     var body: some View {
-        if horizontalSizeClass == .compact {
-            compactNavigationStack
-        } else {
-            splitNavigationView
+        Group {
+            if horizontalSizeClass == .compact {
+                compactNavigationStack
+            } else {
+                splitNavigationView
+            }
         }
+        // Hosted outside the size-class switch so an open recipe form
+        // survives it.
+        .recipeFormPresentationHost()
     }
 
     var compactNavigationStack: some View {

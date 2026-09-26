@@ -10,8 +10,6 @@ struct RecipeLabel: View {
     @Environment(RecipeActionService.self)
     private var recipeActionService
 
-    @State private var isEditPresented = false
-    @State private var isDuplicatePresented = false
     @State private var isDeletePresented = false
     @State private var isErrorPresented = false
     @State private var errorMessage = ""
@@ -46,12 +44,8 @@ struct RecipeLabel: View {
             }
         }
         .contextMenu {
-            EditRecipeButton {
-                isEditPresented = true
-            }
-            DuplicateRecipeButton {
-                isDuplicatePresented = true
-            }
+            EditRecipeButton()
+            DuplicateRecipeButton()
             DeleteRecipeButton {
                 isDeletePresented = true
             }
@@ -90,12 +84,6 @@ struct RecipeLabel: View {
             }
         } message: {
             Text(errorMessage)
-        }
-        .sheet(isPresented: $isEditPresented) {
-            RecipeFormNavigationView(type: .edit)
-        }
-        .sheet(isPresented: $isDuplicatePresented) {
-            RecipeFormNavigationView(type: .duplicate)
         }
     }
 }

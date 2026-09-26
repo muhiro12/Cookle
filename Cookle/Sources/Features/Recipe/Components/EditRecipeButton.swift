@@ -11,18 +11,15 @@ import SwiftUI
 struct EditRecipeButton: View {
     @Environment(Recipe.self)
     private var recipe
-
-    @State private var isPresented = false
-
-    private let action: (() -> Void)?
+    @Environment(RecipeFormPresenter.self)
+    private var recipeFormPresenter
 
     var body: some View {
         Button {
-            if let action {
-                action()
-            } else {
-                isPresented = true
-            }
+            recipeFormPresenter.present(
+                .edit,
+                recipe: recipe
+            )
         } label: {
             Label {
                 Text("Edit \(recipe.name)")
@@ -31,13 +28,6 @@ struct EditRecipeButton: View {
                     .accessibilityHidden(true)
             }
         }
-        .sheet(isPresented: $isPresented) {
-            RecipeFormNavigationView(type: .edit)
-        }
-    }
-
-    init(action: (() -> Void)? = nil) {
-        self.action = action
     }
 }
 

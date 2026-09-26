@@ -29,6 +29,9 @@ struct MainView: View {
             incomingSearchQuery: $navigationModel.incomingSearchQuery,
             incomingSettingsSelection: $navigationModel.incomingSettingsSelection
         )
+        // Hosted above the tab and split layouts, which rebuild when the
+        // window crosses the compact/regular width boundary.
+        .recipeFormPresentationHost()
         .alert(Text("Update Required"), isPresented: isUpdateRequiredBinding) {
             Button {
                 guard let appStoreURL = URL(

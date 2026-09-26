@@ -2,10 +2,17 @@ import MHPlatform
 import Observation
 import SwiftData
 
+/// Editing state for one open recipe form.
+///
+/// A presentation host owns each instance, so the draft, including attached
+/// photos, outlives the views that render it when a size-class change rebuilds
+/// them.
 @MainActor
 @Observable
-final class RecipeFormModel {
+final class RecipeFormModel: Identifiable {
     let type: RecipeFormType
+    /// The recipe being edited or duplicated; `nil` when creating.
+    let recipe: Recipe?
 
     var name = "" {
         didSet {
@@ -44,6 +51,9 @@ final class RecipeFormModel {
         }
     }
 
+    /// Import flow presented over the form, owned here so it is not reopened
+    /// or lost when the form's views are rebuilt.
+    var importSource: RecipeImportSource?
     var errorMessage: String?
     var isInferRecipeFromTextTipEligible = false
     var isImagePlaygroundTipEligible = false
@@ -109,15 +119,17 @@ final class RecipeFormModel {
 
     init(
         type: RecipeFormType,
+        recipe: Recipe? = nil,
+        importSource: RecipeImportSource? = nil,
         snapshotStore: FormSnapshotStore<RecipeFormSnapshot> = .init()
     ) {
         self.type = type
+        self.recipe = recipe
+        self.importSource = importSource
         self.snapshotStore = snapshotStore
     }
 
-    func applyRecipeIfNeeded(
-        _ recipe: Recipe?
-    ) {
+    func applyRecipeIfNeeded() {
         guard let recipe else {
             captureInitialChangeSnapshotIfNeeded()
             return
@@ -173,7 +185,6 @@ final class RecipeFormModel {
 
     func save(
         context: ModelContext,
-        recipe: Recipe?,
         recipeActionService: RecipeActionService,
         draftLogger: MHLogger
     ) async -> RecipeFormSaveCoordinator.Result? {
@@ -202,7 +213,6 @@ final class RecipeFormModel {
             )
             return try await save(
                 context: context,
-                recipe: recipe,
                 draft: draft,
                 recipeActionService: recipeActionService
             )
@@ -242,7 +252,6 @@ private extension RecipeFormModel {
 
     func save(
         context: ModelContext,
-        recipe: Recipe?,
         draft: RecipeFormDraft,
         recipeActionService: RecipeActionService
     ) async throws -> RecipeFormSaveCoordinator.Result {
@@ -261,9 +270,7 @@ private extension RecipeFormModel {
 }
 
 extension RecipeFormModel {
-    func activateSnapshotPersistence(
-        recipe: Recipe?
-    ) {
+    func activateSnapshotPersistence() {
         isSnapshotPersistenceEnabled = type == .create
             && recipe == nil
         refreshSnapshotAvailability()

@@ -1,29 +1,31 @@
 import SwiftUI
 
 struct RecipeFormNavigationView: View {
-    private let initialImportSource: RecipeImportSource?
-    private let type: RecipeFormType
+    private let model: RecipeFormModel
 
     var body: some View {
         NavigationStack {
-            RecipeFormView(type: type, initialImportSource: initialImportSource)
+            RecipeFormView(model: model)
         }
+        .environment(model.recipe)
     }
 
-    init(type: RecipeFormType, initialImportSource: RecipeImportSource? = nil) {
-        self.initialImportSource = initialImportSource
-        self.type = type
+    init(model: RecipeFormModel) {
+        self.model = model
     }
 }
 
 #Preview(traits: .modifier(CookleSampleData())) {
-    RecipeFormNavigationView(type: .create)
+    @Previewable @State var model = RecipeFormModel(type: .create)
+    RecipeFormNavigationView(model: model)
 }
 
 #Preview("Website import entry", traits: .modifier(CookleSampleData())) {
-    RecipeFormNavigationView(type: .create, initialImportSource: .website)
+    @Previewable @State var model = RecipeFormModel(type: .create, importSource: .website)
+    RecipeFormNavigationView(model: model)
 }
 
 #Preview("Photo text import entry", traits: .modifier(CookleSampleData())) {
-    RecipeFormNavigationView(type: .create, initialImportSource: .photo)
+    @Previewable @State var model = RecipeFormModel(type: .create, importSource: .photo)
+    RecipeFormNavigationView(model: model)
 }

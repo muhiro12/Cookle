@@ -20,6 +20,11 @@ struct RecipeView: View {
     @Environment(CookleAppLogging.self)
     private var logging
 
+    #if DEBUG
+    @Environment(RecipeFormPresenter.self)
+    private var recipeFormPresenter
+    #endif
+
     @Environment(\.mhTheme)
     private var theme
 
@@ -32,7 +37,7 @@ struct RecipeView: View {
 
     #if DEBUG
     /// Opens the edit form for a capture run without simulated user interaction.
-    @State private var isCaptureRecipeFormPresented = CookleCaptureConfiguration.presentsRecipeForm
+    @State private var hasPresentedCaptureRecipeForm = false
     #endif
 
     var body: some View {
@@ -62,8 +67,8 @@ struct RecipeView: View {
             }
         }
         #if DEBUG
-        .sheet(isPresented: $isCaptureRecipeFormPresented) {
-            RecipeFormNavigationView(type: .edit)
+        .task {
+            presentCaptureRecipeFormIfNeeded()
         }
         #endif
         .toolbar {
@@ -149,4 +154,19 @@ private extension RecipeView {
 
         isCookingPresented = true
     }
+
+    #if DEBUG
+    func presentCaptureRecipeFormIfNeeded() {
+        guard CookleCaptureConfiguration.presentsRecipeForm,
+              !hasPresentedCaptureRecipeForm else {
+            return
+        }
+
+        hasPresentedCaptureRecipeForm = true
+        recipeFormPresenter.present(
+            .edit,
+            recipe: recipe
+        )
+    }
+    #endif
 }

@@ -11,6 +11,7 @@ struct DiaryFormNavigationView: View {
                 persistsDraft: persistsDraft
             )
         }
+        .recipeFormPresentationHost()
     }
 
     init(
