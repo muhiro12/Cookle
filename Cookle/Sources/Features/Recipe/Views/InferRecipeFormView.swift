@@ -9,6 +9,14 @@ struct InferRecipeFormView: View {
         static let loadingOverlayOpacity = 0.2
     }
 
+    /// An inference that finished after the form input changed, waiting for a
+    /// new review before it may replace that input.
+    private struct PendingInference {
+        let inference: RecipeInferenceResult
+        let sourceURL: URL?
+    }
+
+    private let model: RecipeFormModel
     private let source: RecipeImportSource
     private let initialPhotoData: Data?
 
@@ -17,14 +25,6 @@ struct InferRecipeFormView: View {
     @Environment(\.mhDesignMetrics)
     private var designMetrics
 
-    @Binding private var name: String
-    @Binding private var servingSize: String
-    @Binding private var cookingTime: String
-    @Binding private var ingredients: [RecipeFormIngredient]
-    @Binding private var steps: [String]
-    @Binding private var categories: [String]
-    @Binding private var note: String
-
     @State private var hasOpenedSource = false
     @State private var text = ""
     @State private var sourceURL: URL?
@@ -32,6 +32,8 @@ struct InferRecipeFormView: View {
     @State private var operationTask: Task<Void, Never>?
     @State private var isLoading = false
     @State private var errorMessage = ""
+    @State private var isReplacementReviewPresented = false
+    @State private var pendingInference: PendingInference?
     @FocusState private var isTextFocused: Bool
 
     private let placeholder: LocalizedStringKey = .init(
@@ -96,6 +98,20 @@ struct InferRecipeFormView: View {
             } message: {
                 Text(errorMessage)
             }
+            .confirmationDialog(
+                Text("Replace Current Input?"),
+                isPresented: $isReplacementReviewPresented,
+                titleVisibility: .visible
+            ) {
+                Button("Replace", role: .destructive) {
+                    confirmReplacement()
+                }
+                Button("Cancel", role: .cancel) {
+                    pendingInference = nil
+                }
+            } message: {
+                replacementReviewMessage
+            }
     }
 
     @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
@@ -109,10 +125,7 @@ struct InferRecipeFormView: View {
         }
         ToolbarItem(placement: .confirmationAction) {
             Button {
-                isLoading = true
-                operationTask = Task { @MainActor in
-                    await applyInference()
-                }
+                requestInference()
             } label: {
                 Text("Create Draft")
             }
@@ -130,13 +143,7 @@ struct InferRecipeFormView: View {
     }
 
     init(
-        name: Binding<String>,
-        servingSize: Binding<String>,
-        cookingTime: Binding<String>,
-        ingredients: Binding<[RecipeFormIngredient]>,
-        steps: Binding<[String]>,
-        categories: Binding<[String]>,
-        note: Binding<String>,
+        model: RecipeFormModel,
         source: RecipeImportSource,
         initialWebsiteSource: RecipeWebsiteSource? = nil,
         initialSourceURL: URL? = nil,
@@ -146,14 +153,8 @@ struct InferRecipeFormView: View {
         _text = State(initialValue: initialWebsiteSource?.text ?? "")
         _websiteSource = State(initialValue: initialWebsiteSource)
         _sourceURL = State(initialValue: initialSourceURL)
+        self.model = model
         self.source = source
-        self._name = name
-        self._servingSize = servingSize
-        self._cookingTime = cookingTime
-        self._ingredients = ingredients
-        self._steps = steps
-        self._categories = categories
-        self._note = note
     }
 }
 
@@ -192,8 +193,69 @@ private extension InferRecipeFormView {
         )
     }
 
+    @ViewBuilder var replacementReviewMessage: some View {
+        if pendingInference != nil {
+            Text(
+                """
+                The recipe input changed while importing. Review it again before the imported \
+                recipe replaces it. You can undo the import from the recipe form.
+                """
+            )
+        } else {
+            Text(
+                """
+                The imported recipe replaces the name, servings, cooking time, ingredients, steps, \
+                categories, and note you entered. Photos stay. You can undo the import from the \
+                recipe form.
+                """
+            )
+        }
+    }
+
+    /// Asks before an inference may replace entered values; a blank form needs no review.
+    func requestInference() {
+        guard model.inferenceReplacesEnteredValues else {
+            startInference()
+            return
+        }
+
+        pendingInference = nil
+        isReplacementReviewPresented = true
+    }
+
+    func confirmReplacement() {
+        guard let pendingInference else {
+            startInference()
+            return
+        }
+
+        // The input was reviewed again just now, so the finished inference can apply.
+        self.pendingInference = nil
+        model.applyInference(
+            pendingInference.inference,
+            sourceURL: pendingInference.sourceURL
+        )
+        dismiss()
+    }
+
+    func startInference() {
+        let reviewedInput = model.changeSnapshot
+        isLoading = true
+        operationTask = Task { @MainActor in
+            await applyInference(
+                reviewedInput: reviewedInput
+            )
+        }
+    }
+
+    /// Applies the inference only against the input that was reviewed.
+    ///
+    /// If the form changed while the model was working, the earlier review no
+    /// longer covers it; the result waits for a new review instead.
     @MainActor
-    func applyInference() async {
+    func applyInference(
+        reviewedInput: RecipeFormChangeSnapshot
+    ) async {
         defer {
             isLoading = false
         }
@@ -204,18 +266,20 @@ private extension InferRecipeFormView {
                 inference = websiteSource.grounding(inference)
             }
             try Task.checkCancellation()
-            name = inference.name
-            servingSize = inference.servingSize == .zero ? "" : inference.servingSize.description
-            cookingTime = inference.cookingTime == .zero ? "" : inference.cookingTime.description
-            ingredients = inference.ingredients.map { inferredIngredient in
-                .init(
-                    ingredient: inferredIngredient.ingredient,
-                    amount: inferredIngredient.amount
+            guard model.changeSnapshot == reviewedInput
+                    || model.inferenceReplacesEnteredValues == false else {
+                pendingInference = .init(
+                    inference: inference,
+                    sourceURL: sourceURL
                 )
-            } + [.init(ingredient: "", amount: "")]
-            steps = inference.steps + [""]
-            categories = inference.categories + [""]
-            note = RecipeWebsiteImportOperations.note(inference.note, sourceURL: sourceURL)
+                isReplacementReviewPresented = true
+                return
+            }
+
+            model.applyInference(
+                inference,
+                sourceURL: sourceURL
+            )
             dismiss()
         } catch {
             guard !Task.isCancelled, !(error is CancellationError) else {

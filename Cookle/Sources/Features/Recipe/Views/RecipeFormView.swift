@@ -35,6 +35,7 @@ struct RecipeFormView: View {
     @State private var isDebugAlertPresented = false
     @State private var isRestoreDraftConfirmationPresented = false
     @State private var isDiscardChangesConfirmationPresented = false
+    @State private var isUndoImportConfirmationPresented = false
 
     let type: RecipeFormType
     let inferRecipeFromTextTip = InferRecipeFromTextTip()
@@ -64,13 +65,7 @@ struct RecipeFormView: View {
         .sheet(item: $model.importSource) { source in
             if #available(iOS 26.0, *) {
                 InferRecipeFormNavigationView(
-                    name: $model.name,
-                    servingSize: $model.servingSize,
-                    cookingTime: $model.cookingTime,
-                    ingredients: $model.ingredients,
-                    steps: $model.steps,
-                    categories: $model.categories,
-                    note: $model.note,
+                    model: model,
                     source: source
                 )
                 .interactiveDismissDisabled()
@@ -108,6 +103,25 @@ struct RecipeFormView: View {
             }
         } message: {
             Text("Replace the current form input with the saved draft?")
+        }
+        .confirmationDialog(
+            Text("Undo Import?"),
+            isPresented: $isUndoImportConfirmationPresented,
+            titleVisibility: .visible
+        ) {
+            Button("Undo Import", role: .destructive) {
+                model.undoInference()
+            }
+            Button("Cancel", role: .cancel) {
+                // Keeps the imported recipe and the later changes.
+            }
+        } message: {
+            Text(
+                """
+                This restores the recipe input from before the import and also discards \
+                the changes you made after importing.
+                """
+            )
         }
         .alert(
             Text("Cannot Save Recipe"),
@@ -166,6 +180,15 @@ extension RecipeFormView {
         }
         nonmutating set {
             isRestoreDraftConfirmationPresented = newValue
+        }
+    }
+
+    var isUndoImportDialogPresented: Bool {
+        get {
+            isUndoImportConfirmationPresented
+        }
+        nonmutating set {
+            isUndoImportConfirmationPresented = newValue
         }
     }
 

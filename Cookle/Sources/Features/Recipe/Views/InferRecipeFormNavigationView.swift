@@ -7,13 +7,7 @@ struct InferRecipeFormNavigationView: View {
     @State private var websiteSource: RecipeWebsiteSource?
     @State private var sourceURL: URL?
     @State private var photoData: Data?
-    @Binding var name: String
-    @Binding var servingSize: String
-    @Binding var cookingTime: String
-    @Binding var ingredients: [RecipeFormIngredient]
-    @Binding var steps: [String]
-    @Binding var categories: [String]
-    @Binding var note: String
+    private let model: RecipeFormModel
 
     var body: some View {
         if source == .website, websiteSource == nil {
@@ -33,13 +27,7 @@ struct InferRecipeFormNavigationView: View {
     private var reviewNavigation: some View {
         NavigationStack {
             InferRecipeFormView(
-                name: $name,
-                servingSize: $servingSize,
-                cookingTime: $cookingTime,
-                ingredients: $ingredients,
-                steps: $steps,
-                categories: $categories,
-                note: $note,
+                model: model,
                 source: source,
                 initialWebsiteSource: websiteSource,
                 initialSourceURL: sourceURL,
@@ -48,21 +36,11 @@ struct InferRecipeFormNavigationView: View {
         }
     }
 
-    init(name: Binding<String>,
-         servingSize: Binding<String>,
-         cookingTime: Binding<String>,
-         ingredients: Binding<[RecipeFormIngredient]>,
-         steps: Binding<[String]>,
-         categories: Binding<[String]>,
-         note: Binding<String>,
-         source: RecipeImportSource) {
+    init(
+        model: RecipeFormModel,
+        source: RecipeImportSource
+    ) {
+        self.model = model
         self.source = source
-        self._name = name
-        self._servingSize = servingSize
-        self._cookingTime = cookingTime
-        self._ingredients = ingredients
-        self._steps = steps
-        self._categories = categories
-        self._note = note
     }
 }

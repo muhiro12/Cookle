@@ -33,7 +33,8 @@ extension RecipeFormModel {
     }
 }
 
-private extension RecipeFormModel {
+extension RecipeFormModel {
+    /// The current input in the terms used to detect a meaningful change.
     var changeSnapshot: RecipeFormChangeSnapshot {
         .init(input: formInput)
     }

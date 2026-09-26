@@ -112,10 +112,10 @@
     "2" : {
       "shouldTranslate" : false
     },
-    "30" : {
+    "200g" : {
       "shouldTranslate" : false
     },
-    "200g" : {
+    "30" : {
       "shouldTranslate" : false
     },
     "A diary already exists for this calendar day." : {
@@ -322,75 +322,6 @@
         }
       }
     },
-    "Add a photo?" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add a photo?"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¿Agregar una foto?"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ajouter une photo ?"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "写真を追加しますか？"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "要添加照片吗？"
-          }
-        }
-      }
-    },
-    "Add a recipe to start building your collection." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add a recipe to start building your collection."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Añade una receta para empezar tu colección."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ajoutez une recette pour commencer votre collection."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピを追加してコレクションを作り始めましょう。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "添加食谱，开始建立你的收藏。"
-          }
-        }
-      }
-    },
     "Add Diary" : {
       "localizations" : {
         "en" : {
@@ -527,41 +458,6 @@
         }
       }
     },
-    "Add photos to browse them here." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add photos to browse them here."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Añade fotos para verlas aquí."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ajoutez des photos pour les voir ici."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "写真を追加すると、ここで見られます。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "添加照片后，就可以在这里查看。"
-          }
-        }
-      }
-    },
     "Add Recipe" : {
       "localizations" : {
         "en" : {
@@ -660,6 +556,110 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "添加食谱"
+          }
+        }
+      }
+    },
+    "Add a photo?" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add a photo?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Agregar una foto?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter une photo ?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "写真を追加しますか？"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "要添加照片吗？"
+          }
+        }
+      }
+    },
+    "Add a recipe to start building your collection." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add a recipe to start building your collection."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añade una receta para empezar tu colección."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajoutez une recette pour commencer votre collection."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピを追加してコレクションを作り始めましょう。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加食谱，开始建立你的收藏。"
+          }
+        }
+      }
+    },
+    "Add photos to browse them here." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add photos to browse them here."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añade fotos para verlas aquí."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajoutez des photos pour les voir ici."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "写真を追加すると、ここで見られます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加照片后，就可以在这里查看。"
           }
         }
       }
@@ -970,6 +970,9 @@
         }
       }
     },
+    "AppStorage" : {
+      "shouldTranslate" : false
+    },
     "Apple Intelligence cannot process this recipe's language. You can enter the recipe manually." : {
       "comment" : "Recipe inference does not support the input language.",
       "localizations" : {
@@ -1086,13 +1089,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apple Intelligence no est\u00e1 disponible ahora mismo."
+            "value" : "Apple Intelligence no está disponible ahora mismo."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apple Intelligence n\u2019est pas disponible pour le moment."
+            "value" : "Apple Intelligence n’est pas disponible pour le moment."
           }
         },
         "ja" : {
@@ -1108,9 +1111,6 @@
           }
         }
       }
-    },
-    "AppStorage" : {
-      "shouldTranslate" : false
     },
     "Are you really going to create Preview Diary?" : {
       "localizations" : {
@@ -1622,40 +1622,6 @@
         }
       }
     },
-    "Cannot delete %@." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cannot delete %@."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No se puede eliminar %@."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Impossible de supprimer %@."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@を削除できません。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无法删除%@。"
-          }
-        }
-      }
-    },
     "Cannot Delete Category" : {
       "localizations" : {
         "en" : {
@@ -2132,6 +2098,40 @@
         }
       }
     },
+    "Cannot delete %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cannot delete %@."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede eliminar %@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de supprimer %@."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@を削除できません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法删除%@。"
+          }
+        }
+      }
+    },
     "Categories" : {
       "localizations" : {
         "en" : {
@@ -2302,40 +2302,6 @@
         }
       }
     },
-    "Choose a meal for %@." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choose a meal for %@."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Elige una comida para %@."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choisissez un repas pour %@."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ の食事を選択してください。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "请选择 %@ 的餐次。"
-          }
-        }
-      }
-    },
     "Choose Photo" : {
       "localizations" : {
         "en" : {
@@ -2366,6 +2332,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "选择照片"
+          }
+        }
+      }
+    },
+    "Choose a meal for %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a meal for %@."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige una comida para %@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisissez un repas pour %@."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ の食事を選択してください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请选择 %@ 的餐次。"
           }
         }
       }
@@ -2891,13 +2891,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No se pudieron extraer suficientes detalles de la receta del texto.\nIntenta incluir el t\u00edtulo, los ingredientes o los pasos."
+            "value" : "No se pudieron extraer suficientes detalles de la receta del texto.\nIntenta incluir el título, los ingredientes o los pasos."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Impossible d\u2019extraire assez de d\u00e9tails de la recette \u00e0 partir du texte.\nEssayez d\u2019inclure le titre, les ingr\u00e9dients ou les \u00e9tapes."
+            "value" : "Impossible d’extraire assez de détails de la recette à partir du texte.\nEssayez d’inclure le titre, les ingrédients ou les étapes."
           }
         },
         "ja" : {
@@ -2944,41 +2944,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "创建"
-          }
-        }
-      }
-    },
-    "Create a diary entry to record what you cooked." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Create a diary entry to record what you cooked."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Crea una entrada de diario para registrar lo que cocinaste."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Créez une entrée de journal pour noter ce que vous avez cuisiné."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "作った料理を記録する日記を作成しましょう。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "创建一篇日记，记录你做了什么菜。"
           }
         }
       }
@@ -3115,6 +3080,41 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "创建食谱"
+          }
+        }
+      }
+    },
+    "Create a diary entry to record what you cooked." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create a diary entry to record what you cooked."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crea una entrada de diario para registrar lo que cocinaste."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Créez une entrée de journal pour noter ce que vous avez cuisiné."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "作った料理を記録する日記を作成しましょう。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "创建一篇日记，记录你做了什么菜。"
           }
         }
       }
@@ -3595,40 +3595,6 @@
         }
       }
     },
-    "Delete diary for %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete diary for %@"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eliminar el diario del %@"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Supprimer le journal du %@"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@の日記を削除"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "删除%@的日记"
-          }
-        }
-      }
-    },
     "Delete Ingredient" : {
       "localizations" : {
         "en" : {
@@ -3659,74 +3625,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "删除食材"
-          }
-        }
-      }
-    },
-    "Delete is available only when no recipes use this ingredient. %@ is still used by %lld recipes." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete is available only when no recipes use this ingredient. %@ is still used by %lld recipes."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Solo se puede eliminar cuando ninguna receta usa este ingrediente. %@ todavía se usa en %lld recetas."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La suppression n’est possible que si aucune recette n’utilise cet ingrédient. %@ est encore utilisé par %lld recettes."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "この材料を使っているレシピがない場合のみ削除できます。%@は%lld件のレシピで使われています。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "仅当没有食谱使用该食材时才能删除。%@仍被 %lld 个食谱使用。"
-          }
-        }
-      }
-    },
-    "Delete is available only when no recipes use this ingredient. %@ is still used by one recipe." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete is available only when no recipes use this ingredient. %@ is still used by one recipe."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Solo se puede eliminar cuando ninguna receta usa este ingrediente. %@ todavía se usa en una receta."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La suppression n’est possible que si aucune recette n’utilise cet ingrédient. %@ est encore utilisé par une recette."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "この材料を使っているレシピがない場合のみ削除できます。%@は1件のレシピで使われています。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "仅当没有食谱使用该食材时才能删除。%@仍被 1 个食谱使用。"
           }
         }
       }
@@ -3795,6 +3693,108 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "删除食谱"
+          }
+        }
+      }
+    },
+    "Delete diary for %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete diary for %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar el diario del %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer le journal du %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@の日記を削除"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除%@的日记"
+          }
+        }
+      }
+    },
+    "Delete is available only when no recipes use this ingredient. %@ is still used by %lld recipes." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete is available only when no recipes use this ingredient. %@ is still used by %lld recipes."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo se puede eliminar cuando ninguna receta usa este ingrediente. %@ todavía se usa en %lld recetas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La suppression n’est possible que si aucune recette n’utilise cet ingrédient. %@ est encore utilisé par %lld recettes."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この材料を使っているレシピがない場合のみ削除できます。%@は%lld件のレシピで使われています。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仅当没有食谱使用该食材时才能删除。%@仍被 %lld 个食谱使用。"
+          }
+        }
+      }
+    },
+    "Delete is available only when no recipes use this ingredient. %@ is still used by one recipe." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete is available only when no recipes use this ingredient. %@ is still used by one recipe."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo se puede eliminar cuando ninguna receta usa este ingrediente. %@ todavía se usa en una receta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La suppression n’est possible que si aucune recette n’utilise cet ingrédient. %@ est encore utilisé par une recette."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この材料を使っているレシピがない場合のみ削除できます。%@は1件のレシピで使われています。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仅当没有食谱使用该食材时才能删除。%@仍被 1 个食谱使用。"
           }
         }
       }
@@ -4581,40 +4581,6 @@
         }
       }
     },
-    "End and Add to Diary" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "End and Add to Diary"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Finalizar y añadir al diario"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Terminer et ajouter au journal"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "終了して日記に追加"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "结束并添加到日记"
-          }
-        }
-      }
-    },
     "End Cooking Session?" : {
       "localizations" : {
         "en" : {
@@ -4683,6 +4649,40 @@
         }
       }
     },
+    "End and Add to Diary" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "End and Add to Diary"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finalizar y añadir al diario"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminer et ajouter au journal"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "終了して日記に追加"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "结束并添加到日记"
+          }
+        }
+      }
+    },
     "Enter Manually" : {
       "localizations" : {
         "en" : {
@@ -4713,6 +4713,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "手动输入"
+          }
+        }
+      }
+    },
+    "Export Backup" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export Backup"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportar copia de seguridad"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exporter une sauvegarde"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バックアップを書き出す"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导出备份"
           }
         }
       }
@@ -4781,40 +4815,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "执行破坏性操作前，请先导出备份。恢复备份和“全部删除”产生的更改会同步到使用同一iCloud账户的其他设备。"
-          }
-        }
-      }
-    },
-    "Export Backup" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Export Backup"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exportar copia de seguridad"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exporter une sauvegarde"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "バックアップを書き出す"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "导出备份"
           }
         }
       }
@@ -5057,110 +5057,8 @@
         }
       }
     },
-    "iCloud On" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "iCloud On"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "iCloud activado"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "iCloud activé"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "iCloudオン"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "iCloud 开启"
-          }
-        }
-      }
-    },
     "Image Playground" : {
       "shouldTranslate" : false
-    },
-    "Import from Text" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import from Text"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importar desde texto"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importer du texte"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "テキストから取り込む"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "从文本导入"
-          }
-        }
-      }
-    },
-    "Import from Website" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import from Website"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importar de una web"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importer depuis un site"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Webページから取り込む"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "从网页导入"
-          }
-        }
-      }
     },
     "Import Recipe" : {
       "localizations" : {
@@ -5227,6 +5125,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "导入文本"
+          }
+        }
+      }
+    },
+    "Import from Text" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import from Text"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar desde texto"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importer du texte"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "テキストから取り込む"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从文本导入"
+          }
+        }
+      }
+    },
+    "Import from Website" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import from Website"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar de una web"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importer depuis un site"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Webページから取り込む"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从网页导入"
           }
         }
       }
@@ -5414,13 +5380,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El ingrediente %@ a\u00fan se usa en recetas y no se puede eliminar."
+            "value" : "El ingrediente %@ aún se usa en recetas y no se puede eliminar."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "L\u2019ingr\u00e9dient %@ est encore utilis\u00e9 par des recettes et ne peut pas \u00eatre supprim\u00e9."
+            "value" : "L’ingrédient %@ est encore utilisé par des recettes et ne peut pas être supprimé."
           }
         },
         "ja" : {
@@ -6084,40 +6050,6 @@
         }
       }
     },
-    "Merge duplicate %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Merge duplicate %@"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fusionar duplicados de %@"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fusionner les doublons de %@"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ の重複を統合"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "合并重复的 %@"
-          }
-        }
-      }
-    },
     "Merge Duplicate Diaries" : {
       "localizations" : {
         "en" : {
@@ -6220,6 +6152,40 @@
         }
       }
     },
+    "Merge duplicate %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Merge duplicate %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fusionar duplicados de %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fusionner les doublons de %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ の重複を統合"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "合并重复的 %@"
+          }
+        }
+      }
+    },
     "Merge into %@" : {
       "localizations" : {
         "en" : {
@@ -6250,40 +6216,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "合并到 %@"
-          }
-        }
-      }
-    },
-    "minutes" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "minutes"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "minutos"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "minutes"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "分"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "分钟"
           }
         }
       }
@@ -6493,40 +6425,6 @@
         }
       }
     },
-    "No categories" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No categories"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sin categorías"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune catégorie"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "カテゴリなし"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无分类"
-          }
-        }
-      }
-    },
     "No Diaries Yet" : {
       "localizations" : {
         "en" : {
@@ -6561,40 +6459,6 @@
         }
       }
     },
-    "No diary for today" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No diary for today"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No hay diario para hoy"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucun journal pour aujourd'hui"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "今日の日記はありません"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "今天没有日记"
-          }
-        }
-      }
-    },
     "No Diary Selected" : {
       "localizations" : {
         "en" : {
@@ -6625,74 +6489,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "未选择日记"
-          }
-        }
-      }
-    },
-    "No ingredients" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No ingredients"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sin ingredientes"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucun ingrédient"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "材料なし"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无食材"
-          }
-        }
-      }
-    },
-    "No matching recipes." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No matching recipes."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No hay recetas que coincidan."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune recette correspondante."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "一致するレシピがありません。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "没有匹配的食谱。"
           }
         }
       }
@@ -6799,40 +6595,6 @@
         }
       }
     },
-    "No recipes or note yet" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No recipes or note yet"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aún no hay recetas ni notas"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune recette ni note pour l’instant"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピもメモもまだありません"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "尚无食谱或备注"
-          }
-        }
-      }
-    },
     "No Recipes Yet" : {
       "localizations" : {
         "en" : {
@@ -6863,6 +6625,176 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "还没有食谱"
+          }
+        }
+      }
+    },
+    "No categories" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No categories"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin categorías"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune catégorie"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カテゴリなし"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无分类"
+          }
+        }
+      }
+    },
+    "No diary for today" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No diary for today"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay diario para hoy"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun journal pour aujourd'hui"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日の日記はありません"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今天没有日记"
+          }
+        }
+      }
+    },
+    "No ingredients" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No ingredients"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin ingredientes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun ingrédient"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "材料なし"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无食材"
+          }
+        }
+      }
+    },
+    "No matching recipes." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No matching recipes."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay recetas que coincidan."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune recette correspondante."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一致するレシピがありません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有匹配的食谱。"
+          }
+        }
+      }
+    },
+    "No recipes or note yet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No recipes or note yet"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aún no hay recetas ni notas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune recette ni note pour l’instant"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピもメモもまだありません"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "尚无食谱或备注"
           }
         }
       }
@@ -7174,40 +7106,6 @@
         }
       }
     },
-    "Objects" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Objects"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Objetos"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Objets"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "オブジェクト"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "对象"
-          }
-        }
-      }
-    },
     "OK" : {
       "localizations" : {
         "en" : {
@@ -7238,6 +7136,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "确定"
+          }
+        }
+      }
+    },
+    "Objects" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Objects"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Objetos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Objets"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "オブジェクト"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "对象"
           }
         }
       }
@@ -7273,108 +7205,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "打开"
-          }
-        }
-      }
-    },
-    "Open a page for a single recipe, or paste the recipe text." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open a page for a single recipe, or paste the recipe text."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abre una página con una sola receta o pega el texto de la receta."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ouvrez une page contenant une seule recette ou collez le texte de la recette."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "1つのレシピのページを開くか、レシピの文章を貼り付けてください。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "请打开单个食谱的网页，或粘贴食谱文字。"
-          }
-        }
-      }
-    },
-    "Open a recipe page, then use its text to create your own recipe." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open a recipe page, then use its text to create your own recipe."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abre una página y usa su texto para crear tu propia receta."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ouvrez une page et utilisez son texte pour créer votre propre recette."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピのページを開き、文章を使って自分のレシピを作成できます。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "打开食谱网页，使用其中的文字创建自己的食谱。"
-          }
-        }
-      }
-    },
-    "Open an editable diary draft from your last opened recipe." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open an editable diary draft from your last opened recipe."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abre un borrador editable del diario a partir de la última receta que abriste."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ouvrez un brouillon de journal modifiable à partir de la dernière recette ouverte."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "最後に開いたレシピから編集可能な日記の下書きを開きます。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "根据你最后打开的食谱，打开可编辑的日记草稿。"
           }
         }
       }
@@ -7787,6 +7617,108 @@
         }
       }
     },
+    "Open a page for a single recipe, or paste the recipe text." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open a page for a single recipe, or paste the recipe text."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre una página con una sola receta o pega el texto de la receta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrez une page contenant une seule recette ou collez le texte de la recette."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1つのレシピのページを開くか、レシピの文章を貼り付けてください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请打开单个食谱的网页，或粘贴食谱文字。"
+          }
+        }
+      }
+    },
+    "Open a recipe page, then use its text to create your own recipe." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open a recipe page, then use its text to create your own recipe."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre una página y usa su texto para crear tu propia receta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrez une page et utilisez son texte pour créer votre propre recette."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピのページを開き、文章を使って自分のレシピを作成できます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开食谱网页，使用其中的文字创建自己的食谱。"
+          }
+        }
+      }
+    },
+    "Open an editable diary draft from your last opened recipe." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open an editable diary draft from your last opened recipe."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre un borrador editable del diario a partir de la última receta que abriste."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrez un brouillon de journal modifiable à partir de la dernière recette ouverte."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最後に開いたレシピから編集可能な日記の下書きを開きます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "根据你最后打开的食谱，打开可编辑的日记草稿。"
+          }
+        }
+      }
+    },
     "Opens an editable diary draft." : {
       "localizations" : {
         "en" : {
@@ -7974,7 +7906,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Collez ou importez d\u2019abord le texte d\u2019une recette."
+            "value" : "Collez ou importez d’abord le texte d’une recette."
           }
         },
         "ja" : {
@@ -8400,6 +8332,41 @@
         }
       }
     },
+    "Ready To Add A Diary" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ready To Add A Diary"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listo para añadir un diario"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prêt à ajouter un journal"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日記を追加する準備ができました"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可以添加日记了"
+          }
+        }
+      }
+    },
     "Ready in %lld min with %lld ingredients." : {
       "localizations" : {
         "en" : {
@@ -8468,41 +8435,6 @@
         }
       }
     },
-    "Ready To Add A Diary" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ready To Add A Diary"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Listo para añadir un diario"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prêt à ajouter un journal"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "日記を追加する準備ができました"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "可以添加日记了"
-          }
-        }
-      }
-    },
     "Recently Created" : {
       "localizations" : {
         "en" : {
@@ -8567,40 +8499,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "食谱"
-          }
-        }
-      }
-    },
-    "Recipe not found." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recipe not found."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No se encontró la receta."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recette introuvable."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピが見つかりません。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "未找到该食谱。"
           }
         }
       }
@@ -8775,6 +8673,40 @@
         }
       }
     },
+    "Recipe not found." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recipe not found."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró la receta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recette introuvable."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピが見つかりません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未找到该食谱。"
+          }
+        }
+      }
+    },
     "Recipe: %@" : {
       "localizations" : {
         "en" : {
@@ -8805,75 +8737,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "食谱：%@"
-          }
-        }
-      }
-    },
-    "recipe.shareLink.footer" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Save this link in reminders, calendar events, or notes so you can reopen this recipe in Cookle later. It does not share the recipe details with someone else."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Guarda este enlace en recordatorios, eventos del calendario o notas para volver a abrir esta receta en Cookle más tarde. No comparte los detalles de la receta con otra persona."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enregistrez ce lien dans des rappels, des événements de calendrier ou des notes afin de pouvoir rouvrir cette recette dans Cookle plus tard. Il ne partage pas les détails de la recette avec une autre personne."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "このリンクをリマインダー、カレンダー予定、メモなどに保存しておくと、後でこのレシピを Cookle で開き直せます。ほかの人にレシピ内容を共有するものではありません。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "将此链接保存到提醒事项、日历事件或备忘录中，以便稍后在 Cookle 中重新打开这道食谱。它不会把食谱详情分享给其他人。"
-          }
-        }
-      }
-    },
-    "recipe.shareLink.message" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Save this link in reminders, calendar events, or notes to reopen %@ in Cookle later."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Guarda este enlace en recordatorios, eventos del calendario o notas para volver a abrir %@ en Cookle más tarde."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enregistrez ce lien dans des rappels, des événements de calendrier ou des notes pour rouvrir %@ dans Cookle plus tard."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "このリンクをリマインダー、カレンダー予定、メモなどに保存しておくと、後で Cookle で %@ を開き直せます。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "将此链接保存到提醒事项、日历事件或备忘录中，以便稍后在 Cookle 中重新打开 %@。"
           }
         }
       }
@@ -9253,7 +9116,6 @@
       }
     },
     "Replace" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9283,6 +9145,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "替换"
+          }
+        }
+      }
+    },
+    "Replace Current Input?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Replace Current Input?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Reemplazar la entrada actual?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remplacer la saisie actuelle ?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "現在の入力を置き換えますか？"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "要替换当前输入吗？"
           }
         }
       }
@@ -9697,18 +9593,18 @@
         }
       }
     },
-    "Resume cooking" : {
+    "Resume Cooking" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Resume cooking"
+            "value" : "Resume Cooking"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reanudar la cocción"
+            "value" : "Seguir cocinando"
           }
         },
         "fr" : {
@@ -9731,18 +9627,18 @@
         }
       }
     },
-    "Resume Cooking" : {
+    "Resume cooking" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Resume Cooking"
+            "value" : "Resume cooking"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Seguir cocinando"
+            "value" : "Reanudar la cocción"
           }
         },
         "fr" : {
@@ -9969,74 +9865,6 @@
         }
       }
     },
-    "Search by recipe name, ingredient, or category." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search by recipe name, ingredient, or category."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Busca por nombre de receta, ingrediente o categoría."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recherchez par nom de recette, ingrédient ou catégorie."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピ名、材料、またはカテゴリで検索できます。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "可按食谱名称、食材或分类搜索。"
-          }
-        }
-      }
-    },
-    "Search for Recipes" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search for Recipes"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buscar recetas"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechercher des recettes"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピを探す"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "查找食谱"
-          }
-        }
-      }
-    },
     "Search Recipes" : {
       "localizations" : {
         "en" : {
@@ -10101,6 +9929,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "搜索文本"
+          }
+        }
+      }
+    },
+    "Search by recipe name, ingredient, or category." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search by recipe name, ingredient, or category."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Busca por nombre de receta, ingrediente o categoría."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recherchez par nom de recette, ingrédient ou catégorie."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピ名、材料、またはカテゴリで検索できます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可按食谱名称、食材或分类搜索。"
+          }
+        }
+      }
+    },
+    "Search for Recipes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search for Recipes"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar recetas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechercher des recettes"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピを探す"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查找食谱"
           }
         }
       }
@@ -10373,40 +10269,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "份量大小"
-          }
-        }
-      }
-    },
-    "servings" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "servings"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "porciones"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "portions"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "サービング"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "份"
           }
         }
       }
@@ -10751,40 +10613,6 @@
         }
       }
     },
-    "Show tips again" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show tips again"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mostrar consejos de nuevo"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Afficher a nouveau les astuces"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ヒントを再表示"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "再次显示提示"
-          }
-        }
-      }
-    },
     "Show Today's Diary" : {
       "localizations" : {
         "en" : {
@@ -10815,6 +10643,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "显示今日日记"
+          }
+        }
+      }
+    },
+    "Show tips again" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show tips again"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar consejos de nuevo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher a nouveau les astuces"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ヒントを再表示"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再次显示提示"
           }
         }
       }
@@ -10955,40 +10817,6 @@
         }
       }
     },
-    "Start a recipe with just a name, then add photos when you are ready." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Start a recipe with just a name, then add photos when you are ready."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Empieza una receta solo con un nombre y añade fotos cuando quieras."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Commencez une recette avec un simple nom, puis ajoutez des photos quand vous le souhaitez."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "まずは名前だけでレシピを登録。写真は後から追加できます。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "先用名称创建食谱，之后随时添加照片。"
-          }
-        }
-      }
-    },
     "Start Cooking" : {
       "localizations" : {
         "en" : {
@@ -11023,40 +10851,6 @@
         }
       }
     },
-    "Start cooking from a recipe to see the live step guide here." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Start cooking from a recipe to see the live step guide here."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inicia la cocina desde una receta para ver aquí la guía paso a paso en vivo."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lancez la cuisson depuis une recette pour voir ici le guide des étapes en direct."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピから調理を開始すると、ここにライブ手順ガイドが表示されます。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "从食谱开始烹饪后，这里会显示实时步骤指南。"
-          }
-        }
-      }
-    },
     "Start Searching" : {
       "localizations" : {
         "en" : {
@@ -11087,6 +10881,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "开始搜索"
+          }
+        }
+      }
+    },
+    "Start a recipe with just a name, then add photos when you are ready." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start a recipe with just a name, then add photos when you are ready."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empieza una receta solo con un nombre y añade fotos cuando quieras."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commencez une recette avec un simple nom, puis ajoutez des photos quand vous le souhaitez."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "まずは名前だけでレシピを登録。写真は後から追加できます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "先用名称创建食谱，之后随时添加照片。"
+          }
+        }
+      }
+    },
+    "Start cooking from a recipe to see the live step guide here." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start cooking from a recipe to see the live step guide here."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicia la cocina desde una receta para ver aquí la guía paso a paso en vivo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lancez la cuisson depuis une recette pour voir ici le guide des étapes en direct."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピから調理を開始すると、ここにライブ手順ガイドが表示されます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从食谱开始烹饪后，这里会显示实时步骤指南。"
           }
         }
       }
@@ -11399,6 +11261,40 @@
         }
       }
     },
+    "The imported recipe replaces the name, servings, cooking time, ingredients, steps, categories, and note you entered. Photos stay. You can undo the import from the recipe form." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The imported recipe replaces the name, servings, cooking time, ingredients, steps, categories, and note you entered. Photos stay. You can undo the import from the recipe form."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La receta importada reemplaza el nombre, las porciones, el tiempo de cocción, los ingredientes, los pasos, las categorías y la nota que ingresaste. Las fotos se conservan. Puedes deshacer la importación desde el formulario de la receta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La recette importée remplace le nom, les portions, le temps de cuisson, les ingrédients, les étapes, les catégories et la note que vous avez saisis. Les photos sont conservées. Vous pouvez annuler l’importation depuis le formulaire de la recette."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取り込んだレシピで、入力済みの名前、人数、調理時間、材料、ステップ、カテゴリー、ノートが置き換わります。写真はそのまま残ります。取り込みはレシピの入力画面で取り消せます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入的食谱将替换你输入的名称、份数、烹饪时间、成分、步骤、类别和注释。照片会保留。你可以在食谱表单中撤销导入。"
+          }
+        }
+      }
+    },
     "The page could not be loaded. Try again or paste the recipe text." : {
       "localizations" : {
         "en" : {
@@ -11503,6 +11399,40 @@
         }
       }
     },
+    "The recipe input changed while importing. Review it again before the imported recipe replaces it. You can undo the import from the recipe form." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The recipe input changed while importing. Review it again before the imported recipe replaces it. You can undo the import from the recipe form."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La entrada de la receta cambió durante la importación. Revísala de nuevo antes de que la receta importada la reemplace. Puedes deshacer la importación desde el formulario de la receta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La saisie de la recette a changé pendant l’importation. Vérifiez-la à nouveau avant que la recette importée ne la remplace. Vous pouvez annuler l’importation depuis le formulaire de la recette."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取り込み中にレシピの入力が変更されました。取り込んだレシピで置き換える前に、もう一度確認してください。取り込みはレシピの入力画面で取り消せます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入期间食谱输入已更改。在导入的食谱替换它之前，请再次确认。你可以在食谱表单中撤销导入。"
+          }
+        }
+      }
+    },
     "The recipe stays in your collection even if you cancel the Diary." : {
       "localizations" : {
         "en" : {
@@ -11567,6 +11497,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无法读取食谱文字。请复制并粘贴文字。"
+          }
+        }
+      }
+    },
+    "The selected Cookle backup package has an invalid file structure." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The selected Cookle backup package has an invalid file structure."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El paquete de copia de seguridad de Cookle seleccionado tiene una estructura de archivos no válida."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le paquet de sauvegarde Cookle sélectionné présente une structure de fichiers non valide."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選択したCookleバックアップパッケージのファイル構造が正しくありません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所选 Cookle 备份包的文件结构无效。"
           }
         }
       }
@@ -11669,40 +11633,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "所选备份无效、已损坏，或不受此版本的 Cookle 支持。"
-          }
-        }
-      }
-    },
-    "The selected Cookle backup package has an invalid file structure." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The selected Cookle backup package has an invalid file structure."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "El paquete de copia de seguridad de Cookle seleccionado tiene una estructura de archivos no válida."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Le paquet de sauvegarde Cookle sélectionné présente une structure de fichiers non valide."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "選択したCookleバックアップパッケージのファイル構造が正しくありません。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "所选 Cookle 备份包的文件结构无效。"
           }
         }
       }
@@ -12134,7 +12064,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cela retire la photo de %@ et conserve la photo enregistr\u00e9e dans Photos."
+            "value" : "Cela retire la photo de %@ et conserve la photo enregistrée dans Photos."
           }
         },
         "ja" : {
@@ -12283,6 +12213,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "这将删除未使用的食材记录。不会删除任何食谱的食材行。"
+          }
+        }
+      }
+    },
+    "This restores the recipe input from before the import and also discards the changes you made after importing." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This restores the recipe input from before the import and also discards the changes you made after importing."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto restaura la entrada de la receta anterior a la importación y también descarta los cambios que hiciste después de importar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cela rétablit la saisie de la recette d’avant l’importation et supprime aussi les modifications effectuées après l’importation."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取り込む前のレシピの入力に戻します。取り込んだ後に行った変更も破棄されます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这将恢复导入前的食谱输入，并同时丢弃导入后所做的更改。"
           }
         }
       }
@@ -12630,6 +12594,9 @@
         }
       }
     },
+    "URL" : {
+      "shouldTranslate" : false
+    },
     "Unable to Start Cookle" : {
       "localizations" : {
         "en" : {
@@ -12660,6 +12627,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无法启动 Cookle"
+          }
+        }
+      }
+    },
+    "Undo Import" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Undo Import"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deshacer importación"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler l’importation"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取り込みを取り消す"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "撤销导入"
+          }
+        }
+      }
+    },
+    "Undo Import?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Undo Import?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Deshacer la importación?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler l’importation ?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取り込みを取り消しますか？"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "要撤销导入吗？"
           }
         }
       }
@@ -12936,43 +12971,6 @@
         }
       }
     },
-    "URL" : {
-      "shouldTranslate" : false
-    },
-    "Use freshly grated Parmesan for the best flavor." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Use freshly grated Parmesan for the best flavor."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usa queso parmesano recién rallado para obtener el mejor sabor."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Utilisez du parmesan fraîchement râpé pour un goût optimal."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "風味を最大限に引き出すためには、新鮮にすりおろしたパルメザンチーズを使ってください。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用新鲜刨碎的帕尔马奶酪能带来最佳风味。"
-          }
-        }
-      }
-    },
     "Use Image Playground when you do not have a photo yet." : {
       "localizations" : {
         "en" : {
@@ -13072,6 +13070,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "使用 Siri 或快捷指令可以更快打开食谱和设置。"
+          }
+        }
+      }
+    },
+    "Use freshly grated Parmesan for the best flavor." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use freshly grated Parmesan for the best flavor."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usa queso parmesano recién rallado para obtener el mejor sabor."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisez du parmesan fraîchement râpé pour un goût optimal."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "風味を最大限に引き出すためには、新鮮にすりおろしたパルメザンチーズを使ってください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用新鲜刨碎的帕尔马奶酪能带来最佳风味。"
           }
         }
       }
@@ -13325,13 +13357,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El valor no puede estar vac\u00edo."
+            "value" : "El valor no puede estar vacío."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La valeur ne peut pas \u00eatre vide."
+            "value" : "La valeur ne peut pas être vide."
           }
         },
         "ja" : {
@@ -13514,6 +13546,177 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "未保存的更改将会丢失。"
+          }
+        }
+      }
+    },
+    "iCloud On" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud On"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud activado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud activé"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloudオン"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 开启"
+          }
+        }
+      }
+    },
+    "minutes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "minutes"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "minutos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "minutes"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分钟"
+          }
+        }
+      }
+    },
+    "recipe.shareLink.footer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save this link in reminders, calendar events, or notes so you can reopen this recipe in Cookle later. It does not share the recipe details with someone else."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guarda este enlace en recordatorios, eventos del calendario o notas para volver a abrir esta receta en Cookle más tarde. No comparte los detalles de la receta con otra persona."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistrez ce lien dans des rappels, des événements de calendrier ou des notes afin de pouvoir rouvrir cette recette dans Cookle plus tard. Il ne partage pas les détails de la recette avec une autre personne."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このリンクをリマインダー、カレンダー予定、メモなどに保存しておくと、後でこのレシピを Cookle で開き直せます。ほかの人にレシピ内容を共有するものではありません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将此链接保存到提醒事项、日历事件或备忘录中，以便稍后在 Cookle 中重新打开这道食谱。它不会把食谱详情分享给其他人。"
+          }
+        }
+      }
+    },
+    "recipe.shareLink.message" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save this link in reminders, calendar events, or notes to reopen %@ in Cookle later."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guarda este enlace en recordatorios, eventos del calendario o notas para volver a abrir %@ en Cookle más tarde."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistrez ce lien dans des rappels, des événements de calendrier ou des notes pour rouvrir %@ dans Cookle plus tard."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このリンクをリマインダー、カレンダー予定、メモなどに保存しておくと、後で Cookle で %@ を開き直せます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将此链接保存到提醒事项、日历事件或备忘录中，以便稍后在 Cookle 中重新打开 %@。"
+          }
+        }
+      }
+    },
+    "servings" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "servings"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "porciones"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "portions"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "サービング"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "份"
           }
         }
       }

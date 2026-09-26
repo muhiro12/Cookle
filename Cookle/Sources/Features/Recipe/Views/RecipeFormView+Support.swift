@@ -85,6 +85,7 @@ extension RecipeFormView {
             }
         default:
             importToolbarItem
+            undoImportToolbarItem
             restoreToolbarItem
             confirmationToolbarItem
         }
@@ -112,6 +113,19 @@ extension RecipeFormView {
                     ),
                     arrowEdge: .bottom
                 )
+            }
+        }
+    }
+
+    @ToolbarContentBuilder var undoImportToolbarItem: some ToolbarContent {
+        if formModel.inferenceApplication != nil {
+            ToolbarItem(placement: .bottomBar) {
+                Button {
+                    undoImport()
+                } label: {
+                    Label("Undo Import", systemImage: "arrow.uturn.backward")
+                }
+                .disabled(formModel.isSaving)
             }
         }
     }
@@ -251,6 +265,21 @@ extension RecipeFormView {
         }
 
         formModel.restoreSnapshot()
+    }
+
+    /// Undoes the latest import at once, or asks first when undoing it would
+    /// also discard changes made after the import.
+    func undoImport() {
+        guard formModel.isSaving == false else {
+            return
+        }
+
+        if formModel.hasEditsSinceInference {
+            isUndoImportDialogPresented = true
+            return
+        }
+
+        formModel.undoInference()
     }
 
     func cancelForm() {

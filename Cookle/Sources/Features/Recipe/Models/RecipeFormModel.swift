@@ -54,6 +54,8 @@ final class RecipeFormModel: Identifiable {
     /// Import flow presented over the form, owned here so it is not reopened
     /// or lost when the form's views are rebuilt.
     var importSource: RecipeImportSource?
+    /// The latest inferred recipe applied to this form, kept for one undo.
+    var inferenceApplication: RecipeInferenceApplication?
     var errorMessage: String?
     var isInferRecipeFromTextTipEligible = false
     var isImagePlaygroundTipEligible = false
