@@ -38,12 +38,12 @@ focus is personal cooking organization:
 
 ## Presentation Adoption Update
 
-The main app now links full MHUI 2.1 with the neutral standard theme and its
-navigation title appearance configured once at startup. Cookle keeps its
-orange accent. Recipe Detail and Cooking name the recipe in the native
-navigation title. Recipe Detail leads with its photo, compact facts, and
-cooking entry, followed by open-canvas ingredient, step, category, note, and
-diary sections. Dates and secondary actions close the page. The recipe
+The main app now links full MHUI 2.2 with the neutral standard theme and its
+native appearance configured once at startup. Cookle keeps its orange accent,
+which the root theme also supplies as native control tint. Recipe Detail and
+Cooking name the recipe in the native navigation title. Recipe Detail leads
+with its photo, compact facts, and cooking entry, followed by open-canvas
+ingredient, step, category, note, and diary sections. Dates and secondary actions close the page. The recipe
 content and operations remain the same. Recipe, tag, and search collections,
 diary, tag, and photo details, and recipe, diary, and tag editors use MHUI
 content List/Form presentation. Settings and diagnostics keep native grouping

@@ -91,14 +91,12 @@ private extension PhotoListView {
     func photoSection(
         for group: (source: PhotoSource, photos: [Photo])
     ) -> some View {
-        VStack(alignment: .leading, spacing: theme.spacing.content) {
-            MHSectionHeader(title: group.source.sectionTitle)
-            LazyVGrid(columns: [.init(.adaptive(minimum: Layout.photoGridMinimum))]) {
-                ForEach(group.photos) { photo in
-                    photoButton(for: photo)
-                }
+        LazyVGrid(columns: [.init(.adaptive(minimum: Layout.photoGridMinimum))]) {
+            ForEach(group.photos) { photo in
+                photoButton(for: photo)
             }
         }
+        .mhSection(title: group.source.sectionTitle)
     }
 
     @ViewBuilder

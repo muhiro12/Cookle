@@ -20,7 +20,107 @@ and diary-list information architecture are separate work.
 CookleLibrary, Watch, Widgets, App Intent implementations, and the MHUI
 package remain outside this change.
 
+## MHUI 2.2 Adoption
+
+The remote requirement advances to `2.2.0..<3.0.0`, resolved to MHUI 2.2.0 at
+`24c15fd86eef7207ae56092983305b478d1c9de6`. The project-link and resolved-pin
+guardrails reject the 2.1 baseline. The root standard theme and the orange
+accent are unchanged. The app initializer and the shared preview assembly
+replace `configureNavigationTitleAppearance()` with
+`configureNativeAppearance()`, which keeps the title setup and adds the UIKit
+text-input and unselected-tab requests.
+
+MHUI 2.2 widens section spacing to 40 points and keeps a composed section's
+heading, content, and footer 8 points apart. Recipe Detail, Cooking, Diary,
+and the recipe actions already compose through `mhSection` and
+`theme.spacing.section`, so they receive the new rhythm without app changes.
+The photo collection was the one composed section that placed a standalone
+`MHSectionHeader` above its grid with `theme.spacing.content`; it now uses
+`mhSection`, as the package reading and section-rhythm examples do. Cookle
+adds no metric, padding, border, divider, or palette override. Grouped rows
+keep their own 16-point padding, so visible heading-to-text distances in
+those groups exceed the 8-point structural gap, as the package guide notes.
+
+The root theme now supplies the orange accent as native control tint. Toolbar
+items such as sort, add, and the recipe import control take the accent; the
+confirmation-placed Edit button was already accent-filled. No toolbar item has
+a neutral role that requires a `primaryText` exception, so none is added.
+Default content buttons follow MHUI's primary text or destructive role: See
+All in recipe diary history, Add Diary, Another Suggestion, the
+add-multiple-ingredients header accessory, the backup rows, and the search
+first-use actions change from accent to primary text, and Delete All uses
+MHUI's destructive color for its icon and label. Explicit `mhPrimary`,
+`mhQuiet`, and `mhDestructive` actions keep their treatments. The empty-state
+Add Recipe control is a `Menu`, which the default button style does not reach,
+so it keeps the accent.
+
+### MHUI 2.2 Verification
+
+The Swift formatter and retained repository rules pass, and the guardrails
+reject the 2.1 project baseline and resolved versions below 2.2.0. The
+Xcode-native Cookle build succeeds with no errors or warnings on Xcode 27.1
+(`27A9269`) and the iOS 27.1 Simulator SDK, and Xcode's package state resolves
+MHUI 2.2.0 at the pinned revision. No shared library logic changed, so no
+library tests ran.
+
+Runtime evidence uses the isolated capture fixture in Japanese on iPhone 18
+Pro and a 13-inch iPad, both iOS 27.0, installed and launched through the
+native Xcode integration with an explicit capture environment. On iPhone,
+Recipe Detail measures 40 points between sections and 8 points from each
+heading to its content; the photo collection measures the same. The recipe
+form accepted typed name text, and Cancel and Discard returned to the
+unchanged detail. Settings was checked in light, dark, and dark at AX3; recipe
+actions in dark and at AX3 in light; and the recipe list, tabs, and toolbar in
+light and dark. The diary selector opened with the saved breakfast recipe
+checked once its push transition settled, the first tap changed the count
+from one to zero, and returning and cancelling kept the original diary. With
+the empty isolated store, the Recipe, Photos, and Search first-use states
+remain centered, and at AX5 the Photos action remains reachable by scrolling.
+The iPad run covers the recipe split view with a detail, selecting another
+recipe at AX3 in light, and dark Settings.
+
+The observed limits are separated by owner:
+
+- SwiftUI text fields and the searchable field render input text in the
+  system label color (`#000000` in light) in both the 2.1 and 2.2 captures,
+  while navigation titles use MHUI's primary text (`#444444`). The UIKit
+  text-input default does not reach these SwiftUI-owned inputs on this
+  runtime; this is a native and package boundary, and Cookle adds no
+  per-field override.
+- Unselected tab items stay system black, as the MHUI 2.2 guide records for
+  the Liquid Glass tab renderer. On iPad, the system sidebar toggle stays
+  neutral beside the accent-tinted sort and add items.
+- The orange toolbar glyphs sample about 2.2:1 against the light glass. The
+  accent's light-appearance contrast predates 2.2 and remains an app accent
+  decision, consistent with the 2.1 measurements below.
+- Default content buttons in primary text are less distinct from adjacent
+  text than the previous accent treatment, most visibly in the search
+  first-use actions. This follows the package's default-button decision and
+  is recorded for MHUI review rather than overridden in Cookle.
+- The switch ON state was not exercised. The only switch visible in capture
+  mode controls real daily notifications, so turning it on would change a
+  notification setting; the OFF state and MHUI's native-control Preview are
+  the available evidence.
+
+The fixture run on iPhone logs two SwiftUI `glassEffect()` multiple-update
+faults plus UIKit, keyboard, and accessibility-automation messages. The
+empty-store and iPad runs log no such fault. No crash, fatal error, or
+SwiftData or Core Data error appears.
+
+Appearance and text size used official simulator settings because the native
+integration has no such control; both devices were restored and confirmed. No
+user records were saved or deleted, and no purchase, sync, account, or
+notification setting changed. Interaction sessions ended, runs stopped, the
+iPad returned to its shut-down state, and the original Cookle scheme and
+iPhone 18 Pro destination were restored. VoiceOver, Increase Contrast,
+physical devices, and unvisited routes remain unverified for 2.2. Local
+captures, logs, and a review gallery are retained under
+`.build/ci/mhui-2.2-adoption/`.
+
 ## Empty-State Alignment Review
+
+This review ran against MHUI 2.1. Its spacing values and runtime evidence are
+historical; the MHUI 2.2 section above records the current rhythm.
 
 The September 26 follow-up centers full-screen empty states in the available
 content viewport. Recipe and Search previously placed their placeholders in
@@ -62,6 +162,8 @@ physical-device or VoiceOver coverage. Verification runs ended and the
 original Cookle/iPhone destination and simulator settings were restored.
 
 ## MHUI 2.1 Adoption
+
+This section and its verification are historical MHUI 2.1.0 evidence.
 
 The remote requirement advances to `2.1.0..<3.0.0`, resolved to MHUI 2.1.0 at
 `68a00be5348dadb5a16e84e18d52017f105d5a6d`. The project-link and resolved-pin
@@ -404,7 +506,7 @@ MHUI 2.0 chooses each screen route explicitly: content List/Form presentation
 for product collections, details, and editors, stack composition for freely
 arranged reading and task screens, and native presentation for settings,
 subscription, and diagnostics. No List, Form, or screen-level ScrollView is
-nested inside `mhScreen`. The table reflects the routes as updated for 2.1,
+nested inside `mhScreen`. The table reflects the routes as updated for 2.2,
 where native presentation keeps platform grouping and row geometry on MHUI's
 canvas and row surfaces; the earlier refinement history below describes the
 preceding baseline.
@@ -429,7 +531,7 @@ List presentation while retaining the composed Recipe Detail route.
 | Ingredient/category tags | Content List/Form with `MHContainerContent` | Search, selection, rename and merge/delete conditions |
 | Settings | Native List with `MHContainerContent` | Native settings controls, footers, destructive and disabled states, and the Shortcuts link row |
 | Subscription host | Native List without an added row surface | MHPlatform-owned StoreKit section and its own background |
-| Photo collection | `mhScreen` and section headers around the existing adaptive grid | Source groups, image order, minimum thumbnail width and navigation |
+| Photo collection | `mhScreen` and `mhSection` around the existing adaptive grid | Source groups, image order, minimum thumbnail width and navigation |
 | Photo detail | Content List with `MHContainerContent` | Preview size, recipe associations, dates, full-screen route and deletion confirmation |
 | Detached recipe editors | MHUI input chrome around the existing TextEditor | Full-height native editor, placeholder, keyboard, text conversion, inference and Cancel |
 | Cooking | `mhScreen` with native title, sections and semantic actions | Step list and selection, timers, End Session and diary continuation |

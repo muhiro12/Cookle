@@ -24,8 +24,8 @@ requires changing the product's information architecture.
 ## Decision
 
 - `Cookle` links the full `MHUI` product with the remote version requirement
-  `2.1.0..<3.0.0`, applies the neutral standard theme once at its application
-  root, and configures the same theme's navigation title appearance at startup.
+  `2.2.0..<3.0.0`, applies the neutral standard theme once at its application
+  root, and configures the same theme's native appearance at startup.
   It accesses existing MHDesign metrics through MHUI's re-export, without a
   separate direct MHDesign product dependency or app-local metric overrides.
 - Recipe Detail uses `mhScreen` with the recipe name as its native navigation
@@ -85,6 +85,12 @@ section without an added row surface. Action roles share padding, dimensions
 follow the eight-point grid, and the recipe collection keeps content
 presentation at every width; Cookle copies no previous metrics or palette
 values.
+The baseline advanced to MHUI 2.2 on 2026-09-26. The startup call becomes
+`configureNativeAppearance()`, and the root theme supplies the orange accent
+as native control tint, including toolbars. Default content buttons use
+MHUI's primary text or destructive role, while explicit MHUI action styles
+keep their treatments. Composed sections use the package's 40-point section
+and 8-point heading rhythm without app compensation.
 The earlier composition refinement applied the SDK's visual hierarchy:
 reading content gains emphasis through alignment and spacing, while surfaces
 group related rows and action styles identify the next useful operation.

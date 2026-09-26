@@ -29,8 +29,8 @@ enum CookleAppAssemblyFactory {
         modelContainer: ModelContainer
     ) -> CookleAppAssembly {
         // Previews skip `CookleApp.init()`, so they configure the same
-        // navigation title appearance before returning their hierarchy.
-        MHTheme.standard.configureNavigationTitleAppearance()
+        // native appearance before returning their hierarchy.
+        MHTheme.standard.configureNativeAppearance()
         return makeAssembly(
             modelContainer: modelContainer,
             nativeAdUnitID: CookleMonetizationConfiguration.nativeAdUnitIDDev,

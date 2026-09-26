@@ -53,9 +53,10 @@ struct CookleApp: App {
 
     @MainActor
     init() {
-        // Navigation bars read this UIKit default when they are created, so it
-        // has to be configured before any scene builds its hierarchy.
-        MHTheme.standard.configureNavigationTitleAppearance()
+        // Navigation bars, text inputs, and tab bars read these UIKit defaults
+        // when they are created, so they have to be configured before any
+        // scene builds its hierarchy.
+        MHTheme.standard.configureNativeAppearance()
 
         // Must happen here, not in the scene: an App Intent can launch this
         // process without a scene, and its dependencies have to be registered
