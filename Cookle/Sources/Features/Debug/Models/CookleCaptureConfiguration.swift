@@ -11,6 +11,7 @@ enum CookleCaptureConfiguration {
         static let photoDirectory = "COOKLE_CAPTURE_PHOTO_DIRECTORY"
         static let baseDate = "COOKLE_CAPTURE_BASE_DATE"
         static let screen = "COOKLE_CAPTURE_SCREEN"
+        static let emptyStore = "COOKLE_CAPTURE_EMPTY_STORE"
     }
 
     private enum EnabledValue {
@@ -20,6 +21,11 @@ enum CookleCaptureConfiguration {
     /// Indicates whether the current process runs with capture fixtures.
     static var isEnabled: Bool {
         environmentValue(for: EnvironmentKey.isEnabled) == EnabledValue.enabled
+    }
+
+    /// Uses an empty isolated store to verify first-use presentation.
+    static var usesEmptyStore: Bool {
+        isEnabled && environmentValue(for: EnvironmentKey.emptyStore) == EnabledValue.enabled
     }
 
     /// Directory holding the sample photo files named by `SamplePhotoAsset`.

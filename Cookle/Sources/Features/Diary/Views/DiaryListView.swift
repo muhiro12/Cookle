@@ -22,20 +22,21 @@ struct DiaryListView: View {
     @State private var currentDate = Date.now
 
     var body: some View {
-        VStack(spacing: theme.spacing.section) {
-            DuplicateDiaryRepairSection()
-            DiaryTodaySection(
-                diaries: todayDiaries(on: currentDate),
-                date: currentDate,
-                selection: $diary
-            )
-            DiaryRecipeInspirationSection(recipes: recipes) { recipe in
-                navigationModel.selectedRecipe = recipe
-                navigationModel.selectedTab = .recipe
+        Group {
+            if diaries.isEmpty, recipes.isEmpty {
+                ContentUnavailableView {
+                    Label("No Diaries Yet", systemImage: "book.closed")
+                } description: {
+                    Text("A dish name or a few words is enough to start.")
+                } actions: {
+                    AddDiaryButton()
+                    AddRecipeButton(showsTitle: true)
+                }
+                .cookleEmptyState()
+            } else {
+                diaryContent
             }
-            historySections(on: currentDate)
         }
-        .mhScreen()
         .onAppear {
             currentDate = .now
         }
@@ -66,6 +67,23 @@ struct DiaryListView: View {
 }
 
 private extension DiaryListView {
+    var diaryContent: some View {
+        VStack(spacing: theme.spacing.section) {
+            DuplicateDiaryRepairSection()
+            DiaryTodaySection(
+                diaries: todayDiaries(on: currentDate),
+                date: currentDate,
+                selection: $diary
+            )
+            DiaryRecipeInspirationSection(recipes: recipes) { recipe in
+                navigationModel.selectedRecipe = recipe
+                navigationModel.selectedTab = .recipe
+            }
+            historySections(on: currentDate)
+        }
+        .mhScreen()
+    }
+
     func todayDiaries(on date: Date) -> [Diary] {
         diaries.filter { Calendar.current.isDate($0.date, inSameDayAs: date) }
     }

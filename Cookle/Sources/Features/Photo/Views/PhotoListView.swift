@@ -61,6 +61,7 @@ private extension PhotoListView {
         } actions: {
             AddRecipeButton(showsTitle: true)
         }
+        .cookleEmptyState()
     }
 
     var groupedPhotos: [(source: PhotoSource, photos: [Photo])] {

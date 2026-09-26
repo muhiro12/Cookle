@@ -20,6 +20,47 @@ and diary-list information architecture are separate work.
 CookleLibrary, Watch, Widgets, App Intent implementations, and the MHUI
 package remain outside this change.
 
+## Empty-State Alignment Review
+
+The September 26 follow-up centers full-screen empty states in the available
+content viewport. Recipe and Search previously placed their placeholders in
+`mhScreen`, whose scrolling stack does not expand to the viewport height;
+Photos used an unwrapped native placeholder. The app now shares a scrollable
+empty-state layout for Recipe, Photos, Search, and tag discovery. Diary uses
+it only when both diaries and recipes are empty, retaining recipe inspiration
+when recipes exist. Native navigation and tab bars define the available area.
+The layout uses MHUI's empty-state padding, readable width, text appearance,
+and semantic background without copying palette values or screen offsets.
+
+The border audit found no app-owned stroked frames or border overrides.
+Recipe ingredients, categories, and diary history use `MHGroupedRows`, which
+intentionally draws separators between rows. Content List separators and
+native settings/form boundaries remain structural. The four explicit app
+`Divider` calls separate the website address field from web content or
+separate content in App Intent snippets. They are retained for those roles.
+MHUI 2.1's visual principles explicitly preserve grouped-row separators and
+input boundaries while rejecting ornamental frames.
+
+Recipe Detail, Cooking, Diary, and Photos already use
+`theme.spacing.section` between major blocks. Section headings and their
+content use `mhSection` or `theme.spacing.content`, matching the MHUI reading
+Example and section Preview. In the standard theme those values are 32 and
+24 points; grouped rows add their own 16-point vertical padding. This can
+make the apparent gaps around a heading similar. Cookle does not override
+these values, so this review retains the package rhythm rather than adding
+app-specific offsets. Native List/Form heading geometry also remains under
+MHUI and system control.
+
+The follow-up app build and repository rules pass. Japanese iPhone Simulator
+checks cover all four empty tab states, empty category discovery, no search
+results, and opening/cancelling diary and recipe creation. At the largest
+accessibility text size, the photo description and final action remain
+reachable by scrolling. An iPad capture confirms centering within each split
+column. Populated Recipe and Diary detail captures preserve the existing
+section and row treatments. This is representative Simulator evidence, not
+physical-device or VoiceOver coverage. Verification runs ended and the
+original Cookle/iPhone destination and simulator settings were restored.
+
 ## MHUI 2.1 Adoption
 
 The remote requirement advances to `2.1.0..<3.0.0`, resolved to MHUI 2.1.0 at

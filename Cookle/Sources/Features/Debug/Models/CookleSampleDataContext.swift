@@ -56,7 +56,13 @@ private extension CookleSampleDataContext {
             if let baseDate {
                 previewStore.baseDate = baseDate
             }
+            #if DEBUG
+            if !CookleCaptureConfiguration.usesEmptyStore {
+                try previewStore.prepare(modelContainer.mainContext)
+            }
+            #else
             try previewStore.prepare(modelContainer.mainContext)
+            #endif
             // Stabilize identifiers before navigation and selection retain models.
             try modelContainer.mainContext.save()
             return MainActor.assumeIsolated {

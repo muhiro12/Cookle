@@ -6528,7 +6528,6 @@
       }
     },
     "No Diaries Yet" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

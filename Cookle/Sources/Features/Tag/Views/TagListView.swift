@@ -53,6 +53,7 @@ private extension TagListView {
             tagList
         } else {
             emptyStateView
+                .cookleEmptyState()
         }
     }
 

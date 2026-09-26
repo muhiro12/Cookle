@@ -96,8 +96,7 @@ struct SearchView: View {
     @ViewBuilder var searchContent: some View {
         if isSearching {
             ProgressView("Searching Recipes")
-                .frame(maxWidth: .infinity)
-                .mhScreen()
+                .cookleEmptyState()
         } else if let searchErrorMessage {
             ContentUnavailableView {
                 Label(
@@ -113,8 +112,7 @@ struct SearchView: View {
                     }
                 }
             }
-            .mhEmptyStateLayout()
-            .mhScreen()
+            .cookleEmptyState()
         } else if !recipes.isEmpty {
             SearchResultsView(
                 recipes: recipes,
@@ -129,8 +127,7 @@ struct SearchView: View {
 
     var notFoundPlaceholder: some View {
         ContentUnavailableView.search(text: searchText)
-            .mhEmptyStateLayout()
-            .mhScreen()
+            .cookleEmptyState()
     }
 
     var searchPromptPlaceholder: some View {
@@ -149,8 +146,7 @@ struct SearchView: View {
                 discoverySheet = .category
             }
         }
-        .mhEmptyStateLayout()
-        .mhScreen()
+        .cookleEmptyState()
     }
 
     var discoveryMenu: some View {

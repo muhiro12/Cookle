@@ -101,8 +101,7 @@ private extension RecipeListView {
                     arrowEdge: .top
                 )
         }
-        .mhEmptyStateLayout()
-        .mhScreen()
+        .cookleEmptyState()
     }
 
     var sortedRecipes: [Recipe] {
