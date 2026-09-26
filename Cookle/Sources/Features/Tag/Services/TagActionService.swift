@@ -79,74 +79,114 @@ final class TagActionService {
         )
     }
 
-    @discardableResult
+    /// Deletes the reviewed category when the recipes using it still match the review.
     func delete(
         context: ModelContext,
-        category: Category
-    ) async throws -> MutationOutcome<Void> {
-        try await run(
+        reviewed review: TagDeletionReview<Category>
+    ) async throws -> ReviewedMutationResult<TagDeletionReview<Category>> {
+        guard let currentReview = try TagOperations.currentDeletionReview(
+            for: review,
+            context: context
+        ) else {
+            return .targetMissing
+        }
+        guard currentReview.hasSameImpact(as: review) else {
+            return .changed(currentReview)
+        }
+
+        _ = try await run(
             name: "deleteCategory",
             context: context
         ) {
-            TagOperations.deleteWithOutcome(
+            try TagOperations.deleteWithOutcome(
                 context: context,
-                category: category
+                reviewed: review
             )
         }
+        return .applied
     }
 
-    @discardableResult
+    /// Deletes the reviewed ingredient when it is still unused and unchanged.
     func delete(
         context: ModelContext,
-        ingredient: Ingredient
-    ) async throws -> MutationOutcome<Void> {
-        try await run(
+        reviewed review: TagDeletionReview<Ingredient>
+    ) async throws -> ReviewedMutationResult<TagDeletionReview<Ingredient>> {
+        guard let currentReview = try TagOperations.currentDeletionReview(
+            for: review,
+            context: context
+        ) else {
+            return .targetMissing
+        }
+        guard currentReview.hasSameImpact(as: review) else {
+            return .changed(currentReview)
+        }
+
+        _ = try await run(
             name: "deleteIngredient",
             context: context
         ) {
             try TagOperations.deleteWithOutcome(
                 context: context,
-                ingredient: ingredient
+                reviewed: review
             )
         }
+        return .applied
     }
 
-    @discardableResult
+    /// Merges the reviewed duplicates when they and the recipes they move still match the review.
     func mergeDuplicates<T: Tag>(
         context: ModelContext,
-        keeping tag: T
-    ) async throws -> MutationOutcome<Void> {
-        if let ingredient = tag as? Ingredient {
-            return try await run(
-                name: "mergeDuplicateIngredients",
-                context: context
-            ) {
-                try TagOperations.mergeDuplicatesWithOutcome(
-                    context: context,
-                    keeping: ingredient
-                )
-            }
+        reviewed review: TagMergeReview<T>
+    ) async throws -> ReviewedMutationResult<TagMergeReview<T>> {
+        guard let currentReview = try TagOperations.currentMergeReview(
+            for: review,
+            context: context
+        ) else {
+            return .targetMissing
+        }
+        guard currentReview.hasSameImpact(as: review) else {
+            return .changed(currentReview)
         }
 
-        if let category = tag as? Category {
-            return try await run(
-                name: "mergeDuplicateCategories",
-                context: context
-            ) {
-                try TagOperations.mergeDuplicatesWithOutcome(
-                    context: context,
-                    keeping: category
-                )
-            }
+        _ = try await run(
+            name: review is TagMergeReview<Ingredient>
+                ? "mergeDuplicateIngredients"
+                : "mergeDuplicateCategories",
+            context: context
+        ) {
+            try Self.mergeDuplicatesWithOutcome(
+                context: context,
+                reviewed: review
+            )
+        }
+        return .applied
+    }
+}
+
+private extension TagActionService {
+    static func mergeDuplicatesWithOutcome<T: Tag>(
+        context: ModelContext,
+        reviewed review: TagMergeReview<T>
+    ) throws -> MutationOutcome<Void> {
+        if let ingredientReview = review as? TagMergeReview<Ingredient> {
+            return try TagOperations.mergeDuplicatesWithOutcome(
+                context: context,
+                reviewed: ingredientReview
+            )
+        }
+
+        if let categoryReview = review as? TagMergeReview<Category> {
+            return try TagOperations.mergeDuplicatesWithOutcome(
+                context: context,
+                reviewed: categoryReview
+            )
         }
 
         throw CookleActionError.unsupportedTagType(
             String(describing: T.self)
         )
     }
-}
 
-private extension TagActionService {
     func run<Value>(
         name: String,
         context: ModelContext,

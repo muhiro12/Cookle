@@ -21,32 +21,39 @@ struct DeleteIngredientIntent: AppIntent {
             throw TagMutationIntentError.ingredientNotFound
         }
 
-        guard (ingredient.recipes ?? []).isEmpty else {
+        let review = TagOperations.deletionReview(
+            for: ingredient
+        )
+        guard review.recipeCount == .zero else {
             return .result(
                 dialog: .init(
                     stringLiteral: IngredientDeleteCopy.rejectionDialog(
-                        for: ingredient
+                        for: review
                     )
                 )
             )
         }
 
-        try await requestDeleteConfirmation(
-            dialog: .init(
-                stringLiteral: IngredientDeleteCopy.confirmationDialog(
-                    for: ingredient
-                )
+        let deletedReview = try await confirmReviewedMutation(
+            initialReview: review,
+            dialog: IngredientDeleteCopy.confirmationDialog(for:),
+            missingError: TagMutationIntentError.ingredientNotFound
+        ) { reviewedDeletion in
+            let result = try await tagActionService.delete(
+                context: modelContainer.mainContext,
+                reviewed: reviewedDeletion
             )
-        )
-
-        try await tagActionService.delete(
-            context: modelContainer.mainContext,
-            ingredient: ingredient
-        )
+            // A recipe started using the ingredient; deletion stays unavailable.
+            if case .changed(let currentReview) = result,
+               currentReview.recipeCount > .zero {
+                throw TagMutationIntentError.ingredientInUse(currentReview.value)
+            }
+            return result
+        }
 
         return .result(
             dialog: .init(
-                stringLiteral: IngredientDeleteCopy.successDialog(for: ingredient)
+                stringLiteral: IngredientDeleteCopy.successDialog(for: deletedReview)
             )
         )
     }

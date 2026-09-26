@@ -21,20 +21,22 @@ struct DeleteCategoryIntent: AppIntent {
             throw TagMutationIntentError.categoryNotFound
         }
 
-        try await requestDeleteConfirmation(
-            dialog: .init(
-                stringLiteral: CategoryDeleteCopy.confirmationDialog(for: category)
+        let deletedReview = try await confirmReviewedMutation(
+            initialReview: TagOperations.deletionReview(
+                for: category
+            ),
+            dialog: CategoryDeleteCopy.confirmationDialog(for:),
+            missingError: TagMutationIntentError.categoryNotFound
+        ) { review in
+            try await tagActionService.delete(
+                context: modelContainer.mainContext,
+                reviewed: review
             )
-        )
-
-        try await tagActionService.delete(
-            context: modelContainer.mainContext,
-            category: category
-        )
+        }
 
         return .result(
             dialog: .init(
-                stringLiteral: CategoryDeleteCopy.successDialog(for: category)
+                stringLiteral: CategoryDeleteCopy.successDialog(for: deletedReview)
             )
         )
     }

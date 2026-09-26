@@ -32,6 +32,10 @@ nonisolated enum CookleLibraryErrorCopy {
             return description(for: tag)
         }
 
+        if let reviewed = error as? ReviewedMutationError {
+            return description(for: reviewed)
+        }
+
         return error.localizedDescription
     }
 }
@@ -55,6 +59,19 @@ nonisolated private extension CookleLibraryErrorCopy {
         case .ingredientInUse(let value):
             String(
                 localized: "Ingredient \(value) is still used by recipes and cannot be deleted."
+            )
+        }
+    }
+
+    static func description(for error: ReviewedMutationError) -> String {
+        switch error {
+        case .targetMissing:
+            String(
+                localized: "This item no longer exists."
+            )
+        case .impactChanged:
+            String(
+                localized: "The affected items changed after you reviewed them. Review them again and try once more."
             )
         }
     }

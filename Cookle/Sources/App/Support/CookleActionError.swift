@@ -1,7 +1,9 @@
+import CookleLibrary
 import Foundation
 
 enum CookleActionError: LocalizedError {
     case recipeNotFound
+    case reviewedImpactChanged
     case unsupportedTagType(String)
     case missingMutationResult(String)
 
@@ -9,6 +11,10 @@ enum CookleActionError: LocalizedError {
         switch self {
         case .recipeNotFound:
             return String(localized: "Recipe not found.")
+        case .reviewedImpactChanged:
+            return CookleLibraryErrorCopy.description(
+                for: ReviewedMutationError.impactChanged
+            )
         // The remaining cases guard invariants that only break through a
         // programming mistake, and they report Swift type and entity names,
         // so translating them would tell a reader less than the raw text.

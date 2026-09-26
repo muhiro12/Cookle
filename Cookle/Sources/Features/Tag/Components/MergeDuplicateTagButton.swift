@@ -12,14 +12,14 @@ struct MergeDuplicateTagButton<T: Tag>: View {
     @Query(T.descriptor(.all))
     private var tags: [T]
 
-    @State private var isPresented = false
-    @State private var isErrorPresented = false
-    @State private var errorMessage = ""
+    @State private var review: TagMergeReview<T>?
+    @State private var changedReview: TagMergeReview<T>?
+    @State private var errorMessage: String?
 
     var body: some View {
         if duplicateCount > 1 {
             Button {
-                isPresented = true
+                reviewMerge()
             } label: {
                 Label {
                     Text("Merge duplicate \(tag.value)")
@@ -30,26 +30,27 @@ struct MergeDuplicateTagButton<T: Tag>: View {
             }
             .confirmationDialog(
                 Text("Merge Duplicate Tags"),
-                isPresented: $isPresented
-            ) {
-                Button("Merge into \(tag.value)") {
-                    mergeDuplicates()
+                isPresented: isReviewPresented,
+                presenting: review
+            ) { presentedReview in
+                Button("Merge into \(presentedReview.keptValue)") {
+                    merge(presentedReview)
                 }
                 Button("Cancel", role: .cancel) {
-                    // Dismisses the confirmation dialog.
+                    changedReview = nil
                 }
-            } message: {
-                Text(confirmationMessage)
+            } message: { presentedReview in
+                Text(message(for: presentedReview))
             }
             .alert(
                 Text("Cannot Merge Tags"),
-                isPresented: $isErrorPresented
+                isPresented: isErrorPresented
             ) {
                 Button("OK", role: .cancel) {
-                    // Dismisses the alert.
+                    errorMessage = nil
                 }
             } message: {
-                Text(errorMessage)
+                Text(errorMessage ?? "")
             }
         }
     }
@@ -63,22 +64,70 @@ struct MergeDuplicateTagButton<T: Tag>: View {
 
 private extension MergeDuplicateTagButton {
     var duplicateCount: Int {
-        duplicateTags.count
-    }
-
-    var duplicateTags: [T] {
         TagOperations.duplicateTags(
             matching: tag,
             in: tags
+        ).count
+    }
+
+    var isReviewPresented: Binding<Bool> {
+        .init(
+            get: {
+                review != nil
+            },
+            set: { isPresented in
+                if isPresented == false {
+                    review = nil
+                }
+            }
         )
     }
 
-    var confirmationMessage: String {
-        let matchingCount = duplicateCount - 1
-        if matchingCount == 1 {
+    var isErrorPresented: Binding<Bool> {
+        .init(
+            get: {
+                errorMessage != nil
+            },
+            set: { isPresented in
+                if isPresented == false {
+                    errorMessage = nil
+                }
+            }
+        )
+    }
+
+    func message(for presentedReview: TagMergeReview<T>) -> String {
+        let matchingTags = ReviewExampleCopy.list(
+            presentedReview.duplicateValueExamples,
+            totalCount: presentedReview.duplicateCount
+        )
+        var sections = [
+            impactMessage(for: presentedReview),
+            String(localized: "Matching tags: \(matchingTags).")
+        ]
+        if presentedReview.recipeCount > .zero {
+            let recipes = ReviewExampleCopy.list(
+                presentedReview.recipeNameExamples,
+                totalCount: presentedReview.recipeCount
+            )
+            sections.append(
+                String(localized: "Recipes: \(recipes).")
+            )
+        }
+        if presentedReview == changedReview {
+            sections.insert(
+                ReviewExampleCopy.changedNotice,
+                at: .zero
+            )
+        }
+        return sections.joined(separator: "\n\n")
+    }
+
+    func impactMessage(for presentedReview: TagMergeReview<T>) -> String {
+        if presentedReview.duplicateCount == 1 {
             return String(
                 localized: """
-                This will reassign recipes from one matching tag to \(tag.value), \
+                This will reassign recipes from one matching tag to \(presentedReview.keptValue), \
                 then delete the duplicate tag.
                 """
             )
@@ -86,22 +135,49 @@ private extension MergeDuplicateTagButton {
 
         return String(
             localized: """
-            This will reassign recipes from \(matchingCount) matching tags to \(tag.value), \
-            then delete the duplicate tags.
+            This will reassign recipes from \(presentedReview.duplicateCount) matching tags to \
+            \(presentedReview.keptValue), then delete the duplicate tags.
             """
         )
     }
 
-    func mergeDuplicates() {
+    func reviewMerge() {
+        do {
+            changedReview = nil
+            review = try TagOperations.mergeReview(
+                context: context,
+                keeping: tag
+            )
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    func merge(_ reviewedMerge: TagMergeReview<T>) {
         Task {
             do {
-                try await tagActionService.mergeDuplicates(
+                switch try await tagActionService.mergeDuplicates(
                     context: context,
-                    keeping: tag
-                )
+                    reviewed: reviewedMerge
+                ) {
+                case .applied:
+                    changedReview = nil
+                case .changed(let currentReview) where currentReview.hasDuplicates:
+                    changedReview = currentReview
+                    review = currentReview
+                case .changed:
+                    changedReview = nil
+                    errorMessage = String(
+                        localized: "No matching tags remain to merge. Nothing was changed."
+                    )
+                case .targetMissing:
+                    changedReview = nil
+                    errorMessage = ReviewExampleCopy.missingMessage(
+                        for: reviewedMerge.keptValue
+                    )
+                }
             } catch {
                 errorMessage = error.localizedDescription
-                isErrorPresented = true
             }
         }
     }

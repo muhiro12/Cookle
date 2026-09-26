@@ -149,6 +149,43 @@ public enum RecipeOperations {
         )
     }
 
+    /// Describes what deleting `recipe` removes, as values for a review.
+    public static func deletionReview(
+        for recipe: Recipe
+    ) -> RecipeDeletionReview {
+        RecipeService.deletionReview(
+            for: recipe
+        )
+    }
+
+    /// Re-resolves the reviewed recipe and describes what deleting it removes now.
+    ///
+    /// - Returns: `nil` when the recipe no longer exists.
+    public static func currentDeletionReview(
+        for review: RecipeDeletionReview,
+        context: ModelContext
+    ) throws -> RecipeDeletionReview? {
+        try RecipeService.currentDeletionReview(
+            for: review,
+            context: context
+        )
+    }
+
+    /// Deletes the reviewed recipe after re-resolving it, and returns follow-up hints.
+    ///
+    /// - Throws: `ReviewedMutationError.targetMissing` when the recipe is gone,
+    ///   or `ReviewedMutationError.impactChanged` when the diary meal rows it
+    ///   would remove differ from the review. Neither case changes the store.
+    public static func deleteWithOutcome(
+        context: ModelContext,
+        reviewed review: RecipeDeletionReview
+    ) throws -> MutationOutcome<Void> {
+        try RecipeService.deleteWithOutcome(
+            context: context,
+            reviewed: review
+        )
+    }
+
     /// Removes one persisted photo row from a recipe and returns follow-up hints.
     public static func removePhotoWithOutcome(
         context: ModelContext,

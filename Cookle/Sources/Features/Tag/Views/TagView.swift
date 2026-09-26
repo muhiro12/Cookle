@@ -101,9 +101,14 @@ private extension TagView {
             }
             .environment(ingredient)
             if !(ingredient.recipes ?? []).isEmpty {
-                Text(IngredientDeleteCopy.inUseMessage(for: ingredient))
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
+                Text(
+                    IngredientDeleteCopy.inUseMessage(
+                        value: ingredient.value,
+                        recipeCount: (ingredient.recipes ?? []).count
+                    )
+                )
+                .font(.footnote)
+                .foregroundStyle(.secondary)
             }
         }
     }

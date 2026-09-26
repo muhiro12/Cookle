@@ -20,20 +20,22 @@ struct DeleteRecipeIntent: AppIntent {
             throw RecipeMutationIntentError.recipeNotFound
         }
 
-        try await requestDeleteConfirmation(
-            dialog: .init(
-                stringLiteral: RecipeDeleteCopy.confirmationDialog(for: model)
+        let deletedReview = try await confirmReviewedMutation(
+            initialReview: RecipeOperations.deletionReview(
+                for: model
+            ),
+            dialog: RecipeDeleteCopy.confirmationDialog(for:),
+            missingError: RecipeMutationIntentError.recipeNotFound
+        ) { review in
+            try await recipeActionService.delete(
+                context: modelContainer.mainContext,
+                reviewed: review
             )
-        )
-
-        try await recipeActionService.delete(
-            context: modelContainer.mainContext,
-            recipe: model
-        )
+        }
 
         return .result(
             dialog: .init(
-                stringLiteral: RecipeDeleteCopy.successDialog(for: model)
+                stringLiteral: RecipeDeleteCopy.successDialog(for: deletedReview)
             )
         )
     }

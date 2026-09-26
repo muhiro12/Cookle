@@ -9,9 +9,10 @@ struct DeleteIngredientButton: View {
     @Environment(TagActionService.self)
     private var tagActionService
 
-    @State private var isPresented = false
-    @State private var isErrorPresented = false
-    @State private var errorMessage = ""
+    @State private var review: TagDeletionReview<Ingredient>?
+    @State private var changedReview: TagDeletionReview<Ingredient>?
+    @State private var errorMessage: String?
+    @State private var leavesAfterError = false
 
     private let afterDelete: (() -> Void)?
 
@@ -21,7 +22,10 @@ struct DeleteIngredientButton: View {
 
     var body: some View {
         Button(role: .destructive) {
-            isPresented = true
+            changedReview = nil
+            review = TagOperations.deletionReview(
+                for: ingredient
+            )
         } label: {
             Label {
                 Text("Delete")
@@ -32,43 +36,114 @@ struct DeleteIngredientButton: View {
         }
         .disabled(!isDeletionAvailable)
         .confirmationDialog(
-            Text(IngredientDeleteCopy.title(for: ingredient)),
-            isPresented: $isPresented
-        ) {
+            Text(review.map(IngredientDeleteCopy.title) ?? ""),
+            isPresented: isReviewPresented,
+            presenting: review
+        ) { presentedReview in
             Button("Delete", role: .destructive) {
-                Task {
-                    do {
-                        try await tagActionService.delete(
-                            context: context,
-                            ingredient: ingredient
-                        )
-                        afterDelete?()
-                    } catch {
-                        errorMessage = error.localizedDescription
-                        isErrorPresented = true
-                    }
-                }
+                delete(presentedReview)
             }
             Button("Cancel", role: .cancel) {
-                // Dismisses the confirmation dialog.
+                changedReview = nil
             }
-        } message: {
-            Text(IngredientDeleteCopy.message(for: ingredient))
+        } message: { presentedReview in
+            Text(message(for: presentedReview))
         }
         .alert(
             Text("Cannot Delete Ingredient"),
-            isPresented: $isErrorPresented
+            isPresented: isErrorPresented
         ) {
             Button("OK", role: .cancel) {
-                // Dismisses the alert.
+                errorMessage = nil
+                leaveIfTagIsGone()
             }
         } message: {
-            Text(errorMessage)
+            Text(errorMessage ?? "")
         }
     }
 
     init(afterDelete: (() -> Void)? = nil) {
         self.afterDelete = afterDelete
+    }
+}
+
+private extension DeleteIngredientButton {
+    var isReviewPresented: Binding<Bool> {
+        .init(
+            get: {
+                review != nil
+            },
+            set: { isPresented in
+                if isPresented == false {
+                    review = nil
+                }
+            }
+        )
+    }
+
+    var isErrorPresented: Binding<Bool> {
+        .init(
+            get: {
+                errorMessage != nil
+            },
+            set: { isPresented in
+                if isPresented == false {
+                    errorMessage = nil
+                    leaveIfTagIsGone()
+                }
+            }
+        )
+    }
+
+    func leaveIfTagIsGone() {
+        guard leavesAfterError else {
+            return
+        }
+
+        leavesAfterError = false
+        afterDelete?()
+    }
+
+    func message(for presentedReview: TagDeletionReview<Ingredient>) -> String {
+        let message = IngredientDeleteCopy.message(for: presentedReview)
+        guard presentedReview == changedReview else {
+            return message
+        }
+
+        return ReviewExampleCopy.changedNotice + "\n\n" + message
+    }
+
+    func delete(_ reviewedDeletion: TagDeletionReview<Ingredient>) {
+        Task {
+            do {
+                switch try await tagActionService.delete(
+                    context: context,
+                    reviewed: reviewedDeletion
+                ) {
+                case .applied:
+                    changedReview = nil
+                    afterDelete?()
+                case .changed(let currentReview) where currentReview.recipeCount > .zero:
+                    // A recipe started using the ingredient, so deletion is unavailable now.
+                    changedReview = nil
+                    errorMessage = IngredientDeleteCopy.inUseMessage(
+                        for: currentReview
+                    )
+                case .changed(let currentReview):
+                    changedReview = currentReview
+                    review = currentReview
+                case .targetMissing:
+                    changedReview = nil
+                    // The tag is already gone; leave its screen once the user has read why.
+                    leavesAfterError = true
+                    errorMessage = ReviewExampleCopy.missingMessage(
+                        for: reviewedDeletion.value
+                    )
+                }
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+        }
     }
 }
 

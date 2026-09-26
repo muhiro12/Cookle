@@ -5,6 +5,7 @@ enum TagMutationIntentError: LocalizedError, CustomLocalizedStringResourceConver
     case ambiguousIngredient(String)
     case categoryNotFound
     case ingredientNotFound
+    case ingredientInUse(String)
 
     var errorDescription: String? {
         String(localized: localizedStringResource)
@@ -26,6 +27,8 @@ enum TagMutationIntentError: LocalizedError, CustomLocalizedStringResourceConver
             return "Category not found."
         case .ingredientNotFound:
             return "Ingredient not found."
+        case .ingredientInUse(let value):
+            return "Ingredient \(value) is still used by recipes and cannot be deleted."
         }
     }
 }

@@ -5,14 +5,8 @@ import SwiftUI
 struct RecipeLabel: View {
     @Environment(Recipe.self)
     private var recipe
-    @Environment(\.modelContext)
-    private var context
-    @Environment(RecipeActionService.self)
-    private var recipeActionService
 
-    @State private var isDeletePresented = false
-    @State private var isErrorPresented = false
-    @State private var errorMessage = ""
+    @State private var deletionReview: RecipeDeletionReview?
 
     var body: some View {
         Label {
@@ -46,45 +40,13 @@ struct RecipeLabel: View {
         .contextMenu {
             EditRecipeButton()
             DuplicateRecipeButton()
-            DeleteRecipeButton {
-                isDeletePresented = true
+            DeleteRecipeButton { review in
+                deletionReview = review
             }
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(accessibilitySummary))
-        .confirmationDialog(
-            Text(RecipeDeleteCopy.title(for: recipe)),
-            isPresented: $isDeletePresented
-        ) {
-            Button("Delete", role: .destructive) {
-                Task {
-                    do {
-                        try await recipeActionService.delete(
-                            context: context,
-                            recipe: recipe
-                        )
-                    } catch {
-                        errorMessage = error.localizedDescription
-                        isErrorPresented = true
-                    }
-                }
-            }
-            Button("Cancel", role: .cancel) {
-                // Dismisses the confirmation dialog.
-            }
-        } message: {
-            Text(RecipeDeleteCopy.message(for: recipe))
-        }
-        .alert(
-            Text("Cannot Delete Recipe"),
-            isPresented: $isErrorPresented
-        ) {
-            Button("OK", role: .cancel) {
-                // Dismisses the alert.
-            }
-        } message: {
-            Text(errorMessage)
-        }
+        .recipeDeletionReview($deletionReview)
     }
 }
 

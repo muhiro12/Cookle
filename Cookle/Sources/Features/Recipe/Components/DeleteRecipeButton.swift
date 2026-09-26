@@ -4,24 +4,21 @@ import SwiftUI
 struct DeleteRecipeButton: View {
     @Environment(Recipe.self)
     private var recipe
-    @Environment(\.modelContext)
-    private var context
-    @Environment(RecipeActionService.self)
-    private var recipeActionService
 
-    @State private var isPresented = false
-    @State private var isErrorPresented = false
-    @State private var errorMessage = ""
+    @State private var deletionReview: RecipeDeletionReview?
 
-    private let action: (() -> Void)?
+    private let requestReview: ((RecipeDeletionReview) -> Void)?
     private let showsRecipeName: Bool
 
     var body: some View {
         Button(role: .destructive) {
-            if let action {
-                action()
+            let review = RecipeOperations.deletionReview(
+                for: recipe
+            )
+            if let requestReview {
+                requestReview(review)
             } else {
-                isPresented = true
+                deletionReview = review
             }
         } label: {
             Label {
@@ -35,44 +32,20 @@ struct DeleteRecipeButton: View {
                     .accessibilityHidden(true)
             }
         }
-        .alert(
-            Text(RecipeDeleteCopy.title(for: recipe)),
-            isPresented: $isPresented
-        ) {
-            Button("Delete", role: .destructive) {
-                Task {
-                    do {
-                        try await recipeActionService.delete(
-                            context: context,
-                            recipe: recipe
-                        )
-                    } catch {
-                        errorMessage = error.localizedDescription
-                        isErrorPresented = true
-                    }
-                }
-            }
-            Button("Cancel", role: .cancel) {
-                // Dismisses the alert.
-            }
-        } message: {
-            Text(RecipeDeleteCopy.message(for: recipe))
-        }
-        .alert(
-            Text("Cannot Delete Recipe"),
-            isPresented: $isErrorPresented
-        ) {
-            Button("OK", role: .cancel) {
-                // Dismisses the alert.
-            }
-        } message: {
-            Text(errorMessage)
-        }
+        .recipeDeletionReview($deletionReview)
     }
 
-    init(showsRecipeName: Bool = true, action: (() -> Void)? = nil) {
+    /// Creates a delete button.
+    ///
+    /// - Parameter requestReview: Receives the built review when an ancestor
+    ///   presents it, such as a context menu whose content closes before the
+    ///   confirmation appears. The deletion still requires that review.
+    init(
+        showsRecipeName: Bool = true,
+        requestReview: ((RecipeDeletionReview) -> Void)? = nil
+    ) {
         self.showsRecipeName = showsRecipeName
-        self.action = action
+        self.requestReview = requestReview
     }
 }
 

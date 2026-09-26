@@ -73,21 +73,35 @@ final class RecipeActionService {
         }
     }
 
-    @discardableResult
+    /// Deletes the reviewed recipe when its impact still matches the review.
+    ///
+    /// The recipe is re-resolved first. A changed impact returns the refreshed
+    /// review for a new confirmation, and a missing recipe changes nothing.
     func delete(
         context: ModelContext,
-        recipe: Recipe
-    ) async throws -> MutationOutcome<Void> {
-        try await run(
+        reviewed review: RecipeDeletionReview
+    ) async throws -> ReviewedMutationResult<RecipeDeletionReview> {
+        guard let currentReview = try RecipeOperations.currentDeletionReview(
+            for: review,
+            context: context
+        ) else {
+            return .targetMissing
+        }
+        guard currentReview.hasSameImpact(as: review) else {
+            return .changed(currentReview)
+        }
+
+        _ = try await run(
             name: "deleteRecipe",
             context: context,
             requestReview: false
         ) {
-            RecipeOperations.deleteWithOutcome(
+            try RecipeOperations.deleteWithOutcome(
                 context: context,
-                recipe: recipe
+                reviewed: review
             )
         }
+        return .applied
     }
 
     @discardableResult
