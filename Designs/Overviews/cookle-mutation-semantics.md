@@ -245,3 +245,25 @@ publish. `[source confirmed]`
 Diary rows are the source of each recipe's made count and last-cooked date,
 which is why a diary change invalidates the scheduled suggestion plan as well.
 Propagation is pinned by `OperationsMutationEffectPropagationTests`.
+
+## 8) Reviewed deletion and tag merge
+
+Recipe deletion and tag deletion/merge now capture a value-type impact review
+through `RecipeOperations` or `TagOperations`. The app shows bounded examples
+of affected diary meal rows, recipe names, and duplicate tag values alongside
+the existing impact explanation. Recipe and tag deletion intents use the same
+reviewed Operations contract. `[source confirmed]`
+
+Applying a reviewed mutation re-fetches its targets and compares affected
+identities and the values displayed in the review. A changed recipe name,
+tag value, affected recipe name, diary date, meal type, or affected set makes
+that review stale even when the count is unchanged. Unrelated changes do not
+invalidate it. Missing targets produce a recoverable result without applying
+the mutation. The app refreshes stale reviews and asks again; intents bound
+repeated confirmation attempts. `[runtime confirmed]` for the Operations
+contract — `ReviewedRecipeDeletionTests` and `ReviewedTagMutationTests`;
+`[source confirmed]` for presentation and intent orchestration.
+
+This review does not change deletion, ingredient quantity/order preservation,
+or historical diary reference semantics described above. It does not provide
+after-save undo or reverse writes already synchronized to another device.
