@@ -8,11 +8,13 @@ struct PhotoObjectView: View {
 
     var body: some View {
         List {
-            photoSection
-            orderSection
-            recipeSection
-            createdAtSection
-            updatedAtSection
+            MHContainerContent {
+                photoSection
+                orderSection
+                recipeSection
+                createdAtSection
+                updatedAtSection
+            }
         }
         .mhListChrome(.native)
     }

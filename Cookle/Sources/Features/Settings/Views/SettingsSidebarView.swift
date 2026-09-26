@@ -124,22 +124,24 @@ struct SettingsSidebarView: View {
 
     var settingsList: some View {
         List {
-            subscriptionSection
-            iCloudSection
-            notificationSection
-            SettingsDataManagementSection(
-                model: model,
-                modelContainer: context.container,
-                settingsActionService: settingsActionService,
-                isICloudEnabled: isICloudOn
-            )
-            generalSection
-            ShortcutsLinkSection(
-                tip: currentSettingsTip(
-                    for: shortcutsTip,
-                    isEligible: shouldShowShortcutsTip
+            MHContainerContent {
+                subscriptionSection
+                iCloudSection
+                notificationSection
+                SettingsDataManagementSection(
+                    model: model,
+                    modelContainer: context.container,
+                    settingsActionService: settingsActionService,
+                    isICloudEnabled: isICloudOn
                 )
-            )
+                generalSection
+                ShortcutsLinkSection(
+                    tip: currentSettingsTip(
+                        for: shortcutsTip,
+                        isEligible: shouldShowShortcutsTip
+                    )
+                )
+            }
         }
         .contentMargins(
             .bottom,

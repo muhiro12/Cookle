@@ -20,6 +20,119 @@ and diary-list information architecture are separate work.
 CookleLibrary, Watch, Widgets, App Intent implementations, and the MHUI
 package remain outside this change.
 
+## MHUI 2.1 Adoption
+
+The remote requirement advances to `2.1.0..<3.0.0`, resolved to MHUI 2.1.0 at
+`68a00be5348dadb5a16e84e18d52017f105d5a6d`. The project-link and resolved-pin
+guardrails reject the 2.0 baseline. The root standard theme, the startup
+navigation-title configuration, and the orange accent are unchanged. Cookle
+adds no metric, padding, or color override to reproduce its 2.0 appearance.
+
+MHUI 2.1 applies its canvas and text colors to `.native` containers. Each
+app-owned native List wraps its complete rows once in `MHContainerContent`:
+Settings, the Debug sidebar and model list, and the diary-object,
+photo-object, and ingredient-object inspectors. The adapter adds the themed
+row surface without recomposing sections or removing swipe deletion, and no
+row adds `mhRow()`. Two inspectors name their sections as properties to keep
+the wrapped list within the lint limit. The Shortcuts link row keeps its own
+empty row background inside the adapter.
+
+The subscription host and the Debug Previews list only host MHPlatform-owned
+StoreKit, advertisement, and Shortcuts sections, so they keep the native row
+background. A wrapped trial framed the StoreKit view's own white surface
+inside the muted row, which the package guidance asks adopters to avoid.
+Native control labels and selection, disabled, and destructive states keep
+their system semantics.
+
+The recipe list keeps content presentation at compact and expanded widths.
+Recipe actions keep the vertical quiet and destructive group without fixed
+icon widths or compensating padding. The diary row's day number previously
+forced the system label color; it now uses the theme's primary text role, so
+it follows the softer 2.1 hierarchy beside the rest of the diary text. The
+remaining fixed app metrics size product content: photo heights, thumbnail
+grids, the 44-point target for custom suggestion chips, and the placeholder
+inset matching the native text editor. They are unchanged. Diary recipe
+selection keeps its `PersistentIdentifier` binding and row tags.
+
+### MHUI 2.1 Verification
+
+The Swift formatter and retained repository rules pass, and the guardrail
+rejects the previous project baseline. The Xcode-native Cookle build succeeds
+with no errors or warnings on Xcode 27.0 and the iOS 27.1 Simulator SDK.
+Xcode's package state resolves MHUI 2.1.0 at the pinned revision. No shared
+library logic changed, so no library tests ran.
+
+Runtime evidence uses the isolated capture fixture in Japanese on iPhone 18
+Pro and a 13-inch iPad, both iOS 27.0. The iPhone run covers the startup
+recipe list, detail and Back, the detail's primary and lower actions,
+Settings including its lower Shortcuts row, the subscription host, and the
+Diary landing. The recipe form entered edit mode, reordered and deleted a
+step, and discarded the draft; the detail kept its original six steps.
+
+The diary selector opened with the saved breakfast recipe checked. The first
+tap changed the count from one to zero. Selecting a different recipe, Done,
+and reopening kept the draft selection; Cancel and Discard returned to the
+diary with its original breakfast.
+
+Recipe actions were checked in light and dark, with Increase Contrast in
+both, and at accessibility text size AX3 in both. Settings was checked in
+light, dark, light with Increase Contrast, and AX3. At AX3 the primary pair
+stacks and the longer label wraps without clipping. Quiet and destructive
+icons begin at the same leading edge at the standard size and within one
+point at AX3. Duplicate is about five points taller than Delete at AX3
+because the symbols differ.
+
+These contrast estimates sample 1x screenshots against the adjacent
+background. They are approximate and are not an accessibility certification.
+
+<!-- markdownlint-disable MD013 -->
+| Label | Light | Light + Increase Contrast | Dark | Dark + Increase Contrast |
+| --- | --- | --- | --- | --- |
+| Quiet orange action text | 2.2:1 | 4.2–4.4:1 | 10.3–10.6:1 | 11.4–11.8:1 |
+| Start Cooking label on orange | 2.0:1 | Not sampled | 10.0:1 | Not sampled |
+| MHUI destructive Delete | 5.2:1 | 7.7:1 | 6.3:1 | 12.9:1 |
+| Native Delete All in Settings | 3.3:1 | 3.6:1 | 5.5:1 | Not sampled |
+| Secondary Add to Today | 9.5:1 | Not sampled | 11.8:1 | Not sampled |
+<!-- markdownlint-enable MD013 -->
+
+In light without Increase Contrast, orange text and the white label on the
+orange primary action fall well below 4.5:1. Cookle's accent is the system
+orange, so this predates 2.1 and remains an app accent decision. Settings rows
+use MHUI's muted surface: a subtle `#FAFAFA` on the white canvas, strengthened
+to `#E9E9E9` with Increase Contrast.
+
+The iPad run covers both recipe columns before and after selection, sidebar
+collapse and expansion through the system toggle, portrait and landscape,
+light and dark recipe detail, and dark Settings. No divider is drawn between the
+recipe list and detail columns in either appearance, confirmed at native
+resolution. Whitespace and alignment carry the boundary. Cookle adds no
+separator; the condition is recorded for MHUI review. The same missing divider
+also appears in the isolated 2.0 baseline. Recipe rows use
+app-owned selection routing, so the list shows no persistent selected row,
+as in the 2.0 capture. Choosing a recipe in the app shows an inline detail
+title, while launching directly into it shows the large title. The inline
+title and the large title on direct launch both reproduce on the same iPad
+with the 2.0 baseline at `94983428`, resolving MHUI 2.0.0; this route-dependent
+difference is not introduced by this update. In Settings, the unselected detail
+placeholder uses the system background beside the themed sidebar canvas.
+
+Runtime logs contain four SwiftUI `glassEffect()` multiple-update faults on
+iPhone and one on iPad, plus Core Animation, UI automation, and CoreTelephony
+messages. No crash, fatal error, or SwiftData or Core Data error appears.
+
+The workspace interaction session disappeared right after the native install
+and launch, and the native launch session later expired and terminated the
+app. Verification then relaunched the natively installed build through
+official simulator tooling with the explicit capture environment, using a
+native standalone interaction session. Appearance, text size, and contrast
+used official simulator settings and were restored. No user records were saved
+or deleted, and no purchase, sync, account, or notification setting changed.
+Capture mode hides the Debug screens; a Debug sidebar Preview shows the themed
+rows but is not runtime evidence. Capture mode also skips runtime startup, so
+the subscription store stays in its loading state. VoiceOver, physical
+devices, and unvisited routes remain unverified. Local captures, logs, and a
+review gallery are retained under `.build/ci/mhui-2.1-adoption/`.
+
 ## MHUI 2.0 Adoption
 
 The remote requirement advances to `2.0.0..<3.0.0`, resolved to MHUI 2.0.0 at
@@ -250,8 +363,10 @@ MHUI 2.0 chooses each screen route explicitly: content List/Form presentation
 for product collections, details, and editors, stack composition for freely
 arranged reading and task screens, and native presentation for settings,
 subscription, and diagnostics. No List, Form, or screen-level ScrollView is
-nested inside `mhScreen`. The table reflects the 2.0 routes; the earlier
-refinement history below describes the preceding baseline.
+nested inside `mhScreen`. The table reflects the routes as updated for 2.1,
+where native presentation keeps platform grouping and row geometry on MHUI's
+canvas and row surfaces; the earlier refinement history below describes the
+preceding baseline.
 
 The September 17 refinement is implemented by `b9133ecf`, `5292ccd6`, and
 `99c26972`. It moved Recipe browsing, Search results and states, and the Diary
@@ -271,12 +386,13 @@ List presentation while retaining the composed Recipe Detail route.
 | Diary form and new-recipe registration | Content Form | Date picker, meal selection routes, note, validation, Save and Cancel |
 | Search | Native searchable field; content List results; unframed states | Search activation, discovery routes, result navigation and keyboard behavior |
 | Ingredient/category tags | Content List/Form with `MHContainerContent` | Search, selection, rename and merge/delete conditions |
-| Settings and subscription host | Native List | Native settings controls and MHPlatform-owned subscription content |
+| Settings | Native List with `MHContainerContent` | Native settings controls, footers, destructive and disabled states, and the Shortcuts link row |
+| Subscription host | Native List without an added row surface | MHPlatform-owned StoreKit section and its own background |
 | Photo collection | `mhScreen` and section headers around the existing adaptive grid | Source groups, image order, minimum thumbnail width and navigation |
 | Photo detail | Content List with `MHContainerContent` | Preview size, recipe associations, dates, full-screen route and deletion confirmation |
 | Detached recipe editors | MHUI input chrome around the existing TextEditor | Full-height native editor, placeholder, keyboard, text conversion, inference and Cancel |
 | Cooking | `mhScreen` with native title, sections and semantic actions | Step list and selection, timers, End Session and diary continuation |
-| Debug lists and object inspectors | Native List | Existing diagnostic content, model routes and native swipe behavior |
+| Debug lists and object inspectors | Native List with `MHContainerContent`; the Previews list adds no row surface | Existing diagnostic content, model routes, package-owned previews and native swipe behavior |
 <!-- markdownlint-enable MD013 -->
 
 ## Native and Owning-Package Presentations

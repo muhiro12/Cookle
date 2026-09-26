@@ -9,20 +9,22 @@ struct DebugContentView<Model: PersistentModel>: View {
 
     var body: some View {
         List {
-            ForEach(models) { model in
-                Button {
-                    detail = model
-                } label: {
-                    rowLabel(for: model)
-                        .cookleButtonRowContent()
+            MHContainerContent {
+                ForEach(models) { model in
+                    Button {
+                        detail = model
+                    } label: {
+                        rowLabel(for: model)
+                            .cookleButtonRowContent()
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
-            }
-            .onDelete { indexSet in
-                withAnimation {
-                    indexSet.forEach { index in
-                        let model = models[index]
-                        model.modelContext?.delete(model)
+                .onDelete { indexSet in
+                    withAnimation {
+                        indexSet.forEach { index in
+                            let model = models[index]
+                            model.modelContext?.delete(model)
+                        }
                     }
                 }
             }

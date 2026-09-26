@@ -24,7 +24,7 @@ requires changing the product's information architecture.
 ## Decision
 
 - `Cookle` links the full `MHUI` product with the remote version requirement
-  `2.0.0..<3.0.0`, applies the neutral standard theme once at its application
+  `2.1.0..<3.0.0`, applies the neutral standard theme once at its application
   root, and configures the same theme's navigation title appearance at startup.
   It accesses existing MHDesign metrics through MHUI's re-export, without a
   separate direct MHDesign product dependency or app-local metric overrides.
@@ -38,7 +38,8 @@ requires changing the product's information architecture.
 - Adopt MHUI broadly at app-owned screen boundaries. Product collections and
   editors use MHUI content presentation inside native List and Form containers.
   Freely arranged reading and task screens use stack composition. Settings and
-  utilities retain native presentation. Choose the route by screen purpose while
+  utilities retain native grouping and row geometry on MHUI's themed canvas and
+  row surfaces. Choose the route by screen purpose while
   preserving selection, editing, focus, keyboard, and navigation behavior.
 - Cookle owns screen composition, wording, accent assets, routes, state, and
   behavior. MHUI owns its theme and selected presentation primitives. Do not
@@ -76,6 +77,14 @@ details, and editors use content presentation, and settings, subscription, and
 diagnostics use native presentation. Screen names move to native navigation
 titles, sections and grouped rows sit on the open canvas, and empty and search
 states drop their surface frames.
+The baseline advanced to MHUI 2.1 on 2026-09-26. Native container chrome now
+applies MHUI's canvas and text colors, so each app-owned native settings or
+diagnostics List wraps its complete rows once in `MHContainerContent` for the
+themed row surface. The subscription host keeps its MHPlatform-owned StoreKit
+section without an added row surface. Action roles share padding, dimensions
+follow the eight-point grid, and the recipe collection keeps content
+presentation at every width; Cookle copies no previous metrics or palette
+values.
 The earlier composition refinement applied the SDK's visual hierarchy:
 reading content gains emphasis through alignment and spacing, while surfaces
 group related rows and action styles identify the next useful operation.

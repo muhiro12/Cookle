@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 9/30/24.
 //
 
+import MHUI
 import SwiftData
 import SwiftUI
 
@@ -98,7 +99,7 @@ private extension DiaryLabel {
                 .fixedSize(horizontal: true, vertical: false)
         }
         .frame(width: Layout.iconWidth)
-        .foregroundStyle(Color(uiColor: .label))
+        .mhForegroundStyle(.primaryText)
     }
 
     var summaryContent: some View {

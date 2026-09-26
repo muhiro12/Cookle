@@ -58,12 +58,14 @@ struct DebugSidebarView: View {
 
     var sidebarList: some View {
         List {
-            appStorageSection
-            diagnosticsSection
-            manageSection
-            tipKitSection
-            previewSection
-            modelSection
+            MHContainerContent {
+                appStorageSection
+                diagnosticsSection
+                manageSection
+                tipKitSection
+                previewSection
+                modelSection
+            }
         }
         .mhListChrome(.native)
     }

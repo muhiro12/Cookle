@@ -75,11 +75,12 @@ repository contains the full iOS project together with its shared Swift package.
   stays on the default `MHPlatform` umbrella, `CookleLibrary` stays on
   `MHPlatformCore`, and the repository keeps MHPlatform on the
   `1.13.0..<2.0.0` range to preserve verified subscription entitlement handling.
-- MHUI `2.0.0..<3.0.0` through the full `MHUI` product. The main app applies
+- MHUI `2.1.0..<3.0.0` through the full `MHUI` product. The main app applies
   the neutral standard root theme and its navigation title appearance once,
   keeping Cookle's orange accent app-owned. Product collections and editors use
   MHUI content List/Form presentation, recipe/cooking/diary/photo screens use
-  stack composition, and settings and diagnostics keep native presentation.
+  stack composition, and settings and diagnostics keep native grouping and row
+  geometry with MHUI's themed canvas and row surfaces.
   Content actions keep MHUI's non-glass default; any floating action opts into
   Liquid Glass only at its bounded control layer. See the
   [screen rollout record](Designs/Plans/mhui-app-rollout.md) for presentation
