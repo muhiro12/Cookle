@@ -101,6 +101,29 @@ struct ArchivePackageRoundTripTests {
     }
 
     @Test
+    func archivePackage_rejects_an_already_cancelled_caller() async {
+        let context = makeTestContext()
+        let exportTask = Task {
+            withUnsafeCurrentTask { task in
+                task?.cancel()
+            }
+            return try await DataMaintenanceOperations.archivePackage(
+                from: context,
+                calendar: Support.calendar
+            )
+        }
+
+        do {
+            _ = try await exportTask.value
+            Issue.record("Expected an already cancelled export to fail.")
+        } catch is CancellationError {
+            // Expected.
+        } catch {
+            Issue.record(error)
+        }
+    }
+
+    @Test
     func legacy_version_1_json_import_remains_compatible() throws {
         let archive = try DataMaintenanceOperations.validatedArchive(
             from: Support.legacyArchiveData,

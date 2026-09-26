@@ -8,6 +8,7 @@ extension CookleDataArchiveService {
         calendar: Calendar = .current,
         limits: CookleDataArchiveResourceLimits = .standard
     ) async throws -> CookleDataArchivePackage {
+        try Task.checkCancellation()
         let archive = try makeArchive(
             context: context
         )
@@ -19,7 +20,9 @@ extension CookleDataArchiveService {
             )
         }
         return try await withTaskCancellationHandler {
-            try await packageTask.value
+            let package = try await packageTask.value
+            try Task.checkCancellation()
+            return package
         } onCancel: {
             packageTask.cancel()
         }
