@@ -75,7 +75,7 @@ repository contains the full iOS project together with its shared Swift package.
   stays on the default `MHPlatform` umbrella, `CookleLibrary` stays on
   `MHPlatformCore`, and the repository keeps MHPlatform on the
   `1.13.0..<2.0.0` range to preserve verified subscription entitlement handling.
-- MHUI `2.2.0..<3.0.0` through the full `MHUI` product. The main app applies
+- MHUI `2.3.0..<3.0.0` through the full `MHUI` product. The main app applies
   the neutral standard root theme and its native appearance once, keeping
   Cookle's orange accent app-owned as the native control tint. Product
   collections and editors use MHUI content List/Form presentation,

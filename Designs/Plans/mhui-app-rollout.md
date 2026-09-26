@@ -20,7 +20,83 @@ and diary-list information architecture are separate work.
 CookleLibrary, Watch, Widgets, App Intent implementations, and the MHUI
 package remain outside this change.
 
+## MHUI 2.3 Adoption
+
+The remote requirement advances to `2.3.0..<3.0.0`, resolved to MHUI 2.3.0 at
+`844fec442c78a0777e4b2786bcc9ea3233b12c2f`. The project-link and resolved-pin
+guardrails reject the 2.2 baseline. The root standard theme, the orange
+accent, and the startup `configureNativeAppearance()` call are unchanged.
+
+`mhScreen` no longer limits the entire screen to 640 points. Recipe Detail,
+Cooking, the Diary landing, and the photo collection fill their available
+column or screen within MHUI's responsive margins, and text shares the same
+width as media. These composed screens had no app width compensation to
+remove and gain no new app width limit. Recipe photos keep their app-owned 240-point height,
+aspect-fit scaling, order, and horizontal scrolling; a wider column shows more
+of the row at once. Native split-view column allocation is unchanged, and
+Cookle sets no column width. Full-screen empty states do not use `mhScreen` and
+keep their existing centered layout and readable-width limit.
+
+Default content buttons return from primary text to the accent. The actions
+that 2.2 listed as changing to primary text, including See All, Add Diary,
+Another Suggestion, the add-multiple-ingredients accessory, the backup rows,
+and the search first-use actions, take the accent again. Delete All keeps the
+destructive role, and explicit `mhPrimary`, `mhQuiet`, and `mhDestructive`
+actions keep their treatments.
+
+The two detached recipe text editors already use `mhInputChrome`, which now
+applies primary input text and hides the editor's scroll background. They drop
+their own `scrollContentBackground(.hidden)` call. Native Form fields receive
+no added input decoration.
+
+### MHUI 2.3 Verification
+
+The formatter and retained repository rules pass. Negative guardrail probes
+reject a 2.2 project minimum and resolved pin. The Xcode-native Cookle build
+succeeds with Xcode 27.1 (`27A9269`) and the iOS 27.1 Simulator SDK. Its full
+log includes a Watch App Intents metadata-extraction warning because that
+target has no AppIntents framework dependency. No library logic changed, so
+library tests were not rerun.
+
+The isolated Japanese fixture on a 13-inch iPad with iOS 27.0 confirms the
+landscape detail content width grows from 640 to 976 points, preserving the
+40-point margins inside its 1056-point native detail column. Both sample
+photos fit fully in the initial viewport without changing their 240-point
+height. Portrait retains horizontal scrolling when the photo row exceeds the
+available width. The body uses the same wider column; the native navigation
+title retains its own alignment.
+
+Additional iPad checks cover opening and closing the full-screen photo and
+landscape at the largest accessibility text size. The detail photos and actions
+remain within the column. The narrow native sidebar wraps recipe names heavily
+and truncates secondary labels at that size; this is not evidence of full
+accessibility coverage.
+
+On iPhone 18 Pro with iOS 27.0, the compact recipe detail, existing materials
+TextEditor in light and dark, and empty Recipe and Search screens were checked.
+The editor retains its themed text and background without the duplicate app
+modifier. Changing appearance dismissed the nested editor sheet; reopening it
+allowed the dark capture. That transition was not compared against 2.2, so its
+regression status is undetermined. The separate recipe-inference editor was
+not opened; its identical modifier cleanup has build and source evidence only.
+Search first-use actions render in the accent again, and the empty
+state remains centered in its available viewport with the keyboard shown.
+Cancel and return paths were used without saving changes to user data.
+
+The app-owned orange accent still has limited contrast against light surfaces.
+Unselected tab colors and native Form/search input coverage are not claimed as
+fixed by this update. Diary selection and the complete empty-state accessibility
+matrix were not rerun for 2.3; their earlier checks remain historical evidence.
+No real-device, VoiceOver, Increase Contrast, purchase, notification, or sync
+validation was performed. Appearance, text size, orientation, Xcode selection,
+and the iPad's initial shut-down state were restored, and owned runs and
+interaction sessions ended. Captures and the before/after gallery are retained
+under `.build/ci/mhui-2.3-adoption/`.
+
 ## MHUI 2.2 Adoption
+
+This section records the 2.2 step. Its default-button colors and screen width
+are superseded by the MHUI 2.3 section above.
 
 The remote requirement advances to `2.2.0..<3.0.0`, resolved to MHUI 2.2.0 at
 `24c15fd86eef7207ae56092983305b478d1c9de6`. The project-link and resolved-pin

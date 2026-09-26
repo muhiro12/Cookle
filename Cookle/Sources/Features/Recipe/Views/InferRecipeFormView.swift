@@ -51,7 +51,6 @@ struct InferRecipeFormView: View {
             .overlay(alignment: .topLeading) {
                 placeholderOverlay
             }
-            .scrollContentBackground(.hidden)
             .scrollDismissesKeyboard(.immediately)
             .mhInputChrome(state: isTextFocused ? .focused : .normal)
             .padding()

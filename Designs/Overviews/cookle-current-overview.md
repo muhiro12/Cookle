@@ -38,7 +38,7 @@ focus is personal cooking organization:
 
 ## Presentation Adoption Update
 
-The main app now links full MHUI 2.2 with the neutral standard theme and its
+The main app now links full MHUI 2.3 with the neutral standard theme and its
 native appearance configured once at startup. Cookle keeps its orange accent,
 which the root theme also supplies as native control tint. Recipe Detail and
 Cooking name the recipe in the native navigation title. Recipe Detail leads

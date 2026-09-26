@@ -67,7 +67,7 @@ symmetry with sibling apps.
 - `CookleLibrary` adopts `MHPlatformCore` for core-safe route, preference,
   persistence-maintenance, and logging contracts. It must not depend on
   `MHPlatform`, `MHAppRuntime`, app-runtime split products, MHUI, or MHDesign.
-- `Cookle` adopts full `MHUI` on `2.2.0..<3.0.0` for its root theme and
+- `Cookle` adopts full `MHUI` on `2.3.0..<3.0.0` for its root theme and
   selected presentation primitives. It applies the neutral standard theme and
   its native appearance once at startup, preserving the app-owned orange
   accent as the native control tint. Existing metrics use

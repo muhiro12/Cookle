@@ -24,7 +24,7 @@ requires changing the product's information architecture.
 ## Decision
 
 - `Cookle` links the full `MHUI` product with the remote version requirement
-  `2.2.0..<3.0.0`, applies the neutral standard theme once at its application
+  `2.3.0..<3.0.0`, applies the neutral standard theme once at its application
   root, and configures the same theme's native appearance at startup.
   It accesses existing MHDesign metrics through MHUI's re-export, without a
   separate direct MHDesign product dependency or app-local metric overrides.
@@ -87,10 +87,16 @@ presentation at every width; Cookle copies no previous metrics or palette
 values.
 The baseline advanced to MHUI 2.2 on 2026-09-26. The startup call becomes
 `configureNativeAppearance()`, and the root theme supplies the orange accent
-as native control tint, including toolbars. Default content buttons use
+as native control tint, including toolbars. Default content buttons used
 MHUI's primary text or destructive role, while explicit MHUI action styles
 keep their treatments. Composed sections use the package's 40-point section
 and 8-point heading rhythm without app compensation.
+The baseline advanced to MHUI 2.3 on 2026-09-26. Composed screens fill the
+available navigation column within MHUI's responsive margins, without the
+earlier 640-point maximum or an app width override. Native split-view column
+allocation is unchanged. Default content buttons return to the accent, and
+detached editors rely on `mhInputChrome` for primary input text and the hidden
+editor background.
 The earlier composition refinement applied the SDK's visual hierarchy:
 reading content gains emphasis through alignment and spacing, while surfaces
 group related rows and action styles identify the next useful operation.
