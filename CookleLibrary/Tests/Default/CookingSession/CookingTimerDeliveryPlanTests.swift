@@ -48,6 +48,31 @@ struct CookingTimerDeliveryPlanTests {
     }
 
     @Test
+    func submillisecond_restarts_have_distinct_timer_keys() throws {
+        var state = CookingTimerFixture.state(timerMinutes: 5)
+        let original = try #require(CookingSessionOperations.timerAlert(in: state))
+        state.updateActiveSession { snapshot in
+            snapshot.repeatingTimer(startedAt: startDate.addingTimeInterval(0.0001))
+        }
+        let repeated = try #require(CookingSessionOperations.timerAlert(in: state))
+        #expect(repeated.timerKey != original.timerKey)
+        let encoded = try #require(state.encodedString())
+        let restored = try #require(CookingSessionLocalState.decoded(from: encoded))
+        #expect(CookingSessionOperations.timerAlert(in: restored)?.timerKey == repeated.timerKey)
+    }
+
+    @Test
+    func invalid_timer_dates_do_not_create_system_alerts() {
+        for interval in [Double.infinity, Double.nan, Double.greatestFiniteMagnitude] {
+            var state = CookingTimerFixture.state(timerMinutes: 5)
+            state.updateActiveSession { snapshot in
+                snapshot.repeatingTimer(startedAt: Date(timeIntervalSinceReferenceDate: interval))
+            }
+            #expect(CookingSessionOperations.timerAlert(in: state) == nil)
+        }
+    }
+
+    @Test
     func step_change_keeps_timer_key() throws {
         var state = CookingTimerFixture.state(timerMinutes: 5)
         let original = try #require(CookingTimerAlert.current(in: state))

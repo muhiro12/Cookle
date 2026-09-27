@@ -43,7 +43,6 @@ final class CookingTimerDeliveryService {
     @ObservationIgnored private var reconciliationTask: Task<Void, Never>?
     @ObservationIgnored private var isReconciliationPending = false
     @ObservationIgnored private var requestsAuthorization = false
-    @ObservationIgnored private var hasObservedTimer = false
     @ObservationIgnored private var lastObservedTimerKey: String?
     @ObservationIgnored private var activationObserver: (any NSObjectProtocol)?
 
@@ -55,6 +54,9 @@ final class CookingTimerDeliveryService {
         self.cookingSessionStore = cookingSessionStore
         self.notificationCenter = notificationCenter
         self.isEnabled = isEnabled
+        lastObservedTimerKey = CookingSessionOperations.timerAlert(
+            in: cookingSessionStore.localState
+        )?.timerKey
         guard isEnabled else {
             return
         }
@@ -145,7 +147,7 @@ final class CookingTimerDeliveryService {
 
 private extension CookingTimerDeliveryService {
     var currentAlert: CookingTimerAlert? {
-        CookingTimerAlert.current(
+        CookingSessionOperations.timerAlert(
             in: cookingSessionStore.localState
         )
     }
@@ -179,7 +181,7 @@ private extension CookingTimerDeliveryService {
         // Plan from the state as it is now, after every await above.
         let alert = currentAlert
         let now = Date.now
-        let changes = CookingTimerDeliveryPlan.notificationChanges(
+        let changes = CookingSessionOperations.timerNotificationChanges(
             for: alert,
             pendingTimerKey: pendingTimerKey,
             deliveredTimerKey: deliveredTimerKey,
@@ -249,7 +251,7 @@ private extension CookingTimerDeliveryService {
             request.identifier == Self.notificationIdentifier
         }
         .flatMap { request in
-            request.content.userInfo[Self.timerKeyUserInfoKey] as? String
+            request.content.userInfo[Self.timerKeyUserInfoKey] as? String ?? ""
         }
     }
 
@@ -259,7 +261,7 @@ private extension CookingTimerDeliveryService {
             notification.request.identifier == Self.notificationIdentifier
         }
         .flatMap { notification in
-            notification.request.content.userInfo[Self.timerKeyUserInfoKey] as? String
+            notification.request.content.userInfo[Self.timerKeyUserInfoKey] as? String ?? ""
         }
     }
 
@@ -309,15 +311,13 @@ private extension CookingTimerDeliveryService {
         // Only a timer first seen during this process counts as new, so a
         // relaunch reuses a surviving activity instead of recreating one the
         // person may have dismissed.
-        let isNewTimer = hasObservedTimer
-            && alert != nil
+        let isNewTimer = alert != nil
             && alert?.timerKey != lastObservedTimerKey
         let isActive = UIApplication.shared.applicationState == .active
         // While the app is inactive, such as behind the notification
         // permission prompt, a new timer stays new so the activation pass can
         // still start its activity.
         if isNewTimer == false || isActive {
-            hasObservedTimer = true
             lastObservedTimerKey = alert?.timerKey
         }
         let allowsRequest = isNewTimer
@@ -327,7 +327,7 @@ private extension CookingTimerDeliveryService {
         let activities = Activity<CookingTimerActivityAttributes>.activities.filter { activity in
             activity.activityState == .active || activity.activityState == .stale
         }
-        let changes = CookingTimerDeliveryPlan.activityChanges(
+        let changes = CookingSessionOperations.timerActivityChanges(
             for: alert,
             existing: activities.map { activity in
                 .init(
@@ -340,6 +340,10 @@ private extension CookingTimerDeliveryService {
             now: .now
         )
         for change in changes {
+            guard currentAlert == alert else {
+                isReconciliationPending = true
+                return
+            }
             await apply(change)
         }
     }

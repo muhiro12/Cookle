@@ -65,6 +65,45 @@ public enum CookingSessionOperations {
         )
     }
 
+    /// Derives the timer alert from the current durable session state.
+    public static func timerAlert(
+        in state: CookingSessionLocalState
+    ) -> CookingTimerAlert? {
+        CookingTimerAlert.current(in: state)
+    }
+
+    /// Plans notification replacement and cancellation from current state.
+    public static func timerNotificationChanges(
+        for alert: CookingTimerAlert?,
+        pendingTimerKey: String?,
+        deliveredTimerKey: String?,
+        isAuthorized: Bool,
+        now: Date
+    ) -> CookingTimerDeliveryPlan.NotificationChanges {
+        CookingTimerDeliveryPlan.notificationChanges(
+            for: alert,
+            pendingTimerKey: pendingTimerKey,
+            deliveredTimerKey: deliveredTimerKey,
+            isAuthorized: isAuthorized,
+            now: now
+        )
+    }
+
+    /// Plans changes to the system's current cooking Live Activities.
+    public static func timerActivityChanges(
+        for alert: CookingTimerAlert?,
+        existing activities: [CookingTimerDeliveryPlan.ActivityRecord],
+        allowsRequest: Bool,
+        now: Date
+    ) -> [CookingTimerDeliveryPlan.ActivityChange] {
+        CookingTimerDeliveryPlan.activityChanges(
+            for: alert,
+            existing: activities,
+            allowsRequest: allowsRequest,
+            now: now
+        )
+    }
+
     /// Returns the stable identifier cooking sessions use for a recipe.
     public static func recentRecipeID(
         for recipe: Recipe

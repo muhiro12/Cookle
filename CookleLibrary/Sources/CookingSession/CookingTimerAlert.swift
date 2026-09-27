@@ -1,7 +1,5 @@
 import Foundation
 
-private let kCookingTimerAlertMillisecondsPerSecond = 1_000.0
-
 /// The system-facing description of the timer in the active cooking session.
 ///
 /// It is derived only from existing cooking session state. The session key
@@ -46,16 +44,17 @@ public struct CookingTimerAlert: Equatable, Sendable {
         in state: CookingSessionLocalState
     ) -> Self? {
         guard let record = state.activeRecord,
-              let timer = record.snapshot.activeTimer else {
+              let timer = record.snapshot.activeTimer,
+              timer.startedAt.timeIntervalSinceReferenceDate.isFinite,
+              timer.endsAt.timeIntervalSinceReferenceDate.isFinite,
+              timer.endsAt > timer.startedAt else {
             return nil
         }
         let recordSessionKey = "\(record.sessionID.originID).\(record.sessionID.sequence)"
-        let startMilliseconds = Int(
-            (timer.startedAt.timeIntervalSinceReferenceDate * kCookingTimerAlertMillisecondsPerSecond).rounded()
-        )
+        let startBits = timer.startedAt.timeIntervalSinceReferenceDate.bitPattern
         return .init(
             sessionKey: recordSessionKey,
-            timerKey: "\(recordSessionKey).\(startMilliseconds).\(timer.durationSeconds)",
+            timerKey: "\(recordSessionKey).\(startBits).\(timer.durationSeconds)",
             recipeID: record.snapshot.recipeID,
             recipeName: record.snapshot.recipeName,
             state: .init(

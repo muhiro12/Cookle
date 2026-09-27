@@ -172,9 +172,13 @@ private extension CookleAppAssemblyFactory {
 
     static func makeCookingSessionStore(isIsolated: Bool) -> CookingSessionStore {
         #if DEBUG
-        if isIsolated, CookleCaptureConfiguration.usesWatchSync,
-           let defaults = UserDefaults(suiteName: "Cookle.capture.watch") {
-            return .init(userDefaults: defaults)
+        if isIsolated {
+            let suiteName = CookleCaptureConfiguration.usesWatchSync
+                ? "Cookle.capture.watch" : "Cookle.capture.timer"
+            if CookleCaptureConfiguration.usesWatchSync || CookleCaptureConfiguration.usesTimerDelivery,
+               let defaults = UserDefaults(suiteName: suiteName) {
+                return .init(userDefaults: defaults)
+            }
         }
         #endif
         return .init(persistsSnapshot: !isIsolated)
