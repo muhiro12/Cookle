@@ -200,9 +200,13 @@ note — survive. `[source confirmed]`
 `RecipeDeleteCopy.message` states this to the user accurately, with separate
 wording for zero, one, and many affected meal rows. `[source confirmed]`
 
-**Open.** Whether live reference semantics are the intended product behavior is
-the explicit subject of an acceptance item on
-https://github.com/muhiro12/Cookle/issues/132 and is not settled here.
+**Decision for the current release.** Live reference semantics are the accepted
+behavior for this release. Past diary entries keep referencing the current
+recipe, and no model, schema, or backup format change introduces recipe
+snapshots. Immutable diary history remains the preferred long-term direction
+and is feasible later; it is deferred because it needs its own schema,
+migration, backup, and synchronization design, not because the platform
+prevents it. Tracked by https://github.com/muhiro12/Cookle/issues/132.
 
 ## 5) Diary edit and delete
 
