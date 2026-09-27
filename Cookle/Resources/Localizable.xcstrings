@@ -15862,6 +15862,108 @@
           }
         }
       }
+    },
+    "A notification is scheduled for this timer." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A notification is scheduled for this timer."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このタイマーの終了通知を予約しました。"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se ha programado una notificación para este temporizador."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Une notification est programmée pour ce minuteur."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已为此计时器安排通知。"
+          }
+        }
+      }
+    },
+    "Cookle couldn't schedule a notification for this timer." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle couldn't schedule a notification for this timer."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このタイマーの終了通知を予約できませんでした。"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle no ha podido programar una notificación para este temporizador."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle n’a pas pu programmer de notification pour ce minuteur."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle无法为此计时器安排通知。"
+          }
+        }
+      }
+    },
+    "Notifications are off. Cookle won't send an alert when this timer ends." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications are off. Cookle won't send an alert when this timer ends."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通知がオフのため、このタイマーが終了してもCookleから通知されません。"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las notificaciones están desactivadas. Cookle no avisará cuando termine este temporizador."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les notifications sont désactivées. Cookle ne vous avertira pas à la fin de ce minuteur."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通知已关闭。此计时器结束时，Cookle不会发出提醒。"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

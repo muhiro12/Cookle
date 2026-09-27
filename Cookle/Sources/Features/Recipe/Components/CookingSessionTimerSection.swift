@@ -127,12 +127,15 @@ private extension CookingSessionTimerSection {
     @ViewBuilder var notificationStatusContent: some View {
         switch timerDeliveryService?.notificationStatus {
         case .scheduled:
-            Label("You'll get a notification when this timer ends.", systemImage: "bell")
+            Label("A notification is scheduled for this timer.", systemImage: "bell")
                 .mhTextStyle(.supporting, colorRole: .secondaryText)
         case .disabled:
             VStack(alignment: .leading, spacing: theme.spacing.content) {
-                Label("Notifications are off, so this timer can only finish here in Cookle.", systemImage: "bell.slash")
-                    .mhTextStyle(.supporting, colorRole: .secondaryText)
+                Label(
+                    "Notifications are off. Cookle won't send an alert when this timer ends.",
+                    systemImage: "bell.slash"
+                )
+                .mhTextStyle(.supporting, colorRole: .secondaryText)
                 Button("Open Notification Settings") {
                     if let settingsURL = URL(string: UIApplication.openNotificationSettingsURLString) {
                         openURL(settingsURL)
