@@ -7,9 +7,9 @@ struct ShowDiaryIntent: AppIntent {
         "Show Diary"
     }
 
-    // Same reason as `ShowTodayDiaryIntent`: the snippet carries diary notes.
+    // Use the same authentication policy as recipe and today-diary reads.
     static var authenticationPolicy: IntentAuthenticationPolicy {
-        .requiresAuthentication
+        .alwaysAllowed
     }
 
     @Parameter(title: "Date")
