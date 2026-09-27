@@ -21,14 +21,18 @@ public struct CookingSessionSyncState: Codable, Equatable, Sendable {
     public var current: CookingSessionRecord?
     /// The highest retired start sequence per origin install.
     public var retiredThrough: [String: Int]
+    /// Reviewed conflict choices, separate from irrevocable end records.
+    public var resolutions: [CookingSessionResolution]
 
     public init(
         current: CookingSessionRecord? = nil,
-        retiredThrough: [String: Int] = [:]
+        retiredThrough: [String: Int] = [:],
+        resolutions: [CookingSessionResolution] = []
     ) {
         self.formatVersion = Self.supportedFormatVersion
         self.current = current
         self.retiredThrough = retiredThrough
+        self.resolutions = resolutions
     }
 
     /// Whether the session ended or was replaced.
@@ -43,6 +47,7 @@ public struct CookingSessionSyncState: Codable, Equatable, Sendable {
         _ record: CookingSessionRecord
     ) -> Bool {
         record.snapshot.isActive && isRetired(record.sessionID) == false
+            && resolutions.contains { $0.excludes(record.sessionID) } == false
     }
 
     mutating func retire(
@@ -65,11 +70,29 @@ public struct CookingSessionSyncState: Codable, Equatable, Sendable {
         )
     }
 
+    mutating func recordResolution(_ resolution: CookingSessionResolution) {
+        if let index = resolutions.firstIndex(where: { $0.matches(resolution) }) {
+            if resolution.supersedes(resolutions[index]) {
+                resolutions[index] = resolution
+            }
+        } else {
+            resolutions.append(resolution)
+        }
+    }
+
     mutating func absorbRetirements(
         from other: Self
     ) {
         retiredThrough.merge(other.retiredThrough) { lhs, rhs in
             max(lhs, rhs)
+        }
+        for resolution in other.resolutions {
+            recordResolution(resolution)
+        }
+        let retirementMap = retiredThrough
+        resolutions.removeAll { resolution in
+            resolution.first.sequence <= retirementMap[resolution.first.originID, default: .zero]
+                && resolution.second.sequence <= retirementMap[resolution.second.originID, default: .zero]
         }
     }
 }
@@ -83,6 +106,15 @@ public extension CookingSessionSyncState {
         case unsupported
         /// Unreadable data.
         case malformed
+    }
+
+    internal var isValid: Bool {
+        formatVersion == Self.supportedFormatVersion
+            && (current?.isValid ?? true)
+            && retiredThrough.allSatisfy { origin, sequence in
+                !origin.isEmpty && sequence >= .zero && sequence < CookingSessionID.maximumCounter
+            }
+            && resolutions.allSatisfy(\.isValid)
     }
 
     /// Decodes a peer's state, separating newer formats from unreadable data.
@@ -101,10 +133,9 @@ public extension CookingSessionSyncState {
         guard header.formatVersion <= supportedFormatVersion else {
             return .unsupported
         }
-        guard let state = try? JSONDecoder().decode(
-            Self.self,
-            from: data
-        ) else {
+        guard header.formatVersion == supportedFormatVersion,
+              let state = try? JSONDecoder().decode(Self.self, from: data),
+              state.isValid else {
             return .malformed
         }
         return .decoded(state)

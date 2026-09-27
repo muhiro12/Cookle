@@ -113,4 +113,14 @@ struct RecentRecipeCatalogTests {
         #expect(snapshot.currentStepIndex == 0)
         #expect(snapshot.activeTimer == nil)
     }
+
+    @Test
+    func received_duplicate_identifiers_and_empty_steps_are_rejected() throws {
+        let recipe = RecentRecipe(recipeID: "one", title: "Soup", steps: ["Cook"], updatedAt: .now)
+        let duplicate = RecentRecipeCatalog(recipes: [recipe, recipe], generatedAt: .now)
+        #expect(RecentRecipeCatalog.decoded(from: try #require(duplicate.encodedString())) == nil)
+        let empty = RecentRecipeCatalog(recipes: [.init(recipeID: "two", title: "Soup", steps: [], updatedAt: .now)],
+                                        generatedAt: .now)
+        #expect(RecentRecipeCatalog.decoded(from: try #require(empty.encodedString())) == nil)
+    }
 }

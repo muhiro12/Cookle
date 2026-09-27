@@ -127,24 +127,25 @@ public struct CookingSessionLocalState: Codable, Equatable, Sendable {
         return true
     }
 
-    /// Resolves a pending conflict. Keeping the local session retires the
-    /// peer session; switching retires the local session and adopts the peer's.
+    /// Resolves a pending conflict without mistaking a choice for an end.
     @discardableResult
     public mutating func resolveConflict(
         keepingLocalSession: Bool
     ) -> Bool {
-        guard let pendingConflict else {
+        guard let pendingConflict, let current = activeRecord else {
             return false
         }
+        let winner = keepingLocalSession ? current : pendingConflict
+        let revision = (shared.resolutions.map(\.revision).max() ?? .zero) + 1
+        shared.recordResolution(.init(
+            first: current.sessionID,
+            second: pendingConflict.sessionID,
+            winner: winner.sessionID,
+            revision: revision,
+            editorID: originID
+        ))
+        shared.current = winner
         self.pendingConflict = nil
-        if keepingLocalSession {
-            shared.retire(pendingConflict.sessionID)
-        } else {
-            if let current = shared.current {
-                shared.retire(current.sessionID)
-            }
-            shared.current = pendingConflict
-        }
         normalize()
         return true
     }
@@ -214,10 +215,13 @@ public extension CookingSessionLocalState {
         guard let data = value.data(using: .utf8) else {
             return nil
         }
-        return try? JSONDecoder().decode(
-            Self.self,
-            from: data
-        )
+        guard let state = try? JSONDecoder().decode(Self.self, from: data),
+              !state.originID.isEmpty, state.shared.isValid,
+              state.pendingConflict?.isValid ?? true,
+              state.lastStartedSequence >= 0, state.lastStartedSequence < CookingSessionID.maximumCounter else {
+            return nil
+        }
+        return state
     }
 
     /// Encodes local state for persistence.

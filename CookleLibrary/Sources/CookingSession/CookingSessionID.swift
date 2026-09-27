@@ -7,10 +7,17 @@ import Foundation
 /// delayed update from an earlier session can never be mistaken for the
 /// current one.
 public struct CookingSessionID: Codable, Hashable, Sendable {
+    private static let counterHeadroom = 2
+    static let maximumCounter = Int.max / counterHeadroom
+
     /// The per-install identifier of the device that started the session.
     public let originID: String
     /// The start sequence of the session on its origin install.
     public let sequence: Int
+
+    var isValid: Bool {
+        !originID.isEmpty && sequence > 0 && sequence < Self.maximumCounter
+    }
 
     public init(
         originID: String,

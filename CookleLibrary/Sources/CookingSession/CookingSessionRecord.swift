@@ -12,6 +12,10 @@ public struct CookingSessionRecord: Codable, Equatable, Sendable {
     /// The session content, progress, and timer.
     public let snapshot: CookingSessionSnapshot
 
+    var isValid: Bool {
+        sessionID.isValid && !editorID.isEmpty && revision > 0 && revision < CookingSessionID.maximumCounter
+    }
+
     public init(
         sessionID: CookingSessionID,
         revision: Int,

@@ -74,8 +74,10 @@ public struct RecentRecipeCatalog: Codable, Equatable, Sendable {
                 Self.self,
                 from: data
               ),
-              catalog.formatVersion <= supportedFormatVersion,
-              catalog.recipes.count <= maximumRecipeCount else {
+              catalog.formatVersion == supportedFormatVersion,
+              catalog.recipes.count <= maximumRecipeCount,
+              Set(catalog.recipes.map(\.recipeID)).count == catalog.recipes.count,
+              catalog.recipes.allSatisfy({ !$0.recipeID.isEmpty && !$0.steps.isEmpty }) else {
             return nil
         }
         return catalog

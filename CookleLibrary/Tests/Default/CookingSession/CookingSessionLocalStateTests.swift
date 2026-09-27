@@ -111,9 +111,12 @@ struct CookingSessionLocalStateTests {
         let revision2 = phone.shared
 
         var watch = CookingSessionLocalState(originID: "watch")
-        #expect(watch.merge(revision2))
-        #expect(watch.merge(revision2) == false)
-        #expect(watch.merge(revision1) == false)
+        let initialChange = watch.merge(revision2)
+        let duplicateChange = watch.merge(revision2)
+        let staleChange = watch.merge(revision1)
+        #expect(initialChange)
+        #expect(duplicateChange == false)
+        #expect(staleChange == false)
         #expect(watch.activeSnapshot?.currentStepIndex == 1)
     }
 
@@ -160,7 +163,11 @@ struct CookingSessionLocalStateTests {
         phone.merge(watch.shared)
         watch.merge(phoneResolved)
 
-        // Union of retirements ends both; neither device keeps a second authority.
+        // The deterministic choice wins without treating either Keep as End.
+        #expect(phone.activeSnapshot?.recipeID == "soup")
+        #expect(watch.activeSnapshot?.recipeID == "soup")
+        watch.endActiveSession()
+        phone.merge(watch.shared)
         #expect(phone.activeSnapshot == nil)
         #expect(watch.activeSnapshot == nil)
     }
@@ -225,5 +232,58 @@ struct CookingSessionLocalStateTests {
 
         #expect(active.activeSnapshot?.recipeID == "recipe-1")
         #expect(ended.activeSnapshot == nil)
+    }
+
+    @Test
+    func a_resolved_loser_stays_suppressed_after_restart_and_delayed_delivery() throws {
+        var phone = CookingSessionLocalState(originID: "phone")
+        var watch = CookingSessionLocalState(originID: "watch")
+        phone.start(Self.snapshot(recipeID: "pasta"))
+        watch.start(Self.snapshot(recipeID: "soup"))
+        let delayedWatch = watch.shared
+        phone.merge(watch.shared)
+        phone.resolveConflict(keepingLocalSession: true)
+        let encoded = try #require(phone.encodedString())
+        var restored = try #require(CookingSessionLocalState.decoded(from: encoded))
+        restored.merge(delayedWatch)
+        #expect(restored.activeSnapshot?.recipeID == "pasta")
+        #expect(restored.pendingConflict == nil)
+        restored.endActiveSession()
+        restored.merge(delayedWatch)
+        #expect(restored.activeSnapshot == nil)
+        #expect(restored.pendingConflict == nil)
+    }
+
+    @Test
+    func terminal_state_wins_over_concurrent_conflict_choices() {
+        var phone = CookingSessionLocalState(originID: "phone")
+        var watch = CookingSessionLocalState(originID: "watch")
+        phone.start(Self.snapshot(recipeID: "pasta"))
+        watch.start(Self.snapshot(recipeID: "soup"))
+        let phoneStarted = phone.shared
+        phone.merge(watch.shared)
+        watch.merge(phoneStarted)
+        phone.resolveConflict(keepingLocalSession: true)
+        watch.resolveConflict(keepingLocalSession: true)
+        watch.endActiveSession()
+        let ended = watch.shared
+        watch.merge(phone.shared)
+        phone.merge(ended)
+        #expect(phone.activeSnapshot == nil)
+        #expect(watch.activeSnapshot == nil)
+    }
+
+    @Test
+    func unsafe_counters_and_unsupported_local_formats_are_rejected() throws {
+        let invalid = CookingSessionSyncState(current: .init(
+            sessionID: .init(originID: "peer", sequence: Int.max),
+            revision: Int.max,
+            editorID: "peer",
+            snapshot: Self.snapshot()
+        ))
+        let encoded = try #require(invalid.encodedString())
+        #expect(CookingSessionSyncState.decoding(encoded) == .malformed)
+        let local = CookingSessionLocalState(originID: "phone", shared: invalid)
+        #expect(CookingSessionLocalState.decoded(from: try #require(local.encodedString())) == nil)
     }
 }
