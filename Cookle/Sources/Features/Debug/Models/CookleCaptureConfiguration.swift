@@ -23,6 +23,11 @@ enum CookleCaptureConfiguration {
         environmentValue(for: EnvironmentKey.isEnabled) == EnabledValue.enabled
     }
 
+    /// Enables real companion transport over the isolated capture store.
+    static var usesWatchSync: Bool {
+        isEnabled && ProcessInfo.processInfo.environment["COOKLE_CAPTURE_WATCH_SYNC"] == "1"
+    }
+
     /// Uses an empty isolated store to verify first-use presentation.
     static var usesEmptyStore: Bool {
         isEnabled && environmentValue(for: EnvironmentKey.emptyStore) == EnabledValue.enabled

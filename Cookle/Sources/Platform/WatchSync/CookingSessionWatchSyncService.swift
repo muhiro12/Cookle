@@ -1,6 +1,8 @@
 import Foundation
 import MHPlatform
+import OSLog
 import SwiftData
+import UIKit
 import WatchConnectivity
 
 /// The single iPhone writer of the Watch application context.
@@ -10,6 +12,8 @@ import WatchConnectivity
 /// the previous dictionary, so sending only one part would drop the other.
 @MainActor
 final class CookingSessionWatchSyncService: NSObject, WCSessionDelegate {
+    private static let logger = Logger(subsystem: "Cookle", category: "WatchSync")
+
     private let cookingSessionStore: CookingSessionStore
     private let modelContext: ModelContext?
     private let userDefaults: UserDefaults
@@ -17,6 +21,7 @@ final class CookingSessionWatchSyncService: NSObject, WCSessionDelegate {
     private let session: WCSession?
     private var recentRecipeCatalog: RecentRecipeCatalog?
     private var saveObserver: (any NSObjectProtocol)?
+    private var activationObserver: (any NSObjectProtocol)?
 
     init(
         cookingSessionStore: CookingSessionStore,
@@ -44,6 +49,13 @@ final class CookingSessionWatchSyncService: NSObject, WCSessionDelegate {
                 MainActor.assumeIsolated {
                     self?.refreshRecentRecipes()
                 }
+            }
+        }
+        activationObserver = NotificationCenter.default.addObserver(
+            forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated {
+                self?.refreshRecentRecipes()
             }
         }
         cookingSessionStore.applyReceivedContext(
@@ -98,6 +110,9 @@ final class CookingSessionWatchSyncService: NSObject, WCSessionDelegate {
     func recordOpenedRecipe(
         _ recipe: Recipe
     ) {
+        guard modelContext != nil else {
+            return
+        }
         var history = storedHistory()
         history.recordOpened(
             CookingSessionOperations.recentRecipeID(for: recipe)
@@ -127,7 +142,7 @@ final class CookingSessionWatchSyncService: NSObject, WCSessionDelegate {
                 sendContext()
             }
         } catch {
-            assertionFailure(error.localizedDescription)
+            Self.logger.error("Could not refresh companion recipes")
         }
     }
 
@@ -153,9 +168,7 @@ final class CookingSessionWatchSyncService: NSObject, WCSessionDelegate {
                 return
             }
 
-            assertionFailure(
-                error.localizedDescription
-            )
+            Self.logger.error("Companion context delivery failed (code: \((error as NSError).code))")
         }
     }
 }

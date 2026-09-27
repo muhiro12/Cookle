@@ -1,11 +1,13 @@
 import Combine
 import Foundation
+import OSLog
 import WatchConnectivity
 
 /// Owns the Watch's durable cooking session state and recent recipe cache,
 /// and is the single Watch writer of the application context.
 @MainActor
 final class WatchCookingSessionStore: NSObject, ObservableObject, WCSessionDelegate {
+    private static let logger = Logger(subsystem: "Cookle", category: "WatchSync")
     private let session: WCSession?
     private let userDefaults: UserDefaults?
     private let stateStorageKey: String
@@ -292,9 +294,7 @@ private extension WatchCookingSessionStore {
                 return
             }
 
-            assertionFailure(
-                error.localizedDescription
-            )
+            Self.logger.error("Companion context delivery failed (code: \((error as NSError).code))")
         }
     }
 

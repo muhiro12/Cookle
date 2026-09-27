@@ -1,3 +1,4 @@
+import Foundation
 import MHPlatform
 import MHUI
 import SwiftData
@@ -69,7 +70,7 @@ private extension CookleAppAssemblyFactory {
         isolatesCookingSession: Bool = false
     ) -> CookleAppAssembly {
         let navigationModel = MainNavigationModel()
-        let cookingSessionStore = CookingSessionStore(persistsSnapshot: !isolatesCookingSession)
+        let cookingSessionStore = makeCookingSessionStore(isIsolated: isolatesCookingSession)
         let cookingSessionWatchSyncService = makeCookingSessionWatchSyncService(
             cookingSessionStore: cookingSessionStore,
             modelContext: modelContainer.mainContext,
@@ -165,16 +166,33 @@ private extension CookleAppAssemblyFactory {
         )
     }
 
+    static func makeCookingSessionStore(isIsolated: Bool) -> CookingSessionStore {
+        #if DEBUG
+        if isIsolated, CookleCaptureConfiguration.usesWatchSync,
+           let defaults = UserDefaults(suiteName: "Cookle.capture.watch") {
+            return .init(userDefaults: defaults)
+        }
+        #endif
+        return .init(persistsSnapshot: !isIsolated)
+    }
+
     static func makeCookingSessionWatchSyncService(
         cookingSessionStore: CookingSessionStore,
         modelContext: ModelContext,
         isIsolated: Bool
     ) -> CookingSessionWatchSyncService {
         if isIsolated {
-            return .init(
-                cookingSessionStore: cookingSessionStore,
-                session: nil
-            )
+            #if DEBUG
+            if CookleCaptureConfiguration.usesWatchSync,
+               let defaults = UserDefaults(suiteName: "Cookle.capture.watch") {
+                return .init(
+                    cookingSessionStore: cookingSessionStore,
+                    modelContext: modelContext,
+                    userDefaults: defaults
+                )
+            }
+            #endif
+            return .init(cookingSessionStore: cookingSessionStore, session: nil)
         }
         return .init(
             cookingSessionStore: cookingSessionStore,
