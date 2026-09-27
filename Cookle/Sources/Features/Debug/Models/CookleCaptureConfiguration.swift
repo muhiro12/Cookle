@@ -12,6 +12,7 @@ enum CookleCaptureConfiguration {
         static let baseDate = "COOKLE_CAPTURE_BASE_DATE"
         static let screen = "COOKLE_CAPTURE_SCREEN"
         static let emptyStore = "COOKLE_CAPTURE_EMPTY_STORE"
+        static let timerDelivery = "COOKLE_CAPTURE_TIMER_DELIVERY"
     }
 
     private enum EnabledValue {
@@ -31,6 +32,13 @@ enum CookleCaptureConfiguration {
     /// Uses an empty isolated store to verify first-use presentation.
     static var usesEmptyStore: Bool {
         isEnabled && environmentValue(for: EnvironmentKey.emptyStore) == EnabledValue.enabled
+    }
+
+    /// Lets an isolated capture run schedule real timer notifications and
+    /// Live Activities for native verification. Off by default so captures
+    /// never prompt for permission or leave system alerts behind.
+    static var usesTimerDelivery: Bool {
+        isEnabled && environmentValue(for: EnvironmentKey.timerDelivery) == EnabledValue.enabled
     }
 
     /// Directory holding the sample photo files named by `SamplePhotoAsset`.

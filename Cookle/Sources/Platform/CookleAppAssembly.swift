@@ -12,6 +12,7 @@ final class CookleAppAssembly {
     let cookingSessionStore: CookingSessionStore
     // periphery:ignore - Retain the watch sync service for the lifetime of the app assembly.
     let cookingSessionWatchSyncService: CookingSessionWatchSyncService
+    let cookingTimerDeliveryService: CookingTimerDeliveryService
     let recipeActionService: RecipeActionService
     let photoActionService: PhotoActionService
     let diaryActionService: DiaryActionService
@@ -26,6 +27,7 @@ final class CookleAppAssembly {
         services: CookleAppServices,
         cookingSessionStore: CookingSessionStore,
         cookingSessionWatchSyncService: CookingSessionWatchSyncService,
+        cookingTimerDeliveryService: CookingTimerDeliveryService,
         recipeActionService: RecipeActionService,
         photoActionService: PhotoActionService,
         diaryActionService: DiaryActionService,
@@ -39,6 +41,7 @@ final class CookleAppAssembly {
         self.services = services
         self.cookingSessionStore = cookingSessionStore
         self.cookingSessionWatchSyncService = cookingSessionWatchSyncService
+        self.cookingTimerDeliveryService = cookingTimerDeliveryService
         self.recipeActionService = recipeActionService
         self.photoActionService = photoActionService
         self.diaryActionService = diaryActionService
@@ -89,6 +92,7 @@ extension View {
             .environment(assembly.tagActionService)
             .environment(assembly.settingsActionService)
             .environment(assembly.cookingSessionStore)
+            .environment(assembly.cookingTimerDeliveryService)
             .environment(assembly.navigationModel)
             .environment(assembly.routeNavigator)
             .environment(assembly.services.routePipeline)

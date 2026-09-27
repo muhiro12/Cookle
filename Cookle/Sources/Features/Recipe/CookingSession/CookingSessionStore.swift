@@ -10,6 +10,7 @@ final class CookingSessionStore {
     @ObservationIgnored private let userDefaults: UserDefaults
     @ObservationIgnored private let persistsSnapshot: Bool
     @ObservationIgnored private var stateChangeHandler: ((CookingSessionSyncState) -> Void)?
+    @ObservationIgnored private var timerDeliveryHandler: ((_ isUserStartedTimer: Bool) -> Void)?
 
     private(set) var localState: CookingSessionLocalState
     private(set) var peerStatus: CookingSessionPeerStatus = .compatible
@@ -142,7 +143,7 @@ final class CookingSessionStore {
             return
         }
 
-        updateActiveSession { snapshot in
+        updateActiveSession(isUserStartedTimer: true) { snapshot in
             snapshot.startingTimer(
                 durationMinutes: minutes,
                 startedAt: startedAt
@@ -163,7 +164,7 @@ final class CookingSessionStore {
     func repeatTimer(
         startedAt: Date = .now
     ) {
-        updateActiveSession { snapshot in
+        updateActiveSession(isUserStartedTimer: true) { snapshot in
             snapshot.repeatingTimer(
                 startedAt: startedAt
             )
@@ -216,6 +217,15 @@ final class CookingSessionStore {
     ) {
         stateChangeHandler = handler
     }
+
+    /// Sets the handler told about every applied change, local or received.
+    /// `isUserStartedTimer` is `true` only when the person started or
+    /// repeated a timer on this device.
+    func setTimerDeliveryHandler(
+        _ handler: ((_ isUserStartedTimer: Bool) -> Void)?
+    ) {
+        timerDeliveryHandler = handler
+    }
 }
 
 private extension CookingSessionStore {
@@ -243,9 +253,10 @@ private extension CookingSessionStore {
     }
 
     func updateActiveSession(
+        isUserStartedTimer: Bool = false,
         _ transform: (CookingSessionSnapshot) -> CookingSessionSnapshot
     ) {
-        mutateState { state in
+        mutateState(isUserStartedTimer: isUserStartedTimer) { state in
             state.updateActiveSession(transform)
         }
     }
@@ -253,6 +264,7 @@ private extension CookingSessionStore {
     /// Applies a state change, persists it, then hands the shared state to
     /// the sync writer so a relaunch never loses a change that was sent.
     func mutateState(
+        isUserStartedTimer: Bool = false,
         _ mutation: (inout CookingSessionLocalState) -> Bool
     ) {
         var updatedState = localState
@@ -264,6 +276,7 @@ private extension CookingSessionStore {
         localState = updatedState
         persistState()
         stateChangeHandler?(updatedState.shared)
+        timerDeliveryHandler?(isUserStartedTimer)
     }
 
     func persistState() {

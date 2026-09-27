@@ -22,7 +22,8 @@ enum CookleAppAssemblyFactory {
         makeAssembly(
             modelContainer: modelContainer,
             nativeAdUnitID: liveAdUnitID,
-            logging: logging
+            logging: logging,
+            deliversTimers: true
         )
     }
 
@@ -48,7 +49,8 @@ enum CookleAppAssemblyFactory {
             modelContainer: modelContainer,
             nativeAdUnitID: nil,
             logging: .preview(),
-            isolatesCookingSession: true
+            isolatesCookingSession: true,
+            deliversTimers: CookleCaptureConfiguration.usesTimerDelivery
         )
     }
     #endif
@@ -67,7 +69,8 @@ private extension CookleAppAssemblyFactory {
         modelContainer: ModelContainer,
         nativeAdUnitID: String?,
         logging: CookleAppLogging,
-        isolatesCookingSession: Bool = false
+        isolatesCookingSession: Bool = false,
+        deliversTimers: Bool = false
     ) -> CookleAppAssembly {
         let navigationModel = MainNavigationModel()
         let cookingSessionStore = makeCookingSessionStore(isIsolated: isolatesCookingSession)
@@ -101,6 +104,7 @@ private extension CookleAppAssemblyFactory {
             services: services,
             cookingSessionStore: cookingSessionStore,
             cookingSessionWatchSyncService: cookingSessionWatchSyncService,
+            cookingTimerDeliveryService: .init(cookingSessionStore: cookingSessionStore, isEnabled: deliversTimers),
             recipeActionService: makeRecipeActionService(
                 notificationService: services.notificationService,
                 logging: logging,

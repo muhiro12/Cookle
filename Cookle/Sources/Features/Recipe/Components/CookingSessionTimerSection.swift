@@ -12,8 +12,12 @@ struct CookingSessionTimerSection: View {
 
     @Environment(CookingSessionStore.self)
     private var cookingSessionStore
+    @Environment(CookingTimerDeliveryService.self)
+    private var timerDeliveryService: CookingTimerDeliveryService?
     @Environment(\.mhTheme)
     private var theme
+    @Environment(\.openURL)
+    private var openURL
 
     @State private var timerRefreshDate = Date.now
 
@@ -118,6 +122,31 @@ private extension CookingSessionTimerSection {
         }
     }
 
+    /// States only what was actually scheduled; the notification follows the
+    /// system's notification, Focus, and sound settings.
+    @ViewBuilder var notificationStatusContent: some View {
+        switch timerDeliveryService?.notificationStatus {
+        case .scheduled:
+            Label("You'll get a notification when this timer ends.", systemImage: "bell")
+                .mhTextStyle(.supporting, colorRole: .secondaryText)
+        case .disabled:
+            VStack(alignment: .leading, spacing: theme.spacing.content) {
+                Label("Notifications are off, so this timer can only finish here in Cookle.", systemImage: "bell.slash")
+                    .mhTextStyle(.supporting, colorRole: .secondaryText)
+                Button("Open Notification Settings") {
+                    if let settingsURL = URL(string: UIApplication.openNotificationSettingsURLString) {
+                        openURL(settingsURL)
+                    }
+                }
+            }
+        case .failed:
+            Label("Cookle couldn't schedule a notification for this timer.", systemImage: "exclamationmark.triangle")
+                .mhTextStyle(.supporting, colorRole: .secondaryText)
+        case .idle, nil:
+            EmptyView()
+        }
+    }
+
     @ViewBuilder var expiredActionButtons: some View {
         Button("Repeat") {
             cookingSessionStore.repeatTimer()
@@ -192,6 +221,7 @@ private extension CookingSessionTimerSection {
                 .weight(.semibold)
                 .monospacedDigit()
             )
+            notificationStatusContent
             Button(
                 "Cancel Timer",
                 role: .destructive
