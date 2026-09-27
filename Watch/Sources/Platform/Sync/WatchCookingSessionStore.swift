@@ -2,29 +2,50 @@ import Combine
 import Foundation
 import WatchConnectivity
 
+/// Owns the Watch's durable cooking session state and recent recipe cache,
+/// and is the single Watch writer of the application context.
 @MainActor
 final class WatchCookingSessionStore: NSObject, ObservableObject, WCSessionDelegate {
     private let session: WCSession?
+    private let userDefaults: UserDefaults?
+    private let stateStorageKey: String
+    private let catalogStorageKey: String
 
-    @Published private(set) var snapshot: CookingSessionSnapshot?
+    @Published private(set) var localState: CookingSessionLocalState
+    @Published private(set) var peerStatus: CookingSessionPeerStatus = .compatible
+    /// The last accepted catalog. It is cached content prepared on iPhone,
+    /// not a live view of the recipes.
+    @Published private(set) var recentRecipeCatalog: RecentRecipeCatalog?
 
     var activeSnapshot: CookingSessionSnapshot? {
-        guard let snapshot,
-              snapshot.isActive else {
-            return nil
-        }
+        localState.activeSnapshot
+    }
 
-        return snapshot
+    /// A different session started independently on iPhone.
+    var conflictingSnapshot: CookingSessionSnapshot? {
+        localState.pendingConflict?.snapshot
     }
 
     init(
-        session: WCSession? = WCSession.isSupported() ? .default : nil
+        session: WCSession? = WCSession.isSupported() ? .default : nil,
+        userDefaults: UserDefaults? = .standard,
+        stateStorageKey: String = CookleUserDefaultsKeys.Standard.cookingSessionState.rawValue,
+        catalogStorageKey: String = CookleUserDefaultsKeys.Standard.recentRecipeCatalog.rawValue
     ) {
         self.session = session
-        self.snapshot = nil
+        self.userDefaults = userDefaults
+        self.stateStorageKey = stateStorageKey
+        self.catalogStorageKey = catalogStorageKey
+        self.localState = userDefaults?
+            .string(forKey: stateStorageKey)
+            .flatMap(CookingSessionLocalState.decoded(from:))
+            ?? .init()
+        self.recentRecipeCatalog = userDefaults?
+            .string(forKey: catalogStorageKey)
+            .flatMap(RecentRecipeCatalog.decoded(from:))
         super.init()
         self.session?.delegate = self
-        applyApplicationContext(
+        applyReceivedContext(
             session?.receivedApplicationContext ?? [:]
         )
         self.session?.activate()
@@ -32,131 +53,133 @@ final class WatchCookingSessionStore: NSObject, ObservableObject, WCSessionDeleg
 
     #if DEBUG
     convenience init(
-        previewSnapshot: CookingSessionSnapshot?
+        previewSnapshot: CookingSessionSnapshot?,
+        previewCatalog: RecentRecipeCatalog? = nil
     ) {
-        self.init(session: nil)
-        self.snapshot = previewSnapshot
+        self.init(session: nil, userDefaults: nil)
+        self.localState = .migrating(legacySnapshot: previewSnapshot)
+        self.recentRecipeCatalog = previewCatalog
     }
     #endif
+
+    /// Starts cooking a cached recipe. Works offline; the start is sent when
+    /// iPhone becomes reachable.
+    func startSession(
+        for recipe: RecentRecipe,
+        startedAt: Date = .now
+    ) {
+        guard recipe.steps.isEmpty == false else {
+            return
+        }
+
+        mutateState { state in
+            state.start(
+                recipe.startingSnapshot(startedAt: startedAt)
+            )
+            return true
+        }
+    }
 
     func setCurrentStepIndex(
         _ stepIndex: Int,
         updatedAt: Date = .now
     ) {
-        guard let activeSnapshot else {
-            return
-        }
-
-        applySnapshot(
-            activeSnapshot.settingCurrentStepIndex(
+        updateActiveSession { snapshot in
+            snapshot.settingCurrentStepIndex(
                 stepIndex,
                 updatedAt: updatedAt
             )
-        )
+        }
     }
 
     func returnToPreviousStep(
         updatedAt: Date = .now
     ) {
-        guard let activeSnapshot else {
-            return
-        }
-
-        applySnapshot(
-            activeSnapshot.returningToPreviousStep(
+        updateActiveSession { snapshot in
+            snapshot.returningToPreviousStep(
                 updatedAt: updatedAt
             )
-        )
+        }
     }
 
     func advanceToNextStep(
         updatedAt: Date = .now
     ) {
-        guard let activeSnapshot else {
-            return
-        }
-
-        applySnapshot(
-            activeSnapshot.advancingToNextStep(
+        updateActiveSession { snapshot in
+            snapshot.advancingToNextStep(
                 updatedAt: updatedAt
             )
-        )
+        }
     }
 
     func advanceFromTimerFollowUp(
         updatedAt: Date = .now
     ) {
-        guard let activeSnapshot else {
-            return
+        updateActiveSession { snapshot in
+            snapshot
+                .cancelingTimer(
+                    updatedAt: updatedAt
+                )
+                .advancingToNextStep(
+                    updatedAt: updatedAt
+                )
         }
-
-        let clearedSnapshot = activeSnapshot.cancelingTimer(
-            updatedAt: updatedAt
-        )
-        applySnapshot(
-            clearedSnapshot.advancingToNextStep(
-                updatedAt: updatedAt
-            )
-        )
     }
 
     func startTimer(
         minutes: Int,
         startedAt: Date = .now
     ) {
-        guard let activeSnapshot,
-              minutes > .zero else {
+        guard minutes > .zero else {
             return
         }
 
-        applySnapshot(
-            activeSnapshot.startingTimer(
+        updateActiveSession { snapshot in
+            snapshot.startingTimer(
                 durationMinutes: minutes,
                 startedAt: startedAt
             )
-        )
+        }
     }
 
     func cancelTimer(
         updatedAt: Date = .now
     ) {
-        guard let activeSnapshot else {
-            return
-        }
-
-        applySnapshot(
-            activeSnapshot.cancelingTimer(
+        updateActiveSession { snapshot in
+            snapshot.cancelingTimer(
                 updatedAt: updatedAt
             )
-        )
+        }
     }
 
     func repeatTimer(
         startedAt: Date = .now
     ) {
-        guard let activeSnapshot else {
-            return
-        }
-
-        applySnapshot(
-            activeSnapshot.repeatingTimer(
+        updateActiveSession { snapshot in
+            snapshot.repeatingTimer(
                 startedAt: startedAt
             )
-        )
+        }
     }
 
     func endSession(
         updatedAt: Date = .now
     ) {
-        guard let snapshot else {
-            return
-        }
-
-        applySnapshot(
-            snapshot.endingSession(
+        mutateState { state in
+            state.endActiveSession(
                 updatedAt: updatedAt
             )
-        )
+        }
+    }
+
+    func resolveConflict(
+        keepingLocalSession: Bool
+    ) {
+        mutateState { state in
+            state.resolveConflict(
+                keepingLocalSession: keepingLocalSession
+            )
+        }
     }
 
     nonisolated func session(
@@ -164,16 +187,13 @@ final class WatchCookingSessionStore: NSObject, ObservableObject, WCSessionDeleg
         activationDidCompleteWith _: WCSessionActivationState,
         error _: (any Error)?
     ) {
-        let encodedSnapshot = session.receivedApplicationContext[
-            "activeCookingSessionSnapshot"
-        ] as? String
+        let context = session.receivedApplicationContext.compactMapValues { $0 as? String }
         Task { @MainActor in
-            self.applyEncodedSnapshot(
-                encodedSnapshot
+            self.applyReceivedContext(
+                context
             )
-            self.pushSnapshot(
-                self.snapshot
-            )
+            // Retry the latest local state after every activation.
+            self.sendContext()
         }
     }
 
@@ -181,75 +201,79 @@ final class WatchCookingSessionStore: NSObject, ObservableObject, WCSessionDeleg
         _: WCSession,
         didReceiveApplicationContext applicationContext: [String: Any]
     ) {
-        let encodedSnapshot = applicationContext[
-            "activeCookingSessionSnapshot"
-        ] as? String
+        let context = applicationContext.compactMapValues { $0 as? String }
         Task { @MainActor in
-            self.applyEncodedSnapshot(
-                encodedSnapshot
+            self.applyReceivedContext(
+                context
             )
         }
     }
+}
 
-    private func applyApplicationContext(
-        _ applicationContext: [String: Any]
+private extension WatchCookingSessionStore {
+    func applyReceivedContext(
+        _ context: [String: Any]
     ) {
-        let encodedSnapshot = applicationContext[
-            "activeCookingSessionSnapshot"
-        ] as? String
-        applyEncodedSnapshot(
-            encodedSnapshot
-        )
-    }
-
-    private func applyEncodedSnapshot(
-        _ encodedSnapshot: String?
-    ) {
-        guard let encodedSnapshot else {
-            return
-        }
-
-        guard encodedSnapshot.isEmpty == false else {
-            applySnapshot(nil)
-            return
-        }
-
-        guard let incomingSnapshot = CookingSessionSnapshot.decoded(
-            from: encodedSnapshot
-        ) else {
-            return
-        }
-
-        let mergedSnapshot = if let snapshot {
-            snapshot.merging(
-                with: incomingSnapshot
+        if let receivedCatalog = WatchCompanionContext.recentRecipeCatalog(
+            in: context
+        ),
+        receivedCatalog != recentRecipeCatalog {
+            recentRecipeCatalog = receivedCatalog
+            userDefaults?.set(
+                receivedCatalog.encodedString(),
+                forKey: catalogStorageKey
             )
-        } else {
-            incomingSnapshot
         }
-        applySnapshot(
-            mergedSnapshot
+
+        var updatedState = localState
+        let result = CookingSessionOperations.applyReceivedContext(
+            context,
+            to: &updatedState
         )
+        if let receivedPeerStatus = result.peerStatus,
+           receivedPeerStatus != peerStatus {
+            peerStatus = receivedPeerStatus
+        }
+        guard result.changed else {
+            return
+        }
+        mutateState { state in
+            state = updatedState
+            return true
+        }
     }
 
-    private func applySnapshot(
-        _ updatedSnapshot: CookingSessionSnapshot?
+    func updateActiveSession(
+        _ transform: (CookingSessionSnapshot) -> CookingSessionSnapshot
     ) {
-        guard snapshot != updatedSnapshot else {
+        mutateState { state in
+            state.updateActiveSession(transform)
+        }
+    }
+
+    /// Applies a state change, persists it, then sends it.
+    func mutateState(
+        _ mutation: (inout CookingSessionLocalState) -> Bool
+    ) {
+        var updatedState = localState
+        guard mutation(&updatedState),
+              updatedState != localState else {
             return
         }
 
-        snapshot = updatedSnapshot
-        pushSnapshot(
-            updatedSnapshot
-        )
+        localState = updatedState
+        if let encodedState = updatedState.encodedString() {
+            userDefaults?.set(
+                encodedState,
+                forKey: stateStorageKey
+            )
+        }
+        sendContext()
     }
 
-    private func pushSnapshot(
-        _ snapshot: CookingSessionSnapshot?
-    ) {
+    func sendContext() {
         guard let session,
-              canPushSnapshot(
+              canSendContext(
                 with: session
               ) else {
             return
@@ -257,10 +281,9 @@ final class WatchCookingSessionStore: NSObject, ObservableObject, WCSessionDeleg
 
         do {
             try session.updateApplicationContext(
-                [
-                    "activeCookingSessionSnapshot":
-                        snapshot?.encodedString() ?? ""
-                ]
+                WatchCompanionContext.composed(
+                    sessionState: localState.shared
+                )
             )
         } catch {
             guard isExpectedAvailabilityError(
@@ -274,10 +297,8 @@ final class WatchCookingSessionStore: NSObject, ObservableObject, WCSessionDeleg
             )
         }
     }
-}
 
-private extension WatchCookingSessionStore {
-    func canPushSnapshot(
+    func canSendContext(
         with session: WCSession
     ) -> Bool {
         session.activationState == .activated

@@ -122,6 +122,7 @@ private extension CookingSessionView {
         snapshot: CookingSessionSnapshot
     ) -> some View {
         VStack(alignment: .leading, spacing: theme.spacing.section) {
+            CookingSessionSyncNotice()
             readingLayout {
                 if !ingredients.isEmpty {
                     VStack(alignment: .leading, spacing: theme.spacing.inline) {

@@ -69,11 +69,10 @@ private extension CookleAppAssemblyFactory {
         isolatesCookingSession: Bool = false
     ) -> CookleAppAssembly {
         let navigationModel = MainNavigationModel()
-        let cookingSessionStore = CookingSessionStore(
-            persistsSnapshot: !isolatesCookingSession
-        )
+        let cookingSessionStore = CookingSessionStore(persistsSnapshot: !isolatesCookingSession)
         let cookingSessionWatchSyncService = makeCookingSessionWatchSyncService(
             cookingSessionStore: cookingSessionStore,
+            modelContext: modelContainer.mainContext,
             isIsolated: isolatesCookingSession
         )
         let services = makeServiceGraph(
@@ -103,7 +102,8 @@ private extension CookleAppAssemblyFactory {
             cookingSessionWatchSyncService: cookingSessionWatchSyncService,
             recipeActionService: makeRecipeActionService(
                 notificationService: services.notificationService,
-                logging: logging
+                logging: logging,
+                recordRecentRecipe: cookingSessionWatchSyncService.recordOpenedRecipe
             ),
             photoActionService: makePhotoActionService(
                 notificationService: services.notificationService
@@ -141,10 +141,12 @@ private extension CookleAppAssemblyFactory {
 
     static func makeRecipeActionService(
         notificationService: NotificationService,
-        logging: CookleAppLogging
+        logging: CookleAppLogging,
+        recordRecentRecipe: @escaping @MainActor (Recipe) -> Void
     ) -> RecipeActionService {
         .init(
             notificationService: notificationService,
+            recordRecentRecipe: recordRecentRecipe,
             reviewFlow: makeReviewFlow(
                 logging: logging
             ),
@@ -165,6 +167,7 @@ private extension CookleAppAssemblyFactory {
 
     static func makeCookingSessionWatchSyncService(
         cookingSessionStore: CookingSessionStore,
+        modelContext: ModelContext,
         isIsolated: Bool
     ) -> CookingSessionWatchSyncService {
         if isIsolated {
@@ -174,7 +177,8 @@ private extension CookleAppAssemblyFactory {
             )
         }
         return .init(
-            cookingSessionStore: cookingSessionStore
+            cookingSessionStore: cookingSessionStore,
+            modelContext: modelContext
         )
     }
 

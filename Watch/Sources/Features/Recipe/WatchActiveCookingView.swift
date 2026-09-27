@@ -63,6 +63,7 @@ private extension WatchActiveCookingView {
     ) -> some View {
         ScrollView {
             VStack(spacing: Layout.contentSpacing) {
+                WatchCookingSyncNotice()
                 progressSection(
                     snapshot: snapshot
                 )
@@ -106,20 +107,7 @@ private extension WatchActiveCookingView {
     }
 
     func inactiveSessionContent() -> some View {
-        VStack(spacing: Layout.sectionSpacing) {
-            Image(systemName: "iphone")
-                .font(.title2)
-                .accessibilityHidden(true)
-            Text("Start on iPhone")
-                .font(.headline)
-            Text(
-                "Begin an active cooking session in Cookle on your iPhone."
-            )
-            .font(.footnote)
-            .foregroundStyle(.secondary)
-            .multilineTextAlignment(.center)
-        }
-        .padding()
+        WatchRecentRecipesView()
     }
 
     func progressSection(

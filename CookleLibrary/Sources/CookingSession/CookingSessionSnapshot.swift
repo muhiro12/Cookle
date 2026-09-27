@@ -236,14 +236,6 @@ public struct CookingSessionSnapshot: Codable, Equatable, Sendable {
         )
     }
 
-    public func merging(
-        with incomingSnapshot: Self
-    ) -> Self {
-        incomingSnapshot.updatedAt > updatedAt
-            ? incomingSnapshot
-            : self
-    }
-
     public func timerStatus(
         at date: Date
     ) -> CookingSessionTimerStatus {

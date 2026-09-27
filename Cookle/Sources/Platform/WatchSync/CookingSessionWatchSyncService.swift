@@ -1,27 +1,55 @@
 import Foundation
+import MHPlatform
+import SwiftData
 import WatchConnectivity
 
+/// The single iPhone writer of the Watch application context.
+///
+/// Every update sends the complete composed context: the durable cooking
+/// session state and the recent recipe catalog. Application context replaces
+/// the previous dictionary, so sending only one part would drop the other.
 @MainActor
 final class CookingSessionWatchSyncService: NSObject, WCSessionDelegate {
     private let cookingSessionStore: CookingSessionStore
+    private let modelContext: ModelContext?
+    private let userDefaults: UserDefaults
+    private let recentRecipeIDsKey: String
     private let session: WCSession?
+    private var recentRecipeCatalog: RecentRecipeCatalog?
+    private var saveObserver: (any NSObjectProtocol)?
 
     init(
         cookingSessionStore: CookingSessionStore,
+        modelContext: ModelContext? = nil,
+        userDefaults: UserDefaults = .standard,
+        recentRecipeIDsKey: String = MHPreferenceDescriptors().recentRecipeIDs.storageKey,
         session: WCSession? = WCSession.isSupported() ? .default : nil
     ) {
         self.cookingSessionStore = cookingSessionStore
+        self.modelContext = modelContext
+        self.userDefaults = userDefaults
+        self.recentRecipeIDsKey = recentRecipeIDsKey
         self.session = session
         super.init()
         self.session?.delegate = self
-        cookingSessionStore.setSnapshotChangeHandler { [weak self] snapshot in
-            self?.sendSnapshot(
-                snapshot
-            )
+        cookingSessionStore.setStateChangeHandler { [weak self] _ in
+            self?.sendContext()
         }
-        applyApplicationContext(
+        if let modelContext {
+            saveObserver = NotificationCenter.default.addObserver(
+                forName: ModelContext.didSave,
+                object: modelContext,
+                queue: .main
+            ) { [weak self] _ in
+                MainActor.assumeIsolated {
+                    self?.refreshRecentRecipes()
+                }
+            }
+        }
+        cookingSessionStore.applyReceivedContext(
             session?.receivedApplicationContext ?? [:]
         )
+        refreshRecentRecipes(sends: false)
         self.session?.activate()
     }
 
@@ -30,16 +58,14 @@ final class CookingSessionWatchSyncService: NSObject, WCSessionDelegate {
         activationDidCompleteWith _: WCSessionActivationState,
         error _: (any Error)?
     ) {
-        let encodedSnapshot = session.receivedApplicationContext[
-            "activeCookingSessionSnapshot"
-        ] as? String
+        let context = session.receivedApplicationContext.compactMapValues { $0 as? String }
         Task { @MainActor in
-            self.applyEncodedSnapshot(
-                encodedSnapshot
+            self.cookingSessionStore.applyReceivedContext(
+                context
             )
-            self.sendSnapshot(
-                self.cookingSessionStore.snapshot
-            )
+            self.refreshRecentRecipes(sends: false)
+            // Retry the latest composed context after every activation.
+            self.sendContext()
         }
     }
 
@@ -59,48 +85,55 @@ final class CookingSessionWatchSyncService: NSObject, WCSessionDelegate {
         _: WCSession,
         didReceiveApplicationContext applicationContext: [String: Any]
     ) {
-        let encodedSnapshot = applicationContext[
-            "activeCookingSessionSnapshot"
-        ] as? String
+        let context = applicationContext.compactMapValues { $0 as? String }
         Task { @MainActor in
-            self.applyEncodedSnapshot(
-                encodedSnapshot
+            self.cookingSessionStore.applyReceivedContext(
+                context
             )
         }
     }
 
-    func applyApplicationContext(
-        _ applicationContext: [String: Any]
+    /// Moves an opened recipe to the front of the recent list sent to Watch.
+    /// Opening a recipe never starts or changes a cooking session.
+    func recordOpenedRecipe(
+        _ recipe: Recipe
     ) {
-        let encodedSnapshot = applicationContext[
-            "activeCookingSessionSnapshot"
-        ] as? String
-        applyEncodedSnapshot(
-            encodedSnapshot
+        var history = storedHistory()
+        history.recordOpened(
+            CookingSessionOperations.recentRecipeID(for: recipe)
         )
+        storeHistory(history)
+        refreshRecentRecipes()
     }
 
-    func applyEncodedSnapshot(
-        _ encodedSnapshot: String?
+    /// Rebuilds the recent recipe catalog from current recipes so edits and
+    /// deletions reach Watch. An empty catalog is sent as authoritative.
+    func refreshRecentRecipes(
+        sends: Bool = true
     ) {
-        guard let encodedSnapshot,
-              encodedSnapshot.isEmpty == false,
-              let snapshot = CookingSessionSnapshot.decoded(
-                from: encodedSnapshot
-              ) else {
+        guard let modelContext else {
             return
         }
-
-        cookingSessionStore.applyIncomingSnapshot(
-            snapshot
-        )
+        do {
+            let result = try CookingSessionOperations.recentRecipeCatalog(
+                history: storedHistory(),
+                context: modelContext
+            )
+            storeHistory(result.history)
+            let previousRecipes = recentRecipeCatalog?.recipes
+            recentRecipeCatalog = result.catalog
+            if sends,
+               previousRecipes != result.catalog.recipes {
+                sendContext()
+            }
+        } catch {
+            assertionFailure(error.localizedDescription)
+        }
     }
 
-    func sendSnapshot(
-        _ snapshot: CookingSessionSnapshot?
-    ) {
+    func sendContext() {
         guard let session,
-              canSendSnapshot(
+              canSendContext(
                 with: session
               ) else {
             return
@@ -108,10 +141,10 @@ final class CookingSessionWatchSyncService: NSObject, WCSessionDelegate {
 
         do {
             try session.updateApplicationContext(
-                [
-                    "activeCookingSessionSnapshot":
-                        snapshot?.encodedString() ?? ""
-                ]
+                WatchCompanionContext.composed(
+                    sessionState: cookingSessionStore.localState.shared,
+                    recentRecipeCatalog: recentRecipeCatalog
+                )
             )
         } catch {
             guard isExpectedAvailabilityError(
@@ -128,7 +161,35 @@ final class CookingSessionWatchSyncService: NSObject, WCSessionDelegate {
 }
 
 private extension CookingSessionWatchSyncService {
-    func canSendSnapshot(
+    func storedHistory() -> RecentRecipeHistory {
+        let recipeIDs = userDefaults.string(
+            forKey: recentRecipeIDsKey
+        )
+        .flatMap { value in
+            try? JSONDecoder().decode(
+                [String].self,
+                from: Data(value.utf8)
+            )
+        }
+        return .init(
+            recipeIDs: recipeIDs ?? []
+        )
+    }
+
+    func storeHistory(
+        _ history: RecentRecipeHistory
+    ) {
+        guard let data = try? JSONEncoder().encode(history.recipeIDs),
+              let value = String(bytes: data, encoding: .utf8) else {
+            return
+        }
+        userDefaults.set(
+            value,
+            forKey: recentRecipeIDsKey
+        )
+    }
+
+    func canSendContext(
         with session: WCSession
     ) -> Bool {
         session.activationState == .activated

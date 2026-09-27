@@ -90,6 +90,30 @@ public extension MHPreferenceDescriptors {
         )
     }
 
+    /// Durable cooking session sync state stored in the standard app domain.
+    var cookingSessionState: MHStringPreferenceDescriptor {
+        .init(
+            storageKey: CookleUserDefaultsKeys.Standard.cookingSessionState.rawValue,
+            defaultSelection: .standard
+        )
+    }
+
+    /// Recently opened recipe identifiers used to prepare the Watch catalog.
+    var recentRecipeIDs: MHStringPreferenceDescriptor {
+        .init(
+            storageKey: CookleUserDefaultsKeys.Standard.recentRecipeIDs.rawValue,
+            defaultSelection: .standard
+        )
+    }
+
+    /// The last accepted recent recipe catalog cached on Watch.
+    var recentRecipeCatalog: MHStringPreferenceDescriptor {
+        .init(
+            storageKey: CookleUserDefaultsKeys.Standard.recentRecipeCatalog.rawValue,
+            defaultSelection: .standard
+        )
+    }
+
     /// One-time maintenance flag for detached parent-owned object cleanup.
     var detachedObjectCleanupCompleted: MHBoolPreferenceDescriptor {
         .init(

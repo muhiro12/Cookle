@@ -6,40 +6,51 @@ import Observation
 @Observable
 final class CookingSessionStore {
     private let storageKey: String
+    private let legacyStorageKey: String
     @ObservationIgnored private let userDefaults: UserDefaults
     @ObservationIgnored private let persistsSnapshot: Bool
-    @ObservationIgnored private var snapshotChangeHandler: ((CookingSessionSnapshot?) -> Void)?
+    @ObservationIgnored private var stateChangeHandler: ((CookingSessionSyncState) -> Void)?
 
-    private(set) var snapshot: CookingSessionSnapshot?
+    private(set) var localState: CookingSessionLocalState
+    private(set) var peerStatus: CookingSessionPeerStatus = .compatible
+
+    var snapshot: CookingSessionSnapshot? {
+        localState.shared.current?.snapshot
+    }
 
     var activeSnapshot: CookingSessionSnapshot? {
-        guard let snapshot,
-              snapshot.isActive else {
-            return nil
-        }
+        localState.activeSnapshot
+    }
 
-        return snapshot
+    /// A different session started independently on the paired Watch.
+    var conflictingSnapshot: CookingSessionSnapshot? {
+        localState.pendingConflict?.snapshot
     }
 
     init(
         userDefaults: UserDefaults = .standard,
-        storageKey: String = MHPreferenceDescriptors().activeCookingSessionSnapshot.storageKey,
+        storageKey: String = MHPreferenceDescriptors().cookingSessionState.storageKey,
+        legacyStorageKey: String = MHPreferenceDescriptors().activeCookingSessionSnapshot.storageKey,
         initialSnapshot: CookingSessionSnapshot? = nil,
         persistsSnapshot: Bool = true
     ) {
         self.userDefaults = userDefaults
         self.storageKey = storageKey
+        self.legacyStorageKey = legacyStorageKey
         self.persistsSnapshot = persistsSnapshot
 
         if let initialSnapshot {
-            snapshot = initialSnapshot
+            localState = .migrating(
+                legacySnapshot: initialSnapshot
+            )
         } else if persistsSnapshot {
-            snapshot = Self.restoredSnapshot(
+            localState = Self.restoredState(
                 from: userDefaults,
-                storageKey: storageKey
+                storageKey: storageKey,
+                legacyStorageKey: legacyStorageKey
             )
         } else {
-            snapshot = nil
+            localState = .init()
         }
     }
 
@@ -59,207 +70,223 @@ final class CookingSessionStore {
             return
         }
 
-        applySnapshot(
-            .init(
-                recipeID: RecipeStableIdentifierCodec.stableIdentifier(
-                    for: recipe
-                ),
-                recipeName: recipe.name,
-                steps: recipe.steps,
-                currentStepIndex: .zero,
-                activeTimer: nil,
-                updatedAt: startedAt,
-                isActive: true
+        mutateState { state in
+            state.start(
+                .init(
+                    recipeID: RecipeStableIdentifierCodec.stableIdentifier(
+                        for: recipe
+                    ),
+                    recipeName: recipe.name,
+                    steps: recipe.steps,
+                    currentStepIndex: .zero,
+                    activeTimer: nil,
+                    updatedAt: startedAt,
+                    isActive: true
+                )
             )
-        )
+            return true
+        }
     }
 
     func setCurrentStepIndex(
         _ stepIndex: Int,
         updatedAt: Date = .now
     ) {
-        guard let activeSnapshot else {
-            return
-        }
-
-        applySnapshot(
-            activeSnapshot.settingCurrentStepIndex(
+        updateActiveSession { snapshot in
+            snapshot.settingCurrentStepIndex(
                 stepIndex,
                 updatedAt: updatedAt
             )
-        )
+        }
     }
 
     func returnToPreviousStep(
         updatedAt: Date = .now
     ) {
-        guard let activeSnapshot else {
-            return
-        }
-
-        applySnapshot(
-            activeSnapshot.returningToPreviousStep(
+        updateActiveSession { snapshot in
+            snapshot.returningToPreviousStep(
                 updatedAt: updatedAt
             )
-        )
+        }
     }
 
     func advanceToNextStep(
         updatedAt: Date = .now
     ) {
-        guard let activeSnapshot else {
-            return
-        }
-
-        applySnapshot(
-            activeSnapshot.advancingToNextStep(
+        updateActiveSession { snapshot in
+            snapshot.advancingToNextStep(
                 updatedAt: updatedAt
             )
-        )
+        }
     }
 
     func advanceFromTimerFollowUp(
         updatedAt: Date = .now
     ) {
-        guard let activeSnapshot else {
-            return
+        updateActiveSession { snapshot in
+            snapshot
+                .cancelingTimer(
+                    updatedAt: updatedAt
+                )
+                .advancingToNextStep(
+                    updatedAt: updatedAt
+                )
         }
-
-        let clearedSnapshot = activeSnapshot.cancelingTimer(
-            updatedAt: updatedAt
-        )
-        applySnapshot(
-            clearedSnapshot.advancingToNextStep(
-                updatedAt: updatedAt
-            )
-        )
     }
 
     func startTimer(
         minutes: Int,
         startedAt: Date = .now
     ) {
-        guard let activeSnapshot,
-              minutes > .zero else {
+        guard minutes > .zero else {
             return
         }
 
-        applySnapshot(
-            activeSnapshot.startingTimer(
+        updateActiveSession { snapshot in
+            snapshot.startingTimer(
                 durationMinutes: minutes,
                 startedAt: startedAt
             )
-        )
+        }
     }
 
     func cancelTimer(
         updatedAt: Date = .now
     ) {
-        guard let activeSnapshot else {
-            return
-        }
-
-        applySnapshot(
-            activeSnapshot.cancelingTimer(
+        updateActiveSession { snapshot in
+            snapshot.cancelingTimer(
                 updatedAt: updatedAt
             )
-        )
+        }
     }
 
     func repeatTimer(
         startedAt: Date = .now
     ) {
-        guard let activeSnapshot else {
-            return
-        }
-
-        applySnapshot(
-            activeSnapshot.repeatingTimer(
+        updateActiveSession { snapshot in
+            snapshot.repeatingTimer(
                 startedAt: startedAt
             )
-        )
+        }
     }
 
     func endSession(
         updatedAt: Date = .now
     ) {
-        guard let snapshot else {
-            return
-        }
-
-        applySnapshot(
-            snapshot.endingSession(
+        mutateState { state in
+            state.endActiveSession(
                 updatedAt: updatedAt
             )
-        )
-    }
-
-    func applyIncomingSnapshot(
-        _ incomingSnapshot: CookingSessionSnapshot
-    ) {
-        let mergedSnapshot = if let snapshot {
-            snapshot.merging(
-                with: incomingSnapshot
-            )
-        } else {
-            incomingSnapshot
         }
-
-        applySnapshot(
-            mergedSnapshot
-        )
     }
 
-    func setSnapshotChangeHandler(
-        _ handler: ((CookingSessionSnapshot?) -> Void)?
+    func resolveConflict(
+        keepingLocalSession: Bool
     ) {
-        snapshotChangeHandler = handler
+        mutateState { state in
+            state.resolveConflict(
+                keepingLocalSession: keepingLocalSession
+            )
+        }
+    }
+
+    func applyReceivedContext(
+        _ context: [String: Any]
+    ) {
+        var updatedState = localState
+        let result = CookingSessionOperations.applyReceivedContext(
+            context,
+            to: &updatedState
+        )
+        if let receivedPeerStatus = result.peerStatus,
+           receivedPeerStatus != peerStatus {
+            peerStatus = receivedPeerStatus
+        }
+        guard result.changed else {
+            return
+        }
+        mutateState { state in
+            state = updatedState
+            return true
+        }
+    }
+
+    func setStateChangeHandler(
+        _ handler: ((CookingSessionSyncState) -> Void)?
+    ) {
+        stateChangeHandler = handler
     }
 }
 
 private extension CookingSessionStore {
-    static func restoredSnapshot(
+    static func restoredState(
         from userDefaults: UserDefaults,
-        storageKey: String
-    ) -> CookingSessionSnapshot? {
-        guard let value = userDefaults.string(
+        storageKey: String,
+        legacyStorageKey: String
+    ) -> CookingSessionLocalState {
+        if let value = userDefaults.string(
             forKey: storageKey
-        ) else {
-            return nil
+        ),
+        let state = CookingSessionLocalState.decoded(
+            from: value
+        ) {
+            return state
         }
 
-        return CookingSessionSnapshot.decoded(
-            from: value
+        let legacySnapshot = userDefaults.string(
+            forKey: legacyStorageKey
+        )
+        .flatMap(CookingSessionSnapshot.decoded(from:))
+        return .migrating(
+            legacySnapshot: legacySnapshot
         )
     }
 
-    func applySnapshot(
-        _ updatedSnapshot: CookingSessionSnapshot?
+    func updateActiveSession(
+        _ transform: (CookingSessionSnapshot) -> CookingSessionSnapshot
     ) {
-        guard snapshot != updatedSnapshot else {
+        mutateState { state in
+            state.updateActiveSession(transform)
+        }
+    }
+
+    /// Applies a state change, persists it, then hands the shared state to
+    /// the sync writer so a relaunch never loses a change that was sent.
+    func mutateState(
+        _ mutation: (inout CookingSessionLocalState) -> Bool
+    ) {
+        var updatedState = localState
+        guard mutation(&updatedState),
+              updatedState != localState else {
             return
         }
 
-        snapshot = updatedSnapshot
-        persistSnapshot()
-        snapshotChangeHandler?(updatedSnapshot)
+        localState = updatedState
+        persistState()
+        stateChangeHandler?(updatedState.shared)
     }
 
-    func persistSnapshot() {
+    func persistState() {
         guard persistsSnapshot else {
             return
         }
 
-        guard let encodedSnapshot = snapshot?.encodedString() else {
-            userDefaults.removeObject(
+        if let encodedState = localState.encodedString() {
+            userDefaults.set(
+                encodedState,
                 forKey: storageKey
             )
-            return
         }
-
-        userDefaults.set(
-            encodedSnapshot,
-            forKey: storageKey
-        )
+        // Keep the earlier key readable for local recovery by an older build.
+        if let encodedSnapshot = activeSnapshot?.encodedString() {
+            userDefaults.set(
+                encodedSnapshot,
+                forKey: legacyStorageKey
+            )
+        } else {
+            userDefaults.removeObject(
+                forKey: legacyStorageKey
+            )
+        }
     }
 }

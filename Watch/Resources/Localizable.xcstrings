@@ -35,6 +35,40 @@
         }
       }
     },
+    "%lld steps": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld steps"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld pasos"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld étapes"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lldステップ"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 个步骤"
+          }
+        }
+      }
+    },
     "Begin an active cooking session in Cookle on your iPhone.": {
       "localizations": {
         "en": {
@@ -171,6 +205,40 @@
         }
       }
     },
+    "Copies saved from iPhone. Recent edits appear when iPhone is nearby.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copies saved from iPhone. Recent edits appear when iPhone is nearby."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copias guardadas desde el iPhone. Los cambios recientes aparecen cuando el iPhone está cerca."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copies enregistrées depuis l’iPhone. Les modifications récentes apparaissent quand l’iPhone est à proximité."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iPhoneから保存したコピーです。最近の編集はiPhoneが近くにあるときに反映されます。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "从 iPhone 保存的副本。iPhone 在附近时会显示最近的编辑。"
+          }
+        }
+      }
+    },
     "End Cooking Session?": {
       "localizations": {
         "en": {
@@ -235,6 +303,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "结束会话"
+          }
+        }
+      }
+    },
+    "Keep This Session": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep This Session"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mantener esta sesión"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Garder cette session"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このセッションを続ける"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保留此会话"
           }
         }
       }
@@ -371,6 +473,74 @@
           "stringUnit": {
             "state": "translated",
             "value": "快捷计时器"
+          }
+        }
+      }
+    },
+    "Recently Opened on iPhone": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recently Opened on iPhone"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abiertas recientemente en el iPhone"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvertes récemment sur l’iPhone"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iPhoneで最近開いたレシピ"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最近在 iPhone 上打开"
+          }
+        }
+      }
+    },
+    "Recipes you open on iPhone appear here.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recipes you open on iPhone appear here."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Las recetas que abras en el iPhone aparecen aquí."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les recettes ouvertes sur l’iPhone apparaissent ici."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iPhoneで開いたレシピがここに表示されます。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "你在 iPhone 上打开的菜谱会显示在这里。"
           }
         }
       }
@@ -545,6 +715,40 @@
         }
       }
     },
+    "Switch to iPhone Session": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Switch to iPhone Session"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cambiar a la sesión del iPhone"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passer à la session de l’iPhone"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iPhoneのセッションに切り替える"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "切换到 iPhone 会话"
+          }
+        }
+      }
+    },
     "This stops the active cooking guide and any running timer.": {
       "localizations": {
         "en": {
@@ -643,6 +847,108 @@
           "stringUnit": {
             "state": "translated",
             "value": "计时中"
+          }
+        }
+      }
+    },
+    "Update Cookle on iPhone to sync cooking.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update Cookle on iPhone to sync cooking."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actualiza Cookle en el iPhone para sincronizar la cocina."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mettez à jour Cookle sur l’iPhone pour synchroniser la cuisine."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "調理を同期するにはiPhoneのCookleをアップデートしてください。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请更新 iPhone 上的 Cookle 以同步烹饪。"
+          }
+        }
+      }
+    },
+    "Update Cookle on this Watch to sync cooking.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update Cookle on this Watch to sync cooking."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actualiza Cookle en este Watch para sincronizar la cocina."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mettez à jour Cookle sur cette Watch pour synchroniser la cuisine."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "調理を同期するにはこのWatchのCookleをアップデートしてください。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请更新此手表上的 Cookle 以同步烹饪。"
+          }
+        }
+      }
+    },
+    "iPhone started cooking %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iPhone started cooking %@."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El iPhone empezó a cocinar %@."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’iPhone a commencé à cuisiner %@."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iPhoneで「%@」の調理が始まりました。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iPhone 开始烹饪“%@”。"
           }
         }
       }

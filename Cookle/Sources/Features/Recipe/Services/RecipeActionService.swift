@@ -8,9 +8,13 @@ import SwiftData
 final class RecipeActionService {
     private let effectAdapter: MHMutationAdapter<MutationEffect>
     private let saveLogger: MHLogger
+    private let recordRecentRecipe: @MainActor (Recipe) -> Void
 
     init(
         notificationService: NotificationService,
+        recordRecentRecipe: @escaping @MainActor (Recipe) -> Void = { _ in
+            // no-op
+        },
         reviewFlow: MHReviewFlow,
         saveLogger: MHLogger
     ) {
@@ -21,6 +25,7 @@ final class RecipeActionService {
             reviewFlow: reviewFlow
         )
         self.saveLogger = saveLogger
+        self.recordRecentRecipe = recordRecentRecipe
     }
 
     @discardableResult
@@ -168,7 +173,8 @@ final class RecipeActionService {
     func recordOpenedRecipe(
         _ recipe: Recipe
     ) async throws -> MutationOutcome<Void> {
-        try await run(
+        recordRecentRecipe(recipe)
+        return try await run(
             name: "recordOpenedRecipe",
             context: nil,
             requestReview: false
