@@ -9,6 +9,7 @@ enum CookleCaptureScreen: String {
     case recipeForm
     case cooking
     case photo
+    case backupImport
 
     /// Indicates whether the capture run opens the recipe edit form over the recipe detail.
     var presentsRecipeForm: Bool {
@@ -63,6 +64,8 @@ enum CookleCaptureScreen: String {
             if let recipe = recipes.first {
                 cookingSessionStore.startSession(for: recipe)
             }
+        case .backupImport:
+            navigationModel.selectedTab = .settings
         case .photo:
             navigationModel.selectedTab = .photo
         }

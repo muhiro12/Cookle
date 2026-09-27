@@ -1,4 +1,5 @@
 import Foundation
+import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -10,6 +11,7 @@ struct BackupFileTransferModifier: ViewModifier {
 
     @Bindable var model: SettingsScreenModel
 
+    let modelContainer: ModelContainer
     let settingsActionService: SettingsActionService
     @State private var importRequest: ImportRequest?
 
@@ -57,8 +59,9 @@ private extension BackupFileTransferModifier {
         guard let importRequest else {
             return
         }
-        await model.prepareBackupRestore(
+        await model.prepareBackupImport(
             from: importRequest.url,
+            modelContainer: modelContainer,
             settingsActionService: settingsActionService
         )
         if self.importRequest?.id == importRequest.id {

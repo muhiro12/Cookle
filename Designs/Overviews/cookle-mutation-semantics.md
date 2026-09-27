@@ -267,3 +267,36 @@ contract — `ReviewedRecipeDeletionTests` and `ReviewedTagMutationTests`;
 This review does not change deletion, ingredient quantity/order preservation,
 or historical diary reference semantics described above. It does not provide
 after-save undo or reverse writes already synchronized to another device.
+
+## 9) Backup merge import
+
+Settings imports merge into current data after a review. Backup-local identifiers
+are not persistent identities. Recipe names identify possible matches; recipe
+content determines equality. A single identical match is reused, while ambiguous
+or different matches require an explicit choice. The choices keep a selected
+current recipe, update it in place from the backup, or add a separate recipe.
+Imported diary references follow that choice. Updating a current recipe also
+changes what its existing diary references display. `[source confirmed]`
+
+Diary matching uses the review's calendar day. Different same-day diaries require
+keeping current content, replacing that day's meals and note, or combining both.
+Combining preserves the larger occurrence count for each recipe and meal type,
+keeps existing row order, appends missing backup rows, and retains different
+notes with a separator. An existing duplicate day must be resolved before that
+day can be imported. Unrelated records remain in place. `[runtime confirmed]` —
+`CookleDataImportRecipeTests` and `CookleDataImportDiaryTests`.
+
+Reviewing does not mutate data. Applying validates the archive, binds approval to
+its content, rechecks current affected data, and validates all choices before a
+single save. Stale review requires renewed confirmation. Photos are reused only
+when both bytes and source match; repeated note combinations do not append the
+same backup note again. Failed replacement preserves the original on-disk recipe,
+photo rows and diary references after reopening. `[runtime confirmed]` —
+`CookleDataImportSafetyTests`.
+
+The legacy replacement operation remains for compatibility verification; Settings
+uses reviewed merge Operations. Import does not supply automatic undo, and a
+local rollback does not reverse writes already synchronized elsewhere. Exporting
+a separate backup beforehand preserves recovery material but does not promise an
+automatic return to the pre-import graph. Two-device iCloud convergence remains a
+separate verification requirement.

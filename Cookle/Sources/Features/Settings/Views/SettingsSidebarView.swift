@@ -1,10 +1,3 @@
-//
-//  SettingsSidebarView.swift
-//  Cookle Playgrounds
-//
-//  Created by Hiromu Nakano on 9/17/24.
-//
-
 import MHPlatform
 import MHUI
 import SwiftData
@@ -17,7 +10,7 @@ struct SettingsSidebarView: View {
         static let bottomContentMargin: CGFloat = 96
     }
 
-    @State private var model = SettingsScreenModel()
+    private let model: SettingsScreenModel
     @State private var isDebugPresented = false
 
     @Environment(\.modelContext)
@@ -260,7 +253,11 @@ struct SettingsSidebarView: View {
         }
     }
 
-    init(selection: Binding<SettingsContent?> = .constant(nil)) {
+    init(
+        model: SettingsScreenModel,
+        selection: Binding<SettingsContent?> = .constant(nil)
+    ) {
+        self.model = model
         self._content = selection
     }
 }
@@ -395,6 +392,6 @@ private extension SettingsSidebarView {
 
 #Preview(traits: .modifier(CookleSampleData())) {
     NavigationStack {
-        SettingsSidebarView()
+        SettingsSidebarView(model: .init())
     }
 }

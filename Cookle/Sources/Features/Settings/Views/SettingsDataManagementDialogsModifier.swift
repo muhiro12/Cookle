@@ -13,15 +13,8 @@ struct SettingsDataManagementDialogsModifier: ViewModifier {
             .modifier(
                 BackupFileTransferModifier(
                     model: model,
-                    settingsActionService: settingsActionService
-                )
-            )
-            .modifier(
-                RestoreBackupConfirmationDialogModifier(
-                    model: model,
                     modelContainer: modelContainer,
-                    settingsActionService: settingsActionService,
-                    isICloudEnabled: isICloudEnabled
+                    settingsActionService: settingsActionService
                 )
             )
             .modifier(

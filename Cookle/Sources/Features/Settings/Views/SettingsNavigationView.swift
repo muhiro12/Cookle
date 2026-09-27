@@ -1,7 +1,22 @@
+import MHPlatform
+import SwiftData
 import SwiftUI
 
 struct SettingsNavigationView: View {
+    @Environment(\.modelContext)
+    private var context
+    @Environment(SettingsActionService.self)
+    private var settingsActionService
+
+    @AppStorage(\.isICloudOn)
+    private var isICloudOn
+
     @Binding private var incomingSelection: SettingsContent?
+
+    /// Owned above the split layout so a pending import review survives size-class changes.
+    @State private var model = SettingsScreenModel()
+
+    @State private var hasPreparedCaptureImport = false
 
     @State private var selection: SettingsContent?
     @State private var columnVisibility = NavigationSplitViewVisibility.all
@@ -13,13 +28,22 @@ struct SettingsNavigationView: View {
             columnVisibility: $columnVisibility,
             preferredCompactColumn: $preferredCompactColumn
         ) {
-            SettingsSidebarView(selection: $selection)
+            SettingsSidebarView(
+                model: model,
+                selection: $selection
+            )
         } detail: {
             detailView(for: selection)
         }
         .task {
             applyInitialCompactColumnIfNeeded()
             applyIncomingSelectionIfNeeded()
+            #if DEBUG
+            if hasPreparedCaptureImport == false {
+                hasPreparedCaptureImport = true
+                model.prepareCaptureImportIfNeeded(context: context)
+            }
+            #endif
         }
         .onChange(of: incomingSelection) {
             applyIncomingSelectionIfNeeded()
@@ -27,6 +51,12 @@ struct SettingsNavigationView: View {
         .onChange(of: selection) {
             syncPreferredCompactColumn()
         }
+        .backupImportReview(
+            model: model,
+            modelContainer: context.container,
+            settingsActionService: settingsActionService,
+            isICloudEnabled: isICloudOn
+        )
     }
 
     init(

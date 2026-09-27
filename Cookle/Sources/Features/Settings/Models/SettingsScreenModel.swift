@@ -18,14 +18,15 @@ final class SettingsScreenModel {
     var isDeleteAllConfirmationPresented = false
     var isBackupExporterPresented = false
     var isBackupImporterPresented = false
-    var isRestoreConfirmationPresented = false
+    var isImportReviewPresented = false
     var isManageActionInProgress = false
     var isDailySuggestionTipEligible = false
     var isSubscriptionTipEligible = false
     var isShortcutsTipEligible = false
     var backupDocument: CookleDataArchiveDocument?
     var backupFilename = "Cookle-Backup.cooklebackup"
-    var pendingRestoreArchive: CookleDataArchive?
+    var pendingImport: PendingBackupImport?
+    var importErrorMessage: String?
     var errorMessage: String?
     var statusMessage: String?
 
@@ -85,8 +86,10 @@ final class SettingsScreenModel {
         }
     }
 
-    func prepareBackupRestore(
+    /// Validates the chosen file and builds its merge review without changing data.
+    func prepareBackupImport(
         from url: URL,
+        modelContainer: ModelContainer,
         settingsActionService: SettingsActionService
     ) async {
         guard beginManageAction() else {
@@ -97,48 +100,77 @@ final class SettingsScreenModel {
         }
 
         do {
-            pendingRestoreArchive = try await settingsActionService.validatedBackupArchive(
+            let archive = try await settingsActionService.validatedBackupArchive(
                 from: url
             )
-            isRestoreConfirmationPresented = true
+            pendingImport = .init(
+                archive: archive,
+                review: try settingsActionService.importReview(
+                    for: archive,
+                    modelContainer: modelContainer
+                )
+            )
+            importErrorMessage = nil
+            isImportReviewPresented = true
         } catch is CancellationError {
-            pendingRestoreArchive = nil
+            pendingImport = nil
         } catch {
-            pendingRestoreArchive = nil
+            pendingImport = nil
             errorMessage = error.localizedDescription
         }
     }
 
-    func restorePendingBackup(
+    /// Merges the pending backup with the chosen conflict resolutions.
+    ///
+    /// When current data changed after the review, the review is rebuilt,
+    /// choices for changed conflicts are cleared, and nothing is imported until
+    /// the user confirms again. Other failures keep the review for a retry.
+    func importPendingBackup(
         modelContainer: ModelContainer,
         settingsActionService: SettingsActionService
-    ) async -> Bool {
-        guard let pendingRestoreArchive,
+    ) async {
+        guard var pendingImport,
+              pendingImport.isReadyToImport,
               beginManageAction() else {
-            return false
+            return
         }
         defer {
             isManageActionInProgress = false
-            self.pendingRestoreArchive = nil
         }
 
+        importErrorMessage = nil
         do {
-            let summary = try await settingsActionService.restoreBackup(
-                pendingRestoreArchive,
+            let summary = try await settingsActionService.importBackup(
+                pendingImport.archive,
+                review: pendingImport.review,
+                selections: pendingImport.selections,
                 modelContainer: modelContainer
             )
-            statusMessage = Self.restoreMessage(
-                summary
+            self.pendingImport = nil
+            isImportReviewPresented = false
+            statusMessage = Self.importMessage(summary)
+        } catch CookleDataImportError.reviewChanged(let currentReview) {
+            pendingImport.selections = pendingImport.selections.retainingUnchangedChoices(
+                from: pendingImport.review,
+                in: currentReview
             )
-            return true
+            pendingImport.review = currentReview
+            pendingImport.presentationID = UUID()
+            pendingImport.isReviewRefreshed = true
+            self.pendingImport = pendingImport
         } catch {
-            errorMessage = error.localizedDescription
-            return false
+            importErrorMessage = error.localizedDescription
         }
     }
 
-    func cancelPendingRestore() {
-        pendingRestoreArchive = nil
+    func cancelPendingImport() {
+        guard isManageActionInProgress == false else {
+            return
+        }
+
+        pendingImport = nil
+        importErrorMessage = nil
+        isImportReviewPresented = false
     }
 
     func deleteAllData(
@@ -242,17 +274,30 @@ private extension SettingsScreenModel {
         return "Cookle-Backup-\(formatter.string(from: now)).cooklebackup"
     }
 
-    static func restoreMessage(_ summary: CookleDataRestoreSummary) -> String {
-        // One sentence rather than joined fragments: word order and the
-        // position of each count differ per language, so the pieces cannot be
-        // translated separately.
-        String(
+    static func importMessage(_ summary: CookleDataImportSummary) -> String {
+        // Whole sentences rather than joined fragments: word order and the
+        // position of each count differ per language.
+        let recipes = String(
             localized: """
-            Restored \(summary.recipeCount) recipes, \(summary.diaryCount) diaries, \
-            \(summary.categoryCount) categories, \(summary.ingredientCount) ingredients, \
-            \(summary.photoCount) photos.
+            Recipes: \(summary.addedRecipeCount) added, \(summary.updatedRecipeCount) replaced, \
+            \(summary.keptRecipeCount) kept, \(summary.unchangedRecipeCount) unchanged.
             """
         )
+        let diaries = String(
+            localized: """
+            Diaries: \(summary.addedDiaryCount) added, \(summary.updatedDiaryCount) replaced, \
+            \(summary.combinedDiaryCount) combined, \(summary.keptDiaryCount) kept, \
+            \(summary.unchangedDiaryCount) unchanged.
+            """
+        )
+        let photos = String(localized: "Photos added: \(summary.addedPhotoCount).")
+        return [
+            String(localized: "The backup was merged into your data."),
+            recipes,
+            diaries,
+            photos
+        ]
+        .joined(separator: "\n")
     }
 
     func beginManageAction() -> Bool {

@@ -14,7 +14,7 @@ struct SettingsDataManagementSection: View {
                 backupExportRequestID = UUID()
             }
             .disabled(isManageActionUnavailable)
-            Button("Restore Backup", systemImage: "square.and.arrow.down") {
+            Button("Import Backup", systemImage: "square.and.arrow.down") {
                 model.isBackupImporterPresented = true
             }
             .disabled(isManageActionUnavailable)
@@ -35,14 +35,16 @@ struct SettingsDataManagementSection: View {
             if isICloudEnabled {
                 Text(
                     """
-                    Export a backup before destructive actions. Restore and Delete All changes sync to \
-                    other devices using the same iCloud account.
+                    Export a backup before importing or deleting. Importing merges a backup into your \
+                    data after you review each conflict. Imports and Delete All sync to other devices \
+                    using the same iCloud account.
                     """
                 )
             } else {
                 Text(
                     """
-                    Export a backup before destructive actions. Delete All permanently removes recipes, \
+                    Export a backup before importing or deleting. Importing merges a backup into your \
+                    data after you review each conflict. Delete All permanently removes recipes, \
                     diaries, tags, and photos from this device.
                     """
                 )
