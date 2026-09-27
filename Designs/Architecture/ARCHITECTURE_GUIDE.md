@@ -317,11 +317,31 @@ these interactions. The material copy may differ from an older resumed step
 snapshot; closing and reopening the view refreshes materials from the recipe.
 It is not a new cross-device material snapshot contract.
 
-The existing cooking session snapshot remains separate. It persists to
-UserDefaults and participates in Watch synchronization; ending it clears its
-timer and sets its existing active flag to false. Do not remove or change that
-storage/wire contract merely to change the reading UI. Future storage changes
-must explicitly address relaunch recovery, stale updates and paired devices.
+Cooking session state remains separate from SwiftData and persists in
+UserDefaults on both devices before delivery through WatchConnectivity.
+Session identities combine an installation identifier and a start sequence;
+logical revisions order edits without relying on device clocks. Retirement
+records prevent delayed active updates from reviving an ended session. Ending
+a session also clears its timer.
+
+Independently started sessions require an explicit keep-or-switch choice.
+Choice records resolve concurrent decisions deterministically without treating
+both sessions as ended. An explicit end still takes precedence over a choice.
+The shared reducer owns these rules; phone and Watch adapters own persistence,
+delivery, and presentation. A locally saved legacy snapshot can be recovered,
+but legacy peer payloads cannot participate in the new synchronization protocol.
+Both devices must run compatible versions for session synchronization.
+
+The phone also maintains a recent-recipe history and sends up to five usable
+recipes for offline Watch starts. This bounded cache contains recipe identifiers,
+titles, and complete steps, with a 24 KB encoded catalog limit; oversized recipes
+are omitted rather than truncated. Opening a recipe, saving local changes,
+returning to the foreground, or activating WatchConnectivity refreshes the
+catalog. Delivery is eventual, and the Watch labels these recipes as saved copies.
+Starting from a copy is explicit. Updating the catalog does not replace the
+steps of an active session. One composed application context carries the catalog
+and session state so sending either cannot discard the other. Neither this cache
+nor session synchronization changes the SwiftData schema or backup format.
 
 Registering a recipe from Diary selection is an explicit independent save.
 Before saving, explain that the recipe survives cancellation of the later Diary.
