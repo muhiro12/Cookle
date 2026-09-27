@@ -68,7 +68,50 @@ public enum DataMaintenanceOperations {
         )
     }
 
+    /// Reviews how merging a validated archive into current data would go,
+    /// without changing the store.
+    ///
+    /// - Throws: `CookleDataImportError.duplicateCurrentDiaryDays` when a day the
+    ///   backup touches already has several diaries, which must be merged first.
+    public static func importReview(
+        for archive: CookleDataArchive,
+        context: ModelContext,
+        calendar: Calendar = .current
+    ) throws -> CookleDataImportReview {
+        try CookleDataImportService.review(
+            for: archive,
+            context: context,
+            calendar: calendar
+        )
+    }
+
+    /// Merges a validated archive into current data using a choice for every conflict.
+    ///
+    /// Nothing changes unless the review still matches current data and the
+    /// choices resolve every conflict. All changes are saved together.
+    ///
+    /// - Throws: `CookleDataImportError.reviewChanged` with a rebuilt review when
+    ///   current data or the archive changed, `CookleDataImportError.invalidSelections`
+    ///   for missing or invalid choices, or the save error after rolling back.
+    public static func importArchive(
+        _ archive: CookleDataArchive,
+        review: CookleDataImportReview,
+        selections: CookleDataImportSelections,
+        context: ModelContext
+    ) throws -> CookleDataImportSummary {
+        try CookleDataImportService.apply(
+            archive,
+            review: review,
+            selections: selections,
+            context: context
+        )
+    }
+
     /// Replaces current persisted user data with the supplied validated archive.
+    ///
+    /// Retained for compatibility checks of the replacement format; user-facing
+    /// imports merge through `importReview(for:context:calendar:)` and
+    /// `importArchive(_:review:selections:context:)` instead.
     public static func restore(
         _ archive: CookleDataArchive,
         context: ModelContext
