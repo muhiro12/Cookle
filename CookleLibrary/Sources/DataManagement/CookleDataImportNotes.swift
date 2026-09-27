@@ -11,6 +11,11 @@ enum CookleDataImportNotes {
         if trimmedBackup.isEmpty || trimmedCurrent == trimmedBackup {
             return current
         }
+        if current.hasSuffix(separator + backup)
+            || current.hasPrefix(backup + separator)
+            || current.contains(separator + backup + separator) {
+            return current
+        }
         if trimmedCurrent.isEmpty {
             return backup
         }

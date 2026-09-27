@@ -16,8 +16,8 @@ public struct CookleDataImportReview: Equatable, Sendable {
         public let data: Data
         /// Stored photo source identifier.
         public let sourceID: String
-
-        let digest: Data
+        /// SHA-256 digest of the image bytes, stable for the same image.
+        public let digest: Data
 
         public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.digest == rhs.digest && lhs.sourceID == rhs.sourceID
@@ -63,6 +63,7 @@ public struct CookleDataImportReview: Equatable, Sendable {
         public let diaryMealRowCount: Int
         /// Indicates whether the backup content is identical to this recipe.
         public let isIdenticalToBackup: Bool
+        let diaryReview: RecipeDeletionReview
     }
 
     /// A backup recipe whose name matches current recipes with different
@@ -82,6 +83,7 @@ public struct CookleDataImportReview: Equatable, Sendable {
         public let type: DiaryObjectType
         /// Name of the recipe the row shows.
         public let recipeName: String
+        let recipeID: PersistentIdentifier?
     }
 
     /// Comparable content of one diary day.
@@ -121,22 +123,12 @@ public struct CookleDataImportReview: Equatable, Sendable {
     /// Diary day collisions that each need a choice.
     public let diaryConflicts: [DiaryConflict]
 
-    let archiveIdentity: ArchiveIdentity
+    let archiveIdentity: Data
     let unchangedRecipeTargets: [String: PersistentIdentifier]
     let unchangedDiaryTargets: [String: PersistentIdentifier]
 
     /// Indicates whether anything needs a choice before importing.
     public var hasConflicts: Bool {
         recipeConflicts.isEmpty == false || diaryConflicts.isEmpty == false
-    }
-}
-
-extension CookleDataImportReview {
-    /// Distinguishes the backup a review was built from.
-    struct ArchiveIdentity: Equatable, Sendable {
-        let exportedAt: Date
-        let recipeIDs: [String]
-        let diaryIDs: [String]
-        let photoIDs: [String]
     }
 }

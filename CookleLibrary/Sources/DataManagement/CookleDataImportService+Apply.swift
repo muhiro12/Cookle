@@ -17,6 +17,7 @@ extension CookleDataImportService {
             try context.save()
         }
     ) throws -> CookleDataImportSummary {
+        try Task.checkCancellation()
         try CookleDataArchiveService.validate(
             archive,
             calendar: review.calendar,

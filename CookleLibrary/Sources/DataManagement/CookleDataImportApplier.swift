@@ -121,7 +121,7 @@ private extension CookleDataImportApplier {
         )
         for record in archive.diaries where review.unchangedDiaryTargets[record.id] == nil {
             guard let conflict = conflicts[record.id] else {
-                _ = try Diary.restore(
+                _ = Diary.restore(
                     context: context,
                     content: .init(
                         date: record.date,
@@ -170,7 +170,7 @@ private extension CookleDataImportApplier {
     }
 
     func insertRecipe(_ record: CookleDataArchive.RecipeRecord) throws -> Recipe {
-        try Recipe.restore(
+        Recipe.restore(
             context: context,
             content: try content(of: record),
             timestamps: .init(created: record.createdTimestamp, modified: record.modifiedTimestamp)
@@ -340,9 +340,9 @@ private extension CookleDataImportApplier {
             throw ArchiveError.missingReference(recordID)
         }
 
-        // The same image is one shared asset; an existing asset keeps its source.
+        // Reuse only matching bytes and source; neither version loses provenance.
         if let existing = photoIndex[digest]?.first(where: { photo in
-            photo.data == record.data
+            photo.data == record.data && photo.sourceID == record.sourceID
         }) {
             resolvedPhotos[recordID] = existing
             return existing

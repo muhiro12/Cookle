@@ -27,8 +27,9 @@ enum CookleDataImportService {
         context: ModelContext,
         calendar: Calendar
     ) throws -> CookleDataImportReview {
+        try CookleDataArchiveService.validate(archive, calendar: calendar, limits: .standard)
         let builder = CookleDataImportSnapshotBuilder(archive: archive)
-        let recipes = try classifyRecipes(
+        let recipes = classifyRecipes(
             archive: archive,
             currentRecipes: try context.fetch(.recipes(.all)),
             builder: builder
@@ -47,12 +48,7 @@ enum CookleDataImportService {
             unchangedDiaryCount: diaries.unchangedTargets.count,
             recipeConflicts: recipes.conflicts,
             diaryConflicts: diaries.conflicts,
-            archiveIdentity: .init(
-                exportedAt: archive.exportedAt,
-                recipeIDs: archive.recipes.map(\.id),
-                diaryIDs: archive.diaries.map(\.id),
-                photoIDs: archive.photos.map(\.id)
-            ),
+            archiveIdentity: try builder.archiveIdentity(),
             unchangedRecipeTargets: recipes.unchangedTargets,
             unchangedDiaryTargets: diaries.unchangedTargets
         )
@@ -117,11 +113,12 @@ private extension CookleDataImportService {
                     id: recipe.persistentModelID,
                     recipe: current,
                     diaryMealRowCount: (recipe.diaryObjects ?? []).count,
-                    isIdenticalToBackup: current == backup
+                    isIdenticalToBackup: current == backup,
+                    diaryReview: .init(recipe: recipe)
                 )
             }
             let identical = candidates.filter(\.isIdenticalToBackup)
-            if identical.count == 1, let target = identical.first {
+            if candidates.count == 1, let target = identical.first {
                 classification.unchangedTargets[record.id] = target.id
             } else {
                 classification.conflicts.append(
@@ -191,20 +188,26 @@ private extension CookleDataImportService {
         }
 
         var backupMeals = [MealKey]()
-        for object in record.objects {
+        let orderedBackup = record.objects.sorted { lhs, rhs in
+            (MealKey.index(of: lhs.type), lhs.order) < (MealKey.index(of: rhs.type), rhs.order)
+        }
+        for object in orderedBackup {
             guard let target = unchangedRecipeTargets[object.recipeID] else {
                 return false
             }
             backupMeals.append(.init(type: object.type, recipeID: target))
         }
-        let currentMeals = (diary.objects ?? []).compactMap { object -> MealKey? in
+        let orderedCurrent = (diary.objects ?? []).sorted { lhs, rhs in
+            (MealKey.index(of: lhs.type), lhs.order) < (MealKey.index(of: rhs.type), rhs.order)
+        }
+        let currentMeals = orderedCurrent.compactMap { object -> MealKey? in
             guard let type = object.type,
                   let recipe = object.recipe else {
                 return nil
             }
             return .init(type: type, recipeID: recipe.persistentModelID)
         }
-        return MealKey.counts(backupMeals) == MealKey.counts(currentMeals)
+        return backupMeals == currentMeals
     }
 
     static func snapshot(of diary: Diary) -> CookleDataImportReview.DiarySnapshot {
@@ -217,7 +220,11 @@ private extension CookleDataImportService {
                     guard let type = object.type else {
                         return nil
                     }
-                    return .init(type: type, recipeName: object.recipe?.name ?? "")
+                    return .init(
+                        type: type,
+                        recipeName: object.recipe?.name ?? "",
+                        recipeID: object.recipe?.persistentModelID
+                    )
                 },
             note: diary.note
         )
@@ -233,7 +240,7 @@ private extension CookleDataImportService {
                     (MealKey.index(of: lhs.type), lhs.order) < (MealKey.index(of: rhs.type), rhs.order)
                 }
                 .map { object in
-                    .init(type: object.type, recipeName: recipeNames[object.recipeID] ?? "")
+                    .init(type: object.type, recipeName: recipeNames[object.recipeID] ?? "", recipeID: nil)
                 },
             note: record.note
         )

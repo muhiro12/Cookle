@@ -85,6 +85,30 @@ final class CookleDataImportSnapshotBuilder {
         return digest
     }
 
+    /// Binds approval to all backup content without encoding full image bytes again.
+    func archiveIdentity() throws -> Data {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .sortedKeys
+        var hash = SHA256()
+        hash.update(data: try encoder.encode(archive.formatVersion))
+        hash.update(data: try encoder.encode(archive.exportedAt))
+        hash.update(data: try encoder.encode(archive.ingredients))
+        hash.update(data: try encoder.encode(archive.categories))
+        hash.update(data: try encoder.encode(archive.recipes))
+        hash.update(data: try encoder.encode(archive.diaries))
+        for photo in archive.photos {
+            let compact = CookleDataArchive.PhotoRecord(
+                id: photo.id,
+                data: archiveDigest(forPhotoID: photo.id) ?? Data(),
+                sourceID: photo.sourceID,
+                createdTimestamp: photo.createdTimestamp,
+                modifiedTimestamp: photo.modifiedTimestamp
+            )
+            hash.update(data: try encoder.encode(compact))
+        }
+        return Data(hash.finalize())
+    }
+
     func snapshot(
         of record: CookleDataArchive.RecipeRecord
     ) -> CookleDataImportReview.RecipeSnapshot {
