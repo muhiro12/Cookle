@@ -14,14 +14,20 @@ public enum DiaryPredicate {
     case all
     /// Excludes every diary from the fetch.
     case matchingNone
+    /// Includes only the diary with the supplied persistent identifier.
+    case idIs(PersistentIdentifier)
 
     /// SwiftData predicate that preserves the semantics of the selected query case.
     public var value: Predicate<Diary> {
         switch self {
         case .all:
-            .true
+            return .true
         case .matchingNone:
-            .false
+            return .false
+        case .idIs(let id):
+            return #Predicate<Diary> { diary in
+                diary.persistentModelID == id
+            }
         }
     }
 }

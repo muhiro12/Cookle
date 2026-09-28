@@ -84,8 +84,13 @@ enum RecipeFormService {
         recipe: Recipe,
         draft: RecipeFormDraft
     ) throws -> MutationOutcome<Recipe> {
-        let previousPhotoObjects = (recipe.photoObjects ?? [])
-        let previousIngredientObjects = (recipe.ingredientObjects ?? [])
+        guard let currentRecipe = try context.fetchFirst(
+            .recipes(.idIs(recipe.persistentModelID))
+        ) else {
+            throw ReviewedMutationError.targetMissing
+        }
+        let previousPhotoObjects = (currentRecipe.photoObjects ?? [])
+        let previousIngredientObjects = (currentRecipe.ingredientObjects ?? [])
         let updatedPhotoObjects = try zip(
             draft.photos.indices,
             draft.photos
@@ -108,7 +113,7 @@ enum RecipeFormService {
             )
         }
 
-        recipe.update(
+        currentRecipe.update(
             content: .init(
                 name: draft.name,
                 photos: updatedPhotoObjects,
@@ -126,7 +131,7 @@ enum RecipeFormService {
         previousPhotoObjects.forEach(context.delete)
         previousIngredientObjects.forEach(context.delete)
         return .init(
-            value: recipe,
+            value: currentRecipe,
             effects: recipeMutationEffects
         )
     }

@@ -83,13 +83,18 @@ enum DiaryService {
         type: DiaryObjectType,
         calendar: Calendar = .current
     ) throws -> MutationOutcome<Diary> {
+        guard let currentRecipe = try context.fetchFirst(
+            .recipes(.idIs(recipe.persistentModelID))
+        ) else {
+            throw ReviewedMutationError.targetMissing
+        }
         if let existing = try diary(
             on: date,
             context: context,
             calendar: calendar
         ) {
             var meals = mealRecipes(from: (existing.objects ?? []))
-            append(recipe: recipe, to: &meals, for: type)
+            append(recipe: currentRecipe, to: &meals, for: type)
             let outcome = try Self.updateWithOutcome(
                 context: context,
                 diary: existing,
@@ -110,7 +115,7 @@ enum DiaryService {
         return try createNewDiaryOutcome(
             context: context,
             date: date,
-            recipe: recipe,
+            recipe: currentRecipe,
             type: type,
             calendar: calendar
         )
@@ -142,19 +147,20 @@ enum DiaryService {
             throw DiaryDayConflictError.dayAlreadyOccupied
         }
 
-        let objects = zip(input.breakfasts.indices, input.breakfasts).map { index, recipe in
+        let currentInput = try resolvedInput(for: input, context: context)
+        let objects = zip(currentInput.breakfasts.indices, currentInput.breakfasts).map { index, recipe in
             DiaryObject.create(context: context, recipe: recipe, type: .breakfast, order: index + 1)
-        } + zip(input.lunches.indices, input.lunches).map { index, recipe in
+        } + zip(currentInput.lunches.indices, currentInput.lunches).map { index, recipe in
             DiaryObject.create(context: context, recipe: recipe, type: .lunch, order: index + 1)
-        } + zip(input.dinners.indices, input.dinners).map { index, recipe in
+        } + zip(currentInput.dinners.indices, currentInput.dinners).map { index, recipe in
             DiaryObject.create(context: context, recipe: recipe, type: .dinner, order: index + 1)
         }
         let diary = Diary.create(
             context: context,
             content: .init(
-                date: input.date,
+                date: currentInput.date,
                 objects: objects,
-                note: input.note
+                note: currentInput.note
             )
         )
         return .init(
@@ -185,43 +191,49 @@ enum DiaryService {
         input: DiaryFormInput,
         calendar: Calendar = .current
     ) throws -> MutationOutcome<Diary> {
+        guard let currentDiary = try context.fetchFirst(
+            .diaries(.idIs(diary.persistentModelID))
+        ) else {
+            throw ReviewedMutationError.targetMissing
+        }
+        let currentInput = try resolvedInput(for: input, context: context)
         let isKeepingCalendarDay = calendar.isDate(
-            diary.date,
-            inSameDayAs: input.date
+            currentDiary.date,
+            inSameDayAs: currentInput.date
         )
         let conflictingDiaryExists = if isKeepingCalendarDay {
             false
         } else {
             try diaries(
-                on: input.date,
+                on: currentInput.date,
                 context: context,
                 calendar: calendar
             ).contains { existingDiary in
-                existingDiary !== diary
+                existingDiary !== currentDiary
             }
         }
         guard conflictingDiaryExists == false else {
             throw DiaryDayConflictError.dayAlreadyOccupied
         }
 
-        let previousObjects = (diary.objects ?? [])
-        let objects = zip(input.breakfasts.indices, input.breakfasts).map { index, recipe in
+        let previousObjects = (currentDiary.objects ?? [])
+        let objects = zip(currentInput.breakfasts.indices, currentInput.breakfasts).map { index, recipe in
             DiaryObject.create(context: context, recipe: recipe, type: .breakfast, order: index + 1)
-        } + zip(input.lunches.indices, input.lunches).map { index, recipe in
+        } + zip(currentInput.lunches.indices, currentInput.lunches).map { index, recipe in
             DiaryObject.create(context: context, recipe: recipe, type: .lunch, order: index + 1)
-        } + zip(input.dinners.indices, input.dinners).map { index, recipe in
+        } + zip(currentInput.dinners.indices, currentInput.dinners).map { index, recipe in
             DiaryObject.create(context: context, recipe: recipe, type: .dinner, order: index + 1)
         }
-        diary.update(
+        currentDiary.update(
             content: .init(
-                date: input.date,
+                date: currentInput.date,
                 objects: objects,
-                note: input.note
+                note: currentInput.note
             )
         )
         previousObjects.forEach(context.delete)
         return .init(
-            value: diary,
+            value: currentDiary,
             effects: diaryMutationEffects
         )
     }
@@ -264,6 +276,29 @@ private extension DiaryService {
             .diaryDataChanged,
             .notificationPlanChanged
         ]
+    }
+
+    static func resolvedInput(
+        for input: DiaryFormInput,
+        context: ModelContext
+    ) throws -> DiaryFormInput {
+        func resolve(_ recipes: [Recipe]) throws -> [Recipe] {
+            try recipes.map { recipe in
+                guard let current = try context.fetchFirst(
+                    .recipes(.idIs(recipe.persistentModelID))
+                ) else {
+                    throw ReviewedMutationError.targetMissing
+                }
+                return current
+            }
+        }
+        return try .init(
+            date: input.date,
+            breakfasts: resolve(input.breakfasts),
+            lunches: resolve(input.lunches),
+            dinners: resolve(input.dinners),
+            note: input.note
+        )
     }
 
     static func mealRecipes(from objects: [DiaryObject]) -> MealRecipes {
