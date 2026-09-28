@@ -35,10 +35,21 @@ struct WatchActiveCookingView: View {
             } message: {
                 Text("This stops the active cooking guide and any running timer.")
             }
+            .onChange(of: hasActiveSession) { _, hasActiveSession in
+                // A session ended here or from iPhone leaves nothing to confirm.
+                guard hasActiveSession == false else {
+                    return
+                }
+                isEndSessionConfirmationPresented = false
+            }
     }
 }
 
 private extension WatchActiveCookingView {
+    var hasActiveSession: Bool {
+        cookingSessionStore.activeSnapshot != nil
+    }
+
     var sessionNavigationTitle: Text {
         guard let recipeName = cookingSessionStore.activeSnapshot?.recipeName else {
             return Text("Cooking")
