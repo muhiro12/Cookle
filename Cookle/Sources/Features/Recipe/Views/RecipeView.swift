@@ -114,7 +114,7 @@ private extension RecipeView {
     @ViewBuilder var recipeSections: some View {
         RecipeIngredientsSection(presentation: .mhui)
         RecipeStepsSection(presentation: .reading)
-        AdvertisementSection(.medium)
+        AdvertisementSection(.media)
         RecipeCategoriesSection(presentation: .mhui)
         RecipeNoteSection(presentation: .reading)
         RecipeDiariesSection(presentation: .mhui)

@@ -98,7 +98,7 @@ private extension DiaryListView {
                 diaryRows(group.value)
             }
             .mhSection(title: Text(group.key))
-            AdvertisementSection(.small)
+            AdvertisementSection(.compact)
         }
     }
 

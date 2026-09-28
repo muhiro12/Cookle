@@ -137,8 +137,8 @@ else
     append_error "MHPlatform must not follow a floating branch in $package_manifest."
   fi
 
-  if ! grep -Eq '^\s*"1\.13\.0"\s*\.\.<\s*"2\.0\.0"' <<<"$mhplatform_manifest_block"; then
-    append_error "Cookle keeps MHPlatform on the 1.13.0..<2.0.0 version range in $package_manifest."
+  if ! grep -Eq '^\s*"1\.14\.0"\s*\.\.<\s*"2\.0\.0"' <<<"$mhplatform_manifest_block"; then
+    append_error "Cookle keeps MHPlatform on the 1.14.0..<2.0.0 version range in $package_manifest."
   fi
 fi
 
@@ -151,8 +151,8 @@ else
     append_error "MHPlatform resolved state must not contain branch tracking in $package_resolved."
   fi
 
-  if ! grep -Eq '"version"\s*:\s*"1\.(1[3-9]|[2-9][0-9]|[1-9][0-9]{2,})\.[0-9]+"' <<<"$mhplatform_resolved_pin_block"; then
-    append_error "MHPlatform resolved state must contain a semantic version in the 1.13.0..<2.0.0 range in $package_resolved."
+  if ! grep -Eq '"version"\s*:\s*"1\.(1[4-9]|[2-9][0-9]|[1-9][0-9]{2,})\.[0-9]+"' <<<"$mhplatform_resolved_pin_block"; then
+    append_error "MHPlatform resolved state must contain a semantic version in the 1.14.0..<2.0.0 range in $package_resolved."
   fi
 fi
 
@@ -173,7 +173,7 @@ fi
 mhplatform_remote_package_block=$(remote_package_block "MHPlatform")
 mhui_remote_package_block=$(remote_package_block "MHUI")
 
-check_project_package_reference "MHPlatform" "$mhplatform_remote_package_block" "1.13.0"
+check_project_package_reference "MHPlatform" "$mhplatform_remote_package_block" "1.14.0"
 check_project_package_reference "MHUI" "$mhui_remote_package_block" "2.3.0"
 
 if rg -n 'XCLocalSwiftPackageReference "MHPlatform"|relativePath = .*MHPlatform' "$project_file" >/dev/null; then

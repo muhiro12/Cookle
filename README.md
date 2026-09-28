@@ -74,7 +74,7 @@ repository contains the full iOS project together with its shared Swift package.
 - MHPlatform 1.x using the current consumer boundaries: the `Cookle` app target
   stays on the default `MHPlatform` umbrella, `CookleLibrary` stays on
   `MHPlatformCore`, and the repository keeps MHPlatform on the
-  `1.13.0..<2.0.0` range to preserve verified subscription entitlement handling.
+  `1.14.0..<2.0.0` range for the native ad layout API.
 - MHUI `2.3.0..<3.0.0` through the full `MHUI` product. The main app applies
   the neutral standard root theme and its native appearance once, keeping
   Cookle's orange accent app-owned as the native control tint. Product
@@ -234,9 +234,10 @@ Universal Links require Apple App Site Association (AASA) deployment for
   and pending routes during launch and foreground re-entry. Subscription changes
   update local preferences as soon as the runtime publishes a resolved state.
 - Google Mobile Ads native placements are embedded through the shared runtime so
-  ad units can be refreshed from a single place. Placements use `MHNativeAdSize`
-  and omit the whole section when the cached subscription or runtime availability
-  suppresses ads.
+  ad units can be refreshed from a single place. Placements choose an
+  `MHNativeAdLayout` (`.compact` in lists, `.media` on recipe detail), take the
+  available width at their natural height, and omit the whole section when the
+  cached subscription or runtime availability suppresses ads.
 
 ## Getting started
 

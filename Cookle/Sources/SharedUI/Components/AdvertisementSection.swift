@@ -18,10 +18,10 @@ struct AdvertisementSection {
     @AppStorage(\.isSubscribeOn)
     private var isSubscribeOn
 
-    private let size: MHNativeAdSize
+    private let layout: MHNativeAdLayout
 
-    init(_ size: MHNativeAdSize) {
-        self.size = size
+    init(_ layout: MHNativeAdLayout) {
+        self.layout = layout
     }
 }
 
@@ -29,7 +29,7 @@ extension AdvertisementSection: View {
     var body: some View {
         if !isSubscribeOn, appRuntime.adsAvailability == .available {
             Section {
-                appRuntime.nativeAdView(size: size)
+                appRuntime.nativeAdView(layout: layout)
                     .frame(maxWidth: .infinity)
                     .padding(designMetrics.spacing.inline)
             }
@@ -39,14 +39,14 @@ extension AdvertisementSection: View {
 
 #Preview(traits: .modifier(CookleSampleData())) {
     List {
-        AdvertisementSection(.medium)
+        AdvertisementSection(.media)
     }
 }
 
 #Preview("Ads not configured") {
     List {
         Text(verbatim: "Content before ad")
-        AdvertisementSection(.medium)
+        AdvertisementSection(.media)
         Text(verbatim: "Content after ad")
     }
     .environment(MHAppRuntime(runtimeOnly: .init()))

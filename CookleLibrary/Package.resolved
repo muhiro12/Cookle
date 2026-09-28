@@ -1,13 +1,13 @@
 {
-  "originHash" : "362f25616272ea8bc561856afd3169e166235773932bfa82b1b0d147888cb130",
+  "originHash" : "0a1f14960eabe1abf11e2e9cd75e254ecb55b0ee061567754216aa2e6890a25a",
   "pins" : [
     {
       "identity" : "googlemobileadswrapper",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/muhiro12/GoogleMobileAdsWrapper.git",
       "state" : {
-        "revision" : "7ff5322c261c2df336983b7bc4191a170ac1f718",
-        "version" : "1.4.0"
+        "revision" : "99611421e24b72353f26ec5f8c722de8f43e94a0",
+        "version" : "2.0.0"
       }
     },
     {
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/muhiro12/MHPlatform",
       "state" : {
-        "revision" : "7c6eb2b9ae9c12ba7f486af136ed85505c5d3975",
-        "version" : "1.13.0"
+        "revision" : "f33318bfac7228a0aa49563b256fb3553a74c4c2",
+        "version" : "1.14.0"
       }
     },
     {
@@ -51,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/googleads/swift-package-manager-google-mobile-ads.git",
       "state" : {
-        "revision" : "54efe6d39a7b41b84c1041f21c704a7e6a493d7a",
-        "version" : "13.9.0"
+        "revision" : "12b7af0f844723a86fd3c0089b02f64b1e495605",
+        "version" : "13.10.0"
       }
     },
     {

@@ -16,8 +16,8 @@ struct DebugPreviewsView: View {
     var body: some View {
         List {
             appRuntime.subscriptionSectionView()
-            AdvertisementSection(.medium)
-            AdvertisementSection(.small)
+            AdvertisementSection(.media)
+            AdvertisementSection(.compact)
             ShortcutsLinkSection()
         }
         .mhListChrome(.native)

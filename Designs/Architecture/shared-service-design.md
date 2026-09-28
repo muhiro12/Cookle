@@ -75,7 +75,7 @@ that use case.
 - `Widgets` and `Watch` call `CookleLibrary` first and stay off direct
   app-runtime umbrella adoption.
 - This repository intentionally uses the MHPlatform 1.x semver range
-  `1.13.0..<2.0.0` to preserve verified subscription entitlement handling.
+  `1.14.0..<2.0.0` for the native ad layout API.
 - `Cookle` adopts full MHUI on `2.3.0..<3.0.0` for its root theme and
   selected presentation primitives, using the MHDesign re-export for metrics.
   [ADR 0009](../Decisions/0009-adopt-full-mhui-in-main-app.md) records the
