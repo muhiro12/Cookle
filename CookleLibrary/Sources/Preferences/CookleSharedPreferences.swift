@@ -6,14 +6,8 @@ public enum CookleSharedPreferences {
     /// App-group suite name used by the app and its extensions.
     public static let appGroupIdentifier = UserDefaults.appGroupIdentifier
 
-    private static var userDefaults: UserDefaults {
-        MHUserDefaultsSelection
-            .suite(appGroupIdentifier)
-            .resolveUserDefaults()
-    }
-
     private static var store: MHPreferenceStore {
-        .init(userDefaults: userDefaults)
+        .init(selection: .suite(appGroupIdentifier))
     }
 
     /// Returns the shared string value visible to both the app and extensions.

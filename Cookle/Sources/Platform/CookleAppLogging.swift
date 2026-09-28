@@ -28,7 +28,7 @@ final class CookleAppLogging {
 
     static func live() -> CookleAppLogging {
         let snapshotStore = MHPreferenceStore(
-            userDefaults: .standard
+            selection: .standard
         )
         return .init(
             bootstrap: .init(

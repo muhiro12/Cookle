@@ -2,15 +2,11 @@ import Foundation
 import MHPlatform
 
 enum CookleIntentRouteStore {
-    private static let pendingDeepLinkURLKey = MHPreferenceDescriptors()
+    private static let pendingDeepLinkURLDescriptor = MHPreferenceDescriptors()
         .pendingIntentDeepLinkURL
-        .storageKey
-    private static let userDefaults = MHUserDefaultsSelection
-        .suite(UserDefaults.appGroupIdentifier)
-        .resolveUserDefaults()
     private static let deepLinkStore = MHDeepLinkStore(
-        userDefaults: userDefaults,
-        key: pendingDeepLinkURLKey
+        selection: pendingDeepLinkURLDescriptor.defaultSelection,
+        key: pendingDeepLinkURLDescriptor.storageKey
     )
 
     static var source: MHDeepLinkStore {
