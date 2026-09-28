@@ -9181,6 +9181,40 @@
         }
       }
     },
+    "Other changes are still waiting to be saved. Finish that edit and try again." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other changes are still waiting to be saved. Finish that edit and try again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hay otros cambios pendientes de guardar. Termina esa edición e inténtalo de nuevo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D’autres modifications doivent encore être enregistrées. Terminez cette modification, puis réessayez."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ほかの変更がまだ保存されていません。その編集を完了してから、もう一度お試しください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "其他更改尚未保存。请完成该编辑后重试。"
+          }
+        }
+      }
+    },
     "Paste or import some recipe text first." : {
       "localizations" : {
         "en" : {

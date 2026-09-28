@@ -91,6 +91,7 @@ final class SettingsActionService {
         selections: CookleDataImportSelections,
         modelContainer: ModelContainer
     ) async throws -> CookleDataImportSummary {
+        try CookleMutationWorkflow.requireCleanContext(modelContainer.mainContext)
         let summary: CookleDataImportSummary
         do {
             summary = try DataMaintenanceOperations.importArchive(
@@ -116,6 +117,7 @@ final class SettingsActionService {
 
     func deleteAllData(modelContainer: ModelContainer) async throws {
         let context = modelContainer.mainContext
+        try CookleMutationWorkflow.requireCleanContext(context)
         let mutationOutcome: MutationOutcome<Void>
         do {
             mutationOutcome = try DataMaintenanceOperations.deleteAllWithOutcome(
