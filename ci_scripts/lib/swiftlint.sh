@@ -105,10 +105,25 @@ ci_swiftlint_prepare_directories() {
     "$local_home_directory/Library/Logs"
 }
 
+ci_swiftlint_pinned_version() {
+  local repository_root=$1
+
+  awk '
+    index($0, "\"identity\" : \"swiftlintplugins\"") {
+      in_pin = 1
+    }
+    in_pin && match($0, /"version" : "[^"]+"/) {
+      print substr($0, RSTART + 13, RLENGTH - 14)
+      exit
+    }
+  ' "$repository_root/CookleLibrary/Package.resolved"
+}
+
 ci_swiftlint_find_binary() {
   local repository_root=$1
   local source_packages_directory
   local derived_data_directory
+  local pinned_version
   local search_root
   local candidate
 
@@ -119,6 +134,7 @@ ci_swiftlint_find_binary() {
 
   source_packages_directory=$(ci_swiftlint_source_packages_directory "$repository_root")
   derived_data_directory=$(ci_swiftlint_derived_data_directory "$repository_root")
+  pinned_version=$(ci_swiftlint_pinned_version "$repository_root")
 
   for search_root in \
     "$source_packages_directory" \
@@ -128,18 +144,20 @@ ci_swiftlint_find_binary() {
       continue
     fi
 
-    candidate=$(
+    # Caches resolved for an older pin keep their binary. Skip those so the
+    # caller resolves the version recorded in Package.resolved.
+    while IFS= read -r candidate; do
+      if [[ -z "$pinned_version" || "$("$candidate" version 2>/dev/null)" == "$pinned_version" ]]; then
+        printf '%s\n' "$candidate"
+        return 0
+      fi
+    done < <(
       find \
         "$search_root/artifacts" \
         -path '*/SwiftLintBinary.artifactbundle/macos/swiftlint' \
         -type f \
-        -print 2>/dev/null | LC_ALL=C sort | head -n 1
+        -print 2>/dev/null | LC_ALL=C sort
     )
-
-    if [[ -n "$candidate" ]]; then
-      printf '%s\n' "$candidate"
-      return 0
-    fi
   done
 
   return 1
