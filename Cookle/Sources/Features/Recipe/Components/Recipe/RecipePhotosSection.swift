@@ -9,6 +9,12 @@ import SwiftData
 import SwiftUI
 
 struct RecipePhotosSection: View {
+    private enum Layout {
+        /// Keeps the gallery short enough for ingredients to appear on the
+        /// first screen, and fits a typical landscape photo to a narrow width.
+        static let photoHeight: CGFloat = 180
+    }
+
     @Environment(Recipe.self)
     private var recipe
     @Environment(RecipeFormPresenter.self)
@@ -79,7 +85,7 @@ private extension RecipePhotosSection {
                 size: .preview
             )
             .accessibilityLabel(Text("Open Photo"))
-            .frame(height: RecipePreviewLayout.imageHeight)
+            .frame(height: Layout.photoHeight)
             .clipShape(.rect(cornerRadius: RecipePreviewLayout.imageCornerRadius))
         }
     }
