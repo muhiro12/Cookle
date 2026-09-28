@@ -16,6 +16,7 @@
 		ADB8BF9D2F8FE0DF00C59D93 /* MHUI in Frameworks */ = {isa = PBXBuildFile; productRef = ADB8BF9C2F8FE0DF00C59D93 /* MHUI */; };
 		ADB8C6262F9293B700C59D93 /* Watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = ADB8C61C2F9293B500C59D93 /* Watch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		ADF13D702E8233A7002572CD /* CookleLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = ADF13D6F2E8233A7002572CD /* CookleLibrary */; };
+		C00000012F7B000100000001 /* MHAppRuntimeAds in Frameworks */ = {isa = PBXBuildFile; productRef = C00000022F7B000100000002 /* MHAppRuntimeAds */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,6 +109,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD7F5C0E2F5B3186008D91F3 /* MHPlatform in Frameworks */,
+				C00000012F7B000100000001 /* MHAppRuntimeAds in Frameworks */,
 				ADF13D702E8233A7002572CD /* CookleLibrary in Frameworks */,
 				ADB8BF9D2F8FE0DF00C59D93 /* MHUI in Frameworks */,
 			);
@@ -203,6 +205,7 @@
 			name = Cookle;
 			packageProductDependencies = (
 				AD7F5C0D2F5B3186008D91F3 /* MHPlatform */,
+				C00000022F7B000100000002 /* MHAppRuntimeAds */,
 				ADF13D6F2E8233A7002572CD /* CookleLibrary */,
 				ADB8BF9C2F8FE0DF00C59D93 /* MHUI */,
 			);
@@ -746,7 +749,7 @@
 			repositoryURL = "https://github.com/muhiro12/MHPlatform";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.14.0;
+				minimumVersion = 1.15.0;
 			};
 		};
 		ADB8BF9B2F8FE0DF00C59D93 /* XCRemoteSwiftPackageReference "MHUI" */ = {
@@ -789,6 +792,11 @@
 		ADF13D6F2E8233A7002572CD /* CookleLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CookleLibrary;
+		};
+		C00000022F7B000100000002 /* MHAppRuntimeAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD7F5C0F2F5B3186008D91F3 /* XCRemoteSwiftPackageReference "MHPlatform" */;
+			productName = MHAppRuntimeAds;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

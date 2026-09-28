@@ -1,4 +1,5 @@
 import CookleLibrary
+import MHAppRuntimeAds
 import MHPlatform
 
 enum CookleKnownStorageDescriptors {
@@ -8,15 +9,19 @@ enum CookleKnownStorageDescriptors {
     )
 
     /// The complete cleanup allowlist, including external keys, and its
-    /// migration state.
-    nonisolated static let preferenceRegistry = MHPreferenceRegistry(
-        descriptors: preferenceLifecycleDescriptors,
-        migrationStateDescriptor: preferenceLifecycleState
-    )
+    /// migration state. Built on each access because the consent SDK's keys
+    /// depend on what it has stored so far.
+    nonisolated static var preferenceRegistry: MHPreferenceRegistry {
+        .init(
+            descriptors: preferenceLifecycleDescriptors,
+            migrationStateDescriptor: preferenceLifecycleState
+        )
+    }
 
     /// Exact keys that Apple frameworks write into the standard app domain.
     /// Cookle does not own them, so cleanup must keep them.
     nonisolated static let externalStandardDomainKeys: [MHRawStorageDescriptor] = [
+        "SKSubscriptionStatusUpdatesLastChecked",
         "SKTransactionUpdatesLastChecked",
         "com.apple.UIKit.UISplitViewController.Root"
     ]
@@ -40,5 +45,6 @@ enum CookleKnownStorageDescriptors {
                 CookleAppLogging.snapshotStorageDescriptors.previous
             ]
             + externalStandardDomainKeys
+            + MHAdsConsentStorage.currentDescriptors()
     }
 }
