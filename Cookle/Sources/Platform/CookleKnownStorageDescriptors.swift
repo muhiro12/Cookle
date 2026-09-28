@@ -7,11 +7,25 @@ enum CookleKnownStorageDescriptors {
         defaultSelection: .standard
     )
 
-    /// The complete app-owned preference allowlist and its migration state.
+    /// The complete cleanup allowlist, including external keys, and its
+    /// migration state.
     nonisolated static let preferenceRegistry = MHPreferenceRegistry(
         descriptors: preferenceLifecycleDescriptors,
         migrationStateDescriptor: preferenceLifecycleState
     )
+
+    /// Exact keys that Apple frameworks write into the standard app domain.
+    /// Cookle does not own them, so cleanup must keep them.
+    nonisolated static let externalStandardDomainKeys: [MHRawStorageDescriptor] = [
+        "SKTransactionUpdatesLastChecked",
+        "com.apple.UIKit.UISplitViewController.Root"
+    ]
+    .map { storageKey in
+        .init(
+            storageKey: storageKey,
+            defaultSelection: .standard
+        )
+    }
 
     nonisolated static var primitivePreferences: [any MHStorageDescriptorProtocol] {
         CooklePreferenceCatalog.primitiveDescriptors
@@ -25,5 +39,6 @@ enum CookleKnownStorageDescriptors {
                 CookleAppLogging.snapshotStorageDescriptors.current,
                 CookleAppLogging.snapshotStorageDescriptors.previous
             ]
+            + externalStandardDomainKeys
     }
 }

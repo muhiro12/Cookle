@@ -418,6 +418,14 @@ descriptor catalog to remove unknown keys from the standard app domain and the
 shared suite. In other words, the app-owned preference surface is intentionally
 closed: only declared descriptors survive cleanup.
 
+The standard domain is also written by Apple frameworks. Their exact keys are
+registered as raw exclusions in
+`CookleKnownStorageDescriptors.externalStandardDomainKeys`, so cleanup no longer
+deletes StoreKit's `SKTransactionUpdatesLastChecked` or UIKit's split-view
+state on every launch. Other SDK keys are not enumerated and are still removed;
+register their exact keys before relying on SDK state stored there, such as
+consent strings.
+
 <!-- markdownlint-disable MD013 -->
 | Key group | Backing domain | Purpose | Safe to lose? | Cleanup target? |
 | --- | --- | --- | --- | --- |
@@ -429,6 +437,7 @@ closed: only declared descriptors survive cleanup.
 | `loggingCurrentSession`, `loggingPreviousSession` | `standard` | Diagnostic log snapshots | Yes | Yes |
 | `diaryFormSnapshot`, `recipeFormSnapshot` | `standard` | Create-flow draft snapshots | Yes | Yes |
 | `preferenceLifecycleState` | `standard` | Cleanup bookkeeping state | Yes | Yes |
+| `externalStandardDomainKeys` | `standard` | StoreKit and UIKit framework state | Framework-owned | No, kept |
 <!-- markdownlint-enable MD013 -->
 
 Recent cleanup intentionally does not rescue several retired keys:
