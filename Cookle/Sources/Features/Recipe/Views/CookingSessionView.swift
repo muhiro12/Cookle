@@ -143,6 +143,7 @@ private extension CookingSessionView {
             }
         }
         .mhScreen(title: Text(snapshot.recipeName))
+        .cookleWrappingLargeTitle(Text(snapshot.recipeName))
         .task(id: snapshot.recipeID) {
             loadIngredients(for: snapshot.recipeID)
         }
