@@ -242,6 +242,9 @@ struct SettingsSidebarView: View {
                     .cookleButtonRowContent()
             }
             .buttonStyle(.plain)
+            AdsPrivacyOptionsButton { message in
+                model.errorMessage = message
+            }
             Button("Show tips again") {
                 do {
                     try tipController.resetTips()

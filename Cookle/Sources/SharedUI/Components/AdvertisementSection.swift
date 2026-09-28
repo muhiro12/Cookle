@@ -27,7 +27,7 @@ struct AdvertisementSection {
 
 extension AdvertisementSection: View {
     var body: some View {
-        if !isSubscribeOn, appRuntime.adsAvailability == .available {
+        if !isSubscribeOn, appRuntime.canDisplayAds {
             Section {
                 appRuntime.nativeAdView(layout: layout)
                     .frame(maxWidth: .infinity)

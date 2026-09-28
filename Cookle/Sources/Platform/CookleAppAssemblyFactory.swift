@@ -23,7 +23,8 @@ enum CookleAppAssemblyFactory {
             modelContainer: modelContainer,
             nativeAdUnitID: liveAdUnitID,
             logging: logging,
-            deliversTimers: true
+            deliversTimers: true,
+            adsConsent: CookleMonetizationConfiguration.adsConsent
         )
     }
 
@@ -70,7 +71,8 @@ private extension CookleAppAssemblyFactory {
         nativeAdUnitID: String?,
         logging: CookleAppLogging,
         isolatesCookingSession: Bool = false,
-        deliversTimers: Bool = false
+        deliversTimers: Bool = false,
+        adsConsent: MHAdsConsentConfiguration? = nil
     ) -> CookleAppAssembly {
         let navigationModel = MainNavigationModel()
         let cookingSessionStore = makeCookingSessionStore(isIsolated: isolatesCookingSession)
@@ -85,7 +87,7 @@ private extension CookleAppAssemblyFactory {
             logging: logging
         )
         let bootstrap = makeBootstrap(
-            nativeAdUnitID: nativeAdUnitID,
+            configuration: makeRuntimeConfiguration(nativeAdUnitID: nativeAdUnitID, adsConsent: adsConsent),
             remoteConfigurationService: services.remoteConfigurationService,
             notificationService: services.notificationService,
             routePipeline: services.routePipeline
@@ -125,7 +127,7 @@ private extension CookleAppAssemblyFactory {
     }
 
     static func makeBootstrap<Route: Sendable>(
-        nativeAdUnitID: String?,
+        configuration: MHAppConfiguration,
         remoteConfigurationService: RemoteConfigurationService,
         notificationService: NotificationService,
         routePipeline: MHAppRoutePipeline<Route>
@@ -136,9 +138,7 @@ private extension CookleAppAssemblyFactory {
             routePipeline: routePipeline
         )
         return .init(
-            configuration: makeRuntimeConfiguration(
-                nativeAdUnitID: nativeAdUnitID
-            ),
+            configuration: configuration,
             routePipeline: routePipeline,
             lifecyclePlan: lifecyclePlan
         )
@@ -264,7 +264,8 @@ private extension CookleAppAssemblyFactory {
     }
 
     static func makeRuntimeConfiguration(
-        nativeAdUnitID: String?
+        nativeAdUnitID: String?,
+        adsConsent: MHAdsConsentConfiguration?
     ) -> MHAppConfiguration {
         .init(
             subscriptionProductIDs: [
@@ -272,7 +273,8 @@ private extension CookleAppAssemblyFactory {
             ],
             subscriptionGroupID: CookleMonetizationConfiguration.subscriptionGroupID,
             nativeAdUnitID: nativeAdUnitID,
-            showsLicenses: true
+            showsLicenses: true,
+            adsConsent: adsConsent
         )
     }
 

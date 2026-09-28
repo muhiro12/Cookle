@@ -129,13 +129,18 @@ confirmed]` — `Cookle/Sources/Platform/CookleAppLogging.swift`.
 
 `AdvertisementSection` renders through MHPlatform's `MHNativeAdLayout`. The
 AdMob application identifier and the SKAdNetwork list live in
-`Cookle/Configurations/Info.plist`. `[delegated]` — the request lifecycle is
-MHPlatform's contract: each ad request waits for Google Mobile Ads SDK
-initialization. Consent orchestration is not delegated: since MHPlatform
-1.14.0 the app must complete applicable consent and audience configuration
-before starting the runtime, and shared orchestration is tracked on
-muhiro12/MHPlatform#14. `[source confirmed]` — Cookle runs no UMP consent or
-ATT flow of its own.
+`Cookle/Configurations/Info.plist`. `[source confirmed]` — the live runtime
+sets `MHAppConfiguration.adsConsent`, placements require `canDisplayAds`, and
+Settings offers Privacy Options when the consent SDK requires it. Cookle
+requests no ATT authorization. `[delegated]` — MHPlatform owns the consent and
+request lifecycle: after premium status resolves as inactive it refreshes
+Google UMP consent each session, presents a form only when UMP requires one,
+and starts the Google Mobile Ads SDK only when UMP allows ad requests. UMP
+stores its consent state, including IAB TCF strings, in the standard defaults
+domain, and preference cleanup keeps those keys.
+
+Account-side Privacy & messaging configuration, regional applicability, and the
+under-age tag policy are not established by this source review.
 
 ### Subscriptions
 
