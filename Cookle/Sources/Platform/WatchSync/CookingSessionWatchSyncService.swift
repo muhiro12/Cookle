@@ -93,6 +93,16 @@ final class CookingSessionWatchSyncService: NSObject, WCSessionDelegate {
         session.activate()
     }
 
+    nonisolated func sessionWatchStateDidChange(
+        _: WCSession
+    ) {
+        Task { @MainActor in
+            // A newly installed or paired Watch app has not received the
+            // current context, and content-based refreshes would not resend it.
+            self.sendContext()
+        }
+    }
+
     nonisolated func session(
         _: WCSession,
         didReceiveApplicationContext applicationContext: [String: Any]
