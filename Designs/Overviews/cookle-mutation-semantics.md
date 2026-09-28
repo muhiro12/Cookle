@@ -1,6 +1,6 @@
 # Cookle Mutation Semantics
 
-Current behavior as of September 21, 2026.
+Current behavior as of September 28, 2026.
 
 ## Purpose
 
@@ -272,6 +272,20 @@ This review does not change deletion, ingredient quantity/order preservation,
 or historical diary reference semantics described above. It does not provide
 after-save undo or reverse writes already synchronized to another device.
 
+**Bounded recovery.** Recovery from an applied recipe deletion, tag merge or
+deletion, or recipe edit is bounded to a backup exported before the change.
+Importing that backup through the reviewed merge in section 9 adds a deleted
+recipe back, can replace an edited or tag-merged recipe with its backed-up
+content in place, and can combine a day's diary so meal rows removed by a
+recipe deletion return. It restores recorded content, not previous identities:
+a merged-away or deleted tag returns only as a value of the recipes that
+carried it, and changes made after the export are not part of the recovery.
+Standard undo is not offered for these operations because a SwiftData
+`UndoManager` feasibility check did not restore a deleted recipe durably after
+saving and reopening the store. With iCloud sync enabled, the original change
+and a later recovery import each synchronize as ordinary saves; neither is
+withdrawn from devices that already received it. `[source confirmed]`
+
 ## 9) Backup merge import
 
 Settings imports merge into current data after a review. Backup-local identifiers
@@ -302,5 +316,9 @@ The legacy replacement operation remains for compatibility verification; Setting
 uses reviewed merge Operations. Import does not supply automatic undo, and a
 local rollback does not reverse writes already synchronized elsewhere. Exporting
 a separate backup beforehand preserves recovery material but does not promise an
-automatic return to the pre-import graph. Two-device iCloud convergence remains a
-separate verification requirement.
+automatic return to the pre-import graph. With iCloud sync enabled, an applied
+import is an ordinary local save: its inserts and in-place updates synchronize
+like any other edit, and the review compares the backup only with data already
+on this device. Edits another device makes before or after convergence are not
+part of the review and follow normal synchronization. `[source confirmed]`
+Two-device iCloud convergence remains a separate verification requirement.
