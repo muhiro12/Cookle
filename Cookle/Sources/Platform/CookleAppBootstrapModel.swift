@@ -51,8 +51,10 @@ final class CookleAppBootstrapModel {
         }
         #endif
 
+        // Runs on this thread without a task, so cleanup finishes before
+        // `isICloudOn` is read below to decide how to open the store.
         let preferenceLifecycleStartedAt = Date.timeIntervalSinceReferenceDate
-        let lifecycleOutcome = CooklePreferenceLifecycle.runSynchronously()
+        let lifecycleOutcome = CookleKnownStorageDescriptors.preferenceRegistry.runSynchronously()
         logPreferenceLifecycleOutcome(
             lifecycleOutcome,
             startedAt: preferenceLifecycleStartedAt,
@@ -116,7 +118,7 @@ final class CookleAppBootstrapModel {
         #endif
 
         let preferenceLifecycleStartedAt = Date.timeIntervalSinceReferenceDate
-        let lifecycleOutcome = await CooklePreferenceLifecycle.run()
+        let lifecycleOutcome = await CookleKnownStorageDescriptors.preferenceRegistry.run()
         logPreferenceLifecycleOutcome(
             lifecycleOutcome,
             startedAt: preferenceLifecycleStartedAt,

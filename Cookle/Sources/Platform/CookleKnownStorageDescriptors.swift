@@ -7,6 +7,12 @@ enum CookleKnownStorageDescriptors {
         defaultSelection: .standard
     )
 
+    /// The complete app-owned preference allowlist and its migration state.
+    nonisolated static let preferenceRegistry = MHPreferenceRegistry(
+        descriptors: preferenceLifecycleDescriptors,
+        migrationStateDescriptor: preferenceLifecycleState
+    )
+
     nonisolated static var primitivePreferences: [any MHStorageDescriptorProtocol] {
         CooklePreferenceCatalog.primitiveDescriptors
     }

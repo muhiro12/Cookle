@@ -406,11 +406,13 @@ The app currently uses two app-owned `UserDefaults` domains:
 - the app-group suite for cross-target state shared with widgets and App
   Intents
 
-At startup, `CookleAppBootstrapModel` runs `CooklePreferenceLifecycle` before
-model-container preparation. That lifecycle enumerates the current app-owned
-descriptors from the `CookleLibrary` `MHPreferenceDescriptors` extension plus
-app-owned snapshot, logging, and lifecycle-state descriptors gathered in
-`CookleKnownStorageDescriptors`. The storage-key strings themselves are
+At startup, `CookleAppBootstrapModel` runs the `MHPreferenceRegistry` held by
+`CookleKnownStorageDescriptors` before model-container preparation. The
+launch path runs it synchronously on the calling thread, with no task or
+semaphore, so App Intents launched without a scene see settled preferences.
+The registry enumerates the current app-owned descriptors from the
+`CookleLibrary` `MHPreferenceDescriptors` extension plus app-owned snapshot,
+logging, and lifecycle-state descriptors. The storage-key strings themselves are
 centralized in `CookleUserDefaultsKeys`, and the lifecycle uses the resulting
 descriptor catalog to remove unknown keys from the standard app domain and the
 shared suite. In other words, the app-owned preference surface is intentionally

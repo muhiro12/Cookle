@@ -16,9 +16,10 @@ small numeric settings, cross-target route handoff, diagnostic snapshots, and
 draft assistance. That data currently lives in descriptor-backed
 `AppStorage` / `UserDefaults`.
 
-Cookle now runs `CooklePreferenceLifecycle` during startup. That lifecycle
-keeps only the declared app-owned descriptors in the app-owned standard domain
-and app-group shared suite, and removes unknown keys from those domains.
+Cookle now runs its `MHPreferenceRegistry` lifecycle during startup. That
+lifecycle keeps only the declared app-owned descriptors in the app-owned
+standard domain and app-group shared suite, and removes unknown keys from those
+domains.
 
 That cleanup model is useful because it keeps preferences auditable and
 prevents stale keys from accumulating. It also means preference-backed state is
