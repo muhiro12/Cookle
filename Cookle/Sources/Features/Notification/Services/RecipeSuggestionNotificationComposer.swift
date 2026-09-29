@@ -120,14 +120,27 @@ private extension RecipeSuggestionNotificationComposer {
         for snapshot: NotificationRecipeSnapshot,
         recipeName: String
     ) -> String {
-        practicalBody(for: snapshot)
-            ?? RecipeOperations.makeBlurb(
+        // The subtitle already carries time and servings, so the body adds
+        // what is needed and how the recipe starts instead of repeating them.
+        let lines = [
+            ingredientBody(
+                ingredientNames: normalizedIngredientNames(
+                    from: snapshot.ingredientNames
+                )
+            ),
+            RecipeOperations.makeBlurb(
                 request: .init(
                     steps: snapshot.steps,
-                    ingredients: snapshot.ingredientNames,
+                    ingredients: [],
                     note: snapshot.note
                 )
-            ) ?? String(localized: "How about making \(recipeName) today?")
+            )
+        ].compactMap(\.self)
+
+        guard !lines.isEmpty else {
+            return String(localized: "How about making \(recipeName) today?")
+        }
+        return lines.joined(separator: "\n")
     }
 
     func subtitle(for snapshot: NotificationRecipeSnapshot) -> String {
@@ -141,43 +154,7 @@ private extension RecipeSuggestionNotificationComposer {
             segments.append(String(localized: "Servings: \(snapshot.servingSize)"))
         }
 
-        let ingredientCount = snapshot.ingredientCount
-        if ingredientCount > 0 {
-            segments.append(String(localized: "Ingredients: \(ingredientCount)"))
-        }
-
         return segments.joined(separator: " | ")
-    }
-
-    func practicalBody(
-        for snapshot: NotificationRecipeSnapshot
-    ) -> String? {
-        let ingredientNames = normalizedIngredientNames(
-            from: snapshot.ingredientNames
-        )
-
-        if snapshot.cookingTime > 0, !ingredientNames.isEmpty {
-            return String.localizedStringWithFormat(
-                String(
-                    localized: "Ready in %lld min with %lld ingredients."
-                ),
-                Int64(snapshot.cookingTime),
-                Int64(ingredientNames.count)
-            )
-        }
-
-        if snapshot.cookingTime > 0 {
-            return String.localizedStringWithFormat(
-                String(
-                    localized: "Ready in %lld min."
-                ),
-                Int64(snapshot.cookingTime)
-            )
-        }
-
-        return ingredientBody(
-            ingredientNames: ingredientNames
-        )
     }
 
     func ingredientBody(
