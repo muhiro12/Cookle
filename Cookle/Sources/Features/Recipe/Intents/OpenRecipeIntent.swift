@@ -1,5 +1,7 @@
 import AppIntents
 
+/// Runs shortcuts saved before `OpenRecipeEntityIntent` replaced this intent
+/// in the Shortcuts library.
 struct OpenRecipeIntent: AppIntent {
     static var title: LocalizedStringResource {
         "Open Recipe"
@@ -7,6 +9,10 @@ struct OpenRecipeIntent: AppIntent {
 
     static var openAppWhenRun: Bool {
         true
+    }
+
+    static var isDiscoverable: Bool {
+        false
     }
 
     @Parameter(title: "Recipe")

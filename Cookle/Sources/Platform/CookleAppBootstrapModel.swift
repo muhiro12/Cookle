@@ -329,5 +329,7 @@ private extension CookleAppBootstrapModel {
         AppDependencyManager.shared.add { tagActionServiceForDependency }
         let settingsActionServiceForDependency = assembly.settingsActionService
         AppDependencyManager.shared.add { settingsActionServiceForDependency }
+        let routePipelineForDependency = assembly.services.routePipeline
+        AppDependencyManager.shared.add { routePipelineForDependency }
     }
 }
