@@ -16,7 +16,8 @@ import Testing
 // rather than assumed. The most important thing they document is what this
 // layer deliberately does **not** do: it never splits an amount out of an
 // ingredient line, it never interprets or normalises a unit, and it only reads
-// a serving count or a time when the text spells them in English.
+// a serving count or a time from the explicit English and Japanese phrasings
+// pinned in `RecipeInferenceLanguageCorpusTests`.
 //
 // `RecipeInferenceLanguageCorpusTests` carries the language and unit
 // boundaries; this file covers the shape of an extraction.
@@ -106,7 +107,7 @@ struct RecipeInferenceCorpusTests {
     }
 
     @Test
-    func an_english_serving_count_and_time_are_read_but_a_japanese_one_is_not() {
+    func english_and_japanese_serving_counts_and_times_are_read() {
         let english = RecipeInferenceOperations.fallbackInference(
             from: """
             Stew
@@ -118,8 +119,8 @@ struct RecipeInferenceCorpusTests {
             """
         )
 
-        #expect(english.servingSize == Value.englishServingCount)
-        #expect(english.cookingTime == Value.englishCookingMinutes)
+        #expect(english.servingSize == Value.statedServingCount)
+        #expect(english.cookingTime == Value.statedCookingMinutes)
 
         let japanese = RecipeInferenceOperations.fallbackInference(
             from: """
@@ -132,13 +133,12 @@ struct RecipeInferenceCorpusTests {
             """
         )
 
-        // A known and deliberate limit of the deterministic path: the patterns
-        // are `(serves|for)\s*(\d+)` and `(\d+)\s*(min|minutes)`, so Japanese
-        // 「4人分」 and 「45分」 are not read. Recovering them is the model's
-        // job, and this is the gap the fallback leaves when the model is
-        // unavailable.
-        #expect(japanese.servingSize == .zero)
-        #expect(japanese.cookingTime == .zero)
+        // Devices without Apple Intelligence always take this path, so the
+        // Japanese forms 「4人分」 and 「45分」 are read like their English
+        // counterparts. Like `Simmer for 45 minutes`, a step's duration is
+        // what this layer can find, not a verified total.
+        #expect(japanese.servingSize == Value.statedServingCount)
+        #expect(japanese.cookingTime == Value.statedCookingMinutes)
     }
 
     @Test
@@ -229,8 +229,8 @@ struct RecipeInferenceCorpusTests {
 
 private extension RecipeInferenceCorpusTests {
     enum Value {
-        static let englishServingCount = 4
-        static let englishCookingMinutes = 45
+        static let statedServingCount = 4
+        static let statedCookingMinutes = 45
         static let injectionIngredientCount = 2
         static let injectionStepCount = 2
         static let longInputIngredientCount = 40

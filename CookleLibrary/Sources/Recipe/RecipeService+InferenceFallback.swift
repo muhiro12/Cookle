@@ -29,6 +29,26 @@ extension RecipeService {
 
     static let allSectionHeadings = ingredientSectionHeadings + stepSectionHeadings
 
+    /// Serving counts the fallback reads: `Serves 4`, `4 servings`, `4人分`,
+    /// `4人前`, and `for 4`, except where `for` starts a duration or a
+    /// temperature such as `for 8 minutes` or `for 10-15 minutes`.
+    static let fallbackServingSizePattern = #"""
+        (?ix)
+        serves \s* [:：]? \s* \d+
+        | for \s* \d+ (?!\d)
+        (?! \s* (?: (?: [-–—~〜～] | to | or ) \s* \d+ \s* )?
+        (?: min | hour | hr | sec | ° | degree ) )
+        | \d+ \s* (?: servings? | people | persons? | 人分 | 人前 )
+        """#
+
+    /// Minutes the fallback reads: `45 min`, `45 minutes`, and `45分`, but not
+    /// the `2分` of `2分の1` (a half) or the minutes of `1時間30分`.
+    static let fallbackCookingTimePattern = #"""
+        (?ix)
+        \d+ \s* (?: min | minutes )
+        | (?<! [\d時間] ) (?<! 時間 \s ) \d+ \s* 分 (?! の )
+        """#
+
     /// Trims user-provided text before recipe inference.
     static func normalizedInferenceInput(_ text: String) -> String {
         text.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -151,17 +171,19 @@ extension RecipeService {
             from: lines,
             headings: stepSectionHeadings
         )
-        let sourceText = lines.joined(separator: " ")
+        let sourceText = halfwidthDigits(
+            in: lines.joined(separator: " ")
+        )
 
         return .init(
             name: fallbackName(from: lines),
             servingSize: extractedNumber(
                 in: sourceText,
-                pattern: #"(?i)(serves|for)\s*(\d+)"#
+                pattern: fallbackServingSizePattern
             ),
             cookingTime: extractedNumber(
                 in: sourceText,
-                pattern: #"(?i)(\d+)\s*(min|minutes)"#
+                pattern: fallbackCookingTimePattern
             ),
             ingredients: ingredients,
             steps: steps,
@@ -302,6 +324,24 @@ extension RecipeService {
         )
         .replacingOccurrences(of: " ", with: "")
         .lowercased()
+    }
+
+    /// Replaces full-width digits, common in Japanese text, with ASCII digits.
+    static func halfwidthDigits(
+        in value: String
+    ) -> String {
+        let fullwidthDigits: ClosedRange<Unicode.Scalar> = "０"..."９"
+        let fullwidthOffset = fullwidthDigits.lowerBound.value - ("0" as Unicode.Scalar).value
+        var scalars = String.UnicodeScalarView()
+        for scalar in value.unicodeScalars {
+            if fullwidthDigits.contains(scalar),
+               let halfwidthScalar = Unicode.Scalar(scalar.value - fullwidthOffset) {
+                scalars.append(halfwidthScalar)
+            } else {
+                scalars.append(scalar)
+            }
+        }
+        return String(scalars)
     }
 
     static func extractedNumber(

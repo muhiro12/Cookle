@@ -131,4 +131,109 @@ struct RecipeInferenceLanguageCorpusTests {
         #expect(result.servingSize == 4)
         #expect(result.cookingTime == 45)
     }
+
+    @Test(
+        arguments: [
+            "Boil the pasta for 8 minutes.",
+            "Bake for 10-15 minutes.",
+            "Simmer for 2 to 3 minutes.",
+            "Roast for 1 hour.",
+            "Bake for 180°C."
+        ]
+    )
+    func a_duration_or_temperature_after_for_is_not_a_serving_count(
+        step: String
+    ) {
+        let result = RecipeInferenceOperations.fallbackInference(
+            from: """
+            Pasta
+            Ingredients:
+            Pasta 200g
+            Steps:
+            \(step)
+            """
+        )
+
+        // `for 8` used to become eight servings. Unknown stays zero instead of
+        // turning a step's duration into an invented count.
+        #expect(result.servingSize == .zero)
+    }
+
+    @Test(
+        arguments: [
+            ("Pasta for 2", 2),
+            ("Stew for 4 people", 4),
+            ("Curry, 6 servings", 6),
+            ("カレー 4人前", 4),
+            ("シチュー ４人分", 4)
+        ]
+    )
+    func explicit_serving_counts_are_read(
+        title: String,
+        servingSize: Int
+    ) {
+        let result = RecipeInferenceOperations.fallbackInference(
+            from: """
+            \(title)
+            Ingredients:
+            Rice 1 cup
+            Steps:
+            Cook.
+            """
+        )
+
+        // Full-width digits, common in Japanese text, read like ASCII ones.
+        #expect(result.servingSize == servingSize)
+    }
+
+    @Test(
+        arguments: [
+            ("約３０分煮込む。", 30),
+            ("玉ねぎ 2分の1個を加える。", 0),
+            ("1時間30分煮込む。", 0),
+            ("1時間 30分煮込む。", 0)
+        ]
+    )
+    func japanese_minutes_are_read_but_not_fractions_or_hour_parts(
+        step: String,
+        cookingTime: Int
+    ) {
+        let result = RecipeInferenceOperations.fallbackInference(
+            from: """
+            煮込み
+            材料
+            牛肉 300g
+            手順
+            \(step)
+            """
+        )
+
+        // 「2分の1」 is a half, not two minutes, and the 30 of 「1時間30分」
+        // is not the whole duration. Neither is read.
+        #expect(result.cookingTime == cookingTime)
+    }
+
+    @Test
+    func a_japanese_serving_range_from_the_fallback_becomes_unknown() {
+        let sourceText = """
+            煮物
+            2〜3人分
+            材料
+            大根 1/2本
+            手順
+            煮る。
+            """
+        let result = RecipeInferenceOperations.groundedInference(
+            RecipeInferenceOperations.fallbackInference(
+                from: sourceText
+            ),
+            sourceText: sourceText
+        )
+
+        // The fallback reads 「3人分」 inside the range; grounding then resets
+        // the count and keeps the stated range in the note, as it does for
+        // model output.
+        #expect(result.servingSize == .zero)
+        #expect(result.note.contains("2〜3人分"))
+    }
 }
