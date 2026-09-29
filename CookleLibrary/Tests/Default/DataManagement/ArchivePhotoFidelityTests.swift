@@ -12,31 +12,10 @@ import Testing
 /// an asset no recipe references.
 @MainActor
 struct ArchivePhotoFidelityTests {
-    /// Pins the three version numbers a backup involves, which are unrelated.
-    ///
-    /// They are easy to confuse because two of them currently read `1`:
-    ///
-    /// - `CookleDataArchive.currentFormatVersion` (`1`) versions the **archive
-    ///   payload** — the record shapes inside a backup.
-    /// - `CookleDataArchivePackageManifest.currentPackageFormatVersion` (`2`)
-    ///   versions the **container** that carries a manifest plus photo files
-    ///   beside it. Version 1 was the single JSON blob, still readable.
-    /// - `CookleSchemaV1.versionIdentifier` (`1.0.0`) versions the **SwiftData
-    ///   store**, and has nothing to do with either.
-    ///
-    /// Nothing derives one from another. A schema change does not require an
-    /// archive format bump, and an archive format bump does not migrate a store.
     @Test
-    func the_three_backup_related_versions_are_independent() {
-        #expect(CookleDataArchive.currentFormatVersion == 1)
-        #expect(CookleDataArchivePackageManifest.currentPackageFormatVersion == 2)
-        #expect(CookleSchemaV1.versionIdentifier == .init(1, 0, 0))
-    }
-
-    @Test
-    func restoring_keeps_each_photos_own_source() throws {
+    func replacing_keeps_each_photos_own_source() throws {
         try withStore { url in
-            try restore(Self.archiveWithBothSources(), at: url)
+            try replace(with: Self.archiveWithBothSources(), at: url)
 
             let exported = try CookleDataArchiveService.makeArchive(
                 context: try makeContext(at: url)
@@ -58,16 +37,16 @@ struct ArchivePhotoFidelityTests {
     }
 
     @Test
-    func restoring_keeps_the_display_order_of_a_recipes_photos() throws {
+    func replacing_keeps_the_display_order_of_a_recipes_photos() throws {
         try withStore { url in
-            try restore(Self.archiveWithOrderedPhotos(), at: url)
+            try replace(with: Self.archiveWithOrderedPhotos(), at: url)
 
             let context = try makeContext(at: url)
             let recipe = try #require(try context.fetch(.recipes(.all)).first)
             let rows = (recipe.photoObjects ?? []).sorted { $0.order < $1.order }
 
             // The archive lists the rows in a different sequence from their
-            // `order`, so this fails if restore replays list position instead of
+            // `order`, so this fails if replacement replays list position instead of
             // the stored order.
             #expect(rows.map(\.order) == [1, 2, 3])
             #expect(
@@ -77,9 +56,9 @@ struct ArchivePhotoFidelityTests {
     }
 
     @Test
-    func restoring_keeps_a_photo_no_recipe_references() throws {
+    func replacing_keeps_a_photo_no_recipe_references() throws {
         try withStore { url in
-            try restore(Self.archiveWithUnlinkedPhoto(), at: url)
+            try replace(with: Self.archiveWithUnlinkedPhoto(), at: url)
 
             let context = try makeContext(at: url)
             let photos = try context.fetch(FetchDescriptor<Photo>())
@@ -88,7 +67,7 @@ struct ArchivePhotoFidelityTests {
             )
 
             // Unlinked assets are never collected, so a backup has to carry them
-            // and a restore has to put them back — otherwise a round trip
+            // and a replacement has to put them back — otherwise a round trip
             // quietly prunes the user's library.
             #expect(photos.count == 2)
             #expect((unlinked.objects ?? []).isEmpty)
@@ -164,7 +143,7 @@ private extension ArchivePhotoFidelityTests {
         recipePhotos: [CookleDataArchive.RecipePhotoRecord]
     ) -> CookleDataArchive {
         .init(
-            formatVersion: CookleDataArchive.currentFormatVersion,
+            scope: .all,
             exportedAt: timestamp,
             ingredients: [],
             categories: [],
@@ -236,9 +215,9 @@ private extension ArchivePhotoFidelityTests {
         return context
     }
 
-    func restore(_ archive: CookleDataArchive, at url: URL) throws {
-        _ = try DataMaintenanceOperations.restore(
-            archive,
+    func replace(with archive: CookleDataArchive, at url: URL) throws {
+        _ = try DataMaintenanceOperations.replaceAllData(
+            with: archive,
             context: try makeContext(at: url)
         )
     }

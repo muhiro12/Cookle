@@ -11,8 +11,7 @@ nonisolated struct CookleDataArchiveDocument: FileDocument {
 
     static var importableContentTypes: [UTType] {
         [
-            .cookleBackup,
-            .json
+            .cookleBackup
         ]
     }
 

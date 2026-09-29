@@ -1,6 +1,6 @@
 import Foundation
 
-/// Joins diary notes when a backup day is combined with the current day.
+/// Joins diary notes when an imported day is combined with the current day.
 enum CookleDataImportNotes {
     private static let separator = "\n\n---\n\n"
 

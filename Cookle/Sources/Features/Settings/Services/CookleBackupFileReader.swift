@@ -111,30 +111,16 @@ nonisolated private extension CookleBackupFileReader {
         let resourceValues = try url.resourceValues(
             forKeys: [
                 .isDirectoryKey,
-                .isRegularFileKey,
                 .isSymbolicLinkKey
             ]
         )
-        guard resourceValues.isSymbolicLink != true else {
+        guard resourceValues.isSymbolicLink != true,
+              resourceValues.isDirectory == true else {
             throw Failure.invalidBackupFile
         }
 
-        if resourceValues.isDirectory == true {
-            return try DataMaintenanceOperations.validatedArchive(
-                from: readBackupPackage(from: url),
-                calendar: calendar
-            )
-        }
-
-        guard resourceValues.isRegularFile == true else {
-            throw Failure.invalidBackupFile
-        }
-        let data = try readBoundedData(
-            from: url,
-            maximumByteCount: DataMaintenanceOperations.maximumEncodedArchiveByteCount
-        )
         return try DataMaintenanceOperations.validatedArchive(
-            from: data,
+            from: readBackupPackage(from: url),
             calendar: calendar
         )
     }

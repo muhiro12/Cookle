@@ -1,7 +1,9 @@
 import Foundation
 
 enum CookleDataArchivePackageError: LocalizedError, Sendable {
-    case unsupportedPackageFormatVersion(Int)
+    case unsupportedFormat(String)
+    case unsupportedFormatVersion(Int)
+    case unsupportedSchemaVersion(String)
     case invalidPhotoFilename(String)
     case duplicatePhotoFilename(String)
     case missingPhotoFile(String)
@@ -20,33 +22,37 @@ enum CookleDataArchivePackageError: LocalizedError, Sendable {
 
     var errorDescription: String? {
         switch self {
-        case .unsupportedPackageFormatVersion(let version):
-            "Unsupported backup package format version: \(version)"
+        case .unsupportedFormat(let format):
+            "Unsupported export file format: \(format)"
+        case .unsupportedFormatVersion(let version):
+            "Unsupported export file format version: \(version)"
+        case .unsupportedSchemaVersion(let version):
+            "Unsupported export file schema version: \(version)"
         case .invalidPhotoFilename(let filename):
-            "Backup contains an invalid photo filename: \(filename)"
+            "Export file contains an invalid photo filename: \(filename)"
         case .duplicatePhotoFilename(let filename):
-            "Backup contains a duplicate photo filename: \(filename)"
+            "Export file contains a duplicate photo filename: \(filename)"
         case .missingPhotoFile(let filename):
-            "Backup is missing a photo file: \(filename)"
+            "Export file is missing a photo file: \(filename)"
         case .unexpectedPhotoFile(let filename):
-            "Backup contains an unexpected photo file: \(filename)"
+            "Export file contains an unexpected photo file: \(filename)"
         case let .invalidPhotoByteCount(
             filename,
             byteCount
         ):
-            "Backup photo \(filename) declares an invalid byte count: \(byteCount)"
+            "Exported photo \(filename) declares an invalid byte count: \(byteCount)"
         case let .photoByteCountMismatch(
             filename,
             expectedByteCount,
             actualByteCount
         ):
             """
-            Backup photo \(filename) contains \(actualByteCount) bytes instead of \(expectedByteCount) bytes.
+            Exported photo \(filename) contains \(actualByteCount) bytes instead of \(expectedByteCount) bytes.
             """
         case .invalidPhotoDigest(let filename):
-            "Backup photo \(filename) declares an invalid SHA-256 digest."
+            "Exported photo \(filename) declares an invalid SHA-256 digest."
         case .photoDigestMismatch(let filename):
-            "Backup photo \(filename) does not match its SHA-256 digest."
+            "Exported photo \(filename) does not match its SHA-256 digest."
         }
     }
 }

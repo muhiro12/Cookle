@@ -10,7 +10,6 @@ enum TestArchive {
     static let brokenPhotoOrder = 1
     static let brokenServingSize = 1
     static let brokenCookingTime = 1
-    static let unsupportedFormatVersion = 9_999
     static let duplicateIngredientIdentifier = "ingredient-1"
     static let missingRecipeIdentifier = "recipe-missing"
 

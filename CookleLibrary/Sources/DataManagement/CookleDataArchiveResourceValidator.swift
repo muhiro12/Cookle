@@ -4,17 +4,6 @@ enum CookleDataArchiveResourceValidator {
     typealias ArchiveError = CookleDataArchiveService.ArchiveError
     typealias ResourceCategory = CookleDataArchiveResourceCategory
 
-    static func validateEncodedData(
-        _ data: Data,
-        limits: CookleDataArchiveResourceLimits
-    ) throws {
-        try validateByteCount(
-            data.count,
-            maximumByteCount: limits.maximumEncodedByteCount,
-            category: .encodedData
-        )
-    }
-
     static func validate(
         _ archive: CookleDataArchive,
         limits: CookleDataArchiveResourceLimits

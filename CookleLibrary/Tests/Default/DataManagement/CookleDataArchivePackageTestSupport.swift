@@ -31,30 +31,6 @@ enum CookleDataArchivePackageTestSupport {
         return result
     }
 
-    static var legacyArchiveData: Data {
-        Data(
-            #"""
-                {
-                "formatVersion": 1,
-                "exportedAt": "2023-11-14T22:13:20Z",
-                "ingredients": [],
-                "categories": [],
-                "photos": [
-                {
-                "id": "photo-1",
-                "data": "AQIDBA==",
-                "sourceID": "photos-picker",
-                "createdTimestamp": "2023-11-14T22:13:20Z",
-                "modifiedTimestamp": "2023-11-14T22:13:20Z"
-                }
-                ],
-                "recipes": [],
-                "diaries": []
-                }
-            """#.utf8
-        )
-    }
-
     static func archive(
         photoPayloads: [Data] = [photoData]
     ) -> CookleDataArchive {
@@ -76,7 +52,7 @@ enum CookleDataArchivePackageTestSupport {
             )
         }
         return .init(
-            formatVersion: CookleDataArchive.currentFormatVersion,
+            scope: .all,
             exportedAt: exportedAt,
             ingredients: [ingredientRecord()],
             categories: [categoryRecord()],
@@ -120,13 +96,21 @@ enum CookleDataArchivePackageTestSupport {
         )
     }
 
-    static func replacingPackageFormatVersion(
+    /// Returns `manifest` with any of its header fields replaced.
+    static func replacingHeader(
         _ manifest: CookleDataArchivePackageManifest,
-        with packageFormatVersion: Int
+        format: String? = nil,
+        formatVersion: Int? = nil,
+        schemaVersion: String? = nil,
+        scope: String? = nil
     ) -> CookleDataArchivePackageManifest {
         .init(
-            packageFormatVersion: packageFormatVersion,
-            archiveFormatVersion: manifest.archiveFormatVersion,
+            format: format ?? manifest.format,
+            formatVersion: formatVersion ?? manifest.formatVersion,
+            schemaVersion: schemaVersion ?? manifest.schemaVersion,
+            contents: .init(
+                scope: scope ?? manifest.contents.scope
+            ),
             exportedAt: manifest.exportedAt,
             ingredients: manifest.ingredients,
             categories: manifest.categories,
@@ -136,19 +120,69 @@ enum CookleDataArchivePackageTestSupport {
         )
     }
 
-    static func replacingArchiveFormatVersion(
-        _ manifest: CookleDataArchivePackageManifest,
-        with archiveFormatVersion: Int
-    ) -> CookleDataArchivePackageManifest {
+    /// Writes `archive` as a current export package without validating it, so
+    /// tests can hand invalid content to the reader.
+    static func unvalidatedPackage(
+        from archive: CookleDataArchive
+    ) throws -> CookleDataArchivePackage {
+        let photoFiles = archive.photos.enumerated().map { index, photo in
+            CookleDataArchivePackage.PhotoFile(
+                filename: CookleDataArchivePackageCodec.photoFilename(
+                    at: index,
+                    fileExtension: CookleDataArchivePackageCodec.photoFileExtension(
+                        for: photo.data
+                    )
+                ),
+                data: photo.data
+            )
+        }
+        let manifest = CookleDataArchivePackageManifest(
+            format: CookleDataArchivePackageManifest.formatIdentifier,
+            formatVersion: CookleDataArchivePackageManifest.currentFormatVersion,
+            schemaVersion: CookleDataArchiveSchemaVersions.string(
+                for: CookleDataArchiveSchemaVersions.current
+            ),
+            contents: .init(
+                scope: archive.scope.rawValue
+            ),
+            exportedAt: archive.exportedAt,
+            ingredients: archive.ingredients,
+            categories: archive.categories,
+            photos: zip(archive.photos, photoFiles).map { photo, file in
+                .init(
+                    id: photo.id,
+                    filename: file.filename,
+                    byteCount: photo.data.count,
+                    sha256: CookleDataArchivePackageCodec.sha256HexDigest(
+                        for: photo.data
+                    ),
+                    sourceID: photo.sourceID,
+                    createdTimestamp: photo.createdTimestamp,
+                    modifiedTimestamp: photo.modifiedTimestamp
+                )
+            },
+            recipes: archive.recipes,
+            diaries: archive.diaries
+        )
+        return try package(
+            manifest: manifest,
+            photoFiles: photoFiles
+        )
+    }
+
+    /// Returns `archive` with a different scope and otherwise the same content.
+    static func replacingScope(
+        _ archive: CookleDataArchive,
+        with scope: CookleDataArchiveScope
+    ) -> CookleDataArchive {
         .init(
-            packageFormatVersion: manifest.packageFormatVersion,
-            archiveFormatVersion: archiveFormatVersion,
-            exportedAt: manifest.exportedAt,
-            ingredients: manifest.ingredients,
-            categories: manifest.categories,
-            photos: manifest.photos,
-            recipes: manifest.recipes,
-            diaries: manifest.diaries
+            scope: scope,
+            exportedAt: archive.exportedAt,
+            ingredients: archive.ingredients,
+            categories: archive.categories,
+            photos: archive.photos,
+            recipes: archive.recipes,
+            diaries: archive.diaries
         )
     }
 
@@ -157,8 +191,10 @@ enum CookleDataArchivePackageTestSupport {
         with photos: [CookleDataArchivePackageManifest.PhotoRecord]
     ) -> CookleDataArchivePackageManifest {
         .init(
-            packageFormatVersion: manifest.packageFormatVersion,
-            archiveFormatVersion: manifest.archiveFormatVersion,
+            format: manifest.format,
+            formatVersion: manifest.formatVersion,
+            schemaVersion: manifest.schemaVersion,
+            contents: manifest.contents,
             exportedAt: manifest.exportedAt,
             ingredients: manifest.ingredients,
             categories: manifest.categories,

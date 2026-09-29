@@ -3,7 +3,7 @@ import Foundation
 import SwiftData
 import Testing
 
-/// Pins how a backup merges recipes into current data.
+/// Pins how an export file merges recipes into current data.
 @MainActor
 struct CookleDataImportRecipeTests {
     typealias Store = CookleDataImportTestStore

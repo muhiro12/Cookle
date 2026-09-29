@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 extension CookleDataArchiveService {
-    /// Builds a version 2 package with photo payloads stored outside the manifest.
+    /// Builds an export package with photo payloads stored outside the manifest.
     static func archivePackage(
         from context: ModelContext,
         calendar: Calendar = .current,
@@ -28,7 +28,7 @@ extension CookleDataArchiveService {
         }
     }
 
-    /// Validates a version 2 package and hydrates the canonical restore archive.
+    /// Validates an export package and hydrates the canonical archive.
     nonisolated static func validatedArchive(
         from package: CookleDataArchivePackage,
         calendar: Calendar = .current,

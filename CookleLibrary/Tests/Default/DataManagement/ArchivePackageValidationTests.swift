@@ -9,33 +9,6 @@ struct ArchivePackageValidationTests {
     private typealias Support = CookleDataArchivePackageTestSupport
 
     @Test
-    func validatedArchive_rejects_unsupported_package_version() throws {
-        let package = try Support.package()
-        let manifest = try Support.manifest(
-            from: package
-        )
-        let invalidPackage = try Support.package(
-            manifest: Support.replacingPackageFormatVersion(
-                manifest,
-                with: 99
-            ),
-            photoFiles: package.photoFiles
-        )
-
-        do {
-            _ = try DataMaintenanceOperations.validatedArchive(
-                from: invalidPackage,
-                calendar: Support.calendar
-            )
-            Issue.record("Expected package version validation to fail.")
-        } catch PackageError.unsupportedPackageFormatVersion(let version) {
-            #expect(version == 99)
-        } catch {
-            Issue.record(error)
-        }
-    }
-
-    @Test
     func validatedArchive_rejects_invalid_photo_filename() throws {
         let package = try Support.package()
         let invalidPackage: CookleDataArchivePackage = .init(

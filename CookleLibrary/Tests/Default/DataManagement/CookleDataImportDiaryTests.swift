@@ -3,7 +3,7 @@ import Foundation
 import SwiftData
 import Testing
 
-/// Pins how a backup merges diary days and how stale approvals are refused.
+/// Pins how an export file merges diary days and how stale approvals are refused.
 @MainActor
 struct CookleDataImportDiaryTests {
     typealias Store = CookleDataImportTestStore

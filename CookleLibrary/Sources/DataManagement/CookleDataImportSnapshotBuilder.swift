@@ -2,7 +2,7 @@ import CryptoKit
 import Foundation
 import SwiftData
 
-/// Builds comparable snapshots of current and backup records.
+/// Builds comparable snapshots of current and imported records.
 ///
 /// Photo digests are computed at most once per photo so comparing candidates
 /// never re-hashes or copies image bytes repeatedly.
@@ -85,12 +85,12 @@ final class CookleDataImportSnapshotBuilder {
         return digest
     }
 
-    /// Binds approval to all backup content without encoding full image bytes again.
+    /// Binds approval to all file content without encoding full image bytes again.
     func archiveIdentity() throws -> Data {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .sortedKeys
         var hash = SHA256()
-        hash.update(data: try encoder.encode(archive.formatVersion))
+        hash.update(data: try encoder.encode(archive.scope.rawValue))
         hash.update(data: try encoder.encode(archive.exportedAt))
         hash.update(data: try encoder.encode(archive.ingredients))
         hash.update(data: try encoder.encode(archive.categories))

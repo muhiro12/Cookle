@@ -3,27 +3,28 @@ import Foundation
 import SwiftData
 import Testing
 
-// A restore that is refused must leave the store exactly as it was. Validation
-// runs before `DataResetService.deleteAll`, so these tests pin that ordering
-// against a populated disk store rather than against an archive value alone.
+// A refused import must leave the store exactly as it was. Validation runs
+// before `DataResetService.deleteAll`, so these tests pin that ordering against
+// a populated disk store rather than against an archive value alone.
 @MainActor
-struct RejectedRestorePreservationTests {
+struct RejectedImportPreservationTests {
     private typealias Support = CookleDataArchivePackageTestSupport
 
     enum RejectedInput: CaseIterable, Sendable {
-        case notJSON
-        case truncatedJSON
-        case unsupportedFormatVersion
+        case manifestNotJSON
+        case truncatedManifest
+        case otherFormat
+        case newerSchema
         case duplicateIdentifier
         case duplicateDiaryDay
         case missingReference
-        case oversizedEncodedData
+        case oversizedManifest
     }
 
-    // Malformed values that a caller could hand to `restore` without going
+    // Malformed values that a caller could hand to replacement without going
     // through `validatedArchive` first.
     enum RejectedArchiveValue: CaseIterable, Sendable {
-        case unsupportedFormatVersion
+        case partialScope
         case duplicateIdentifier
         case duplicateDiaryDay
         case missingReference
@@ -31,7 +32,7 @@ struct RejectedRestorePreservationTests {
     }
 
     @Test(arguments: RejectedInput.allCases)
-    func rejected_backup_data_leaves_the_existing_store_readable(
+    func rejected_export_file_leaves_the_existing_store_readable(
         input: RejectedInput
     ) throws {
         let directory = try makeDirectory()
@@ -40,20 +41,20 @@ struct RejectedRestorePreservationTests {
         }
         let storeURL = directory.appendingPathComponent("original.sqlite")
         let original = Support.archive()
-        try restore(original, at: storeURL)
+        try replace(with: original, at: storeURL)
         let before = try storeContent(at: storeURL)
 
         do {
             let archive = try CookleDataArchiveService.validatedArchive(
-                from: try data(for: input),
+                from: try package(for: input),
                 calendar: Support.calendar,
                 limits: limits(for: input)
             )
             // Never reached for a rejected input. Present so a regression that
             // moved validation after the reset would actually touch the store.
             let context = try makeContext(at: storeURL)
-            _ = try CookleDataArchiveService.restore(
-                archive,
+            _ = try CookleDataArchiveService.replaceAll(
+                with: archive,
                 context: context,
                 calendar: Support.calendar
             )
@@ -76,17 +77,20 @@ struct RejectedRestorePreservationTests {
             try? FileManager.default.removeItem(at: directory)
         }
         let storeURL = directory.appendingPathComponent("original.sqlite")
-        try restore(Support.archive(), at: storeURL)
+        try replace(with: Support.archive(), at: storeURL)
         let before = try storeContent(at: storeURL)
 
         let context = try makeContext(at: storeURL)
-        #expect(throws: CookleDataArchiveService.ArchiveError.self) {
-            _ = try CookleDataArchiveService.restore(
-                archive(for: value),
+        do {
+            _ = try CookleDataArchiveService.replaceAll(
+                with: archive(for: value),
                 context: context,
                 calendar: Support.calendar,
                 limits: limits(for: value)
             )
+            Issue.record("Expected \(value) to be refused.")
+        } catch {
+            #expect(rejectedAsExpected(error, for: value))
         }
 
         // The reset is the destructive step. Refusing before it means the
@@ -96,33 +100,33 @@ struct RejectedRestorePreservationTests {
     }
 
     @Test
-    func an_accepted_backup_still_replaces_the_store() throws {
+    func an_accepted_export_file_still_replaces_the_store() throws {
         let directory = try makeDirectory()
         defer {
             try? FileManager.default.removeItem(at: directory)
         }
         let storeURL = directory.appendingPathComponent("original.sqlite")
-        try restore(Support.archive(), at: storeURL)
+        try replace(with: Support.archive(), at: storeURL)
         let before = try storeContent(at: storeURL)
 
         let replacement = Support.archive(
             photoPayloads: [Data([Value.replacementPhotoByte])]
         )
-        try restore(replacement, at: storeURL)
+        try replace(with: replacement, at: storeURL)
 
-        // Without this the preservation tests above would pass on a restore
-        // path that silently refused everything.
+        // Without this the preservation tests above would pass on a
+        // replacement path that silently refused everything.
         #expect(try storeContent(at: storeURL) != before)
     }
 }
 
-private extension RejectedRestorePreservationTests {
+private extension RejectedImportPreservationTests {
     enum Value {
         static let replacementPhotoByte: UInt8 = 99
-        static let unsupportedFormatVersion = 999
         static let oversizedPhotoByteCount = 512
-        static let tightEncodedByteCount = 8
+        static let tightManifestByteCount = 8
         static let truncationDivisor = 2
+        static let newerSchemaVersion = "99.0.0"
     }
 
     static let baseArchive = Support.archive()
@@ -132,12 +136,19 @@ private extension RejectedRestorePreservationTests {
         for input: RejectedInput
     ) -> Bool {
         switch input {
-        case .notJSON, .truncatedJSON:
+        case .manifestNotJSON, .truncatedManifest:
             error is DecodingError
-        case .oversizedEncodedData:
+        case .oversizedManifest:
             isResourceLimitError(error)
-        case .unsupportedFormatVersion:
-            archiveError(error).map(isUnsupportedFormatVersion) ?? false
+        case .otherFormat:
+            if case .unsupportedFormat = error as? CookleDataArchivePackageError {
+                true
+            } else {
+                false
+            }
+        case .newerSchema:
+            error as? CookleDataArchiveVersionError
+                == .newerSchemaVersion(Value.newerSchemaVersion)
         case .duplicateIdentifier:
             archiveError(error).map(isDuplicateIdentifier) ?? false
         case .duplicateDiaryDay:
@@ -147,19 +158,28 @@ private extension RejectedRestorePreservationTests {
         }
     }
 
+    func rejectedAsExpected(
+        _ error: any Error,
+        for value: RejectedArchiveValue
+    ) -> Bool {
+        switch value {
+        case .partialScope:
+            error as? CookleDataImportError == .replacementRequiresCompleteArchive
+        case .duplicateIdentifier:
+            archiveError(error).map(isDuplicateIdentifier) ?? false
+        case .duplicateDiaryDay:
+            archiveError(error).map(isDuplicateDiaryDay) ?? false
+        case .missingReference:
+            archiveError(error).map(isMissingReference) ?? false
+        case .oversizedPhoto:
+            isResourceLimitError(error)
+        }
+    }
+
     func archiveError(
         _ error: any Error
     ) -> CookleDataArchiveService.ArchiveError? {
         error as? CookleDataArchiveService.ArchiveError
-    }
-
-    func isUnsupportedFormatVersion(
-        _ error: CookleDataArchiveService.ArchiveError
-    ) -> Bool {
-        guard case .unsupportedFormatVersion = error else {
-            return false
-        }
-        return true
     }
 
     func isDuplicateIdentifier(
@@ -201,41 +221,58 @@ private extension RejectedRestorePreservationTests {
         }
     }
 
-    func data(for input: RejectedInput) throws -> Data {
+    func package(for input: RejectedInput) throws -> CookleDataArchivePackage {
+        let validPackage = try Support.package()
         switch input {
-        case .notJSON:
-            Data("not a Cookle backup".utf8)
-        case .truncatedJSON:
-            try truncated(
-                CookleDataArchiveService.encoder.encode(Support.archive())
+        case .manifestNotJSON:
+            return .init(
+                manifestData: Data("not a Cookle export".utf8),
+                photoFiles: validPackage.photoFiles
             )
-        case .oversizedEncodedData:
-            try CookleDataArchiveService.encoder.encode(Support.archive())
-        case .unsupportedFormatVersion:
-            try CookleDataArchiveService.encoder.encode(
-                archive(for: .unsupportedFormatVersion)
+        case .truncatedManifest:
+            return .init(
+                manifestData: truncated(validPackage.manifestData),
+                photoFiles: validPackage.photoFiles
+            )
+        case .oversizedManifest:
+            return validPackage
+        case .otherFormat:
+            return try Support.package(
+                manifest: Support.replacingHeader(
+                    Support.manifest(from: validPackage),
+                    format: "com.muhiro12.cookle.backup"
+                ),
+                photoFiles: validPackage.photoFiles
+            )
+        case .newerSchema:
+            return try Support.package(
+                manifest: Support.replacingHeader(
+                    Support.manifest(from: validPackage),
+                    schemaVersion: Value.newerSchemaVersion
+                ),
+                photoFiles: validPackage.photoFiles
             )
         case .duplicateIdentifier:
-            try CookleDataArchiveService.encoder.encode(
-                archive(for: .duplicateIdentifier)
+            return try Support.unvalidatedPackage(
+                from: archive(for: .duplicateIdentifier)
             )
         case .duplicateDiaryDay:
-            try CookleDataArchiveService.encoder.encode(
-                archive(for: .duplicateDiaryDay)
+            return try Support.unvalidatedPackage(
+                from: archive(for: .duplicateDiaryDay)
             )
         case .missingReference:
-            try CookleDataArchiveService.encoder.encode(
-                archive(for: .missingReference)
+            return try Support.unvalidatedPackage(
+                from: archive(for: .missingReference)
             )
         }
     }
 
     func limits(for input: RejectedInput) -> CookleDataArchiveResourceLimits {
-        guard input == .oversizedEncodedData else {
+        guard input == .oversizedManifest else {
             return .standard
         }
         return ArchiveResourceLimitTestSupport.makeLimits(
-            maximumEncodedByteCount: Value.tightEncodedByteCount
+            maximumManifestByteCount: Value.tightManifestByteCount
         )
     }
 
@@ -248,10 +285,9 @@ private extension RejectedRestorePreservationTests {
 
     func archive(for value: RejectedArchiveValue) -> CookleDataArchive {
         let base = Self.baseArchive
-        return replacing(
-            formatVersion: value == .unsupportedFormatVersion
-                ? Value.unsupportedFormatVersion
-                : base.formatVersion,
+        return .init(
+            scope: value == .partialScope ? .partial("recipes") : base.scope,
+            exportedAt: base.exportedAt,
             ingredients: value == .duplicateIdentifier
                 ? base.ingredients + base.ingredients
                 : base.ingredients,
@@ -259,6 +295,7 @@ private extension RejectedRestorePreservationTests {
             // the reference dangle.
             categories: value == .missingReference ? [] : base.categories,
             photos: value == .oversizedPhoto ? oversizedPhotos(base.photos) : base.photos,
+            recipes: base.recipes,
             diaries: value == .duplicateDiaryDay
                 ? base.diaries + duplicatedDay(base.diaries)
                 : base.diaries
@@ -297,24 +334,6 @@ private extension RejectedRestorePreservationTests {
         }
     }
 
-    func replacing(
-        formatVersion: Int,
-        ingredients: [CookleDataArchive.IngredientRecord],
-        categories: [CookleDataArchive.CategoryRecord],
-        photos: [CookleDataArchive.PhotoRecord],
-        diaries: [CookleDataArchive.DiaryRecord]
-    ) -> CookleDataArchive {
-        .init(
-            formatVersion: formatVersion,
-            exportedAt: Self.baseArchive.exportedAt,
-            ingredients: ingredients,
-            categories: categories,
-            photos: photos,
-            recipes: Self.baseArchive.recipes,
-            diaries: diaries
-        )
-    }
-
     func truncated(_ data: Data) -> Data {
         data.prefix(data.count / Value.truncationDivisor)
     }
@@ -341,27 +360,15 @@ private extension RejectedRestorePreservationTests {
         return context
     }
 
-    func restore(_ archive: CookleDataArchive, at url: URL) throws {
+    func replace(with archive: CookleDataArchive, at url: URL) throws {
         let context = try makeContext(at: url)
-        _ = try DataMaintenanceOperations.restore(archive, context: context)
+        _ = try DataMaintenanceOperations.replaceAllData(with: archive, context: context)
     }
 
     // Reopens the store so the comparison reads what actually landed on disk.
     func storeContent(at url: URL) throws -> Data {
-        let archive = try CookleDataArchiveService.makeArchive(
-            context: try makeContext(at: url)
-        )
-        return try CookleDataArchiveService.encoder.encode(
-            CookleDataArchive(
-                formatVersion: archive.formatVersion,
-                // Export time moves on every snapshot; content must not.
-                exportedAt: Support.exportedAt,
-                ingredients: archive.ingredients,
-                categories: archive.categories,
-                photos: archive.photos,
-                recipes: archive.recipes,
-                diaries: archive.diaries
-            )
+        try TestArchiveContent.data(
+            storedIn: makeContext(at: url)
         )
     }
 }

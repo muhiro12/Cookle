@@ -1,7 +1,6 @@
 enum CookleDataArchiveResourceCategory: String, Sendable {
-    case encodedData = "encoded backup data"
-    case manifestData = "backup manifest data"
-    case packageData = "total backup package data"
+    case manifestData = "export manifest data"
+    case packageData = "total export package data"
     case photoFiles = "photo files"
     case ingredientRecords = "ingredient records"
     case categoryRecords = "category records"

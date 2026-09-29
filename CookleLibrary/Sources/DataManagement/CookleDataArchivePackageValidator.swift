@@ -143,7 +143,10 @@ private extension CookleDataArchivePackageValidator {
                     photo.filename
                 )
             }
-            guard photo.filename == CookleDataArchivePackageCodec.photoFilename(at: index) else {
+            guard CookleDataArchivePackageCodec.isPhotoFilename(
+                photo.filename,
+                at: index
+            ) else {
                 throw PackageError.invalidPhotoFilename(
                     photo.filename
                 )

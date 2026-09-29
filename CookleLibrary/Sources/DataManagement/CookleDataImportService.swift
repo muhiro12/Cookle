@@ -35,18 +35,25 @@ enum CookleDataImportService {
     ) throws -> CookleDataImportReview {
         try CookleDataArchiveService.validate(archive, calendar: calendar, limits: .standard)
         let builder = CookleDataImportSnapshotBuilder(archive: archive)
+        let currentRecipes = try context.fetch(.recipes(.all))
+        let currentDiaries = try context.fetch(.diaries(.all))
         let recipes = classifyRecipes(
             archive: archive,
-            currentRecipes: try context.fetch(.recipes(.all)),
+            currentRecipes: currentRecipes,
             builder: builder
         )
         let diaries = try classifyDiaries(
             archive: archive,
-            currentDiaries: try context.fetch(.diaries(.all)),
+            currentDiaries: currentDiaries,
             calendar: calendar
         )
         return .init(
             calendar: calendar,
+            isCurrentDataEmpty: try isEmpty(
+                context: context,
+                currentRecipes: currentRecipes,
+                currentDiaries: currentDiaries
+            ),
             newRecipeCount: recipes.newRecordIDs.count,
             unchangedRecipeCount: recipes.unchangedTargets.count,
             newDiaryCount: diaries.newRecordIDs.count,
@@ -86,7 +93,7 @@ enum CookleDataImportService {
                 throw CookleDataImportError.invalidSelections
             }
         }
-        // A recipe the backup replaces cannot also stand for another backup recipe.
+        // A recipe the file replaces cannot also stand for another imported recipe.
         guard replacedTargets.isDisjoint(with: keptTargets) else {
             throw CookleDataImportError.invalidSelections
         }
@@ -180,7 +187,7 @@ private extension CookleDataImportService {
         return classification
     }
 
-    /// A backup day equals the current one when the notes match and every
+    /// An imported day equals the current one when the notes match and every
     /// meal, in order, shows a recipe with the same name.
     ///
     /// Comparing names rather than resolved recipes keeps an edited recipe from
@@ -195,7 +202,7 @@ private extension CookleDataImportService {
             return false
         }
 
-        let backupMeals = record.objects
+        let importedMeals = record.objects
             .sorted { lhs, rhs in
                 (MealKey.index(of: lhs.type), lhs.order) < (MealKey.index(of: rhs.type), rhs.order)
             }
@@ -221,7 +228,21 @@ private extension CookleDataImportService {
                     recipeNameKey: CookleDataImportSnapshotBuilder.nameKey(recipe.name)
                 )
             }
-        return backupMeals == currentMeals
+        return importedMeals == currentMeals
+    }
+
+    static func isEmpty(
+        context: ModelContext,
+        currentRecipes: [Recipe],
+        currentDiaries: [Diary]
+    ) throws -> Bool {
+        guard currentRecipes.isEmpty,
+              currentDiaries.isEmpty else {
+            return false
+        }
+        return try context.fetchCount(.photos(.all)) == .zero
+            && context.fetchCount(.ingredients(.all)) == .zero
+            && context.fetchCount(.categories(.all)) == .zero
     }
 
     static func snapshot(of diary: Diary) -> CookleDataImportReview.DiarySnapshot {

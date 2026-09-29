@@ -7,14 +7,17 @@ import Testing
 struct ArchivePersistentStoreTests {
     private typealias Support = CookleDataArchivePackageTestSupport
 
-    enum BackupFormat: CaseIterable, Sendable {
-        case legacyJSON
-        case package
+    /// How an exported file reaches the destination store.
+    enum ImportMethod: CaseIterable, Sendable {
+        /// Replaces a populated store.
+        case replace
+        /// Merges into an empty store, as when moving to a new device.
+        case mergeIntoEmptyStore
     }
 
-    @Test(arguments: BackupFormat.allCases)
-    func restore_preserves_complete_graph_after_reopening_store(
-        format: BackupFormat
+    @Test(arguments: ImportMethod.allCases)
+    func import_preserves_complete_graph_after_reopening_store(
+        method: ImportMethod
     ) async throws {
         let directory = try makeDirectory()
         defer {
@@ -23,32 +26,37 @@ struct ArchivePersistentStoreTests {
         let sourceURL = directory.appendingPathComponent("source.sqlite")
         let destinationURL = directory.appendingPathComponent("destination.sqlite")
         let original = originalArchive()
-        try restore(original, at: sourceURL)
+        try replace(with: original, at: sourceURL)
         let sourceContext = try makeContext(at: sourceURL)
-        let archive: CookleDataArchive
-        switch format {
-        case .legacyJSON:
-            let data = try DataMaintenanceOperations.encodedArchive(
-                from: sourceContext,
+        let package = try await DataMaintenanceOperations.archivePackage(
+            from: sourceContext,
+            calendar: Support.calendar
+        )
+        let archive = try DataMaintenanceOperations.validatedArchive(
+            from: package,
+            calendar: Support.calendar
+        )
+
+        switch method {
+        case .replace:
+            try replace(with: replacementArchive(), at: destinationURL)
+            try replace(with: archive, at: destinationURL)
+        case .mergeIntoEmptyStore:
+            let context = try makeContext(at: destinationURL)
+            let review = try DataMaintenanceOperations.importReview(
+                for: archive,
+                context: context,
                 calendar: Support.calendar
             )
-            archive = try DataMaintenanceOperations.validatedArchive(
-                from: data,
-                calendar: Support.calendar
-            )
-        case .package:
-            let package = try await DataMaintenanceOperations.archivePackage(
-                from: sourceContext,
-                calendar: Support.calendar
-            )
-            archive = try DataMaintenanceOperations.validatedArchive(
-                from: package,
-                calendar: Support.calendar
+            #expect(review.isCurrentDataEmpty)
+            #expect(review.hasConflicts == false)
+            _ = try DataMaintenanceOperations.importArchive(
+                archive,
+                review: review,
+                selections: .init(),
+                context: context
             )
         }
-
-        try restore(replacementArchive(), at: destinationURL)
-        try restore(archive, at: destinationURL)
 
         let reopenedContext = try makeContext(at: destinationURL)
         let reopenedArchive = try CookleDataArchiveService.makeArchive(
@@ -65,7 +73,7 @@ struct ArchivePersistentStoreTests {
         }
         let storeURL = directory.appendingPathComponent("original.sqlite")
         let original = originalArchive()
-        try restore(original, at: storeURL)
+        try replace(with: original, at: storeURL)
 
         try attemptFailedReplacement(at: storeURL, original: original)
 
@@ -121,9 +129,9 @@ private extension ArchivePersistentStoreTests {
         )
     }
 
-    func restore(_ archive: CookleDataArchive, at url: URL) throws {
+    func replace(with archive: CookleDataArchive, at url: URL) throws {
         let context = try makeContext(at: url)
-        _ = try DataMaintenanceOperations.restore(archive, context: context)
+        _ = try DataMaintenanceOperations.replaceAllData(with: archive, context: context)
     }
 
     func attemptFailedReplacement(
@@ -137,8 +145,8 @@ private extension ArchivePersistentStoreTests {
             throw SaveError.forcedFailure
         }
         do {
-            _ = try CookleDataArchiveService.restore(
-                replacementArchive(),
+            _ = try CookleDataArchiveService.replaceAll(
+                with: replacementArchive(),
                 context: context,
                 calendar: Support.calendar,
                 save: failingSave
@@ -150,22 +158,12 @@ private extension ArchivePersistentStoreTests {
 
         #expect(attemptedSave)
         #expect(context.hasChanges == false)
-        let restoredArchive = try CookleDataArchiveService.makeArchive(context: context)
-        #expect(try contentData(restoredArchive) == contentData(original))
+        let currentArchive = try CookleDataArchiveService.makeArchive(context: context)
+        #expect(try contentData(currentArchive) == contentData(original))
     }
 
     func contentData(_ archive: CookleDataArchive) throws -> Data {
         // Export time changes on every snapshot; all stored content must match.
-        try CookleDataArchiveService.encoder.encode(
-            CookleDataArchive(
-                formatVersion: archive.formatVersion,
-                exportedAt: Support.exportedAt,
-                ingredients: archive.ingredients,
-                categories: archive.categories,
-                photos: archive.photos,
-                recipes: archive.recipes,
-                diaries: archive.diaries
-            )
-        )
+        try TestArchiveContent.data(of: archive)
     }
 }

@@ -9,13 +9,9 @@ struct ArchivePackageResourceLimitTests {
     private typealias PackageSupport = CookleDataArchivePackageTestSupport
 
     @Test
-    func public_limits_preserve_legacy_capacity_and_support_long_term_photo_libraries() {
+    func public_limits_support_long_term_photo_libraries() {
         let bytesPerMebibyte = 1_024 * 1_024
 
-        #expect(
-            DataMaintenanceOperations.maximumEncodedArchiveByteCount
-                == 64 * bytesPerMebibyte
-        )
         #expect(
             DataMaintenanceOperations.maximumArchiveManifestByteCount
                 == 64 * bytesPerMebibyte

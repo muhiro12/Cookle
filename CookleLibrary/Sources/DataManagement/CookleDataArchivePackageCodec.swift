@@ -1,14 +1,32 @@
 import CryptoKit
 import Foundation
+import ImageIO
+import UniformTypeIdentifiers
 
 enum CookleDataArchivePackageCodec {
+    typealias Manifest = CookleDataArchivePackageManifest
+    typealias SchemaVersions = CookleDataArchiveSchemaVersions
+
     private enum PhotoFilename {
         static let firstIndexOffset = 1
         static let indexWidth = 6
         static let minimumDigitASCII: UInt8 = 48
         static let maximumDigitASCII: UInt8 = 57
         static let prefix = "photo-"
-        static let suffix = ".data"
+        static let extensionSeparator: Character = "."
+        /// Used when the bytes are not a recognized image type.
+        static let fallbackExtension = "data"
+        static let allowedExtensions: Set<String> = [
+            "bmp",
+            fallbackExtension,
+            "gif",
+            "heic",
+            "heif",
+            "jpeg",
+            "png",
+            "tiff",
+            "webp"
+        ]
     }
 
     private enum Digest {
@@ -33,8 +51,14 @@ enum CookleDataArchivePackageCodec {
             from: archive.photos
         )
         let manifest: CookleDataArchivePackageManifest = .init(
-            packageFormatVersion: CookleDataArchivePackageManifest.currentPackageFormatVersion,
-            archiveFormatVersion: archive.formatVersion,
+            format: Manifest.formatIdentifier,
+            formatVersion: Manifest.currentFormatVersion,
+            schemaVersion: SchemaVersions.string(
+                for: SchemaVersions.current
+            ),
+            contents: .init(
+                scope: archive.scope.rawValue
+            ),
             exportedAt: archive.exportedAt,
             ingredients: archive.ingredients,
             categories: archive.categories,
@@ -67,21 +91,16 @@ enum CookleDataArchivePackageCodec {
             package.manifestData,
             limits: limits
         )
+        try validateHeader(
+            try CookleDataArchiveService.decoder.decode(
+                Manifest.Header.self,
+                from: package.manifestData
+            )
+        )
         let manifest = try CookleDataArchiveService.decoder.decode(
-            CookleDataArchivePackageManifest.self,
+            Manifest.self,
             from: package.manifestData
         )
-        guard manifest.packageFormatVersion
-                == CookleDataArchivePackageManifest.currentPackageFormatVersion else {
-            throw CookleDataArchivePackageError.unsupportedPackageFormatVersion(
-                manifest.packageFormatVersion
-            )
-        }
-        guard manifest.archiveFormatVersion == CookleDataArchive.currentFormatVersion else {
-            throw CookleDataArchiveService.ArchiveError.unsupportedFormatVersion(
-                manifest.archiveFormatVersion
-            )
-        }
 
         let photoDataByFilename = try CookleDataArchivePackageValidator.validatedPhotoData(
             package: package,
@@ -100,35 +119,55 @@ enum CookleDataArchivePackageCodec {
         return archive
     }
 
+    /// Name of the photo at `index` in manifest order, such as `photo-000001.jpeg`.
     static func photoFilename(
-        at index: Int
+        at index: Int,
+        fileExtension: String
     ) -> String {
-        let ordinal = index + PhotoFilename.firstIndexOffset
-        let indexText = String(
-            repeating: "0",
-            count: max(
-                PhotoFilename.indexWidth - String(ordinal).count,
-                .zero
-            )
-        ) + String(ordinal)
-        return PhotoFilename.prefix + indexText + PhotoFilename.suffix
+        photoFilenameStem(at: index)
+            + String(PhotoFilename.extensionSeparator)
+            + fileExtension
     }
 
-    static func isPhotoFilename(_ filename: String) -> Bool {
-        guard filename.hasPrefix(PhotoFilename.prefix),
-              filename.hasSuffix(PhotoFilename.suffix) else {
+    /// Filename extension that describes the image type of `data`.
+    static func photoFileExtension(
+        for data: Data
+    ) -> String {
+        guard let source = CGImageSourceCreateWithData(
+            data as CFData,
+            nil
+        ),
+        let typeIdentifier = CGImageSourceGetType(source),
+        let fileExtension = UTType(typeIdentifier as String)?.preferredFilenameExtension,
+        PhotoFilename.allowedExtensions.contains(fileExtension) else {
+            return PhotoFilename.fallbackExtension
+        }
+        return fileExtension
+    }
+
+    /// Indicates whether `filename` is a well-formed photo filename, and, when
+    /// `index` is given, whether it names the photo at that manifest position.
+    static func isPhotoFilename(
+        _ filename: String,
+        at index: Int? = nil
+    ) -> Bool {
+        guard let separatorIndex = filename.lastIndex(
+            of: PhotoFilename.extensionSeparator
+        ) else {
             return false
         }
 
-        let startIndex = filename.index(
-            filename.startIndex,
-            offsetBy: PhotoFilename.prefix.count
-        )
-        let endIndex = filename.index(
-            filename.endIndex,
-            offsetBy: -PhotoFilename.suffix.count
-        )
-        let indexText = filename[startIndex ..< endIndex]
+        let stem = filename[..<separatorIndex]
+        let fileExtension = filename[filename.index(after: separatorIndex)...]
+        guard PhotoFilename.allowedExtensions.contains(String(fileExtension)),
+              stem.hasPrefix(PhotoFilename.prefix) else {
+            return false
+        }
+        if let index {
+            return stem == photoFilenameStem(at: index)
+        }
+
+        let indexText = stem.dropFirst(PhotoFilename.prefix.count)
         guard indexText.count == PhotoFilename.indexWidth else {
             return false
         }
@@ -170,6 +209,52 @@ enum CookleDataArchivePackageCodec {
 }
 
 private extension CookleDataArchivePackageCodec {
+    static func validateHeader(
+        _ header: Manifest.Header
+    ) throws {
+        guard header.format == Manifest.formatIdentifier else {
+            throw CookleDataArchivePackageError.unsupportedFormat(
+                header.format
+            )
+        }
+        guard header.formatVersion == Manifest.currentFormatVersion else {
+            throw CookleDataArchivePackageError.unsupportedFormatVersion(
+                header.formatVersion
+            )
+        }
+        guard let version = SchemaVersions.version(
+            from: header.schemaVersion
+        ) else {
+            throw CookleDataArchivePackageError.unsupportedSchemaVersion(
+                header.schemaVersion
+            )
+        }
+        guard version <= SchemaVersions.current else {
+            throw CookleDataArchiveVersionError.newerSchemaVersion(
+                header.schemaVersion
+            )
+        }
+        guard SchemaVersions.readable.contains(version) else {
+            throw CookleDataArchivePackageError.unsupportedSchemaVersion(
+                header.schemaVersion
+            )
+        }
+    }
+
+    static func photoFilenameStem(
+        at index: Int
+    ) -> String {
+        let ordinal = index + PhotoFilename.firstIndexOffset
+        let indexText = String(
+            repeating: "0",
+            count: max(
+                PhotoFilename.indexWidth - String(ordinal).count,
+                .zero
+            )
+        ) + String(ordinal)
+        return PhotoFilename.prefix + indexText
+    }
+
     static func packageContents(
         from photos: [CookleDataArchive.PhotoRecord]
     ) throws -> (
@@ -184,7 +269,10 @@ private extension CookleDataArchivePackageCodec {
         for (index, photo) in photos.enumerated() {
             try Task.checkCancellation()
             let filename = photoFilename(
-                at: index
+                at: index,
+                fileExtension: photoFileExtension(
+                    for: photo.data
+                )
             )
             manifestPhotos.append(
                 .init(
@@ -217,7 +305,9 @@ private extension CookleDataArchivePackageCodec {
         photoDataByFilename: [String: Data]
     ) throws -> CookleDataArchive {
         .init(
-            formatVersion: manifest.archiveFormatVersion,
+            scope: .init(
+                rawValue: manifest.contents.scope
+            ),
             exportedAt: manifest.exportedAt,
             ingredients: manifest.ingredients,
             categories: manifest.categories,

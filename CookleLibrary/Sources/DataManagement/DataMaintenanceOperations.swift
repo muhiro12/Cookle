@@ -5,37 +5,24 @@ import SwiftData
 @preconcurrency
 @MainActor
 public enum DataMaintenanceOperations {
-    /// Maximum encoded backup payload accepted for restore.
-    nonisolated public static let maximumEncodedArchiveByteCount: Int =
-        CookleDataArchiveResourceLimits.standard.maximumEncodedByteCount
-    /// Maximum encoded manifest payload accepted in a version 2 package.
+    /// Maximum encoded manifest payload accepted in an export package.
     nonisolated public static let maximumArchiveManifestByteCount: Int =
         CookleDataArchiveResourceLimits.standard.maximumManifestByteCount
-    /// Maximum combined manifest and photo payload accepted in a version 2 package.
+    /// Maximum combined manifest and photo payload accepted in an export package.
     nonisolated public static let maximumArchivePackageByteCount: Int =
         CookleDataArchiveResourceLimits.standard.maximumPackageByteCount
-    /// Maximum individual photo payload accepted in a version 2 package.
+    /// Maximum individual photo payload accepted in an export package.
     nonisolated public static let maximumArchivePhotoByteCount: Int =
         CookleDataArchiveResourceLimits.standard.maximumPhotoByteCount
-    /// Maximum combined photo payload accepted in a version 2 package.
+    /// Maximum combined photo payload accepted in an export package.
     nonisolated public static let maximumArchiveAggregatePhotoByteCount: Int =
         CookleDataArchiveResourceLimits.standard.maximumAggregatePhotoByteCount
-    /// Maximum photo file count accepted in a version 2 package.
+    /// Maximum photo file count accepted in an export package.
     nonisolated public static let maximumArchivePhotoFileCount: Int =
         CookleDataArchiveResourceLimits.standard.maximumTopLevelRecordCountPerCategory
 
-    /// Encodes the current persisted user data as portable JSON backup data.
-    public static func encodedArchive(
-        from context: ModelContext,
-        calendar: Calendar = .current
-    ) throws -> Data {
-        try CookleDataArchiveService.encodedArchive(
-            from: context,
-            calendar: calendar
-        )
-    }
-
-    /// Builds a version 2 package with photo payloads stored outside its manifest.
+    /// Builds an export package of every current record, with photo payloads
+    /// stored outside its manifest.
     public static func archivePackage(
         from context: ModelContext,
         calendar: Calendar = .current
@@ -46,18 +33,10 @@ public enum DataMaintenanceOperations {
         )
     }
 
-    /// Decodes and validates JSON backup data before restore confirmation.
-    nonisolated public static func validatedArchive(
-        from data: Data,
-        calendar: Calendar = .current
-    ) throws -> CookleDataArchive {
-        try CookleDataArchiveService.validatedArchive(
-            from: data,
-            calendar: calendar
-        )
-    }
-
-    /// Validates a version 2 package before restore confirmation.
+    /// Validates an export package and returns its current-schema content.
+    ///
+    /// - Throws: `CookleDataArchiveVersionError.newerSchemaVersion` when a newer
+    ///   Cookle wrote the file, or a validation error for any other invalid file.
     nonisolated public static func validatedArchive(
         from package: CookleDataArchivePackage,
         calendar: Calendar = .current
@@ -72,7 +51,7 @@ public enum DataMaintenanceOperations {
     /// without changing the store.
     ///
     /// - Throws: `CookleDataImportError.duplicateCurrentDiaryDays` when a day the
-    ///   backup touches already has several diaries, which must be merged first.
+    ///   file touches already has several diaries, which must be merged first.
     public static func importReview(
         for archive: CookleDataArchive,
         context: ModelContext,
@@ -88,7 +67,9 @@ public enum DataMaintenanceOperations {
     /// Merges a validated archive into current data using a choice for every conflict.
     ///
     /// Nothing changes unless the review still matches current data and the
-    /// choices resolve every conflict. All changes are saved together.
+    /// choices resolve every conflict. All changes are saved together. Use
+    /// `CookleDataImportSelections.updatingMatchingData(for:)` to update every
+    /// match with the file's content instead of choosing per conflict.
     ///
     /// - Throws: `CookleDataImportError.reviewChanged` with a rebuilt review when
     ///   current data or the archive changed, `CookleDataImportError.invalidSelections`
@@ -107,17 +88,17 @@ public enum DataMaintenanceOperations {
         )
     }
 
-    /// Replaces current persisted user data with the supplied validated archive.
+    /// Replaces all current data with a validated complete-library archive.
     ///
-    /// Retained for compatibility checks of the replacement format; user-facing
-    /// imports merge through `importReview(for:context:calendar:)` and
-    /// `importArchive(_:review:selections:context:)` instead.
-    public static func restore(
-        _ archive: CookleDataArchive,
+    /// - Throws: `CookleDataImportError.replacementRequiresCompleteArchive` when
+    ///   the archive's scope is not `.all`, a validation error, or the save error
+    ///   after rolling back. Every failure leaves current data unchanged.
+    public static func replaceAllData(
+        with archive: CookleDataArchive,
         context: ModelContext
-    ) throws -> CookleDataRestoreSummary {
-        try CookleDataArchiveService.restore(
-            archive,
+    ) throws -> CookleDataReplacementSummary {
+        try CookleDataArchiveService.replaceAll(
+            with: archive,
             context: context
         )
     }

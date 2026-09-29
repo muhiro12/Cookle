@@ -3,7 +3,6 @@ import Foundation
 
 enum ArchiveResourceLimitTestSupport {
     static func makeLimits(
-        maximumEncodedByteCount: Int = 1_000_000,
         maximumManifestByteCount: Int = 1_000_000,
         maximumPackageByteCount: Int = 2_000_000,
         maximumTopLevelRecordCountPerCategory: Int = 10,
@@ -14,7 +13,6 @@ enum ArchiveResourceLimitTestSupport {
         maximumAggregatePhotoByteCount: Int = 256
     ) -> CookleDataArchiveResourceLimits {
         .init(
-            maximumEncodedByteCount: maximumEncodedByteCount,
             maximumManifestByteCount: maximumManifestByteCount,
             maximumPackageByteCount: maximumPackageByteCount,
             maximumTopLevelRecordCountPerCategory: maximumTopLevelRecordCountPerCategory,
@@ -26,23 +24,13 @@ enum ArchiveResourceLimitTestSupport {
         )
     }
 
-    static func encodedData(
-        from archive: CookleDataArchive
-    ) throws -> Data {
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-        return try encoder.encode(
-            archive
-        )
-    }
-
     static func makeArchive(
         ingredients: [CookleDataArchive.IngredientRecord] = [],
         photos: [CookleDataArchive.PhotoRecord] = [],
         recipes: [CookleDataArchive.RecipeRecord] = []
     ) -> CookleDataArchive {
         .init(
-            formatVersion: CookleDataArchive.currentFormatVersion,
+            scope: .all,
             exportedAt: .now,
             ingredients: ingredients,
             categories: [],

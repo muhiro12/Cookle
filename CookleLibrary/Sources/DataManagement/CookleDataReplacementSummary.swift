@@ -1,5 +1,5 @@
-/// Counts restored from a validated Cookle data archive.
-public struct CookleDataRestoreSummary: Sendable {
+/// Counts of the records a complete-library replacement wrote.
+public struct CookleDataReplacementSummary: Equatable, Sendable {
     public let ingredientCount: Int
     public let categoryCount: Int
     public let photoCount: Int

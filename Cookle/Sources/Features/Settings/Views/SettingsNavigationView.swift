@@ -41,7 +41,7 @@ struct SettingsNavigationView: View {
             #if DEBUG
             if hasPreparedCaptureImport == false {
                 hasPreparedCaptureImport = true
-                model.prepareCaptureImportIfNeeded(context: context)
+                await model.prepareCaptureImportIfNeeded(context: context)
             }
             #endif
         }

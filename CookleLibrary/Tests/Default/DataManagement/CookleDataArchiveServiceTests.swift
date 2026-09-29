@@ -12,24 +12,40 @@ struct CookleDataArchiveServiceTests {
     let context: ModelContext = makeTestContext()
 
     @Test
-    func restore_replaces_current_data_with_archive_contents() throws {
-        let backupData = try makeSampleBackupData()
+    func replaceAll_replaces_current_data_with_archive_contents() async throws {
+        let archive = try await makeSampleArchive()
         try insertTemporaryRecipe()
 
-        let summary = try CookleDataArchiveService.restore(
-            CookleDataArchiveService.validatedArchive(
-                from: backupData
-            ),
+        let summary = try CookleDataArchiveService.replaceAll(
+            with: archive,
             context: context
         )
 
-        try assertRestoredSampleData(summary)
+        try assertReplacedSampleData(summary)
+    }
+
+    @Test
+    func replaceAll_rejects_a_partial_archive_and_keeps_current_data() async throws {
+        let archive = try await makeSampleArchive()
+        try insertTemporaryRecipe()
+
+        #expect(throws: CookleDataImportError.replacementRequiresCompleteArchive) {
+            try CookleDataArchiveService.replaceAll(
+                with: CookleDataArchivePackageTestSupport.replacingScope(
+                    archive,
+                    with: .partial("recipes")
+                ),
+                context: context
+            )
+        }
+        #expect(context.hasChanges == false)
+        #expect(try context.fetch(.recipes(.all)).map(\.name).sorted() == ["Pancakes", "Temporary"])
     }
 
     @Test
     func validatedArchive_throws_when_recipe_references_missing_photo() {
         let archive = CookleDataArchive(
-            formatVersion: CookleDataArchive.currentFormatVersion,
+            scope: .all,
             exportedAt: .now,
             ingredients: [],
             categories: [],
@@ -58,15 +74,13 @@ struct CookleDataArchiveServiceTests {
             ],
             diaries: []
         )
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-        let data = try? encoder.encode(
-            archive
+        let package = try? CookleDataArchivePackageTestSupport.unvalidatedPackage(
+            from: archive
         )
 
         do {
             _ = try CookleDataArchiveService.validatedArchive(
-                from: try #require(data)
+                from: try #require(package)
             )
             Issue.record("Expected archive validation to fail.")
         } catch CookleDataArchiveService.ArchiveError.missingReference(let identifier) {
@@ -77,26 +91,10 @@ struct CookleDataArchiveServiceTests {
     }
 
     @Test
-    func validatedArchive_throws_when_format_version_is_unsupported() {
-        do {
-            _ = try CookleDataArchiveService.validatedArchive(
-                from: try encodedData(
-                    from: unsupportedFormatArchive()
-                )
-            )
-            Issue.record("Expected archive validation to fail.")
-        } catch CookleDataArchiveService.ArchiveError.unsupportedFormatVersion(let version) {
-            #expect(version == TestArchive.unsupportedFormatVersion)
-        } catch {
-            Issue.record(error)
-        }
-    }
-
-    @Test
     func validatedArchive_throws_when_archive_contains_duplicate_identifier() {
         do {
             _ = try CookleDataArchiveService.validatedArchive(
-                from: try encodedData(
+                from: try CookleDataArchivePackageTestSupport.unvalidatedPackage(
                     from: duplicateIngredientIdentifierArchive()
                 )
             )
@@ -112,7 +110,7 @@ struct CookleDataArchiveServiceTests {
     func validatedArchive_throws_when_diary_references_missing_recipe() {
         do {
             _ = try CookleDataArchiveService.validatedArchive(
-                from: try encodedData(
+                from: try CookleDataArchivePackageTestSupport.unvalidatedPackage(
                     from: missingDiaryRecipeArchive()
                 )
             )
@@ -125,17 +123,17 @@ struct CookleDataArchiveServiceTests {
     }
 
     @Test
-    func restore_keeps_existing_data_when_archive_is_invalid() throws {
+    func replaceAll_keeps_existing_data_when_archive_is_invalid() throws {
         try insertTemporaryRecipe()
 
         do {
-            _ = try CookleDataArchiveService.restore(
-                unsupportedFormatArchive(),
+            _ = try CookleDataArchiveService.replaceAll(
+                with: duplicateIngredientIdentifierArchive(),
                 context: context
             )
-            Issue.record("Expected archive restore to fail.")
-        } catch CookleDataArchiveService.ArchiveError.unsupportedFormatVersion(let version) {
-            #expect(version == TestArchive.unsupportedFormatVersion)
+            Issue.record("Expected archive replacement to fail.")
+        } catch CookleDataArchiveService.ArchiveError.duplicateIdentifier(let identifier) {
+            #expect(identifier == TestArchive.duplicateIngredientIdentifier)
         } catch {
             Issue.record(error)
         }
@@ -147,19 +145,19 @@ struct CookleDataArchiveServiceTests {
     }
 
     @Test
-    func restore_rolls_back_pending_replacement_when_save_fails() throws {
+    func replaceAll_rolls_back_pending_replacement_when_save_fails() throws {
         try insertTemporaryRecipe()
         let failingSave: (ModelContext) throws -> Void = { _ in
             throw SaveError.forcedFailure
         }
 
         do {
-            _ = try CookleDataArchiveService.restore(
-                emptyArchive(),
+            _ = try CookleDataArchiveService.replaceAll(
+                with: emptyArchive(),
                 context: context,
                 save: failingSave
             )
-            Issue.record("Expected archive restore to fail.")
+            Issue.record("Expected archive replacement to fail.")
         } catch SaveError.forcedFailure {
             // Expected failure.
         } catch {
@@ -179,21 +177,9 @@ struct CookleDataArchiveServiceTests {
 }
 
 private extension CookleDataArchiveServiceTests {
-    func encodedData(
-        from archive: CookleDataArchive
-    ) throws -> Data {
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-        return try encoder.encode(
-            archive
-        )
-    }
-
-    func emptyArchive(
-        formatVersion: Int = CookleDataArchive.currentFormatVersion
-    ) -> CookleDataArchive {
+    func emptyArchive() -> CookleDataArchive {
         .init(
-            formatVersion: formatVersion,
+            scope: .all,
             exportedAt: .now,
             ingredients: [],
             categories: [],
@@ -203,15 +189,9 @@ private extension CookleDataArchiveServiceTests {
         )
     }
 
-    func unsupportedFormatArchive() -> CookleDataArchive {
-        emptyArchive(
-            formatVersion: TestArchive.unsupportedFormatVersion
-        )
-    }
-
     func duplicateIngredientIdentifierArchive() -> CookleDataArchive {
         .init(
-            formatVersion: CookleDataArchive.currentFormatVersion,
+            scope: .all,
             exportedAt: .now,
             ingredients: [
                 ingredientRecord(
@@ -230,7 +210,7 @@ private extension CookleDataArchiveServiceTests {
 
     func missingDiaryRecipeArchive() -> CookleDataArchive {
         .init(
-            formatVersion: CookleDataArchive.currentFormatVersion,
+            scope: .all,
             exportedAt: .now,
             ingredients: [],
             categories: [],
@@ -268,7 +248,7 @@ private extension CookleDataArchiveServiceTests {
         )
     }
 
-    func makeSampleBackupData() throws -> Data {
+    func makeSampleArchive() async throws -> CookleDataArchive {
         let category = try Category.create(
             context: context,
             value: "Breakfast"
@@ -300,24 +280,22 @@ private extension CookleDataArchiveServiceTests {
                 note: "Weekend"
             )
         )
-        let diaryObject = DiaryObject.create(
-            context: context,
-            recipe: recipe,
-            type: .breakfast,
-            order: 1
-        )
         _ = Diary.create(
             context: context,
             content: .init(
                 date: TestArchive.diaryDate,
-                objects: [diaryObject],
+                objects: [
+                    DiaryObject.create(context: context, recipe: recipe, type: .breakfast, order: 1)
+                ],
                 note: "Good"
             )
         )
         try context.save()
 
-        return try CookleDataArchiveService.encodedArchive(
-            from: context
+        return try CookleDataArchiveService.validatedArchive(
+            from: try await CookleDataArchiveService.archivePackage(
+                from: context
+            )
         )
     }
 
@@ -338,8 +316,8 @@ private extension CookleDataArchiveServiceTests {
         try context.save()
     }
 
-    func assertRestoredSampleData(
-        _ summary: CookleDataRestoreSummary
+    func assertReplacedSampleData(
+        _ summary: CookleDataReplacementSummary
     ) throws {
         let restoredRecipes = try context.fetch(.recipes(.all))
         let restoredRecipe = try #require(restoredRecipes.first)

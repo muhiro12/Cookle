@@ -1,6 +1,6 @@
 import Foundation
 
-/// Portable version 2 backup package with photo payloads stored outside its manifest.
+/// Cookle data export package with photo payloads stored outside its manifest.
 public struct CookleDataArchivePackage: Sendable {
     /// One photo payload stored in the package's `photos` directory.
     public struct PhotoFile: Sendable {

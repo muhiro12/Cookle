@@ -1,7 +1,10 @@
 import Foundation
 
-/// Portable backup payload for user-authored Cookle data.
-public struct CookleDataArchive: Codable, Sendable {
+/// Validated, current-schema content of a Cookle data export file.
+///
+/// Records carry export-local identifiers and reference each other only within
+/// the same file, so every archive is referentially complete whatever its scope.
+public struct CookleDataArchive: Sendable {
     public struct IngredientRecord: Codable, Sendable {
         public let id: String
         public let value: String
@@ -70,9 +73,8 @@ public struct CookleDataArchive: Codable, Sendable {
         public let modifiedTimestamp: Date
     }
 
-    public static let currentFormatVersion = 1
-
-    public let formatVersion: Int
+    /// Which part of the exporting library the records represent.
+    public let scope: CookleDataArchiveScope
     public let exportedAt: Date
     public let ingredients: [IngredientRecord]
     public let categories: [CategoryRecord]

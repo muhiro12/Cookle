@@ -122,15 +122,4 @@ struct ArchivePackageRoundTripTests {
             Issue.record(error)
         }
     }
-
-    @Test
-    func legacy_version_1_json_import_remains_compatible() throws {
-        let archive = try DataMaintenanceOperations.validatedArchive(
-            from: Support.legacyArchiveData,
-            calendar: Support.calendar
-        )
-
-        #expect(archive.formatVersion == 1)
-        #expect(archive.photos.map(\.data) == [Support.photoData])
-    }
 }

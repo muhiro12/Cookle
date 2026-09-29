@@ -10,12 +10,6 @@ extension CookleDataArchiveService {
             archive,
             limits: limits
         )
-        guard archive.formatVersion == CookleDataArchive.currentFormatVersion else {
-            throw ArchiveError.unsupportedFormatVersion(
-                archive.formatVersion
-            )
-        }
-
         let ingredientIDs = try uniqueIDs(
             archive.ingredients.map(\.id)
         )

@@ -49,19 +49,35 @@ struct CookleDataImportSafetyTests {
     }
 
     @Test
-    func changed_backup_content_with_the_same_identifiers_requires_a_new_review() throws {
+    func changed_file_content_with_the_same_identifiers_requires_a_new_review() throws {
         let source = Store()
         try source.recipe("Curry", note: "Reviewed")
         let archive = try source.archive()
         let target = Store()
         let review = try target.review(of: archive)
-        var wire = try #require(JSONSerialization.jsonObject(with: JSONEncoder().encode(archive)) as? [String: Any])
-        var recipes = try #require(wire["recipes"] as? [[String: Any]])
-        recipes[0]["note"] = "Changed after review"
-        wire["recipes"] = recipes
-        let changed = try JSONDecoder().decode(
-            CookleDataArchive.self,
-            from: JSONSerialization.data(withJSONObject: wire)
+        let recipe = try #require(archive.recipes.first)
+        let changed = CookleDataArchive(
+            scope: archive.scope,
+            exportedAt: archive.exportedAt,
+            ingredients: archive.ingredients,
+            categories: archive.categories,
+            photos: archive.photos,
+            recipes: [
+                .init(
+                    id: recipe.id,
+                    name: recipe.name,
+                    photos: recipe.photos,
+                    servingSize: recipe.servingSize,
+                    cookingTime: recipe.cookingTime,
+                    ingredients: recipe.ingredients,
+                    steps: recipe.steps,
+                    categoryIDs: recipe.categoryIDs,
+                    note: "Changed after review",
+                    createdTimestamp: recipe.createdTimestamp,
+                    modifiedTimestamp: recipe.modifiedTimestamp
+                )
+            ] + archive.recipes.dropFirst(),
+            diaries: archive.diaries
         )
         #expect(throws: CookleDataImportError.self) {
             try DataMaintenanceOperations.importArchive(changed,

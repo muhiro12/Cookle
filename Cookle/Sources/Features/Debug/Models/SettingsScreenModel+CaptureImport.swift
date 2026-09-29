@@ -4,25 +4,28 @@ import SwiftData
 
 extension SettingsScreenModel {
     /// Opens a reproducible review over capture mode's isolated sample store.
-    func prepareCaptureImportIfNeeded(context: ModelContext) {
+    func prepareCaptureImportIfNeeded(context: ModelContext) async {
         guard CookleCaptureConfiguration.isEnabled,
               CookleCaptureConfiguration.screen == .backupImport else {
             return
         }
         do {
-            let data = try DataMaintenanceOperations.encodedArchive(from: context)
-            guard var wire = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-                  var recipes = wire["recipes"] as? [[String: Any]],
-                  var diaries = wire["diaries"] as? [[String: Any]],
+            let package = try await DataMaintenanceOperations.archivePackage(from: context)
+            guard var manifest = try JSONSerialization.jsonObject(with: package.manifestData) as? [String: Any],
+                  var recipes = manifest["recipes"] as? [[String: Any]],
+                  var diaries = manifest["diaries"] as? [[String: Any]],
                   recipes.isEmpty == false, diaries.isEmpty == false else {
                 return
             }
             recipes[0]["note"] = "Backup recipe note for import review"
             diaries[0]["note"] = "Backup diary note for import review"
-            wire["recipes"] = recipes
-            wire["diaries"] = diaries
+            manifest["recipes"] = recipes
+            manifest["diaries"] = diaries
             let archive = try DataMaintenanceOperations.validatedArchive(
-                from: JSONSerialization.data(withJSONObject: wire)
+                from: .init(
+                    manifestData: JSONSerialization.data(withJSONObject: manifest),
+                    photoFiles: package.photoFiles
+                )
             )
             pendingImport = .init(
                 archive: archive,

@@ -10,7 +10,7 @@ struct CookleDataArchiveDiaryDayValidationTests {
 
         do {
             _ = try CookleDataArchiveService.validatedArchive(
-                from: try encodedData(
+                from: try CookleDataArchivePackageTestSupport.unvalidatedPackage(
                     from: duplicateDiaryDayArchive()
                 ),
                 calendar: calendar
@@ -23,22 +23,12 @@ struct CookleDataArchiveDiaryDayValidationTests {
         }
     }
 
-    private func encodedData(
-        from archive: CookleDataArchive
-    ) throws -> Data {
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-        return try encoder.encode(
-            archive
-        )
-    }
-
     private func duplicateDiaryDayArchive() -> CookleDataArchive {
         let laterDate = TestArchive.diaryDate.addingTimeInterval(
             kArchiveDiaryDayTestTimeDifference
         )
         return .init(
-            formatVersion: CookleDataArchive.currentFormatVersion,
+            scope: .all,
             exportedAt: .now,
             ingredients: [],
             categories: [],

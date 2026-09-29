@@ -6,7 +6,6 @@ import SwiftData
 @MainActor
 enum CookleDataArchiveService {
     enum ArchiveError: LocalizedError, Sendable {
-        case unsupportedFormatVersion(Int)
         case duplicateIdentifier(String)
         case duplicateDiaryDay
         case missingReference(String)
@@ -23,21 +22,20 @@ enum CookleDataArchiveService {
 
         var errorDescription: String? {
             switch self {
-            case .unsupportedFormatVersion(let version):
-                "Unsupported backup format version: \(version)"
             case .duplicateIdentifier(let identifier):
-                "Backup contains a duplicate identifier: \(identifier)"
+                "Export file contains a duplicate identifier: \(identifier)"
             case .duplicateDiaryDay:
-                "Backup contains multiple diaries for the same calendar day."
+                "Export file contains multiple diaries for the same calendar day."
             case .missingReference(let identifier):
-                "Backup is missing referenced data: \(identifier)"
+                "Export file is missing referenced data: \(identifier)"
             case let .resourceByteCountExceeded(
                 category,
                 actualByteCount,
                 maximumByteCount
             ):
                 """
-                Backup \(category.rawValue) uses \(actualByteCount) bytes, exceeding the \(maximumByteCount)-byte limit.
+                Export file \(category.rawValue) uses \(actualByteCount) bytes, \
+                exceeding the \(maximumByteCount)-byte limit.
                 """
             case let .resourceCountExceeded(
                 category,
@@ -45,7 +43,7 @@ enum CookleDataArchiveService {
                 maximumCount
             ):
                 """
-                Backup contains \(actualCount) \(category.rawValue), exceeding the limit of \(maximumCount).
+                Export file contains \(actualCount) \(category.rawValue), exceeding the limit of \(maximumCount).
                 """
             }
         }
@@ -67,7 +65,7 @@ enum CookleDataArchiveService {
         let recipeIDs = identifierMap(for: recipes, prefix: "recipe")
 
         return .init(
-            formatVersion: CookleDataArchive.currentFormatVersion,
+            scope: .all,
             exportedAt: .now,
             ingredients: ingredientRecords(
                 ingredients,
@@ -99,73 +97,22 @@ enum CookleDataArchiveService {
         )
     }
 
-    /// Encodes the current persisted user data as portable JSON backup data.
-    static func encodedArchive(
-        from context: ModelContext,
-        calendar: Calendar = .current,
-        limits: CookleDataArchiveResourceLimits = .standard
-    ) throws -> Data {
-        let archive = try makeArchive(
-            context: context
-        )
-        try validate(
-            archive,
-            calendar: calendar,
-            limits: limits
-        )
-        let data = try encoder.encode(
-            archive
-        )
-        try CookleDataArchiveResourceValidator.validateEncodedData(
-            data,
-            limits: limits
-        )
-        return data
-    }
-
-    /// Decodes JSON backup data without applying it to the store.
-    nonisolated static func decodedArchive(
-        from data: Data,
-        limits: CookleDataArchiveResourceLimits = .standard
-    ) throws -> CookleDataArchive {
-        try CookleDataArchiveResourceValidator.validateEncodedData(
-            data,
-            limits: limits
-        )
-        return try decoder.decode(
-            CookleDataArchive.self,
-            from: data
-        )
-    }
-
-    /// Decodes and validates JSON backup data before restore confirmation.
-    nonisolated static func validatedArchive(
-        from data: Data,
-        calendar: Calendar = .current,
-        limits: CookleDataArchiveResourceLimits = .standard
-    ) throws -> CookleDataArchive {
-        let archive = try decodedArchive(
-            from: data,
-            limits: limits
-        )
-        try validate(
-            archive,
-            calendar: calendar,
-            limits: limits
-        )
-        return archive
-    }
-
-    /// Replaces current persisted user data with the supplied validated archive.
-    static func restore(
-        _ archive: CookleDataArchive,
+    /// Replaces all current persisted user data with a complete-library archive.
+    ///
+    /// Nothing changes unless the archive covers the whole library and passes
+    /// validation; any failure rolls the context back before rethrowing.
+    static func replaceAll(
+        with archive: CookleDataArchive,
         context: ModelContext,
         calendar: Calendar = .current,
         limits: CookleDataArchiveResourceLimits = .standard,
         save: (ModelContext) throws -> Void = { context in
             try context.save()
         }
-    ) throws -> CookleDataRestoreSummary {
+    ) throws -> CookleDataReplacementSummary {
+        guard archive.scope == .all else {
+            throw CookleDataImportError.replacementRequiresCompleteArchive
+        }
         try validate(
             archive,
             calendar: calendar,

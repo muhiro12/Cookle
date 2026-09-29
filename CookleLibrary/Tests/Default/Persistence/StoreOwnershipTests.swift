@@ -101,18 +101,7 @@ struct StoreOwnershipTests {
 
     private func storedContent(at url: URL) throws -> Data {
         let container = try ModelContainerFactory.makeReadOnlyContainer(url: url)
-        let archive = try CookleDataArchiveService.makeArchive(context: ModelContext(container))
-        return try CookleDataArchiveService.encoder.encode(
-            CookleDataArchive(
-                formatVersion: archive.formatVersion,
-                exportedAt: CookleDataArchivePackageTestSupport.exportedAt,
-                ingredients: archive.ingredients,
-                categories: archive.categories,
-                photos: archive.photos,
-                recipes: archive.recipes,
-                diaries: archive.diaries
-            )
-        )
+        return try TestArchiveContent.data(storedIn: ModelContext(container))
     }
 
     private func openApp(at url: URL) throws {

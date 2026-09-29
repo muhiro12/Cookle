@@ -3,9 +3,9 @@ import SwiftData
 
 /// Performs the mutations of an already validated merge import.
 ///
-/// Tags reuse current records with the exact same value, photos reuse a
-/// current photo with the same image bytes, and only backup content that the
-/// choices keep is inserted, so repeating an import does not duplicate data.
+/// Tags reuse a current record with the same value or keep the file's timestamps,
+/// photos reuse a current photo with the same image bytes, and only imported content
+/// the choices keep is inserted, so repeating an import does not duplicate data.
 @MainActor
 final class CookleDataImportApplier {
     private let archive: CookleDataArchive
@@ -14,8 +14,8 @@ final class CookleDataImportApplier {
     private let context: ModelContext
     private let builder: CookleDataImportSnapshotBuilder
     private let photoRecords: [String: CookleDataArchive.PhotoRecord]
-    private let ingredientValues: [String: String]
-    private let categoryValues: [String: String]
+    private let ingredientRecords: [String: CookleDataArchive.IngredientRecord]
+    private let categoryRecords: [String: CookleDataArchive.CategoryRecord]
 
     private var photoIndex = [Data: [Photo]]()
     private var resolvedPhotos = [String: Photo]()
@@ -40,14 +40,14 @@ final class CookleDataImportApplier {
                 (record.id, record)
             }
         )
-        ingredientValues = Dictionary(
+        ingredientRecords = Dictionary(
             uniqueKeysWithValues: archive.ingredients.map { record in
-                (record.id, record.value)
+                (record.id, record)
             }
         )
-        categoryValues = Dictionary(
+        categoryRecords = Dictionary(
             uniqueKeysWithValues: archive.categories.map { record in
-                (record.id, record.value)
+                (record.id, record)
             }
         )
     }
@@ -148,7 +148,7 @@ private extension CookleDataImportApplier {
         return counts
     }
 
-    /// Adds backup photos and tags that no backup recipe uses, so an import
+    /// Adds imported photos and tags that no imported recipe uses, so an import
     /// keeps standalone records without creating unused copies of discarded versions.
     func insertStandaloneRecords() throws {
         let usedPhotoIDs = Set(archive.recipes.flatMap { recipe in
@@ -177,7 +177,7 @@ private extension CookleDataImportApplier {
         )
     }
 
-    /// Keeps the recipe itself, so diary rows that show it show the backup content.
+    /// Keeps the recipe itself, so diary rows that show it show the imported content.
     func replaceContent(
         of recipe: Recipe,
         with record: CookleDataArchive.RecipeRecord
@@ -237,7 +237,7 @@ private extension CookleDataImportApplier {
         previousObjects.forEach(context.delete)
     }
 
-    /// Keeps every current row and adds backup rows beyond the number of
+    /// Keeps every current row and adds imported rows beyond the number of
     /// equivalent rows the day already has, so repeats are not collapsed.
     func combine(
         _ record: CookleDataArchive.DiaryRecord,
@@ -362,28 +362,38 @@ private extension CookleDataImportApplier {
     }
 
     func resolvedIngredient(_ recordID: String) throws -> Ingredient {
-        guard let value = ingredientValues[recordID] else {
+        guard let record = ingredientRecords[recordID] else {
             throw ArchiveError.missingReference(recordID)
         }
-        if let ingredient = ingredients[value] {
+        if let ingredient = ingredients[record.value] {
             return ingredient
         }
-
-        let ingredient = try Ingredient.create(context: context, value: value)
-        ingredients[value] = ingredient
+        let ingredient = try context.fetchFirst(.ingredients(.valueIs(record.value)))
+            ?? Ingredient.restore(
+                context: context,
+                value: record.value,
+                createdTimestamp: record.createdTimestamp,
+                modifiedTimestamp: record.modifiedTimestamp
+            )
+        ingredients[record.value] = ingredient
         return ingredient
     }
 
     func resolvedCategory(_ recordID: String) throws -> Category {
-        guard let value = categoryValues[recordID] else {
+        guard let record = categoryRecords[recordID] else {
             throw ArchiveError.missingReference(recordID)
         }
-        if let category = categories[value] {
+        if let category = categories[record.value] {
             return category
         }
-
-        let category = try Category.create(context: context, value: value)
-        categories[value] = category
+        let category = try context.fetchFirst(.categories(.valueIs(record.value)))
+            ?? Category.restore(
+                context: context,
+                value: record.value,
+                createdTimestamp: record.createdTimestamp,
+                modifiedTimestamp: record.modifiedTimestamp
+            )
+        categories[record.value] = category
         return category
     }
 }

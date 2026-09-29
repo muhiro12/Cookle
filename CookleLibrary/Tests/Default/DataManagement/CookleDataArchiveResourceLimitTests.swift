@@ -22,7 +22,7 @@ struct CookleDataArchiveResourceLimitTests {
 
         do {
             _ = try CookleDataArchiveService.validatedArchive(
-                from: Support.encodedData(
+                from: CookleDataArchivePackageTestSupport.unvalidatedPackage(
                     from: archive
                 ),
                 limits: Support.makeLimits(
@@ -55,7 +55,7 @@ struct CookleDataArchiveResourceLimitTests {
 
         do {
             _ = try CookleDataArchiveService.validatedArchive(
-                from: Support.encodedData(
+                from: CookleDataArchivePackageTestSupport.unvalidatedPackage(
                     from: archive
                 ),
                 limits: Support.makeLimits(
@@ -88,7 +88,7 @@ struct CookleDataArchiveResourceLimitTests {
 
         do {
             _ = try CookleDataArchiveService.validatedArchive(
-                from: Support.encodedData(
+                from: CookleDataArchivePackageTestSupport.unvalidatedPackage(
                     from: archive
                 ),
                 limits: Support.makeLimits(
@@ -121,7 +121,7 @@ struct CookleDataArchiveResourceLimitTests {
 
         do {
             _ = try CookleDataArchiveService.validatedArchive(
-                from: Support.encodedData(
+                from: CookleDataArchivePackageTestSupport.unvalidatedPackage(
                     from: archive
                 ),
                 limits: Support.makeLimits(
@@ -159,7 +159,7 @@ struct CookleDataArchiveResourceLimitTests {
 
         do {
             _ = try CookleDataArchiveService.validatedArchive(
-                from: Support.encodedData(
+                from: CookleDataArchivePackageTestSupport.unvalidatedPackage(
                     from: archive
                 ),
                 limits: Support.makeLimits(
@@ -182,7 +182,7 @@ struct CookleDataArchiveResourceLimitTests {
     }
 
     @Test
-    func restore_rejects_aggregate_nested_count_before_deleting_current_data() throws {
+    func replaceAll_rejects_aggregate_nested_count_before_deleting_current_data() throws {
         let context = makeTestContext()
         _ = Recipe.create(
             context: context,
@@ -213,8 +213,8 @@ struct CookleDataArchiveResourceLimitTests {
         )
 
         do {
-            _ = try CookleDataArchiveService.restore(
-                archive,
+            _ = try CookleDataArchiveService.replaceAll(
+                with: archive,
                 context: context,
                 limits: Support.makeLimits(
                     maximumAggregateNestedRecordCount: 3

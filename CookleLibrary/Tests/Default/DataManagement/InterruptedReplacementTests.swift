@@ -4,15 +4,15 @@ import SwiftData
 import Testing
 
 // Two failure modes criterion 3 names that cannot be injected literally: a
-// process killed mid-restore, and a disk that fills during the write.
+// process killed mid-replacement, and a disk that fills during the write.
 //
 // Both are modelled by their observable shape rather than their cause. An
-// interruption before the save is a restore whose context is discarded without
+// interruption before the save is a replacement whose context is discarded without
 // saving; a full disk is a save that throws a write error. What matters for
 // this issue is the same in both cases — the store on disk must still hold the
 // data it held before.
 @MainActor
-struct InterruptedRestoreTests {
+struct InterruptedReplacementTests {
     private typealias Support = CookleDataArchivePackageTestSupport
 
     enum WriteFailure: Error {
@@ -20,11 +20,11 @@ struct InterruptedRestoreTests {
     }
 
     @Test
-    func a_restore_abandoned_before_saving_leaves_the_store_intact() throws {
+    func a_replacement_abandoned_before_saving_leaves_the_store_intact() throws {
         try withDiskStore { url in
             let seeded = try makeContext(at: url)
-            _ = try DataMaintenanceOperations.restore(
-                Support.archive(),
+            _ = try DataMaintenanceOperations.replaceAllData(
+                with: Support.archive(),
                 context: seeded
             )
             let before = try storeContent(at: url)
@@ -33,8 +33,8 @@ struct InterruptedRestoreTests {
             // without saving, the way a killed process would drop it.
             try autoreleasepool {
                 let interrupted = try makeContext(at: url)
-                _ = try CookleDataArchiveService.restore(
-                    Support.archive(
+                _ = try CookleDataArchiveService.replaceAll(
+                    with: Support.archive(
                         photoPayloads: [Data([Value.replacementPhotoByte])]
                     ),
                     context: interrupted,
@@ -52,16 +52,16 @@ struct InterruptedRestoreTests {
     func a_save_that_runs_out_of_space_leaves_the_store_intact() throws {
         try withDiskStore { url in
             let seeded = try makeContext(at: url)
-            _ = try DataMaintenanceOperations.restore(
-                Support.archive(),
+            _ = try DataMaintenanceOperations.replaceAllData(
+                with: Support.archive(),
                 context: seeded
             )
             let before = try storeContent(at: url)
 
             let context = try makeContext(at: url)
             #expect(throws: WriteFailure.self) {
-                _ = try CookleDataArchiveService.restore(
-                    Support.archive(
+                _ = try CookleDataArchiveService.replaceAll(
+                    with: Support.archive(
                         photoPayloads: [Data([Value.replacementPhotoByte])]
                     ),
                     context: context,
@@ -71,7 +71,7 @@ struct InterruptedRestoreTests {
                 }
             }
 
-            // `restore` rolls the context back before rethrowing, so the
+            // `replaceAll` rolls the context back before rethrowing, so the
             // abandoned deletions and inserts must not reach disk.
             #expect(context.hasChanges == false)
             #expect(try storeContent(at: url) == before)
@@ -82,18 +82,18 @@ struct InterruptedRestoreTests {
     func the_store_survives_repeated_interrupted_attempts() throws {
         try withDiskStore { url in
             let seeded = try makeContext(at: url)
-            _ = try DataMaintenanceOperations.restore(
-                Support.archive(),
+            _ = try DataMaintenanceOperations.replaceAllData(
+                with: Support.archive(),
                 context: seeded
             )
             let before = try storeContent(at: url)
 
-            // A person retrying a failing restore several times.
+            // A person retrying a failing replacement several times.
             for _ in 0..<Value.attemptCount {
                 let context = try makeContext(at: url)
                 #expect(throws: WriteFailure.self) {
-                    _ = try CookleDataArchiveService.restore(
-                        Support.archive(
+                    _ = try CookleDataArchiveService.replaceAll(
+                        with: Support.archive(
                             photoPayloads: [Data([Value.replacementPhotoByte])]
                         ),
                         context: context,
@@ -106,11 +106,11 @@ struct InterruptedRestoreTests {
 
             #expect(try storeContent(at: url) == before)
 
-            // And a successful restore still works afterwards, so the failures
+            // And a successful replacement still works afterwards, so the failures
             // left nothing wedged.
             let recovering = try makeContext(at: url)
-            _ = try DataMaintenanceOperations.restore(
-                Support.archive(
+            _ = try DataMaintenanceOperations.replaceAllData(
+                with: Support.archive(
                     photoPayloads: [Data([Value.replacementPhotoByte])]
                 ),
                 context: recovering
@@ -120,7 +120,7 @@ struct InterruptedRestoreTests {
     }
 }
 
-private extension InterruptedRestoreTests {
+private extension InterruptedReplacementTests {
     enum Value {
         static let replacementPhotoByte: UInt8 = 99
         static let attemptCount = 3
@@ -152,19 +152,8 @@ private extension InterruptedRestoreTests {
     }
 
     func storeContent(at url: URL) throws -> Data {
-        let archive = try CookleDataArchiveService.makeArchive(
-            context: try makeContext(at: url)
-        )
-        return try CookleDataArchiveService.encoder.encode(
-            CookleDataArchive(
-                formatVersion: archive.formatVersion,
-                exportedAt: Support.exportedAt,
-                ingredients: archive.ingredients,
-                categories: archive.categories,
-                photos: archive.photos,
-                recipes: archive.recipes,
-                diaries: archive.diaries
-            )
+        try TestArchiveContent.data(
+            storedIn: makeContext(at: url)
         )
     }
 }
