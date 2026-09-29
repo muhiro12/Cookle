@@ -180,39 +180,36 @@ struct CookleDataImportRecipeTests {
     }
 
     @Test
-    func identical_content_in_two_current_recipes_requires_choosing_the_target() throws {
+    func identical_content_in_two_current_recipes_is_unchanged_and_needs_no_choice() throws {
         let source = Store()
         try source.recipe("Curry", steps: ["Same"])
         let archive = try source.archive()
         let target = Store()
         try target.recipe("Curry", steps: ["Same"])
         try target.recipe("Curry", steps: ["Same"])
-        let unrelated = try target.recipe("Salad")
+        try target.recipe("Salad")
         try target.context.save()
 
         let review = try target.review(of: archive)
-        let conflict = try #require(review.recipeConflicts.first)
-        #expect(review.unchangedRecipeCount == .zero)
-        #expect(conflict.candidates.count == 2)
-        #expect(conflict.candidates.filter(\.isIdenticalToBackup).count == 2)
+        #expect(review.hasConflicts == false)
+        #expect(review.unchangedRecipeCount == 1)
 
         #expect(throws: CookleDataImportError.invalidSelections) {
             try DataMaintenanceOperations.importArchive(
                 archive,
                 review: review,
-                selections: .init(recipeChoices: [conflict.id: .useBackup(unrelated.persistentModelID)]),
+                selections: .init(recipeChoices: ["extra": .keepBoth]),
                 context: target.context
             )
         }
-        #expect(throws: CookleDataImportError.invalidSelections) {
-            try DataMaintenanceOperations.importArchive(
-                archive,
-                review: review,
-                selections: .init(recipeChoices: [conflict.id: .keepBoth, "extra": .keepBoth]),
-                context: target.context
-            )
-        }
-        #expect(target.context.hasChanges == false)
+        let summary = try DataMaintenanceOperations.importArchive(
+            archive,
+            review: review,
+            selections: .init(),
+            context: target.context
+        )
+        #expect(summary.addedRecipeCount == .zero)
+        #expect(try target.count(Recipe.self) == 3)
     }
 
     @Test

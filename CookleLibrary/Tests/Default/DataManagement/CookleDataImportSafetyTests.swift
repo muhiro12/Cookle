@@ -117,17 +117,18 @@ struct CookleDataImportSafetyTests {
     }
 
     @Test
-    func one_identical_candidate_among_multiple_matches_still_requires_a_choice() throws {
+    func one_identical_candidate_among_multiple_matches_is_unchanged() throws {
         let source = Store()
         try source.recipe("Curry", steps: ["Same"])
         let archive = try source.archive()
         let target = Store()
-        try target.recipe("Curry", steps: ["Same"])
+        let identical = try target.recipe("Curry", steps: ["Same"])
         try target.recipe("Curry", steps: ["Different"])
         try target.context.save()
         let review = try target.review(of: archive)
-        #expect(review.recipeConflicts.count == 1)
-        #expect(review.unchangedRecipeCount == .zero)
+        #expect(review.recipeConflicts.isEmpty)
+        #expect(review.unchangedRecipeCount == 1)
+        #expect(Array(review.unchangedRecipeTargets.values) == [identical.persistentModelID])
     }
 
     @Test

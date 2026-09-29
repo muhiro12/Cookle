@@ -15,6 +15,12 @@ enum CookleDataImportService {
         var conflicts = [CookleDataImportReview.RecipeConflict]()
     }
 
+    /// A diary meal compared by meal and normalized recipe name.
+    struct NamedMealKey: Equatable {
+        let type: DiaryObjectType
+        let recipeNameKey: String
+    }
+
     struct DiaryClassification {
         var newRecordIDs = [String]()
         var unchangedTargets = [String: PersistentIdentifier]()
@@ -37,7 +43,6 @@ enum CookleDataImportService {
         let diaries = try classifyDiaries(
             archive: archive,
             currentDiaries: try context.fetch(.diaries(.all)),
-            unchangedRecipeTargets: recipes.unchangedTargets,
             calendar: calendar
         )
         return .init(
@@ -117,8 +122,8 @@ private extension CookleDataImportService {
                     diaryReview: .init(recipe: recipe)
                 )
             }
-            let identical = candidates.filter(\.isIdenticalToBackup)
-            if candidates.count == 1, let target = identical.first {
+            // Candidates are oldest first, so identical duplicates resolve to the oldest.
+            if let target = candidates.first(where: \.isIdenticalToBackup) {
                 classification.unchangedTargets[record.id] = target.id
             } else {
                 classification.conflicts.append(
@@ -136,7 +141,6 @@ private extension CookleDataImportService {
     static func classifyDiaries(
         archive: CookleDataArchive,
         currentDiaries: [Diary],
-        unchangedRecipeTargets: [String: PersistentIdentifier],
         calendar: Calendar
     ) throws -> DiaryClassification {
         let diariesByDay = Dictionary(grouping: currentDiaries) { diary in
@@ -159,7 +163,7 @@ private extension CookleDataImportService {
                 continue
             }
 
-            if isIdentical(record, to: current, unchangedRecipeTargets: unchangedRecipeTargets) {
+            if isIdentical(record, to: current, recipeNames: recipeNames) {
                 classification.unchangedTargets[record.id] = current.persistentModelID
                 continue
             }
@@ -176,37 +180,47 @@ private extension CookleDataImportService {
         return classification
     }
 
-    /// A backup day equals the current one only when every meal already
-    /// resolves to the same current recipe and the notes match.
+    /// A backup day equals the current one when the notes match and every
+    /// meal, in order, shows a recipe with the same name.
+    ///
+    /// Comparing names rather than resolved recipes keeps an edited recipe from
+    /// turning every day that shows it into a conflict; the recipe itself is
+    /// reviewed separately.
     static func isIdentical(
         _ record: CookleDataArchive.DiaryRecord,
         to diary: Diary,
-        unchangedRecipeTargets: [String: PersistentIdentifier]
+        recipeNames: [String: String]
     ) -> Bool {
         guard record.note == diary.note else {
             return false
         }
 
-        var backupMeals = [MealKey]()
-        let orderedBackup = record.objects.sorted { lhs, rhs in
-            (MealKey.index(of: lhs.type), lhs.order) < (MealKey.index(of: rhs.type), rhs.order)
-        }
-        for object in orderedBackup {
-            guard let target = unchangedRecipeTargets[object.recipeID] else {
-                return false
+        let backupMeals = record.objects
+            .sorted { lhs, rhs in
+                (MealKey.index(of: lhs.type), lhs.order) < (MealKey.index(of: rhs.type), rhs.order)
             }
-            backupMeals.append(.init(type: object.type, recipeID: target))
-        }
-        let orderedCurrent = (diary.objects ?? []).sorted { lhs, rhs in
-            (MealKey.index(of: lhs.type), lhs.order) < (MealKey.index(of: rhs.type), rhs.order)
-        }
-        let currentMeals = orderedCurrent.compactMap { object -> MealKey? in
-            guard let type = object.type,
-                  let recipe = object.recipe else {
-                return nil
+            .map { object in
+                NamedMealKey(
+                    type: object.type,
+                    recipeNameKey: CookleDataImportSnapshotBuilder.nameKey(
+                        recipeNames[object.recipeID] ?? ""
+                    )
+                )
             }
-            return .init(type: type, recipeID: recipe.persistentModelID)
-        }
+        let currentMeals = (diary.objects ?? [])
+            .sorted { lhs, rhs in
+                (MealKey.index(of: lhs.type), lhs.order) < (MealKey.index(of: rhs.type), rhs.order)
+            }
+            .compactMap { object -> NamedMealKey? in
+                guard let type = object.type,
+                      let recipe = object.recipe else {
+                    return nil
+                }
+                return .init(
+                    type: type,
+                    recipeNameKey: CookleDataImportSnapshotBuilder.nameKey(recipe.name)
+                )
+            }
         return backupMeals == currentMeals
     }
 

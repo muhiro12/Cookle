@@ -66,8 +66,8 @@ public struct CookleDataImportReview: Equatable, Sendable {
         let diaryReview: RecipeDeletionReview
     }
 
-    /// A backup recipe whose name matches current recipes with different
-    /// content, or identical content in more than one current recipe.
+    /// A backup recipe whose name matches only current recipes with
+    /// different content.
     public struct RecipeConflict: Equatable, Sendable, Identifiable {
         /// Backup-local identifier, valid only within this review.
         public let id: String
