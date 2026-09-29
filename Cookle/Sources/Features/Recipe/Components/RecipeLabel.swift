@@ -61,6 +61,7 @@ struct RecipeLabel: View {
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(accessibilitySummary))
+        .cookleRecipeEntityAnnotation(recipe)
         .recipeDeletionReview($deletionReview)
         .alert(
             Text("Cannot Add to Diary"),

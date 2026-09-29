@@ -61,6 +61,7 @@ struct RecipeView: View {
         }
         .mhScreen(title: Text(recipe.name))
         .cookleWrappingLargeTitle(Text(recipe.name))
+        .cookleRecipeEntityAnnotation(recipe)
         .cookleIdleTimerDisabled()
         .fullScreenCover(isPresented: $isCookingPresented) {
             NavigationStack {

@@ -1,3 +1,4 @@
+import AppIntents
 import Foundation
 import MHPlatform
 import UserNotifications
@@ -90,6 +91,16 @@ private extension RecipeSuggestionNotificationComposer {
                 ]
             )
         )
+        if #available(iOS 27.0, *),
+           !input.stableIdentifier.isEmpty {
+            // Lets Siri resolve "this recipe" for a delivered suggestion.
+            content.appEntityIdentifiers = [
+                .init(
+                    for: RecipeEntity.self,
+                    identifier: input.stableIdentifier
+                )
+            ]
+        }
         if let attachmentFileURL = input.attachmentFileURL,
            let attachment = try? UNNotificationAttachment(
             identifier: input.stableIdentifier,
