@@ -13,6 +13,9 @@ public enum TextRecognitionService {
         let request = VNRecognizeTextRequest()
         request.recognitionLevel = .accurate
         request.usesLanguageCorrection = true
+        // Without this, recognition reads only its default English, which
+        // turns a Japanese recipe into a few stray digits.
+        request.automaticallyDetectsLanguage = true
         let handler = VNImageRequestHandler(cgImage: cgImage)
         try handler.perform([request])
         let texts = request.results?.compactMap { $0.topCandidates(1).first?.string }
