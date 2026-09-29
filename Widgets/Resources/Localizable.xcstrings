@@ -854,41 +854,6 @@
         }
       }
     },
-    "Shows a recipe by selection: Latest, Last Opened, or Random." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shows a recipe by selection: Latest, Last Opened, or Random."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Muestra una receta según la selección: la más reciente, la última abierta o una al azar."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Affiche une recette selon la sélection : la plus récente, la dernière ouverte ou une recette aléatoire."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "選択に応じて、最新、最後に開いた、またはランダムなレシピを表示します。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "根据选择显示最新、上次打开或随机食谱。"
-          }
-        }
-      }
-    },
     "Shows diary by selection: Latest, Today, or Random." : {
       "localizations" : {
         "en" : {
