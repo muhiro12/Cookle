@@ -38,13 +38,13 @@ struct InferRecipeFormView: View {
     @State private var pendingInference: PendingInference?
     @FocusState private var isTextFocused: Bool
 
-    private let placeholder: LocalizedStringKey = .init(
-        """
+    // A literal, not `LocalizedStringKey.init(_:)`, so the string catalog
+    // extracts and translates the sample.
+    private let placeholder: LocalizedStringKey = """
         Spaghetti Carbonara for 2 people.
         Ingredients: Spaghetti 200g, Eggs 2, Pancetta 100g.
         Cook spaghetti. Fry pancetta. Mix eggs and cheese. Combine all.
         """
-    )
 
     var body: some View {
         TextEditor(text: $text)

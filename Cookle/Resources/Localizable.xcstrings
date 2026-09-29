@@ -12504,6 +12504,40 @@
         }
       }
     },
+    "Spaghetti Carbonara for 2 people.\nIngredients: Spaghetti 200g, Eggs 2, Pancetta 100g.\nCook spaghetti. Fry pancetta. Mix eggs and cheese. Combine all." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spaghetti Carbonara for 2 people.\nIngredients: Spaghetti 200g, Eggs 2, Pancetta 100g.\nCook spaghetti. Fry pancetta. Mix eggs and cheese. Combine all."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espagueti a la carbonara para 2 personas.\nIngredientes: espagueti 200 g, huevos 2, panceta 100 g.\nCuece el espagueti. Fríe la panceta. Mezcla los huevos y el queso. Combínalo todo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spaghetti carbonara pour 2 personnes.\nIngrédients : spaghetti 200 g, œufs 2, pancetta 100 g.\nFaites cuire les spaghetti. Faites revenir la pancetta. Mélangez les œufs et le fromage. Assemblez le tout."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スパゲッティ・カルボナーラ 2人分\n材料: スパゲッティ 200g、卵 2個、パンチェッタ 100g\nスパゲッティをゆでる。パンチェッタを焼く。卵とチーズを混ぜる。すべてを合わせる。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "培根蛋面，2人份。\n食材：意大利面 200克，鸡蛋 2个，意式培根 100克。\n煮意大利面。煎意式培根。将鸡蛋和奶酪混合。全部拌匀。"
+          }
+        }
+      }
+    },
     "Start Cooking" : {
       "localizations" : {
         "en" : {
@@ -15938,7 +15972,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "サービング"
+            "value" : "人分"
           }
         },
         "zh-Hans" : {

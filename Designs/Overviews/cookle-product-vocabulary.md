@@ -19,12 +19,13 @@ languages; the other locales keep the same concept boundaries.
 | Recipe step list | Steps | 手順 | 步骤 | Pasos | Étapes |
 | Recipe category | Category | カテゴリ | 分类 | Categoría | Catégorie |
 | Free-text note | Note | メモ | 备注 | Nota | Note |
-| Number of servings | Serving Size; `Servings: n` | 人数; `n人分` | 份数; `n人份` | Porciones | Portions |
+| Number of servings | Serving Size; `Servings: n`; unit `servings` | 人数; `n人分`; unit 人分 | 份数; `n人份`; unit 份 | Porciones | Portions |
 | Cooking time | Cooking Time | 調理時間 | 烹饪时间 | Tiempo de cocción | Temps de cuisson |
 | Recipe or diary image | Photo | 写真 | 照片 | Foto | Photo |
 | Daily notification | Recipe Suggestion | レシピ提案 | 食谱推荐 | Sugerencia de receta | Suggestion de recette |
 | Guided cooking | Start Cooking | 調理を開始 | 开始烹饪 | Comenzar a cocinar | Commencer à cuisiner |
 | Moving data in and out | Import, Export | 取り込む、書き出す | 导入、导出 | Importar, Exportar | Importer, Exporter |
+| Reading a recipe from an image | Read Recipe from Photo | 写真からレシピを読み取る | 从照片识别食谱 | Leer receta de una foto | Lire une recette sur une photo |
 | App settings tab | Settings | 設定 | 设置 | Ajustes | Réglages |
 <!-- markdownlint-enable MD013 -->
 
@@ -37,6 +38,8 @@ Usage rules:
   load. These are separate concepts.
 - A timer's per-step suggestion (`この手順のおすすめ`) is not a Recipe
   Suggestion. It keeps its own wording.
+- Reading a recipe from a photo says "read", not "import": the photo is read
+  for text and never attached to the recipe, unlike adding a Photo.
 
 ## 2) Platform terms
 
@@ -47,15 +50,12 @@ the same word each locale uses for iOS Settings.
 
 ## 3) Open vocabulary decisions
 
-These wordings depend on product decisions that are still open, so this note
-does not fix them yet:
+This wording depends on a product decision that is still open, so this note
+does not fix it yet:
 
 - **Recipe navigation wording**, such as "Open in Recipes" or tab-change
   phrasing, follows the recipe presentation contract in
   [#145](https://github.com/muhiro12/Cookle/issues/145).
-- **Photo capture wording**, the add-menu entry that reads a recipe from a
-  photo, follows the capture entry decision in
-  [#114](https://github.com/muhiro12/Cookle/issues/114).
 
 ## 4) Repeating the audit
 
