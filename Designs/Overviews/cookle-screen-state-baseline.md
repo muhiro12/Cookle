@@ -94,6 +94,6 @@ conventional filled square grid is a design decision and belongs to the issue.
   without taking over touch input.
 - **Real photographs in the grid and in recipe detail.** Only placeholder assets
   were rendered.
-- **Error states other than the one above.** Invalid backup restore, a full
+- **Error states other than the one above.** Invalid data import, a full
   disk, and model unavailability have deterministic library coverage but were
   not exercised as screens.

@@ -159,9 +159,10 @@ unsaved recipe-form draft. `[source confirmed]`
 ### User-initiated export
 
 `CookleDataArchiveDocument` is a `FileDocument` exported through
-`fileExporter`, to a destination the user picks. Its `.cooklebackup` package
-contains an archive manifest and photo files; legacy JSON remains importable.
-`[source confirmed]` —
+`fileExporter`, to a destination the user picks. Its `.cookle` package
+contains a JSON manifest and photo files, as specified in
+[the export format](cookle-data-export-format.md). Only that format is
+importable. `[source confirmed]` —
 `Cookle/Sources/Features/Settings/`.
 
 ## 2) Observations for reconciliation
@@ -228,8 +229,8 @@ conclusions and they propose no wording.
 3. **Camera.** `NSCameraUsageDescription` is declared — "Use the camera to take
    photos of your dishes or scan recipe text" — and the camera is not described
    as a data source.
-4. **Backup export.** The marketing page advertises exporting recipes, diary and
-   photos; the policy does not mention that the user can write that archive to
+4. **Data export.** The marketing page advertises exporting recipes, diary and
+   photos; the policy does not mention that the user can write that file to
    any destination they choose, including third-party storage.
 
 ### Framework claims checked against official contracts

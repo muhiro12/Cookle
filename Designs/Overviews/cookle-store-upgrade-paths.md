@@ -121,13 +121,15 @@ downgrade behaves this way, or that every future V2 is readable by V1.
 
 The practical boundary is that downgrade safety is **not guaranteed**. Before
 shipping a schema change, verify the actual old/new binaries and stores and
-preserve an independently readable recovery copy. A portable archive is a
-separate compatibility contract: restoring it into an older app also depends
-on that app accepting the archive version and representing its contents.
+preserve an independently readable recovery copy. A data export file carries
+the schema version that wrote it: an older app refuses a file from a newer
+schema, and a newer app reads older files through the migration plan, as
+[ADR 0012](../Decisions/0012-version-data-exports-with-the-swiftdata-schema.md)
+describes.
 
-Nothing currently prompts for a backup before a schema change, because no
-schema transition has shipped. Recovery planning is tracked in
-<https://github.com/muhiro12/Cookle/issues/133>.
+Nothing currently prompts for an export before a schema change, because no
+schema transition has shipped. ADR 0012 places that decision with the first
+migration stage.
 
 ## 7) Open questions
 
@@ -136,8 +138,9 @@ schema transition has shipped. Recovery planning is tracked in
   evidence; they do not prove that every released store opens. Which released
   versions are *declared* supported, and which historical binaries/stores must
   be tested before a schema change, has not been decided.
-- **Pre-upgrade backup.** Whether a schema change should require or offer a
-  backup first, given that safe downgrade is not guaranteed.
+- **Pre-migration copy.** Whether the first launch that runs a migration stage
+  keeps a copy of the pre-migration store files. ADR 0012 defers this decision
+  to the introduction of `CookleSchemaV2`.
 - **Low storage and interruption.** The relocation is ordered safely, but
   behavior under a disk-full copy or a kill mid-relocation is not covered by a
   test today.

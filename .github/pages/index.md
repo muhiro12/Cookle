@@ -59,7 +59,8 @@ cooking diary. Find a familiar meal or return to a recipe you want to cook again
 - Follow cooking steps with built-in timers and active-session controls on
   Apple Watch.
 - Open recipes and your cooking diary from widgets and App Shortcuts.
-- Export your recipes, diary, and photos as a backup, and restore it in Settings.
+- Export your recipes, diary, and photos to a file, and import it again in
+  Settings on this or another device.
 - An optional subscription enables iCloud sync and removes advertisements.
 
 ## Accessibility

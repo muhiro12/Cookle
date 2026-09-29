@@ -207,9 +207,11 @@ Cookle uses adaptive tab navigation.
   - choose notification time
   - send a test notification
   - open system notification settings when permission is denied
-- Export all persisted cooking data to a JSON backup.
-- Restore a validated JSON backup after explicit confirmation that it will
-  replace the current recipes, diaries, tags, and photos.
+- Export all persisted cooking data to a `.cookle` data file (see the
+  [export format](cookle-data-export-format.md)).
+- Import a validated data file. An empty library adds everything; otherwise
+  choose Merge, Choose for Each Item, or — for a complete-library file —
+  Replace, with exporting current data first offered for every method.
 - Delete all persisted app data with destructive confirmation.
 - Show third-party license information.
 - Re-show TipKit onboarding tips on demand.

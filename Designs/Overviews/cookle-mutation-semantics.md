@@ -202,10 +202,10 @@ wording for zero, one, and many affected meal rows. `[source confirmed]`
 
 **Decision for the current release.** Live reference semantics are the accepted
 behavior for this release. Past diary entries keep referencing the current
-recipe, and no model, schema, or backup format change introduces recipe
+recipe, and no model, schema, or export format change introduces recipe
 snapshots. Immutable diary history remains the preferred long-term direction
 and is feasible later; it is deferred because it needs its own schema,
-migration, backup, and synchronization design, not because the platform
+migration, export, and synchronization design, not because the platform
 prevents it. Tracked by https://github.com/muhiro12/Cookle/issues/132.
 
 ## 5) Diary edit and delete
@@ -273,52 +273,74 @@ or historical diary reference semantics described above. It does not provide
 after-save undo or reverse writes already synchronized to another device.
 
 **Bounded recovery.** Recovery from an applied recipe deletion, tag merge or
-deletion, or recipe edit is bounded to a backup exported before the change.
-Importing that backup through the reviewed merge in section 9 adds a deleted
-recipe back, can replace an edited or tag-merged recipe with its backed-up
-content in place, and can combine a day's diary so meal rows removed by a
-recipe deletion return. It restores recorded content, not previous identities:
-a merged-away or deleted tag returns only as a value of the recipes that
-carried it, and changes made after the export are not part of the recovery.
+deletion, or recipe edit is bounded to a data file exported before the change.
+Importing that file through section 9 adds a deleted recipe back, can replace
+an edited or tag-merged recipe with its exported content in place, and can
+combine a day's diary so meal rows removed by a recipe deletion return;
+replacing the whole library returns to the exported state. Merging restores
+recorded content, not previous identities: a merged-away or deleted tag returns
+only as a value of the recipes that carried it, and changes made after the
+export are not part of the recovery.
 Standard undo is not offered for these operations because a SwiftData
 `UndoManager` feasibility check did not restore a deleted recipe durably after
 saving and reopening the store. With iCloud sync enabled, the original change
 and a later recovery import each synchronize as ordinary saves; neither is
 withdrawn from devices that already received it. `[source confirmed]`
 
-## 9) Backup merge import
+## 9) Data import
 
-Settings imports merge into current data after a review. Backup-local identifiers
-are not persistent identities. Recipe names identify possible matches; recipe
-content determines equality. A single identical match is reused, while ambiguous
-or different matches require an explicit choice. The choices keep a selected
-current recipe, update it in place from the backup, or add a separate recipe.
-Imported diary references follow that choice. Updating a current recipe also
-changes what its existing diary references display. `[source confirmed]`
+Settings imports a validated data file after a review
+([format](cookle-data-export-format.md),
+[ADR 0012](../Decisions/0012-version-data-exports-with-the-swiftdata-schema.md)).
+Reviewing does not mutate data. With an empty library everything is added.
+Otherwise the person chooses one method, and exporting current data first is
+offered for each:
 
-Diary matching uses the review's calendar day. Different same-day diaries require
-keeping current content, replacing that day's meals and note, or combining both.
-Combining preserves the larger occurrence count for each recipe and meal type,
-keeps existing row order, appends missing backup rows, and retains different
-notes with a separator. An existing duplicate day must be resolved before that
-day can be imported. Unrelated records remain in place. `[runtime confirmed]` —
-`CookleDataImportRecipeTests` and `CookleDataImportDiaryTests`.
+- **Merge** adds new items and updates matching items with the file's content;
+  items only on this device stay.
+- **Choose for Each Item** resolves each differing item individually.
+- **Replace** deletes all current data and inserts the file's content. It is
+  available only for a complete-library file (`contents.scope` of `all`).
 
-Reviewing does not mutate data. Applying validates the archive, binds approval to
-its content, rechecks current affected data, and validates all choices before a
+**Matching.** File-local identifiers are not persistent identities. Recipe names
+identify possible matches; recipe content determines equality. When any current
+recipe with the name is identical, the file's recipe is unchanged and reuses the
+oldest identical one. Otherwise the recipe differs. Per item, the choices keep a
+selected current recipe, update it in place from the file, or add a separate
+recipe; Merge updates the oldest candidate that no other imported recipe keeps
+or updates, and adds a separate recipe when none is left. Imported diary
+references follow that choice. Updating a current recipe also changes what its
+existing diary references display. `[runtime confirmed]` —
+`CookleDataImportRecipeTests` and `CookleDataImportMergeTests`.
+
+Diary matching uses the review's calendar day. A day is unchanged when its note
+and, in order, each meal's type and recipe name match, so editing a recipe does
+not make the days that show it differ. Differing same-day diaries are kept,
+replaced (Merge always replaces), or combined. Combining preserves the larger
+occurrence count for each recipe and meal type, keeps existing row order,
+appends missing rows from the file, and retains different notes with a
+separator. An existing duplicate day must be resolved before that day can be
+imported. Unrelated records remain in place. `[runtime confirmed]` —
+`CookleDataImportDiaryTests` and `CookleDataImportMergeTests`.
+
+**Applying.** Merge and per-item imports validate the archive, bind approval to
+its content, recheck current affected data, and validate all choices before a
 single save. Stale review requires renewed confirmation. Photos are reused only
-when both bytes and source match; repeated note combinations do not append the
-same backup note again. Failed replacement preserves the original on-disk recipe,
-photo rows and diary references after reopening. `[runtime confirmed]` —
-`CookleDataImportSafetyTests`.
+when both bytes and source match; new tags keep the file's timestamps; repeated
+note combinations do not append the same note again. A failed merge preserves
+the original on-disk recipe, photo rows and diary references after reopening.
+Replacement validates the whole file before deleting anything and rolls back on
+a failed save; it gives every record a new identity, so open screens, routes,
+and cooking snapshots pointing at old records no longer resolve.
+`[runtime confirmed]` — `CookleDataImportSafetyTests`,
+`InterruptedReplacementTests`, `RejectedImportPreservationTests`, and
+`ReplacementInvalidationTests`.
 
-The legacy replacement operation remains for compatibility verification; Settings
-uses reviewed merge Operations. Import does not supply automatic undo, and a
-local rollback does not reverse writes already synchronized elsewhere. Exporting
-a separate backup beforehand preserves recovery material but does not promise an
-automatic return to the pre-import graph. With iCloud sync enabled, an applied
-import is an ordinary local save: its inserts and in-place updates synchronize
-like any other edit, and the review compares the backup only with data already
-on this device. Edits another device makes before or after convergence are not
-part of the review and follow normal synchronization. `[source confirmed]`
-Two-device iCloud convergence remains a separate verification requirement.
+Import does not supply automatic undo, and a local rollback does not reverse
+writes already synchronized elsewhere. Exporting beforehand preserves recovery
+material. With iCloud sync enabled, an applied import is an ordinary local save:
+its inserts, in-place updates, and replacement deletions synchronize like any
+other edit, and the review compares the file only with data already on this
+device. Edits another device makes before or after convergence are not part of
+the review and follow normal synchronization. `[source confirmed]` Two-device
+iCloud convergence remains a separate verification requirement.

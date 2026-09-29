@@ -341,7 +341,7 @@ catalog. Delivery is eventual, and the Watch labels these recipes as saved copie
 Starting from a copy is explicit. Updating the catalog does not replace the
 steps of an active session. One composed application context carries the catalog
 and session state so sending either cannot discard the other. Neither this cache
-nor session synchronization changes the SwiftData schema or backup format.
+nor session synchronization changes the SwiftData schema or data export format.
 
 Registering a recipe from Diary selection is an explicit independent save.
 Before saving, explain that the recipe survives cancellation of the later Diary.
