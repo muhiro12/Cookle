@@ -76,7 +76,8 @@ private extension AddRecipeToTodayDiaryButton {
     }
 }
 
-private extension DiaryObjectType {
+extension DiaryObjectType {
+    /// Singular meal name for choosing where a recipe goes in today's diary.
     var mealTitle: LocalizedStringKey {
         switch self {
         case .breakfast:

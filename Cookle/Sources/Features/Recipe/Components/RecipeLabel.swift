@@ -7,6 +7,9 @@ struct RecipeLabel: View {
     private var recipe
 
     @State private var deletionReview: RecipeDeletionReview?
+    @State private var diaryErrorMessage: String?
+
+    private let includesDiaryAndSharingActions: Bool
 
     var body: some View {
         Label {
@@ -38,15 +41,46 @@ struct RecipeLabel: View {
             }
         }
         .contextMenu {
-            EditRecipeButton()
-            DuplicateRecipeButton()
-            DeleteRecipeButton { review in
-                deletionReview = review
+            Section {
+                EditRecipeButton()
+                DuplicateRecipeButton()
+            }
+            if includesDiaryAndSharingActions {
+                Section {
+                    AddRecipeToTodayDiaryMenu { message in
+                        diaryErrorMessage = message
+                    }
+                    ShareRecipeLinkButton()
+                }
+            }
+            Section {
+                DeleteRecipeButton { review in
+                    deletionReview = review
+                }
             }
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(accessibilitySummary))
         .recipeDeletionReview($deletionReview)
+        .alert(
+            Text("Cannot Add to Diary"),
+            isPresented: isDiaryErrorPresented
+        ) {
+            Button("OK", role: .cancel) {
+                // Dismisses the alert.
+            }
+        } message: {
+            Text(diaryErrorMessage ?? "")
+        }
+    }
+
+    /// Creates a recipe row label.
+    ///
+    /// - Parameter includesDiaryAndSharingActions: Whether the context menu
+    ///   offers adding to today's diary and sharing. Pass `false` where the row
+    ///   is part of editing a diary, so the menu cannot bypass that form.
+    init(includesDiaryAndSharingActions: Bool = true) {
+        self.includesDiaryAndSharingActions = includesDiaryAndSharingActions
     }
 }
 
@@ -59,6 +93,19 @@ struct RecipeLabel: View {
 }
 
 private extension RecipeLabel {
+    var isDiaryErrorPresented: Binding<Bool> {
+        .init(
+            get: {
+                diaryErrorMessage != nil
+            },
+            set: { isPresented in
+                if !isPresented {
+                    diaryErrorMessage = nil
+                }
+            }
+        )
+    }
+
     var ingredientsText: String {
         recipe.ingredientObjects?
             .sorted()

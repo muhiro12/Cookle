@@ -147,7 +147,7 @@ private extension DiaryFormRecipeListView {
 
     func recipeRows(_ recipes: [Recipe]) -> some View {
         ForEach(recipes) { recipe in
-            RecipeLabel()
+            RecipeLabel(includesDiaryAndSharingActions: false)
                 .labelStyle(.titleAndLargeIcon)
                 .tag(recipe.persistentModelID)
                 .environment(recipe)
