@@ -51,7 +51,7 @@ struct SettingsNavigationView: View {
         .onChange(of: selection) {
             syncPreferredCompactColumn()
         }
-        .backupImportReview(
+        .dataImport(
             model: model,
             modelContainer: context.container,
             settingsActionService: settingsActionService,

@@ -21,7 +21,7 @@ final class SettingsActionService {
         await notificationService.applySuggestionSettings()
     }
 
-    func exportBackupPackage(
+    func exportDataPackage(
         modelContainer: ModelContainer
     ) async throws -> CookleDataArchivePackage {
         do {
@@ -40,17 +40,17 @@ final class SettingsActionService {
         } catch let error as SettingsActionError {
             throw error
         } catch {
-            throw SettingsActionError.backupCreationFailed
+            throw SettingsActionError.exportFailed
         }
     }
 
-    nonisolated func validatedBackupArchive(
+    nonisolated func validatedImportArchive(
         from url: URL
     ) async throws -> CookleDataArchive {
         let calendar = Calendar.current
         let validationTask = Task.detached(priority: .userInitiated) {
             try Task.checkCancellation()
-            let archive = try CookleBackupFileReader.validatedArchive(
+            let archive = try CookleDataFileReader.validatedArchive(
                 from: url,
                 calendar: calendar
             )
@@ -64,7 +64,7 @@ final class SettingsActionService {
         }
     }
 
-    /// Builds the merge review for a validated backup without changing data.
+    /// Builds the import review for a validated file without changing data.
     func importReview(
         for archive: CookleDataArchive,
         modelContainer: ModelContainer
@@ -77,15 +77,15 @@ final class SettingsActionService {
         } catch CookleDataImportError.duplicateCurrentDiaryDays {
             throw SettingsActionError.duplicateDiaryDaysBeforeImport
         } catch {
-            throw SettingsActionError.backupImportFailed
+            throw SettingsActionError.importFailed
         }
     }
 
-    /// Merges a reviewed backup using a choice for every conflict.
+    /// Merges a reviewed file using a choice for every conflict.
     ///
     /// A changed review is rethrown unchanged so the caller can ask again;
     /// every other failure leaves current data as it was.
-    func importBackup(
+    func importData(
         _ archive: CookleDataArchive,
         review: CookleDataImportReview,
         selections: CookleDataImportSelections,
@@ -106,12 +106,32 @@ final class SettingsActionService {
             }
             throw error
         } catch {
-            throw SettingsActionError.backupImportFailed
+            throw SettingsActionError.importFailed
         }
 
-        CookleWidgetReloader.reloadTodayDiaryWidget()
-        CookleWidgetReloader.reloadRecipeWidgets()
-        await notificationService.synchronizeScheduledSuggestions()
+        await reloadAfterImport()
+        return summary
+    }
+
+    /// Replaces all current data with a complete-library file.
+    ///
+    /// Every failure leaves current data as it was.
+    func replaceAllData(
+        with archive: CookleDataArchive,
+        modelContainer: ModelContainer
+    ) async throws -> CookleDataReplacementSummary {
+        try CookleMutationWorkflow.requireCleanContext(modelContainer.mainContext)
+        let summary: CookleDataReplacementSummary
+        do {
+            summary = try DataMaintenanceOperations.replaceAllData(
+                with: archive,
+                context: modelContainer.mainContext
+            )
+        } catch {
+            throw SettingsActionError.importFailed
+        }
+
+        await reloadAfterImport()
         return summary
     }
 
@@ -147,35 +167,41 @@ private extension SettingsActionService {
     enum SettingsActionError: LocalizedError {
         case duplicateDiaryDays
         case duplicateDiaryDaysBeforeImport
-        case backupCreationFailed
-        case backupImportFailed
+        case exportFailed
+        case importFailed
 
         var errorDescription: String? {
             switch self {
             case .duplicateDiaryDays:
                 String(
                     localized: """
-                    Open Diaries and merge duplicate diary entries before exporting a backup. \
-                    No backup was created, and your data was not changed.
+                    Open Diaries and merge duplicate diary entries before exporting your data. \
+                    No file was created, and your data was not changed.
                     """
                 )
-            case .backupCreationFailed:
+            case .exportFailed:
                 String(
-                    localized: "Cookle couldn’t create the backup. Your data was not changed."
+                    localized: "Cookle couldn’t export your data. Your data was not changed."
                 )
             case .duplicateDiaryDaysBeforeImport:
                 String(
                     localized: """
-                    Some days in this backup already have more than one diary. Open Diaries and merge \
-                    duplicate diary entries, then import again. Your data was not changed.
+                    Some days in this file already have more than one diary on this device. Open Diaries \
+                    and merge duplicate diary entries, then import again. Your data was not changed.
                     """
                 )
-            case .backupImportFailed:
+            case .importFailed:
                 String(
-                    localized: "Cookle couldn’t import the backup. Your current data was not changed."
+                    localized: "Cookle couldn’t import the file. Your current data was not changed."
                 )
             }
         }
+    }
+
+    func reloadAfterImport() async {
+        CookleWidgetReloader.reloadTodayDiaryWidget()
+        CookleWidgetReloader.reloadRecipeWidgets()
+        await notificationService.synchronizeScheduledSuggestions()
     }
 
     func normalizeNotificationDefaultsIfNeeded() {

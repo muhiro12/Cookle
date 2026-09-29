@@ -239,14 +239,14 @@
 				<string>public.content</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Cookle Backup</string>
+			<string>Cookle Data</string>
 			<key>UTTypeIdentifier</key>
-			<string>com.muhiro12.cookle.backup</string>
+			<string>com.muhiro12.cookle.data</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
-					<string>cooklebackup</string>
+					<string>cookle</string>
 				</array>
 			</dict>
 		</dict>

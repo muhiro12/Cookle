@@ -1,9 +1,9 @@
 import MHUI
 import SwiftUI
 
-/// Compares the current and backup diaries of one day and records how the
-/// backup day should be imported.
-struct BackupImportDiaryConflictView: View {
+/// Compares the current diary of one day with the diary in the file and
+/// records how the file's day should be imported.
+struct DataImportDiaryConflictView: View {
     let conflict: CookleDataImportReview.DiaryConflict
     let calendar: Calendar
 
@@ -13,8 +13,8 @@ struct BackupImportDiaryConflictView: View {
         Form {
             Section {
                 ForEach(CookleDataDiaryImportChoice.allCases, id: \.self) { option in
-                    BackupImportChoiceRow(
-                        title: BackupImportChoiceCopy.title(of: option),
+                    DataImportChoiceRow(
+                        title: DataImportChoiceCopy.title(of: option),
                         isSelected: choice == option
                     ) {
                         choice = option
@@ -26,7 +26,7 @@ struct BackupImportDiaryConflictView: View {
                 Text(
                     """
                     Replacing changes only this day's meals and note. Combining keeps every current \
-                    meal and adds backup meals the day does not already have, keeping repeated meals. \
+                    meal and adds meals from the file the day does not already have, keeping repeated meals. \
                     Different notes are both kept, separated by a line.
                     """
                 )
@@ -36,16 +36,16 @@ struct BackupImportDiaryConflictView: View {
                 snapshot: conflict.current
             )
             diarySection(
-                title: String(localized: "Backup Diary"),
+                title: String(localized: "Diary in File"),
                 snapshot: conflict.backup
             )
         }
         .mhFormChrome(.content)
-        .navigationTitle(BackupImportChoiceCopy.day(conflict.day, calendar: calendar))
+        .navigationTitle(DataImportChoiceCopy.day(conflict.day, calendar: calendar))
     }
 }
 
-private extension BackupImportDiaryConflictView {
+private extension DataImportDiaryConflictView {
     func diarySection(
         title: String,
         snapshot: CookleDataImportReview.DiarySnapshot

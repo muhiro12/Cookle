@@ -67,7 +67,7 @@ private extension DuplicateDiaryRepairSection {
                 Text(
                     """
                     Cookle found multiple diary entries for the same day. \
-                    Merge them before exporting a backup.
+                    Merge them before exporting your data.
                     """
                 )
                 .font(.subheadline)

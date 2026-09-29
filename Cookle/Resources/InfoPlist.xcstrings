@@ -14,37 +14,37 @@
       },
       "shouldTranslate" : false
     },
-    "Cookle Backup" : {
-      "comment" : "Description of Cookle's exported backup package file type.",
+    "Cookle Data" : {
+      "comment" : "Description of Cookle's exported data file type.",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookle Backup"
+            "value" : "Cookle Data"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Copia de seguridad de Cookle"
+            "value" : "Datos de Cookle"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sauvegarde Cookle"
+            "value" : "Données Cookle"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookleバックアップ"
+            "value" : "Cookleデータ"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookle 备份"
+            "value" : "Cookle 数据"
           }
         }
       }

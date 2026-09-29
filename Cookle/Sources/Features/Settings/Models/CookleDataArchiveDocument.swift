@@ -6,12 +6,12 @@ nonisolated struct CookleDataArchiveDocument: FileDocument {
     static let readableContentTypes = [UTType]()
 
     static let writableContentTypes: [UTType] = [
-        .cookleBackup
+        .cookleData
     ]
 
     static var importableContentTypes: [UTType] {
         [
-            .cookleBackup
+            .cookleData
         ]
     }
 

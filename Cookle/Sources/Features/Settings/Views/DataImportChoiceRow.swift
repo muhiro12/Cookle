@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// A selectable import option that shows a checkmark when chosen.
-struct BackupImportChoiceRow: View {
+struct DataImportChoiceRow: View {
     let title: String
     let isSelected: Bool
     let action: () -> Void

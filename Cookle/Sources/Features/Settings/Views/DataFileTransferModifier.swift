@@ -3,7 +3,7 @@ import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct BackupFileTransferModifier: ViewModifier {
+struct DataFileTransferModifier: ViewModifier {
     private struct ImportRequest: Identifiable {
         let id = UUID()
         let url: URL
@@ -18,22 +18,22 @@ struct BackupFileTransferModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .fileExporter(
-                isPresented: $model.isBackupExporterPresented,
-                document: model.backupDocument,
+                isPresented: $model.isDataExporterPresented,
+                document: model.exportDocument,
                 contentTypes: [
-                    .cookleBackup
+                    .cookleData
                 ],
-                defaultFilename: model.backupFilename
+                defaultFilename: model.exportFilename
             ) { result in
-                model.backupDocument = nil
+                model.exportDocument = nil
                 if case .failure(let error) = result {
                     model.errorMessage = error.localizedDescription
                 }
             } onCancellation: {
-                model.backupDocument = nil
+                model.exportDocument = nil
             }
             .fileImporter(
-                isPresented: $model.isBackupImporterPresented,
+                isPresented: $model.isDataImporterPresented,
                 allowedContentTypes: CookleDataArchiveDocument.importableContentTypes
             ) { result in
                 switch result {
@@ -46,7 +46,7 @@ struct BackupFileTransferModifier: ViewModifier {
                 }
             }
             .task(id: importRequest?.id) {
-                await prepareRequestedBackupImport()
+                await prepareRequestedDataImport()
             }
             .onDisappear {
                 importRequest = nil
@@ -54,12 +54,12 @@ struct BackupFileTransferModifier: ViewModifier {
     }
 }
 
-private extension BackupFileTransferModifier {
-    func prepareRequestedBackupImport() async {
+private extension DataFileTransferModifier {
+    func prepareRequestedDataImport() async {
         guard let importRequest else {
             return
         }
-        await model.prepareBackupImport(
+        await model.prepareDataImport(
             from: importRequest.url,
             modelContainer: modelContainer,
             settingsActionService: settingsActionService

@@ -11,7 +11,7 @@ struct SettingsDataManagementDialogsModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .modifier(
-                BackupFileTransferModifier(
+                DataFileTransferModifier(
                     model: model,
                     modelContainer: modelContainer,
                     settingsActionService: settingsActionService

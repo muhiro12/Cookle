@@ -3,7 +3,7 @@ import Foundation
 import SwiftData
 
 /// Words for import conflict choices, shared by the review list and detail screens.
-enum BackupImportChoiceCopy {
+enum DataImportChoiceCopy {
     static func status(
         of choice: CookleDataRecipeImportChoice?,
         in conflict: CookleDataImportReview.RecipeConflict
@@ -42,10 +42,10 @@ enum BackupImportChoiceCopy {
     ) -> String {
         guard conflict.candidates.count > 1,
               let number = candidateNumber(of: target, in: conflict) else {
-            return String(localized: "Replace Current Recipe with Backup")
+            return String(localized: "Replace Current Recipe with File Version")
         }
 
-        return String(localized: "Replace Current Recipe \(number) with Backup")
+        return String(localized: "Replace Current Recipe \(number) with File Version")
     }
 
     static func title(of choice: CookleDataDiaryImportChoice) -> String {
@@ -53,7 +53,7 @@ enum BackupImportChoiceCopy {
         case .keepCurrent:
             String(localized: "Keep Current Diary")
         case .useBackup:
-            String(localized: "Replace with Backup Diary")
+            String(localized: "Replace with Diary in File")
         case .combine:
             String(localized: "Combine Both")
         }
@@ -71,7 +71,7 @@ enum BackupImportChoiceCopy {
     }
 }
 
-private extension BackupImportChoiceCopy {
+private extension DataImportChoiceCopy {
     static func candidateNumber(
         of target: PersistentIdentifier,
         in conflict: CookleDataImportReview.RecipeConflict

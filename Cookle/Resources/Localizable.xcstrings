@@ -220,6 +220,40 @@
     "30" : {
       "shouldTranslate" : false
     },
+    "A current recipe cannot be replaced by more than one recipe from the file, or be kept and replaced at once. Review the recipe choices." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A current recipe cannot be replaced by more than one recipe from the file, or be kept and replaced at once. Review the recipe choices."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una receta actual no puede reemplazarse por más de una receta del archivo ni conservarse y reemplazarse a la vez. Revisa las opciones."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Une recette actuelle ne peut pas être remplacée par plusieurs recettes du fichier ni conservée et remplacée à la fois. Vérifiez les choix."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "同じ現在のレシピを、ファイル内の複数のレシピで置き換えたり、残すと置き換えるを同時に選んだりすることはできません。レシピの選択を見直してください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "同一当前食谱不能被文件中的多个食谱替换，也不能同时保留和替换。请检查食谱选项。"
+          }
+        }
+      }
+    },
     "A diary already exists for this calendar day." : {
       "localizations" : {
         "en" : {
@@ -284,6 +318,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "一道菜名或几句话，就能开始记录。"
+          }
+        }
+      }
+    },
+    "A notification is scheduled for this timer." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A notification is scheduled for this timer."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se ha programado una notificación para este temporizador."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Une notification est programmée pour ce minuteur."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このタイマーの終了通知を予約しました。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已为此计时器安排通知。"
           }
         }
       }
@@ -731,6 +799,40 @@
         }
       }
     },
+    "Add new items and update matching items with the file's content." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add new items and update matching items with the file's content."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añade los elementos nuevos y actualiza con el contenido del archivo los que coinciden."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajoute les nouveaux éléments et met à jour les éléments correspondants avec le contenu du fichier."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新しい項目を追加し、一致する項目をファイルの内容で更新します。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加新项目，并用文件内容更新匹配的项目。"
+          }
+        }
+      }
+    },
     "Add photos to browse them here." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1106,6 +1208,40 @@
         }
       }
     },
+    "Another Cooking Session" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Another Cooking Session"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otra sesión de cocina"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autre session de cuisine"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "別の調理セッション"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "另一个烹饪会话"
+          }
+        }
+      }
+    },
     "AppStorage" : {
       "shouldTranslate" : false
     },
@@ -1244,6 +1380,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Apple Intelligence 当前不可用。"
+          }
+        }
+      }
+    },
+    "Apple Watch started cooking %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Watch started cooking %@."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El Apple Watch empezó a cocinar %@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’Apple Watch a commencé à cuisiner %@."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Watchで「%@」の調理が始まりました。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Watch 开始烹饪“%@”。"
           }
         }
       }
@@ -1414,74 +1584,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "返回最近打开的食谱"
-          }
-        }
-      }
-    },
-    "Backup Diary" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Backup Diary"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Diario de la copia"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Journal de la sauvegarde"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "バックアップの日記"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "备份中的日记"
-          }
-        }
-      }
-    },
-    "Backup Version" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Backup Version"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Versión de la copia"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Version de la sauvegarde"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "バックアップの内容"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "备份版本"
           }
         }
       }
@@ -2030,36 +2132,36 @@
         }
       }
     },
-    "Cannot Import Backup" : {
+    "Cannot Import Data" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cannot Import Backup"
+            "value" : "Cannot Import Data"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No se puede importar la copia"
+            "value" : "No se pueden importar los datos"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Impossible d’importer la sauvegarde"
+            "value" : "Impossible d’importer les données"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "バックアップを取り込めません"
+            "value" : "データを取り込めません"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "无法导入备份"
+            "value" : "无法导入数据"
           }
         }
       }
@@ -2676,36 +2778,36 @@
         }
       }
     },
-    "Choose an option for every conflict below before importing." : {
+    "Choose for Each Item" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choose an option for every conflict below before importing."
+            "value" : "Choose for Each Item"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Elige una opción para cada conflicto antes de importar."
+            "value" : "Elegir para cada elemento"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choisissez une option pour chaque conflit ci-dessous avant d’importer."
+            "value" : "Choisir pour chaque élément"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "取り込む前に、下の各競合について選択してください。"
+            "value" : "項目ごとに選ぶ"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "导入前，请为下方每个冲突选择一个选项。"
+            "value" : "逐项选择"
           }
         }
       }
@@ -2846,6 +2948,40 @@
         }
       }
     },
+    "Compare each item that differs and choose which version to keep." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compare each item that differs and choose which version to keep."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compara cada elemento distinto y elige qué versión conservar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comparez chaque élément différent et choisissez la version à conserver."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "内容が異なる項目ごとに比較し、残す方を選びます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "逐一比较不同的项目，并选择要保留的版本。"
+          }
+        }
+      }
+    },
     "Content" : {
       "localizations" : {
         "en" : {
@@ -2948,138 +3084,172 @@
         }
       }
     },
-    "Cookle couldn’t access the selected backup. Choose it again and try again." : {
+    "Cookle couldn't schedule a notification for this timer." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookle couldn’t access the selected backup. Choose it again and try again."
+            "value" : "Cookle couldn't schedule a notification for this timer."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookle no pudo acceder a la copia de seguridad seleccionada. Selecciónala de nuevo e inténtalo otra vez."
+            "value" : "Cookle no ha podido programar una notificación para este temporizador."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookle n’a pas pu accéder à la sauvegarde sélectionnée. Sélectionnez-la de nouveau et réessayez."
+            "value" : "Cookle n’a pas pu programmer de notification pour ce minuteur."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookleは選択したバックアップにアクセスできませんでした。もう一度選択してお試しください。"
+            "value" : "このタイマーの終了通知を予約できませんでした。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookle 无法访问所选备份。请重新选择并重试。"
+            "value" : "Cookle无法为此计时器安排通知。"
           }
         }
       }
     },
-    "Cookle couldn’t create the backup. Your data was not changed." : {
+    "Cookle couldn’t access the selected file. Choose it again and try again." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookle couldn’t create the backup. Your data was not changed."
+            "value" : "Cookle couldn’t access the selected file. Choose it again and try again."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookle no pudo crear la copia de seguridad. Tus datos no se modificaron."
+            "value" : "Cookle no pudo acceder al archivo seleccionado. Selecciónalo de nuevo e inténtalo otra vez."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookle n’a pas pu créer la sauvegarde. Vos données n’ont pas été modifiées."
+            "value" : "Cookle n’a pas pu accéder au fichier sélectionné. Sélectionnez-le de nouveau et réessayez."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookleはバックアップを作成できませんでした。データは変更されていません。"
+            "value" : "Cookleは選択したファイルにアクセスできませんでした。もう一度選択してお試しください。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookle 无法创建备份。你的数据未被更改。"
+            "value" : "Cookle 无法访问所选文件。请重新选择并重试。"
           }
         }
       }
     },
-    "Cookle couldn’t import the backup. Your current data was not changed." : {
+    "Cookle couldn’t export your data. Your data was not changed." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookle couldn’t import the backup. Your current data was not changed."
+            "value" : "Cookle couldn’t export your data. Your data was not changed."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookle no pudo importar la copia de seguridad. Tus datos actuales no se modificaron."
+            "value" : "Cookle no pudo exportar tus datos. Tus datos no se modificaron."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookle n’a pas pu importer la sauvegarde. Vos données actuelles n’ont pas été modifiées."
+            "value" : "Cookle n’a pas pu exporter vos données. Vos données n’ont pas été modifiées."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookleはバックアップを取り込めませんでした。現在のデータは変更されていません。"
+            "value" : "Cookleはデータを書き出せませんでした。データは変更されていません。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookle 无法导入备份。你的当前数据未被更改。"
+            "value" : "Cookle 无法导出你的数据。你的数据未被更改。"
           }
         }
       }
     },
-    "Cookle found multiple diary entries for the same day. Merge them before exporting a backup." : {
+    "Cookle couldn’t import the file. Your current data was not changed." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookle found multiple diary entries for the same day. Merge them before exporting a backup."
+            "value" : "Cookle couldn’t import the file. Your current data was not changed."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookle encontró varias entradas de diario para el mismo día. Combínalas antes de exportar una copia de seguridad."
+            "value" : "Cookle no pudo importar el archivo. Tus datos actuales no se modificaron."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookle a trouvé plusieurs entrées de journal pour le même jour. Fusionnez-les avant d’exporter une sauvegarde."
+            "value" : "Cookle n’a pas pu importer le fichier. Vos données actuelles n’ont pas été modifiées."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "同じ日付に複数の日記があります。バックアップを書き出す前に統合してください。"
+            "value" : "Cookleはファイルを取り込めませんでした。現在のデータは変更されていません。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookle 发现同一天有多条日记。请先合并，再导出备份。"
+            "value" : "Cookle 无法导入该文件。你的当前数据未被更改。"
+          }
+        }
+      }
+    },
+    "Cookle found multiple diary entries for the same day. Merge them before exporting your data." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle found multiple diary entries for the same day. Merge them before exporting your data."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle encontró varias entradas de diario para el mismo día. Combínalas antes de exportar tus datos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle a trouvé plusieurs entrées de journal pour le même jour. Fusionnez-les avant d’exporter vos données."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "同じ日付に複数の日記があります。データを書き出す前に統合してください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle 发现同一天有多条日记。请先合并，再导出数据。"
           }
         }
       }
@@ -4173,6 +4343,40 @@
         }
       }
     },
+    "Delete all current data and use only the file's content." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete all current data and use only the file's content."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elimina todos los datos actuales y usa solo el contenido del archivo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprime toutes les données actuelles et n’utilise que le contenu du fichier."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "現在のデータをすべて削除し、ファイルの内容だけにします。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除所有当前数据，只保留文件中的内容。"
+          }
+        }
+      }
+    },
     "Delete diary for %@" : {
       "localizations" : {
         "en" : {
@@ -4577,6 +4781,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "日记冲突"
+          }
+        }
+      }
+    },
+    "Diary Days That Differ" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diary Days That Differ"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Días de diario distintos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jours de journal différents"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "内容が異なる日記の日"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不同的日记日期"
+          }
+        }
+      }
+    },
+    "Diary in File" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diary in File"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diario del archivo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Journal du fichier"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイルの日記"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件中的日记"
           }
         }
       }
@@ -5261,40 +5533,6 @@
         }
       }
     },
-    "Export Backup" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Export Backup"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exportar copia de seguridad"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exporter une sauvegarde"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "バックアップを書き出す"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "导出备份"
-          }
-        }
-      }
-    },
     "Export Current Data First" : {
       "localizations" : {
         "en" : {
@@ -5329,104 +5567,104 @@
         }
       }
     },
-    "Export a backup before importing or deleting. Importing merges a backup into your data after you review each conflict. Delete All permanently removes recipes, diaries, tags, and photos from this device." : {
+    "Export Data" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Export a backup before importing or deleting. Importing merges a backup into your data after you review each conflict. Delete All permanently removes recipes, diaries, tags, and photos from this device."
+            "value" : "Export Data"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exporta una copia de seguridad antes de importar o eliminar. Al importar, la copia se combina con tus datos después de que revises cada conflicto. Eliminar todo borra de forma permanente las recetas, diarios, etiquetas y fotos de este dispositivo."
+            "value" : "Exportar datos"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exportez une sauvegarde avant d’importer ou de supprimer. L’importation fusionne une sauvegarde avec vos données après que vous avez examiné chaque conflit. Tout supprimer efface définitivement les recettes, journaux, étiquettes et photos de cet appareil."
+            "value" : "Exporter les données"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "取り込みや削除の前にバックアップを書き出してください。取り込みでは、各競合を確認したうえでバックアップを現在のデータに統合します。すべて削除すると、このデバイスからレシピ、日記、タグ、写真が完全に削除されます。"
+            "value" : "データを書き出す"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "导入或删除前请先导出备份。导入会在你查看每个冲突后将备份合并到你的数据中。“全部删除”会从此设备永久移除食谱、日记、标签和照片。"
+            "value" : "导出数据"
           }
         }
       }
     },
-    "Export a backup before importing or deleting. Importing merges a backup into your data after you review each conflict. Imports and Delete All sync to other devices using the same iCloud account." : {
+    "Export your data to keep a copy you can import on any device. Export before importing or deleting, because neither can be undone. Delete All permanently removes recipes, diaries, tags, and photos from this device." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Export a backup before importing or deleting. Importing merges a backup into your data after you review each conflict. Imports and Delete All sync to other devices using the same iCloud account."
+            "value" : "Export your data to keep a copy you can import on any device. Export before importing or deleting, because neither can be undone. Delete All permanently removes recipes, diaries, tags, and photos from this device."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exporta una copia de seguridad antes de importar o eliminar. Al importar, la copia se combina con tus datos después de que revises cada conflicto. Las importaciones y Eliminar todo se sincronizan con otros dispositivos que usan la misma cuenta de iCloud."
+            "value" : "Exporta tus datos para guardar una copia que puedas importar en cualquier dispositivo. Exporta antes de importar o eliminar, porque ninguna de las dos acciones se puede deshacer. Eliminar todo borra de forma permanente las recetas, diarios, etiquetas y fotos de este dispositivo."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exportez une sauvegarde avant d’importer ou de supprimer. L’importation fusionne une sauvegarde avec vos données après que vous avez examiné chaque conflit. Les importations et Tout supprimer se synchronisent avec les autres appareils utilisant le même compte iCloud."
+            "value" : "Exportez vos données pour conserver une copie que vous pourrez importer sur n’importe quel appareil. Exportez-les avant d’importer ou de supprimer, car ces actions sont irréversibles. Tout supprimer efface définitivement les recettes, journaux, étiquettes et photos de cet appareil."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "取り込みや削除の前にバックアップを書き出してください。取り込みでは、各競合を確認したうえでバックアップを現在のデータに統合します。取り込みとすべて削除は、同じiCloudアカウントを使うほかのデバイスにも同期されます。"
+            "value" : "データを書き出すと、どのデバイスでも取り込めるコピーを残せます。取り込みや削除は元に戻せないため、その前に書き出してください。すべて削除すると、このデバイスからレシピ、日記、タグ、写真が完全に削除されます。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "导入或删除前请先导出备份。导入会在你查看每个冲突后将备份合并到你的数据中。导入和“全部删除”会同步到使用同一 iCloud 账户的其他设备。"
+            "value" : "导出数据可保留一份副本，并可在任何设备上导入。导入和删除都无法撤销，请在操作前先导出。“全部删除”会从此设备永久移除食谱、日记、标签和照片。"
           }
         }
       }
     },
-    "Export a separate backup before importing. Importing does not provide automatic undo." : {
+    "Export your data to keep a copy you can import on any device. Export before importing or deleting, because neither can be undone. Imports and Delete All sync to other devices using the same iCloud account." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Export a separate backup before importing. Importing does not provide automatic undo."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "取り込む前に、現在のデータを別のバックアップとして書き出してください。取り込みを自動で元に戻す機能はありません。"
+            "value" : "Export your data to keep a copy you can import on any device. Export before importing or deleting, because neither can be undone. Imports and Delete All sync to other devices using the same iCloud account."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exporta una copia de seguridad aparte antes de importar. La importación no se puede deshacer automáticamente."
+            "value" : "Exporta tus datos para guardar una copia que puedas importar en cualquier dispositivo. Exporta antes de importar o eliminar, porque ninguna de las dos acciones se puede deshacer. Las importaciones y Eliminar todo se sincronizan con otros dispositivos que usan la misma cuenta de iCloud."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exportez une sauvegarde distincte avant l’importation. Celle-ci ne propose pas d’annulation automatique."
+            "value" : "Exportez vos données pour conserver une copie que vous pourrez importer sur n’importe quel appareil. Exportez-les avant d’importer ou de supprimer, car ces actions sont irréversibles. Les importations et Tout supprimer se synchronisent avec les autres appareils utilisant le même compte iCloud."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "データを書き出すと、どのデバイスでも取り込めるコピーを残せます。取り込みや削除は元に戻せないため、その前に書き出してください。取り込みとすべて削除は、同じiCloudアカウントを使うほかのデバイスにも同期されます。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "导入前，请另行导出当前数据的备份。导入不提供自动撤销功能。"
+            "value" : "导出数据可保留一份副本，并可在任何设备上导入。导入和删除都无法撤销，请在操作前先导出。导入和“全部删除”会同步到使用同一 iCloud 账户的其他设备。"
           }
         }
       }
@@ -5495,6 +5733,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无法生成食谱结果。"
+          }
+        }
+      }
+    },
+    "File Version" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File Version"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versión del archivo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version du fichier"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイルの内容"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件版本"
           }
         }
       }
@@ -5669,36 +5941,70 @@
         }
       }
     },
-    "Identical to the backup version." : {
+    "How to Import" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Identical to the backup version."
+            "value" : "How to Import"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Idéntica a la versión de la copia."
+            "value" : "Cómo importar"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Identique à la version de la sauvegarde."
+            "value" : "Comment importer"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "バックアップの内容と同じです。"
+            "value" : "取り込み方法"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "与备份版本相同。"
+            "value" : "导入方式"
+          }
+        }
+      }
+    },
+    "Identical to the file version." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Identical to the file version."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Idéntica a la versión del archivo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Identique à la version du fichier."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイルの内容と同じです。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "与文件版本相同。"
           }
         }
       }
@@ -5740,40 +6046,6 @@
         }
       }
     },
-    "Import Backup" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import Backup"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importar copia de seguridad"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importer une sauvegarde"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "バックアップを取り込む"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "导入备份"
-          }
-        }
-      }
-    },
     "Import Choice" : {
       "localizations" : {
         "en" : {
@@ -5804,6 +6076,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "导入方式"
+          }
+        }
+      }
+    },
+    "Import Data" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import Data"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar datos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importer des données"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "データを取り込む"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入数据"
           }
         }
       }
@@ -5945,70 +6251,70 @@
         }
       }
     },
-    "Imported changes sync to other devices using the same iCloud account, and deleting them later on this device does not restore those devices." : {
+    "Imported changes sync to other devices using the same iCloud account." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Imported changes sync to other devices using the same iCloud account, and deleting them later on this device does not restore those devices."
+            "value" : "Imported changes sync to other devices using the same iCloud account."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Los cambios importados se sincronizan con otros dispositivos que usan la misma cuenta de iCloud, y eliminarlos después en este dispositivo no restaura esos dispositivos."
+            "value" : "Los cambios importados se sincronizan con otros dispositivos que usan la misma cuenta de iCloud."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les modifications importées se synchronisent avec les autres appareils utilisant le même compte iCloud, et les supprimer ensuite sur cet appareil ne restaure pas ces appareils."
+            "value" : "Les modifications importées se synchronisent avec les autres appareils utilisant le même compte iCloud."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "取り込んだ変更は同じiCloudアカウントを使うほかのデバイスにも同期されます。あとでこのデバイスで削除しても、ほかのデバイスは元に戻りません。"
+            "value" : "取り込んだ変更は、同じiCloudアカウントを使うほかのデバイスにも同期されます。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "导入的更改会同步到使用同一 iCloud 账户的其他设备，之后在此设备上删除这些更改也无法恢复那些设备。"
+            "value" : "导入的更改会同步到使用同一 iCloud 账户的其他设备。"
           }
         }
       }
     },
-    "Importing merges this backup into your current recipes, diaries, tags, and photos. Nothing is removed unless you choose to replace a conflicting item." : {
+    "Importing can't be undone. Export your current data first so you can return to it." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Importing merges this backup into your current recipes, diaries, tags, and photos. Nothing is removed unless you choose to replace a conflicting item."
+            "value" : "Importing can't be undone. Export your current data first so you can return to it."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Al importar, esta copia se combina con tus recetas, diarios, etiquetas y fotos actuales. No se elimina nada a menos que elijas reemplazar un elemento en conflicto."
+            "value" : "La importación no se puede deshacer. Exporta primero tus datos actuales para poder volver a ellos."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "L’importation fusionne cette sauvegarde avec vos recettes, journaux, étiquettes et photos actuels. Rien n’est supprimé sauf si vous choisissez de remplacer un élément en conflit."
+            "value" : "L’importation est irréversible. Exportez d’abord vos données actuelles pour pouvoir y revenir."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "取り込むと、このバックアップが現在のレシピ、日記、タグ、写真に統合されます。競合する項目の置き換えを選ばない限り、何も削除されません。"
+            "value" : "取り込みは元に戻せません。元の状態に戻せるよう、先に現在のデータを書き出してください。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "导入会将此备份合并到你当前的食谱、日记、标签和照片中。除非你选择替换有冲突的项目，否则不会删除任何内容。"
+            "value" : "导入无法撤销。请先导出当前数据，以便需要时恢复。"
           }
         }
       }
@@ -6389,6 +6695,40 @@
         }
       }
     },
+    "Items differ when a recipe name or diary day matches but the content does not." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Items differ when a recipe name or diary day matches but the content does not."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un elemento es distinto cuando coincide el nombre de la receta o el día del diario, pero no el contenido."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un élément est différent lorsque le nom de la recette ou le jour du journal correspond, mais pas le contenu."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピ名や日記の日付が一致していても、内容が違う項目は「異なる」として数えます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当食谱名称或日记日期相同但内容不同时，该项目即为不同。"
+          }
+        }
+      }
+    },
     "Keep Both" : {
       "localizations" : {
         "en" : {
@@ -6559,6 +6899,40 @@
         }
       }
     },
+    "Keep This Session" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep This Session"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mantener esta sesión"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Garder cette session"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このセッションを続ける"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保留此会话"
+          }
+        }
+      }
+    },
     "Keep ingredients, steps, photos, and notes together." : {
       "localizations" : {
         "en" : {
@@ -6593,36 +6967,36 @@
         }
       }
     },
-    "Keeping a current recipe ignores the backup version, and backup diaries that use it show the current recipe. Replacing updates that current recipe, so every diary meal that shows it shows the backup content. Keeping both adds the backup version as a separate recipe." : {
+    "Keeping a current recipe ignores the file version, and diaries in the file that use it show the current recipe. Replacing updates that current recipe, so every diary meal that shows it shows the file's content. Keeping both adds the file version as a separate recipe." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Keeping a current recipe ignores the backup version, and backup diaries that use it show the current recipe. Replacing updates that current recipe, so every diary meal that shows it shows the backup content. Keeping both adds the backup version as a separate recipe."
+            "value" : "Keeping a current recipe ignores the file version, and diaries in the file that use it show the current recipe. Replacing updates that current recipe, so every diary meal that shows it shows the file's content. Keeping both adds the file version as a separate recipe."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Conservar una receta actual ignora la versión de la copia, y los diarios de la copia que la usan muestran la receta actual. Reemplazar actualiza esa receta actual, por lo que cada comida del diario que la muestra mostrará el contenido de la copia. Conservar ambas añade la versión de la copia como una receta aparte."
+            "value" : "Conservar una receta actual ignora la versión del archivo, y los diarios del archivo que la usan muestran la receta actual. Reemplazar actualiza esa receta actual, por lo que cada comida del diario que la muestra mostrará el contenido del archivo. Conservar ambas añade la versión del archivo como una receta aparte."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Conserver une recette actuelle ignore la version de la sauvegarde, et les journaux de la sauvegarde qui l’utilisent affichent la recette actuelle. Remplacer met à jour cette recette actuelle : chaque repas du journal qui l’affiche montrera le contenu de la sauvegarde. Conserver les deux ajoute la version de la sauvegarde comme recette distincte."
+            "value" : "Conserver une recette actuelle ignore la version du fichier, et les journaux du fichier qui l’utilisent affichent la recette actuelle. Remplacer met à jour cette recette actuelle : chaque repas du journal qui l’affiche montrera le contenu du fichier. Conserver les deux ajoute la version du fichier comme recette distincte."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "現在のレシピを残すと、バックアップの内容は取り込まれず、バックアップの日記では現在のレシピが表示されます。置き換えると現在のレシピが更新され、そのレシピを表示している日記の食事すべてにバックアップの内容が表示されます。両方を残すと、バックアップの内容が別のレシピとして追加されます。"
+            "value" : "現在のレシピを残すと、ファイルの内容は取り込まれず、ファイルの日記では現在のレシピが表示されます。置き換えると現在のレシピが更新され、そのレシピを表示している日記の食事すべてにファイルの内容が表示されます。両方を残すと、ファイルの内容が別のレシピとして追加されます。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "保留当前食谱会忽略备份版本，使用它的备份日记会显示当前食谱。替换会更新该当前食谱，因此显示它的每个日记餐食都会显示备份内容。保留两者会将备份版本添加为单独的食谱。"
+            "value" : "保留当前食谱会忽略文件版本，文件中使用它的日记会显示当前食谱。替换会更新该当前食谱，因此显示它的每个日记餐食都会显示文件内容。保留两者会将文件版本添加为单独的食谱。"
           }
         }
       }
@@ -7172,6 +7546,40 @@
         }
       }
     },
+    "Merge This File?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Merge This File?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Combinar este archivo?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fusionner ce fichier ?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このファイルを統合しますか？"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "要合并此文件吗？"
+          }
+        }
+      }
+    },
     "Merge duplicate %@" : {
       "localizations" : {
         "en" : {
@@ -7440,6 +7848,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "新食谱"
+          }
+        }
+      }
+    },
+    "New items are added, and items with the same recipe name or diary day are updated with the file's content. Items that are only on this device stay. This can't be undone." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New items are added, and items with the same recipe name or diary day are updated with the file's content. Items that are only on this device stay. This can't be undone."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se añaden los elementos nuevos, y los que tienen el mismo nombre de receta o día de diario se actualizan con el contenido del archivo. Los elementos que solo están en este dispositivo se mantienen. No se puede deshacer."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les nouveaux éléments sont ajoutés, et ceux qui ont le même nom de recette ou le même jour de journal sont mis à jour avec le contenu du fichier. Les éléments présents uniquement sur cet appareil sont conservés. Cette action est irréversible."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新しい項目は追加され、レシピ名や日記の日付が同じ項目はファイルの内容で更新されます。このデバイスにしかない項目はそのまま残ります。この操作は元に戻せません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新项目会被添加，食谱名称或日记日期相同的项目会用文件内容更新。仅在此设备上的项目会保留。此操作无法撤销。"
           }
         }
       }
@@ -8262,36 +8704,36 @@
         }
       }
     },
-    "Nothing in this backup conflicts with your current data." : {
+    "Nothing in this file differs from your current data." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nothing in this backup conflicts with your current data."
+            "value" : "Nothing in this file differs from your current data."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nada de esta copia entra en conflicto con tus datos actuales."
+            "value" : "Nada de este archivo difiere de tus datos actuales."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rien dans cette sauvegarde n’entre en conflit avec vos données actuelles."
+            "value" : "Rien dans ce fichier ne diffère de vos données actuelles."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "このバックアップには現在のデータと競合する項目はありません。"
+            "value" : "このファイルには現在のデータと異なる項目はありません。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "此备份中没有与当前数据冲突的内容。"
+            "value" : "此文件中没有与当前数据不同的内容。"
           }
         }
       }
@@ -8360,6 +8802,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "系统设置中已禁用通知。"
+          }
+        }
+      }
+    },
+    "Notifications are off. Cookle won't send an alert when this timer ends." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications are off. Cookle won't send an alert when this timer ends."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las notificaciones están desactivadas. Cookle no avisará cuando termine este temporizador."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les notifications sont désactivées. Cookle ne vous avertira pas à la fin de ce minuteur."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通知がオフのため、このタイマーが終了してもCookleから通知されません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通知已关闭。此计时器结束时，Cookle不会发出提醒。"
           }
         }
       }
@@ -8603,36 +9079,36 @@
         }
       }
     },
-    "Open Diaries and merge duplicate diary entries before exporting a backup. No backup was created, and your data was not changed." : {
+    "Open Diaries and merge duplicate diary entries before exporting your data. No file was created, and your data was not changed." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open Diaries and merge duplicate diary entries before exporting a backup. No backup was created, and your data was not changed."
+            "value" : "Open Diaries and merge duplicate diary entries before exporting your data. No file was created, and your data was not changed."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Abre Diarios y combina las entradas duplicadas antes de exportar una copia de seguridad. No se creó ninguna copia de seguridad y tus datos no se modificaron."
+            "value" : "Abre Diarios y combina las entradas duplicadas antes de exportar tus datos. No se creó ningún archivo y tus datos no se modificaron."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ouvrez Journaux et fusionnez les entrées en double avant d’exporter une sauvegarde. Aucune sauvegarde n’a été créée et vos données n’ont pas été modifiées."
+            "value" : "Ouvrez Journaux et fusionnez les entrées en double avant d’exporter vos données. Aucun fichier n’a été créé et vos données n’ont pas été modifiées."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "「日記」を開き、重複した日記を統合してからバックアップを書き出してください。バックアップは作成されず、データも変更されていません。"
+            "value" : "「日記」を開き、重複した日記を統合してからデータを書き出してください。ファイルは作成されず、データも変更されていません。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "请打开“日记”并合并重复条目，然后再导出备份。未创建备份，你的数据也未更改。"
+            "value" : "请打开“日记”并合并重复条目，然后再导出数据。未创建文件，你的数据也未更改。"
           }
         }
       }
@@ -10271,6 +10747,40 @@
         }
       }
     },
+    "Recipes That Differ" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recipes That Differ"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recetas distintas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recettes différentes"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "内容が異なるレシピ"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不同的食谱"
+          }
+        }
+      }
+    },
     "Recipes: %@." : {
       "localizations" : {
         "en" : {
@@ -10369,6 +10879,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "食谱：新增 %1$lld 个，替换 %2$lld 个，保留 %3$lld 个，未变 %4$lld 个。"
+          }
+        }
+      }
+    },
+    "Recipes: %lld. Diaries: %lld. Photos: %lld." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recipes: %1$lld. Diaries: %2$lld. Photos: %3$lld."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recetas: %1$lld. Diarios: %2$lld. Fotos: %3$lld."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recettes : %1$lld. Journaux : %2$lld. Photos : %3$lld."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピ: %1$lld件、日記: %2$lld件、写真: %3$lld枚。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "食谱：%1$lld 个，日记：%2$lld 篇，照片：%3$lld 张。"
           }
         }
       }
@@ -10713,6 +11257,40 @@
         }
       }
     },
+    "Replace All Data?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Replace All Data?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Reemplazar todos los datos?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remplacer toutes les données ?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべてのデータを置き換えますか？"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "要替换所有数据吗？"
+          }
+        }
+      }
+    },
     "Replace Current Input?" : {
       "localizations" : {
         "en" : {
@@ -10747,70 +11325,70 @@
         }
       }
     },
-    "Replace Current Recipe %lld with Backup" : {
+    "Replace Current Recipe %lld with File Version" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Replace Current Recipe %lld with Backup"
+            "value" : "Replace Current Recipe %lld with File Version"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reemplazar la receta actual %lld con la copia"
+            "value" : "Reemplazar la receta actual %lld con la versión del archivo"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Remplacer la recette actuelle %lld par la sauvegarde"
+            "value" : "Remplacer la recette actuelle %lld par la version du fichier"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "現在のレシピ%lldをバックアップで置き換える"
+            "value" : "現在のレシピ%lldをファイルの内容で置き換える"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "用备份替换当前食谱 %lld"
+            "value" : "用文件版本替换当前食谱 %lld"
           }
         }
       }
     },
-    "Replace Current Recipe with Backup" : {
+    "Replace Current Recipe with File Version" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Replace Current Recipe with Backup"
+            "value" : "Replace Current Recipe with File Version"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reemplazar la receta actual con la copia"
+            "value" : "Reemplazar la receta actual con la versión del archivo"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Remplacer la recette actuelle par la sauvegarde"
+            "value" : "Remplacer la recette actuelle par la version du fichier"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "現在のレシピをバックアップで置き換える"
+            "value" : "現在のレシピをファイルの内容で置き換える"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "用备份替换当前食谱"
+            "value" : "用文件版本替换当前食谱"
           }
         }
       }
@@ -10919,70 +11497,70 @@
         }
       }
     },
-    "Replace with Backup Diary" : {
+    "Replace with Diary in File" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Replace with Backup Diary"
+            "value" : "Replace with Diary in File"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reemplazar con el diario de la copia"
+            "value" : "Reemplazar con el diario del archivo"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Remplacer par le journal de la sauvegarde"
+            "value" : "Remplacer par le journal du fichier"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "バックアップの日記で置き換える"
+            "value" : "ファイルの日記で置き換える"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "用备份中的日记替换"
+            "value" : "用文件中的日记替换"
           }
         }
       }
     },
-    "Replacing changes only this day's meals and note. Combining keeps every current meal and adds backup meals the day does not already have, keeping repeated meals. Different notes are both kept, separated by a line." : {
+    "Replacing changes only this day's meals and note. Combining keeps every current meal and adds meals from the file the day does not already have, keeping repeated meals. Different notes are both kept, separated by a line." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Replacing changes only this day's meals and note. Combining keeps every current meal and adds backup meals the day does not already have, keeping repeated meals. Different notes are both kept, separated by a line."
+            "value" : "Replacing changes only this day's meals and note. Combining keeps every current meal and adds meals from the file the day does not already have, keeping repeated meals. Different notes are both kept, separated by a line."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reemplazar solo cambia las comidas y la nota de este día. Combinar conserva todas las comidas actuales y añade las comidas de la copia que el día aún no tiene, manteniendo las comidas repetidas. Si las notas son distintas, se conservan ambas separadas por una línea."
+            "value" : "Reemplazar solo cambia las comidas y la nota de este día. Combinar conserva todas las comidas actuales y añade las comidas del archivo que el día aún no tiene, manteniendo las comidas repetidas. Si las notas son distintas, se conservan ambas separadas por una línea."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Remplacer ne modifie que les repas et la note de ce jour. Combiner conserve tous les repas actuels et ajoute les repas de la sauvegarde que ce jour n’a pas encore, en gardant les repas répétés. Des notes différentes sont toutes deux conservées, séparées par une ligne."
+            "value" : "Remplacer ne modifie que les repas et la note de ce jour. Combiner conserve tous les repas actuels et ajoute les repas du fichier que ce jour n’a pas encore, en gardant les repas répétés. Des notes différentes sont toutes deux conservées, séparées par une ligne."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "置き換えでは、この日の食事とノートだけが変わります。統合では、現在の食事をすべて残し、この日にまだないバックアップの食事を追加します。同じ食事の繰り返しも保たれます。ノートが異なる場合は、区切り線を挟んで両方残します。"
+            "value" : "置き換えでは、この日の食事とノートだけが変わります。統合では、現在の食事をすべて残し、この日にまだないファイルの食事を追加します。同じ食事の繰り返しも保たれます。ノートが異なる場合は、区切り線を挟んで両方残します。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "替换只会更改这一天的餐食和备注。合并会保留所有当前餐食，并添加这一天还没有的备份餐食，重复的餐食也会保留。不同的备注会同时保留，并以分隔线隔开。"
+            "value" : "替换只会更改这一天的餐食和备注。合并会保留所有当前餐食，并添加这一天还没有的文件中的餐食，重复的餐食也会保留。不同的备注会同时保留，并以分隔线隔开。"
           }
         }
       }
@@ -11187,40 +11765,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "继续烹饪"
-          }
-        }
-      }
-    },
-    "Review Import" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Review Import"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Revisar importación"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vérifier l’importation"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "取り込みの確認"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "检查导入"
           }
         }
       }
@@ -11633,36 +12177,36 @@
         }
       }
     },
-    "Select a Cookle backup package or a legacy JSON backup." : {
+    "Select a Cookle data file exported from Cookle." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Select a Cookle backup package or a legacy JSON backup."
+            "value" : "Select a Cookle data file exported from Cookle."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Selecciona un paquete de copia de seguridad de Cookle o una copia de seguridad JSON antigua."
+            "value" : "Selecciona un archivo de datos de Cookle exportado desde Cookle."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sélectionnez un paquet de sauvegarde Cookle ou une ancienne sauvegarde JSON."
+            "value" : "Sélectionnez un fichier de données Cookle exporté depuis Cookle."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cookleのバックアップパッケージ、または従来のJSONバックアップを選択してください。"
+            "value" : "Cookleから書き出したCookleデータファイルを選択してください。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "请选择 Cookle 备份包或旧版 JSON 备份。"
+            "value" : "请选择从 Cookle 导出的 Cookle 数据文件。"
           }
         }
       }
@@ -12313,36 +12857,36 @@
         }
       }
     },
-    "Some days in this backup already have more than one diary. Open Diaries and merge duplicate diary entries, then import again. Your data was not changed." : {
+    "Some days in this file already have more than one diary on this device. Open Diaries and merge duplicate diary entries, then import again. Your data was not changed." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Some days in this backup already have more than one diary. Open Diaries and merge duplicate diary entries, then import again. Your data was not changed."
+            "value" : "Some days in this file already have more than one diary on this device. Open Diaries and merge duplicate diary entries, then import again. Your data was not changed."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Algunos días de esta copia ya tienen más de un diario. Abre Diarios, combina las entradas duplicadas y vuelve a importar. Tus datos no se modificaron."
+            "value" : "Algunos días de este archivo ya tienen más de un diario en este dispositivo. Abre Diarios, combina las entradas duplicadas y vuelve a importar. Tus datos no se modificaron."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Certains jours de cette sauvegarde ont déjà plusieurs journaux. Ouvrez Journaux, fusionnez les entrées en double, puis importez à nouveau. Vos données n’ont pas été modifiées."
+            "value" : "Certains jours de ce fichier ont déjà plusieurs journaux sur cet appareil. Ouvrez Journaux, fusionnez les entrées en double, puis importez à nouveau. Vos données n’ont pas été modifiées."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "このバックアップに含まれる日のなかに、すでに日記が複数ある日があります。日記を開いて重複した日記を統合してから、もう一度取り込んでください。データは変更されていません。"
+            "value" : "このファイルに含まれる日のなかに、このデバイスですでに日記が複数ある日があります。日記を開いて重複した日記を統合してから、もう一度取り込んでください。データは変更されていません。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "此备份涉及的某些日期已有多篇日记。请打开“日记”合并重复的日记，然后重新导入。你的数据未被更改。"
+            "value" : "此文件涉及的某些日期在此设备上已有多篇日记。请打开“日记”合并重复的日记，然后重新导入。你的数据未被更改。"
           }
         }
       }
@@ -12824,6 +13368,40 @@
         }
       }
     },
+    "Switch to Apple Watch Session" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Switch to Apple Watch Session"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambiar a la sesión del Apple Watch"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passer à la session de l’Apple Watch"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Watchのセッションに切り替える"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "切换到 Apple Watch 会话"
+          }
+        }
+      }
+    },
     "Tags appear after recipes create them." : {
       "localizations" : {
         "en" : {
@@ -12995,36 +13573,36 @@
         }
       }
     },
-    "The backup was merged into your data." : {
+    "The file was merged into your data." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The backup was merged into your data."
+            "value" : "The file was merged into your data."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La copia de seguridad se combinó con tus datos."
+            "value" : "El archivo se combinó con tus datos."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La sauvegarde a été fusionnée avec vos données."
+            "value" : "Le fichier a été fusionné avec vos données."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "バックアップを現在のデータに統合しました。"
+            "value" : "ファイルを現在のデータに統合しました。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "备份已合并到你的数据中。"
+            "value" : "文件已合并到你的数据中。"
           }
         }
       }
@@ -13269,138 +13847,172 @@
         }
       }
     },
-    "The selected Cookle backup package has an invalid file structure." : {
+    "The selected Cookle data file has an invalid file structure." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The selected Cookle backup package has an invalid file structure."
+            "value" : "The selected Cookle data file has an invalid file structure."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El paquete de copia de seguridad de Cookle seleccionado tiene una estructura de archivos no válida."
+            "value" : "El archivo de datos de Cookle seleccionado tiene una estructura de archivos no válida."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Le paquet de sauvegarde Cookle sélectionné présente une structure de fichiers non valide."
+            "value" : "Le fichier de données Cookle sélectionné présente une structure de fichiers non valide."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "選択したCookleバックアップパッケージのファイル構造が正しくありません。"
+            "value" : "選択したCookleデータファイルのファイル構造が正しくありません。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "所选 Cookle 备份包的文件结构无效。"
+            "value" : "所选 Cookle 数据文件的文件结构无效。"
           }
         }
       }
     },
-    "The selected backup contains too many photo files." : {
+    "The selected file contains too many photo files." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The selected backup contains too many photo files."
+            "value" : "The selected file contains too many photo files."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La copia de seguridad seleccionada contiene demasiados archivos de fotos."
+            "value" : "El archivo seleccionado contiene demasiados archivos de fotos."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La sauvegarde sélectionnée contient trop de fichiers photo."
+            "value" : "Le fichier sélectionné contient trop de fichiers photo."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "選択したバックアップに含まれる写真ファイルが多すぎます。"
+            "value" : "選択したファイルに含まれる写真ファイルが多すぎます。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "所选备份包含过多照片文件。"
+            "value" : "所选文件包含过多照片文件。"
           }
         }
       }
     },
-    "The selected backup exceeds Cookle’s safe import size limit." : {
+    "The selected file exceeds Cookle’s safe import size limit." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The selected backup exceeds Cookle’s safe import size limit."
+            "value" : "The selected file exceeds Cookle’s safe import size limit."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La copia de seguridad seleccionada supera el límite de tamaño seguro de importación de Cookle."
+            "value" : "El archivo seleccionado supera el límite de tamaño seguro de importación de Cookle."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La sauvegarde sélectionnée dépasse la limite de taille d’importation sécurisée de Cookle."
+            "value" : "Le fichier sélectionné dépasse la limite de taille d’importation sécurisée de Cookle."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "選択したバックアップはCookleの安全な読み込みサイズ上限を超えています。"
+            "value" : "選択したファイルはCookleの安全な取り込みサイズ上限を超えています。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "所选备份超过了 Cookle 的安全导入大小限制。"
+            "value" : "所选文件超过了 Cookle 的安全导入大小限制。"
           }
         }
       }
     },
-    "The selected backup is invalid, damaged, or not supported by this version of Cookle." : {
+    "The selected file is invalid, damaged, or not supported by this version of Cookle." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The selected backup is invalid, damaged, or not supported by this version of Cookle."
+            "value" : "The selected file is invalid, damaged, or not supported by this version of Cookle."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La copia de seguridad seleccionada no es válida, está dañada o no es compatible con esta versión de Cookle."
+            "value" : "El archivo seleccionado no es válido, está dañado o no es compatible con esta versión de Cookle."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La sauvegarde sélectionnée est non valide, endommagée ou non prise en charge par cette version de Cookle."
+            "value" : "Le fichier sélectionné est non valide, endommagé ou non pris en charge par cette version de Cookle."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "選択したバックアップは無効か破損しているか、このバージョンのCookleでは対応していません。"
+            "value" : "選択したファイルは無効か破損しているか、このバージョンのCookleでは対応していません。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "所选备份无效、已损坏，或不受此版本的 Cookle 支持。"
+            "value" : "所选文件无效、已损坏，或不受此版本的 Cookle 支持。"
+          }
+        }
+      }
+    },
+    "The selected file was exported by a newer version of Cookle. Update Cookle, then try again." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The selected file was exported by a newer version of Cookle. Update Cookle, then try again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El archivo seleccionado se exportó con una versión más reciente de Cookle. Actualiza Cookle e inténtalo de nuevo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le fichier sélectionné a été exporté par une version plus récente de Cookle. Mettez Cookle à jour, puis réessayez."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選択したファイルは新しいバージョンのCookleで書き出されています。Cookleをアップデートしてから、もう一度お試しください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所选文件由更新版本的 Cookle 导出。请更新 Cookle 后重试。"
           }
         }
       }
@@ -13440,40 +14052,6 @@
         }
       }
     },
-    "These backup recipes match current recipe names. Compare the versions and choose which to keep." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "These backup recipes match current recipe names. Compare the versions and choose which to keep."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "現在のレシピと同じ名前のレシピがあります。内容を比較し、残すものを選んでください。"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Estas recetas coinciden con nombres actuales. Compara las versiones y elige cuál conservar."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ces recettes portent des noms déjà présents. Comparez les versions et choisissez celles à conserver."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "这些备份食谱与当前食谱同名。请比较各版本并选择要保留的内容。"
-          }
-        }
-      }
-    },
     "These days already have a different diary." : {
       "localizations" : {
         "en" : {
@@ -13508,6 +14086,108 @@
         }
       }
     },
+    "These recipes in the file match current recipe names. Compare the versions and choose which to keep." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "These recipes in the file match current recipe names. Compare the versions and choose which to keep."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estas recetas del archivo coinciden con nombres de recetas actuales. Compara las versiones y elige cuál conservar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ces recettes du fichier portent des noms de recettes actuelles. Comparez les versions et choisissez celles à conserver."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイル内に、現在のレシピと同じ名前のレシピがあります。内容を比較し、残すものを選んでください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件中的这些食谱与当前食谱同名。请比较各版本并选择要保留的内容。"
+          }
+        }
+      }
+    },
+    "This deletes all current recipes, diaries, tags, and photos and replaces them with the file's content. The change syncs to other devices using the same iCloud account. This can't be undone." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This deletes all current recipes, diaries, tags, and photos and replaces them with the file's content. The change syncs to other devices using the same iCloud account. This can't be undone."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta acción elimina todas las recetas, diarios, etiquetas y fotos actuales y los reemplaza con el contenido del archivo. El cambio se sincroniza con otros dispositivos que usan la misma cuenta de iCloud. No se puede deshacer."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette action supprime toutes les recettes, journaux, étiquettes et photos actuels et les remplace par le contenu du fichier. La modification se synchronise avec les autres appareils utilisant le même compte iCloud. Cette action est irréversible."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "現在のレシピ、日記、タグ、写真をすべて削除し、ファイルの内容に置き換えます。この変更は、同じiCloudアカウントを使うほかのデバイスにも同期されます。この操作は元に戻せません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这会删除所有当前的食谱、日记、标签和照片，并用文件内容替换。此更改会同步到使用同一 iCloud 账户的其他设备。此操作无法撤销。"
+          }
+        }
+      }
+    },
+    "This deletes all recipes, diaries, tags, and photos on this device and replaces them with the file's content. This can't be undone." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This deletes all recipes, diaries, tags, and photos on this device and replaces them with the file's content. This can't be undone."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta acción elimina todas las recetas, diarios, etiquetas y fotos de este dispositivo y los reemplaza con el contenido del archivo. No se puede deshacer."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette action supprime toutes les recettes, journaux, étiquettes et photos de cet appareil et les remplace par le contenu du fichier. Cette action est irréversible."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このデバイス上のレシピ、日記、タグ、写真をすべて削除し、ファイルの内容に置き換えます。この操作は元に戻せません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这会删除此设备上的所有食谱、日记、标签和照片，并用文件内容替换。此操作无法撤销。"
+          }
+        }
+      }
+    },
     "This deletes the photo from %lld recipe entries. The recipes stay saved." : {
       "localizations" : {
         "en" : {
@@ -13538,6 +14218,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "将从%lld个食谱条目中删除此照片。食谱会保留。"
+          }
+        }
+      }
+    },
+    "This file contains only part of a library, so it can be merged but can't replace your data." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This file contains only part of a library, so it can be merged but can't replace your data."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este archivo solo contiene parte de una biblioteca, así que puede combinarse, pero no reemplazar tus datos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce fichier ne contient qu’une partie d’une bibliothèque : il peut être fusionné, mais ne peut pas remplacer vos données."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このファイルにはデータの一部しか含まれていないため、統合はできますが、現在のデータを置き換えることはできません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此文件只包含部分数据，因此可以合并，但不能替换你的数据。"
           }
         }
       }
@@ -13610,70 +14324,70 @@
         }
       }
     },
-    "This permanently deletes all recipes, diaries, tags, and photos from this device. Export a backup first if you need to keep the data." : {
+    "This permanently deletes all recipes, diaries, tags, and photos from this device. Export your data first if you need to keep it." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This permanently deletes all recipes, diaries, tags, and photos from this device. Export a backup first if you need to keep the data."
+            "value" : "This permanently deletes all recipes, diaries, tags, and photos from this device. Export your data first if you need to keep it."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Esta acción elimina permanentemente de este dispositivo todas las recetas, entradas del diario, etiquetas y fotos. Si necesitas conservar los datos, exporta primero una copia de seguridad."
+            "value" : "Esta acción elimina permanentemente de este dispositivo todas las recetas, entradas del diario, etiquetas y fotos. Si necesitas conservar los datos, expórtalos primero."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cette action supprime définitivement de cet appareil toutes les recettes, les entrées du journal, les étiquettes et les photos. Si vous souhaitez conserver les données, exportez d’abord une sauvegarde."
+            "value" : "Cette action supprime définitivement de cet appareil toutes les recettes, les entrées du journal, les étiquettes et les photos. Si vous souhaitez conserver les données, exportez-les d’abord."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "この操作を実行すると、このデバイス上のすべてのレシピ、日記、タグ、写真が完全に削除されます。データを残す必要がある場合は、先にバックアップを書き出してください。"
+            "value" : "この操作を実行すると、このデバイス上のすべてのレシピ、日記、タグ、写真が完全に削除されます。データを残す必要がある場合は、先にデータを書き出してください。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "此操作会永久删除此设备上的所有食谱、日记、标签和照片。如果需要保留这些数据，请先导出备份。"
+            "value" : "此操作会永久删除此设备上的所有食谱、日记、标签和照片。如果需要保留这些数据，请先导出数据。"
           }
         }
       }
     },
-    "This permanently deletes all recipes, diaries, tags, and photos. The deletions sync to other devices using the same iCloud account. Export a backup first if you need to keep the data." : {
+    "This permanently deletes all recipes, diaries, tags, and photos. The deletions sync to other devices using the same iCloud account. Export your data first if you need to keep it." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This permanently deletes all recipes, diaries, tags, and photos. The deletions sync to other devices using the same iCloud account. Export a backup first if you need to keep the data."
+            "value" : "This permanently deletes all recipes, diaries, tags, and photos. The deletions sync to other devices using the same iCloud account. Export your data first if you need to keep it."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Esta acción elimina permanentemente todas las recetas, entradas del diario, etiquetas y fotos. Las eliminaciones se sincronizan con otros dispositivos que utilizan la misma cuenta de iCloud. Si necesitas conservar los datos, exporta primero una copia de seguridad."
+            "value" : "Esta acción elimina permanentemente todas las recetas, entradas del diario, etiquetas y fotos. Las eliminaciones se sincronizan con otros dispositivos que utilizan la misma cuenta de iCloud. Si necesitas conservar los datos, expórtalos primero."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cette action supprime définitivement toutes les recettes, les entrées du journal, les étiquettes et les photos. Les suppressions sont synchronisées avec les autres appareils utilisant le même compte iCloud. Si vous souhaitez conserver les données, exportez d’abord une sauvegarde."
+            "value" : "Cette action supprime définitivement toutes les recettes, les entrées du journal, les étiquettes et les photos. Les suppressions sont synchronisées avec les autres appareils utilisant le même compte iCloud. Si vous souhaitez conserver les données, exportez-les d’abord."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "この操作を実行すると、すべてのレシピ、日記、タグ、写真が完全に削除されます。削除内容は、同じiCloudアカウントを使用しているほかのデバイスにも同期されます。データを残す必要がある場合は、先にバックアップを書き出してください。"
+            "value" : "この操作を実行すると、すべてのレシピ、日記、タグ、写真が完全に削除されます。削除内容は、同じiCloudアカウントを使用しているほかのデバイスにも同期されます。データを残す必要がある場合は、先にデータを書き出してください。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "此操作会永久删除所有食谱、日记、标签和照片。删除内容会同步到使用同一iCloud账户的其他设备。如果需要保留这些数据，请先导出备份。"
+            "value" : "此操作会永久删除所有食谱、日记、标签和照片。删除内容会同步到使用同一iCloud账户的其他设备。如果需要保留这些数据，请先导出数据。"
           }
         }
       }
@@ -14739,6 +15453,74 @@
         }
       }
     },
+    "Update Cookle on Apple Watch to sync cooking." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update Cookle on Apple Watch to sync cooking."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualiza Cookle en el Apple Watch para sincronizar la cocina."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mettez à jour Cookle sur l’Apple Watch pour synchroniser la cuisine."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "調理を同期するにはApple WatchのCookleをアップデートしてください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请更新 Apple Watch 上的 Cookle 以同步烹饪。"
+          }
+        }
+      }
+    },
+    "Update Cookle on this iPhone to sync cooking." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update Cookle on this iPhone to sync cooking."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualiza Cookle en este iPhone para sincronizar la cocina."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mettez à jour Cookle sur cet iPhone pour synchroniser la cuisine."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "調理を同期するにはこのiPhoneのCookleをアップデートしてください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请更新此 iPhone 上的 Cookle 以同步烹饪。"
+          }
+        }
+      }
+    },
     "Update Diary" : {
       "localizations" : {
         "en" : {
@@ -15454,6 +16236,40 @@
         }
       }
     },
+    "You have no data on this device yet, so everything in this file will be added." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have no data on this device yet, so everything in this file will be added."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aún no tienes datos en este dispositivo, así que se añadirá todo el contenido de este archivo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vous n’avez encore aucune donnée sur cet appareil : tout le contenu de ce fichier sera ajouté."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このデバイスにはまだデータがないため、ファイルの内容がすべて追加されます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此设备上还没有数据，因此会添加此文件中的全部内容。"
+          }
+        }
+      }
+    },
     "You will lose any unsaved changes." : {
       "localizations" : {
         "en" : {
@@ -15488,36 +16304,70 @@
         }
       }
     },
-    "Your data changed after this review was prepared. The review was updated; choose again for any conflict that changed." : {
+    "Your data changed after this file was reviewed. The summary was updated; choose how to import again." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your data changed after this review was prepared. The review was updated; choose again for any conflict that changed."
+            "value" : "Your data changed after this file was reviewed. The summary was updated; choose how to import again."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tus datos cambiaron después de preparar esta revisión. La revisión se actualizó; vuelve a elegir para cada conflicto que cambió."
+            "value" : "Tus datos cambiaron después de revisar este archivo. El resumen se actualizó; vuelve a elegir cómo importar."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vos données ont changé après la préparation de cette vérification. Elle a été mise à jour ; choisissez à nouveau pour chaque conflit modifié."
+            "value" : "Vos données ont changé après la vérification de ce fichier. Le résumé a été mis à jour ; choisissez à nouveau comment importer."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "この確認を用意した後にデータが変更されたため、内容を更新しました。変更された競合についてもう一度選択してください。"
+            "value" : "ファイルの確認後にデータが変更されたため、概要を更新しました。取り込み方法をもう一度選んでください。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "准备此检查后你的数据已更改。检查内容已更新；请为已更改的冲突重新选择。"
+            "value" : "检查此文件后你的数据已更改。摘要已更新；请重新选择导入方式。"
+          }
+        }
+      }
+    },
+    "Your data was replaced with the file's content." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your data was replaced with the file's content."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tus datos se reemplazaron con el contenido del archivo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vos données ont été remplacées par le contenu du fichier."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "データをファイルの内容に置き換えました。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的数据已替换为文件内容。"
           }
         }
       }
@@ -15689,346 +16539,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "份"
-          }
-        }
-      }
-    },
-    "A current recipe cannot be replaced by multiple backup recipes or kept and replaced at once. Review the recipe choices." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A current recipe cannot be replaced by multiple backup recipes or kept and replaced at once. Review the recipe choices."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "同じレシピを複数のバックアップ内容で置き換えたり、残すと置き換えるを同時に選んだりすることはできません。レシピの選択を見直してください。"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Una receta actual no puede reemplazarse por varias recetas de la copia ni conservarse y reemplazarse a la vez. Revisa las opciones."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Une recette actuelle ne peut pas être remplacée par plusieurs recettes ni conservée et remplacée à la fois. Vérifiez les choix."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "同一当前食谱不能被多个备份食谱替换，也不能同时保留和替换。请检查食谱选项。"
-          }
-        }
-      }
-    },
-    "Apple Watch started cooking %@." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Watch started cooking %@."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "El Apple Watch empezó a cocinar %@."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’Apple Watch a commencé à cuisiner %@."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Watchで「%@」の調理が始まりました。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Watch 开始烹饪“%@”。"
-          }
-        }
-      }
-    },
-    "Keep This Session" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keep This Session"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mantener esta sesión"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Garder cette session"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "このセッションを続ける"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "保留此会话"
-          }
-        }
-      }
-    },
-    "Switch to Apple Watch Session" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Switch to Apple Watch Session"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cambiar a la sesión del Apple Watch"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Passer à la session de l’Apple Watch"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Watchのセッションに切り替える"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "切换到 Apple Watch 会话"
-          }
-        }
-      }
-    },
-    "Another Cooking Session" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Another Cooking Session"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Otra sesión de cocina"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Autre session de cuisine"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "別の調理セッション"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "另一个烹饪会话"
-          }
-        }
-      }
-    },
-    "Update Cookle on Apple Watch to sync cooking." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Update Cookle on Apple Watch to sync cooking."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Actualiza Cookle en el Apple Watch para sincronizar la cocina."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mettez à jour Cookle sur l’Apple Watch pour synchroniser la cuisine."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "調理を同期するにはApple WatchのCookleをアップデートしてください。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "请更新 Apple Watch 上的 Cookle 以同步烹饪。"
-          }
-        }
-      }
-    },
-    "Update Cookle on this iPhone to sync cooking." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Update Cookle on this iPhone to sync cooking."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Actualiza Cookle en este iPhone para sincronizar la cocina."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mettez à jour Cookle sur cet iPhone pour synchroniser la cuisine."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "調理を同期するにはこのiPhoneのCookleをアップデートしてください。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "请更新此 iPhone 上的 Cookle 以同步烹饪。"
-          }
-        }
-      }
-    },
-    "A notification is scheduled for this timer." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A notification is scheduled for this timer."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "このタイマーの終了通知を予約しました。"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se ha programado una notificación para este temporizador."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Une notification est programmée pour ce minuteur."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "已为此计时器安排通知。"
-          }
-        }
-      }
-    },
-    "Cookle couldn't schedule a notification for this timer." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cookle couldn't schedule a notification for this timer."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "このタイマーの終了通知を予約できませんでした。"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cookle no ha podido programar una notificación para este temporizador."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cookle n’a pas pu programmer de notification pour ce minuteur."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cookle无法为此计时器安排通知。"
-          }
-        }
-      }
-    },
-    "Notifications are off. Cookle won't send an alert when this timer ends." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Notifications are off. Cookle won't send an alert when this timer ends."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "通知がオフのため、このタイマーが終了してもCookleから通知されません。"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Las notificaciones están desactivadas. Cookle no avisará cuando termine este temporizador."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Les notifications sont désactivées. Cookle ne vous avertira pas à la fin de ce minuteur."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "通知已关闭。此计时器结束时，Cookle不会发出提醒。"
           }
         }
       }

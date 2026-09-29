@@ -3,10 +3,10 @@ import Foundation
 import SwiftData
 
 extension SettingsScreenModel {
-    /// Opens a reproducible review over capture mode's isolated sample store.
+    /// Opens a reproducible import over capture mode's isolated sample store.
     func prepareCaptureImportIfNeeded(context: ModelContext) async {
         guard CookleCaptureConfiguration.isEnabled,
-              CookleCaptureConfiguration.screen == .backupImport else {
+              CookleCaptureConfiguration.screen == .dataImport else {
             return
         }
         do {
@@ -17,8 +17,8 @@ extension SettingsScreenModel {
                   recipes.isEmpty == false, diaries.isEmpty == false else {
                 return
             }
-            recipes[0]["note"] = "Backup recipe note for import review"
-            diaries[0]["note"] = "Backup diary note for import review"
+            recipes[0]["note"] = "Recipe note from the imported file"
+            diaries[0]["note"] = "Diary note from the imported file"
             manifest["recipes"] = recipes
             manifest["diaries"] = diaries
             let archive = try DataMaintenanceOperations.validatedArchive(
@@ -31,7 +31,7 @@ extension SettingsScreenModel {
                 archive: archive,
                 review: try DataMaintenanceOperations.importReview(for: archive, context: context)
             )
-            isImportReviewPresented = true
+            isImportPresented = true
         } catch {
             errorMessage = error.localizedDescription
         }

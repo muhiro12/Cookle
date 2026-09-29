@@ -16,16 +16,16 @@ final class SettingsScreenModel {
     }
 
     var isDeleteAllConfirmationPresented = false
-    var isBackupExporterPresented = false
-    var isBackupImporterPresented = false
-    var isImportReviewPresented = false
+    var isDataExporterPresented = false
+    var isDataImporterPresented = false
+    var isImportPresented = false
     var isManageActionInProgress = false
     var isDailySuggestionTipEligible = false
     var isSubscriptionTipEligible = false
     var isShortcutsTipEligible = false
-    var backupDocument: CookleDataArchiveDocument?
-    var backupFilename = "Cookle-Backup.cooklebackup"
-    var pendingImport: PendingBackupImport?
+    var exportDocument: CookleDataArchiveDocument?
+    var exportFilename = "Cookle-Export.cookle"
+    var pendingImport: PendingDataImport?
     var importErrorMessage: String?
     var errorMessage: String?
     var statusMessage: String?
@@ -59,7 +59,7 @@ final class SettingsScreenModel {
         }
     }
 
-    func prepareBackupExport(
+    func prepareDataExport(
         modelContainer: ModelContainer,
         settingsActionService: SettingsActionService
     ) async {
@@ -70,24 +70,24 @@ final class SettingsScreenModel {
             isManageActionInProgress = false
         }
 
-        backupDocument = nil
+        exportDocument = nil
         do {
-            backupDocument = .init(
-                archivePackage: try await settingsActionService.exportBackupPackage(
+            exportDocument = .init(
+                archivePackage: try await settingsActionService.exportDataPackage(
                     modelContainer: modelContainer
                 )
             )
-            backupFilename = Self.backupFilename()
-            isBackupExporterPresented = true
+            exportFilename = Self.exportFilename()
+            isDataExporterPresented = true
         } catch is CancellationError {
-            // Leaving Settings cancels backup preparation without showing an error.
+            // Leaving Settings cancels export preparation without showing an error.
         } catch {
             errorMessage = error.localizedDescription
         }
     }
 
-    /// Validates the chosen file and builds its merge review without changing data.
-    func prepareBackupImport(
+    /// Validates the chosen file and builds its import review without changing data.
+    func prepareDataImport(
         from url: URL,
         modelContainer: ModelContainer,
         settingsActionService: SettingsActionService
@@ -100,7 +100,7 @@ final class SettingsScreenModel {
         }
 
         do {
-            let archive = try await settingsActionService.validatedBackupArchive(
+            let archive = try await settingsActionService.validatedImportArchive(
                 from: url
             )
             pendingImport = .init(
@@ -111,7 +111,7 @@ final class SettingsScreenModel {
                 )
             )
             importErrorMessage = nil
-            isImportReviewPresented = true
+            isImportPresented = true
         } catch is CancellationError {
             pendingImport = nil
         } catch {
@@ -120,17 +120,47 @@ final class SettingsScreenModel {
         }
     }
 
-    /// Merges the pending backup with the chosen conflict resolutions.
-    ///
-    /// When current data changed after the review, the review is rebuilt,
-    /// choices for changed conflicts are cleared, and nothing is imported until
-    /// the user confirms again. Other failures keep the review for a retry.
-    func importPendingBackup(
+    /// Merges the pending file, adding new items and updating every matching
+    /// item with the file's content.
+    func mergePendingImport(
         modelContainer: ModelContainer,
         settingsActionService: SettingsActionService
     ) async {
-        guard var pendingImport,
-              pendingImport.isReadyToImport,
+        guard let pendingImport else {
+            return
+        }
+
+        await applyPendingImport(
+            selections: .updatingMatchingData(for: pendingImport.review),
+            modelContainer: modelContainer,
+            settingsActionService: settingsActionService
+        )
+    }
+
+    /// Merges the pending file with the choice made for each differing item.
+    func importPendingSelections(
+        modelContainer: ModelContainer,
+        settingsActionService: SettingsActionService
+    ) async {
+        guard let pendingImport,
+              pendingImport.isReadyToImport else {
+            return
+        }
+
+        await applyPendingImport(
+            selections: pendingImport.selections,
+            modelContainer: modelContainer,
+            settingsActionService: settingsActionService
+        )
+    }
+
+    /// Replaces all current data with the pending complete-library file.
+    func replaceWithPendingImport(
+        modelContainer: ModelContainer,
+        settingsActionService: SettingsActionService
+    ) async {
+        guard let pendingImport,
+              pendingImport.canReplace,
               beginManageAction() else {
             return
         }
@@ -140,24 +170,11 @@ final class SettingsScreenModel {
 
         importErrorMessage = nil
         do {
-            let summary = try await settingsActionService.importBackup(
-                pendingImport.archive,
-                review: pendingImport.review,
-                selections: pendingImport.selections,
+            let summary = try await settingsActionService.replaceAllData(
+                with: pendingImport.archive,
                 modelContainer: modelContainer
             )
-            self.pendingImport = nil
-            isImportReviewPresented = false
-            statusMessage = Self.importMessage(summary)
-        } catch CookleDataImportError.reviewChanged(let currentReview) {
-            pendingImport.selections = pendingImport.selections.retainingUnchangedChoices(
-                from: pendingImport.review,
-                in: currentReview
-            )
-            pendingImport.review = currentReview
-            pendingImport.presentationID = UUID()
-            pendingImport.isReviewRefreshed = true
-            self.pendingImport = pendingImport
+            finishImport(message: Self.replacementMessage(summary))
         } catch {
             importErrorMessage = error.localizedDescription
         }
@@ -170,7 +187,7 @@ final class SettingsScreenModel {
 
         pendingImport = nil
         importErrorMessage = nil
-        isImportReviewPresented = false
+        isImportPresented = false
     }
 
     func deleteAllData(
@@ -265,16 +282,16 @@ final class SettingsScreenModel {
 }
 
 private extension SettingsScreenModel {
-    static func backupFilename(now: Date = .now) -> String {
+    static func exportFilename(now: Date = .now) -> String {
         let formatter = DateFormatter()
         formatter.calendar = .init(identifier: .gregorian)
         formatter.locale = .init(identifier: "en_US_POSIX")
         formatter.timeZone = .current
         formatter.dateFormat = "yyyyMMdd-HHmmss"
-        return "Cookle-Backup-\(formatter.string(from: now)).cooklebackup"
+        return "Cookle-Export-\(formatter.string(from: now)).cookle"
     }
 
-    static func importMessage(_ summary: CookleDataImportSummary) -> String {
+    static func mergeMessage(_ summary: CookleDataImportSummary) -> String {
         // Whole sentences rather than joined fragments: word order and the
         // position of each count differ per language.
         let recipes = String(
@@ -292,12 +309,73 @@ private extension SettingsScreenModel {
         )
         let photos = String(localized: "Photos added: \(summary.addedPhotoCount).")
         return [
-            String(localized: "The backup was merged into your data."),
+            String(localized: "The file was merged into your data."),
             recipes,
             diaries,
             photos
         ]
         .joined(separator: "\n")
+    }
+
+    static func replacementMessage(_ summary: CookleDataReplacementSummary) -> String {
+        [
+            String(localized: "Your data was replaced with the file's content."),
+            String(
+                localized: """
+                Recipes: \(summary.recipeCount). Diaries: \(summary.diaryCount). \
+                Photos: \(summary.photoCount).
+                """
+            )
+        ]
+        .joined(separator: "\n")
+    }
+
+    /// Applies `selections` to the pending file.
+    ///
+    /// When current data changed after the review, the review is rebuilt,
+    /// per-item choices for changed conflicts are cleared, and nothing is
+    /// imported until the person confirms again. Other failures keep the
+    /// pending file for a retry.
+    func applyPendingImport(
+        selections: CookleDataImportSelections,
+        modelContainer: ModelContainer,
+        settingsActionService: SettingsActionService
+    ) async {
+        guard var pendingImport,
+              beginManageAction() else {
+            return
+        }
+        defer {
+            isManageActionInProgress = false
+        }
+
+        importErrorMessage = nil
+        do {
+            let summary = try await settingsActionService.importData(
+                pendingImport.archive,
+                review: pendingImport.review,
+                selections: selections,
+                modelContainer: modelContainer
+            )
+            finishImport(message: Self.mergeMessage(summary))
+        } catch CookleDataImportError.reviewChanged(let currentReview) {
+            pendingImport.selections = pendingImport.selections.retainingUnchangedChoices(
+                from: pendingImport.review,
+                in: currentReview
+            )
+            pendingImport.review = currentReview
+            pendingImport.presentationID = UUID()
+            pendingImport.isReviewRefreshed = true
+            self.pendingImport = pendingImport
+        } catch {
+            importErrorMessage = error.localizedDescription
+        }
+    }
+
+    func finishImport(message: String) {
+        pendingImport = nil
+        isImportPresented = false
+        statusMessage = message
     }
 
     func beginManageAction() -> Bool {

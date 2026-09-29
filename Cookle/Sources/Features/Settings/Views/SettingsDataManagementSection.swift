@@ -6,16 +6,16 @@ struct SettingsDataManagementSection: View {
     let modelContainer: ModelContainer
     let settingsActionService: SettingsActionService
     let isICloudEnabled: Bool
-    @State private var backupExportRequestID: UUID?
+    @State private var exportRequestID: UUID?
 
     var body: some View {
         Section {
-            Button("Export Backup", systemImage: "square.and.arrow.up") {
-                backupExportRequestID = UUID()
+            Button("Export Data", systemImage: "square.and.arrow.up") {
+                exportRequestID = UUID()
             }
             .disabled(isManageActionUnavailable)
-            Button("Import Backup", systemImage: "square.and.arrow.down") {
-                model.isBackupImporterPresented = true
+            Button("Import Data", systemImage: "square.and.arrow.down") {
+                model.isDataImporterPresented = true
             }
             .disabled(isManageActionUnavailable)
             Button("Delete All", systemImage: "trash", role: .destructive) {
@@ -35,45 +35,45 @@ struct SettingsDataManagementSection: View {
             if isICloudEnabled {
                 Text(
                     """
-                    Export a backup before importing or deleting. Importing merges a backup into your \
-                    data after you review each conflict. Imports and Delete All sync to other devices \
-                    using the same iCloud account.
+                    Export your data to keep a copy you can import on any device. Export before \
+                    importing or deleting, because neither can be undone. Imports and Delete All sync \
+                    to other devices using the same iCloud account.
                     """
                 )
             } else {
                 Text(
                     """
-                    Export a backup before importing or deleting. Importing merges a backup into your \
-                    data after you review each conflict. Delete All permanently removes recipes, \
-                    diaries, tags, and photos from this device.
+                    Export your data to keep a copy you can import on any device. Export before \
+                    importing or deleting, because neither can be undone. Delete All permanently \
+                    removes recipes, diaries, tags, and photos from this device.
                     """
                 )
             }
         }
-        .task(id: backupExportRequestID) {
-            await prepareRequestedBackupExport()
+        .task(id: exportRequestID) {
+            await prepareRequestedExport()
         }
         .onDisappear {
-            backupExportRequestID = nil
+            exportRequestID = nil
         }
     }
 }
 
 private extension SettingsDataManagementSection {
     var isManageActionUnavailable: Bool {
-        model.isManageActionInProgress || backupExportRequestID != nil
+        model.isManageActionInProgress || exportRequestID != nil
     }
 
-    func prepareRequestedBackupExport() async {
-        guard let requestID = backupExportRequestID else {
+    func prepareRequestedExport() async {
+        guard let requestID = exportRequestID else {
             return
         }
-        await model.prepareBackupExport(
+        await model.prepareDataExport(
             modelContainer: modelContainer,
             settingsActionService: settingsActionService
         )
-        if backupExportRequestID == requestID {
-            backupExportRequestID = nil
+        if exportRequestID == requestID {
+            exportRequestID = nil
         }
     }
 }

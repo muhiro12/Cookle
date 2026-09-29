@@ -2,8 +2,8 @@ import Foundation
 import MHUI
 import SwiftUI
 
-/// Shows one recipe version in full so current and backup versions can be compared.
-struct BackupImportRecipeSnapshotSection: View {
+/// Shows one recipe version in full so current and file versions can be compared.
+struct DataImportRecipeSnapshotSection: View {
     private enum Layout {
         static let photoHeight: CGFloat = 72
         static let photoCornerRadius: CGFloat = 8
@@ -36,7 +36,7 @@ struct BackupImportRecipeSnapshotSection: View {
     }
 }
 
-private extension BackupImportRecipeSnapshotSection {
+private extension DataImportRecipeSnapshotSection {
     var ingredientsText: String {
         guard snapshot.ingredients.isEmpty == false else {
             return String(localized: "None")

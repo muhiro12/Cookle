@@ -1,6 +1,6 @@
 import Foundation
 
-nonisolated enum CookleBackupFileReader {
+nonisolated enum CookleDataFileReader {
     private enum Read {
         static let chunkKibibytes = 64
         static let bytesPerKibibyte = 1_024
@@ -9,38 +9,46 @@ nonisolated enum CookleBackupFileReader {
     }
 
     enum Failure: LocalizedError {
-        case invalidBackupFile
-        case invalidBackupPackage
-        case invalidBackupContents
-        case cannotAccessBackup
-        case backupFileTooLarge
+        case invalidDataFile
+        case invalidDataPackage
+        case invalidDataContents
+        case requiresNewerCookle
+        case cannotAccessFile
+        case dataFileTooLarge
         case tooManyPhotoFiles
 
         var errorDescription: String? {
             switch self {
-            case .invalidBackupFile:
+            case .invalidDataFile:
                 String(
-                    localized: "Select a Cookle backup package or a legacy JSON backup."
+                    localized: "Select a Cookle data file exported from Cookle."
                 )
-            case .invalidBackupPackage:
+            case .invalidDataPackage:
                 String(
-                    localized: "The selected Cookle backup package has an invalid file structure."
+                    localized: "The selected Cookle data file has an invalid file structure."
                 )
-            case .invalidBackupContents:
+            case .invalidDataContents:
                 String(
-                    localized: "The selected backup is invalid, damaged, or not supported by this version of Cookle."
+                    localized: "The selected file is invalid, damaged, or not supported by this version of Cookle."
                 )
-            case .cannotAccessBackup:
+            case .requiresNewerCookle:
                 String(
-                    localized: "Cookle couldn’t access the selected backup. Choose it again and try again."
+                    localized: """
+                    The selected file was exported by a newer version of Cookle. \
+                    Update Cookle, then try again.
+                    """
                 )
-            case .backupFileTooLarge:
+            case .cannotAccessFile:
                 String(
-                    localized: "The selected backup exceeds Cookle’s safe import size limit."
+                    localized: "Cookle couldn’t access the selected file. Choose it again and try again."
+                )
+            case .dataFileTooLarge:
+                String(
+                    localized: "The selected file exceeds Cookle’s safe import size limit."
                 )
             case .tooManyPhotoFiles:
                 String(
-                    localized: "The selected backup contains too many photo files."
+                    localized: "The selected file contains too many photo files."
                 )
             }
         }
@@ -51,7 +59,7 @@ nonisolated enum CookleBackupFileReader {
         calendar: Calendar
     ) throws -> CookleDataArchive {
         guard url.startAccessingSecurityScopedResource() else {
-            throw Failure.cannotAccessBackup
+            throw Failure.cannotAccessFile
         }
         defer {
             url.stopAccessingSecurityScopedResource()
@@ -66,13 +74,15 @@ nonisolated enum CookleBackupFileReader {
             throw CancellationError()
         } catch let failure as Failure {
             throw failure
+        } catch CookleDataArchiveVersionError.newerSchemaVersion {
+            throw Failure.requiresNewerCookle
         } catch {
-            throw Failure.invalidBackupContents
+            throw Failure.invalidDataContents
         }
     }
 }
 
-nonisolated private extension CookleBackupFileReader {
+nonisolated private extension CookleDataFileReader {
     static func coordinatedValidatedArchive(
         from url: URL,
         calendar: Calendar
@@ -99,9 +109,9 @@ nonisolated private extension CookleBackupFileReader {
             return try validationResult.get()
         }
         if coordinationError != nil {
-            throw Failure.cannotAccessBackup
+            throw Failure.cannotAccessFile
         }
-        throw Failure.cannotAccessBackup
+        throw Failure.cannotAccessFile
     }
 
     static func validatedArchiveContents(
@@ -116,22 +126,22 @@ nonisolated private extension CookleBackupFileReader {
         )
         guard resourceValues.isSymbolicLink != true,
               resourceValues.isDirectory == true else {
-            throw Failure.invalidBackupFile
+            throw Failure.invalidDataFile
         }
 
         return try DataMaintenanceOperations.validatedArchive(
-            from: readBackupPackage(from: url),
+            from: readDataPackage(from: url),
             calendar: calendar
         )
     }
 
-    static func readBackupPackage(
+    static func readDataPackage(
         from url: URL
     ) throws -> CookleDataArchivePackage {
         let rootEntries = try packageEntries(
             in: url,
             maximumEntryCount: Read.requiredPackageRootEntryCount,
-            entryLimitError: .invalidBackupPackage
+            entryLimitError: .invalidDataPackage
         )
         let expectedRootNames: Set<String> = [
             CookleDataArchivePackage.manifestFilename,
@@ -144,7 +154,7 @@ nonisolated private extension CookleBackupFileReader {
               let photosURL = rootEntries[
                 CookleDataArchivePackage.photosDirectoryName
               ] else {
-            throw Failure.invalidBackupPackage
+            throw Failure.invalidDataPackage
         }
 
         try requireRegularFile(manifestURL)
@@ -222,7 +232,7 @@ nonisolated private extension CookleBackupFileReader {
                 .skipsSubdirectoryDescendants
             ]
         ) else {
-            throw Failure.invalidBackupPackage
+            throw Failure.invalidDataPackage
         }
 
         var entries = [String: URL]()
@@ -235,7 +245,7 @@ nonisolated private extension CookleBackupFileReader {
                 entryURL,
                 forKey: entryURL.lastPathComponent
             ) == nil else {
-                throw Failure.invalidBackupPackage
+                throw Failure.invalidDataPackage
             }
         }
         return entries
@@ -250,7 +260,7 @@ nonisolated private extension CookleBackupFileReader {
         )
         guard values.isRegularFile == true,
               values.isSymbolicLink != true else {
-            throw Failure.invalidBackupPackage
+            throw Failure.invalidDataPackage
         }
     }
 
@@ -263,7 +273,7 @@ nonisolated private extension CookleBackupFileReader {
         )
         guard values.isDirectory == true,
               values.isSymbolicLink != true else {
-            throw Failure.invalidBackupPackage
+            throw Failure.invalidDataPackage
         }
     }
 
@@ -276,7 +286,7 @@ nonisolated private extension CookleBackupFileReader {
             maximumByteCount: maximumByteCount
         )
         guard data.count <= maximumByteCount else {
-            throw Failure.backupFileTooLarge
+            throw Failure.dataFileTooLarge
         }
         return data
     }
@@ -291,7 +301,7 @@ nonisolated private extension CookleBackupFileReader {
         )
         guard didOverflow == false,
               newTotalByteCount <= maximumByteCount else {
-            throw Failure.backupFileTooLarge
+            throw Failure.dataFileTooLarge
         }
         return newTotalByteCount
     }
