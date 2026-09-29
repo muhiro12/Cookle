@@ -126,7 +126,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@: %2$@"
+            "value" : "%1$@ : %2$@"
           }
         },
         "ja" : {
@@ -138,7 +138,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@: %2$@"
+            "value" : "%1$@：%2$@"
           }
         }
       }
