@@ -2529,13 +2529,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "カテゴリー"
+            "value" : "カテゴリ"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "类别"
+            "value" : "分类"
           }
         }
       }
@@ -6486,7 +6486,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "成分"
+            "value" : "食材"
           }
         }
       }
@@ -6588,7 +6588,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "成分"
+            "value" : "食材"
           }
         }
       }
@@ -8625,13 +8625,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ノート"
+            "value" : "メモ"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "注释"
+            "value" : "备注"
           }
         }
       }
@@ -11452,7 +11452,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "置き換えでは、この日の食事とノートだけが変わります。統合では、現在の食事をすべて残し、この日にまだないファイルの食事を追加します。同じ食事の繰り返しも保たれます。ノートが異なる場合は、区切り線を挟んで両方残します。"
+            "value" : "置き換えでは、この日の食事とメモだけが変わります。統合では、現在の食事をすべて残し、この日にまだないファイルの食事を追加します。同じ食事の繰り返しも保たれます。メモが異なる場合は、区切り線を挟んで両方残します。"
           }
         },
         "zh-Hans" : {
@@ -12256,25 +12256,25 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tamaño de la porción"
+            "value" : "Porciones"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Taille de portion"
+            "value" : "Portions"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "サービングサイズ"
+            "value" : "人数"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "份量大小"
+            "value" : "份数"
           }
         }
       }
@@ -12324,13 +12324,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Configuraciones"
+            "value" : "Ajustes"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Paramètres"
+            "value" : "Réglages"
           }
         },
         "ja" : {
@@ -13153,7 +13153,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ステップ"
+            "value" : "手順"
           }
         },
         "zh-Hans" : {
@@ -13528,13 +13528,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "取り込んだレシピで、入力済みの名前、人数、調理時間、材料、ステップ、カテゴリー、ノートが置き換わります。写真はそのまま残ります。取り込みはレシピの入力画面で取り消せます。"
+            "value" : "取り込んだレシピで、入力済みの名前、人数、調理時間、材料、手順、カテゴリ、メモが置き換わります。写真はそのまま残ります。取り込みはレシピの入力画面で取り消せます。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "导入的食谱将替换你输入的名称、份数、烹饪时间、成分、步骤、类别和注释。照片会保留。你可以在食谱表单中撤销导入。"
+            "value" : "导入的食谱将替换你输入的名称、份数、烹饪时间、食材、步骤、分类和备注。照片会保留。你可以在食谱表单中撤销导入。"
           }
         }
       }
