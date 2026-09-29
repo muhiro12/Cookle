@@ -31,7 +31,10 @@ struct InferRecipeFormNavigationView: View {
                 source: source,
                 initialWebsiteSource: websiteSource,
                 initialSourceURL: sourceURL,
-                initialPhotoData: photoData
+                initialPhotoData: photoData,
+                choosesAnotherPhoto: photoData == nil ? nil : {
+                    photoData = nil
+                }
             )
         }
     }

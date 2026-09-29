@@ -19,6 +19,7 @@ struct InferRecipeFormView: View {
     private let model: RecipeFormModel
     private let source: RecipeImportSource
     private let initialPhotoData: Data?
+    private let choosesAnotherPhoto: (() -> Void)?
 
     @Environment(\.dismiss)
     private var dismiss
@@ -32,6 +33,7 @@ struct InferRecipeFormView: View {
     @State private var operationTask: Task<Void, Never>?
     @State private var isLoading = false
     @State private var errorMessage = ""
+    @State private var isPhotoRecognitionFailure = false
     @State private var isReplacementReviewPresented = false
     @State private var pendingInference: PendingInference?
     @FocusState private var isTextFocused: Bool
@@ -78,6 +80,7 @@ struct InferRecipeFormView: View {
                         try await appendRecognizedText(from: initialPhotoData)
                     } catch {
                         if !Task.isCancelled {
+                            isPhotoRecognitionFailure = true
                             errorMessage = CookleLibraryErrorCopy.description(for: error)
                         }
                     }
@@ -89,11 +92,19 @@ struct InferRecipeFormView: View {
                 operationTask?.cancel()
             }
             .alert(
-                Text("Cannot Infer Recipe"),
+                isPhotoRecognitionFailure ? Text("Cannot Read Photo") : Text("Cannot Infer Recipe"),
                 isPresented: isInferenceErrorPresented
             ) {
+                // A photo without readable text leaves nothing to review, so
+                // offer the picker again instead of an empty text editor.
+                if isPhotoRecognitionFailure, let choosesAnotherPhoto {
+                    Button("Choose Another Photo") {
+                        clearError()
+                        choosesAnotherPhoto()
+                    }
+                }
                 Button("OK", role: .cancel) {
-                    errorMessage = ""
+                    clearError()
                 }
             } message: {
                 Text(errorMessage)
@@ -142,14 +153,19 @@ struct InferRecipeFormView: View {
         }
     }
 
+    /// - Parameter choosesAnotherPhoto: Returns to photo selection after the
+    ///   initial photo yields no readable text. Pass `nil` when the view was
+    ///   not opened from a photo.
     init(
         model: RecipeFormModel,
         source: RecipeImportSource,
         initialWebsiteSource: RecipeWebsiteSource? = nil,
         initialSourceURL: URL? = nil,
-        initialPhotoData: Data? = nil
+        initialPhotoData: Data? = nil,
+        choosesAnotherPhoto: (() -> Void)? = nil
     ) {
         self.initialPhotoData = initialPhotoData
+        self.choosesAnotherPhoto = choosesAnotherPhoto
         _text = State(initialValue: initialWebsiteSource?.text ?? "")
         _websiteSource = State(initialValue: initialWebsiteSource)
         _sourceURL = State(initialValue: initialSourceURL)
@@ -187,7 +203,7 @@ private extension InferRecipeFormView {
             },
             set: { isPresented in
                 if isPresented == false {
-                    errorMessage = ""
+                    clearError()
                 }
             }
         )
@@ -210,6 +226,11 @@ private extension InferRecipeFormView {
                 """
             )
         }
+    }
+
+    func clearError() {
+        errorMessage = ""
+        isPhotoRecognitionFailure = false
     }
 
     /// Asks before an inference may replace entered values; a blank form needs no review.
