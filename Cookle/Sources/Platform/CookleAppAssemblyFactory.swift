@@ -24,6 +24,7 @@ enum CookleAppAssemblyFactory {
             nativeAdUnitID: liveAdUnitID,
             logging: logging,
             deliversTimers: true,
+            indexesRecipesInSpotlight: true,
             adsConsent: CookleMonetizationConfiguration.adsConsent
         )
     }
@@ -72,6 +73,7 @@ private extension CookleAppAssemblyFactory {
         logging: CookleAppLogging,
         isolatesCookingSession: Bool = false,
         deliversTimers: Bool = false,
+        indexesRecipesInSpotlight: Bool = false,
         adsConsent: MHAdsConsentConfiguration? = nil
     ) -> CookleAppAssembly {
         let navigationModel = MainNavigationModel()
@@ -107,6 +109,7 @@ private extension CookleAppAssemblyFactory {
             cookingSessionStore: cookingSessionStore,
             cookingSessionWatchSyncService: cookingSessionWatchSyncService,
             cookingTimerDeliveryService: .init(cookingSessionStore: cookingSessionStore, isEnabled: deliversTimers),
+            recipeSpotlightIndexer: .init(modelContainer: modelContainer, isEnabled: indexesRecipesInSpotlight),
             recipeActionService: makeRecipeActionService(
                 notificationService: services.notificationService,
                 logging: logging,
@@ -116,9 +119,7 @@ private extension CookleAppAssemblyFactory {
                 notificationService: services.notificationService
             ),
             diaryActionService: DiaryActionService(notificationService: services.notificationService),
-            tagActionService: TagActionService(
-                notificationService: services.notificationService
-            ),
+            tagActionService: TagActionService(notificationService: services.notificationService),
             settingsActionService: SettingsActionService(
                 notificationService: services.notificationService
             ),

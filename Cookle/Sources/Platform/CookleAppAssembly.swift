@@ -13,6 +13,8 @@ final class CookleAppAssembly {
     // periphery:ignore - Retain the watch sync service for the lifetime of the app assembly.
     let cookingSessionWatchSyncService: CookingSessionWatchSyncService
     let cookingTimerDeliveryService: CookingTimerDeliveryService
+    // periphery:ignore - Retain the Spotlight indexer for the lifetime of the app assembly.
+    let recipeSpotlightIndexer: RecipeSpotlightIndexer
     let recipeActionService: RecipeActionService
     let photoActionService: PhotoActionService
     let diaryActionService: DiaryActionService
@@ -28,6 +30,7 @@ final class CookleAppAssembly {
         cookingSessionStore: CookingSessionStore,
         cookingSessionWatchSyncService: CookingSessionWatchSyncService,
         cookingTimerDeliveryService: CookingTimerDeliveryService,
+        recipeSpotlightIndexer: RecipeSpotlightIndexer,
         recipeActionService: RecipeActionService,
         photoActionService: PhotoActionService,
         diaryActionService: DiaryActionService,
@@ -42,6 +45,7 @@ final class CookleAppAssembly {
         self.cookingSessionStore = cookingSessionStore
         self.cookingSessionWatchSyncService = cookingSessionWatchSyncService
         self.cookingTimerDeliveryService = cookingTimerDeliveryService
+        self.recipeSpotlightIndexer = recipeSpotlightIndexer
         self.recipeActionService = recipeActionService
         self.photoActionService = photoActionService
         self.diaryActionService = diaryActionService

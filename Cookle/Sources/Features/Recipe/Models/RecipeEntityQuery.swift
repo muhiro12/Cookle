@@ -1,4 +1,5 @@
 import AppIntents
+import CoreSpotlight
 import SwiftData
 
 struct RecipeEntityQuery: EntityStringQuery {
@@ -39,5 +40,57 @@ struct RecipeEntityQuery: EntityStringQuery {
         descriptor.fetchLimit = Self.suggestionLimit
         let recipes = try modelContainer.mainContext.fetch(descriptor)
         return recipes.compactMap(RecipeEntity.init)
+    }
+}
+
+@available(iOS 27.0, *)
+extension RecipeEntityQuery: IndexedEntityQuery {
+    nonisolated func reindexEntities(
+        for identifiers: [RecipeEntity.ID],
+        indexDescription _: CSSearchableIndexDescription
+    ) async throws {
+        try await reindexRecipes(
+            identifiers: identifiers
+        )
+    }
+
+    nonisolated func reindexAllEntities(
+        indexDescription _: CSSearchableIndexDescription
+    ) async throws {
+        try await reindexAllRecipes()
+    }
+}
+
+private extension RecipeEntityQuery {
+    /// Capture runs use an isolated sample store that must not reach Spotlight.
+    @MainActor var maintainsSpotlightIndex: Bool {
+        #if DEBUG
+        !CookleCaptureConfiguration.isEnabled
+        #else
+        true
+        #endif
+    }
+
+    @MainActor
+    func reindexRecipes(
+        identifiers: [RecipeEntity.ID]
+    ) async throws {
+        guard maintainsSpotlightIndex else {
+            return
+        }
+        try await RecipeSpotlightIndexer.reindex(
+            identifiers: identifiers,
+            entities: entities(for: identifiers)
+        )
+    }
+
+    @MainActor
+    func reindexAllRecipes() async throws {
+        guard maintainsSpotlightIndex else {
+            return
+        }
+        try await RecipeSpotlightIndexer.replaceIndex(
+            context: modelContainer.mainContext
+        )
     }
 }

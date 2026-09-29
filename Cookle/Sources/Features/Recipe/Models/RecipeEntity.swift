@@ -1,8 +1,9 @@
 import AppIntents
+import CoreSpotlight
 import SwiftData
 
 @Observable
-final class RecipeEntity: AppEntity, Hashable {
+final class RecipeEntity: IndexedEntity, Hashable {
     static var defaultQuery: RecipeEntityQuery {
         .init()
     }
@@ -30,6 +31,20 @@ final class RecipeEntity: AppEntity, Hashable {
             title: .init(.init(name), table: "AppIntents"),
             image: .init(systemName: "book")
         )
+    }
+
+    /// Spotlight metadata beyond the display title.
+    ///
+    /// Ingredient names describe the recipe in search results, and ingredient
+    /// and category names are offered as keywords. Steps and notes stay out
+    /// of the index: they are long, personal, and add noise rather than
+    /// discovery.
+    var attributeSet: CSSearchableItemAttributeSet {
+        let attributes = defaultAttributeSet
+        let ingredientNames = ingredients.map(\.ingredient)
+        attributes.contentDescription = ingredientNames.joined(separator: ", ")
+        attributes.keywords = ingredientNames + categories
+        return attributes
     }
 
     init(
