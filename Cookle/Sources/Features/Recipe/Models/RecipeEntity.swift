@@ -16,7 +16,6 @@ final class RecipeEntity: AppEntity, Hashable {
 
     let id: String
     let name: String
-    let photos: [Data]
     let servingSize: Int
     let cookingTime: Int
     let ingredients: [(ingredient: String, amount: String)]
@@ -36,7 +35,6 @@ final class RecipeEntity: AppEntity, Hashable {
     init(
         id: String,
         name: String,
-        photos: [Data],
         servingSize: Int,
         cookingTime: Int,
         ingredients: [(ingredient: String, amount: String)],
@@ -48,7 +46,6 @@ final class RecipeEntity: AppEntity, Hashable {
     ) {
         self.id = id
         self.name = name
-        self.photos = photos
         self.servingSize = servingSize
         self.cookingTime = cookingTime
         self.ingredients = ingredients
@@ -76,7 +73,6 @@ extension RecipeEntity {
         self.init(
             id: encodedID,
             name: model.name,
-            photos: model.orderedPhotos.map(\.data),
             servingSize: model.servingSize,
             cookingTime: model.cookingTime,
             ingredients: (model.ingredientObjects ?? []).sorted().compactMap { object in
