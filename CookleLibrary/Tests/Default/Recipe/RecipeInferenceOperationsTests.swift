@@ -81,6 +81,44 @@ struct RecipeInferenceOperationsTests {
         #expect(result.note.isEmpty)
     }
 
+    @Test(
+        arguments: [
+            "Cook time: 20-30 minutes",
+            "Cooking time 20 to 30 min",
+            "調理時間 20〜30分",
+            "調理時間：約２０～３０分"
+        ]
+    )
+    func grounding_preserves_ambiguous_cooking_time_ranges(
+        cookingTimeRange: String
+    ) {
+        let result = RecipeInferenceOperations.groundedInference(
+            inference(cookingTime: 20),
+            sourceText: "Soup\n\(cookingTimeRange)\nIngredients\nOnion"
+        )
+
+        #expect(result.cookingTime == .zero)
+        #expect(result.note == cookingTimeRange)
+    }
+
+    @Test
+    func grounding_keeps_a_single_cooking_time_and_ignores_step_ranges() {
+        // A range inside a step times that step only; the labeled single
+        // cooking time is still the recipe's.
+        let result = RecipeInferenceOperations.groundedInference(
+            inference(cookingTime: 45),
+            sourceText: """
+            Soup
+            Cook time: 45 minutes
+            Steps
+            Simmer 10-15 minutes.
+            """
+        )
+
+        #expect(result.cookingTime == 45)
+        #expect(result.note.isEmpty)
+    }
+
     @Test
     func sanitizing_moves_ingredient_groups_to_the_note() {
         let result = RecipeInferenceOperations.sanitizedInference(
@@ -123,6 +161,7 @@ struct RecipeInferenceOperationsTests {
 private extension RecipeInferenceOperationsTests {
     func inference(
         servingSize: Int = 2,
+        cookingTime: Int = 0,
         note: String = "",
         ingredients: [RecipeInferenceIngredient] = [
             .init(ingredient: "Onion", amount: "1")
@@ -132,7 +171,7 @@ private extension RecipeInferenceOperationsTests {
         .init(
             name: "Soup",
             servingSize: servingSize,
-            cookingTime: 0,
+            cookingTime: cookingTime,
             ingredients: ingredients,
             steps: ["Cook."],
             categories: categories,

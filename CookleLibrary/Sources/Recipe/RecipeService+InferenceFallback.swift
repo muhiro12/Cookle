@@ -42,11 +42,14 @@ extension RecipeService {
         """#
 
     /// Minutes the fallback reads: `45 min`, `45 minutes`, and `45分`, but not
-    /// the `2分` of `2分の1` (a half) or the minutes of `1時間30分`.
+    /// the `2分` of `2分の1` (a half), the minutes of `1時間30分`, or either
+    /// end of a range such as `20-30 minutes`, which stays unknown.
     static let fallbackCookingTimePattern = #"""
         (?ix)
+        (?<! [\d\-–—~〜～] ) (?<! [\-–—~〜～] \s ) (?<! to \s )
         \d+ \s* (?: min | minutes )
-        | (?<! [\d時間] ) (?<! 時間 \s ) \d+ \s* 分 (?! の )
+        | (?<! [\d時間\-–—~〜～] ) (?<! [時間\-–—~〜～] \s ) (?<! to \s )
+        \d+ \s* 分 (?! の )
         """#
 
     /// Trims user-provided text before recipe inference.
@@ -94,19 +97,30 @@ extension RecipeService {
         sourceText: String
     ) -> RecipeInferenceResult {
         var result = sanitizedInference(inference)
-        guard let servingRange = explicitServingRange(in: sourceText) else {
-            return result
+        if let servingRange = explicitServingRange(in: sourceText) {
+            result.servingSize = .zero
+            result.note = noteRetaining(servingRange, in: result.note)
         }
-
-        result.servingSize = .zero
-        if result.note.contains(servingRange) == false {
-            result.note = [result.note, servingRange]
-                .filter { value in
-                    value.isEmpty == false
-                }
-                .joined(separator: "\n\n")
+        if let cookingTimeRange = explicitCookingTimeRange(in: sourceText) {
+            result.cookingTime = .zero
+            result.note = noteRetaining(cookingTimeRange, in: result.note)
         }
         return result
+    }
+
+    /// Appends a stated source fact the numeric field cannot hold, once.
+    static func noteRetaining(
+        _ sourceFact: String,
+        in note: String
+    ) -> String {
+        guard note.contains(sourceFact) == false else {
+            return note
+        }
+        return [note, sourceFact]
+            .filter { value in
+                value.isEmpty == false
+            }
+            .joined(separator: "\n\n")
     }
 
     /// Returns whether inference output contains enough data to create a recipe.
@@ -148,6 +162,25 @@ extension RecipeService {
                 [0-9０-９]+ \s* [-–—〜～~] \s* [0-9０-９]+ \s*
                 (?: 人分 | 人前 | servings? | people | persons? )
                 )
+                /#
+        guard let match = text.firstMatch(of: pattern) else {
+            return nil
+        }
+        return String(match.output)
+    }
+
+    /// Returns a labeled cooking time stated as a range, such as
+    /// `Cook time: 20-30 minutes` or `調理時間 20〜30分`.
+    ///
+    /// Only the labeled form counts: a step such as `simmer 10-15 minutes`
+    /// describes one step, not the recipe's cooking time.
+    static func explicitCookingTimeRange(in text: String) -> String? {
+        let pattern = #/
+                (?ix)
+                (?: cook (?: ing )? \s* time | 調理時間 )
+                \s* [:：]? \s* (?: 約 | about \s* )?
+                [0-9０-９]+ \s* (?: [-–—〜～~] | to ) \s* [0-9０-９]+ \s*
+                (?: minutes? | mins? | 分 )
                 /#
         guard let match = text.firstMatch(of: pattern) else {
             return nil

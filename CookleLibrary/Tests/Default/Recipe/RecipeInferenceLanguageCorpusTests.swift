@@ -213,6 +213,31 @@ struct RecipeInferenceLanguageCorpusTests {
         #expect(result.cookingTime == cookingTime)
     }
 
+    @Test(
+        arguments: [
+            "Simmer 20-30 minutes.",
+            "Simmer for 2 to 3 minutes.",
+            "20〜30分煮る。",
+            "２０～３０分煮る。"
+        ]
+    )
+    func a_duration_range_is_not_read_as_either_end(
+        step: String
+    ) {
+        let result = RecipeInferenceOperations.fallbackInference(
+            from: """
+            Soup
+            Ingredients:
+            Onion 1
+            Steps:
+            \(step)
+            """
+        )
+
+        // Picking 20 or 30 would state a precision the source does not have.
+        #expect(result.cookingTime == .zero)
+    }
+
     @Test
     func a_japanese_serving_range_from_the_fallback_becomes_unknown() {
         let sourceText = """
