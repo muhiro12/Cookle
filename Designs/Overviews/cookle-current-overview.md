@@ -43,10 +43,11 @@ native appearance configured once at startup. Cookle keeps its orange accent,
 which the root theme also supplies as native control tint. Recipe Detail and
 Cooking name the recipe in the native navigation title. Recipe Detail leads
 with its photo, compact facts, and cooking entry, followed by open-canvas
-ingredient, step, category, note, and diary sections. Dates and secondary actions close the page. The recipe
-content and operations remain the same. Recipe, tag, and search collections,
-diary, tag, and photo details, and recipe, diary, and tag editors use MHUI
-content List/Form presentation. Settings and diagnostics keep native grouping
+ingredient, step, category, note, and diary sections. Dates and secondary actions
+close the page. The recipe content and operations remain the same. Recipe, tag,
+and search collections, diary, tag, and photo details, and recipe, diary, and tag
+editors use MHUI content List/Form presentation. Settings and diagnostics keep
+native grouping
 and row geometry on MHUI's themed canvas and row surfaces; the subscription host
 leaves its MHPlatform-owned section without an added row surface. The Diary
 landing, cooking, and photo grid use stack composition; detached editors use

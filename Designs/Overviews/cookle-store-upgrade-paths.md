@@ -77,10 +77,12 @@ stored declaration would otherwise change the released schema silently.
 
 ## 4) What each process may do to the store
 
+<!-- markdownlint-disable MD013 -->
 | Process | Opens with | May migrate | CloudKit |
 | --- | --- | --- | --- |
 | App | `makeModelContainer` + `CookleMigrationPlan` | yes | `.automatic` when iCloud is on, else `.none` |
 | Widgets / extensions | `ModelContainerFactory.shared()` → `makeReadOnlyContainer` | **no** | `.none` |
+<!-- markdownlint-enable MD013 -->
 
 `makeReadOnlyContainer` passes `allowsSave: false` and **no migration plan**, and
 throws `CocoaError(.fileReadNoSuchFile)` when the file is absent. An

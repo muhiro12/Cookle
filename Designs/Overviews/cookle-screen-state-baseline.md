@@ -5,7 +5,7 @@ Observed September 21–22, 2026.
 ## Purpose
 
 An annotated baseline of Cookle's screens in empty, populated, and error states,
-recorded so that https://github.com/muhiro12/Cookle/issues/110 can separate
+recorded so that [#110](https://github.com/muhiro12/Cookle/issues/110) can separate
 **what was observed** from **what is still a hypothesis**. That separation is
 the first acceptance item on that issue, and it is the thing the earlier
 planning passes said was missing.
@@ -59,9 +59,9 @@ work, which is the right call for someone who is mid-cook.
 
 Choosing **End and add to diary** then produces a clear alert — the diary
 cannot be opened because the recipe was not found — and leaves the session
-snapshot intact. Nothing fails silently, nothing is lost, and the wording names the
-actual cause. Recorded because an audit should record what works, not only what
-does not.
+snapshot intact. Nothing fails silently, nothing is lost, and the wording
+names the actual cause. Recorded because an audit should record what works,
+not only what does not.
 
 ### Destructive text contrast
 

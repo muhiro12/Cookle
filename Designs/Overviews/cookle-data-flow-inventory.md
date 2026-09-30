@@ -82,7 +82,8 @@ receives an image. `[source confirmed]` —
 `RecipeWebsiteReader` loads a URL the user typed or pasted into a `WKWebView`
 whose configuration sets `websiteDataStore = .nonPersistent()`. WebKit keeps
 this website data in memory instead of persisting it to disk; it can remain
-available while the same reader and data store are reused. `[source confirmed]` —
+available while the same reader and data store are reused.
+`[source confirmed]` —
 `Cookle/Sources/Features/Recipe/Services/RecipeWebsiteReader.swift`.
 
 - **Recipient**: the chosen website and any resources it loads, which can

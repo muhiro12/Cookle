@@ -1,3 +1,5 @@
+<!-- This landing page uses HTML for its layout and rendered h1. -->
+<!-- markdownlint-disable MD013 MD033 MD041 -->
 <style>
 .hero {
   text-align: center;

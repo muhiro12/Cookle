@@ -47,8 +47,8 @@ record. `[runtime confirmed]` — `ingredient_create_reuses_existing_value`,
 **Duplicate detection — normalized equality.** `TagService.duplicateKey` trims
 the value, collapses internal whitespace runs to a single space, and applies
 `folding(options: [.caseInsensitive, .diacriticInsensitive, .widthInsensitive],
-locale: .current)`. `Sugar`, `sugar`, `ｓｕｇａｒ`, `sugár`, and `  sugar  `
-all land in one group. `[runtime confirmed]` —
+locale: .current)`. `Sugar`, `sugar`, `ｓｕｇａｒ`, `sugár`, and a value with
+spaces around `sugar` all land in one group. `[runtime confirmed]` —
 `duplicateTags_matches_case_width_diacritic_and_spacing_variants`,
 `duplicateTags_keeps_distinct_values_separate`.
 
@@ -206,7 +206,7 @@ recipe, and no model, schema, or export format change introduces recipe
 snapshots. Immutable diary history remains the preferred long-term direction
 and is feasible later; it is deferred because it needs its own schema,
 migration, export, and synchronization design, not because the platform
-prevents it. Tracked by https://github.com/muhiro12/Cookle/issues/132.
+prevents it. Tracked by [#132](https://github.com/muhiro12/Cookle/issues/132).
 
 ## 5) Diary edit and delete
 
@@ -240,11 +240,13 @@ behavior is pinned by `MutationRollbackPersistenceTests`.
 Every mutation returns a `MutationOutcome` carrying the effects a caller must
 publish. `[source confirmed]`
 
+<!-- markdownlint-disable MD013 -->
 | Mutation | Effects |
 | --- | --- |
 | Tag rename / delete / merge | `.notificationPlanChanged` |
 | Recipe create / update / delete / photo removal | `.recipeDataChanged`, `.notificationPlanChanged` |
 | Diary create / update / delete | `.diaryDataChanged`, `.notificationPlanChanged` |
+<!-- markdownlint-enable MD013 -->
 
 Diary rows are the source of each recipe's made count and last-cooked date,
 which is why a diary change invalidates the scheduled suggestion plan as well.

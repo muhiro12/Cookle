@@ -358,6 +358,7 @@ Do not persist a last-selected tab as a side effect of visual improvements.
 
 Explicit destinations take precedence over the ordinary launch default:
 
+<!-- markdownlint-disable MD013 -->
 | Entry | Destination and behavior |
 | --- | --- |
 | Recipe tab, recipe-list link | Browse saved recipes without creating a Diary |
@@ -367,6 +368,7 @@ Explicit destinations take precedence over the ordinary launch default:
 | Photo tab or photo link | Browse saved photos or open the requested photo |
 | Search or tag link | Open search or the requested category/ingredient |
 | Settings link | Open the requested settings destination |
+<!-- markdownlint-enable MD013 -->
 
 Photos remains a browsing surface. Its recipe-creation entry must say that it
 adds a recipe; a name-only recipe can be enriched with photos later. Independent
