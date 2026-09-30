@@ -1,9 +1,9 @@
 Welcome to Cookle 4.0! A fresh look and new ways to collect recipes, enjoy cooking, and remember your meals.
 
 - Explore a refreshed design that makes recipes and meal records easier to browse.
-- Import recipes from websites, review and edit the draft, then save it to your collection. Results depend on the source page.
+- On iOS 26 or later, import recipes from websites, review and edit the draft, then save it to your collection. Results depend on the source page.
 - Follow every cooking step in one view and continue to recording your meal. Find inspiration for today’s meals and browse your Diary by month.
 - Choose a favorite recipe to display in your Home Screen widget.
 - Export your recipes, Diary, and photos as a Cookle Data file (.cookle). When importing, merge data, choose for each item, or replace all data from a complete-library file.
 
-The data file format has changed. Cookle 4.0 cannot import .cooklebackup files exported by version 3.9. JSON files are also unsupported. This file-format change does not erase the data already stored in the app. After updating, export your current data again in the new format.
+The data file format has changed. Cookle 4.0 cannot import .cooklebackup files exported by version 3.9. JSON files are also unsupported. After updating, export your current data again in the new format.
