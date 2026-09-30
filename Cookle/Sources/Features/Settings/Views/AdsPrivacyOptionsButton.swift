@@ -6,18 +6,35 @@ struct AdsPrivacyOptionsButton: View {
     @Environment(MHAppRuntime.self)
     private var appRuntime
 
+    @State private var isPresentingPrivacyOptions = false
+
     let onError: (String) -> Void
 
     var body: some View {
         if appRuntime.adsPrivacyOptionsRequirement == .required {
             Button("Privacy Options") {
-                Task {
-                    do {
-                        try await appRuntime.presentAdsPrivacyOptions()
-                    } catch {
-                        onError(error.localizedDescription)
-                    }
-                }
+                presentPrivacyOptions()
+            }
+            .disabled(isPresentingPrivacyOptions)
+        }
+    }
+}
+
+private extension AdsPrivacyOptionsButton {
+    func presentPrivacyOptions() {
+        guard isPresentingPrivacyOptions == false else {
+            return
+        }
+        isPresentingPrivacyOptions = true
+
+        Task {
+            defer {
+                isPresentingPrivacyOptions = false
+            }
+            do {
+                try await appRuntime.presentAdsPrivacyOptions()
+            } catch {
+                onError(error.localizedDescription)
             }
         }
     }

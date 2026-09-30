@@ -241,9 +241,12 @@ Universal Links require Apple App Site Association (AASA) deployment for
   cached subscription or the runtime's `canDisplayAds` suppresses ads.
 - The live runtime opts into MHPlatform's consent-managed ads. After premium
   status resolves as inactive, Google's User Messaging Platform refreshes
-  consent each session and presents a form only when required; ads start only
-  when it allows ad requests. Settings shows Privacy Options when the platform
-  requires that entry point.
+  consent each session and presents a form only when required. The runtime uses
+  the SDK's latest ad-request eligibility, including its previous-session state
+  while the update runs, and suppresses ads when premium becomes active.
+  Settings shows Privacy Options when the platform requires that entry point
+  and prevents overlapping presentations. Rejecting personalized advertising
+  does not itself determine whether the SDK permits an ad request.
 
 ## Getting started
 
@@ -255,6 +258,15 @@ Universal Links require Apple App Site Association (AASA) deployment for
 The monetization identifiers live in
 `Cookle/Sources/Platform/CookleMonetizationConfiguration.swift`. They
 are source-controlled production identifiers, not local-only credentials.
+The AdMob application identifier lives in `Cookle/Configurations/Info.plist`.
+Create and publish the applicable Privacy & messaging forms for that Cookle
+application in AdMob; integrating UMP alone does not configure those forms.
+See [Google's UMP setup guide](https://developers.google.com/admob/ios/privacy).
+For Simulator region checks, Debug builds accept
+`COOKLE_ADS_CONSENT_DEBUG_GEOGRAPHY=eea`, `regulatedUSState`, or `other`.
+Keep Cookle's application identifier when validating its account configuration;
+a successful form with Google's sample application identifier only proves the
+test integration.
 
 ## Testing
 
