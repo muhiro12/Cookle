@@ -41,15 +41,15 @@ extension RecipeService {
         | \d+ \s* (?: servings? | people | persons? | 人分 | 人前 )
         """#
 
-    /// Minutes the fallback reads: `45 min`, `45 minutes`, and `45分`, but not
-    /// the `2分` of `2分の1` (a half), the minutes of `1時間30分`, or either
-    /// end of a range such as `20-30 minutes`, which stays unknown.
-    static let fallbackCookingTimePattern = #"""
+    /// Reads literal minutes after removing ambiguous values; "mint" is not a unit.
+    static let fallbackCookingTimePattern = #"(?i)\d+\s*(?:minutes?|mins?)\b|\d+\s*分"#
+
+    static let ambiguousCookingTimePattern = #"""
         (?ix)
-        (?<! [\d\-–—~〜～] ) (?<! [\-–—~〜～] \s ) (?<! to \s )
-        \d+ \s* (?: min | minutes )
-        | (?<! [\d時間\-–—~〜～] ) (?<! [時間\-–—~〜～] \s ) (?<! to \s )
-        \d+ \s* 分 (?! の )
+        \d+ \s* (?: (?: minutes? \b | mins? \b | 分 ) \s* )?
+        (?: [-–—~〜～] | to | or | hours? | hrs? | 時間 | / | [.,] ) \s*
+        \d+ \s* (?: minutes? \b | mins? \b | 分 )
+        | \d+ \s* 分 \s* の \s* \d+
         """#
 
     /// Trims user-provided text before recipe inference.
@@ -215,7 +215,11 @@ extension RecipeService {
                 pattern: fallbackServingSizePattern
             ),
             cookingTime: extractedNumber(
-                in: sourceText,
+                in: sourceText.replacingOccurrences(
+                    of: ambiguousCookingTimePattern,
+                    with: " ",
+                    options: .regularExpression
+                ),
                 pattern: fallbackCookingTimePattern
             ),
             ingredients: ingredients,

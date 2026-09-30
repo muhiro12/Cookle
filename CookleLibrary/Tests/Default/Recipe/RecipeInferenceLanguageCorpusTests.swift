@@ -191,10 +191,18 @@ struct RecipeInferenceLanguageCorpusTests {
             ("約３０分煮込む。", 30),
             ("玉ねぎ 2分の1個を加える。", 0),
             ("1時間30分煮込む。", 0),
-            ("1時間 30分煮込む。", 0)
+            ("1時間 30分煮込む。", 0),
+            ("1時間  30分煮込む。", 0),
+            ("玉ねぎ 2分 の 1個を加える。", 0),
+            ("Add 5 mint leaves.", 0),
+            ("Wait 1 hour  30 minutes.", 0),
+            ("Stir for 1/2 minute.", 0),
+            ("Wait 1.5 minutes.", 0),
+            ("Wait 1,5 minutes.", 0),
+            ("1.5分待つ。", 0)
         ]
     )
-    func japanese_minutes_are_read_but_not_fractions_or_hour_parts(
+    func literal_minutes_are_read_but_ambiguous_units_stay_unknown(
         step: String,
         cookingTime: Int
     ) {
@@ -218,7 +226,13 @@ struct RecipeInferenceLanguageCorpusTests {
             "Simmer 20-30 minutes.",
             "Simmer for 2 to 3 minutes.",
             "20〜30分煮る。",
-            "２０～３０分煮る。"
+            "２０～３０分煮る。",
+            "Simmer 20 -  30 minutes.",
+            "Simmer 20 to  30 minutes.",
+            "Simmer 20 or 30 minutes.",
+            "20 〜  30分煮る。",
+            "Simmer 20 min to 30 min.",
+            "20分〜30分煮る。"
         ]
     )
     func a_duration_range_is_not_read_as_either_end(
