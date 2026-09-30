@@ -12,6 +12,16 @@ Repository-specific agent contract for Cookle.
   <https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md>.
 - Swift code must comply with the repository SwiftLint configuration.
 
+## SwiftData App Data Flow
+
+- Use live SwiftData models in SwiftUI. Independently read collections with
+  feature-owned `@Query`; propagate a selected model with typed environment.
+- Follow the selected model's relationships instead of re-fetching that graph.
+  Keep form drafts, selections, snapshots, and external representations at
+  their own lifetimes. Product writes enter public `*Operations` through adapters.
+- Follow the read ownership and diagnostic boundary in
+  [the architecture guide](Designs/Architecture/ARCHITECTURE_GUIDE.md#live-app-data-flow).
+
 ## Build and Test Entry Point
 
 Agents MUST prefer the Xcode-native integration available in the current agent

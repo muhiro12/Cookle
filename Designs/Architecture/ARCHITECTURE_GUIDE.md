@@ -259,6 +259,82 @@ API style decision:
   current migration goal is clearer boundaries rather than a persistence actor
   rewrite.
 
+### Live App Data Flow
+
+`Recipe`, `Diary`, `Photo`, `Category`, `Ingredient`, and their structural rows
+are the main SwiftUI app's live model graph. Do not mirror this graph into
+presentation entities or keep a fetched collection in `@State` for manual
+refresh after writes.
+
+- Independently read live store collections with `@Query` in the consuming
+  feature. Supply predicate or sort configuration through small initializer
+  inputs. The navigation shell owns selections and routes, not an all-model
+  query shared by unrelated features.
+- Inject one current model with `.environment(model)` at a row, destination,
+  or sheet boundary. Descendants read it with typed `@Environment`, including
+  optional reads for create flows. Do not relay the same current model through
+  view initializer chains. Required-model destinations receive the concrete
+  model inside the non-optional selection branch.
+- Follow existing relationships for data belonging to a selected model's
+  graph. For example, `DiaryView` traverses `diary.objects` to recipes and
+  supplies each recipe to `RecipeLabel` through environment. It does not query
+  `DiaryObject` or `Recipe` again. `RecipeView`, `TagView`, and `PhotoView`
+  likewise use their relationships.
+- A relationship collection warrants an independent query only for a concrete
+  need such as separate filtering, paging, store-level sorting, measured
+  performance, or data absent from the relationship graph.
+- Resolve route IDs and command inputs once through shared Operations or
+  routing APIs. These bounded reads are distinct from a live screen collection.
+- Keep explicit inputs for bindings, closures, query configuration, editable
+  drafts, reports, snapshots, and collections of peer models. Passing a
+  query-derived presentation slice to a section does not create another store
+  owner. Selection references in navigation state are presentation state, not
+  a copied persistence graph.
+- Product writes enter public `*Operations` through app workflows. SwiftData
+  observation updates the views; no manual copy-back layer is required.
+
+Recipe and Diary form models hold unsaved inputs with a different lifetime
+from persisted records. `RecipeFormPresenter` retains the draft while the
+navigation layout changes; the form host also supplies the source recipe
+through environment. Cooking/Watch snapshots, archive records, inference
+values, and App Intent entities remain separate contracts because their
+lifetimes or framework roles differ. They are not ordinary UI mirror models.
+
+`ResultsObserver` is appropriate only for a demonstrated non-view observable
+consumer on a supported OS. It does not replace ordinary screen `@Query` reads.
+
+### Current Read Ownership
+
+<!-- markdownlint-disable MD013 -->
+| Surface | Ownership |
+| --- | --- |
+| `MainView`, `MainTabView`, navigation views | Routes, selection bindings, and presentation; selected models enter detail environments. No root collection query. |
+| `RecipeListView` | Owns the live recipe query; `RecipeOperations.browse` derives the displayed order. Top-return actions use bounded shared lookup. |
+| `DiaryListView` | Owns Diary history and the independent recipe inspiration query. Today/history sections receive derived collections. |
+| `SearchResultsView` | Owns the query configured by debounced search text; shared `RecipePredicate.anyTextMatches` and `RecipeOperations.browse` retain canonical matching and order. |
+| `SearchResultView` | Owns the separate App Intent snippet query configured by its predicate. |
+| `PhotoListView`, `TagListView` | Own source-filtered photos and typed tags respectively. |
+| `DiaryFormRecipeListView`, `SuggestionButtons` | Own independent recipe-selection and tag-suggestion queries. Form selections and inputs remain drafts. |
+| `DuplicateDiaryRepairSection`, `MergeDuplicateTagButton` | Own independent collections needed to discover duplicates outside the current model's relationships; shared Operations build and revalidate mutation reviews. |
+| `DiaryView`, `RecipeView` and its sections, `TagView`, `PhotoView` | Read the current model from environment and follow relationships. Diary history rows receive each current Diary through environment. |
+| `PhotoDetailView` | Pages through an explicitly supplied set of peer photos; `currentID` is presentation state. The collection comes from the caller's query or relationship. |
+| `DebugContentView`, `DebugDetailView` | The selected entity inspector owns its query and supplies the selected model through environment. Its raw deletion path is the unresolved diagnostic boundary described below. |
+<!-- markdownlint-enable MD013 -->
+
+### Diagnostic Mutation Boundary
+
+`DebugContentView` currently deletes arbitrary `PersistentModel` records
+directly from their context, including parent-owned structural rows. This
+bypasses product deletion reviews, relationship policies, and mutation
+follow-up. It is not a reference pattern for product views. The inspector is
+reachable through the app's debug preference and is not compile-time limited
+to Debug builds.
+
+Whether to retain raw diagnostic deletion or restrict the inspector to
+product-safe Operations is an unresolved product/data-policy choice. Do not
+introduce a generic deletion facade merely to rename this bypass. Isolated
+Preview/capture fixture setup is a separate development-only persistence path.
+
 ## Current Hotspots and Minimal Refactor Plans
 
 1. Route assembly should stay separate from navigation state mutation.

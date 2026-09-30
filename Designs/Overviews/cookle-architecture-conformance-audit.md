@@ -1,107 +1,101 @@
 # Cookle Architecture Conformance Audit
 
-Current as of April 17, 2026.
+Reviewed on September 30, 2026 against the current Cookle sources, the Incomes
+architecture guide, and
+[Stally Issue 21](https://github.com/muhiro12/Stally/issues/21).
 
-## Purpose
+## Scope and Conclusion
 
-This note records whether the current repository still follows the accepted
-Cookle architecture:
+Cookle remains aligned with `domain-in-library, adapters-in-targets` and the
+SwiftData-first live app data flow. The review covers source placement, live
+reads, selected-model propagation, relationship traversal, mutation entry
+points, package consumers, test ownership, and architecture guidance.
 
-- `CookleLibrary` is the single source of truth for reusable business logic.
-- `Cookle`, `Widgets`, and App Intents stay responsibility-thin as
-  Apple-platform adapters.
-- Repository-owned unit tests stay concentrated in `CookleLibrary/Tests/Default`.
+Two app-local data-flow inconsistencies are corrected: Search no longer
+retains a one-shot fetched collection in `@State`, and recipe Diary-history
+rows now receive the current Diary through typed environment. The existing
+diagnostic raw-deletion policy remains unresolved; the review does not claim
+that every mutation path conforms.
 
-Authoritative design rules remain:
+Authoritative rules remain in the
+[architecture guide](../Architecture/ARCHITECTURE_GUIDE.md),
+[shared service design](../Architecture/shared-service-design.md), and accepted
+[architecture decisions](../Decisions/0001-adopt-shared-services-and-workflow-adapters.md).
 
-- [ADR 0001](../Decisions/0001-adopt-shared-services-and-workflow-adapters.md)
-- [ADR 0002](../Decisions/0002-app-intents-are-adapters.md)
-- [ADR 0003](../Decisions/0003-platform-adapters-stay-in-app-target.md)
-- [ADR 0005](../Decisions/0005-adapter-failure-surfacing-contract.md)
-- [ARCHITECTURE_GUIDE.md](../Architecture/ARCHITECTURE_GUIDE.md)
-- [shared-service-design.md](../Architecture/shared-service-design.md)
+## Architectural Findings
 
-## Conclusion
+### Align: Live Search Ownership
 
-The repository is materially aligned with the intended architecture after the
-current correction. Shared recipe browse/search behavior, persisted photo
-ordering/removal rules, and primitive preference descriptor cataloging now live
-in `CookleLibrary`, and the repository no longer carries a separate
-`CookleTests` app unit test target.
+Previously, `SearchView` performed `RecipeOperations.search` only when search
+text changed and stored its result in `@State`. Writes with unchanged search
+text had no collection-refresh owner. `SearchResultsView` now owns the live
+query; `SearchView` owns text, debounce, retry identity, and presentations.
+The existing shared predicate and browse ordering preserve short-text tag
+matching and localized alphabetical ordering. Query fetch errors retain a
+visible retry path.
 
-## Conformant
+### Align: Selected Diary Propagation
 
-### Shared business logic remains centralized
+`RecipeDiaryRow` was an initializer-based current-model exception among
+environment-based rows. `RecipeDiariesSection` and `RecipeDiaryHistoryView`
+now inject each current Diary. The row follows the same convention as
+`DiaryLabel` and `RecipeLabel`; the route and relationship traversal are
+unchanged.
 
-- `CookleLibrary` owns the shared model, mutation/query services, browse
-  criteria, shared photo display/removal rules, and preference descriptor
-  catalog.
-- Representative files:
-  - `CookleLibrary/Sources/Recipe/RecipeService.swift`
-  - `CookleLibrary/Sources/Recipe/RecipeBrowseCriteria.swift`
-  - `CookleLibrary/Sources/Recipe/RecipePhotoDisplay.swift`
-  - `CookleLibrary/Sources/Preferences/CooklePreferenceCatalog.swift`
+### Keep: Feature Reads and Relationships
 
-### Multiple targets still consume the same shared APIs
+- `MainView` and `MainNavigationModel` own routes and selections, without a
+  root query spanning unrelated features.
+- Recipe, Diary, Photo, Tag, and form-selection surfaces own their queries.
+  The guide's [read inventory](../Architecture/ARCHITECTURE_GUIDE.md#current-read-ownership)
+  identifies the consuming surface and independent duplicate queries.
+- `DiaryView` follows `Diary.objects` to recipes. Recipe sections, `TagView`,
+  and `PhotoView` likewise traverse existing relationships instead of
+  re-fetching those graphs.
+- Selected models enter destination and row environments. Navigation
+  selections are live references, not mirrored models.
 
-- The iOS app and widgets both depend on the local `CookleLibrary` package
-  product from `Cookle.xcodeproj`.
-- Representative files:
-  - `Cookle/Sources/App/CookleLibrary.swift`
-  - `Widgets/Sources/App/CookleLibrary.swift`
-  - `Cookle.xcodeproj/project.pbxproj`
+### Adapt: Purpose-Specific Values and Adapters
 
-### Tests are library-centered
+`RecipeFormModel`, `DiaryFormModel`, form snapshots, mutation reviews, cooking
+and Watch snapshots, archive records, and App Intent/inference entities have
+different lifetimes or framework roles from live persistence models. Retain
+them. `RecipeFormPresenter` keeps unsaved input alive across layout changes;
+`RecipeFormNavigationView` supplies its source recipe through environment.
 
-- Repository-owned unit tests are concentrated in `CookleLibrary/Tests/Default`.
-- `Cookle.xcodeproj` no longer defines a `CookleTests` unit test target.
-- Verification now builds the `Cookle` scheme and runs `CookleLibrary` tests.
-- Representative files:
-  - `CookleLibrary/Tests/Default/Recipe/RecipeBrowseCriteriaTests.swift`
-  - `CookleLibrary/Tests/Default/Photo/RecipePhotoRemovalTests.swift`
-  - `AGENTS.md`
-  - `ci_scripts/tasks/check_repository_rules.sh`
-  - `ci_scripts/tasks/check_test_posture.sh`
+`PhotoDetailView` receives peer photos for paging. Diary landing sections
+receive slices of their parent's live queries. Image Playground and entity
+annotation modifiers adapt explicitly supplied recipe context to system APIs.
+These inputs do not justify a second live graph or another collection query.
 
-## Corrected Drift
+### Unresolved: Raw Diagnostic Deletion
 
-### App-owned test posture drift
+`DebugContentView` directly deletes arbitrary inspected models, including
+structural rows, outside product Operations and follow-up. The debug
+preference also exposes it in Release builds. Choosing between unrestricted
+diagnostic deletion and product-safe deletion changes data-policy behavior;
+that choice remains open. Product deletion flows continue to use shared
+Operations through Recipe, Diary, Photo, Tag, and Settings action services.
 
-- Previous state:
-  - The repository defined a `CookleTests` unit test target.
-  - Shell verification wrappers treated app-owned tests as the required
-    app-side verification path.
-  - App-owned tests had started to cover logic that should have been modeled as
-    shared rules instead.
-- Risk:
-  - The repository contract contradicted the intended library-centered
-    architecture and made it easy to keep durable logic in the app target.
-- Current correction:
-  - `CookleTests` and `test_app.sh` are removed.
-  - Verification now uses XcodeBuildMCP `build_sim` with the `Cookle` scheme
-    plus XcodeBuildMCP `test_sim` with the `CookleLibrary` scheme.
-  - A dedicated `check_test_posture.sh` guardrail blocks reintroduction of the
-    removed app test posture.
+## Structural and Workflow Conformance
 
-### Shared recipe browse and photo rule drift
+- App entry, product features, platform glue, and reusable target-local UI
+  remain in `Cookle/Sources/App`, `Features`, `Platform`, and `SharedUI`.
+- `CookleLibrary/Sources` and `Tests/Default` remain capability-oriented.
+  No app, Widgets, or Watch unit-test target is introduced.
+- The main app consumes MHPlatform and MHUI; CookleLibrary consumes
+  MHPlatformCore. Widgets and Watch stay outside app-runtime and presentation
+  umbrella dependencies. Release tooling remains isolated in `Tools/Release`.
+- Repository checks retain package-consumer, Operations, model-directory,
+  test-posture, remote-configuration, and vocabulary boundaries alongside
+  SwiftLint. Xcode-native verification remains the first choice under
+  `AGENTS.md`; official Apple tooling is the fallback for an observed
+  integration failure, without creating another verification wrapper.
 
-- Previous state:
-  - Recipe list sorting lived in an app-local browse helper.
-  - Persisted photo ordering and removal rules lived in app-local helpers.
-- Risk:
-  - Different app surfaces could drift away from the canonical search and photo
-    semantics expected across widgets, notifications, and intents.
-- Current correction:
-  - `RecipeOperations.search(context:criteria:)` owns canonical browse/search
-    sorting.
-  - `RecipePhotoDisplay` and `RecipePhotoRemovalBehavior` now live in
-    `CookleLibrary`.
-  - `RecipeOperations.removePhotoWithOutcome(...)` now owns the shared persisted
-    photo mutation rule.
+## Documentation Correction
 
-## Notes
-
-- This audit does not introduce a new architecture policy. It records current
-  conformance against the already accepted ADRs and guide documents.
-- Future durable rules discovered in app adapters should be extracted into
-  `CookleLibrary` instead of reintroducing target-local unit tests.
+The former April audit omitted newer Operations and live-read boundaries and
+referenced a superseded verification integration. This review updates it and adds
+the live-read rules and their diagnostic boundary to the existing guide and
+agent contract. No schema, archive format, route vocabulary, companion
+protocol, package API, or product layout change is required for this cleanup.

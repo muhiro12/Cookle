@@ -74,7 +74,7 @@ repository contains the full iOS project together with its shared Swift package.
 - MHPlatform 1.x using the current consumer boundaries: the `Cookle` app target
   stays on the default `MHPlatform` umbrella, `CookleLibrary` stays on
   `MHPlatformCore`, and the repository keeps MHPlatform on the
-  `1.15.0..<2.0.0` range for consent-managed ads, native ad layouts, and the
+  `1.16.0..<2.0.0` range for consent-managed ads, native ad layouts, and the
   synchronous preference registry.
 - MHUI `2.3.0..<3.0.0` through the full `MHUI` product. The main app applies
   the neutral standard root theme and its native appearance once, keeping
@@ -137,8 +137,9 @@ Primary records:
 - SwiftUI views and App Intents call workflow services for commands instead of
   mutating models directly, and delivery surfaces call `*Operations` facades
   instead of service collaborators for shared business use cases.
-- `RecipeOperations.search` is the canonical recipe search API used by views,
-  intents, and widgets.
+- Live search uses feature-owned `@Query` with the shared `RecipePredicate`
+  and `RecipeOperations.browse` ordering. `RecipeOperations.search` exposes
+  the same matching and ordering for one-shot intent and widget reads.
 - Route parsing and execution stay shared so deep links, widgets, and intents
   speak the same navigation language through a single `MHAppRoutePipeline`.
 - Mutation follow-up uses `MHMutationWorkflow.runThrowing(..., adapterValue:)`,
