@@ -329,12 +329,16 @@ single save. Stale review requires renewed confirmation. Photos are reused only
 when both bytes and source match; new tags keep the file's timestamps; repeated
 note combinations do not append the same note again. A failed merge preserves
 the original on-disk recipe, photo rows and diary references after reopening.
+Replacement binds its approval to the file and the complete current library,
+including standalone records and data absent from the file. A changed review
+returns to the import screen for renewed confirmation. Both import paths reject
+unrelated unsaved edits before entering their save/rollback boundary.
 Replacement validates the whole file before deleting anything and rolls back on
 a failed save; it gives every record a new identity, so open screens, routes,
 and cooking snapshots pointing at old records no longer resolve.
 `[runtime confirmed]` — `CookleDataImportSafetyTests`,
 `InterruptedReplacementTests`, `RejectedImportPreservationTests`, and
-`ReplacementInvalidationTests`.
+`ReplacementInvalidationTests`, and `ReplacementReviewSafetyTests`.
 
 Import does not supply automatic undo, and a local rollback does not reverse
 writes already synchronized elsewhere. Exporting beforehand preserves recovery

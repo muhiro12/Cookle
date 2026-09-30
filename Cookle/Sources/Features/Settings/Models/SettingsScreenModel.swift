@@ -108,6 +108,10 @@ final class SettingsScreenModel {
                 review: try settingsActionService.importReview(
                     for: archive,
                     modelContainer: modelContainer
+                ),
+                replacementReview: try settingsActionService.replacementReview(
+                    for: archive,
+                    modelContainer: modelContainer
                 )
             )
             importErrorMessage = nil
@@ -152,32 +156,6 @@ final class SettingsScreenModel {
             modelContainer: modelContainer,
             settingsActionService: settingsActionService
         )
-    }
-
-    /// Replaces all current data with the pending complete-library file.
-    func replaceWithPendingImport(
-        modelContainer: ModelContainer,
-        settingsActionService: SettingsActionService
-    ) async {
-        guard let pendingImport,
-              pendingImport.canReplace,
-              beginManageAction() else {
-            return
-        }
-        defer {
-            isManageActionInProgress = false
-        }
-
-        importErrorMessage = nil
-        do {
-            let summary = try await settingsActionService.replaceAllData(
-                with: pendingImport.archive,
-                modelContainer: modelContainer
-            )
-            finishImport(message: Self.replacementMessage(summary))
-        } catch {
-            importErrorMessage = error.localizedDescription
-        }
     }
 
     func cancelPendingImport() {
@@ -279,9 +257,20 @@ final class SettingsScreenModel {
             }
         }
     }
+
+    func beginManageAction() -> Bool {
+        guard isManageActionInProgress == false else {
+            return false
+        }
+
+        isManageActionInProgress = true
+        errorMessage = nil
+        statusMessage = nil
+        return true
+    }
 }
 
-private extension SettingsScreenModel {
+extension SettingsScreenModel {
     static func exportFilename(now: Date = .now) -> String {
         let formatter = DateFormatter()
         formatter.calendar = .init(identifier: .gregorian)
@@ -364,6 +353,15 @@ private extension SettingsScreenModel {
                 in: currentReview
             )
             pendingImport.review = currentReview
+            do {
+                pendingImport.replacementReview = try settingsActionService.replacementReview(
+                    for: pendingImport.archive,
+                    modelContainer: modelContainer
+                )
+            } catch {
+                importErrorMessage = error.localizedDescription
+                return
+            }
             pendingImport.presentationID = UUID()
             pendingImport.isReviewRefreshed = true
             self.pendingImport = pendingImport
@@ -376,16 +374,5 @@ private extension SettingsScreenModel {
         pendingImport = nil
         isImportPresented = false
         statusMessage = message
-    }
-
-    func beginManageAction() -> Bool {
-        guard isManageActionInProgress == false else {
-            return false
-        }
-
-        isManageActionInProgress = true
-        errorMessage = nil
-        statusMessage = nil
-        return true
     }
 }

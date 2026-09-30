@@ -29,7 +29,8 @@ extension SettingsScreenModel {
             )
             pendingImport = .init(
                 archive: archive,
-                review: try DataMaintenanceOperations.importReview(for: archive, context: context)
+                review: try DataMaintenanceOperations.importReview(for: archive, context: context),
+                replacementReview: try DataMaintenanceOperations.replacementReview(for: archive, context: context)
             )
             isImportPresented = true
         } catch {

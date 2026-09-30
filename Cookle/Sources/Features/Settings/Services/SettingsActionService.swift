@@ -113,11 +113,22 @@ final class SettingsActionService {
         return summary
     }
 
+    func replacementReview(
+        for archive: CookleDataArchive,
+        modelContainer: ModelContainer
+    ) throws -> CookleDataReplacementReview {
+        try DataMaintenanceOperations.replacementReview(
+            for: archive,
+            context: modelContainer.mainContext
+        )
+    }
+
     /// Replaces all current data with a complete-library file.
     ///
     /// Every failure leaves current data as it was.
     func replaceAllData(
         with archive: CookleDataArchive,
+        review: CookleDataReplacementReview,
         modelContainer: ModelContainer
     ) async throws -> CookleDataReplacementSummary {
         try CookleMutationWorkflow.requireCleanContext(modelContainer.mainContext)
@@ -125,8 +136,11 @@ final class SettingsActionService {
         do {
             summary = try DataMaintenanceOperations.replaceAllData(
                 with: archive,
+                review: review,
                 context: modelContainer.mainContext
             )
+        } catch CookleDataImportError.replacementReviewChanged {
+            throw CookleDataImportError.replacementReviewChanged
         } catch {
             throw SettingsActionError.importFailed
         }

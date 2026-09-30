@@ -10,6 +10,10 @@ public enum CookleDataImportError: Error, Equatable, Sendable {
     /// A conflict has no choice, a choice names no conflict, or a choice
     /// targets a recipe that is not one of its candidates or is targeted twice.
     case invalidSelections
+    /// Another edit is still unsaved; importing must not save or discard it.
+    case pendingChanges
+    /// The complete current library or the file changed after replacement review.
+    case replacementReviewChanged
     /// Replacement needs a file that contains the complete library.
     case replacementRequiresCompleteArchive
 }

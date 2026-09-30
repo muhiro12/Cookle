@@ -88,6 +88,37 @@ public enum DataMaintenanceOperations {
         )
     }
 
+    /// Captures every current record and the file before destructive replacement.
+    /// Unlike a merge review, this includes data the file does not reference.
+    public static func replacementReview(
+        for archive: CookleDataArchive,
+        context: ModelContext
+    ) throws -> CookleDataReplacementReview {
+        try CookleDataArchiveService.validate(archive, calendar: .current, limits: .standard)
+        return .init(
+            archiveIdentity: try CookleDataImportSnapshotBuilder(archive: archive).archiveIdentity(),
+            currentDataIdentity: try CookleDataImportSnapshotBuilder(
+                archive: CookleDataArchiveService.makeArchive(context: context)
+            ).archiveIdentity(includingExportDate: false)
+        )
+    }
+
+    /// Replaces data only while the complete library and file still match the review.
+    /// A changed review leaves all records untouched and requires a new confirmation.
+    public static func replaceAllData(
+        with archive: CookleDataArchive,
+        review: CookleDataReplacementReview,
+        context: ModelContext
+    ) throws -> CookleDataReplacementSummary {
+        guard context.hasChanges == false else {
+            throw CookleDataImportError.pendingChanges
+        }
+        guard try replacementReview(for: archive, context: context) == review else {
+            throw CookleDataImportError.replacementReviewChanged
+        }
+        return try replaceAllData(with: archive, context: context)
+    }
+
     /// Replaces all current data with a validated complete-library archive.
     ///
     /// - Throws: `CookleDataImportError.replacementRequiresCompleteArchive` when

@@ -86,12 +86,14 @@ final class CookleDataImportSnapshotBuilder {
     }
 
     /// Binds approval to all file content without encoding full image bytes again.
-    func archiveIdentity() throws -> Data {
+    func archiveIdentity(includingExportDate: Bool = true) throws -> Data {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .sortedKeys
         var hash = SHA256()
         hash.update(data: try encoder.encode(archive.scope.rawValue))
-        hash.update(data: try encoder.encode(archive.exportedAt))
+        if includingExportDate {
+            hash.update(data: try encoder.encode(archive.exportedAt))
+        }
         hash.update(data: try encoder.encode(archive.ingredients))
         hash.update(data: try encoder.encode(archive.categories))
         hash.update(data: try encoder.encode(archive.recipes))

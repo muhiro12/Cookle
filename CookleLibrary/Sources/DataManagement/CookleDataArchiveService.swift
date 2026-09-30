@@ -110,6 +110,10 @@ enum CookleDataArchiveService {
             try context.save()
         }
     ) throws -> CookleDataReplacementSummary {
+        try Task.checkCancellation()
+        guard context.hasChanges == false else {
+            throw CookleDataImportError.pendingChanges
+        }
         guard archive.scope == .all else {
             throw CookleDataImportError.replacementRequiresCompleteArchive
         }

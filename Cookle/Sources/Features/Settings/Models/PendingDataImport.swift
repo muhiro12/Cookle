@@ -7,6 +7,7 @@ import Foundation
 struct PendingDataImport {
     let archive: CookleDataArchive
     var review: CookleDataImportReview
+    var replacementReview: CookleDataReplacementReview
     var presentationID = UUID()
     /// Choices made per conflict when importing item by item.
     var selections = CookleDataImportSelections()

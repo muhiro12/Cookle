@@ -17,6 +17,9 @@ extension CookleDataImportService {
             try context.save()
         }
     ) throws -> CookleDataImportSummary {
+        guard context.hasChanges == false else {
+            throw CookleDataImportError.pendingChanges
+        }
         try Task.checkCancellation()
         try CookleDataArchiveService.validate(
             archive,
