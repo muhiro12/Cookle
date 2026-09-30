@@ -24,7 +24,8 @@ struct RecipeDiariesSection: View {
         if !diaries.isEmpty {
             RecipeContentSection("Diaries (\(diaries.count))", presentation: presentation) {
                 ForEach(diaries.prefix(Self.previewLimit)) { diary in
-                    RecipeDiaryRow(diary: diary)
+                    RecipeDiaryRow()
+                        .environment(diary)
                 }
                 if diaries.count > Self.previewLimit {
                     NavigationLink {

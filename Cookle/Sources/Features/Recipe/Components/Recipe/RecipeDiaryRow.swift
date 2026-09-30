@@ -4,11 +4,12 @@ struct RecipeDiaryRow: View {
     @Environment(CookleRouteNavigator.self)
     private var routeNavigator
 
-    let diary: Diary
+    @Environment(Diary.self)
+    private var diary
 
     var body: some View {
         Button {
-            openDiary(diary)
+            openDiary()
         } label: {
             Text(diary.date.formatted(.dateTime.year().month().day()))
                 .fixedSize(horizontal: false, vertical: true)
@@ -20,7 +21,7 @@ struct RecipeDiaryRow: View {
 }
 
 private extension RecipeDiaryRow {
-    func openDiary(_ diary: Diary) {
+    func openDiary() {
         let dateComponents = Calendar.current.dateComponents(
             [.year, .month, .day],
             from: diary.date

@@ -14,7 +14,8 @@ struct RecipeDiaryHistoryView: View {
             MHContainerContent {
                 Section {
                     ForEach(diaries) { diary in
-                        RecipeDiaryRow(diary: diary)
+                        RecipeDiaryRow()
+                            .environment(diary)
                     }
                 } header: {
                     MHSectionHeader("Diaries (\(diaries.count))")
