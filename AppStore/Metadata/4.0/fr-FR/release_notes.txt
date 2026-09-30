@@ -1,0 +1,9 @@
+Bienvenue dans Cookle 4.0 ! Un nouveau design et de nouvelles façons de réunir vos recettes, de cuisiner et de garder une trace de vos repas.
+
+- Découvrez un design repensé qui facilite la consultation des recettes et des repas enregistrés.
+- Importez des recettes depuis des sites web, vérifiez et modifiez le brouillon, puis enregistrez-le dans votre collection. Le résultat dépend de la page source.
+- Consultez toutes les étapes de cuisine dans une seule vue, puis passez à l’enregistrement du repas. Trouvez des idées pour aujourd’hui et parcourez votre Journal par mois.
+- Choisissez une recette favorite à afficher dans le widget de l’écran d’accueil.
+- Exportez vos recettes, votre Journal et vos photos dans un fichier de données Cookle (.cookle). À l’importation, fusionnez les données, choisissez pour chaque élément ou remplacez toutes les données à partir d’un fichier contenant la collection complète.
+
+Le format des fichiers de données a changé. Cookle 4.0 ne peut pas importer les fichiers .cooklebackup exportés par la version 3.9. Les fichiers JSON ne sont pas pris en charge non plus. Ce changement de format n’efface pas les données déjà enregistrées dans l’app. Après la mise à jour, exportez à nouveau vos données actuelles dans le nouveau format.
