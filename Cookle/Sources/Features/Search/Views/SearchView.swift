@@ -6,7 +6,6 @@
 //
 
 import MHUI
-import SwiftData
 import SwiftUI
 
 struct SearchView: View {
@@ -23,18 +22,15 @@ struct SearchView: View {
         }
     }
 
-    @Environment(\.modelContext)
-    private var context
     @Environment(\.isPresented)
     private var isPresented
 
     @Binding private var recipe: Recipe?
     @Binding private var incomingSearchQuery: String?
 
-    @State private var recipes = [Recipe]()
     @State private var searchText = ""
-    @State private var searchErrorMessage: String?
-    @State private var isSearching = false
+    @State private var debouncedSearchText = ""
+    @State private var searchRetryID = 0
     @State private var isSearchPresented = false
     @State private var discoverySheet: DiscoverySheet?
     @State private var ingredientSelection: Ingredient?
@@ -83,7 +79,7 @@ struct SearchView: View {
                 }
             }
             .task(id: searchText) {
-                await performSearch()
+                await debounceSearch()
             }
             .task {
                 applyIncomingSearchQueryIfNeeded()
@@ -94,40 +90,20 @@ struct SearchView: View {
     }
 
     @ViewBuilder var searchContent: some View {
-        if isSearching {
+        if searchText.isEmpty {
+            searchPromptPlaceholder
+        } else if searchText != debouncedSearchText {
             ProgressView("Searching Recipes")
                 .cookleEmptyState()
-        } else if let searchErrorMessage {
-            ContentUnavailableView {
-                Label(
-                    "Cannot Search Recipes",
-                    systemImage: "exclamationmark.triangle"
-                )
-            } description: {
-                Text(searchErrorMessage)
-            } actions: {
-                Button("Try Again") {
-                    Task {
-                        await performSearch(shouldDebounce: false)
-                    }
-                }
-            }
-            .cookleEmptyState()
-        } else if !recipes.isEmpty {
-            SearchResultsView(
-                recipes: recipes,
-                selection: $recipe
-            )
-        } else if !searchText.isEmpty {
-            notFoundPlaceholder
         } else {
-            searchPromptPlaceholder
+            SearchResultsView(
+                searchText: debouncedSearchText,
+                selection: $recipe
+            ) {
+                searchRetryID += 1
+            }
+            .id(searchRetryID)
         }
-    }
-
-    var notFoundPlaceholder: some View {
-        ContentUnavailableView.search(text: searchText)
-            .cookleEmptyState()
     }
 
     var searchPromptPlaceholder: some View {
@@ -181,48 +157,25 @@ private extension SearchView {
         self.incomingSearchQuery = nil
     }
 
-    func performSearch(
-        shouldDebounce: Bool = true
-    ) async {
+    func debounceSearch() async {
         let query = searchText
         guard !query.isEmpty else {
-            recipes = []
-            searchErrorMessage = nil
-            isSearching = false
+            debouncedSearchText = ""
             return
-        }
-
-        isSearching = true
-        defer {
-            if query == searchText {
-                isSearching = false
-            }
         }
 
         do {
-            if shouldDebounce {
-                try await Task.sleep(
-                    for: .milliseconds(SearchTiming.debounceMilliseconds)
-                )
-            }
-            try Task.checkCancellation()
-            let results = try RecipeOperations.search(
-                context: context,
-                text: query
+            try await Task.sleep(
+                for: .milliseconds(SearchTiming.debounceMilliseconds)
             )
+            try Task.checkCancellation()
             guard query == searchText else {
                 return
             }
-            recipes = results
-            searchErrorMessage = nil
-        } catch is CancellationError {
-            return
+            debouncedSearchText = query
         } catch {
-            guard query == searchText else {
-                return
-            }
-            recipes = []
-            searchErrorMessage = error.localizedDescription
+            // A superseding query cancels this debounce without changing results.
+            return
         }
     }
 
