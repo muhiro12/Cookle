@@ -13,6 +13,17 @@ account through Apple's CloudKit services.
 The developer does not operate a separate server that receives your recipes,
 diary entries, photos, or cooking data.
 
+## Photos and Recipe Assistance
+
+You can select photos or use the camera to add cooking photos and scan recipe
+text. Photo text recognition uses Apple's Vision framework on your device. You
+can review the extracted text before using it to fill a recipe form.
+
+When you request an image through Image Playground, Cookle presents Apple's
+system interface. Images you choose to use are stored as recipe photos and
+follow the device-storage and optional iCloud behavior described above. Apple's
+terms and privacy policies apply to that system feature.
+
 ## Location Data
 
 Cookle does not request or collect precise location data.
@@ -21,7 +32,14 @@ Cookle does not request or collect precise location data.
 
 Cookle uses Google AdMob to show advertisements. AdMob may collect device,
 advertising, usage, diagnostic, or similar data according to Google's own
-policies and the choices available on your device.
+policies and the choices available on your device. This can include an IP
+address used to estimate your device's approximate location.
+
+Cookle uses Google's User Messaging Platform to request updated advertising
+consent information and present any required privacy message. When Google
+requires a privacy-options entry point, it is available in Cookle's Settings
+so you can review or change those choices. Ad requests follow the Google SDK's
+current eligibility, and an active premium subscription suppresses ads.
 
 Cookle also uses Apple services such as iCloud, StoreKit, App Store purchases,
 push notification infrastructure, and system frameworks. Those services are
@@ -29,7 +47,7 @@ provided by Apple and are governed by Apple's terms and privacy policies.
 
 Third-party privacy information:
 
-- [Google AdMob privacy information](https://support.google.com/admob/answer/6128543)
+- [Google Privacy Policy](https://policies.google.com/privacy)
 - [Apple Privacy Policy](https://www.apple.com/legal/privacy/)
 
 ## Network Access
@@ -51,6 +69,12 @@ note. Saved recipes follow the device-storage and optional iCloud behavior
 described above. Cookle does not automatically attach images from the source
 website to the recipe.
 
+## Data Export
+
+You can export recipes, cooking diary entries, and photos as a Cookle backup to
+a destination you choose. If you select storage operated by another provider,
+that provider handles the exported file under its own terms and privacy policy.
+
 ## Data Deletion
 
 You can delete Cookle's locally stored app data from inside the app where data
@@ -71,7 +95,7 @@ collect personal information from children under 13.
 This policy may be updated from time to time. Updates are published on this
 page.
 
-Effective date: 2026-09-16
+Effective date: 2026-09-30
 
 ## Contact
 

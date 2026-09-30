@@ -136,12 +136,19 @@ Settings offers Privacy Options when the consent SDK requires it. Cookle
 requests no ATT authorization. `[delegated]` — MHPlatform owns the consent and
 request lifecycle: after premium status resolves as inactive it refreshes
 Google UMP consent each session, presents a form only when UMP requires one,
-and starts the Google Mobile Ads SDK only when UMP allows ad requests. UMP
-stores its consent state, including IAB TCF strings, in the standard defaults
-domain, and preference cleanup keeps those keys.
+and starts the Google Mobile Ads SDK only when UMP allows ad requests. The
+runtime applies the SDK's current eligibility while the refresh or required
+form is in progress, including usable previous-session consent. Premium changes
+suppress placements and defer any pending required form until premium ends.
+Cancellation stops subsequent consent work; the shared runtime exposes an
+explicit refresh API. Consent rejection alone does not mean that all ad requests
+are forbidden. UMP stores its consent state, including IAB TCF strings, in the
+standard defaults domain, and preference cleanup keeps those keys.
 
 Account-side Privacy & messaging configuration, regional applicability, and the
 under-age tag policy are not established by this source review.
+Forms must be configured and published in AdMob for the application identifier
+in the app's `Info.plist`; a sample application's form is separate evidence.
 
 ### Subscriptions
 
@@ -197,10 +204,10 @@ for the disclosure work, not a defect claim.
 
 ## 3) Published policy compared with this inventory
 
-Compared September 22, 2026 against
+Compared September 30, 2026 against
 `https://muhiro12.github.io/Cookle/privacy.html`, effective date 2026-09-16.
 Statements below are about agreement between text and code. They are not legal
-conclusions and they propose no wording.
+conclusions. The updated policy source is separate from that published page.
 
 ### Statements the code supports
 
@@ -219,7 +226,7 @@ conclusions and they propose no wording.
 - Images from the source website are not automatically attached. The reader
   extracts no images.
 
-### Data paths present in code and absent from the policy
+### Data paths present in code and absent from the published policy
 
 1. **Image Playground.** `CookleImagePlaygroundModifier` presents
    `.imagePlaygroundSheet`, and generated images are stored as recipe photos
@@ -233,6 +240,11 @@ conclusions and they propose no wording.
 4. **Data export.** The marketing page advertises exporting recipes, diary and
    photos; the policy does not mention that the user can write that file to
    any destination they choose, including third-party storage.
+
+The updated `.github/pages/privacy.md` describes those four paths, the
+consent-managed advertising flow, and the conditional Settings privacy-options
+entry. Its effective date is 2026-09-30. Publication still requires the normal
+repository and Pages workflow.
 
 ### Framework claims checked against official contracts
 
@@ -248,12 +260,34 @@ runtime CloudKit delivery or make a legal determination about the policy.
 
 ### Links
 
-All three resolve. `https://twitter.com/muhiro_12` redirects to the developer's
+The September 22 link check found all three resolved.
+`https://twitter.com/muhiro_12` redirects to the developer's
 X account, and `https://www.apple.com/legal/privacy/` reaches Apple's customer
 privacy policy. The third, labelled "Google AdMob privacy information", points
 at `https://support.google.com/admob/answer/6128543`, which is **AdMob policies
 and restrictions** — the publisher program policy, not information about what
 AdMob collects.
+
+The updated policy source links directly to the
+[Google Privacy Policy](https://policies.google.com/privacy), verified on
+September 30.
+
+### Public App Store and SDK disclosures
+
+The [Japanese App Store listing](https://apps.apple.com/jp/app/id6483363226),
+read on September 30, now declares device identifiers used for tracking;
+linked coarse location, device ID, product interaction, and advertising data;
+and unlinked crash, performance, and other diagnostic data. The earlier
+"Data Not Collected" checkpoint no longer describes the public listing.
+
+The resolved Google Mobile Ads 13.10.0 privacy manifest declares those seven
+data types. User Messaging Platform 3.1.0 separately declares coarse location,
+product interaction, and performance data for app functionality. Those
+declarations and the public listing cover the same broad categories, but
+neither proves the candidate's actual collection, enabled territories, or
+account configuration. The shipping archive report and account review remain
+separate checks; see
+[Google's disclosure guidance](https://developers.google.com/admob/ios/privacy/data-disclosure).
 
 ## 4) What this note does not establish
 
