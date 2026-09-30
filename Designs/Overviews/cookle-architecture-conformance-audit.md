@@ -3,6 +3,7 @@
 Reviewed on September 30, 2026 against the current Cookle sources, the Incomes
 architecture guide, and
 [Stally Issue 21](https://github.com/muhiro12/Stally/issues/21).
+The diagnostic mutation policy was resolved on October 1, 2026.
 
 ## Scope and Conclusion
 
@@ -14,8 +15,8 @@ points, package consumers, test ownership, and architecture guidance.
 Two app-local data-flow inconsistencies are corrected: Search no longer
 retains a one-shot fetched collection in `@State`, and recipe Diary-history
 rows now receive the current Diary through typed environment. The existing
-diagnostic raw-deletion policy remains unresolved; the review does not claim
-that every mutation path conforms.
+diagnostic deletion path now preserves relationship invariants through shared
+Operations while keeping inspector-only maintenance available.
 
 Authoritative rules remain in the
 [architecture guide](../Architecture/ARCHITECTURE_GUIDE.md),
@@ -68,14 +69,20 @@ receive slices of their parent's live queries. Image Playground and entity
 annotation modifiers adapt explicitly supplied recipe context to system APIs.
 These inputs do not justify a second live graph or another collection query.
 
-### Unresolved: Raw Diagnostic Deletion
+### Align: Diagnostic Deletion Without Graph Drift
 
-`DebugContentView` directly deletes arbitrary inspected models, including
-structural rows, outside product Operations and follow-up. The debug
-preference also exposes it in Release builds. Choosing between unrestricted
-diagnostic deletion and product-safe deletion changes data-policy behavior;
-that choice remains open. Product deletion flows continue to use shared
-Operations through Recipe, Diary, Photo, Tag, and Settings action services.
+The former direct deletion of structural rows could leave the owner's stored
+Photo, Ingredient, or Recipe relation inconsistent with its remaining rows.
+`DiagnosticOperations` now rebuilds those relations and refreshes the owner's
+modified timestamp. Shared roots and remaining rows are preserved. Root
+deletion reuses the existing Operations; used Ingredient deletion is rejected.
+
+`DebugActionService` uses the app mutation workflow for a clean-context guard,
+explicit save, rollback, and Widget/notification effects. Missing targets are
+rejected and failures reach an alert. The inspector's hidden preference remains
+available in Release; valid diagnostic actions remain distinct from publicly
+offered product actions and their impact reviews. Explicit detached-row deletion
+does not reintroduce automatic startup cleanup of incomplete imported graphs.
 
 ## Structural and Workflow Conformance
 
@@ -97,5 +104,6 @@ Operations through Recipe, Diary, Photo, Tag, and Settings action services.
 The former April audit omitted newer Operations and live-read boundaries and
 referenced a superseded verification integration. This review updates it and adds
 the live-read rules and their diagnostic boundary to the existing guide and
-agent contract. No schema, archive format, route vocabulary, companion
-protocol, package API, or product layout change is required for this cleanup.
+agent contract. A bounded `DiagnosticOperations` API supports the inspector.
+No schema, archive format, route vocabulary, companion protocol, or product
+layout change is required for this cleanup.

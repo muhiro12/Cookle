@@ -1,5 +1,10 @@
 # Cookle Data Deletion Policy Audit
 
+For the current inspector mutation policy, see the
+[diagnostic mutation boundary](../Architecture/ARCHITECTURE_GUIDE.md#diagnostic-mutation-boundary).
+The historical raw inspector deletion described below was replaced on
+October 1, 2026 by relationship-preserving diagnostic Operations.
+
 Historical audit as of July 14, 2026.
 
 Startup cleanup policy was superseded on September 20, 2026 by

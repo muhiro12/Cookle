@@ -318,21 +318,32 @@ consumer on a supported OS. It does not replace ordinary screen `@Query` reads.
 | `DuplicateDiaryRepairSection`, `MergeDuplicateTagButton` | Own independent collections needed to discover duplicates outside the current model's relationships; shared Operations build and revalidate mutation reviews. |
 | `DiaryView`, `RecipeView` and its sections, `TagView`, `PhotoView` | Read the current model from environment and follow relationships. Diary history rows receive each current Diary through environment. |
 | `PhotoDetailView` | Pages through an explicitly supplied set of peer photos; `currentID` is presentation state. The collection comes from the caller's query or relationship. |
-| `DebugContentView`, `DebugDetailView` | The selected entity inspector owns its query and supplies the selected model through environment. Its raw deletion path is the unresolved diagnostic boundary described below. |
+| `DebugContentView`, `DebugDetailView` | The selected entity inspector owns its query and supplies the selected model through environment. Explicit deletion uses the diagnostic boundary below. |
 <!-- markdownlint-enable MD013 -->
 
 ### Diagnostic Mutation Boundary
 
-`DebugContentView` currently deletes arbitrary `PersistentModel` records
-directly from their context, including parent-owned structural rows. This
-bypasses product deletion reviews, relationship policies, and mutation
-follow-up. It is not a reference pattern for product views. The inspector is
-reachable through the app's debug preference and is not compile-time limited
-to Debug builds.
+The inspector remains reachable through the app's hidden debug preference,
+including Release builds. Diagnostic access is not a reason to retain an
+operation known to violate the current graph's invariants. Conversely, a valid
+maintenance operation need not become an ordinary product action.
 
-Whether to retain raw diagnostic deletion or restrict the inspector to
-product-safe Operations is an unresolved product/data-policy choice. Do not
-introduce a generic deletion facade merely to rename this bypass. Isolated
+`DebugActionService` sends explicit inspector deletions through
+`DiagnosticOperations` and `CookleMutationWorkflow`. Recipe, Diary, Photo,
+Category, and unused Ingredient roots reuse the existing domain Operations.
+Deleting an Ingredient still attached to a recipe is rejected, including when
+only its amount rows establish that attachment.
+
+Deleting a `PhotoObject`, `IngredientObject`, or `DiaryObject` removes the
+selected row while rebuilding its owner's flattened relations and refreshing
+the owner's modified timestamp. Shared Photo, Ingredient, and Recipe roots
+and sibling rows survive. Explicit deletion of a detached row remains a
+diagnostic action; startup still preserves incomplete imported graphs.
+
+The adapter owns the save, clean-context guard, rollback, and Widget/notification
+follow-up. It rejects missing selections and reports failures. These diagnostic
+actions intentionally omit product impact reviews and remain in the inspector;
+product screens continue to use domain-specific deletion reviews. Isolated
 Preview/capture fixture setup is a separate development-only persistence path.
 
 ## Current Hotspots and Minimal Refactor Plans
