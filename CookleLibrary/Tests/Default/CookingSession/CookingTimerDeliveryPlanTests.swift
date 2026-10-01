@@ -48,6 +48,7 @@ struct CookingTimerDeliveryPlanTests {
     }
 
     @Test
+    @MainActor
     func submillisecond_restarts_have_distinct_timer_keys() throws {
         var state = CookingTimerFixture.state(timerMinutes: 5)
         let original = try #require(CookingSessionOperations.timerAlert(in: state))
@@ -62,6 +63,7 @@ struct CookingTimerDeliveryPlanTests {
     }
 
     @Test
+    @MainActor
     func invalid_timer_dates_do_not_create_system_alerts() {
         for interval in [Double.infinity, Double.nan, Double.greatestFiniteMagnitude] {
             var state = CookingTimerFixture.state(timerMinutes: 5)

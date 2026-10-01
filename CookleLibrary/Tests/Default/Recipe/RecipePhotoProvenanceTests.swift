@@ -118,7 +118,7 @@ struct RecipePhotoProvenanceTests {
                 (recipe.photoObjects ?? []).first { $0.photo?.data == Value.generated }
             )
 
-            _ = try RecipeService.removePhotoWithOutcome(
+            _ = RecipeService.removePhotoWithOutcome(
                 context: context,
                 recipe: recipe,
                 photoObject: generatedRow
