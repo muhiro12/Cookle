@@ -100,7 +100,8 @@ shared package so multiple targets can call the same workflows.
 
 Primary records:
 
-- [Architecture guide](Designs/Architecture/ARCHITECTURE_GUIDE.md)
+- [Architecture guide](Designs/Architecture/ARCHITECTURE_GUIDE.md), including
+  [live SwiftData read ownership](Designs/Architecture/ARCHITECTURE_GUIDE.md#live-app-data-flow)
 - [Shared service design](Designs/Architecture/shared-service-design.md)
 - [ADR 0001](Designs/Decisions/0001-adopt-shared-services-and-workflow-adapters.md)
 - [Deletion policy audit](Designs/Overviews/cookle-data-deletion-policy-audit.md)
@@ -271,6 +272,13 @@ test integration.
 
 ## Testing
 
+Choose evidence for the changed boundary; library tests, consumer builds,
+retained rules, and runtime checks prove different things. Discover current
+schemes and destinations from the project rather than assuming a saved selection.
+Before switching Xcode selection, record it. After verification, stop runs and
+interaction sessions started for the check, restore the original scheme, then
+rediscover and restore its destination. Report any restoration failure.
+
 - Repository-owned unit tests stay in `CookleLibrary/Tests/Default`.
 - `Cookle`, `Widgets`, and App Intents are verified through app builds plus
   shared-library tests instead of a separate app unit test target.
@@ -282,11 +290,17 @@ test integration.
   destination.
 - For shared-library tests, use its test capability with the `CookleLibrary`
   scheme and a compatible discovered destination.
+- For public `CookleLibrary` APIs, `*Operations`, shared wire contracts,
+  SwiftData schema, or adapter-facing changes, also build the `Cookle` consumer.
+- For widget changes, build the `Widgets` scheme with a discovered iOS
+  Simulator destination.
 - For Watch builds and previews, use the shared `Watch` scheme and a
   discovered watchOS Simulator destination. Verify paired delivery separately.
+  Watch product linkage changes also require a `Cookle` embedding-target build.
 - For runtime or UI-sensitive checks, add a targeted run, runtime-log review,
   Preview rendering when appropriate, and live UI or screenshot evidence.
-- Run retained repository rule checks after Xcode-native build/test evidence:
+- Run retained repository rule checks when the changed code affects their
+  static boundaries; they complement Xcode-native build/test evidence:
 
   ```bash
   bash ci_scripts/tasks/check_repository_rules.sh
@@ -300,6 +314,9 @@ test integration.
   ```
 
 ## Continuous integration
+
+Follow existing Swift source style and the repository SwiftLint configuration.
+Markdown follows the [markdownlint rules](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md).
 
 - `ci_scripts/ci_post_clone.sh` adjusts Xcode defaults for plugin validation
   inside automated builds.

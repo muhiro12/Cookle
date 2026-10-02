@@ -96,14 +96,15 @@ does not reintroduce automatic startup cleanup of incomplete imported graphs.
 - Repository checks retain package-consumer, Operations, model-directory,
   test-posture, remote-configuration, and vocabulary boundaries alongside
   SwiftLint. Xcode-native verification remains the first choice under
-  `AGENTS.md`; official Apple tooling is the fallback for an observed
+  [README Testing](../../README.md#testing); official Apple tooling is the
+  fallback for an observed
   integration failure, without creating another verification wrapper.
 
 ## Documentation Correction
 
 The former April audit omitted newer Operations and live-read boundaries and
 referenced a superseded verification integration. This review updates it and adds
-the live-read rules and their diagnostic boundary to the existing guide and
-agent contract. A bounded `DiagnosticOperations` API supports the inspector.
+the live-read rules and their diagnostic boundary to the existing guide.
+A bounded `DiagnosticOperations` API supports the inspector.
 No schema, archive format, route vocabulary, companion protocol, or product
 layout change is required for this cleanup.
