@@ -306,13 +306,6 @@ rediscover and restore its destination. Report any restoration failure.
   bash ci_scripts/tasks/check_repository_rules.sh
   ```
 
-- Run the manual unused code audit only after an Xcode-native build has
-  refreshed a supported DerivedData index:
-
-  ```bash
-  bash ci_scripts/tasks/check_unused_code.sh
-  ```
-
 ## Continuous integration
 
 Follow existing Swift source style and the repository SwiftLint configuration.
@@ -340,8 +333,6 @@ post-clone CI setup.
   gate. Use the global `$xcode-ui-smoke-auditor` skill and the
   [release UI smoke audit guide](Designs/Architecture/release-ui-smoke-audit.md)
   when a release or UI-sensitive change needs live Simulator evidence.
-- `bash ci_scripts/tasks/check_unused_code.sh` runs the opt-in Periphery audit
-  after an Xcode-native build has refreshed a supported index store.
 
 SwiftLint is resolved from the `SimplyDanny/SwiftLintPlugins` package declared
 in `Cookle.xcodeproj`. The repository scripts do not require a separately
@@ -372,44 +363,12 @@ bash ci_scripts/tasks/format_swift.sh
 bash ci_scripts/tasks/lint_swift.sh
 ```
 
-## Unused code audit (Periphery)
-
-Periphery is an opt-in manual audit tool in this repository. It is not part of
-the standard Xcode-native build/test and retained-rule flow.
-
-Install `periphery` manually before using the audit task. For example:
-
-```sh
-brew install periphery
-```
-
-Then build the `Cookle` scheme through the available Xcode-native integration.
-The audit task uses `PERIPHERY_INDEX_STORE_PATH` when set. Otherwise, it
-selects the index with the most recently modified versioned unit artifacts
-across the repository shared DerivedData location and matching directories
-under Xcode's default DerivedData root.
-
-Run the audit after the Xcode-native build completes:
-
-```sh
-bash ci_scripts/tasks/check_unused_code.sh
-```
-
-The repository keeps stable scan options, including `skip_build`, in
-`.periphery.yml`; the task passes the selected index store explicitly. Set
-`PERIPHERY_INDEX_STORE_PATH` to an existing DataStore directory when Xcode
-uses another DerivedData location. Relative override paths are resolved from
-the repository root. This repository does not maintain a Periphery baseline
-file. Keep intentional framework entry points with `// periphery:ignore` when
-needed.
-
-### Build output layout
+## Build output layout
 
 Cookle helper scripts may write disposable cache data under `.build/ci/shared/`.
 Xcode-native build and test evidence is owned by the active integration. The
 repository keeps `.build/ci/shared/DerivedData` as a compatibility DerivedData
-location, while opt-in follow-up tools such as Periphery can also use Xcode's
-default DerivedData index.
+location.
 
 ## Screenshots
 

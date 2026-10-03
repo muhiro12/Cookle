@@ -10,10 +10,10 @@ final class CookleAppAssembly {
     let routeNavigator: CookleRouteNavigator
     let services: CookleAppServices
     let cookingSessionStore: CookingSessionStore
-    // periphery:ignore - Retain the watch sync service for the lifetime of the app assembly.
+    // Retain the watch sync service for the lifetime of the app assembly.
     let cookingSessionWatchSyncService: CookingSessionWatchSyncService
     let cookingTimerDeliveryService: CookingTimerDeliveryService
-    // periphery:ignore - Retain the Spotlight indexer for the lifetime of the app assembly.
+    // Retain the Spotlight indexer for the lifetime of the app assembly.
     let recipeSpotlightIndexer: RecipeSpotlightIndexer
     let recipeActionService: RecipeActionService
     let photoActionService: PhotoActionService
