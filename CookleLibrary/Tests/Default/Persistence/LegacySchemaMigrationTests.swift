@@ -6,11 +6,7 @@ import Testing
 struct LegacySchemaMigrationTests {
     @Test
     func unversioned_store_without_photo_source_upgrades() throws {
-        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        defer {
-            try? FileManager.default.removeItem(at: directory)
-        }
+        let directory = try persistentTestDirectory(fileManager: .default)
         let url = directory.appendingPathComponent("default.store")
         try seed(at: url)
         #expect(throws: (any Error).self) {

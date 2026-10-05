@@ -7,9 +7,7 @@ import Testing
 struct RecipeWebsitePersistenceTests {
     @Test
     func reviewed_source_survives_save_and_reopening_without_remote_photos() throws {
-        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        defer { try? FileManager.default.removeItem(at: directory) }
+        let directory = try persistentTestDirectory(fileManager: .default)
         let storeURL = directory.appendingPathComponent("recipes.sqlite")
         let sourceURL = try #require(URL(string: "https://recipes.example/soup"))
         let source = try RecipeWebsiteImportOperations.source(

@@ -8,9 +8,6 @@ struct ModelContainerFactoryTests {
     @MainActor
     func validateMigratedDataBeforeDeletingLegacyIfNeeded_passes_when_relocated_store_opens() throws {
         let sandbox = try makeSandboxDirectory()
-        defer {
-            try? FileManager.default.removeItem(at: sandbox)
-        }
         let currentURL = sandbox.appendingPathComponent("current.sqlite")
         let legacyURL = sandbox.appendingPathComponent("legacy.sqlite")
 
@@ -44,9 +41,6 @@ struct ModelContainerFactoryTests {
     @Test
     func validateMigratedDataBeforeDeletingLegacyIfNeeded_skips_when_legacy_is_missing() throws {
         let sandbox = try makeSandboxDirectory()
-        defer {
-            try? FileManager.default.removeItem(at: sandbox)
-        }
         let currentURL = sandbox.appendingPathComponent("current.sqlite")
         let legacyURL = sandbox.appendingPathComponent("missing-legacy.sqlite")
 
@@ -70,15 +64,7 @@ private extension ModelContainerFactoryTests {
     }
 
     func makeSandboxDirectory() throws -> URL {
-        let sandbox = FileManager.default.temporaryDirectory.appendingPathComponent(
-            UUID().uuidString,
-            isDirectory: true
-        )
-        try FileManager.default.createDirectory(
-            at: sandbox,
-            withIntermediateDirectories: true
-        )
-        return sandbox
+        try persistentTestDirectory(fileManager: .default)
     }
 
     func seed(context: ModelContext) throws {

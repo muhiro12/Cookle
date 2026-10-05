@@ -18,11 +18,7 @@ struct SchemaCompatibilityTests {
 
     @Test(arguments: [false, true])
     func released_store_preserves_graph_and_identity(versioned: Bool) throws {
-        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        defer {
-            try? FileManager.default.removeItem(at: directory)
-        }
+        let directory = try persistentTestDirectory(fileManager: .default)
         let url = directory.appendingPathComponent("default.store")
         let identifier = try seedReleasedStore(at: url, versioned: versioned)
         let before = try metadata(at: url)

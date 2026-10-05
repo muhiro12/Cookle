@@ -166,17 +166,7 @@ private extension RecipePhotoProvenanceTests {
     }
 
     func withStore(_ body: (ModelContext) throws -> Void) throws {
-        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
-            UUID().uuidString,
-            isDirectory: true
-        )
-        try FileManager.default.createDirectory(
-            at: directory,
-            withIntermediateDirectories: true
-        )
-        defer {
-            try? FileManager.default.removeItem(at: directory)
-        }
+        let directory = try persistentTestDirectory(fileManager: .default)
         let container = try ModelContainerFactory.makeModelContainer(
             url: directory.appendingPathComponent("store.sqlite"),
             cloudKitDatabase: .none

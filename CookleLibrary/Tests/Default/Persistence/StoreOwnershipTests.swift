@@ -17,9 +17,6 @@ struct StoreOwnershipTests {
     @Test
     func extension_reads_existing_store_but_cannot_save() throws {
         let directory = try makeDirectory()
-        defer {
-            try? FileManager.default.removeItem(at: directory)
-        }
         let url = directory.appendingPathComponent("default.store")
         try seedDetachedRows(at: url)
         let container = try ModelContainerFactory.makeReadOnlyContainer(url: url)
@@ -36,9 +33,6 @@ struct StoreOwnershipTests {
     @Test
     func app_startup_preserves_rows_with_missing_parents() throws {
         let directory = try makeDirectory()
-        defer {
-            try? FileManager.default.removeItem(at: directory)
-        }
         let url = directory.appendingPathComponent("default.store")
         try seedDetachedRows(at: url)
         try openApp(at: url)
@@ -55,9 +49,6 @@ struct StoreOwnershipTests {
     @Test
     func relocation_preserves_both_populated_stores() throws {
         let directory = try makeDirectory()
-        defer {
-            try? FileManager.default.removeItem(at: directory)
-        }
         let legacyURL = directory.appendingPathComponent("legacy.store")
         let currentURL = directory.appendingPathComponent("current.store")
         try seedDetachedRows(at: legacyURL)
@@ -78,9 +69,6 @@ struct StoreOwnershipTests {
     @Test
     func relocation_replaces_empty_destination_and_preserves_graph() throws {
         let directory = try makeDirectory()
-        defer {
-            try? FileManager.default.removeItem(at: directory)
-        }
         let legacyDirectory = directory.appendingPathComponent("legacy")
         let currentDirectory = directory.appendingPathComponent("current")
         try FileManager.default.createDirectory(at: legacyDirectory, withIntermediateDirectories: true)
@@ -113,9 +101,7 @@ struct StoreOwnershipTests {
     }
 
     private func makeDirectory() throws -> URL {
-        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        return directory
+        try persistentTestDirectory(fileManager: .default)
     }
 
     private func seedDetachedRows(at url: URL) throws {

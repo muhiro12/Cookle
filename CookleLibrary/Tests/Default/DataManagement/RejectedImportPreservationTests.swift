@@ -36,9 +36,6 @@ struct RejectedImportPreservationTests {
         input: RejectedInput
     ) throws {
         let directory = try makeDirectory()
-        defer {
-            try? FileManager.default.removeItem(at: directory)
-        }
         let storeURL = directory.appendingPathComponent("original.sqlite")
         let original = Support.archive()
         try replace(with: original, at: storeURL)
@@ -73,9 +70,6 @@ struct RejectedImportPreservationTests {
         value: RejectedArchiveValue
     ) throws {
         let directory = try makeDirectory()
-        defer {
-            try? FileManager.default.removeItem(at: directory)
-        }
         let storeURL = directory.appendingPathComponent("original.sqlite")
         try replace(with: Support.archive(), at: storeURL)
         let before = try storeContent(at: storeURL)
@@ -102,9 +96,6 @@ struct RejectedImportPreservationTests {
     @Test
     func an_accepted_export_file_still_replaces_the_store() throws {
         let directory = try makeDirectory()
-        defer {
-            try? FileManager.default.removeItem(at: directory)
-        }
         let storeURL = directory.appendingPathComponent("original.sqlite")
         try replace(with: Support.archive(), at: storeURL)
         let before = try storeContent(at: storeURL)
@@ -339,15 +330,7 @@ private extension RejectedImportPreservationTests {
     }
 
     func makeDirectory() throws -> URL {
-        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
-            UUID().uuidString,
-            isDirectory: true
-        )
-        try FileManager.default.createDirectory(
-            at: directory,
-            withIntermediateDirectories: true
-        )
-        return directory
+        try persistentTestDirectory(fileManager: .default)
     }
 
     func makeContext(at url: URL) throws -> ModelContext {

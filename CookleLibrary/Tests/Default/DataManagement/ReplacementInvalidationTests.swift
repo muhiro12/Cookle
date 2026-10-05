@@ -126,17 +126,7 @@ private extension ReplacementInvalidationTests {
     }
 
     func withDiskStore(_ body: (URL) throws -> Void) throws {
-        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
-            UUID().uuidString,
-            isDirectory: true
-        )
-        try FileManager.default.createDirectory(
-            at: directory,
-            withIntermediateDirectories: true
-        )
-        defer {
-            try? FileManager.default.removeItem(at: directory)
-        }
+        let directory = try persistentTestDirectory(fileManager: .default)
         try body(directory.appendingPathComponent("store.sqlite"))
     }
 

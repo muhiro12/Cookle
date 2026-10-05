@@ -11,11 +11,7 @@ struct CookleDataImportSafetyTests {
 
     @Test
     func failed_replacement_reopens_with_original_photo_rows_and_recipe() throws {
-        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        defer {
-            try? FileManager.default.removeItem(at: directory)
-        }
+        let directory = try persistentTestDirectory(fileManager: .default)
         let url = directory.appendingPathComponent("store.sqlite")
         let container = try ModelContainerFactory.makeModelContainer(url: url, cloudKitDatabase: .none)
         let context = ModelContext(container)

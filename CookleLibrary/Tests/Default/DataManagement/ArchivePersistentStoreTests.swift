@@ -20,9 +20,6 @@ struct ArchivePersistentStoreTests {
         method: ImportMethod
     ) async throws {
         let directory = try makeDirectory()
-        defer {
-            try? FileManager.default.removeItem(at: directory)
-        }
         let sourceURL = directory.appendingPathComponent("source.sqlite")
         let destinationURL = directory.appendingPathComponent("destination.sqlite")
         let original = originalArchive()
@@ -68,9 +65,6 @@ struct ArchivePersistentStoreTests {
     @Test
     func failed_save_preserves_complete_graph_after_reopening_store() throws {
         let directory = try makeDirectory()
-        defer {
-            try? FileManager.default.removeItem(at: directory)
-        }
         let storeURL = directory.appendingPathComponent("original.sqlite")
         let original = originalArchive()
         try replace(with: original, at: storeURL)
@@ -96,15 +90,7 @@ private extension ArchivePersistentStoreTests {
     }
 
     func makeDirectory() throws -> URL {
-        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
-            UUID().uuidString,
-            isDirectory: true
-        )
-        try FileManager.default.createDirectory(
-            at: directory,
-            withIntermediateDirectories: true
-        )
-        return directory
+        try persistentTestDirectory(fileManager: .default)
     }
 
     func makeContext(at url: URL) throws -> ModelContext {

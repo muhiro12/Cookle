@@ -136,11 +136,7 @@ struct CookleDataImportDiaryTests {
 
     @Test
     func a_merged_store_reopens_with_every_record() throws {
-        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        defer {
-            try? FileManager.default.removeItem(at: directory)
-        }
+        let directory = try persistentTestDirectory(fileManager: .default)
         let url = directory.appendingPathComponent("store.sqlite")
         let source = Store()
         let toast = try source.recipe("Toast", photos: [Store.photo("toast")])
