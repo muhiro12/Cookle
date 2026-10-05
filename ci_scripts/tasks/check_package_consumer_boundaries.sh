@@ -176,11 +176,13 @@ mhui_remote_package_block=$(remote_package_block "MHUI")
 check_project_package_reference "MHPlatform" "$mhplatform_remote_package_block" "1.16.0"
 check_project_package_reference "MHUI" "$mhui_remote_package_block" "2.3.0"
 
-if rg -n 'XCLocalSwiftPackageReference "MHPlatform"|relativePath = .*MHPlatform' "$project_file" >/dev/null; then
+matches=$(ci_task_rg -n 'XCLocalSwiftPackageReference "MHPlatform"|relativePath = .*MHPlatform' "$project_file")
+if [[ -n "$matches" ]]; then
   append_error "MHPlatform must not be referenced as a local Xcode package in $project_file."
 fi
 
-if rg -n 'XCLocalSwiftPackageReference "MHUI"|relativePath = .*MHUI' "$project_file" >/dev/null; then
+matches=$(ci_task_rg -n 'XCLocalSwiftPackageReference "MHUI"|relativePath = .*MHUI' "$project_file")
+if [[ -n "$matches" ]]; then
   append_error "MHUI must not be referenced as a local Xcode package in $project_file."
 fi
 
@@ -196,28 +198,34 @@ if ! python3 "$repository_root/ci_scripts/lib/check_mhui_project_links.py" "$pro
   append_error "MHUI target linkage must follow the Cookle-only adoption contract."
 fi
 
-if rg -nP "$presentation_import_pattern" \
-  Cookle/Sources/App/Intents Cookle/Sources/Features/*/Intents >/dev/null; then
+matches=$(ci_task_rg -nP "$presentation_import_pattern" \
+  Cookle/Sources/App/Intents Cookle/Sources/Features/*/Intents)
+if [[ -n "$matches" ]]; then
   append_error "App Intent implementations must not import MHUI or MHDesign."
 fi
 
-if rg -nP '^\s*(?:@preconcurrency\s+)?import\s+MHPlatform\s*$' CookleLibrary/Sources CookleLibrary/Tests >/dev/null; then
+matches=$(ci_task_rg -nP '^\s*(?:@preconcurrency\s+)?import\s+MHPlatform\s*$' CookleLibrary/Sources CookleLibrary/Tests)
+if [[ -n "$matches" ]]; then
   append_error "CookleLibrary must not import the full MHPlatform umbrella."
 fi
 
-if rg -n 'name:\s*"MHPlatform",\s*package:\s*"MHPlatform"|productName = MHPlatform;' "$package_manifest" >/dev/null; then
+matches=$(ci_task_rg -n 'name:\s*"MHPlatform",\s*package:\s*"MHPlatform"|productName = MHPlatform;' "$package_manifest")
+if [[ -n "$matches" ]]; then
   append_error "CookleLibrary must not depend on the full MHPlatform umbrella."
 fi
 
-if rg -nP "$presentation_import_pattern" CookleLibrary/Sources CookleLibrary/Tests >/dev/null; then
+matches=$(ci_task_rg -nP "$presentation_import_pattern" CookleLibrary/Sources CookleLibrary/Tests)
+if [[ -n "$matches" ]]; then
   append_error "CookleLibrary must not import MHUI or MHDesign."
 fi
 
-if rg -nP '^\s*(?:@preconcurrency\s+)?import\s+(?:SwiftUI|UIKit|AppKit|WatchKit)\s*$' CookleLibrary/Sources CookleLibrary/Tests >/dev/null; then
+matches=$(ci_task_rg -nP '^\s*(?:@preconcurrency\s+)?import\s+(?:SwiftUI|UIKit|AppKit|WatchKit)\s*$' CookleLibrary/Sources CookleLibrary/Tests)
+if [[ -n "$matches" ]]; then
   append_error "CookleLibrary Sources and Tests must stay presentation-free and must not import SwiftUI, UIKit, AppKit, or WatchKit."
 fi
 
-if rg -n 'url:\s*"https://github.com/muhiro12/MHUI"|name:\s*"MHUI"|name:\s*"MHDesign"' "$package_manifest" >/dev/null; then
+matches=$(ci_task_rg -n 'url:\s*"https://github.com/muhiro12/MHUI"|name:\s*"MHUI"|name:\s*"MHDesign"' "$package_manifest")
+if [[ -n "$matches" ]]; then
   append_error "CookleLibrary must not depend on MHUI or MHDesign."
 fi
 
@@ -237,19 +245,22 @@ if grep -Eq '/\* MHUI \*/|/\* MHDesign \*/|productName = MHUI;|productName = MHD
   append_error "Watch MHUI linkage awaits a readable watchOS surface under ADR 0010."
 fi
 
-if rg -nP '^\s*(?:@preconcurrency\s+)?import\s+MHPlatform\s*$' Widgets >/dev/null; then
+matches=$(ci_task_rg -nP '^\s*(?:@preconcurrency\s+)?import\s+MHPlatform\s*$' Widgets)
+if [[ -n "$matches" ]]; then
   append_error "Widgets must not import the full MHPlatform umbrella."
 fi
 
-if rg -nP '^\s*(?:@preconcurrency\s+)?import\s+MHPlatform\s*$' Watch >/dev/null; then
+matches=$(ci_task_rg -nP '^\s*(?:@preconcurrency\s+)?import\s+MHPlatform\s*$' Watch)
+if [[ -n "$matches" ]]; then
   append_error "Watch must not import the full MHPlatform umbrella."
 fi
 
-if rg -nP "$presentation_import_pattern" Widgets Watch >/dev/null; then
+matches=$(ci_task_rg -nP "$presentation_import_pattern" Widgets Watch)
+if [[ -n "$matches" ]]; then
   append_error "Widgets and Watch remain free of MHUI/MHDesign imports under ADR 0010."
 fi
 
-if rg -n 'MHAppRuntimeCore' \
+matches=$(ci_task_rg -n 'MHAppRuntimeCore' \
   "$package_manifest" \
   "$project_file" \
   "$readme_file" \
@@ -258,7 +269,8 @@ if rg -n 'MHAppRuntimeCore' \
   Cookle \
   CookleLibrary \
   Widgets \
-  Watch >/dev/null; then
+  Watch)
+if [[ -n "$matches" ]]; then
   append_error "MHAppRuntimeCore must not remain in Cookle source or policy files after MHPlatform 1.9 adoption."
 fi
 

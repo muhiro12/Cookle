@@ -34,13 +34,16 @@ if [[ -e "$legacy_test_script" ]]; then
   append_error "Legacy app test entrypoint must not exist at $legacy_test_script."
 fi
 
-if rg -n 'CookleTests|com\.apple\.product-type\.bundle\.unit-test|CookleTests\.xctest' "$project_file" >/dev/null; then
+matches=$(ci_task_rg -n 'CookleTests|com\.apple\.product-type\.bundle\.unit-test|CookleTests\.xctest' "$project_file")
+if [[ -n "$matches" ]]; then
   append_error "Cookle.xcodeproj must not define a CookleTests unit test target."
 fi
 
-if [[ -d "$schemes_directory" ]] \
-  && rg -n 'CookleTests|CookleTests\.xctest' "$schemes_directory" >/dev/null; then
-  append_error "Shared Xcode schemes must not reference CookleTests."
+if [[ -d "$schemes_directory" ]]; then
+  matches=$(ci_task_rg -n 'CookleTests|CookleTests\.xctest' "$schemes_directory")
+  if [[ -n "$matches" ]]; then
+    append_error "Shared Xcode schemes must not reference CookleTests."
+  fi
 fi
 
 if [[ ${#errors[@]} -gt 0 ]]; then

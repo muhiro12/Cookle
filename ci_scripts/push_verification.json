@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "project": "Cookle.xcodeproj",
+  "checks": {
+    "build": {
+      "kind": "build",
+      "scheme": "Cookle",
+      "project": "Cookle.xcodeproj"
+    },
+    "tests": {
+      "kind": "tests",
+      "scheme": "CookleLibrary",
+      "targets": [
+        "CookleLibraryTests"
+      ]
+    }
+  },
+  "lint": {
+    "argv": [
+      "bash",
+      "ci_scripts/tasks/check_repository_rules.sh"
+    ],
+    "resolved": "CookleLibrary/Package.resolved"
+  },
+  "reuse_prose": [
+    "README.md"
+  ]
+}

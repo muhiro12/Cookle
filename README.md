@@ -370,6 +370,26 @@ Xcode-native build and test evidence is owned by the active integration. The
 repository keeps `.build/ci/shared/DerivedData` as a compatibility DerivedData
 location.
 
+
+## Optional Local Push Verification
+
+`ci_scripts/push_verification.json` declares `Cookle` build, all `CookleLibraryTests`, and retained rules.
+The optional local hook invokes
+`python3 ci_scripts/lib/agent_verification.py push <remote-name> <remote-location>`.
+It requires the installed `ci-verify-and-summarize` skill; set
+`CI_VERIFICATION_SKILL` for a non-default installation. Missing helpers or
+unsupported versions leave verification incomplete. Ordinary builds, rules,
+and Xcode Cloud do not require the skill.
+
+Set `CI_VERIFICATION_EVIDENCE=1` when capturing retained rules for a receipt.
+This binds strict SwiftLint execution to the registered project artifact, tracked
+package pin, and complete tracked Swift input list. Source searches distinguish
+no match from execution failure. The hook matches private `.git/push-verification`
+evidence without rerunning QA or scanners. Follow the skill's
+[receipt procedure](https://github.com/muhiro12/agent-skills/blob/main/ci-verify-and-summarize/references/push-verification.md)
+for complete native results, zero diagnostics, full outgoing-history scan/review,
+compatibility checks, and receipt refresh. Activation and publication are separate.
+
 ## Screenshots
 
 | iPhone | iPhone | iPhone |

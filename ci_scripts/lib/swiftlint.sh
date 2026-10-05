@@ -121,6 +121,13 @@ ci_swiftlint_pinned_version() {
 
 ci_swiftlint_find_binary() {
   local repository_root=$1
+  if [[ "${CI_VERIFICATION_EVIDENCE:-0}" == "1" ]]; then
+    python3 "$repository_root/ci_scripts/lib/agent_verification.py" swiftlint select \
+      "$repository_root" \
+      "$(ci_swiftlint_source_packages_directory "$repository_root")" \
+      "$(ci_swiftlint_derived_data_directory "$repository_root")/SourcePackages"
+    return $?
+  fi
   local source_packages_directory
   local derived_data_directory
   local pinned_version
@@ -179,6 +186,11 @@ ci_swiftlint_resolve_binary() {
   if candidate=$(ci_swiftlint_find_binary "$repository_root"); then
     printf '%s\n' "$candidate"
     return 0
+  else
+    local selection_status=$?
+    if [[ $selection_status -ne 1 ]]; then
+      return "$selection_status"
+    fi
   fi
 
   ci_swiftlint_prepare_directories "$repository_root"
@@ -267,6 +279,15 @@ ci_swiftlint_run() {
   swiftlint_binary=$(ci_swiftlint_resolve_binary "$repository_root")
 
   echo "$start_message"
+  if [[ "${CI_VERIFICATION_EVIDENCE:-0}" == "1" ]]; then
+    python3 "$repository_root/ci_scripts/lib/agent_verification.py" swiftlint run \
+      "$repository_root" \
+      "$(ci_swiftlint_source_packages_directory "$repository_root")" \
+      "$(ci_swiftlint_derived_data_directory "$repository_root")/SourcePackages" \
+      "$mode" "${swift_files[@]}"
+    echo "$finish_message"
+    return 0
+  fi
   case "$mode" in
     format)
       "$swiftlint_binary" lint --quiet --no-cache --fix --format "${swift_files[@]}"
