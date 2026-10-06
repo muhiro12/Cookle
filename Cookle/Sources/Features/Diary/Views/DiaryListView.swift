@@ -50,8 +50,16 @@ struct DiaryListView: View {
         }
         .cookleTopLevelNavigationChrome("Diaries")
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                AddDiaryButton()
+            if !diaries.isEmpty || !recipes.isEmpty {
+                ToolbarItem(placement: .primaryAction) {
+                    AddRecipeButton(showsTitle: true)
+                }
+                if #available(iOS 26.0, *) {
+                    ToolbarSpacer(.fixed, placement: .primaryAction)
+                }
+                ToolbarItem(placement: .primaryAction) {
+                    AddDiaryButton()
+                }
             }
             if isPresented {
                 ToolbarItem(placement: .cancellationAction) {
