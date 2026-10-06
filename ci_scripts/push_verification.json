@@ -12,7 +12,8 @@
       "scheme": "CookleLibrary",
       "targets": [
         "CookleLibraryTests"
-      ]
+      ],
+      "test_plan": "CookleLibrary"
     }
   },
   "lint": {
@@ -24,5 +25,37 @@
   },
   "reuse_prose": [
     "README.md"
-  ]
+  ],
+  "schema_research": {
+    "scheme": "CookleLibrary",
+    "test_plan": "CookleSchemaResearch",
+    "target": "CookleSchemaResearchTests",
+    "normal_plan_path": "CookleLibrary/Tests/CookleLibrary.xctestplan",
+    "plan_path": "CookleLibrary/Tests/CookleSchemaResearch.xctestplan",
+    "cases": {
+      "CookleSchemaResearchTests/FutureSchemaResearchTests/opening_a_store_from_a_newer_schema_keeps_the_shared_records()": "The current schema reads shared Recipe data from a synthetic future store; this is a bounded runtime observation.",
+      "CookleSchemaResearchTests/FutureSchemaResearchTests/a_newer_schemas_own_records_are_lost_once_the_released_build_writes()": "Passing observes future-only data loss after a current-schema write; it does not prove downgrade safety."
+    },
+    "inputs": [
+      "CookleLibrary/Package.swift",
+      "CookleLibrary/Package.resolved",
+      "CookleLibrary/Sources/Persistence/",
+      "CookleLibrary/Sources/Recipe/",
+      "CookleLibrary/Sources/Diary/",
+      "CookleLibrary/Sources/Photo/",
+      "CookleLibrary/Sources/Tag/",
+      "CookleLibrary/Sources/DataManagement/",
+      "CookleLibrary/Tests/Default/Persistence/",
+      "CookleLibrary/Tests/Default/Support/",
+      "CookleLibrary/Tests/SchemaResearch/",
+      "CookleLibrary/Tests/CookleLibrary.xctestplan",
+      "CookleLibrary/Tests/CookleSchemaResearch.xctestplan",
+      "CookleLibrary/.swiftpm/xcode/xcshareddata/xcschemes/CookleLibrary.xcscheme",
+      "ci_scripts/lib/schema_research.py",
+      "ci_scripts/lib/agent_verification.py",
+      "ci_scripts/push_verification.json",
+      "Cookle/Sources/Platform/CookleAppAssemblyFactory.swift",
+      "Cookle/Sources/Platform/CookleAppBootstrapModel.swift"
+    ]
+  }
 }

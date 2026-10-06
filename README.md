@@ -122,7 +122,8 @@ Primary records:
   off MHUI/MHDesign dependencies; future adoption is evaluated per surface.
 - `MHAppRuntime` remains available as an advanced app-root surface, but this
   repo does not use it as the default adoption path.
-- Repository-owned unit tests stay concentrated in `CookleLibrary/Tests/Default`.
+- Ordinary package regression tests stay in `CookleLibrary/Tests/Default`;
+  synthetic future-schema observations stay in `CookleLibrary/Tests/SchemaResearch`.
 - The repository does not maintain a separate `CookleTests` unit test target;
   app adapters are verified through `Cookle` builds plus shared-library tests.
 - The `Cookle` app target owns workflow services such as
@@ -279,7 +280,17 @@ Before switching Xcode selection, record it. After verification, stop runs and
 interaction sessions started for the check, restore the original scheme, then
 rediscover and restore its destination. Report any restoration failure.
 
-- Repository-owned unit tests stay in `CookleLibrary/Tests/Default`.
+- Run the complete `CookleLibrary` test plan for ordinary regression checks.
+  It contains all `CookleLibraryTests` and requires zero raw warnings.
+- Run the complete `CookleSchemaResearch` plan for the two synthetic future-store
+  observations in `CookleSchemaResearchTests`. Run it initially and again when
+  the declared schema, storage, model, dependency, or fixture inputs change, or
+  when Xcode, Swift, the Simulator SDK, or the test runtime changes.
+  The input scope is recorded in `ci_scripts/push_verification.json`.
+  Preserve its raw logs, diagnostic counts, native results, and assertion meaning.
+  A passing observation characterizes possible data loss; it does not prove safety.
+  See the [store upgrade paths](Designs/Overviews/cookle-store-upgrade-paths.md#6-synthetic-downgrade-exposes-a-data-loss-risk)
+  before publishing a schema change.
 - `Cookle`, `Widgets`, and App Intents are verified through app builds plus
   shared-library tests instead of a separate app unit test target.
 - Use the Xcode-native integration available in the agent environment for
@@ -289,7 +300,8 @@ rediscover and restore its destination. Report any restoration failure.
   `Cookle.xcodeproj`, scheme `Cookle`, and a discovered iOS Simulator
   destination.
 - For shared-library tests, use its test capability with the `CookleLibrary`
-  scheme and a compatible discovered destination.
+  scheme, explicitly selecting the required test plan, and a compatible discovered
+  destination.
 - For public `CookleLibrary` APIs, `*Operations`, shared wire contracts,
   SwiftData schema, or adapter-facing changes, also build the `Cookle` consumer.
 - For widget changes, build the `Widgets` scheme with a discovered iOS
@@ -373,7 +385,11 @@ location.
 
 ## Optional Local Push Verification
 
-`ci_scripts/push_verification.json` declares `Cookle` build, all `CookleLibraryTests`, and retained rules.
+`ci_scripts/push_verification.json` declares the `Cookle` build, the complete
+ordinary `CookleLibrary` plan, and retained rules. The Cookle adapter also requires
+a separate schema-research observation matching the declared inputs and native
+environment. An unrelated app-view or prose change can reuse that observation;
+a storage or environment change requires another research run.
 The optional local hook invokes
 `python3 ci_scripts/lib/agent_verification.py push <remote-name> <remote-location>`.
 It requires the installed `ci-verify-and-summarize` skill; set
@@ -389,6 +405,25 @@ evidence without rerunning QA or scanners. Follow the skill's
 [receipt procedure](https://github.com/muhiro12/agent-skills/blob/main/ci-verify-and-summarize/references/push-verification.md)
 for complete native results, zero diagnostics, full outgoing-history scan/review,
 compatibility checks, and receipt refresh. Activation and publication are separate.
+
+Capture the complete `CookleSchemaResearch` plan separately, without requesting
+a clean-diagnostics QA record. After reviewing every raw warning/error candidate
+against its exact passing assertion, preserve the observation with:
+
+```sh
+python3 ci_scripts/lib/schema_research.py record \
+  --captured /path/to/research-capture \
+  --review /path/to/diagnostic-review.json \
+  --output /path/to/new-research-observation
+```
+
+The review binds each candidate to its raw line and hash, native test ID,
+committed test source and hash, start/pass span, and contextual reason. The
+observation retains the capture and native artifacts with `status: observed`
+and `safety_proof: false`; it cannot satisfy ordinary zero-warning QA. Add its
+store-relative `result.json` path to the private receipt under
+`schema_research[<proposed-commit>]`. Missing or stale observations stop the
+optional push hook without rerunning tests or hiding diagnostics.
 
 ## Screenshots
 

@@ -17,4 +17,6 @@ bash "$repository_root/ci_scripts/tasks/check_models_directory_consistency.sh"
 bash "$repository_root/ci_scripts/tasks/check_remote_update_configuration.sh"
 bash "$repository_root/ci_scripts/tasks/check_string_catalog_vocabulary.sh"
 
+python3 -m unittest discover -s "$repository_root/ci_scripts/tests" -p 'test_*.py'
+
 echo "Repository rules check passed."

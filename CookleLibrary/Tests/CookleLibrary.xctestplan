@@ -1,0 +1,20 @@
+{
+  "configurations": [
+    {
+      "id": "5B9D30BA-8A3B-4B32-A681-37D52C9B2582",
+      "name": "Test Scheme Action",
+      "options": {}
+    }
+  ],
+  "defaultOptions": {},
+  "testTargets": [
+    {
+      "target": {
+        "containerPath": "container:",
+        "identifier": "CookleLibraryTests",
+        "name": "CookleLibraryTests"
+      }
+    }
+  ],
+  "version": 2
+}

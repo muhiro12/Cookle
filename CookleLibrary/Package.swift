@@ -39,6 +39,13 @@ let kPackage = Package(
                 "CookleLibrary"
             ],
             path: "Tests/Default"
+        ),
+        .testTarget(
+            name: "CookleSchemaResearchTests",
+            dependencies: [
+                "CookleLibrary"
+            ],
+            path: "Tests/SchemaResearch"
         )
     ]
 )

@@ -105,7 +105,7 @@ persisted data requires the explicit Settings action
 
 ## 6) Synthetic downgrade exposes a data-loss risk
 
-Cookle defines no reverse migration stage. `StoreRecoveryTests` creates a
+Cookle defines no reverse migration stage. `FutureSchemaResearchTests` creates a
 **synthetic** `FutureSchemaV2` using the current SDK: it contains the current
 V1 model types plus a `FutureNote` entity. The test opens that store with the
 current V1 factory, saves another recipe, then opens it with the synthetic V2
@@ -115,7 +115,15 @@ again. The expected observations are:
 - The shared recipe records remain readable, including the recipe added by V1.
 - The synthetic V2-only `FutureNote` records are no longer returned.
 
-This is a regression characterization of one local schema shape on the test
+These two observations run together in the complete `CookleSchemaResearch`
+plan, independently of the ordinary `CookleLibrary` regression plan. The ordinary
+plan retains corrupt-store and failed-validation recovery checks and requires
+zero raw warnings. Research preserves all raw diagnostics and their counts, with
+exact assertion context; a passed research plan is not data-loss safety evidence.
+Repeat research when the declared schema/storage/model/dependency/fixture inputs
+or Xcode/Swift/SDK/runtime change, as recorded in `ci_scripts/push_verification.json`.
+
+This is a characterization of one local schema shape on the test
 runtime. It is **not** a run of an older released binary, a real future schema,
 or a CloudKit-backed store. The schema/container lifetimes in the test also do
 not reproduce separate app processes. It does not establish that every schema

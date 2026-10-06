@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Resolve the installed shared verifier without copying its implementation."""
 from pathlib import Path
+import io
 import os
 import runpy
 import subprocess
@@ -19,7 +20,21 @@ def main():
         if module.get("CHECKER_API_VERSION") != 1:
             raise ValueError("Unsupported shared verifier version; review compatibility before enabling it.")
         os.chdir(root)
-        return module["main"](["ci_scripts/push_verification.json", *sys.argv[2:]])
+        arguments = ["ci_scripts/push_verification.json", *sys.argv[2:]]
+        if sys.argv[1] != "push":
+            return module["main"](arguments)
+        lines = sys.stdin.read()
+        original_input = sys.stdin
+        try:
+            sys.stdin = io.StringIO(lines)
+            status = module["main"](arguments)
+        finally:
+            sys.stdin = original_input
+        if status != 0:
+            return status
+        research = runpy.run_path(str(root / "ci_scripts/lib/schema_research.py"))
+        research["match"](root, sys.argv[3], lines)
+        return 0
     except (OSError, ValueError, KeyError, TypeError, IndexError, subprocess.SubprocessError) as error:
         print("Verification incomplete: " + str(error), file=sys.stderr)
         return 2

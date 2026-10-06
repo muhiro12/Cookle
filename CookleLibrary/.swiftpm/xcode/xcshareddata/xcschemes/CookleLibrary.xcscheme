@@ -28,7 +28,11 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
-      shouldAutocreateTestPlan = "YES">
+      shouldAutocreateTestPlan = "NO">
+      <TestPlans>
+         <TestPlanReference reference = "container:Tests/CookleLibrary.xctestplan" default = "YES"/>
+         <TestPlanReference reference = "container:Tests/CookleSchemaResearch.xctestplan"/>
+      </TestPlans>
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -37,6 +41,15 @@
                BlueprintIdentifier = "CookleLibraryTests"
                BuildableName = "CookleLibraryTests"
                BlueprintName = "CookleLibraryTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CookleSchemaResearchTests"
+               BuildableName = "CookleSchemaResearchTests"
+               BlueprintName = "CookleSchemaResearchTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
