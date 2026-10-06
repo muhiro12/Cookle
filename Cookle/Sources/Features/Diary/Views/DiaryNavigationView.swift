@@ -2,6 +2,8 @@ import SwiftData
 import SwiftUI
 
 struct DiaryNavigationView: View {
+    @Environment(\.horizontalSizeClass)
+    private var horizontalSizeClass
     @Binding private var diary: Diary?
     @Binding private var recipe: Recipe?
     @State private var columnVisibility = NavigationSplitViewVisibility.all
@@ -9,11 +11,16 @@ struct DiaryNavigationView: View {
     @State private var hasAppliedInitialCompactColumn = false
 
     var body: some View {
+        let usesSidebarToolbar = horizontalSizeClass == .regular
+
         NavigationSplitView(
             columnVisibility: $columnVisibility,
             preferredCompactColumn: $preferredCompactColumn
         ) {
-            DiaryListView(selection: $diary)
+            DiaryListView(
+                selection: $diary,
+                usesSidebarToolbar: usesSidebarToolbar
+            )
         } content: {
             if let diary {
                 DiaryView(selection: $recipe)

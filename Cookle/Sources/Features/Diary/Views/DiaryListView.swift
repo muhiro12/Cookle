@@ -18,6 +18,8 @@ struct DiaryListView: View {
     @Query(sort: [SortDescriptor(\Recipe.modifiedTimestamp, order: .reverse), SortDescriptor(\Recipe.name)])
     private var recipes: [Recipe]
 
+    private let usesSidebarToolbar: Bool
+
     @Binding private var diary: Diary?
     @State private var currentDate = Date.now
 
@@ -51,10 +53,10 @@ struct DiaryListView: View {
         .cookleTopLevelNavigationChrome("Diaries")
         .toolbar {
             if !diaries.isEmpty || !recipes.isEmpty {
-                ToolbarItem(placement: .primaryAction) {
+                ToolbarItem(placement: usesSidebarToolbar ? .secondaryAction : .primaryAction) {
                     AddRecipeButton(showsTitle: true)
                 }
-                if #available(iOS 26.0, *) {
+                if #available(iOS 26.0, *), !usesSidebarToolbar {
                     ToolbarSpacer(.fixed, placement: .primaryAction)
                 }
                 ToolbarItem(placement: .primaryAction) {
@@ -69,8 +71,9 @@ struct DiaryListView: View {
         }
     }
 
-    init(selection: Binding<Diary?> = .constant(nil)) {
+    init(selection: Binding<Diary?> = .constant(nil), usesSidebarToolbar: Bool = false) {
         _diary = selection
+        self.usesSidebarToolbar = usesSidebarToolbar
     }
 }
 
