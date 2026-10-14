@@ -118,6 +118,33 @@ public enum RecipeOperations {
         )
     }
 
+    /// Returns at most one local, half-hour-rounded time for each supplied meal.
+    ///
+    /// Callers supply eligible first-open observations. Meal boundaries, observation
+    /// expiry, and delivery dates are deliberately outside this calculation.
+    nonisolated public static func mealSuggestionTimes(
+        from firstOpenDates: [DiaryObjectType: Date],
+        isEnabled: Bool,
+        calendar: Calendar = .current
+    ) -> [DiaryObjectType: DateComponents] {
+        guard isEnabled else {
+            return [:]
+        }
+
+        let intervalMinutes = 30
+        return firstOpenDates.mapValues { firstOpenDate -> DateComponents in
+            let time = DailySuggestionTimePolicy.components(
+                from: firstOpenDate,
+                calendar: calendar
+            )
+            return .init(
+                hour: time.hour,
+                minute: time.minute / intervalMinutes * intervalMinutes,
+                second: .zero
+            )
+        }
+    }
+
     /// Returns a concise deterministic blurb from recipe content.
     nonisolated public static func makeBlurb(
         request: RecipeBlurbRequest,
