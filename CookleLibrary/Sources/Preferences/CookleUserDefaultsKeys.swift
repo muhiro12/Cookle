@@ -8,6 +8,8 @@ public enum CookleUserDefaultsKeys {
         case isICloudOn = "AO9Yo1cC"
         case isDebugOn = "hd3fAy3G"
         case isDailyRecipeSuggestionNotificationOn = "m9Pq2Ls4"
+        case recipeSuggestionNotificationMode = "d4Hw9Cs6"
+        case adaptiveRecipeSuggestionState = "b8Nm4Qp2"
         case dailyRecipeSuggestionHour = "r5Vn8Kt1"
         case dailyRecipeSuggestionMinute = "u7Bx3Jd6"
         case tipExperienceVersion = "t7Px9Nb4"

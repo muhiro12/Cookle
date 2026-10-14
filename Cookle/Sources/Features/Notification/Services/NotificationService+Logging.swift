@@ -15,7 +15,7 @@ extension NotificationService {
     }
 
     func handleDisabledSuggestionSyncIfNeeded() async -> Bool {
-        guard !CooklePreferences.bool(for: \.isDailyRecipeSuggestionNotificationOn) else {
+        guard CooklePreferences.suggestionNotificationMode == .off else {
             return false
         }
 
@@ -195,8 +195,7 @@ extension NotificationService {
             "attachment_count": plan.preparedRequests.compactMap(
                 \.attachmentFileURL
             ).count.description,
-            "notification_hour": notificationHour.description,
-            "notification_minute": notificationMinute.description
+            "learned_meal_count": suggestionState.learnedMinutes.count.description
         ]
     }
 

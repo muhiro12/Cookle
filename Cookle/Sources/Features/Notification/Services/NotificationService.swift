@@ -1,8 +1,11 @@
+import Combine
 @preconcurrency import MHPlatform
 import Observation
 import SwiftData
+import UIKit
 import UserNotifications
 
+@MainActor
 @Observable
 final class NotificationService: NSObject {
     private enum SyncConstants {
@@ -12,14 +15,19 @@ final class NotificationService: NSObject {
 
     let routeInbox: MHObservableDeepLinkInbox
     let notificationCenter = UNUserNotificationCenter.current()
-    let calendar = Calendar.current
     let composer = RecipeSuggestionNotificationComposer()
     let syncWorker: NotificationSyncWorker
     let syncLogger: MHLogger
     let routeLogger: MHLogger
 
-    @MainActor private var lifecycleSynchronizationTask: Task<Void, Never>?
-    @MainActor private var isLifecycleSynchronizationPending = false
+    private var lifecycleSynchronizationTask: Task<Void, Never>?
+    private var isLifecycleSynchronizationPending = false
+
+    let recordsUsage: Bool
+    var usageObservers = Set<AnyCancellable>()
+    var notificationOpenedThisForeground = false
+    var activationBeforeRecording: (date: Date, state: AdaptiveRecipeSuggestionState)?
+    var suggestionState: AdaptiveRecipeSuggestionState
 
     var authorizationStatus: UNAuthorizationStatus = .notDetermined
 
@@ -27,8 +35,15 @@ final class NotificationService: NSObject {
         modelContainer: ModelContainer,
         routeInbox: MHObservableDeepLinkInbox,
         syncLogger: MHLogger,
-        routeLogger: MHLogger
+        routeLogger: MHLogger,
+        recordsUsage: Bool = true
     ) {
+        self.recordsUsage = recordsUsage
+        self.suggestionState = recordsUsage
+            ? AdaptiveRecipeSuggestionState.decoded(
+                from: CooklePreferences.string(for: \.adaptiveRecipeSuggestionState)
+            ) ?? .init()
+            : .init()
         self.routeInbox = routeInbox
         self.syncLogger = syncLogger
         self.routeLogger = routeLogger
@@ -39,29 +54,21 @@ final class NotificationService: NSObject {
         super.init()
         notificationCenter.delegate = self
         registerNotificationCategories()
+        if recordsUsage {
+            observeForegroundUsage()
+        }
     }
 
-    @MainActor
     func scheduleLifecycleSynchronization() {
-        isLifecycleSynchronizationPending = true
-        guard lifecycleSynchronizationTask == nil else {
-            return
-        }
-
-        lifecycleSynchronizationTask = Task { [weak self] in
-            guard let self else {
-                return
-            }
-            await runLifecycleSynchronizationLoop()
-        }
+        _ = synchronizationTask()
     }
 
     func synchronizeScheduledSuggestions() async {
-        await syncSuggestions(requestAuthorizationIfNeeded: false)
+        await synchronizationTask().value
     }
 
     func applySuggestionSettings() async {
-        await syncSuggestions(requestAuthorizationIfNeeded: true)
+        await synchronizationTask().value
     }
 
     func requestSettingsAuthorizationIfNeeded() async {
@@ -81,19 +88,7 @@ final class NotificationService: NSObject {
             requestAuthorizationIfNeeded: true
         )
 
-        if isAuthorizationGranted(status) {
-            CooklePreferences.set(
-                true,
-                for: \.isDailyRecipeSuggestionNotificationOn
-            )
-            return
-        }
-
-        CooklePreferences.set(
-            false,
-            for: \.isDailyRecipeSuggestionNotificationOn
-        )
-        await clearSuggestionsAndAttachments()
+        await synchronizationTask().value
     }
 
     func refreshAuthorizationStatus() async {
@@ -159,34 +154,6 @@ extension NotificationService {
         )
     }
 
-    var notificationHour: Int {
-        let suggestionTime = DailySuggestionTimePolicy.normalized(
-            hour: CooklePreferences.int(
-                for: \.dailyRecipeSuggestionHour,
-                default: DailySuggestionTimePolicy.defaultHour
-            ),
-            minute: CooklePreferences.int(
-                for: \.dailyRecipeSuggestionMinute,
-                default: DailySuggestionTimePolicy.minimumTimeComponent
-            )
-        )
-        return suggestionTime.hour
-    }
-
-    var notificationMinute: Int {
-        let suggestionTime = DailySuggestionTimePolicy.normalized(
-            hour: CooklePreferences.int(
-                for: \.dailyRecipeSuggestionHour,
-                default: DailySuggestionTimePolicy.defaultHour
-            ),
-            minute: CooklePreferences.int(
-                for: \.dailyRecipeSuggestionMinute,
-                default: DailySuggestionTimePolicy.minimumTimeComponent
-            )
-        )
-        return suggestionTime.minute
-    }
-
     var authorizationOptions: UNAuthorizationOptions {
         [
             .alert,
@@ -247,7 +214,7 @@ extension NotificationService {
         )
     }
 
-    func syncSuggestions(requestAuthorizationIfNeeded: Bool) async {
+    func syncSuggestions() async {
         if await handleDisabledSuggestionSyncIfNeeded() {
             return
         }
@@ -255,11 +222,11 @@ extension NotificationService {
         let status = await MHNotificationOrchestrator.requestAuthorizationIfNeeded(
             center: notificationCenter,
             options: authorizationOptions,
-            requestIfNotDetermined: requestAuthorizationIfNeeded
+            requestIfNotDetermined: false
         )
         logAuthorizationRefresh(
             status: status,
-            requestAuthorizationIfNeeded: requestAuthorizationIfNeeded
+            requestAuthorizationIfNeeded: false
         )
 
         if await handleUnauthorizedStatusIfNeeded(
@@ -270,12 +237,24 @@ extension NotificationService {
 
         let plan: NotificationSyncWorker.Plan
         do {
+            suggestionState = RecipeOperations.reconciledSuggestionState(suggestionState)
+            saveSuggestionState()
             plan = try await syncWorker.buildPlan(
-                hour: notificationHour,
-                minute: notificationMinute
+                state: suggestionState,
+                mode: CooklePreferences.suggestionNotificationMode,
+                hour: CooklePreferences.int(
+                    for: \.dailyRecipeSuggestionHour,
+                    default: DailySuggestionTimePolicy.defaultHour
+                ),
+                minute: CooklePreferences.int(for: \.dailyRecipeSuggestionMinute)
             )
         } catch {
             logPlanBuildFailure(error)
+            return
+        }
+        // A foreground open or setting change during the worker await makes
+        // this plan stale. The single synchronization loop will rebuild it.
+        guard !isLifecycleSynchronizationPending else {
             return
         }
         logPlanBuilt(plan)
@@ -297,7 +276,7 @@ extension NotificationService {
         )
     }
 
-    nonisolated func handleNotificationResponse(_ response: UNNotificationResponse) async {
+    func handleNotificationResponse(_ response: UNNotificationResponse) async {
         let deliveredOutcome = await deliverRoute(
             for: response
         )
@@ -333,7 +312,7 @@ extension NotificationService {
     }
 
     func suggestionTrigger(for notifyDate: Date) -> UNCalendarNotificationTrigger {
-        let dateComponents = calendar.dateComponents(
+        let dateComponents = Calendar.current.dateComponents(
             [.year, .month, .day, .hour, .minute],
             from: notifyDate
         )
@@ -343,14 +322,23 @@ extension NotificationService {
         )
     }
 
-    @MainActor
-    func runLifecycleSynchronizationLoop() async {
-        while isLifecycleSynchronizationPending {
-            isLifecycleSynchronizationPending = false
-            await synchronizeScheduledSuggestions()
+    private func synchronizationTask() -> Task<Void, Never> {
+        isLifecycleSynchronizationPending = true
+        if let lifecycleSynchronizationTask {
+            return lifecycleSynchronizationTask
         }
-
-        lifecycleSynchronizationTask = nil
+        let task = Task { [weak self] in
+            guard let self else {
+                return
+            }
+            while isLifecycleSynchronizationPending {
+                isLifecycleSynchronizationPending = false
+                await syncSuggestions()
+            }
+            lifecycleSynchronizationTask = nil
+        }
+        lifecycleSynchronizationTask = task
+        return task
     }
 
     func durationMilliseconds(

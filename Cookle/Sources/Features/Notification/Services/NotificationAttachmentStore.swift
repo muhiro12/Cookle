@@ -12,42 +12,54 @@ nonisolated final class NotificationAttachmentStore {
     }
 
     func prepareAttachmentFileURL(
-        for snapshot: NotificationRecipeSnapshot
+        for snapshot: NotificationRecipeSnapshot,
+        requestIdentifier: String? = nil
     ) -> URL? {
         do {
             try ensureDirectoryExists()
             let fileURL = attachmentFileURL(
                 for: snapshot.stableIdentifier
             )
-            if let cachedFileURL = existingAttachmentFileURLIfUpToDate(
+            if existingAttachmentFileURLIfUpToDate(
                 fileURL: fileURL,
                 recipeModifiedTimestamp: snapshot.modifiedTimestamp
-            ) {
-                return cachedFileURL
+            ) == nil {
+                guard let photoData = snapshot.primaryPhotoData,
+                      let data = PhotoImageProcessor.compressedJPEGData(from: photoData) else {
+                    try removeItemIfExists(at: fileURL)
+                    return nil
+                }
+                try data.write(to: fileURL, options: .atomic)
             }
-            guard let photoData = snapshot.primaryPhotoData,
-                  let data = PhotoImageProcessor.compressedJPEGData(
-                    from: photoData
-                  ) else {
-                try removeItemIfExists(at: fileURL)
-                return nil
+            guard let requestIdentifier else {
+                return fileURL
             }
-            try data.write(to: fileURL, options: .atomic)
-            return fileURL
+            // UserNotifications takes ownership of an attachment file when a
+            // request is added. Each request must have its own staged copy.
+            let requestFileURL = attachmentFileURL(for: "request:" + requestIdentifier)
+            try removeItemIfExists(at: requestFileURL)
+            try fileManager.copyItem(at: fileURL, to: requestFileURL)
+            return requestFileURL
         } catch {
             assertionFailure(error.localizedDescription)
             return nil
         }
     }
 
-    func pruneAttachments(keepingStableIdentifiers stableIdentifiers: Set<String>) {
+    func pruneAttachments(
+        keepingStableIdentifiers stableIdentifiers: Set<String>,
+        keepingRequestIdentifiers requestIdentifiers: Set<String> = []
+    ) {
         do {
             try ensureDirectoryExists()
             let directoryContents = try fileManager.contentsOfDirectory(
                 at: directoryURL,
                 includingPropertiesForKeys: nil
             )
-            let expectedFileNames = Set(stableIdentifiers.map(attachmentFileName))
+            let identifiers = stableIdentifiers.union(requestIdentifiers.map { identifier in
+                "request:" + identifier
+            })
+            let expectedFileNames = Set(identifiers.map(attachmentFileName))
             for fileURL in directoryContents {
                 guard expectedFileNames.contains(fileURL.lastPathComponent) == false else {
                     continue

@@ -41,6 +41,11 @@ enum CookleCaptureConfiguration {
         isEnabled && environmentValue(for: EnvironmentKey.timerDelivery) == EnabledValue.enabled
     }
 
+    /// Opts dedicated notification QA into native delivery over sample data only.
+    static var usesSuggestionDelivery: Bool {
+        isEnabled && environmentValue(for: "COOKLE_CAPTURE_SUGGESTION_DELIVERY") == EnabledValue.enabled
+    }
+
     /// Directory holding the sample photo files named by `SamplePhotoAsset`.
     static var photoDirectoryURL: URL? {
         guard let photoDirectoryPath = environmentValue(for: EnvironmentKey.photoDirectory) else {
@@ -80,8 +85,11 @@ enum CookleCaptureConfiguration {
     }
 
     private static func environmentValue(for key: String) -> String? {
-        guard let value = ProcessInfo.processInfo.environment[key],
-              !value.isEmpty else {
+        // A locally signed QA bundle can retain capture isolation when the
+        // system cold-launches it from a notification without launch arguments.
+        let configuredValue = ProcessInfo.processInfo.environment[key]
+            ?? Bundle.main.object(forInfoDictionaryKey: key) as? String
+        guard let value = configuredValue, !value.isEmpty else {
             return nil
         }
         return value

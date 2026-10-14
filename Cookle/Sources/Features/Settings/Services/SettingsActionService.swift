@@ -12,12 +12,10 @@ final class SettingsActionService {
     }
 
     func prepareNotificationSettings() async {
-        normalizeNotificationDefaultsIfNeeded()
         await notificationService.refreshAuthorizationStatus()
     }
 
     func applyNotificationSettings() async {
-        normalizeNotificationDefaultsIfNeeded()
         await notificationService.applySuggestionSettings()
     }
 
@@ -216,21 +214,5 @@ private extension SettingsActionService {
         CookleWidgetReloader.reloadTodayDiaryWidget()
         CookleWidgetReloader.reloadRecipeWidgets()
         await notificationService.synchronizeScheduledSuggestions()
-    }
-
-    func normalizeNotificationDefaultsIfNeeded() {
-        if CooklePreferences.contains(\.dailyRecipeSuggestionHour) == false {
-            CooklePreferences.set(
-                DailySuggestionTimePolicy.defaultHour,
-                for: \.dailyRecipeSuggestionHour
-            )
-        }
-
-        if CooklePreferences.contains(\.dailyRecipeSuggestionMinute) == false {
-            CooklePreferences.set(
-                DailySuggestionTimePolicy.minimumTimeComponent,
-                for: \.dailyRecipeSuggestionMinute
-            )
-        }
     }
 }

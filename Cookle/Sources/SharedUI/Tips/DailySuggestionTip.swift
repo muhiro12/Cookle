@@ -7,7 +7,7 @@ struct DailySuggestionTip: Tip {
     }
 
     var message: Text? {
-        Text("Get one recipe suggestion at your chosen time.")
+        Text("Get recipe suggestions around the meal times you use Cookle.")
     }
 
     var image: Image? {

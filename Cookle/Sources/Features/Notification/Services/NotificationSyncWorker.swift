@@ -18,40 +18,54 @@ actor NotificationSyncWorker {
     }
 
     private let modelContainer: ModelContainer
-    private let calendar: Calendar
     private let attachmentStore: NotificationAttachmentStore
     private let logger: MHLogger
 
     init(
         modelContainer: ModelContainer,
         logger: MHLogger,
-        calendar: Calendar = .current,
         attachmentStore: NotificationAttachmentStore = .init()
     ) {
         self.modelContainer = modelContainer
         self.logger = logger
-        self.calendar = calendar
         self.attachmentStore = attachmentStore
     }
 
     func buildPlan(
-        hour: Int,
-        minute: Int,
+        state: AdaptiveRecipeSuggestionState,
+        mode: RecipeSuggestionNotificationMode = .adaptive,
+        hour: Int = DailySuggestionTimePolicy.defaultHour,
+        minute: Int = .zero,
         daysAhead: Int = 14,
-        now: Date = .now
+        now: Date = .now,
+        calendar: Calendar = .current
     ) throws -> Plan {
         let snapshots = try fetchRecipeSnapshots()
-        let suggestions = RecipeOperations.buildDailySuggestions(
-            candidates: suggestionCandidates(
-                snapshots: snapshots
-            ),
-            hour: hour,
-            minute: minute,
-            now: now,
-            calendar: calendar,
-            daysAhead: daysAhead,
-            identifierPrefix: NotificationConstants.suggestionIdentifierPrefix
-        )
+        let candidates = suggestionCandidates(snapshots: snapshots)
+        let suggestions: [DailyRecipeSuggestion]
+        switch mode {
+        case .off:
+            suggestions = []
+        case .fixed:
+            suggestions = RecipeOperations.buildDailySuggestions(
+                candidates: candidates,
+                hour: hour,
+                minute: minute,
+                now: now,
+                calendar: calendar,
+                daysAhead: daysAhead,
+                identifierPrefix: NotificationConstants.suggestionIdentifierPrefix
+            )
+        case .adaptive:
+            suggestions = RecipeOperations.buildAdaptiveSuggestions(
+                candidates: candidates,
+                state: state,
+                now: now,
+                calendar: calendar,
+                daysAhead: daysAhead,
+                identifierPrefix: NotificationConstants.suggestionIdentifierPrefix
+            )
+        }
         let preparedRequests = prepareRequests(
             suggestions: suggestions,
             snapshots: snapshots
@@ -65,7 +79,8 @@ actor NotificationSyncWorker {
                     }
                     return nil
                 }
-            )
+            ),
+            keepingRequestIdentifiers: Set(preparedRequests.map(\.suggestion.identifier))
         )
 
         return .init(
@@ -81,7 +96,8 @@ actor NotificationSyncWorker {
         for snapshot: NotificationRecipeSnapshot
     ) -> URL? {
         attachmentStore.prepareAttachmentFileURL(
-            for: snapshot
+            for: snapshot,
+            requestIdentifier: NotificationConstants.testSuggestionIdentifier
         )
     }
 
@@ -169,7 +185,8 @@ private extension NotificationSyncWorker {
         ]
         let attachmentFileURL = snapshot.flatMap { resolvedSnapshot in
             attachmentStore.prepareAttachmentFileURL(
-                for: resolvedSnapshot
+                for: resolvedSnapshot,
+                requestIdentifier: suggestion.identifier
             )
         }
         return .init(

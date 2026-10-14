@@ -118,6 +118,52 @@ public enum RecipeOperations {
         )
     }
 
+    /// Records a first independent open or a notification-driven use in one bounded value.
+    nonisolated public static func recordSuggestionUsage(
+        in state: AdaptiveRecipeSuggestionState,
+        at date: Date,
+        isNotificationResponse: Bool,
+        calendar: Calendar = .current
+    ) -> AdaptiveRecipeSuggestionState {
+        AdaptiveSuggestionPolicy.recordingUsage(
+            in: state,
+            at: date,
+            isNotificationResponse: isNotificationResponse,
+            calendar: calendar
+        )
+    }
+
+    /// Prunes old local observations and expires each accepted meal independently.
+    nonisolated public static func reconciledSuggestionState(
+        _ state: AdaptiveRecipeSuggestionState,
+        now: Date = .now,
+        calendar: Calendar = .current
+    ) -> AdaptiveRecipeSuggestionState {
+        AdaptiveSuggestionPolicy.reconciled(state, now: now, calendar: calendar)
+    }
+
+    /// Builds at most one future suggestion per local day and learned meal.
+    ///
+    /// The horizon includes today, matching the existing fixed-time planner. Already
+    /// used meals are suppressed today, and no request survives its meal's expiry.
+    nonisolated public static func buildAdaptiveSuggestions(
+        candidates: [DailyRecipeSuggestionCandidate],
+        state: AdaptiveRecipeSuggestionState,
+        now: Date = .now,
+        calendar: Calendar = .current,
+        daysAhead: Int = 14,
+        identifierPrefix: String = "daily-recipe-suggestion-"
+    ) -> [DailyRecipeSuggestion] {
+        DailyRecipeSuggestionService.buildAdaptiveSuggestions(
+            candidates: candidates,
+            state: reconciledSuggestionState(state, now: now, calendar: calendar),
+            now: now,
+            calendar: calendar,
+            daysAhead: daysAhead,
+            identifierPrefix: identifierPrefix
+        )
+    }
+
     /// Returns at most one local, half-hour-rounded time for each supplied meal.
     ///
     /// Callers supply eligible first-open observations. Meal boundaries, observation

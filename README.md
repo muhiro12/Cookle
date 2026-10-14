@@ -32,6 +32,21 @@ repository contains the full iOS project together with its shared Swift package.
 - Developer utilities including a regular-width debug tab and preview helpers
   that seed SwiftData models for SwiftUI previews.
 
+Recipe suggestions adapt to the first independent app open in each meal window
+(before 11:00, 11:00-16:00, and from 16:00). The last 14 local dates are kept in one
+device-local preference value. A meal needs at least two observed days and at
+least half of the independent-use days; its median time is rounded down to
+:00 or :30. Notification opens do not train the time, but renew that meal's
+14-day activity limit. Suggestions are capped at one per meal and three per day.
+
+Choose Off, At a set time (one suggestion per day), or Adaptive. New installations
+prefer Adaptive; upgrades preserve Off or the existing fixed hour and minute.
+The choice is separate from iOS permission. When permission is unavailable, the
+choice is kept and disabled until permission is granted. Fixed mode also learns
+meal times; Off records no usage. Adaptive schedules nothing until enough history
+exists. Opening a meal window skips its remaining adaptive suggestion that day;
+mode and time changes replace managed requests within the existing 14-day horizon.
+
 ## Project structure
 
 - `Cookle/` – main SwiftUI application target with feature-based sources,

@@ -11,6 +11,8 @@ public enum CooklePreferenceCatalog {
             descriptors.isICloudOn,
             descriptors.isDebugOn,
             descriptors.isDailyRecipeSuggestionNotificationOn,
+            descriptors.recipeSuggestionNotificationMode,
+            descriptors.adaptiveRecipeSuggestionState,
             descriptors.dailyRecipeSuggestionHour,
             descriptors.dailyRecipeSuggestionMinute,
             descriptors.tipExperienceVersion,

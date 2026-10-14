@@ -32,12 +32,8 @@ struct SettingsSidebarView: View {
     private var isICloudOn
     @AppStorage(\.isDebugOn)
     private var isDebugOn
-    @AppStorage(\.isDailyRecipeSuggestionNotificationOn)
-    private var isDailyRecipeSuggestionNotificationOn
-    @AppStorage(\.dailyRecipeSuggestionHour)
-    private var dailyRecipeSuggestionHour
-    @AppStorage(\.dailyRecipeSuggestionMinute)
-    private var dailyRecipeSuggestionMinute
+    @AppStorage(\.recipeSuggestionNotificationMode, default: "adaptive")
+    private var suggestionMode
 
     @Binding private var content: SettingsContent?
 
@@ -94,15 +90,8 @@ struct SettingsSidebarView: View {
                     shortcutsTip
                 )
             }
-            .onChange(of: isDailyRecipeSuggestionNotificationOn) {
+            .onChange(of: suggestionMode) {
                 refreshTipEligibility()
-                applyNotificationSettings()
-            }
-            .onChange(of: dailyRecipeSuggestionHour) {
-                applyNotificationSettings()
-            }
-            .onChange(of: dailyRecipeSuggestionMinute) {
-                applyNotificationSettings()
             }
             .onChange(of: isSubscribeOn) {
                 refreshTipEligibility()
@@ -182,46 +171,13 @@ struct SettingsSidebarView: View {
     }
 
     var notificationSection: some View {
-        Section {
-            Toggle("Daily recipe suggestions", isOn: $isDailyRecipeSuggestionNotificationOn)
-                .cooklePopoverTip(
-                    currentSettingsTip(
-                        for: dailySuggestionTip,
-                        isEligible: shouldShowDailySuggestionTip
-                    ),
-                    arrowEdge: .top
-                )
-            if notificationService.authorizationStatus == .denied {
-                Button("Open Notification Settings") {
-                    openNotificationSettings()
-                }
-            }
-            if isDailyRecipeSuggestionNotificationOn {
-                DatePicker(
-                    "Notify time",
-                    selection: dailySuggestionTime,
-                    displayedComponents: .hourAndMinute
-                )
-                if notificationService.authorizationStatus != .denied {
-                    sendTestNotificationButton
-                }
-            }
-        } header: {
-            Text("Recipe Suggestion Notifications")
-        } footer: {
-            Text(notificationStatusDescription)
-        }
-    }
-
-    var sendTestNotificationButton: some View {
-        Button("Send test notification") {
-            Task {
-                await model.sendTestSuggestionNotification(
-                    notificationService: notificationService
-                )
-            }
-        }
-        .disabled(model.isManageActionInProgress)
+        SettingsRecipeSuggestionsSection(
+            model: model,
+            tip: currentSettingsTip(
+                for: dailySuggestionTip,
+                isEligible: shouldShowDailySuggestionTip
+            )
+        )
     }
 
     var generalSection: some View {
@@ -267,7 +223,7 @@ struct SettingsSidebarView: View {
 
 private extension SettingsSidebarView {
     var shouldShowDailySuggestionTip: Bool {
-        isDailyRecipeSuggestionNotificationOn == false && model.isDailySuggestionTipEligible
+        suggestionMode == RecipeSuggestionNotificationMode.off.rawValue && model.isDailySuggestionTipEligible
     }
 
     var shouldShowSubscriptionTip: Bool {
@@ -293,74 +249,6 @@ private extension SettingsSidebarView {
                 }
             }
         )
-    }
-
-    var dailySuggestionTime: Binding<Date> {
-        .init {
-            DailySuggestionTimePolicy.date(
-                hour: dailyRecipeSuggestionHour,
-                minute: dailyRecipeSuggestionMinute,
-                on: .now,
-                calendar: .current
-            )
-        } set: { newValue in
-            let components = DailySuggestionTimePolicy.components(
-                from: newValue,
-                calendar: .current
-            )
-            dailyRecipeSuggestionHour = components.hour
-            dailyRecipeSuggestionMinute = components.minute
-        }
-    }
-
-    var notificationStatusDescription: String {
-        switch notificationService.authorizationStatus {
-        case .authorized,
-             .provisional,
-             .ephemeral:
-            if isDailyRecipeSuggestionNotificationOn {
-                return String(
-                    localized: "Daily recipe suggestions are enabled and will arrive at your selected time."
-                )
-            }
-
-            return String(
-                localized: """
-                Notifications are allowed. \
-                Turn on daily recipe suggestions to receive one recipe suggestion each day.
-                """
-            )
-        case .denied:
-            return String(
-                localized: "Notifications are disabled in system settings."
-            )
-        case .notDetermined:
-            return String(
-                localized: "Allow notifications to get one recipe suggestion each day at your selected time."
-            )
-        @unknown default:
-            return String(
-                localized: "Allow notifications to get one recipe suggestion each day at your selected time."
-            )
-        }
-    }
-
-    func applyNotificationSettings() {
-        Task {
-            await model.applyNotificationSettings(
-                settingsActionService: settingsActionService
-            )
-        }
-    }
-
-    func openNotificationSettings() {
-        if let notificationSettingsURL = URL(string: UIApplication.openNotificationSettingsURLString) {
-            openURL(notificationSettingsURL)
-            return
-        }
-        if let appSettingsURL = URL(string: UIApplication.openSettingsURLString) {
-            openURL(appSettingsURL)
-        }
     }
 
     func refreshTipEligibility() {

@@ -39,12 +39,28 @@ public extension MHPreferenceDescriptors {
         )
     }
 
+    /// Off, one fixed daily time, or adaptive meal timing.
+    var recipeSuggestionNotificationMode: MHStringPreferenceDescriptor {
+        .init(
+            storageKey: CookleUserDefaultsKeys.Standard.recipeSuggestionNotificationMode.rawValue,
+            defaultSelection: .standard
+        )
+    }
+
+    /// Device-local adaptive observations, accepted times, and per-meal activity.
+    var adaptiveRecipeSuggestionState: MHStringPreferenceDescriptor {
+        .init(
+            storageKey: CookleUserDefaultsKeys.Standard.adaptiveRecipeSuggestionState.rawValue,
+            defaultSelection: .standard
+        )
+    }
+
     /// Preferred hour for daily recipe suggestion notifications.
     var dailyRecipeSuggestionHour: MHIntPreferenceDescriptor {
         .init(
             storageKey: CookleUserDefaultsKeys.Standard.dailyRecipeSuggestionHour.rawValue,
             defaultSelection: .standard,
-            default: .zero
+            default: DailySuggestionTimePolicy.defaultHour
         )
     }
 

@@ -25,6 +25,7 @@ enum CookleAppAssemblyFactory {
             logging: logging,
             deliversTimers: true,
             indexesRecipesInSpotlight: true,
+            recordsNotificationUsage: true,
             adsConsent: CookleMonetizationConfiguration.adsConsent
         )
     }
@@ -52,7 +53,8 @@ enum CookleAppAssemblyFactory {
             nativeAdUnitID: nil,
             logging: .preview(),
             isolatesCookingSession: true,
-            deliversTimers: CookleCaptureConfiguration.usesTimerDelivery
+            deliversTimers: CookleCaptureConfiguration.usesTimerDelivery,
+            recordsNotificationUsage: CookleCaptureConfiguration.usesSuggestionDelivery
         )
     }
     #endif
@@ -74,6 +76,7 @@ private extension CookleAppAssemblyFactory {
         isolatesCookingSession: Bool = false,
         deliversTimers: Bool = false,
         indexesRecipesInSpotlight: Bool = false,
+        recordsNotificationUsage: Bool = false,
         adsConsent: MHAdsConsentConfiguration? = nil
     ) -> CookleAppAssembly {
         let navigationModel = MainNavigationModel()
@@ -86,7 +89,8 @@ private extension CookleAppAssemblyFactory {
         let services = makeServiceGraph(
             modelContainer: modelContainer,
             navigationModel: navigationModel,
-            logging: logging
+            logging: logging,
+            recordsNotificationUsage: recordsNotificationUsage
         )
         let bootstrap = makeBootstrap(
             configuration: makeRuntimeConfiguration(nativeAdUnitID: nativeAdUnitID, adsConsent: adsConsent),
@@ -212,7 +216,8 @@ private extension CookleAppAssemblyFactory {
     static func makeServiceGraph(
         modelContainer: ModelContainer,
         navigationModel: MainNavigationModel,
-        logging: CookleAppLogging
+        logging: CookleAppLogging,
+        recordsNotificationUsage: Bool
     ) -> CookleAppServices {
         let remoteConfigurationService = RemoteConfigurationService()
         let routePipeline = MainRouteService.makeRoutePipeline(
@@ -233,7 +238,8 @@ private extension CookleAppAssemblyFactory {
             routeLogger: logging.logger(
                 category: "NotificationRoute",
                 source: #fileID
-            )
+            ),
+            recordsUsage: recordsNotificationUsage
         )
         let tipController = CookleTipController()
 

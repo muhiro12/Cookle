@@ -8,9 +8,17 @@ nonisolated private struct NotificationResponseDelivery: @unchecked Sendable {
 extension NotificationService: UNUserNotificationCenterDelegate {
     nonisolated func userNotificationCenter(
         _: UNUserNotificationCenter,
-        willPresent _: UNNotification
+        willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
-        await Task.yield()
+        let identifier = notification.request.identifier
+        let isSuggestion = identifier.hasPrefix(NotificationConstants.suggestionIdentifierPrefix)
+            && identifier != NotificationConstants.testSuggestionIdentifier
+        if isSuggestion {
+            let hasUsedMeal = await hasUsedCurrentMealToday()
+            if hasUsedMeal {
+                return []
+            }
+        }
         return [.sound, .list, .banner]
     }
 
@@ -22,6 +30,9 @@ extension NotificationService: UNUserNotificationCenterDelegate {
             completionHandler: completionHandler
         )
         Task { @MainActor in
+            if Self.opensApp(delivery.response) {
+                recordNotificationOpen(deliveredAt: delivery.response.notification.date)
+            }
             await handleNotificationResponse(delivery.response)
             delivery.completionHandler()
         }
@@ -39,5 +50,25 @@ extension NotificationService: UNUserNotificationCenterDelegate {
             )
             await routeInbox.replacePendingURL(settingsURL)
         }
+    }
+}
+
+extension NotificationService {
+    nonisolated static func opensApp(_ response: UNNotificationResponse) -> Bool {
+        response.actionIdentifier == UNNotificationDefaultActionIdentifier
+            || response.actionIdentifier == NotificationConstants.browseRecipesActionIdentifier
+    }
+
+    private func hasUsedCurrentMealToday() -> Bool {
+        guard CooklePreferences.suggestionNotificationMode == .adaptive else {
+            return false
+        }
+        let now = Date.now
+        let calendar = Calendar.current
+        let meal = DiaryOperations.mealType(for: now, calendar: calendar)
+        guard let usedAt = suggestionState.lastUsedAt[meal] else {
+            return false
+        }
+        return calendar.isDate(usedAt, inSameDayAs: now)
     }
 }

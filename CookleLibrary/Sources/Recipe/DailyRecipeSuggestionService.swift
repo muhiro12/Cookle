@@ -8,6 +8,55 @@ enum DailyRecipeSuggestionService {
         static let recentCookingCooldownDays = 2
     }
 
+    static func buildAdaptiveSuggestions(
+        candidates: [DailyRecipeSuggestionCandidate],
+        state: AdaptiveRecipeSuggestionState,
+        now: Date,
+        calendar: Calendar,
+        daysAhead: Int,
+        identifierPrefix: String = "daily-recipe-suggestion-"
+    ) -> [DailyRecipeSuggestion] {
+        let minutesPerHour = 60
+        return DiaryObjectType.allCases.flatMap { meal -> [DailyRecipeSuggestion] in
+            guard let minute = state.learnedMinutes[meal],
+                  let lastUsed = state.lastUsedAt[meal],
+                  let expiry = calendar.date(
+                    byAdding: .day,
+                    value: AdaptiveSuggestionPolicy.historyDays,
+                    to: lastUsed
+                  ) else {
+                return []
+            }
+            return buildSuggestions(
+                candidates: candidates,
+                hour: minute / minutesPerHour,
+                minute: minute % minutesPerHour,
+                now: now,
+                calendar: calendar,
+                daysAhead: min(daysAhead, AdaptiveSuggestionPolicy.historyDays),
+                identifierPrefix: identifierPrefix
+            )
+            .filter { suggestion in
+                suggestion.notifyDate < expiry
+                    && !calendar.isDate(suggestion.notifyDate, inSameDayAs: lastUsed)
+            }
+            .map { suggestion in
+                .init(
+                    identifier: suggestion.identifier + "-" + meal.id,
+                    recipeName: suggestion.recipeName,
+                    stableIdentifier: suggestion.stableIdentifier,
+                    notifyDate: suggestion.notifyDate
+                )
+            }
+        }
+        .sorted { left, right in
+            if left.notifyDate == right.notifyDate {
+                return left.identifier < right.identifier
+            }
+            return left.notifyDate < right.notifyDate
+        }
+    }
+
     /// Builds future daily suggestion entries from the supplied candidates.
     static func buildSuggestions(
         candidates: [DailyRecipeSuggestionCandidate],

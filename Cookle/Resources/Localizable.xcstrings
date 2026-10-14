@@ -356,6 +356,40 @@
         }
       }
     },
+    "Adaptive" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adaptive"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adaptativas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adaptatives"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自動調整"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自适应"
+          }
+        }
+      }
+    },
     "Add" : {
       "localizations" : {
         "en" : {
@@ -1036,36 +1070,70 @@
         }
       }
     },
-    "Allow notifications to get one recipe suggestion each day at your selected time." : {
+    "Allow notifications" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Allow notifications to get one recipe suggestion each day at your selected time."
+            "value" : "Allow notifications"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Permite las notificaciones para recibir una sugerencia de receta cada día a la hora que elijas."
+            "value" : "Permitir notificaciones"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Autorisez les notifications pour recevoir chaque jour une suggestion de recette à l’heure choisie."
+            "value" : "Autoriser les notifications"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "通知を許可すると、選んだ時間に毎日レシピの提案を1件受け取れます。"
+            "value" : "通知を許可"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "允许通知后，你可在所选时间每天收到一条食谱推荐。"
+            "value" : "允许通知"
+          }
+        }
+      }
+    },
+    "Allow notifications in iOS to change recipe suggestion settings. Your selected mode is kept." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow notifications in iOS to change recipe suggestion settings. Your selected mode is kept."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permite las notificaciones en iOS para cambiar los ajustes de sugerencias. Se conserva el modo seleccionado."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autorisez les notifications dans iOS pour modifier les suggestions de recettes. Le mode choisi est conservé."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピ提案の設定を変更するには、iOSで通知を許可してください。選択中のモードは保持されます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 iOS 中允许通知后即可更改食谱推荐设置。已选模式会保留。"
           }
         }
       }
@@ -1446,6 +1514,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "升序"
+          }
+        }
+      }
+    },
+    "At a set time" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "At a set time"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A una hora fija"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À une heure fixe"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "指定した時刻"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "固定时间"
           }
         }
       }
@@ -3116,6 +3218,40 @@
         }
       }
     },
+    "Cookle also learns meal times while you use fixed timing." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle also learns meal times while you use fixed timing."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle también aprende tus horarios de comida mientras usas un horario fijo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle apprend aussi vos horaires de repas lorsque vous utilisez une heure fixe."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "固定時刻を使用中も、Cookleの利用から食事の時間帯を学習します。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用固定时间时，Cookle 也会学习你的用餐时间。"
+          }
+        }
+      }
+    },
     "Cookle couldn't schedule a notification for this timer." : {
       "localizations" : {
         "en" : {
@@ -3350,6 +3486,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cookle 中有多个名为“%1$@”的食材。请打开 Cookle 合并重复项，然后再次运行此快捷指令。"
+          }
+        }
+      }
+    },
+    "Cookle learns meal times from independent use on this device. Learning needs at least two days; no suggestions are scheduled yet." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle learns meal times from independent use on this device. Learning needs at least two days; no suggestions are scheduled yet."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle aprende tus horarios de comida cuando abres la app por tu cuenta en este dispositivo. Necesita al menos dos días; aún no hay sugerencias programadas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle apprend vos horaires de repas lorsque vous ouvrez l’app de votre propre initiative sur cet appareil. Il faut au moins deux jours ; aucune suggestion n’est encore programmée."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この端末で通知によらずCookleを開いた時間帯から学習します。学習には2日以上が必要です。まだ提案の通知は予定されていません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookle 会根据你在此设备上主动打开应用的时间学习用餐时段。至少需要两天；目前尚未安排推荐通知。"
           }
         }
       }
@@ -5836,36 +6006,36 @@
         }
       }
     },
-    "Get one recipe suggestion at your chosen time." : {
+    "Get recipe suggestions around the meal times you use Cookle." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Get one recipe suggestion at your chosen time."
+            "value" : "Get recipe suggestions around the meal times you use Cookle."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recibe una sugerencia de receta a la hora que elijas."
+            "value" : "Recibe sugerencias de recetas cerca de los horarios de comida en los que usas Cookle."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recevez une suggestion de recette à l'heure de votre choix."
+            "value" : "Recevez des suggestions de recettes aux heures de repas où vous utilisez Cookle."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "選んだ時間にレシピの提案を1件受け取れます。"
+            "value" : "Cookleを利用する食事の時間帯に合わせてレシピの提案を受け取れます。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "在你选择的时间接收一条食谱推荐。"
+            "value" : "在你使用Cookle的用餐时段前后接收食谱推荐。"
           }
         }
       }
@@ -8526,40 +8696,6 @@
         }
       }
     },
-    "Notifications are allowed. Turn on daily recipe suggestions to receive one recipe suggestion each day." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Notifications are allowed. Turn on daily recipe suggestions to receive one recipe suggestion each day."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Las notificaciones están permitidas. Activa las sugerencias diarias de recetas para recibir una cada día."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Les notifications sont autorisées. Activez les suggestions quotidiennes de recettes pour en recevoir une chaque jour."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "通知は許可されています。毎日のレシピ提案をオンにすると、毎日1件受け取れます。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "通知已获允许。开启每日食谱推荐后，你每天都会收到一条推荐。"
-          }
-        }
-      }
-    },
     "Notifications are disabled in system settings." : {
       "localizations" : {
         "en" : {
@@ -8726,6 +8862,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "对象"
+          }
+        }
+      }
+    },
+    "Off" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desactivadas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désactivées"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "オフ"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
           }
         }
       }
@@ -10290,6 +10460,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "未找到该食谱。"
+          }
+        }
+      }
+    },
+    "Recipe suggestions" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recipe suggestions"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sugerencias de recetas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suggestions de recettes"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピ提案"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "食谱推荐"
+          }
+        }
+      }
+    },
+    "Recipe suggestions are off. Cookle does not record meal times while Off." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recipe suggestions are off. Cookle does not record meal times while Off."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las sugerencias de recetas están desactivadas. Cookle no registra horarios de comida en este modo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les suggestions de recettes sont désactivées. Cookle n’enregistre pas les horaires de repas dans ce mode."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピ提案はOFFです。OFFの間は食事の時間帯を記録しません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "食谱推荐已关闭。关闭时，Cookle 不记录用餐时间。"
           }
         }
       }
@@ -12878,6 +13116,40 @@
         }
       }
     },
+    "Suggestions follow your recent use, up to one per meal and three per day. Opening Cookle skips that meal's remaining suggestion today." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suggestions follow your recent use, up to one per meal and three per day. Opening Cookle skips that meal's remaining suggestion today."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las sugerencias se adaptan a tu uso reciente, hasta una por comida y tres al día. Al abrir Cookle, se omite la sugerencia pendiente de esa comida para hoy."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les suggestions suivent votre utilisation récente, avec au plus une par repas et trois par jour. Ouvrir Cookle annule la suggestion restante pour ce repas aujourd’hui."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最近の利用に合わせて、食事ごとに1回、1日最大3回の提案を通知します。Cookleを開いた時間帯は、その日の残りの提案を通知しません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "推荐时间会根据你最近的使用情况调整，每个用餐时段最多一次，每天最多三次。打开Cookle后，当天该时段尚未发送的推荐将被跳过。"
+          }
+        }
+      }
+    },
     "Summary" : {
       "localizations" : {
         "en" : {
@@ -15299,6 +15571,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "使用 Siri 或快捷指令可以更快打开食谱和设置。"
+          }
+        }
+      }
+    },
+    "Use adaptive timing" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use adaptive timing"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usar horario adaptativo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utiliser les horaires adaptatifs"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自動調整に切り替える"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用自适应时间"
           }
         }
       }

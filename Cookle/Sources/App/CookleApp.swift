@@ -11,6 +11,9 @@ import SwiftUI
 
 @main
 struct CookleApp: App {
+    @UIApplicationDelegateAdaptor(CookleNotificationAppDelegate.self)
+    private var notificationAppDelegate
+
     @AppStorage(\.isICloudOn)
     private var isICloudOn
     @AppStorage(\.isDebugOn)
@@ -41,12 +44,13 @@ struct CookleApp: App {
             .task(id: isICloudOn) {
                 // `init()` already assembled for the stored setting; only a
                 // real toggle needs the store reopened.
-                guard !bootstrapModel.isAssembled(forICloudSetting: isICloudOn) else {
-                    return
+                if !bootstrapModel.isAssembled(forICloudSetting: isICloudOn) {
+                    await bootstrapModel.loadAssembly(isICloudOn: isICloudOn)
                 }
-                await bootstrapModel.loadAssembly(
-                    isICloudOn: isICloudOn
-                )
+                notificationAppDelegate.notificationService = bootstrapModel.appAssembly?.services.notificationService
+            }
+            .onChange(of: bootstrapModel.appAssembly?.services.notificationService) {
+                notificationAppDelegate.notificationService = bootstrapModel.appAssembly?.services.notificationService
             }
         }
     }
@@ -61,9 +65,13 @@ struct CookleApp: App {
         // Must happen here, not in the scene: an App Intent can launch this
         // process without a scene, and its dependencies have to be registered
         // before `perform()` runs.
+        if let domainName = Bundle.main.bundleIdentifier {
+            CooklePreferences.migrateSuggestionNotificationMode(domainName: domainName)
+        }
         let model = CookleAppBootstrapModel()
         model.loadAssemblySynchronously()
         _bootstrapModel = State(wrappedValue: model)
+        notificationAppDelegate.notificationService = model.appAssembly?.services.notificationService
 
         #if DEBUG
         isDebugOn = !CookleCaptureConfiguration.isEnabled

@@ -57,6 +57,10 @@ enum DiaryTopSuggestionService {
             from: date
         )
 
+        return mealType(hour: hour)
+    }
+
+    nonisolated static func mealType(hour: Int) -> DiaryObjectType {
         switch hour {
         case ..<MealHourBoundary.breakfastEndsAt:
             return .breakfast
