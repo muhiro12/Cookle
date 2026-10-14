@@ -19,6 +19,7 @@ struct CookingSessionView: View {
     @State private var isMealChoicePresented = false
     @State private var isDiaryPresented = false
     @State private var diaryPrefill: DiaryFormPrefill?
+    @State private var recipe: Recipe?
     @State private var ingredients = [String]()
     @State private var errorMessage: String?
 
@@ -144,8 +145,9 @@ private extension CookingSessionView {
         }
         .mhScreen(title: Text(snapshot.recipeName))
         .cookleWrappingLargeTitle(Text(snapshot.recipeName))
+        .cookleRecipeEntityAnnotation(recipeEntity(for: snapshot.recipeID))
         .task(id: snapshot.recipeID) {
-            loadIngredients(for: snapshot.recipeID)
+            loadRecipe(for: snapshot.recipeID)
         }
     }
 
@@ -153,17 +155,27 @@ private extension CookingSessionView {
         dismiss()
     }
 
-    func loadIngredients(for recipeID: String) {
+    func loadRecipe(for recipeID: String) {
         ingredients = []
+        recipe = nil
         guard let recipe = try? RecipeStableIdentifierCodec.recipe(from: recipeID, context: context) else {
             return
         }
+        self.recipe = recipe
         ingredients = (recipe.ingredientObjects ?? []).sorted().compactMap { object in
             guard let ingredient = object.ingredient else {
                 return nil
             }
             return "\(ingredient.value) \(object.amount)"
         }
+    }
+
+    func recipeEntity(for recipeID: String) -> Recipe? {
+        guard let recipe, !recipe.isDeleted, recipe.modelContext != nil,
+              RecipeStableIdentifierCodec.stableIdentifier(for: recipe) == recipeID else {
+            return nil
+        }
+        return recipe
     }
 
     func endAndRecordMeal(_ type: DiaryObjectType) {

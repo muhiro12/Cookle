@@ -9,17 +9,22 @@ struct RecipeEntityQuery: EntityStringQuery {
 
     @Dependency private var modelContainer: ModelContainer
 
+    init() {
+        _modelContainer = .init()
+    }
+
+    /// Uses an explicit container for app-local queries outside an intent execution.
+    init(modelContainer: ModelContainer) {
+        self.modelContainer = modelContainer
+    }
+
     @MainActor
     func entities(for identifiers: [RecipeEntity.ID]) throws -> [RecipeEntity] {
         try identifiers.compactMap { id in
-            let persistentIdentifier = try RecipeStableIdentifierCodec.decode(
-                id
-            )
-            var descriptor = FetchDescriptor<Recipe>.recipes(
-                .idIs(persistentIdentifier)
-            )
-            descriptor.fetchLimit = 1
-            guard let recipe = try modelContainer.mainContext.fetch(descriptor).first else {
+            guard let recipe = try RecipeStableIdentifierCodec.recipe(
+                from: id,
+                context: modelContainer.mainContext
+            ) else {
                 return nil
             }
             return RecipeEntity(recipe)
