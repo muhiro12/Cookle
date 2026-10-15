@@ -4034,40 +4034,6 @@
         }
       }
     },
-    "Daily recipe suggestions" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Daily recipe suggestions"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sugerencias diarias de recetas"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Suggestions quotidiennes de recettes"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "毎日のレシピ提案"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "每日食谱推荐"
-          }
-        }
-      }
-    },
     "Daily recipe suggestions are enabled and will arrive at your selected time." : {
       "localizations" : {
         "en" : {
@@ -8692,40 +8658,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "此文件中没有与当前数据不同的内容。"
-          }
-        }
-      }
-    },
-    "Notifications are disabled in system settings." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Notifications are disabled in system settings."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Las notificaciones están desactivadas en los ajustes del sistema."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Les notifications sont désactivées dans les réglages système."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "システム設定で通知がオフになっています。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "系统设置中已禁用通知。"
           }
         }
       }
