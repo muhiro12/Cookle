@@ -30,6 +30,20 @@ struct AdaptiveRecipeSuggestionTests {
         #expect(odd.learnedMinutes.count == 1)
     }
 
+    @Test(arguments: [(18, 12, 0), (18, 29, 0), (18, 30, 30), (18, 41, 30), (0, 0, 0), (23, 59, 30)])
+    func learned_times_round_down_to_the_previous_half_hour(
+        hour: Int,
+        minute: Int,
+        expectedMinute: Int
+    ) throws {
+        let calendar = try calendar()
+        let state = try state([.init(1, hour, minute), .init(2, hour, minute)], calendar: calendar)
+        let observedDate = try date(day: 2, hour: hour, minute: minute, calendar: calendar)
+        let meal = DiaryOperations.mealType(for: observedDate, calendar: calendar)
+
+        #expect(state.learnedMinutes == [meal: hour * 60 + expectedMinute])
+    }
+
     @Test
     func an_occasional_lunch_does_not_become_a_new_notification_window() throws {
         let calendar = try calendar()
