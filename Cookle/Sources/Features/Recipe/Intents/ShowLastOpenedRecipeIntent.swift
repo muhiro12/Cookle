@@ -35,7 +35,6 @@ struct ShowLastOpenedRecipeIntent: AppIntent {
                     )
                     .frame(height: RecipePreviewLayout.imageHeight)
                     .frame(maxWidth: .infinity)
-                    .clipShape(.rect(cornerRadius: RecipePreviewLayout.imageCornerRadius))
                 }
                 RecipeIngredientsSection()
                 Divider()

@@ -271,7 +271,6 @@ private extension RecipeFormPhotosSection {
                 photoID: row.id,
                 index: row.index,
                 height: height,
-                cornerRadius: designMetrics.cornerRadius.control,
                 actionButtonPadding: designMetrics.spacing.inline,
                 photoRemovalBehavior: photoRemovalBehavior(
                     for: row.index

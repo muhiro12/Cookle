@@ -86,7 +86,6 @@ private extension RecipePhotosSection {
             )
             .accessibilityLabel(Text("Open Photo"))
             .frame(height: Layout.photoHeight)
-            .clipShape(.rect(cornerRadius: RecipePreviewLayout.imageCornerRadius))
         }
     }
 }

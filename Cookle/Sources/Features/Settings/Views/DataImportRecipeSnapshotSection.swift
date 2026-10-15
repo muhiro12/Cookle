@@ -6,7 +6,6 @@ import SwiftUI
 struct DataImportRecipeSnapshotSection: View {
     private enum Layout {
         static let photoHeight: CGFloat = 72
-        static let photoCornerRadius: CGFloat = 8
     }
 
     let title: String
@@ -77,7 +76,6 @@ private extension DataImportRecipeSnapshotSection {
                                     size: .thumbnail
                                 )
                                 .frame(height: Layout.photoHeight)
-                                .clipShape(.rect(cornerRadius: Layout.photoCornerRadius))
                                 .accessibilityLabel(Text("Photo \(index + 1)"))
                                 (PhotoSource(rawValue: photo.sourceID) ?? .defaultValue).sectionTitle
                                     .font(.caption)

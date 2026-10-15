@@ -1,7 +1,11 @@
 import CoreGraphics
+import MHUI
 import SwiftUI
 
 struct CooklePhotoImage: View {
+    @Environment(\.mhDesignMetrics)
+    private var designMetrics
+
     private let data: Data
     private let request: CooklePhotoImageRequest
     private let pipeline: CooklePhotoImagePipeline
@@ -32,6 +36,7 @@ struct CooklePhotoImage: View {
                 .accessibilityLabel(Text("Photo"))
             }
         }
+        .clipShape(.rect(cornerRadius: designMetrics.cornerRadius.control))
         .task(id: taskID) {
             image = nil
             let loadedImage = await pipeline.image(

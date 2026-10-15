@@ -5,7 +5,6 @@ struct RecipeFormPhotoThumbnailView: View {
     let photoID: UUID
     let index: Int
     let height: CGFloat
-    let cornerRadius: CGFloat
     let actionButtonPadding: CGFloat
     let photoRemovalBehavior: RecipePhotoRemovalBehavior?
     @Binding var pendingPhotoRemovalIndex: Int?
@@ -20,7 +19,6 @@ struct RecipeFormPhotoThumbnailView: View {
             )
             .accessibilityLabel(Text("Selected Photo"))
             .frame(height: height)
-            .clipShape(.rect(cornerRadius: cornerRadius))
             photoRemovalMenu
         }
     }
