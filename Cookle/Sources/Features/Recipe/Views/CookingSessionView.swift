@@ -123,6 +123,10 @@ private extension CookingSessionView {
         snapshot: CookingSessionSnapshot
     ) -> some View {
         VStack(alignment: .leading, spacing: theme.spacing.section) {
+            Text(snapshot.recipeName)
+                .mhTextStyle(.screenTitle)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityAddTraits(.isHeader)
             CookingSessionSyncNotice()
             readingLayout {
                 if !ingredients.isEmpty {
@@ -144,7 +148,7 @@ private extension CookingSessionView {
             }
         }
         .mhScreen(title: Text(snapshot.recipeName))
-        .cookleWrappingLargeTitle(Text(snapshot.recipeName))
+        .navigationBarTitleDisplayMode(.inline)
         .cookleRecipeEntityAnnotation(recipeEntity(for: snapshot.recipeID))
         .task(id: snapshot.recipeID) {
             loadRecipe(for: snapshot.recipeID)
