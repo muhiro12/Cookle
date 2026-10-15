@@ -36,10 +36,13 @@ public enum RecipeStableIdentifierCodec {
         from stableIdentifier: String,
         context: ModelContext
     ) throws -> Recipe? {
-        try recipes(from: [stableIdentifier], context: context).first
+        guard let identifier = try? decode(stableIdentifier) else {
+            return nil
+        }
+        return try context.fetchFirst(.recipes(.idIs(identifier)))
     }
 
-    /// Resolves saved identifiers in one fetch, preserving input order and repetitions.
+    /// Resolves saved identifiers, preserving input order and repetitions.
     /// Invalid identifiers and recipes missing from this store are omitted.
     public static func recipes(
         from stableIdentifiers: [String],
@@ -51,14 +54,14 @@ public enum RecipeStableIdentifierCodec {
         guard !identifiers.isEmpty else {
             return []
         }
-        let descriptor = FetchDescriptor<Recipe>(predicate: #Predicate { recipe in
-            identifiers.contains(recipe.persistentModelID)
-        })
-        let recipesByIdentifier = Dictionary(
-            uniqueKeysWithValues: try context.fetch(descriptor).map { recipe in
-                (recipe.persistentModelID, recipe)
+        var recipesByIdentifier = [Recipe.ID: Recipe]()
+        // Array membership against persistentModelID drops saved matches on iOS
+        // 18.6. Exact-ID predicates work there; fetch each distinct ID only once.
+        for identifier in Set(identifiers) {
+            if let recipe = try context.fetchFirst(.recipes(.idIs(identifier))) {
+                recipesByIdentifier[identifier] = recipe
             }
-        )
+        }
         return identifiers.compactMap { identifier in
             recipesByIdentifier[identifier]
         }
