@@ -397,7 +397,6 @@ Xcode-native build and test evidence is owned by the active integration. The
 repository keeps `.build/ci/shared/DerivedData` as a compatibility DerivedData
 location.
 
-
 ## Optional Local Push Verification
 
 `ci_scripts/push_verification.json` declares the `Cookle` build, the complete
