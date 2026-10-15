@@ -40,6 +40,10 @@ struct RecipeFormPhotoThumbnailView: View {
                     .font(.title3)
                     .foregroundStyle(.primary)
                     .padding(actionButtonPadding)
+                    .frame(
+                        minWidth: CookleAccessibilityLayout.minimumHitTargetSize,
+                        minHeight: CookleAccessibilityLayout.minimumHitTargetSize
+                    )
                     .cookleGlassControl(
                         in: Circle()
                     )
