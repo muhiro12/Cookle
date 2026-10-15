@@ -111,11 +111,12 @@ struct CookleDataImportDiaryTests {
         #expect(selections.retainingUnchangedChoices(from: review, in: review) == selections)
     }
 
-    @Test
-    func a_failed_save_rolls_back_every_change() throws {
+    @Test(arguments: [false, true])
+    func a_failed_save_rolls_back_every_change(usesDiskStore: Bool) throws {
         let directory = try persistentTestDirectory(fileManager: .default)
         let url = directory.appendingPathComponent("rollback.store")
-        let fixture = try makeSameDayFixture(context: makeDiskContext(at: url))
+        let context = try usesDiskStore ? makeDiskContext(at: url) : makeTestContext()
+        let fixture = try makeSameDayFixture(context: context)
         let review = try fixture.target.review(of: fixture.archive)
         let conflict = try #require(review.diaryConflicts.first)
 
@@ -135,9 +136,11 @@ struct CookleDataImportDiaryTests {
         #expect(try fixture.target.count(Diary.self) == 2)
         #expect(try fixture.target.count(DiaryObject.self) == 2)
 
-        let reopened = try makeDiskContext(at: url)
-        #expect(try reopened.fetch(.diaries(.all)).map(\.note).sorted() == ["Current note", "Other day"])
-        #expect(try reopened.fetchCount(FetchDescriptor<DiaryObject>()) == 2)
+        if usesDiskStore {
+            let reopened = try makeDiskContext(at: url)
+            #expect(try reopened.fetch(.diaries(.all)).map(\.note).sorted() == ["Current note", "Other day"])
+            #expect(try reopened.fetchCount(FetchDescriptor<DiaryObject>()) == 2)
+        }
     }
 
     @Test
