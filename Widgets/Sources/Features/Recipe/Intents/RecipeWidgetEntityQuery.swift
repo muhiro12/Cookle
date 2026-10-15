@@ -7,18 +7,9 @@ struct RecipeWidgetEntityQuery: EntityStringQuery {
 
     @MainActor
     func entities(for identifiers: [String]) throws -> [RecipeWidgetEntity] {
-        let persistentIdentifiers = identifiers.compactMap { identifier in
-            try? RecipeStableIdentifierCodec.decode(identifier)
-        }
-        guard !persistentIdentifiers.isEmpty else {
-            return []
-        }
-        var descriptor = FetchDescriptor<Recipe>.recipes(.all)
-        descriptor.predicate = #Predicate { recipe in
-            persistentIdentifiers.contains(recipe.persistentModelID)
-        }
         let context = try ModelContainerFactory.sharedContext()
-        return try context.fetch(descriptor).compactMap(Self.entity)
+        return try RecipeStableIdentifierCodec.recipes(from: identifiers, context: context)
+            .compactMap(Self.entity)
     }
 
     @MainActor

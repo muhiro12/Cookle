@@ -147,4 +147,33 @@ struct RecipeStableIdentifierCodecTests {
             from: RecipeStableIdentifierCodec.stableIdentifier(for: local), context: context
         ) === local)
     }
+
+    @Test
+    func batch_lookup_preserves_order_and_repetitions_while_omitting_unavailable_ids() throws {
+        let first = Recipe.create(context: context, content: .init(name: "Same name", note: "First"))
+        let second = Recipe.create(context: context, content: .init(name: "Same name", note: "Second"))
+        let deleted = Recipe.create(context: context, content: .init(name: "Deleted"))
+        let other = makeTestContext()
+        let foreign = Recipe.create(context: other, content: .init(name: "Same name", note: "Foreign"))
+        try context.save()
+        try other.save()
+        let deletedIdentifier = RecipeStableIdentifierCodec.stableIdentifier(for: deleted)
+        context.delete(deleted)
+        try context.save()
+
+        let recipes = try RecipeStableIdentifierCodec.recipes(
+            from: [
+                RecipeStableIdentifierCodec.stableIdentifier(for: second),
+                "invalid-id",
+                deletedIdentifier,
+                RecipeStableIdentifierCodec.stableIdentifier(for: foreign),
+                RecipeStableIdentifierCodec.stableIdentifier(for: first),
+                RecipeStableIdentifierCodec.stableIdentifier(for: second)
+            ],
+            context: context
+        )
+
+        #expect(recipes.map(\.note) == ["Second", "First", "Second"])
+        #expect(try RecipeStableIdentifierCodec.recipes(from: [], context: context).isEmpty)
+    }
 }

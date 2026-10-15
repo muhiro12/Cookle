@@ -20,15 +20,11 @@ struct RecipeEntityQuery: EntityStringQuery {
 
     @MainActor
     func entities(for identifiers: [RecipeEntity.ID]) throws -> [RecipeEntity] {
-        try identifiers.compactMap { id in
-            guard let recipe = try RecipeStableIdentifierCodec.recipe(
-                from: id,
-                context: modelContainer.mainContext
-            ) else {
-                return nil
-            }
-            return RecipeEntity(recipe)
-        }
+        try RecipeStableIdentifierCodec.recipes(
+            from: identifiers,
+            context: modelContainer.mainContext
+        )
+        .compactMap(RecipeEntity.init)
     }
 
     @MainActor

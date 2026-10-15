@@ -14,17 +14,12 @@ public enum RecipeOperations {
         stableIdentifiers: [String],
         context: ModelContext
     ) throws -> [Recipe] {
-        var recipes = [Recipe]()
-        recipes.reserveCapacity(stableIdentifiers.count)
-
-        for stableIdentifier in stableIdentifiers {
-            guard let recipe = try RecipeStableIdentifierCodec.recipe(
-                from: stableIdentifier,
-                context: context
-            ) else {
-                throw RecipeResolutionError.recipeNotFound
-            }
-            recipes.append(recipe)
+        let recipes = try RecipeStableIdentifierCodec.recipes(
+            from: stableIdentifiers,
+            context: context
+        )
+        guard recipes.count == stableIdentifiers.count else {
+            throw RecipeResolutionError.recipeNotFound
         }
 
         return recipes
