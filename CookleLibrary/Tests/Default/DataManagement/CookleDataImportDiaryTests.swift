@@ -113,7 +113,9 @@ struct CookleDataImportDiaryTests {
 
     @Test
     func a_failed_save_rolls_back_every_change() throws {
-        let fixture = try makeSameDayFixture()
+        let directory = try persistentTestDirectory(fileManager: .default)
+        let url = directory.appendingPathComponent("rollback.store")
+        let fixture = try makeSameDayFixture(context: makeDiskContext(at: url))
         let review = try fixture.target.review(of: fixture.archive)
         let conflict = try #require(review.diaryConflicts.first)
 
@@ -132,6 +134,10 @@ struct CookleDataImportDiaryTests {
         #expect(fixture.conflictDiary.note == "Current note")
         #expect(try fixture.target.count(Diary.self) == 2)
         #expect(try fixture.target.count(DiaryObject.self) == 2)
+
+        let reopened = try makeDiskContext(at: url)
+        #expect(try reopened.fetch(.diaries(.all)).map(\.note).sorted() == ["Current note", "Other day"])
+        #expect(try reopened.fetchCount(FetchDescriptor<DiaryObject>()) == 2)
     }
 
     @Test
@@ -169,7 +175,7 @@ private extension CookleDataImportDiaryTests {
     struct TestSaveError: Error {}
 
     /// Current and backup share day 1 with different meals and notes; day 2 exists only in current.
-    func makeSameDayFixture() throws -> Fixture {
+    func makeSameDayFixture(context: ModelContext = makeTestContext()) throws -> Fixture {
         let source = Store()
         let backupToast = try source.recipe("Toast")
         source.diary(
@@ -178,7 +184,7 @@ private extension CookleDataImportDiaryTests {
             note: "Backup note"
         )
         let archive = try source.archive()
-        let target = Store()
+        let target = Store(context: context)
         let toast = try target.recipe("Toast")
         let conflictDiary = target.diary(day: 1, meals: [.init(recipe: toast, type: .breakfast)], note: "Current note")
         let untouchedDiary = target.diary(

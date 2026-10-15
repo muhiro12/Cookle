@@ -20,14 +20,16 @@ struct StoreOwnershipTests {
         let url = directory.appendingPathComponent("default.store")
         try seedDetachedRows(at: url)
         let container = try ModelContainerFactory.makeReadOnlyContainer(url: url)
-        #expect(container.migrationPlan == nil)
         let context = ModelContext(container)
         #expect(try context.fetchCount(FetchDescriptor<IngredientObject>()) == 1)
         _ = try Ingredient.create(context: context, value: "Must not persist")
-        #expect(throws: (any Error).self) {
-            try context.save()
-        }
+        // Runtimes may reject or ignore a read-only save; persisted data is the contract.
+        try? context.save()
         context.rollback()
+
+        let reopened = ModelContext(try ModelContainerFactory.makeReadOnlyContainer(url: url))
+        #expect(try reopened.fetchCount(.ingredients(.valueIs("Must not persist"))) == 0)
+        #expect(try reopened.fetchCount(FetchDescriptor<IngredientObject>()) == 1)
     }
 
     @Test

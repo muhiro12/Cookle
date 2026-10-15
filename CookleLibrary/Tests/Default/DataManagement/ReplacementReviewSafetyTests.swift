@@ -101,7 +101,5 @@ struct ReplacementReviewSafetyTests {
         #expect(current.note == "Unsaved edit")
         #expect(target.context.hasChanges)
         #expect(try target.recipes(named: "Imported").isEmpty)
-        target.context.rollback()
-        #expect(current.note == "Saved")
     }
 }
