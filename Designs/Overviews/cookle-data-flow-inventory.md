@@ -117,6 +117,16 @@ Cookle declares `aps-environment` and the `remote-notification` background mode.
 Local reminders and framework-managed CloudKit notifications are separate
 paths; push delivery has not been measured in this review.
 
+Adaptive local suggestions keep the last 14 local dates of first independent
+opens, learned meal minutes, and per-meal last-use dates in the standard
+`UserDefaults` domain under `adaptiveRecipeSuggestionState` (`b8Nm4Qp2`).
+`recipeSuggestionNotificationMode` (`d4Hw9Cs6`) stores Off, fixed, or adaptive
+as a string. Fixed mode also learns; Off records no usage. Notification opens
+renew activity without training times. These values are device-local, outside
+SwiftData and the app-group suite, and have no app-owned upload path.
+See `AdaptiveRecipeSuggestionState`, `CooklePreferences+SuggestionMode`, and
+`NotificationService+Usage`.
+
 ### Diagnostics
 
 `CookleAppLogging` writes through `MHLogger` to OSLog under the subsystem

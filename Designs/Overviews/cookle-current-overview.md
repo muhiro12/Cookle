@@ -1,8 +1,9 @@
 # Cookle Product and Architecture Overview
 
 Implementation snapshot based on the repository state on July 14, 2026.
-The presentation adoption note below was updated on September 14, 2026; other
-sections retain their original snapshot scope.
+The presentation adoption note below was updated on September 14, 2026.
+Notification behavior and its preferences were updated on October 15, 2026;
+other sections retain their original snapshot scope.
 
 ## Purpose
 
@@ -203,11 +204,12 @@ Cookle uses adaptive tab navigation.
 - Subscription and license screens are presented through MHPlatform runtime
   surfaces.
 - iCloud toggle shown only for subscribed users.
-- Daily recipe suggestion notification controls:
-  - enable or disable notifications
-  - choose notification time
+- Recipe suggestion notification controls:
+  - choose Off, At a set time, or Adaptive independently of iOS permission
+  - choose the hour and minute for fixed daily suggestions
   - send a test notification
-  - open system notification settings when permission is denied
+  - request permission or open system notification settings when unavailable;
+    preserve the selected mode while its controls are disabled
 - Export all persisted cooking data to a `.cookle` data file (see the
   [export format](cookle-data-export-format.md)).
 - Import a validated data file. An empty library adds everything; otherwise
@@ -220,8 +222,18 @@ Cookle uses adaptive tab navigation.
 
 ### Notifications
 
-- Schedule one daily recipe suggestion notification when the setting is enabled.
-- Plan notifications up to 14 days ahead.
+- Fixed mode schedules one daily suggestion at the selected hour and minute.
+  Adaptive mode schedules at most one per learned meal and three per local day.
+- Learn from the first independent foreground open per meal on each of the last
+  14 local dates. A meal needs at least two observations and at least half of
+  the independent-use days; round its median time down to `:00` or `:30`.
+- Notification opens renew the opened meal's 14-day activity limit without
+  training its time. Opening a meal suppresses its remaining adaptive suggestion
+  that day. Fixed mode also learns; Off records no usage.
+- Plan notifications within the existing 14-day horizon. Adaptive mode has no
+  fixed fallback before learning, and each meal expires independently.
+- New installations prefer Adaptive. Upgrades retain Off or their existing
+  fixed schedule, using persistent values before startup preference cleanup.
 - Use deterministic recipe rotation so suggestions remain stable across
   refreshes.
 - Avoid repeating the same recipe on consecutive days when multiple candidates
@@ -434,6 +446,8 @@ consent namespaces. Other SDK keys are not enumerated and are still removed.
 | --- | --- | --- | --- | --- |
 | `MHPreferenceDescriptors` bool descriptors | `standard` | UI and product-control flags | Yes | Yes |
 | `MHPreferenceDescriptors` int descriptors | `standard` | Notification time and tip progress | Yes | Yes |
+| `recipeSuggestionNotificationMode` (`d4Hw9Cs6`) | `standard` | String: `off`, `fixed`, or `adaptive`; migrated from the legacy notification flag | Yes | Yes |
+| `adaptiveRecipeSuggestionState` (`b8Nm4Qp2`) | `standard` | JSON string: bounded first opens, learned minutes, and per-meal last use; device-local | Yes | Yes |
 | `MHPreferenceDescriptors.lastLaunchedAppVersion` | `standard` | App version marker | Yes | Yes |
 | `MHPreferenceDescriptors.lastOpenedRecipeID` | shared suite | Cross-target last-opened pointer | Yes | Yes |
 | `MHPreferenceDescriptors.pendingIntentDeepLinkURL` | shared suite | Temporary App Intent route handoff | Yes | Yes |
