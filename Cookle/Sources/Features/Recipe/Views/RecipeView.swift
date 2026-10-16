@@ -74,7 +74,7 @@ struct RecipeView: View {
         }
         #endif
         .toolbar {
-            ToolbarItem(placement: .confirmationAction) {
+            ToolbarItem(placement: .primaryAction) {
                 EditRecipeButton()
             }
         }

@@ -27,7 +27,7 @@ struct DiaryView: View {
         .mhListChrome(.content)
         .navigationTitle(diary.date.formatted(.dateTime.year().month().day().weekday()))
         .toolbar {
-            ToolbarItem(placement: .confirmationAction) {
+            ToolbarItem(placement: .primaryAction) {
                 EditDiaryButton()
             }
         }
