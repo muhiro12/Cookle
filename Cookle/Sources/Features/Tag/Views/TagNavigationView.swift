@@ -47,6 +47,7 @@ struct TagNavigationView<T: Tag & Identifiable>: View {
             preferredCompactColumn: $preferredCompactColumn
         ) {
             TagListView<T>(selection: $tag)
+                .cookleSplitSidebar(isExpanded: horizontalSizeClass == .regular)
         } content: {
             if let tag {
                 TagView<T>(

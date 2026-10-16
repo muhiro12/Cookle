@@ -2,6 +2,9 @@ import SwiftData
 import SwiftUI
 
 struct PhotoNavigationView: View {
+    @Environment(\.horizontalSizeClass)
+    private var horizontalSizeClass
+
     @Binding private var photo: Photo?
     @State private var recipe: Recipe?
     @State private var columnVisibility = NavigationSplitViewVisibility.all
@@ -14,6 +17,7 @@ struct PhotoNavigationView: View {
             preferredCompactColumn: $preferredCompactColumn
         ) {
             PhotoListView(selection: $photo)
+                .cookleSplitSidebar(isExpanded: horizontalSizeClass == .regular)
         } content: {
             if let photo {
                 PhotoView(

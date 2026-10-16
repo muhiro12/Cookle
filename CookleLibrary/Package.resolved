@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/muhiro12/MHUI",
       "state" : {
-        "revision" : "844fec442c78a0777e4b2786bcc9ea3233b12c2f",
-        "version" : "2.3.0"
+        "revision" : "00a26dc40a3d2c2c7ef27c3749a280ba0891041c",
+        "version" : "2.4.0"
       }
     },
     {

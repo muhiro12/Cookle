@@ -14,6 +14,9 @@ struct PhotoListView: View {
         static let photoGridMinimum: CGFloat = 120
     }
 
+    @Environment(\.cookleSplitSidebarBackground)
+    private var sidebarBackground
+
     @Environment(\.isPresented)
     private var isPresented
     @Environment(\.mhTheme)
@@ -50,7 +53,7 @@ private extension PhotoListView {
                 photoSection(for: group)
             }
         }
-        .mhScreen()
+        .mhScreen(background: sidebarBackground)
     }
 
     var emptyStateView: some View {

@@ -13,6 +13,9 @@ struct SettingsSidebarView: View {
     private let model: SettingsScreenModel
     @State private var isDebugPresented = false
 
+    @Environment(\.cookleSplitSidebarBackground)
+    private var sidebarBackground
+
     @Environment(\.modelContext)
     private var context
     @Environment(\.isPresented)
@@ -130,7 +133,7 @@ struct SettingsSidebarView: View {
             Layout.bottomContentMargin,
             for: .scrollContent
         )
-        .mhListChrome(.native)
+        .mhListChrome(.native, background: sidebarBackground)
     }
 
     @ViewBuilder var subscriptionSection: some View {

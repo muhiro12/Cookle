@@ -3,6 +3,9 @@ import SwiftData
 import SwiftUI
 
 struct SettingsNavigationView: View {
+    @Environment(\.horizontalSizeClass)
+    private var horizontalSizeClass
+
     @Environment(\.modelContext)
     private var context
     @Environment(SettingsActionService.self)
@@ -32,6 +35,7 @@ struct SettingsNavigationView: View {
                 model: model,
                 selection: $selection
             )
+            .cookleSplitSidebar(isExpanded: horizontalSizeClass == .regular)
         } detail: {
             detailView(for: selection)
         }

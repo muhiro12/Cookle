@@ -21,6 +21,7 @@ struct DiaryNavigationView: View {
                 selection: $diary,
                 usesSidebarToolbar: usesSidebarToolbar
             )
+            .cookleSplitSidebar(isExpanded: horizontalSizeClass == .regular)
         } content: {
             if let diary {
                 DiaryView(selection: $recipe)

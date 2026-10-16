@@ -3,6 +3,9 @@ import SwiftUI
 
 /// Centers empty content in the available viewport while keeping tall content scrollable.
 private struct CookleEmptyStateModifier: ViewModifier {
+    @Environment(\.cookleSplitSidebarBackground)
+    private var sidebarBackground
+
     @Environment(\.mhTheme)
     private var theme
 
@@ -18,9 +21,11 @@ private struct CookleEmptyStateModifier: ViewModifier {
         }
         .mhTextAppearance(.themed)
         .background {
-            Rectangle()
-                .mhForegroundStyle(.background)
-                .ignoresSafeArea(.container)
+            if sidebarBackground == .themed {
+                Rectangle()
+                    .mhForegroundStyle(.background)
+                    .ignoresSafeArea(.container)
+            }
         }
     }
 }

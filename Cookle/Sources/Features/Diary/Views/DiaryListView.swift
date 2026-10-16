@@ -4,6 +4,9 @@ import SwiftData
 import SwiftUI
 
 struct DiaryListView: View {
+    @Environment(\.cookleSplitSidebarBackground)
+    private var sidebarBackground
+
     @Environment(\.scenePhase)
     private var scenePhase
     @Environment(\.isPresented)
@@ -92,7 +95,7 @@ private extension DiaryListView {
             }
             historySections(on: currentDate)
         }
-        .mhScreen()
+        .mhScreen(background: sidebarBackground)
     }
 
     func todayDiaries(on date: Date) -> [Diary] {

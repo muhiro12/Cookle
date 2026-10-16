@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct SearchNavigationView: View {
+    @Environment(\.horizontalSizeClass)
+    private var horizontalSizeClass
+
     @Binding private var recipe: Recipe?
     @Binding private var incomingSearchQuery: String?
     @State private var columnVisibility = NavigationSplitViewVisibility.all
@@ -23,6 +26,7 @@ struct SearchNavigationView: View {
                 selection: $recipe,
                 incomingSearchQuery: $incomingSearchQuery
             )
+            .cookleSplitSidebar(isExpanded: horizontalSizeClass == .regular)
         } detail: {
             if let recipe {
                 RecipeView()

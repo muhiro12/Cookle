@@ -165,8 +165,8 @@ else
     append_error "MHUI resolved state must not contain branch tracking in $package_resolved."
   fi
 
-  if ! grep -Eq '"version"\s*:\s*"2\.([3-9]|[1-9][0-9]+)\.[0-9]+"' <<<"$mhui_resolved_pin_block"; then
-    append_error "MHUI resolved state must contain a semantic version in the 2.3.0..<3.0.0 range in $package_resolved."
+  if ! grep -Eq '"version"\s*:\s*"2\.([4-9]|[1-9][0-9]+)\.[0-9]+"' <<<"$mhui_resolved_pin_block"; then
+    append_error "MHUI resolved state must contain a semantic version in the 2.4.0..<3.0.0 range in $package_resolved."
   fi
 fi
 
@@ -174,7 +174,7 @@ mhplatform_remote_package_block=$(remote_package_block "MHPlatform")
 mhui_remote_package_block=$(remote_package_block "MHUI")
 
 check_project_package_reference "MHPlatform" "$mhplatform_remote_package_block" "1.16.0"
-check_project_package_reference "MHUI" "$mhui_remote_package_block" "2.3.0"
+check_project_package_reference "MHUI" "$mhui_remote_package_block" "2.4.0"
 
 matches=$(ci_task_rg -n 'XCLocalSwiftPackageReference "MHPlatform"|relativePath = .*MHPlatform' "$project_file")
 if [[ -n "$matches" ]]; then

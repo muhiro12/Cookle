@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct RecipeNavigationView: View {
+    @Environment(\.horizontalSizeClass)
+    private var horizontalSizeClass
+
     @Binding private var recipe: Recipe?
     @State private var columnVisibility = NavigationSplitViewVisibility.all
     @State private var preferredCompactColumn = NavigationSplitViewColumn.sidebar
@@ -19,6 +22,7 @@ struct RecipeNavigationView: View {
             preferredCompactColumn: $preferredCompactColumn
         ) {
             RecipeListView(selection: $recipe)
+                .cookleSplitSidebar(isExpanded: horizontalSizeClass == .regular)
         } detail: {
             if let recipe {
                 RecipeView()

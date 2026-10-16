@@ -91,13 +91,16 @@ mode and time changes replace managed requests within the existing 14-day horizo
   `MHPlatformCore`, and the repository keeps MHPlatform on the
   `1.16.0..<2.0.0` range for consent-managed ads, native ad layouts, and the
   synchronous preference registry.
-- MHUI `2.3.0..<3.0.0` through the full `MHUI` product. The main app applies
+- MHUI `2.4.0..<3.0.0` through the full `MHUI` product. The main app applies
   the neutral standard root theme and its native appearance once, keeping
   Cookle's orange accent app-owned as the native control tint. Product
   collections and editors use MHUI content List/Form presentation,
   recipe/cooking/diary/photo screens use stack composition, and settings and
   diagnostics keep native grouping and row geometry with MHUI's themed canvas
   and row surfaces.
+  Content lists retain native backgrounds and selection. Expanded split
+  sidebars preserve system materials; forms and standalone screens retain
+  their themed defaults.
   Content actions keep MHUI's non-glass default; any floating action opts into
   Liquid Glass only at its bounded control layer. See the
   [screen rollout record](Designs/Plans/mhui-app-rollout.md) for presentation
