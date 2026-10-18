@@ -34,15 +34,27 @@ References:
 
 <!-- markdownlint-enable MD013 -->
 
-`ci_scripts/lib/ReadXcodeProject.swift` uses Foundation's JSON5 reader because
-Xcode emits trailing commas. The reader accepts comments and preserves string contents
-without maintaining a custom JSON preprocessor. Legacy configurations continue
-through Apple's `plutil`, allowing an isolated conversion revert. Missing,
-ambiguous, malformed, or unresolved project configurations fail the checks.
+`ci_scripts/lib/xcode_project.py` normalizes both formats with Apple's
+`plutil -convert json -o -` before strict JSON parsing. Fixed copies of the
+original plist and current JSON both pass all three guards. Comments, trailing
+commas, URLs, and escaped string contents have fixture coverage. No Swift
+interpreter or custom JSON preprocessor is required.
+
+The initial implementation used Foundation's JSON5 reader after a failed
+`plutil -lint` probe. That probe did not establish that conversion was
+unsupported: direct `plutil -convert json` succeeds on the unchanged JSON.
+The follow-up removes the Swift helper and its module-cache requirement.
+
+Missing, ambiguous, linked, malformed, or unresolved project configurations
+fail the checks. The filename selects the expected object model. Package
+ownership follows references reachable from the legacy project root, and a
+JSON product's Frameworks membership requires the target's actual Frameworks
+phase. Cookle retains its own package-adoption rules, including direct
+framework references.
 
 Shared `.xcscheme` files, `ci_scripts/push_verification.json`, SwiftLint package
-resolution, and Xcode Cloud's `ci_post_clone.sh` use the project bundle or native
-Xcode tools; their entry points do not change. Git ignore rules already retain
+resolution, and Xcode Cloud's `ci_post_clone.sh` use the project bundle or
+native Xcode tools; their entry points do not change. Git ignore rules retain
 configuration files inside `.xcodeproj` bundles.
 
 Historical MHUI review patches and evidence hashes under `Designs/Plans` refer
@@ -54,16 +66,37 @@ artifacts, not parsers or instructions to patch the converted project.
 Conversion uses Xcode 27.2's File inspector **Project Format → JSON** action.
 The generated JSON is kept as Xcode wrote it. A disposable copy is converted
 back with `xcodebuild -convert-project pbxproj` for a structural comparison
-against the original configuration.
+against the original configuration; that selector is recorded in the original
+execution log. A later disposable copy also confirms the named selector
+`xcodebuild -project App.xcodeproj -convert-project 'Xcode 27.0'` on Xcode 27.2.
+Neither reverse conversion is an exact restoration procedure.
 
 The comparison resolves regenerated object references and checks all three
 targets, their eight Debug/Release configurations, target/product IDs used by
 schemes, package locations and requirements, build phases, embedding settings,
 target dependencies, synchronized folders and membership exceptions, resources,
-and localizations. These values match. Xcode normalizes internal object IDs,
-inferred file types, default flags, and package/framework listing order; old
-target creation-version annotations are omitted. Those serialization changes
-are distinguished from the preserved configuration values.
+and localizations. Their values and memberships match. The comparison treats
+Frameworks inputs and package-product declarations as sets; it does not prove
+that their order is preserved. Xcode regenerates internal object IDs and
+normalizes inferred file types and default flags; old target creation-version
+annotations are omitted.
+
+The native reverse conversion exposes these Frameworks-phase input orders:
+
+<!-- markdownlint-disable MD013 -->
+
+| Target | Before conversion | After conversion |
+| --- | --- | --- |
+| Cookle | MHPlatform, MHAppRuntimeAds, CookleLibrary, MHUI | CookleLibrary, MHAppRuntimeAds, MHPlatform, MHUI |
+| Widgets | SwiftUI.framework, CookleLibrary, WidgetKit.framework | CookleLibrary, SwiftUI.framework, WidgetKit.framework |
+| Watch | CookleLibrary | CookleLibrary |
+
+<!-- markdownlint-enable MD013 -->
+
+The order differences are retained as an observation. Equal membership and
+settings do not establish identical linker input order. The successful app and
+embedded-target build and library tests below bound the behavior observed with
+the converted configuration.
 
 Xcode 27.2's resolved Cookle Debug Simulator settings and Release device
 settings also match exactly before and after conversion. Native target,
@@ -80,7 +113,8 @@ package resolutions have no diff. The Archive actions continue to use Release.
 | Earlier project reader | Xcode 27.1 (`27A9275`); all targets, configurations, and schemes discovered. |
 | App and embedded targets | Xcode 27.1 Debug Simulator build of Cookle, Widgets, and Watch succeeds; complete CLI output has no warnings or errors. |
 | Normal regression plan | Xcode 27.2, iOS 27.2, Cookle's assigned iPhone 17 Simulator; all 565 tests pass. |
-| Repository rules | SwiftLint, retained repository guards, and 21 tooling tests, including nine dual-format project checks. |
+| Initial repository rules | At `07d83c32`: SwiftLint, retained repository guards, and 21 tooling tests, including nine dual-format project checks. |
+| Handoff follow-up | At `598ccf9a`: evidence-mode repository rules pass; SwiftLint 0.65.1 checks 667 files with zero captured errors/warnings; all 28 tooling tests pass, including 16 project checks. |
 | Schema research | The two synthetic future-schema cases are separate observations, not downgrade-safety proof. |
 
 <!-- markdownlint-enable MD013 -->
@@ -101,6 +135,15 @@ Local builds, tests, and Release-setting inspection do not prove a signed
 archive, TestFlight build, or Xcode Cloud run. Issue
 [#125](https://github.com/muhiro12/Cookle/issues/125) retains the existing release
 operations boundary; no new workflow is introduced.
+
+The handoff follow-up changes only repository tooling and this record. The
+original and converted project hashes are unchanged. It rejects reproduced
+missing-phase, wrong-model, unattached-owner, and symlink cases, with coverage
+for wrong package ownership and direct framework boundary violations. The
+updated shared lint matcher also accepts the actual execution evidence against
+the JSON stored in source commit `598ccf9a`; no publication receipt is created.
+The earlier app build and 565-test execution remain earlier evidence, rather
+than a new build/test run or authorization to publish the follow-up.
 
 ## Rollback
 
