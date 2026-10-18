@@ -17,7 +17,7 @@ ci_task_require_command "rg" "Install ripgrep so repository rule checks can scan
 
 package_manifest="CookleLibrary/Package.swift"
 package_resolved="CookleLibrary/Package.resolved"
-project_file="Cookle.xcodeproj/project.pbxproj"
+project_file=$(python3 "$repository_root/ci_scripts/lib/check_project_configuration.py" Cookle.xcodeproj --path-only)
 readme_file="README.md"
 architecture_guide="Designs/Architecture/ARCHITECTURE_GUIDE.md"
 shared_service_design="Designs/Architecture/shared-service-design.md"
@@ -53,63 +53,6 @@ resolved_pin_block() {
       exit
     }
   ' "$package_resolved"
-}
-
-remote_package_block() {
-  local package_name=$1
-
-  awk -v package_name="$package_name" '
-    index($0, "XCRemoteSwiftPackageReference \"" package_name "\" */ = {") {
-      in_block = 1
-    }
-    in_block {
-      print
-      open_braces += gsub(/\{/, "{")
-      close_braces += gsub(/\};/, "};")
-    }
-    in_block && open_braces > 0 && open_braces == close_braces {
-      exit
-    }
-  ' "$project_file"
-}
-
-target_block() {
-  local target_name=$1
-
-  awk -v target_name="$target_name" '
-    index($0, "name = " target_name ";") {
-      in_block = 1
-    }
-    in_block {
-      print
-    }
-    in_block && /^\t\t};$/ {
-      exit
-    }
-  ' "$project_file"
-}
-
-check_project_package_reference() {
-  local package_name=$1
-  local block=$2
-  local minimum_version=$3
-
-  if [[ -z "$block" ]]; then
-    append_error "$package_name remote package reference was not found in $project_file."
-    return 0
-  fi
-
-  if grep -Eq 'kind = branch;|branch = ' <<<"$block"; then
-    append_error "$package_name must not follow a floating branch in $project_file."
-  fi
-
-  if ! grep -Eq 'kind = upToNextMajorVersion;' <<<"$block"; then
-    append_error "Cookle keeps $package_name on an upToNextMajorVersion requirement in $project_file."
-  fi
-
-  if ! grep -Fq "minimumVersion = $minimum_version;" <<<"$block"; then
-    append_error "Cookle keeps $package_name on minimumVersion $minimum_version in $project_file."
-  fi
 }
 
 mhplatform_manifest_block=$(
@@ -170,32 +113,8 @@ else
   fi
 fi
 
-mhplatform_remote_package_block=$(remote_package_block "MHPlatform")
-mhui_remote_package_block=$(remote_package_block "MHUI")
-
-check_project_package_reference "MHPlatform" "$mhplatform_remote_package_block" "1.16.0"
-check_project_package_reference "MHUI" "$mhui_remote_package_block" "2.4.0"
-
-matches=$(ci_task_rg -n 'XCLocalSwiftPackageReference "MHPlatform"|relativePath = .*MHPlatform' "$project_file")
-if [[ -n "$matches" ]]; then
-  append_error "MHPlatform must not be referenced as a local Xcode package in $project_file."
-fi
-
-matches=$(ci_task_rg -n 'XCLocalSwiftPackageReference "MHUI"|relativePath = .*MHUI' "$project_file")
-if [[ -n "$matches" ]]; then
-  append_error "MHUI must not be referenced as a local Xcode package in $project_file."
-fi
-
-cookle_target_block=$(target_block "Cookle")
-widgets_target_block=$(target_block "Widgets")
-watch_target_block=$(target_block "Watch")
-
-if ! grep -Eq '/\* MHPlatform \*/' <<<"$cookle_target_block"; then
-  append_error "Cookle must keep the MHPlatform umbrella linked in $project_file."
-fi
-
-if ! python3 "$repository_root/ci_scripts/lib/check_mhui_project_links.py" "$project_file"; then
-  append_error "MHUI target linkage must follow the Cookle-only adoption contract."
+if ! python3 "$repository_root/ci_scripts/lib/check_project_configuration.py" Cookle.xcodeproj; then
+  append_error "Project package requirements and target linkage must follow the consumer contract."
 fi
 
 matches=$(ci_task_rg -nP "$presentation_import_pattern" \
@@ -227,22 +146,6 @@ fi
 matches=$(ci_task_rg -n 'url:\s*"https://github.com/muhiro12/MHUI"|name:\s*"MHUI"|name:\s*"MHDesign"' "$package_manifest")
 if [[ -n "$matches" ]]; then
   append_error "CookleLibrary must not depend on MHUI or MHDesign."
-fi
-
-if grep -Eq '/\* MHPlatform \*/|productName = MHPlatform;' <<<"$widgets_target_block"; then
-  append_error "Widgets must not depend on the full MHPlatform umbrella."
-fi
-
-if grep -Eq '/\* MHPlatform \*/|productName = MHPlatform;' <<<"$watch_target_block"; then
-  append_error "Watch must not depend on the full MHPlatform umbrella."
-fi
-
-if grep -Eq '/\* MHUI \*/|/\* MHDesign \*/|productName = MHUI;|productName = MHDesign;' <<<"$widgets_target_block"; then
-  append_error "Widgets retains WidgetKit presentation and must not link MHUI or MHDesign."
-fi
-
-if grep -Eq '/\* MHUI \*/|/\* MHDesign \*/|productName = MHUI;|productName = MHDesign;' <<<"$watch_target_block"; then
-  append_error "Watch MHUI linkage awaits a readable watchOS surface under ADR 0010."
 fi
 
 matches=$(ci_task_rg -nP '^\s*(?:@preconcurrency\s+)?import\s+MHPlatform\s*$' Widgets)

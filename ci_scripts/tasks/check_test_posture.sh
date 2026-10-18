@@ -21,7 +21,6 @@ append_error() {
   errors+=("$1")
 }
 
-project_file="Cookle.xcodeproj/project.pbxproj"
 schemes_directory="Cookle.xcodeproj/xcshareddata/xcschemes"
 tests_directory="CookleTests"
 legacy_test_script="ci_scripts/tasks/test_app.sh"
@@ -34,9 +33,8 @@ if [[ -e "$legacy_test_script" ]]; then
   append_error "Legacy app test entrypoint must not exist at $legacy_test_script."
 fi
 
-matches=$(ci_task_rg -n 'CookleTests|com\.apple\.product-type\.bundle\.unit-test|CookleTests\.xctest' "$project_file")
-if [[ -n "$matches" ]]; then
-  append_error "Cookle.xcodeproj must not define a CookleTests unit test target."
+if ! python3 "$repository_root/ci_scripts/lib/check_project_configuration.py" Cookle.xcodeproj --check test-posture; then
+  append_error "Cookle.xcodeproj must not define a unit test target."
 fi
 
 if [[ -d "$schemes_directory" ]]; then

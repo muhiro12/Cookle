@@ -63,19 +63,15 @@ ensure_command() {
 }
 
 check_swiftlint_environment() {
-  local project_file="Cookle.xcodeproj/project.pbxproj"
-
   ensure_command "xcodebuild" "Install Xcode and ensure xcodebuild is available from the command line."
+  ensure_command "xcrun" "Install the Xcode command-line tools with Swift support."
+  ensure_command "python3" "Install the Xcode command-line tools with Python 3 support."
 
-  if [[ ! -f "$project_file" ]]; then
-    record_failure "Missing file: $project_file"
-    record_next_step "Restore $project_file so the repository-managed SwiftLint package can be resolved."
-    return 0
-  fi
-
-  if ! grep -q --fixed-strings "https://github.com/SimplyDanny/SwiftLintPlugins" "$project_file"; then
-    record_failure "Cookle.xcodeproj is missing the SwiftLintPlugins package dependency."
-    record_next_step "Add https://github.com/SimplyDanny/SwiftLintPlugins to Cookle.xcodeproj."
+  if command -v python3 >/dev/null 2>&1; then
+    if ! python3 "$CI_TASK_REPOSITORY_ROOT/ci_scripts/lib/check_project_configuration.py" Cookle.xcodeproj --check swiftlint; then
+      record_failure "Cannot verify the project's SwiftLintPlugins package dependency."
+      record_next_step "Restore a valid Cookle.xcodeproj configuration with the remote SwiftLintPlugins dependency."
+    fi
   fi
 }
 
