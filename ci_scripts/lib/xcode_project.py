@@ -7,31 +7,35 @@ import subprocess
 
 def project_file(path):
     path = Path(path)
-    if not path.is_dir():
-        if path.is_file() and path.name in {"project.pbxproj", "project.xcproj"}:
-            return path
+    names = {"project.pbxproj", "project.xcproj"}
+    directory = path.parent if path.name in names else path
+    if not directory.is_dir():
         raise ValueError(f"Missing Xcode project configuration: {path}")
-    candidates = [path / name for name in ("project.pbxproj", "project.xcproj")]
-    found = [candidate for candidate in candidates if candidate.is_file()]
+    candidates = [directory / name for name in sorted(names)]
+    found = [candidate for candidate in candidates if candidate.exists() or candidate.is_symlink()]
     if len(found) != 1:
-        raise ValueError(f"Expected exactly one project configuration in {path}.")
-    return found[0]
+        raise ValueError(f"Expected exactly one project configuration in {directory}.")
+    selected = found[0]
+    if directory.is_symlink() or selected.is_symlink() or not selected.is_file():
+        raise ValueError("The Xcode project configuration must be a regular file in a non-symlink project bundle.")
+    if path.name in names and path != selected:
+        raise ValueError(f"Missing Xcode project configuration: {path}")
+    return selected
 
 
 def read_project(path):
     path = project_file(path)
-    if path.suffix == ".pbxproj":
-        command = ["plutil", "-convert", "json", "-o", "-", str(path)]
-    else:
-        directory = Path(__file__).resolve().parent
-        cache = directory.parents[1] / ".build/ci/shared/cache/project-reader-modules"
-        cache.mkdir(parents=True, exist_ok=True)
-        command = ["xcrun", "swift", "-module-cache-path", str(cache),
-                   str(directory / "ReadXcodeProject.swift"), str(path)]
-    result = subprocess.run(command, check=True, capture_output=True, text=True)
+    result = subprocess.run(["plutil", "-convert", "json", "-o", "-", str(path)],
+                            check=True, capture_output=True, text=True)
     document = json.loads(result.stdout)
     if not isinstance(document, dict):
         raise ValueError("The Xcode project must be an object.")
+    if path.suffix == ".pbxproj":
+        if not isinstance(document.get("objects"), dict) or not isinstance(document.get("rootObject"), str):
+            raise ValueError("project.pbxproj must contain the legacy objects model.")
+    elif ("objects" in document or not isinstance(document.get("packages"), list) or
+          not isinstance(document.get("targets"), list)):
+        raise ValueError("project.xcproj must contain the JSON packages and targets model.")
     return document
 
 
@@ -71,11 +75,12 @@ def summarize_project(document):
                 members.append(product)
                 phase = member.get("build-phase", {})
                 phase = phase.get("build-phase") if isinstance(phase, dict) else phase
-                if phase == "frameworks":
+                if phase == "frameworks" and "frameworks" in target.get("build-phases", []):
                     frameworks.append(product)
             targets.append({"name": target["name"], "type": target["product-type"],
                             "members": members, "frameworks": frameworks,
-                            "files": framework_files(document.get("files", []), target["name"])})
+                            "files": (framework_files(document.get("files", []), target["name"])
+                                      if "frameworks" in target.get("build-phases", []) else set())})
         return packages, targets
 
     objects = document["objects"]
@@ -99,11 +104,14 @@ def summarize_project(document):
 
     def product_for(identifier):
         product = object_for(identifier, "XCSwiftPackageProductDependency")
+        if "package" in product and product["package"] not in package_references:
+            raise ValueError(f"Unattached package owner for product: {identifier}")
         package = package_for(product["package"]) if "package" in product else None
         return {"name": product["productName"], "package": package}
 
     root = object_for(document["rootObject"], "PBXProject")
-    packages = [package_for(identifier) for identifier in root.get("packageReferences", [])]
+    package_references = root.get("packageReferences", [])
+    packages = [package_for(identifier) for identifier in package_references]
     targets = []
     for identifier in root["targets"]:
         target = object_for(identifier, "PBXNativeTarget")

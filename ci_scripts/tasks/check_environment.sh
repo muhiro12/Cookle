@@ -64,7 +64,7 @@ ensure_command() {
 
 check_swiftlint_environment() {
   ensure_command "xcodebuild" "Install Xcode and ensure xcodebuild is available from the command line."
-  ensure_command "xcrun" "Install the Xcode command-line tools with Swift support."
+  ensure_command "plutil" "Run repository checks on macOS with Apple's property-list tools."
   ensure_command "python3" "Install the Xcode command-line tools with Python 3 support."
 
   if command -v python3 >/dev/null 2>&1; then
@@ -78,7 +78,6 @@ check_swiftlint_environment() {
 check_rules_environment() {
   check_swiftlint_environment
   ensure_command "rg" "Install ripgrep so repository rule checks can scan source files."
-  ensure_command "plutil" "Run repository rules on macOS with Apple's property-list tools."
   ensure_command "python3" "Install the Xcode command-line tools with Python 3 support."
 }
 

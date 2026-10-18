@@ -12,7 +12,7 @@ import unittest
 LIBRARY = Path(__file__).resolve().parents[1] / "lib"
 sys.path.insert(0, str(LIBRARY))
 from check_project_configuration import check_project
-from xcode_project import project_file
+from xcode_project import project_file, read_project
 
 
 def fixture(legacy):
@@ -23,7 +23,8 @@ def fixture(legacy):
         members = [{"package": name, "product-name": name, "build-phase": {"build-phase": "frameworks"}}
                    for name in ("MHPlatform", "MHUI")]
         return {"packages": packages, "files": [], "targets": [
-            {"name": name, "product-type": "application", "package-product-members": members if name == "Cookle" else []}
+            {"name": name, "product-type": "application", "build-phases": ["frameworks"],
+             "package-product-members": members if name == "Cookle" else []}
             for name in ("Cookle", "Widgets", "Watch")]}
     objects = {"root": {"isa": "PBXProject", "packageReferences": [name for name, _ in repositories],
                         "targets": ["Cookle", "Widgets", "Watch"]}}
@@ -70,6 +71,33 @@ class ProjectConfigurationTests(unittest.TestCase):
             with self.subTest(legacy=legacy):
                 self.assertTrue(self.inspect(document, legacy))
 
+    def test_missing_frameworks_phase_is_rejected(self):
+        for legacy in (False, True):
+            document = fixture(legacy)
+            if legacy:
+                document["objects"]["Cookle"]["buildPhases"] = []
+            else:
+                document["targets"][0]["build-phases"] = []
+            with self.subTest(legacy=legacy):
+                self.assertTrue(self.inspect(document, legacy))
+
+    def test_unattached_legacy_package_cannot_own_a_linked_product(self):
+        document = fixture(True)
+        document["objects"]["unattachedMHUI"] = copy.deepcopy(document["objects"]["MHUI"])
+        document["objects"]["MHUIProduct"]["package"] = "unattachedMHUI"
+        with self.assertRaises(ValueError):
+            self.inspect(document, True)
+
+    def test_product_name_does_not_replace_package_ownership(self):
+        for legacy in (False, True):
+            document = fixture(legacy)
+            if legacy:
+                document["objects"]["MHUIProduct"]["package"] = "MHPlatform"
+            else:
+                document["targets"][0]["package-product-members"][1]["package"] = "MHPlatform"
+            with self.subTest(legacy=legacy):
+                self.assertTrue(self.inspect(document, legacy))
+
     def test_equivalent_git_repository_urls_are_accepted(self):
         for legacy in (False, True):
             document = fixture(legacy)
@@ -109,6 +137,35 @@ class ProjectConfigurationTests(unittest.TestCase):
             with self.subTest(legacy=legacy):
                 self.assertTrue(self.inspect(document, legacy))
 
+    def test_direct_framework_references_preserve_adoption_boundaries(self):
+        for legacy in (False, True):
+            for target, framework in (("Cookle", "MHDesign"), ("Widgets", "MHUI"), ("Watch", "MHPlatform")):
+                document = fixture(legacy)
+                if legacy:
+                    document["objects"]["directFile"] = {"isa": "PBXFileReference", "path": framework + ".framework"}
+                    document["objects"]["directBuild"] = {"isa": "PBXBuildFile", "fileRef": "directFile"}
+                    document["objects"][target + "Frameworks"]["files"].append("directBuild")
+                else:
+                    document["files"] = [{"kind": "group", "children": [
+                        {"path": framework + ".framework", "target-membership": [
+                            {"build-phase": target + "/frameworks"}]}]}]
+                with self.subTest(legacy=legacy, target=target):
+                    self.assertTrue(self.inspect(document, legacy))
+
+    def test_native_normalization_preserves_escaped_string_contents(self):
+        expected = 'https://example.com/a//b/ /* literal */ "quoted" \\path\nnext'
+        for legacy in (False, True):
+            with tempfile.TemporaryDirectory() as directory:
+                path = Path(directory) / ("project.pbxproj" if legacy else "project.xcproj")
+                document = fixture(legacy)
+                document["custom-setting"] = expected
+                if legacy:
+                    path.write_bytes(plistlib.dumps(document))
+                else:
+                    path.write_text("// Xcode project\n" + json.dumps(document, indent=2)[:-1] + ",\n}\n")
+                with self.subTest(legacy=legacy):
+                    self.assertEqual(read_project(path)["custom-setting"], expected)
+
     def test_unit_test_target_is_rejected_in_each_format(self):
         for legacy in (False, True):
             document = fixture(legacy)
@@ -138,6 +195,40 @@ class ProjectConfigurationTests(unittest.TestCase):
                 (path / name).write_text("{}")
             with self.assertRaises(ValueError):
                 project_file(path)
+
+    def test_configuration_filename_requires_its_own_object_model(self):
+        for filename, document in (("project.xcproj", fixture(True)),
+                                   ("project.pbxproj", fixture(False)),
+                                   ("project.xcproj", dict(fixture(False), objects={}))):
+            with tempfile.TemporaryDirectory() as directory:
+                path = Path(directory) / filename
+                path.write_text(json.dumps(document))
+                with self.subTest(filename=filename, legacy="objects" in document):
+                    with self.assertRaises(ValueError):
+                        read_project(path)
+
+    def test_linked_and_dangling_configurations_are_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            project = root / "App.xcodeproj"
+            project.mkdir()
+            actual = root / "actual"
+            actual.write_text("{}")
+            configuration = project / "project.xcproj"
+            configuration.symlink_to(actual)
+            for path in (project, configuration):
+                with self.subTest(path=path):
+                    with self.assertRaises(ValueError):
+                        project_file(path)
+            configuration.unlink()
+            configuration.write_text("{}")
+            linked_project = root / "Linked.xcodeproj"
+            linked_project.symlink_to(project, target_is_directory=True)
+            with self.assertRaises(ValueError):
+                project_file(linked_project)
+            (project / "project.pbxproj").symlink_to(root / "missing")
+            with self.assertRaises(ValueError):
+                project_file(project)
 
     def test_invalid_json_and_invalid_reference_fail_without_success(self):
         with tempfile.TemporaryDirectory() as directory:
