@@ -78,8 +78,8 @@ mode and time changes replace managed requests within the existing 14-day horizo
 
 ## Technology stack
 
-- Swift 6 toolchain with Xcode 26.3 project settings and a minimum deployment
-  target of iOS 18.0.
+- Swift 6 toolchain with Xcode 27 or later, JSON project configuration, and a
+  minimum deployment target of iOS 18.0.
 - SwiftUI for all user interfaces, including adaptive tab navigation and preview
   infrastructure.
 - SwiftData for persistence, schema migrations, and model container previews
@@ -272,9 +272,14 @@ Universal Links require Apple App Site Association (AASA) deployment for
 ## Getting started
 
 1. Clone the repository and open the workspace directory.
-2. Open `Cookle.xcodeproj` in Xcode 26.3 or later and select the **Cookle**
+2. Open `Cookle.xcodeproj` in Xcode 27 or later and select the **Cookle**
    scheme.
 3. Build and run on an iOS 18 simulator or device.
+
+The bundle stores its configuration in `project.xcproj`. Xcode 27.2 or later is
+needed only to convert formats. See the
+[migration and rollback record](Designs/Plans/xcode-json-migration.md) for
+compatibility, tooling changes, and qualification limits.
 
 The monetization identifiers live in
 `Cookle/Sources/Platform/CookleMonetizationConfiguration.swift`. They

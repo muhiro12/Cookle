@@ -13,7 +13,7 @@ def check_project(path, check):
     errors = []
     if check == "swiftlint":
         if not any(package.get("kind") == "remote" and
-                   package.get("repository", "").removesuffix(".git").rstrip("/") ==
+                   package.get("repository", "").rstrip("/").removesuffix(".git") ==
                    "https://github.com/SimplyDanny/SwiftLintPlugins" for package in packages):
             errors.append("Cookle.xcodeproj must reference the remote SwiftLintPlugins package.")
         return errors

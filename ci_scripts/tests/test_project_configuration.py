@@ -70,6 +70,19 @@ class ProjectConfigurationTests(unittest.TestCase):
             with self.subTest(legacy=legacy):
                 self.assertTrue(self.inspect(document, legacy))
 
+    def test_equivalent_git_repository_urls_are_accepted(self):
+        for legacy in (False, True):
+            document = fixture(legacy)
+            if legacy:
+                for name in ("MHPlatform", "MHUI", "SwiftLintPlugins"):
+                    document["objects"][name]["repositoryURL"] += ".git/"
+            else:
+                for package in document["packages"]:
+                    package["repository"] += ".git/"
+            for check in ("packages", "swiftlint"):
+                with self.subTest(legacy=legacy, check=check):
+                    self.assertEqual(self.inspect(document, legacy, check), [])
+
     def test_wrong_repository_branch_and_local_dependency_are_rejected(self):
         for legacy in (False, True):
             for mutation in ("repository", "branch", "local"):
