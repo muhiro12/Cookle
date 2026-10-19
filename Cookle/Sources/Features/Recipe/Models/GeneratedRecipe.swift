@@ -6,14 +6,24 @@ import FoundationModels
 struct GeneratedRecipe {
     @Guide(description: "A concise dish name in the person's requested language.")
     var name: String
-    @Guide(description: "Number of people served. Follow the request; otherwise choose a small household portion.")
+    @Guide(
+        description: "Number of people served. Follow the request; otherwise choose a small household portion.",
+        .minimum(1)
+    )
     var servingSize: Int
-    @Guide(description: "Estimated cooking time in minutes for this recipe.")
+    @Guide(description: "Estimated cooking time in minutes. Use zero when no cooking is needed.", .minimum(0))
     var cookingTime: Int
-    @Guide(description: "Ingredients and practical quantities for the stated servings.")
-    var ingredients: [GeneratedRecipeIngredient]
-    @Guide(description: "Ordered cooking instructions without step numbers or bullets. Include heat and doneness cues.")
+    @Guide(
+        description: "Ordered steps including preparation, heat, and doneness cues. No step numbers or bullets.",
+        .count(1...Self.maximumStepCount)
+    )
     var steps: [String]
+    // Generate ingredients after the steps so the list can account for what they use.
+    @Guide(
+        description: "Separate ingredients and practical quantities for the stated servings.",
+        .count(1...Self.maximumIngredientCount)
+    )
+    var ingredients: [GeneratedRecipeIngredient]
     @Guide(
         description: """
         Optional tips or substitutions. Empty when unnecessary. \
@@ -35,4 +45,10 @@ struct GeneratedRecipe {
             note: note
         )
     }
+}
+
+@available(iOS 26.0, *)
+private extension GeneratedRecipe {
+    static let maximumStepCount = 8
+    static let maximumIngredientCount = 16
 }
