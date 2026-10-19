@@ -16120,7 +16120,8 @@
       }
     },
     "When available, Apple's Private Cloud Compute processes your request. Otherwise, Cookle uses the on-device model." : {
-      "extractionState" : "stale",
+      "comment" : "Used only in the Debug Simulator PCC experiment; retain translations when other configurations omit this screen.",
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
