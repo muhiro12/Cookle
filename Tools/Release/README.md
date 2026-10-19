@@ -1,8 +1,8 @@
 # Cookle release tools
 
-This isolated macOS SwiftPM package pins Apogee **1.3.0** for Cookle release
+This isolated macOS SwiftPM package pins Apogee **1.4.0** for Cookle release
 preparation. The published tag resolves to
-`e72fee32a7f3a4ea288e1ed1b69798deee7bfe92`. Commit `Package.resolved` with any
+`805ea2c7c274bc7d4147efc560b72b9484e893c7`. Commit `Package.resolved` with any
 intentional dependency update. No app, library, Widget, or Watch target links
 Apogee.
 
@@ -61,7 +61,7 @@ Do not use temporary text or an invented version for a remote rehearsal.
 
 ## Authentication and read-only status
 
-Apogee 1.3 uses an App Store Connect team API key. Store its private key outside
+Apogee uses an App Store Connect team API key. Store its private key outside
 the repository with owner-only access. Configure the execution shell locally:
 
 ```sh
@@ -148,11 +148,16 @@ the exact candidate commit, Cloud toolchain/build, tests, signed archive,
 TestFlight checks, metadata, and remaining product gates before submission.
 Treat screenshot updates and version-setting writes as separate release
 decisions. Follow Apogee's dry-run, private recovery, and read-back requirements
-before applying them. `--allow-unrecoverable-replacement` gives up the previous
+before applying them. With Apogee 1.4, add `--progress` to `update-screenshots`
+when observing a long upload: stage progress goes to stderr and final JSON
+remains on stdout. Progress alone does not establish successful completion or
+remote verification. `--allow-unrecoverable-replacement` gives up the previous
 screenshot composition, so decide it separately and keep the replaced images
 elsewhere. `build-feedback --export-path` downloads tester crash logs and
 screenshots, which can contain personal data; write them to a private
 owner-only directory outside the repository and delete them after review.
+Apogee 1.4 preserves earlier exports if a later export fails and refuses to
+overwrite existing files; select a fresh private destination for each export.
 Apogee does not manage Xcode Cloud workflows.
 
 After release, review availability, crash/sync reports, and user feedback for
