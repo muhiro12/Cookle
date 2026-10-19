@@ -14,7 +14,11 @@ struct GeneratedRecipe {
     @Guide(description: "Estimated cooking time in minutes. Use zero when no cooking is needed.", .minimum(0))
     var cookingTime: Int
     @Guide(
-        description: "Ordered steps including preparation, heat, and doneness cues. No step numbers or bullets.",
+        description: """
+        Complete ordered steps in the requested language. Start with necessary preparation, \
+        such as cutting sizes and draining, then cooking with heat, timing, and doneness cues. \
+        Include everything needed to make the dish here. No step numbers or bullets.
+        """,
         .count(1...Self.maximumStepCount)
     )
     var steps: [String]
@@ -26,7 +30,8 @@ struct GeneratedRecipe {
     var ingredients: [GeneratedRecipeIngredient]
     @Guide(
         description: """
-        Optional tips or substitutions. Empty when unnecessary. \
+        Optional tips or substitutions in the requested language. Empty when unnecessary. \
+        Essential preparation and cooking belong in the steps, never only here. \
         No claims of verified safety or nutrition.
         """
     )

@@ -30,6 +30,9 @@ repository contains the full iOS project together with its shared Swift package.
   generated recipe in the ordinary form and improve it after cooking. Drafts
   are saved only through the form's Create or Update action. Manual entry and
   text/photo/website import remain available when generation is unavailable.
+  Debug iOS Simulator builds additionally evaluate Private Cloud Compute on
+  iOS 27+, with on-device fallback for unavailable or failed cloud services.
+  PCC activation for devices and distribution is a separate future step.
 - Google Mobile Ads monetization and StoreKit-based subscriptions configured
   through MHPlatform runtime defaults.
 - Remote configuration fetch that can require users to update before continuing,

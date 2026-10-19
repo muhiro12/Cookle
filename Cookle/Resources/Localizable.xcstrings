@@ -16119,6 +16119,41 @@
         }
       }
     },
+    "When available, Apple's Private Cloud Compute processes your request. Otherwise, Cookle uses the on-device model." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When available, Apple's Private Cloud Compute processes your request. Otherwise, Cookle uses the on-device model."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuando está disponible, Private Cloud Compute de Apple procesa tu solicitud. En caso contrario, Cookle utiliza el modelo del dispositivo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si disponible, Private Cloud Compute d’Apple traite votre demande. Sinon, Cookle utilise le modèle sur l’appareil."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "利用できる場合は、AppleのPrivate Cloud Computeでリクエストを処理します。それ以外は、端末内のモデルを使用します。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可用时，Apple 的 Private Cloud Compute 会处理你的请求。否则，Cookle 将使用设备端模型。"
+          }
+        }
+      }
+    },
     "Working..." : {
       "localizations" : {
         "en" : {

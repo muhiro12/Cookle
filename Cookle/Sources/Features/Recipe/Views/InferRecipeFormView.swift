@@ -57,6 +57,18 @@ struct InferRecipeFormView: View {
                 )
                 .font(.callout)
                 .foregroundStyle(.secondary)
+                #if DEBUG && targetEnvironment(simulator)
+                if #available(iOS 27.0, *) {
+                    Text(
+                        """
+                        When available, Apple's Private Cloud Compute processes your request. \
+                        Otherwise, Cookle uses the on-device model.
+                        """
+                    )
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                }
+                #endif
             }
             requestEditor
         }

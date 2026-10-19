@@ -1,4 +1,3 @@
-import FoundationModels
 import SwiftUI
 
 enum RecipeDraftSource: CaseIterable, Identifiable {
@@ -15,7 +14,7 @@ enum RecipeDraftSource: CaseIterable, Identifiable {
         switch self {
         case .generation:
             if #available(iOS 26.0, *) {
-                SystemLanguageModel.default.isAvailable
+                RecipeModelGenerationOperations.isAvailable
             } else {
                 false
             }

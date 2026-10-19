@@ -133,7 +133,9 @@
       "build-settings": {
         "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIcon",
         "ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME": "AccentColor",
-        "CODE_SIGN_ENTITLEMENTS": "Cookle/Configurations/Cookle.entitlements",
+        "CODE_SIGN_ENTITLEMENTS[config=Debug]": "Cookle/Configurations/Cookle.entitlements",
+        "CODE_SIGN_ENTITLEMENTS[config=Debug][sdk=iphonesimulator*]": "Cookle/Configurations/CooklePCCValidation.entitlements",
+        "CODE_SIGN_ENTITLEMENTS[config=Release]": "Cookle/Configurations/Cookle.entitlements",
         "CODE_SIGN_STYLE": "Automatic",
         "CURRENT_PROJECT_VERSION": "1",
         "DEAD_CODE_STRIPPING": "YES",
