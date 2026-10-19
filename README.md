@@ -89,8 +89,8 @@ mode and time changes replace managed requests within the existing 14-day horizo
 - MHPlatform 1.x using the current consumer boundaries: the `Cookle` app target
   stays on the default `MHPlatform` umbrella, `CookleLibrary` stays on
   `MHPlatformCore`, and the repository keeps MHPlatform on the
-  `1.16.0..<2.0.0` range for consent-managed ads, native ad layouts, and the
-  synchronous preference registry.
+  `1.18.0..<2.0.0` range for consent-managed ads, native ad layouts, the
+  synchronous preference registry, and shared remote-update evaluation.
 - MHUI `2.4.0..<3.0.0` through the full `MHUI` product. The main app applies
   the neutral standard root theme and its native appearance once, keeping
   Cookle's orange accent app-owned as the native control tint. Product
@@ -252,6 +252,15 @@ Universal Links require Apple App Site Association (AASA) deployment for
   controls while guarding destructive actions behind confirmation dialogs.
 - Remote configuration is loaded from GitHub to determine whether the current
   build must force an update before the main UI is shown.
+  Cookle retains its existing `forceUpdate` format and inclusive activation
+  window of at most 72 hours. MHPlatform validates numeric versions and the
+  activation interval, confirms the app's identity and published version in the
+  Japanese storefront, and evaluates the requirement again after lookup.
+  Only `updateRequired` presents the alert; unavailable evidence and request
+  failures keep the app usable. Cancelled or superseded refreshes cannot apply
+  an obsolete update decision.
+  Scheduled-policy adoption through MHAppConfig is pending Cookle's configuration
+  document and operation-policy decisions. The legacy endpoint remains in use.
 - Root lifecycle tasks refresh remote configuration, notification schedules,
   and pending routes during launch and foreground re-entry. Subscription changes
   update local preferences as soon as the runtime publishes a resolved state.

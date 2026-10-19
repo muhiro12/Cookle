@@ -1,5 +1,7 @@
 import CookleLibrary
 import Foundation
+import MHPlatformCore
+import Synchronization
 import Testing
 
 struct RemoteUpdatePolicyTests {
@@ -109,6 +111,134 @@ struct RemoteUpdatePolicyTests {
                 duration: RemoteUpdatePolicy.maximumActivationDuration + 1
             ) == nil
         )
+    }
+
+    @Test
+    func evaluatesActivePolicyWithSharedPublicationLookup() async throws {
+        let policy = try #require(makePolicy())
+        let evaluationDate = activatedAt
+        let evaluator = MHRemoteUpdateEvaluator(
+            currentVersion: {
+                "3.8"
+            },
+            now: {
+                evaluationDate
+            },
+            publicVersion: {
+                AppVersion("3.9")
+            }
+        )
+
+        #expect(try await evaluator.evaluate(policy.updatePolicy) == .updateRequired)
+    }
+
+    @Test
+    func skipsPublicationLookupWhenNoUpdateApplies() async throws {
+        let policy = try #require(makePolicy())
+        let activeDate = activatedAt
+        let inactiveDate = policy.expiresAt.addingTimeInterval(1)
+
+        for (version, date) in [("3.9", activeDate), ("3.8", inactiveDate)] {
+            let evaluator = MHRemoteUpdateEvaluator(
+                currentVersion: {
+                    version
+                },
+                now: {
+                    date
+                },
+                publicVersion: {
+                    throw URLError(.notConnectedToInternet)
+                }
+            )
+
+            #expect(try await evaluator.evaluate(policy.updatePolicy) == .notRequired)
+        }
+    }
+
+    @Test
+    func distinguishesUnpublishedMinimumFromPermissionToContinue() async throws {
+        let policy = try #require(makePolicy())
+        let evaluationDate = activatedAt
+        let evaluator = MHRemoteUpdateEvaluator(
+            currentVersion: {
+                "3.8"
+            },
+            now: {
+                evaluationDate
+            },
+            publicVersion: {
+                AppVersion("3.8.1")
+            }
+        )
+
+        #expect(try await evaluator.evaluate(policy.updatePolicy) == .unavailable)
+    }
+
+    @Test
+    func reevaluatesExpiryAfterPublicationLookup() async throws {
+        let policy = try #require(makePolicy())
+        let clock = Mutex(activatedAt)
+        let expiredDate = policy.expiresAt.addingTimeInterval(1)
+        let evaluator = MHRemoteUpdateEvaluator(
+            currentVersion: {
+                "3.8"
+            },
+            now: {
+                clock.withLock { date in
+                    date
+                }
+            },
+            publicVersion: {
+                clock.withLock { date in
+                    date = expiredDate
+                }
+                return AppVersion("3.9")
+            }
+        )
+
+        #expect(try await evaluator.evaluate(policy.updatePolicy) == .notRequired)
+    }
+
+    @Test
+    func propagatesPublicationFailureInsteadOfGrantingPermission() async throws {
+        let policy = try #require(makePolicy())
+        let evaluationDate = activatedAt
+        let evaluator = MHRemoteUpdateEvaluator(
+            currentVersion: {
+                "3.8"
+            },
+            now: {
+                evaluationDate
+            },
+            publicVersion: {
+                throw URLError(.notConnectedToInternet)
+            }
+        )
+
+        await #expect(throws: URLError(.notConnectedToInternet)) {
+            try await evaluator.evaluate(policy.updatePolicy)
+        }
+    }
+
+    @Test
+    func propagatesCancellationInsteadOfApplyingAnUpdateDecision() async throws {
+        let policy = try #require(makePolicy())
+        let evaluationDate = activatedAt
+        let evaluator = MHRemoteUpdateEvaluator(
+            currentVersion: {
+                "3.8"
+            },
+            now: {
+                evaluationDate
+            },
+            publicVersion: {
+                throw URLError(.cancelled)
+            }
+        )
+
+        await #expect(throws: CancellationError.self) {
+            try await evaluator.evaluate(policy.updatePolicy)
+        }
     }
 
     private func makePolicy(

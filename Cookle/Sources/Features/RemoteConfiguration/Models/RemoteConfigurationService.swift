@@ -7,6 +7,7 @@
 
 import CookleLibrary
 import Foundation
+import MHPlatform
 import SwiftUI
 
 @MainActor
@@ -24,13 +25,11 @@ final class RemoteConfigurationService {
     private let session: URLSession
     private let currentVersion: () -> String?
     private let bundleIdentifier: () -> String?
-    private let now: () -> Date
+    private let now: @Sendable () -> Date
+    private var loadIdentifier: UUID?
 
     private let remoteConfigurationURL = URL(
         string: "https://raw.githubusercontent.com/muhiro12/Cookle/main/.config.json"
-    )
-    private let appStoreLookupURL = URL(
-        string: "https://itunes.apple.com/lookup?id=6483363226&country=jp"
     )
 
     init(
@@ -41,7 +40,7 @@ final class RemoteConfigurationService {
         bundleIdentifier: @escaping () -> String? = {
             Bundle.main.bundleIdentifier
         },
-        now: @escaping () -> Date = Date.init
+        now: @escaping @Sendable () -> Date = Date.init
     ) {
         self.session = session
         self.currentVersion = currentVersion
@@ -50,12 +49,16 @@ final class RemoteConfigurationService {
     }
 
     func load() async {
+        guard Task.isCancelled == false else {
+            return
+        }
+        let identifier = UUID()
+        loadIdentifier = identifier
         isUpdateRequired = false
 
         guard let expectedBundleIdentifier = bundleIdentifier(),
               expectedBundleIdentifier.contains("playgrounds") == false,
-              let remoteConfigurationURL,
-              let appStoreLookupURL else {
+              let remoteConfigurationURL else {
             return
         }
 
@@ -64,7 +67,6 @@ final class RemoteConfigurationService {
                 from: remoteConfigurationURL
             )
             guard let forceUpdate = remoteConfiguration.forceUpdate,
-                  let installedVersion = currentVersion().flatMap(AppVersion.init),
                   let minimumVersion = AppVersion(forceUpdate.minimumVersion),
                   let policy = RemoteUpdatePolicy(
                     minimumVersion: minimumVersion,
@@ -74,18 +76,45 @@ final class RemoteConfigurationService {
                 return
             }
 
-            let publicVersion = try await appStorePublicVersion(
-                from: appStoreLookupURL,
+            let decision = try await updateDecision(
+                for: policy,
                 expectedBundleIdentifier: expectedBundleIdentifier
             )
-            isUpdateRequired = policy.isUpdateRequired(
-                currentVersion: installedVersion,
-                publicVersion: publicVersion,
-                now: now()
-            )
+            try Task.checkCancellation()
+            guard loadIdentifier == identifier else {
+                return
+            }
+            isUpdateRequired = decision == .updateRequired
         } catch {
+            guard loadIdentifier == identifier, Task.isCancelled == false else {
+                return
+            }
             isUpdateRequired = false
         }
+    }
+
+    private func updateDecision(
+        for policy: RemoteUpdatePolicy,
+        expectedBundleIdentifier: String
+    ) async throws -> MHRemoteUpdateDecision {
+        let installedVersion = currentVersion()
+        let identifier = Self.appStoreIdentifier
+        let lookup = MHAppStoreVersionLookup(session: session)
+        let publicVersion: @Sendable () async throws -> MHAppVersion? = {
+            try await lookup.version(
+                appID: identifier,
+                bundleIdentifier: expectedBundleIdentifier,
+                country: "jp"
+            )
+        }
+        let evaluator = MHRemoteUpdateEvaluator(
+            currentVersion: {
+                installedVersion
+            },
+            now: now,
+            publicVersion: publicVersion
+        )
+        return try await evaluator.evaluate(policy.updatePolicy)
     }
 
     private func remoteConfiguration(
@@ -95,25 +124,6 @@ final class RemoteConfigurationService {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         return try decoder.decode(RemoteConfiguration.self, from: data)
-    }
-
-    private func appStorePublicVersion(
-        from url: URL,
-        expectedBundleIdentifier: String
-    ) async throws -> AppVersion {
-        let data = try await responseData(from: url)
-        let lookupResponse = try JSONDecoder().decode(
-            AppStoreLookupResponse.self,
-            from: data
-        )
-        guard let result = lookupResponse.results.first(where: { result in
-            result.trackID == Self.appStoreIdentifier
-                && result.bundleID == expectedBundleIdentifier
-        }),
-        let publicVersion = AppVersion(result.version) else {
-            throw URLError(.cannotParseResponse)
-        }
-        return publicVersion
     }
 
     private func responseData(from url: URL) async throws -> Data {

@@ -22,7 +22,7 @@ def check_project(path, check):
             errors.append("Cookle.xcodeproj must not define a unit test target.")
         return errors
 
-    for name, minimum in (("MHPlatform", "1.16.0"), ("MHUI", "2.4.0")):
+    for name, minimum in (("MHPlatform", "1.18.0"), ("MHUI", "2.4.0")):
         matches = [package for package in packages if package_name(package) == name]
         if len(matches) != 1 or not valid_package(matches[0], name, minimum):
             errors.append(f"{name} must use its remote up-to-next-major-version requirement from {minimum}.")
@@ -35,7 +35,7 @@ def check_project(path, check):
         target = matches[0]
         all_links = {product["name"] for product in target["members"] + target["frameworks"]} | target["files"]
         if name == "Cookle":
-            for product_name, minimum in (("MHPlatform", "1.16.0"), ("MHUI", "2.4.0")):
+            for product_name, minimum in (("MHPlatform", "1.18.0"), ("MHUI", "2.4.0")):
                 for edge in ("members", "frameworks"):
                     products = [product for product in target[edge] if product["name"] == product_name]
                     if len(products) != 1 or not valid_package(products[0]["package"], product_name, minimum):
