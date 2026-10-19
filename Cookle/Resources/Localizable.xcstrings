@@ -356,6 +356,40 @@
         }
       }
     },
+    "A simple tofu and mushroom dinner for two, using one frying pan." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A simple tofu and mushroom dinner for two, using one frying pan."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una cena sencilla de tofu y setas para dos, con una sola sartén."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un dîner simple au tofu et aux champignons pour deux, avec une seule poêle."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "豆腐ときのこを使って、フライパンひとつで作れる簡単な2人分の夕食。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用豆腐和蘑菇做一份简单的双人晚餐，只用一个平底锅。"
+          }
+        }
+      }
+    },
     "Adaptive" : {
       "localizations" : {
         "en" : {
@@ -1990,6 +2024,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无法完成设置操作"
+          }
+        }
+      }
+    },
+    "Cannot Create Recipe" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cannot Create Recipe"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede crear la receta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de créer la recette"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピを作成できません"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法创建食谱"
           }
         }
       }
@@ -3830,6 +3898,40 @@
         }
       }
     },
+    "Create with AI" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create with AI"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crear con IA"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Créer avec l’IA"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AIでレシピを作る"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用 AI 创建"
+          }
+        }
+      }
+    },
     "Created At" : {
       "localizations" : {
         "en" : {
@@ -4676,6 +4778,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已删除%@的日记"
+          }
+        }
+      }
+    },
+    "Describe a dish, ingredients, or preferences. AI creates a starting point you can edit and improve after cooking." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Describe a dish, ingredients, or preferences. AI creates a starting point you can edit and improve after cooking."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Describe un plato, ingredientes o preferencias. La IA crea una base que puedes editar y mejorar después de cocinar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Décrivez un plat, des ingrédients ou vos préférences. L’IA crée une base à modifier et à améliorer après avoir cuisiné."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "料理や食材、好みを伝えると、AIがレシピのたたき台を作ります。自由に編集し、作ってみた感想をもとに育てていきましょう。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "描述菜品、食材或偏好。AI 将生成食谱初稿，你可以自由编辑，并在烹饪后逐步改进。"
           }
         }
       }
@@ -6243,40 +6379,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "导入数据"
-          }
-        }
-      }
-    },
-    "Import Recipe" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import Recipe"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importar receta"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importer une recette"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピを取り込む"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "导入食谱"
           }
         }
       }
@@ -10226,6 +10328,40 @@
         }
       }
     },
+    "Recipe Request" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recipe Request"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Petición de receta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Demande de recette"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "作りたい料理の希望"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "食谱需求"
+          }
+        }
+      }
+    },
     "Recipe Suggestion" : {
       "localizations" : {
         "en" : {
@@ -10324,6 +10460,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "菜谱文本"
+          }
+        }
+      }
+    },
+    "Recipe Tools" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recipe Tools"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herramientas de recetas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Outils de recette"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピ作成ツール"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "食谱工具"
           }
         }
       }
@@ -13355,40 +13525,6 @@
         }
       }
     },
-    "The imported recipe replaces the name, servings, cooking time, ingredients, steps, categories, and note you entered. Photos stay. You can undo the import from the recipe form." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The imported recipe replaces the name, servings, cooking time, ingredients, steps, categories, and note you entered. Photos stay. You can undo the import from the recipe form."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La receta importada reemplaza el nombre, las porciones, el tiempo de cocción, los ingredientes, los pasos, las categorías y la nota que ingresaste. Las fotos se conservan. Puedes deshacer la importación desde el formulario de la receta."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La recette importée remplace le nom, les portions, le temps de cuisson, les ingrédients, les étapes, les catégories et la note que vous avez saisis. Les photos sont conservées. Vous pouvez annuler l’importation depuis le formulaire de la recette."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "取り込んだレシピで、入力済みの名前、人数、調理時間、材料、手順、カテゴリ、メモが置き換わります。写真はそのまま残ります。取り込みはレシピの入力画面で取り消せます。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "导入的食谱将替换你输入的名称、份数、烹饪时间、食材、步骤、分类和备注。照片会保留。你可以在食谱表单中撤销导入。"
-          }
-        }
-      }
-    },
     "The page could not be loaded. Try again or paste the recipe text." : {
       "localizations" : {
         "en" : {
@@ -13493,36 +13629,70 @@
         }
       }
     },
-    "The recipe input changed while importing. Review it again before the imported recipe replaces it. You can undo the import from the recipe form." : {
+    "The recipe draft replaces the name, servings, cooking time, ingredients, steps, categories, and note you entered. Photos stay. You can undo this from the recipe form." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The recipe input changed while importing. Review it again before the imported recipe replaces it. You can undo the import from the recipe form."
+            "value" : "The recipe draft replaces the name, servings, cooking time, ingredients, steps, categories, and note you entered. Photos stay. You can undo this from the recipe form."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La entrada de la receta cambió durante la importación. Revísala de nuevo antes de que la receta importada la reemplace. Puedes deshacer la importación desde el formulario de la receta."
+            "value" : "El borrador reemplaza el nombre, las porciones, el tiempo, los ingredientes, los pasos, las categorías y la nota. Las fotos se conservan. Puedes deshacerlo en el formulario de receta."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La saisie de la recette a changé pendant l’importation. Vérifiez-la à nouveau avant que la recette importée ne la remplace. Vous pouvez annuler l’importation depuis le formulaire de la recette."
+            "value" : "Le brouillon remplace le nom, les portions, le temps de cuisson, les ingrédients, les étapes, les catégories et la note. Les photos sont conservées. Vous pourrez annuler dans le formulaire de recette."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "取り込み中にレシピの入力が変更されました。取り込んだレシピで置き換える前に、もう一度確認してください。取り込みはレシピの入力画面で取り消せます。"
+            "value" : "下書きで、入力済みの名前・人数・調理時間・材料・手順・カテゴリ・メモを置き換えます。写真は残ります。レシピ編集画面で取り消せます。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "导入期间食谱输入已更改。在导入的食谱替换它之前，请再次确认。你可以在食谱表单中撤销导入。"
+            "value" : "草稿将替换已输入的名称、份数、烹饪时间、食材、步骤、分类和备注。照片会保留。你可以在食谱编辑页面撤销此操作。"
+          }
+        }
+      }
+    },
+    "The recipe input changed while preparing the draft. Review it again before the draft replaces it. You can undo this from the recipe form." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The recipe input changed while preparing the draft. Review it again before the draft replaces it. You can undo this from the recipe form."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La receta cambió mientras se preparaba el borrador. Revísala antes de reemplazarla. Puedes deshacerlo en el formulario de receta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La saisie a changé pendant la préparation du brouillon. Vérifiez-la avant de la remplacer. Vous pourrez annuler dans le formulaire de recette."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下書きの準備中にレシピの入力が変更されました。置き換える前にもう一度確認してください。レシピ編集画面で取り消せます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "准备草稿时食谱内容已更改。请再次确认后再替换。你可以在食谱编辑页面撤销此操作。"
           }
         }
       }
@@ -14549,36 +14719,36 @@
         }
       }
     },
-    "This restores the recipe input from before the import and also discards the changes you made after importing." : {
+    "This restores the recipe input from before the last draft was applied and also discards the changes you made afterwards." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This restores the recipe input from before the import and also discards the changes you made after importing."
+            "value" : "This restores the recipe input from before the last draft was applied and also discards the changes you made afterwards."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Esto restaura la entrada de la receta anterior a la importación y también descarta los cambios que hiciste después de importar."
+            "value" : "Se restaurará la receta anterior al último borrador y se descartarán los cambios posteriores."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cela rétablit la saisie de la recette d’avant l’importation et supprime aussi les modifications effectuées après l’importation."
+            "value" : "La saisie précédant le dernier brouillon sera restaurée et les modifications ultérieures seront perdues."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "取り込む前のレシピの入力に戻します。取り込んだ後に行った変更も破棄されます。"
+            "value" : "最後に下書きを適用する前の入力に戻します。適用後に加えた変更も失われます。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "这将恢复导入前的食谱输入，并同时丢弃导入后所做的更改。"
+            "value" : "这将恢复应用上一个草稿前的食谱内容，并舍弃之后所做的更改。"
           }
         }
       }
@@ -15031,70 +15201,70 @@
         }
       }
     },
-    "Undo Import" : {
+    "Undo Recipe Draft" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Undo Import"
+            "value" : "Undo Recipe Draft"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Deshacer importación"
+            "value" : "Deshacer borrador de receta"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Annuler l’importation"
+            "value" : "Annuler le brouillon de recette"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "取り込みを取り消す"
+            "value" : "下書きの適用を取り消す"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "撤销导入"
+            "value" : "撤销食谱草稿"
           }
         }
       }
     },
-    "Undo Import?" : {
+    "Undo Recipe Draft?" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Undo Import?"
+            "value" : "Undo Recipe Draft?"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¿Deshacer la importación?"
+            "value" : "¿Deshacer el borrador de receta?"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Annuler l’importation ?"
+            "value" : "Annuler le brouillon de recette ?"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "取り込みを取り消しますか？"
+            "value" : "下書きの適用を取り消しますか？"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "要撤销导入吗？"
+            "value" : "撤销食谱草稿？"
           }
         }
       }

@@ -25,6 +25,11 @@ repository contains the full iOS project together with its shared Swift package.
   the last or a random recipe, and creating diary entries.
 - Image Playground integration (iOS 18.1+) to generate dish photos from recipe
   content.
+- Creative recipe starting points with on-device Apple Intelligence (iOS 26+ on
+  supported devices). Describe ingredients, a dish, or preferences, then edit the
+  generated recipe in the ordinary form and improve it after cooking. Drafts
+  are saved only through the form's Create or Update action. Manual entry and
+  text/photo/website import remain available when generation is unavailable.
 - Google Mobile Ads monetization and StoreKit-based subscriptions configured
   through MHPlatform runtime defaults.
 - Remote configuration fetch that can require users to update before continuing,

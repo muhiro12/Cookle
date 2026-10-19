@@ -21,11 +21,11 @@ struct RecipeFormNavigationView: View {
 }
 
 #Preview("Website import entry", traits: .modifier(CookleSampleData())) {
-    @Previewable @State var model = RecipeFormModel(type: .create, importSource: .website)
+    @Previewable @State var model = RecipeFormModel(type: .create, draftSource: .website)
     RecipeFormNavigationView(model: model)
 }
 
 #Preview("Photo text import entry", traits: .modifier(CookleSampleData())) {
-    @Previewable @State var model = RecipeFormModel(type: .create, importSource: .photo)
+    @Previewable @State var model = RecipeFormModel(type: .create, draftSource: .photo)
     RecipeFormNavigationView(model: model)
 }

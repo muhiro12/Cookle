@@ -19,7 +19,7 @@ final class RecipeFormPresenter {
     func present(
         _ type: RecipeFormType,
         recipe: Recipe? = nil,
-        importSource: RecipeImportSource? = nil
+        draftSource: RecipeDraftSource? = nil
     ) {
         guard form == nil else {
             return
@@ -28,7 +28,7 @@ final class RecipeFormPresenter {
         form = .init(
             type: type,
             recipe: recipe,
-            importSource: importSource
+            draftSource: draftSource
         )
     }
 }

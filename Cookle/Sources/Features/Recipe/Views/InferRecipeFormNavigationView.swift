@@ -3,7 +3,7 @@ import SwiftUI
 
 @available(iOS 26.0, *)
 struct InferRecipeFormNavigationView: View {
-    private let source: RecipeImportSource
+    private let source: RecipeDraftSource
     @State private var websiteSource: RecipeWebsiteSource?
     @State private var sourceURL: URL?
     @State private var photoData: Data?
@@ -41,7 +41,7 @@ struct InferRecipeFormNavigationView: View {
 
     init(
         model: RecipeFormModel,
-        source: RecipeImportSource
+        source: RecipeDraftSource
     ) {
         self.model = model
         self.source = source

@@ -95,15 +95,15 @@ extension RecipeFormView {
         if #available(iOS 26.0, *) {
             ToolbarItem(placement: .bottomBar) {
                 Menu {
-                    ForEach(RecipeImportSource.allCases) { source in
+                    ForEach(RecipeDraftSource.allCases) { source in
                         Button {
-                            formModel.importSource = source
+                            formModel.draftSource = source
                         } label: {
                             Label(source.title, systemImage: source.systemImage)
                         }
                     }
                 } label: {
-                    Label("Import Recipe", systemImage: "square.and.arrow.down")
+                    Label("Recipe Tools", systemImage: "wand.and.stars")
                 }
                 .disabled(formModel.isSaving)
                 .cooklePopoverTip(
@@ -123,7 +123,7 @@ extension RecipeFormView {
                 Button {
                     undoImport()
                 } label: {
-                    Label("Undo Import", systemImage: "arrow.uturn.backward")
+                    Label("Undo Recipe Draft", systemImage: "arrow.uturn.backward")
                 }
                 .disabled(formModel.isSaving)
             }

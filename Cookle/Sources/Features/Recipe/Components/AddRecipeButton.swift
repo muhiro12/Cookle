@@ -23,7 +23,7 @@ struct AddRecipeButton: View {
                     Button("Enter Manually", systemImage: "pencil") {
                         beginRegistration()
                     }
-                    ForEach(RecipeImportSource.allCases) { source in
+                    ForEach(RecipeDraftSource.allCases) { source in
                         Button {
                             beginRegistration(source: source)
                         } label: {
@@ -58,7 +58,7 @@ struct AddRecipeButton: View {
 }
 
 private extension AddRecipeButton {
-    func beginRegistration(source: RecipeImportSource? = nil) {
+    func beginRegistration(source: RecipeDraftSource? = nil) {
         let logger = logging.logger(category: "UIAction", source: #fileID)
         logger.info("add recipe button tapped")
         if let action {
@@ -66,7 +66,7 @@ private extension AddRecipeButton {
         } else {
             recipeFormPresenter.present(
                 .create,
-                importSource: source
+                draftSource: source
             )
         }
     }

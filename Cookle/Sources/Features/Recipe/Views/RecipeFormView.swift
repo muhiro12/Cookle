@@ -62,7 +62,7 @@ struct RecipeFormView: View {
         .toolbar {
             toolbarItems
         }
-        .sheet(item: $model.importSource) { source in
+        .sheet(item: $model.draftSource) { source in
             if #available(iOS 26.0, *) {
                 InferRecipeFormNavigationView(
                     model: model,
@@ -105,11 +105,11 @@ struct RecipeFormView: View {
             Text("Replace the current form input with the saved draft?")
         }
         .confirmationDialog(
-            Text("Undo Import?"),
+            Text("Undo Recipe Draft?"),
             isPresented: $isUndoImportConfirmationPresented,
             titleVisibility: .visible
         ) {
-            Button("Undo Import", role: .destructive) {
+            Button("Undo Recipe Draft", role: .destructive) {
                 model.undoInference()
             }
             Button("Cancel", role: .cancel) {
@@ -118,8 +118,8 @@ struct RecipeFormView: View {
         } message: {
             Text(
                 """
-                This restores the recipe input from before the import and also discards \
-                the changes you made after importing.
+                This restores the recipe input from before the last draft was applied and also discards \
+                the changes you made afterwards.
                 """
             )
         }

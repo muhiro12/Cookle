@@ -17,7 +17,7 @@ struct InferRecipeFormView: View {
     }
 
     private let model: RecipeFormModel
-    private let source: RecipeImportSource
+    private let source: RecipeDraftSource
     private let initialPhotoData: Data?
     private let choosesAnotherPhoto: (() -> Void)?
 
@@ -47,82 +47,77 @@ struct InferRecipeFormView: View {
         """
 
     var body: some View {
+        VStack(alignment: .leading) {
+            if source == .generation {
+                Text(
+                    """
+                    Describe a dish, ingredients, or preferences. AI creates a starting point you can edit \
+                    and improve after cooking.
+                    """
+                )
+                .font(.callout)
+                .foregroundStyle(.secondary)
+            }
+            requestEditor
+        }
+        .padding()
+        .navigationTitle(source == .generation ? Text("Create with AI") : Text("Review Recipe Text"))
+        .toolbar {
+            toolbarItems
+        }
+        .font(nil)
+        .overlay {
+            loadingOverlay
+        }
+        .task {
+            await openSourceIfNeeded()
+        }
+        .onDisappear {
+            operationTask?.cancel()
+        }
+        .alert(
+            isPhotoRecognitionFailure ? Text("Cannot Read Photo") : errorTitle,
+            isPresented: isInferenceErrorPresented
+        ) {
+            if isPhotoRecognitionFailure, let choosesAnotherPhoto {
+                Button("Choose Another Photo") {
+                    clearError()
+                    choosesAnotherPhoto()
+                }
+            }
+            Button("OK", role: .cancel) {
+                clearError()
+            }
+        } message: {
+            Text(errorMessage)
+        }
+        .confirmationDialog(
+            Text("Replace Current Input?"),
+            isPresented: $isReplacementReviewPresented,
+            titleVisibility: .visible
+        ) {
+            Button("Replace", role: .destructive) {
+                confirmReplacement()
+            }
+            Button("Cancel", role: .cancel) {
+                pendingInference = nil
+            }
+        } message: {
+            replacementReviewMessage
+        }
+    }
+
+    private var requestEditor: some View {
         TextEditor(text: $text)
             .focused($isTextFocused)
             .disabled(isLoading)
-            .accessibilityLabel(Text("Recipe Text"))
+            .accessibilityLabel(source == .generation ? Text("Recipe Request") : Text("Recipe Text"))
             .accessibilityValue(Text(verbatim: text))
             .overlay(alignment: .topLeading) {
                 placeholderOverlay
             }
             .scrollDismissesKeyboard(.immediately)
             .mhInputChrome(state: isTextFocused ? .focused : .normal)
-            .padding()
-            .navigationTitle(Text("Review Recipe Text"))
-            .toolbar {
-                toolbarItems
-            }
-            .font(nil)
-            .overlay {
-                loadingOverlay
-            }
-            .task {
-                guard !hasOpenedSource else {
-                    return
-                }
-                hasOpenedSource = true
-                if let initialPhotoData {
-                    isLoading = true
-                    defer {
-                        isLoading = false
-                    }
-                    do {
-                        try await appendRecognizedText(from: initialPhotoData)
-                    } catch {
-                        if !Task.isCancelled {
-                            isPhotoRecognitionFailure = true
-                            errorMessage = CookleLibraryErrorCopy.description(for: error)
-                        }
-                    }
-                } else if source == .text {
-                    isTextFocused = true
-                }
-            }
-            .onDisappear {
-                operationTask?.cancel()
-            }
-            .alert(
-                isPhotoRecognitionFailure ? Text("Cannot Read Photo") : Text("Cannot Infer Recipe"),
-                isPresented: isInferenceErrorPresented
-            ) {
-                // A photo without readable text leaves nothing to review, so
-                // offer the picker again instead of an empty text editor.
-                if isPhotoRecognitionFailure, let choosesAnotherPhoto {
-                    Button("Choose Another Photo") {
-                        clearError()
-                        choosesAnotherPhoto()
-                    }
-                }
-                Button("OK", role: .cancel) {
-                    clearError()
-                }
-            } message: {
-                Text(errorMessage)
-            }
-            .confirmationDialog(
-                Text("Replace Current Input?"),
-                isPresented: $isReplacementReviewPresented,
-                titleVisibility: .visible
-            ) {
-                Button("Replace", role: .destructive) {
-                    confirmReplacement()
-                }
-                Button("Cancel", role: .cancel) {
-                    pendingInference = nil
-                }
-            } message: {
-                replacementReviewMessage
-            }
     }
 
     @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
@@ -158,7 +153,7 @@ struct InferRecipeFormView: View {
     ///   not opened from a photo.
     init(
         model: RecipeFormModel,
-        source: RecipeImportSource,
+        source: RecipeDraftSource,
         initialWebsiteSource: RecipeWebsiteSource? = nil,
         initialSourceURL: URL? = nil,
         initialPhotoData: Data? = nil,
@@ -176,23 +171,33 @@ struct InferRecipeFormView: View {
 
 @available(iOS 26.0, *)
 private extension InferRecipeFormView {
+    var errorTitle: Text {
+        source == .generation ? Text("Cannot Create Recipe") : Text("Cannot Infer Recipe")
+    }
+
     @ViewBuilder var placeholderOverlay: some View {
         if text.isEmpty {
-            Text(placeholder)
-                .font(.body)
-                .foregroundStyle(.placeholder)
-                .padding(
-                    .vertical,
-                    RecipeTextEditorLayout.placeholderVerticalPadding(
-                        metrics: designMetrics
-                    )
+            Group {
+                if source == .generation {
+                    Text("A simple tofu and mushroom dinner for two, using one frying pan.")
+                } else {
+                    Text(placeholder)
+                }
+            }
+            .font(.body)
+            .foregroundStyle(.placeholder)
+            .padding(
+                .vertical,
+                RecipeTextEditorLayout.placeholderVerticalPadding(
+                    metrics: designMetrics
                 )
-                .padding(
-                    .horizontal,
-                    RecipeTextEditorLayout.placeholderHorizontalPadding
-                )
-                .allowsHitTesting(false)
-                .accessibilityHidden(true)
+            )
+            .padding(
+                .horizontal,
+                RecipeTextEditorLayout.placeholderHorizontalPadding
+            )
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
         }
     }
 
@@ -213,18 +218,40 @@ private extension InferRecipeFormView {
         if pendingInference != nil {
             Text(
                 """
-                The recipe input changed while importing. Review it again before the imported \
-                recipe replaces it. You can undo the import from the recipe form.
+                The recipe input changed while preparing the draft. Review it again before the \
+                draft replaces it. You can undo this from the recipe form.
                 """
             )
         } else {
             Text(
                 """
-                The imported recipe replaces the name, servings, cooking time, ingredients, steps, \
-                categories, and note you entered. Photos stay. You can undo the import from the \
-                recipe form.
+                The recipe draft replaces the name, servings, cooking time, ingredients, steps, \
+                categories, and note you entered. Photos stay. You can undo this from the recipe form.
                 """
             )
+        }
+    }
+
+    func openSourceIfNeeded() async {
+        guard !hasOpenedSource else {
+            return
+        }
+        hasOpenedSource = true
+        if let initialPhotoData {
+            isLoading = true
+            defer {
+                isLoading = false
+            }
+            do {
+                try await appendRecognizedText(from: initialPhotoData)
+            } catch {
+                if !Task.isCancelled {
+                    isPhotoRecognitionFailure = true
+                    errorMessage = CookleLibraryErrorCopy.description(for: error)
+                }
+            }
+        } else if source == .text || source == .generation {
+            isTextFocused = true
         }
     }
 
@@ -260,6 +287,9 @@ private extension InferRecipeFormView {
     }
 
     func startInference() {
+        guard !isLoading else {
+            return
+        }
         let reviewedInput = model.changeSnapshot
         isLoading = true
         operationTask = Task { @MainActor in
@@ -282,7 +312,12 @@ private extension InferRecipeFormView {
         }
 
         do {
-            var inference = try await RecipeFoundationModelInferenceOperations.infer(text: text)
+            var inference: RecipeInferenceResult
+            if source == .generation {
+                inference = try await RecipeModelGenerationOperations.generate(request: text)
+            } else {
+                inference = try await RecipeFoundationModelInferenceOperations.infer(text: text)
+            }
             if let websiteSource, websiteSource.text == text {
                 inference = websiteSource.grounding(inference)
             }
@@ -314,5 +349,13 @@ private extension InferRecipeFormView {
         let recognizedText = try await RecipeTextImporter.recognize(in: data)
         try Task.checkCancellation()
         text += (text.isEmpty ? "" : "\n") + recognizedText
+    }
+}
+
+#Preview("Create with AI") {
+    if #available(iOS 26.0, *) {
+        NavigationStack {
+            InferRecipeFormView(model: .init(type: .create), source: .generation)
+        }
     }
 }

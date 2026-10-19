@@ -1,6 +1,6 @@
 import Foundation
 
-/// Best-effort recipe structure inferred from free-form text.
+/// Unsaved recipe fields produced by source extraction or creative generation.
 public struct RecipeInferenceResult: Equatable, Sendable {
     /// Recipe name.
     public var name: String

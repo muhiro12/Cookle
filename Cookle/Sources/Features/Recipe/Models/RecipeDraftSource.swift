@@ -1,6 +1,7 @@
 import SwiftUI
 
-enum RecipeImportSource: CaseIterable, Identifiable {
+enum RecipeDraftSource: CaseIterable, Identifiable {
+    case generation
     case text
     case photo
     case website
@@ -11,6 +12,8 @@ enum RecipeImportSource: CaseIterable, Identifiable {
 
     var title: LocalizedStringKey {
         switch self {
+        case .generation:
+            "Create with AI"
         case .text:
             "Import from Text"
         case .photo:
@@ -22,6 +25,8 @@ enum RecipeImportSource: CaseIterable, Identifiable {
 
     var systemImage: String {
         switch self {
+        case .generation:
+            "sparkles"
         case .text:
             "text.alignleft"
         case .photo:
