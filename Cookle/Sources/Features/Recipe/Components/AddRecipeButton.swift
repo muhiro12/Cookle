@@ -23,7 +23,7 @@ struct AddRecipeButton: View {
                     Button("Enter Manually", systemImage: "pencil") {
                         beginRegistration()
                     }
-                    ForEach(RecipeDraftSource.allCases) { source in
+                    ForEach(RecipeDraftSource.allCases.filter(\.isAvailable)) { source in
                         Button {
                             beginRegistration(source: source)
                         } label: {

@@ -95,7 +95,7 @@ extension RecipeFormView {
         if #available(iOS 26.0, *) {
             ToolbarItem(placement: .bottomBar) {
                 Menu {
-                    ForEach(RecipeDraftSource.allCases) { source in
+                    ForEach(RecipeDraftSource.allCases.filter(\.isAvailable)) { source in
                         Button {
                             formModel.draftSource = source
                         } label: {

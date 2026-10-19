@@ -1,3 +1,4 @@
+import FoundationModels
 import SwiftUI
 
 enum RecipeDraftSource: CaseIterable, Identifiable {
@@ -8,6 +9,21 @@ enum RecipeDraftSource: CaseIterable, Identifiable {
 
     var id: Self {
         self
+    }
+
+    var isAvailable: Bool {
+        switch self {
+        case .generation:
+            if #available(iOS 26.0, *) {
+                SystemLanguageModel.default.isAvailable
+            } else {
+                false
+            }
+        case .text,
+             .photo,
+             .website:
+            true
+        }
     }
 
     var title: LocalizedStringKey {
