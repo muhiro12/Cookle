@@ -12,7 +12,7 @@ struct GeneratedRecipe {
     var cookingTime: Int
     @Guide(description: "Ingredients and practical quantities for the stated servings.")
     var ingredients: [GeneratedRecipeIngredient]
-    @Guide(description: "Concise ordered cooking instructions, including useful heat and doneness cues.")
+    @Guide(description: "Ordered cooking instructions without step numbers or bullets. Include heat and doneness cues.")
     var steps: [String]
     @Guide(
         description: """

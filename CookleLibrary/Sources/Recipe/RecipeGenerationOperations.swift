@@ -1,3 +1,5 @@
+import Foundation
+
 /// Shared rules for turning creative output into an editable recipe draft.
 @preconcurrency
 @MainActor
@@ -9,7 +11,20 @@ public enum RecipeGenerationOperations {
     public static func preparedDraft(
         from generated: RecipeInferenceResult
     ) -> RecipeInferenceResult? {
-        let draft = RecipeInferenceOperations.sanitizedInference(generated)
+        var draft = RecipeInferenceOperations.sanitizedInference(generated)
+        // The editor supplies row numbers. Strip generated list markers while
+        // preserving quantities such as "1.5 tbsp" at the start of a step.
+        draft.steps = draft.steps
+            .map { step in
+                step.replacingOccurrences(
+                    of: #"^(?:[0-9０-９]+[.．)）]|[-*•])(?:\s+|$)"#,
+                    with: "",
+                    options: .regularExpression
+                )
+            }
+            .filter { step in
+                !step.isEmpty
+            }
         guard !draft.name.isEmpty,
               !draft.ingredients.isEmpty,
               !draft.steps.isEmpty else {

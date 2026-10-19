@@ -30,6 +30,23 @@ struct RecipeGenerationOperationsTests {
     }
 
     @Test
+    func generated_list_markers_do_not_repeat_editor_numbers_or_remove_quantities() throws {
+        var generated = recipe
+        generated.steps = ["1. Cook tofu.", "２） Stir.", "- Serve.", "1.5 tbsp oil goes into the pan."]
+        let draft = try #require(RecipeGenerationOperations.preparedDraft(from: generated))
+
+        #expect(draft.steps == ["Cook tofu.", "Stir.", "Serve.", "1.5 tbsp oil goes into the pan."])
+    }
+
+    @Test
+    func list_markers_alone_are_not_usable_cooking_steps() {
+        var generated = recipe
+        generated.steps = ["1. ", "- "]
+
+        #expect(RecipeGenerationOperations.preparedDraft(from: generated) == nil)
+    }
+
+    @Test
     func a_generated_draft_can_be_edited_and_undone_like_an_import() throws {
         let draft = try #require(RecipeGenerationOperations.preparedDraft(from: recipe))
         let previous = RecipeFormInput(
