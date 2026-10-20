@@ -100,7 +100,7 @@ mode and time changes replace managed requests within the existing 14-day horizo
 - MHPlatform 1.x using the current consumer boundaries: the `Cookle` app target
   stays on the default `MHPlatform` umbrella, `CookleLibrary` stays on
   `MHPlatformCore`, and the repository keeps MHPlatform on the
-  `1.18.0..<2.0.0` range for consent-managed ads, native ad layouts, the
+  `1.20.0..<2.0.0` range for consent-managed ads, native ad layouts, the
   synchronous preference registry, and shared remote-update evaluation.
 - MHUI `2.4.0..<3.0.0` through the full `MHUI` product. The main app applies
   the neutral standard root theme and its native appearance once, keeping

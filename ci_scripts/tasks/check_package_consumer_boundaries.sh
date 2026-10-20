@@ -80,8 +80,8 @@ else
     append_error "MHPlatform must not follow a floating branch in $package_manifest."
   fi
 
-  if ! grep -Eq '^\s*"1\.18\.0"\s*\.\.<\s*"2\.0\.0"' <<<"$mhplatform_manifest_block"; then
-    append_error "Cookle keeps MHPlatform on the 1.18.0..<2.0.0 version range in $package_manifest."
+  if ! grep -Eq '^\s*"1\.20\.0"\s*\.\.<\s*"2\.0\.0"' <<<"$mhplatform_manifest_block"; then
+    append_error "Cookle keeps MHPlatform on the 1.20.0..<2.0.0 version range in $package_manifest."
   fi
 fi
 
@@ -94,8 +94,8 @@ else
     append_error "MHPlatform resolved state must not contain branch tracking in $package_resolved."
   fi
 
-  if ! grep -Eq '"version"\s*:\s*"1\.(1[8-9]|[2-9][0-9]|[1-9][0-9]{2,})\.[0-9]+"' <<<"$mhplatform_resolved_pin_block"; then
-    append_error "MHPlatform resolved state must contain a semantic version in the 1.18.0..<2.0.0 range in $package_resolved."
+  if ! grep -Eq '"version"\s*:\s*"1\.([2-9][0-9]|[1-9][0-9]{2,})\.[0-9]+"' <<<"$mhplatform_resolved_pin_block"; then
+    append_error "MHPlatform resolved state must contain a semantic version in the 1.20.0..<2.0.0 range in $package_resolved."
   fi
 fi
 

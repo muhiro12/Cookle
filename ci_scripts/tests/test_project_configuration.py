@@ -16,7 +16,7 @@ from xcode_project import project_file, read_project
 
 
 def fixture(legacy):
-    repositories = (("MHPlatform", "1.18.0"), ("MHUI", "2.4.0"), ("SwiftLintPlugins", "0.65.1"))
+    repositories = (("MHPlatform", "1.20.0"), ("MHUI", "2.4.0"), ("SwiftLintPlugins", "0.65.1"))
     if not legacy:
         packages = [{"kind": "remote", "repository": f"https://github.com/{'SimplyDanny' if name == 'SwiftLintPlugins' else 'muhiro12'}/{name}",
                      "version": {"up-to-next-major-version": version}} for name, version in repositories]
