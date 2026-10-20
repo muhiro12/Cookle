@@ -1,6 +1,7 @@
 # Cookle Data Flow Inventory
 
 Source review updated September 26, 2026.
+Recipe-generation and remote-configuration sections reviewed October 20, 2026.
 
 ## Purpose
 
@@ -61,8 +62,8 @@ network call on this path. `[source confirmed]` —
 and `LanguageModelSession`. The app passes recipe text to Apple's system model
 on device. Apple's
 [SystemLanguageModel documentation](https://developer.apple.com/documentation/foundationmodels/systemlanguagemodel)
-defines this type as the on-device model. Cookle does not select a
-`PrivateCloudComputeLanguageModel`. `[source confirmed]` —
+defines this type as the on-device model. This source-extraction path does not
+select a `PrivateCloudComputeLanguageModel`. `[source confirmed]` —
 `Cookle/Sources/Features/Recipe/Services/RecipeFoundationModelInferenceOperations.swift`.
 
 - **Recipient**: Apple's system model.
@@ -70,6 +71,31 @@ defines this type as the on-device model. Cookle does not select a
 
 The deterministic fallback path used when the model is unavailable performs no
 network access. `[source confirmed]`
+
+### Creative recipe generation
+
+`RecipeModelGenerationOperations` sends the entered cooking request and app
+instructions to `SystemLanguageModel` in device and distribution builds.
+It does not read the saved recipe collection. The result enters the ordinary
+editable form without saving; Create or Update persists it only after review.
+`[source confirmed]` —
+`Cookle/Sources/Features/Recipe/Services/RecipeModelGenerationOperations.swift`
+and `Cookle/Sources/Features/Recipe/Views/InferRecipeFormView.swift`.
+
+Debug iOS Simulator builds on iOS 27+ can additionally select
+`PrivateCloudComputeLanguageModel` through Automatic processing. In that
+configuration, the cooking request can leave the Simulator for Apple's PCC
+service. On-Device Only never makes a cloud request. Unavailable cloud service
+or a recoverable quota, network, or service failure permits one on-device
+attempt; cancellation does not start fallback. The form displays the processing
+method and any fallback reason. `[source confirmed]` — the same app adapter and
+`CookleLibrary/Sources/Recipe/RecipeGenerationOperations.swift`.
+
+- **Recipient**: Apple's on-device model; Apple's PCC service only in the
+  described Debug Simulator configuration when Automatic uses cloud processing.
+- **Retention**: generated content remains an unsaved form draft until saved.
+- **Leaves device**: no request leaves through device/distribution generation;
+  Debug Simulator Automatic processing can send the cooking request to PCC.
 
 ### Image Playground
 
