@@ -147,6 +147,15 @@ public extension MHPreferenceDescriptors {
         )
     }
 
+    /// Keeps creative recipe requests on this device when enabled.
+    var isRecipeGenerationOnDeviceOnly: MHBoolPreferenceDescriptor {
+        .init(
+            storageKey: CookleUserDefaultsKeys.Standard.isRecipeGenerationOnDeviceOnly.rawValue,
+            defaultSelection: .standard,
+            default: false
+        )
+    }
+
     /// Pending deep link handoff shared across app targets.
     var pendingIntentDeepLinkURL: MHStringPreferenceDescriptor {
         .init(

@@ -7,6 +7,14 @@ extension RecipeFormView {
     @ViewBuilder var formSections: some View {
         @Bindable var bindableModel = formModel
 
+        if let status = bindableModel.generationStatus {
+            Section {
+                RecipeGenerationStatusView(status: status, isCompleted: true)
+            } header: {
+                Text("AI-Generated Draft")
+            }
+        }
+
         if currentEditMode != .active {
             RecipeFormNameSection(
                 $bindableModel.name,

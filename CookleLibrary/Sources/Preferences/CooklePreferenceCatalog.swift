@@ -24,6 +24,7 @@ public enum CooklePreferenceCatalog {
             descriptors.recentRecipeCatalog,
             descriptors.detachedObjectCleanupCompleted,
             descriptors.recipeBrowseSortSelection,
+            descriptors.isRecipeGenerationOnDeviceOnly,
             descriptors.pendingIntentDeepLinkURL
         ]
     }

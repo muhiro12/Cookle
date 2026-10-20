@@ -5,6 +5,25 @@ import Testing
 
 @Suite(.serialized)
 struct CooklePreferencesTests {
+    @Test
+    func recipeGenerationChoiceDefaultsToAutomaticAndKeepsLocalOnlySelection() {
+        let descriptor = MHPreferenceDescriptors().isRecipeGenerationOnDeviceOnly
+        let defaults = UserDefaults.standard
+        let originalValue = defaults.object(forKey: descriptor.storageKey)
+        defer {
+            if let originalValue {
+                defaults.set(originalValue, forKey: descriptor.storageKey)
+            } else {
+                defaults.removeObject(forKey: descriptor.storageKey)
+            }
+        }
+        defaults.removeObject(forKey: descriptor.storageKey)
+        #expect(!CooklePreferences.bool(for: \.isRecipeGenerationOnDeviceOnly))
+        CooklePreferences.set(true, for: \.isRecipeGenerationOnDeviceOnly)
+        #expect(CooklePreferences.bool(for: \.isRecipeGenerationOnDeviceOnly))
+        #expect(defaults.bool(forKey: descriptor.storageKey))
+    }
+
     @Test("Stores and retrieves boolean preferences")
     func boolRoundTrip() {
         let descriptor = MHPreferenceDescriptors().isDebugOn

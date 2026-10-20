@@ -21,7 +21,8 @@ extension RecipeFormModel {
     /// replaced input for one undo. Nothing is saved until the form is saved.
     func applyInference(
         _ inference: RecipeInferenceResult,
-        sourceURL: URL?
+        sourceURL: URL?,
+        generationStatus: RecipeGenerationStatus? = nil
     ) {
         let application = RecipeFormOperations.applyInference(
             inference,
@@ -32,6 +33,8 @@ extension RecipeFormModel {
             with: application.appliedInput
         )
         inferenceApplication = application
+        generationStatusBeforeInference = self.generationStatus
+        self.generationStatus = generationStatus
     }
 
     /// Restores the whole form, including photos, to its state immediately
@@ -45,6 +48,8 @@ extension RecipeFormModel {
             with: inferenceApplication.previousInput
         )
         self.inferenceApplication = nil
+        generationStatus = generationStatusBeforeInference
+        generationStatusBeforeInference = nil
     }
 }
 

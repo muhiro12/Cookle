@@ -56,6 +56,9 @@ final class RecipeFormModel: Identifiable {
     var draftSource: RecipeDraftSource?
     /// The latest inferred recipe applied to this form, kept for one undo.
     var inferenceApplication: RecipeInferenceApplication?
+    /// Processing information belongs to this editing session, not the saved recipe.
+    var generationStatus: RecipeGenerationStatus?
+    var generationStatusBeforeInference: RecipeGenerationStatus?
     var errorMessage: String?
     var isInferRecipeFromTextTipEligible = false
     var isImagePlaygroundTipEligible = false
@@ -304,6 +307,8 @@ extension RecipeFormModel {
             )
             note = snapshot.note
         }
+        generationStatus = nil
+        generationStatusBeforeInference = nil
         refreshSnapshotAvailability()
     }
 }

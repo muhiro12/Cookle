@@ -1,19 +1,17 @@
 import AppIntents
 import CookleLibrary
+import MHPlatform
 import MHUI
 import SwiftUI
 
 @available(iOS 26.0, *)
 struct InferRecipeFormView: View {
-    private enum Layout {
-        static let loadingOverlayOpacity = 0.2
-    }
-
     /// An inference that finished after the form input changed, waiting for a
     /// new review before it may replace that input.
     private struct PendingInference {
         let inference: RecipeInferenceResult
         let sourceURL: URL?
+        let generationStatus: RecipeGenerationStatus?
     }
 
     private let model: RecipeFormModel
@@ -26,6 +24,9 @@ struct InferRecipeFormView: View {
     @Environment(\.mhDesignMetrics)
     private var designMetrics
 
+    @AppStorage(\.isRecipeGenerationOnDeviceOnly)
+    private var isRecipeGenerationOnDeviceOnly
+
     @State private var hasOpenedSource = false
     @State private var text = ""
     @State private var sourceURL: URL?
@@ -36,6 +37,7 @@ struct InferRecipeFormView: View {
     @State private var isPhotoRecognitionFailure = false
     @State private var isReplacementReviewPresented = false
     @State private var pendingInference: PendingInference?
+    @State private var generationStatus: RecipeGenerationStatus?
     @FocusState private var isTextFocused: Bool
 
     // A literal, not `LocalizedStringKey.init(_:)`, so the string catalog
@@ -57,18 +59,11 @@ struct InferRecipeFormView: View {
                 )
                 .font(.callout)
                 .foregroundStyle(.secondary)
-                #if DEBUG && targetEnvironment(simulator)
-                if #available(iOS 27.0, *) {
-                    Text(
-                        """
-                        When available, Apple's Private Cloud Compute processes your request. \
-                        Otherwise, Cookle uses the on-device model.
-                        """
-                    )
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                }
-                #endif
+                RecipeGenerationControlsView(
+                    onDeviceOnly: $isRecipeGenerationOnDeviceOnly,
+                    status: generationStatus,
+                    isLoading: isLoading
+                )
             }
             requestEditor
         }
@@ -79,13 +74,21 @@ struct InferRecipeFormView: View {
         }
         .font(nil)
         .overlay {
-            loadingOverlay
+            if isLoading {
+                RecipeGenerationProgressView(status: source == .generation ? generationStatus : nil)
+            }
         }
         .task {
             await openSourceIfNeeded()
         }
         .onDisappear {
             operationTask?.cancel()
+        }
+        .onChange(of: isRecipeGenerationOnDeviceOnly) {
+            guard !isLoading else {
+                return
+            }
+            generationStatus = nil
         }
         .alert(
             isPhotoRecognitionFailure ? Text("Cannot Read Photo") : errorTitle,
@@ -148,15 +151,9 @@ struct InferRecipeFormView: View {
                 Text("Create Draft")
             }
             .disabled(isLoading || text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-        }
-    }
-
-    @ViewBuilder var loadingOverlay: some View {
-        if isLoading {
-            ZStack {
-                Color.black.opacity(Layout.loadingOverlayOpacity).ignoresSafeArea()
-                ProgressView()
-            }
+            .disabled(source == .generation && !RecipeModelGenerationOperations.canGenerate(
+                onDeviceOnly: isRecipeGenerationOnDeviceOnly
+            ))
         }
     }
 
@@ -293,7 +290,8 @@ private extension InferRecipeFormView {
         self.pendingInference = nil
         model.applyInference(
             pendingInference.inference,
-            sourceURL: pendingInference.sourceURL
+            sourceURL: pendingInference.sourceURL,
+            generationStatus: pendingInference.generationStatus
         )
         dismiss()
     }
@@ -303,10 +301,13 @@ private extension InferRecipeFormView {
             return
         }
         let reviewedInput = model.changeSnapshot
+        let onDeviceOnly = isRecipeGenerationOnDeviceOnly
+        generationStatus = nil
         isLoading = true
         operationTask = Task { @MainActor in
             await applyInference(
-                reviewedInput: reviewedInput
+                reviewedInput: reviewedInput,
+                onDeviceOnly: onDeviceOnly
             )
         }
     }
@@ -317,7 +318,8 @@ private extension InferRecipeFormView {
     /// longer covers it; the result waits for a new review instead.
     @MainActor
     func applyInference(
-        reviewedInput: RecipeFormChangeSnapshot
+        reviewedInput: RecipeFormChangeSnapshot,
+        onDeviceOnly: Bool
     ) async {
         defer {
             isLoading = false
@@ -326,7 +328,15 @@ private extension InferRecipeFormView {
         do {
             var inference: RecipeInferenceResult
             if source == .generation {
-                inference = try await RecipeModelGenerationOperations.generate(request: text)
+                inference = try await RecipeModelGenerationOperations.generate(
+                    request: text,
+                    onDeviceOnly: onDeviceOnly
+                ) { status in
+                    guard !Task.isCancelled else {
+                        return
+                    }
+                    generationStatus = status
+                }
             } else {
                 inference = try await RecipeFoundationModelInferenceOperations.infer(text: text)
             }
@@ -338,7 +348,8 @@ private extension InferRecipeFormView {
                     || model.inferenceReplacesEnteredValues == false else {
                 pendingInference = .init(
                     inference: inference,
-                    sourceURL: sourceURL
+                    sourceURL: sourceURL,
+                    generationStatus: generationStatus
                 )
                 isReplacementReviewPresented = true
                 return
@@ -346,7 +357,8 @@ private extension InferRecipeFormView {
 
             model.applyInference(
                 inference,
-                sourceURL: sourceURL
+                sourceURL: sourceURL,
+                generationStatus: generationStatus
             )
             dismiss()
         } catch {

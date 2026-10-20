@@ -32,6 +32,9 @@ repository contains the full iOS project together with its shared Swift package.
   text/photo/website import remain available when generation is unavailable.
   Debug iOS Simulator builds additionally evaluate Private Cloud Compute on
   iOS 27+, with on-device fallback for unavailable or failed cloud services.
+  The request screen remembers an optional on-device-only choice, shows the
+  processing method and fallback reason, and carries that information into the
+  unsaved recipe form. It is not stored as recipe data.
   PCC activation for devices and distribution is a separate future step.
 - Google Mobile Ads monetization and StoreKit-based subscriptions configured
   through MHPlatform runtime defaults.
