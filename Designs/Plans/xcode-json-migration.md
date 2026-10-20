@@ -2,18 +2,19 @@
 
 ## Scope and compatibility
 
-Issue [#154](https://github.com/muhiro12/Cookle/issues/154) changes only the
-configuration file inside `Cookle.xcodeproj` from `project.pbxproj` to
-`project.xcproj`. The bundle path, shared schemes, package resolutions, app
-version, deployment targets, signing settings, entitlements, source code,
-resources, and persisted data remain unchanged.
+The original [#154](https://github.com/muhiro12/Cookle/issues/154) migration
+changed the configuration file inside `Cookle.xcodeproj` from `project.pbxproj`
+to `project.xcproj`. It preserved the bundle path, shared schemes, package
+resolutions, app version, deployment targets, signing settings, entitlements,
+source code, resources, and persisted data. Later feature changes have their
+own scope.
 
 The minimum project reader is Xcode 27. Apple provides format conversion in
 Xcode 27.2 and later; ordinary development does not require 27.2. The owner
 confirmed that the existing Xcode Cloud environment already uses Xcode 27.
-That confirmation does not establish a Cloud build of the converted candidate.
-This change neither upgrades the deployment targets nor makes JSON conversion
-a prerequisite for separate Duo qualification.
+The later Cloud checkpoint below records the converted candidate's actual
+result separately. This migration neither upgrades the deployment targets nor
+makes JSON conversion a prerequisite for separate Duo qualification.
 
 References:
 
@@ -145,6 +146,64 @@ the JSON stored in source commit `598ccf9a`; no publication receipt is created.
 The earlier app build and 565-test execution remain earlier evidence, rather
 than a new build/test run or authorization to publish the follow-up.
 
+## Xcode Cloud checkpoint on 2026-10-19
+
+For published commit `c8aaf1858f600ac1a6e3187a370638a83a0fd155`, GitHub's
+Xcode Cloud app reported success for both [Test - iOS][cloud-test] and
+[Archive - iOS][cloud-archive]. Both reports contain zero errors, test
+failures, analysis issues, and warnings, with zero annotations. The overall
+`Cookle | Workflow` commit status also completed successfully.
+
+This checkpoint covers that exact candidate. GitHub's report does not identify
+the Xcode build, so it does not independently establish use of `27B48`.
+Subsequent source changes need their own candidate verification.
+
+## Xcode 27.2 RC review on 2026-10-20
+
+The selected local toolchain is Xcode 27.2 RC (`27B48`). Apple's
+[RC release notes][rc-notes] retain the JSON project format, and the
+[conversion guide][conversion] identifies it as the default for new projects.
+Xcode 27 remains the documented reader minimum.
+
+The review uses clean source commit `d5a07587a3296720d9e8406535ce8ce0ba7b0741`,
+including its later package and Debug Simulator configuration changes.
+The RC's bundled `xcprojformatter` parses and serializes the current project
+to exactly the same bytes. The configuration is already in Xcode's canonical
+format; its target membership, ordered Frameworks inputs, package ownership,
+and conditional settings require no rewrite.
+
+The current settings already select Swift 6, Approachable Concurrency,
+MainActor default isolation, and String Catalog support. Deployment targets
+remain iOS 18 and watchOS 11. Release device settings resolve the ordinary
+`Cookle.entitlements`, keeping Simulator-only validation entitlements scoped
+to their existing Debug configuration. The RC's listed SDK issues involving
+27.1 deployment targets and Mac Catalyst do not affect these target settings.
+
+The optional `last-upgrade` and `last-swift-update` fields map to Apple's
+[upgrade-check metadata][project-metadata]. Their retained `26.3` values are
+check history, so this review preserves them. No native recommended-settings
+update or Swift migration was applied.
+
+Verification completed:
+
+- Native integration discovers all four shared schemes and reads app settings.
+- The official RC CLI builds Cookle, Widgets, and Watch for the generic iOS
+  Simulator destination. Complete output and native result exports contain
+  zero errors, warnings, or analyzer warnings.
+- Repository rules, SwiftLint, and all 28 tooling tests pass with zero captured
+  errors or warnings.
+- The Release device settings identify Xcode build `27B48`, deployment
+  target 18.0, and the ordinary app entitlements.
+
+The headless Xcode integration's build failed to load package products,
+including the local library. The official CLI loaded the pinned package graph
+and built the same configuration successfully. Keep that integration failure
+separate from the successful CLI evidence; no product-link workaround was
+applied to the project.
+
+This RC review changes documentation only. It does not rerun the complete
+library test plan, create an archive, or establish a new candidate Cloud result.
+
 ## Rollback
 
 The format replacement is committed separately from the compatible checker
@@ -160,3 +219,7 @@ only; it is not an application-data or binary downgrade procedure.
 
 [conversion]: https://developer.apple.com/documentation/xcode/updating-your-xcode-project-configuration-file-format
 [schema]: https://github.com/apple/xcode-project-format
+[rc-notes]: https://developer.apple.com/documentation/xcode-release-notes/xcode-27_2-release-notes
+[project-metadata]: https://github.com/apple/xcode-project-format/blob/main/Sources/Library/Schema/Project.swift
+[cloud-test]: https://github.com/muhiro12/Cookle/runs/118025129903
+[cloud-archive]: https://github.com/muhiro12/Cookle/runs/118029605944

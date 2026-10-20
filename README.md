@@ -297,7 +297,9 @@ Universal Links require Apple App Site Association (AASA) deployment for
 3. Build and run on an iOS 18 simulator or device.
 
 The bundle stores its configuration in `project.xcproj`. Xcode 27.2 or later is
-needed only to convert formats. See the
+needed to convert formats. The current project has also been checked with
+Xcode 27.2 RC (`27B48`), including its native canonical formatter and a consumer
+build. The project-format reader minimum remains Xcode 27. See the
 [migration and rollback record](Designs/Plans/xcode-json-migration.md) for
 compatibility, tooling changes, and qualification limits.
 
