@@ -95,12 +95,15 @@ available while the same reader and data store are reused.
 
 ### Remote configuration and version lookup
 
-Two unauthenticated GET requests, neither carrying user content:
+Unauthenticated GET requests, neither carrying user content:
 
-- `https://raw.githubusercontent.com/muhiro12/Cookle/main/.config.json`
+- `https://raw.githubusercontent.com/muhiro12/MHAppConfig/main/cookle/app.json`
 - `https://itunes.apple.com/lookup?id=6483363226&country=jp`
 
-`[source confirmed]` — `Cookle/Sources/Features/RemoteConfiguration/`.
+The package performs the publication lookup when the retained schedule needs
+confirmation, including future requirements. Cached reads do not issue requests.
+`[source confirmed]` — `Cookle/Sources/Platform/CookleRemoteUpdateConfiguration.swift`
+and `Cookle/Sources/Features/RemoteConfiguration/`.
 
 - **Recipient**: GitHub and Apple, which observe the device IP address.
 - **Leaves device**: the request; no app data.

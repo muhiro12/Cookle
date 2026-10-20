@@ -39,7 +39,8 @@ enum CookleAppAssemblyFactory {
         return makeAssembly(
             modelContainer: modelContainer,
             nativeAdUnitID: CookleMonetizationConfiguration.nativeAdUnitIDDev,
-            logging: .preview()
+            logging: .preview(),
+            isolatesCookingSession: true
         )
     }
 
@@ -90,7 +91,8 @@ private extension CookleAppAssemblyFactory {
             modelContainer: modelContainer,
             navigationModel: navigationModel,
             logging: logging,
-            recordsNotificationUsage: recordsNotificationUsage
+            recordsNotificationUsage: recordsNotificationUsage,
+            isolatesRemoteUpdates: isolatesCookingSession
         )
         let bootstrap = makeBootstrap(
             configuration: makeRuntimeConfiguration(nativeAdUnitID: nativeAdUnitID, adsConsent: adsConsent),
@@ -98,6 +100,8 @@ private extension CookleAppAssemblyFactory {
             notificationService: services.notificationService,
             routePipeline: services.routePipeline
         )
+        let notificationService = services.notificationService
+        let updates = services.remoteConfigurationService.updates
         return .init(
             modelContainer: modelContainer,
             navigationModel: navigationModel,
@@ -115,18 +119,15 @@ private extension CookleAppAssemblyFactory {
             cookingTimerDeliveryService: .init(cookingSessionStore: cookingSessionStore, isEnabled: deliversTimers),
             recipeSpotlightIndexer: .init(modelContainer: modelContainer, isEnabled: indexesRecipesInSpotlight),
             recipeActionService: makeRecipeActionService(
-                notificationService: services.notificationService,
+                notificationService: notificationService,
+                updates: updates,
                 logging: logging,
                 recordRecentRecipe: cookingSessionWatchSyncService.recordOpenedRecipe
             ),
-            photoActionService: makePhotoActionService(
-                notificationService: services.notificationService
-            ),
-            diaryActionService: DiaryActionService(notificationService: services.notificationService),
-            tagActionService: TagActionService(notificationService: services.notificationService),
-            settingsActionService: SettingsActionService(
-                notificationService: services.notificationService
-            ),
+            photoActionService: PhotoActionService(notificationService: notificationService, updates: updates),
+            diaryActionService: DiaryActionService(notificationService: notificationService, updates: updates),
+            tagActionService: TagActionService(notificationService: notificationService, updates: updates),
+            settingsActionService: SettingsActionService(notificationService: notificationService, updates: updates),
             bootstrap: bootstrap
         )
     }
@@ -151,11 +152,13 @@ private extension CookleAppAssemblyFactory {
 
     static func makeRecipeActionService(
         notificationService: NotificationService,
+        updates: RemoteUpdateOperations,
         logging: CookleAppLogging,
         recordRecentRecipe: @escaping @MainActor (Recipe) -> Void
     ) -> RecipeActionService {
         .init(
             notificationService: notificationService,
+            updates: updates,
             recordRecentRecipe: recordRecentRecipe,
             reviewFlow: makeReviewFlow(
                 logging: logging
@@ -164,14 +167,6 @@ private extension CookleAppAssemblyFactory {
                 category: "RecipeSave",
                 source: #fileID
             )
-        )
-    }
-
-    static func makePhotoActionService(
-        notificationService: NotificationService
-    ) -> PhotoActionService {
-        .init(
-            notificationService: notificationService
         )
     }
 
@@ -217,9 +212,17 @@ private extension CookleAppAssemblyFactory {
         modelContainer: ModelContainer,
         navigationModel: MainNavigationModel,
         logging: CookleAppLogging,
-        recordsNotificationUsage: Bool
+        recordsNotificationUsage: Bool,
+        isolatesRemoteUpdates: Bool
     ) -> CookleAppServices {
-        let remoteConfigurationService = RemoteConfigurationService()
+        let updateLogger = logging.logger(category: "RemoteUpdate", source: #fileID)
+        let remoteConfigurationService = RemoteConfigurationService(
+            updates: CookleRemoteUpdateConfiguration.makeOperations(
+                isIsolated: isolatesRemoteUpdates,
+                logger: updateLogger
+            ),
+            logger: updateLogger
+        )
         let routePipeline = MainRouteService.makeRoutePipeline(
             navigationModel: navigationModel,
             modelContext: modelContainer.mainContext,

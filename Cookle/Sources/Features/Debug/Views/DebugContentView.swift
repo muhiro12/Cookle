@@ -8,6 +8,9 @@ struct DebugContentView<Model: PersistentModel>: View {
     @Environment(NotificationService.self)
     private var notificationService
 
+    @Environment(RemoteConfigurationService.self)
+    private var remoteConfigurationService
+
     @Query private var models: [Model]
 
     @Binding private var detail: Model?
@@ -74,7 +77,8 @@ private extension DebugContentView {
                 try await DebugActionService.delete(
                     context: context,
                     models: selectedModels,
-                    notificationService: notificationService
+                    notificationService: notificationService,
+                    updates: remoteConfigurationService.updates
                 )
             } catch {
                 detailIDToRestore = previousDetailID

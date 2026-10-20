@@ -5,9 +5,11 @@ import SwiftData
 @MainActor
 @Observable
 final class PhotoActionService {
+    private let updates: RemoteUpdateOperations
     private let effectAdapter: MHMutationAdapter<MutationEffect>
 
-    init(notificationService: NotificationService) {
+    init(notificationService: NotificationService, updates: RemoteUpdateOperations) {
+        self.updates = updates
         self.effectAdapter = CookleMutationEffectAdapter.make(
             synchronizeNotifications: {
                 await notificationService.synchronizeScheduledSuggestions()
@@ -42,6 +44,7 @@ private extension PhotoActionService {
         try await CookleMutationWorkflow.run(
             name: name,
             context: context,
+            updates: updates,
             adapter: effectAdapter,
             operation: operation
         )

@@ -6,18 +6,21 @@ import SwiftData
 @MainActor
 @Observable
 final class RecipeActionService {
+    private let updates: RemoteUpdateOperations
     private let effectAdapter: MHMutationAdapter<MutationEffect>
     private let saveLogger: MHLogger
     private let recordRecentRecipe: @MainActor (Recipe) -> Void
 
     init(
         notificationService: NotificationService,
+        updates: RemoteUpdateOperations,
         recordRecentRecipe: @escaping @MainActor (Recipe) -> Void = { _ in
             // no-op
         },
         reviewFlow: MHReviewFlow,
         saveLogger: MHLogger
     ) {
+        self.updates = updates
         self.effectAdapter = CookleMutationEffectAdapter.make(
             synchronizeNotifications: {
                 await notificationService.synchronizeScheduledSuggestions()
@@ -222,6 +225,7 @@ private extension RecipeActionService {
             let outcome = try await CookleMutationWorkflow.run(
                 name: name,
                 context: context,
+                updates: updates,
                 adapter: effectAdapter
             ) {
                 let outcome = try operation()

@@ -334,13 +334,17 @@ Cookle uses adaptive tab navigation.
 - Native ads are shown in diary and recipe flows for non-subscribers.
 - Premium users do not see those ad sections. Placements also omit the section
   when the shared runtime reports that ads are unavailable.
-- The app fetches remote configuration from GitHub and can require an update
-  only during a positive activation window no longer than 72 hours.
-- Update enforcement also requires an App Store lookup that matches Cookle's
-  configured app identifier and current bundle identifier, and the requested
-  minimum version cannot exceed the confirmed public version.
-- Playgrounds builds, malformed or expired policies, version mismatches,
-  network failures, and App Store lookup failures leave the main app available.
+- The app reads Cookle's shared configuration from MHAppConfig. Its initial
+  revision has no active or scheduled update requirement. MHPlatform retains
+  immutable policy revisions and confirms publication in the Japanese storefront.
+- A confirmed required update blocks user-data writes through the same Operations
+  used by the app and shortcuts. Its notice can be dismissed for reading and
+  backup export. Missing or expired evidence permits offline editing, while
+  failed refreshes preserve still-valid confirmed restrictions.
+- Requirements can be scheduled with `effectiveAt` and optional `endsAt`.
+  Standard cached policy and publication evidence last 30 days and 24 hours;
+  local reads do not renew either. Legacy `.config.json` remains for older clients.
+- Previews, capture assemblies, and Playgrounds do not enforce remote updates.
 - A shared runtime lifecycle plan refreshes remote configuration, notification
   schedules, and pending routes during initial load and foreground transitions.
 

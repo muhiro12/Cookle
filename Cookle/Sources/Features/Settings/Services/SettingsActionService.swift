@@ -5,9 +5,11 @@ import Observation
 @MainActor
 @Observable
 final class SettingsActionService {
+    private let updates: RemoteUpdateOperations
     private let notificationService: NotificationService
 
-    init(notificationService: NotificationService) {
+    init(notificationService: NotificationService, updates: RemoteUpdateOperations) {
+        self.updates = updates
         self.notificationService = notificationService
     }
 
@@ -89,22 +91,23 @@ final class SettingsActionService {
         selections: CookleDataImportSelections,
         modelContainer: ModelContainer
     ) async throws -> CookleDataImportSummary {
-        try CookleMutationWorkflow.requireCleanContext(modelContainer.mainContext)
-        let summary: CookleDataImportSummary
-        do {
-            summary = try DataMaintenanceOperations.importArchive(
-                archive,
-                review: review,
-                selections: selections,
-                context: modelContainer.mainContext
-            )
-        } catch let error as CookleDataImportError {
-            if case .duplicateCurrentDiaryDays = error {
-                throw SettingsActionError.duplicateDiaryDaysBeforeImport
+        let summary = try await CookleMutationWorkflow.performMutation(updates: updates) {
+            try CookleMutationWorkflow.requireCleanContext(modelContainer.mainContext)
+            do {
+                return try DataMaintenanceOperations.importArchive(
+                    archive,
+                    review: review,
+                    selections: selections,
+                    context: modelContainer.mainContext
+                )
+            } catch let error as CookleDataImportError {
+                if case .duplicateCurrentDiaryDays = error {
+                    throw SettingsActionError.duplicateDiaryDaysBeforeImport
+                }
+                throw error
+            } catch {
+                throw SettingsActionError.importFailed
             }
-            throw error
-        } catch {
-            throw SettingsActionError.importFailed
         }
 
         await reloadAfterImport()
@@ -129,18 +132,19 @@ final class SettingsActionService {
         review: CookleDataReplacementReview,
         modelContainer: ModelContainer
     ) async throws -> CookleDataReplacementSummary {
-        try CookleMutationWorkflow.requireCleanContext(modelContainer.mainContext)
-        let summary: CookleDataReplacementSummary
-        do {
-            summary = try DataMaintenanceOperations.replaceAllData(
-                with: archive,
-                review: review,
-                context: modelContainer.mainContext
-            )
-        } catch CookleDataImportError.replacementReviewChanged {
-            throw CookleDataImportError.replacementReviewChanged
-        } catch {
-            throw SettingsActionError.importFailed
+        let summary = try await CookleMutationWorkflow.performMutation(updates: updates) {
+            try CookleMutationWorkflow.requireCleanContext(modelContainer.mainContext)
+            do {
+                return try DataMaintenanceOperations.replaceAllData(
+                    with: archive,
+                    review: review,
+                    context: modelContainer.mainContext
+                )
+            } catch CookleDataImportError.replacementReviewChanged {
+                throw CookleDataImportError.replacementReviewChanged
+            } catch {
+                throw SettingsActionError.importFailed
+            }
         }
 
         await reloadAfterImport()
@@ -148,17 +152,19 @@ final class SettingsActionService {
     }
 
     func deleteAllData(modelContainer: ModelContainer) async throws {
-        let context = modelContainer.mainContext
-        try CookleMutationWorkflow.requireCleanContext(context)
-        let mutationOutcome: MutationOutcome<Void>
-        do {
-            mutationOutcome = try DataMaintenanceOperations.deleteAllWithOutcome(
-                context: context
-            )
-            try context.save()
-        } catch {
-            context.rollback()
-            throw error
+        let mutationOutcome = try await CookleMutationWorkflow.performMutation(updates: updates) {
+            let context = modelContainer.mainContext
+            try CookleMutationWorkflow.requireCleanContext(context)
+            do {
+                let mutationOutcome = try DataMaintenanceOperations.deleteAllWithOutcome(
+                    context: context
+                )
+                try context.save()
+                return mutationOutcome
+            } catch {
+                context.rollback()
+                throw error
+            }
         }
 
         if mutationOutcome.effects.contains(.diaryDataChanged) {

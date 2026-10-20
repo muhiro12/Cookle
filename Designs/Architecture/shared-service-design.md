@@ -114,10 +114,17 @@ and supporting contracts:
 - `TagOperations`
 - `PhotoOperations`
 - `DataMaintenanceOperations`
+- `RemoteUpdateOperations`
 
 Delivery-surface call sites should consume Operations APIs and keep
 platform-only side effects in the app target. Existing `*Service` types remain
 as implementation collaborators rather than public delivery-surface APIs.
+
+`RemoteUpdateOperations` shares MHPlatform's controller between update
+presentation and all app/shortcut mutation adapters. It checks retained evidence
+immediately before synchronous writes, permitting unavailable evidence for
+Cookle's offline workflow. Endpoint, storefront, logging, and presentation
+remain app-owned. Reading and archive export do not require mutation permission.
 
 ## Placement Rules
 

@@ -11,6 +11,8 @@ struct MainView: View {
     @Environment(CookleAppLogging.self)
     private var logging
 
+    @State private var dismissedUpdateRevision: Int?
+
     var body: some View {
         @Bindable var navigationModel = navigationModel
 
@@ -43,8 +45,11 @@ struct MainView: View {
             } label: {
                 Text("Open App Store")
             }
+            Button("Cancel", role: .cancel) {
+                dismissedUpdateRevision = remoteConfigurationService.updates.evaluation?.revision
+            }
         } message: {
-            Text("Please update Cookle to the latest version to continue using it.")
+            Text("Update Cookle to continue making changes. You can still view and export your data.")
         }
         .onAppear {
             handleRouteParseFailureIfNeeded()
@@ -61,9 +66,12 @@ private extension MainView {
         .init(
             get: {
                 remoteConfigurationService.isUpdateRequired
+                    && remoteConfigurationService.updates.evaluation?.revision != dismissedUpdateRevision
             },
-            set: { _ in
-                // Update-required presentation is controlled by remote configuration.
+            set: { isPresented in
+                if isPresented == false {
+                    dismissedUpdateRevision = remoteConfigurationService.updates.evaluation?.revision
+                }
             }
         )
     }

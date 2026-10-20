@@ -10192,40 +10192,6 @@
         }
       }
     },
-    "Please update Cookle to the latest version to continue using it." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please update Cookle to the latest version to continue using it."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Para continuar, actualiza Cookle a la última versión."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pour continuer, veuillez mettre à jour Cookle vers la dernière version."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "続行するには最新バージョンのCookleにアップデートしてください。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "要继续使用，请将 Cookle 更新到最新版本。"
-          }
-        }
-      }
-    },
     "Prefers Apple's Private Cloud Compute, with on-device fallback when unavailable." : {
       "localizations" : {
         "en" : {
@@ -15945,6 +15911,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "请更新此 iPhone 上的 Cookle 以同步烹饪。"
+          }
+        }
+      }
+    },
+    "Update Cookle to continue making changes. You can still view and export your data." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update Cookle to continue making changes. You can still view and export your data."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualiza Cookle para seguir realizando cambios. Puedes seguir consultando y exportando tus datos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mettez Cookle à jour pour continuer à apporter des modifications. Vous pouvez toujours consulter et exporter vos données."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "データを変更するにはCookleをアップデートしてください。閲覧と書き出しは引き続き利用できます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请更新 Cookle 以继续修改数据。你仍可查看和导出数据。"
           }
         }
       }

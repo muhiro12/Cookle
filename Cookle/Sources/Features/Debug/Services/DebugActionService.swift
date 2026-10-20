@@ -6,7 +6,8 @@ enum DebugActionService {
     static func delete<Model: PersistentModel>(
         context: ModelContext,
         models: [Model],
-        notificationService: NotificationService
+        notificationService: NotificationService,
+        updates: RemoteUpdateOperations
     ) async throws {
         let adapter = CookleMutationEffectAdapter.make(
             synchronizeNotifications: {
@@ -17,6 +18,7 @@ enum DebugActionService {
         _ = try await CookleMutationWorkflow.run(
             name: "deleteDiagnosticRecords",
             context: context,
+            updates: updates,
             adapter: adapter
         ) {
             var effects = MutationEffect()

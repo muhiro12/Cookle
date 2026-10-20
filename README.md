@@ -261,17 +261,26 @@ Universal Links require Apple App Site Association (AASA) deployment for
   preserves the user's iCloud choice, and inactive state disables iCloud sync.
 - Settings surfaces the subscription paywall, iCloud toggle, and bulk delete
   controls while guarding destructive actions behind confirmation dialogs.
-- Remote configuration is loaded from GitHub to determine whether the current
-  build must force an update before the main UI is shown.
-  Cookle retains its existing `forceUpdate` format and inclusive activation
-  window of at most 72 hours. MHPlatform validates numeric versions and the
-  activation interval, confirms the app's identity and published version in the
-  Japanese storefront, and evaluates the requirement again after lookup.
-  Only `updateRequired` presents the alert; unavailable evidence and request
-  failures keep the app usable. Cancelled or superseded refreshes cannot apply
-  an obsolete update decision.
-  Scheduled-policy adoption through MHAppConfig is pending Cookle's configuration
-  document and operation-policy decisions. The legacy endpoint remains in use.
+- Cookle reads its shared configuration from
+  [MHAppConfig](https://raw.githubusercontent.com/muhiro12/MHAppConfig/main/cookle/app.json).
+  The initial revision has no minimum version or scheduled requirement.
+  MHPlatform owns decoding, immutable revisions, retained evidence, and
+  identity-validated publication checks in the Japanese storefront. Startup and
+  foreground transitions restore and refresh the same controller used by the
+  app and shortcuts. The first headless mutation also restores cached evidence.
+- A confirmed required update blocks user-data mutations, including imports,
+  replacement, and deletion. The update notice can be dismissed to keep reading
+  and exporting. Missing, expired, or unavailable evidence allows offline editing;
+  a failed refresh does not erase a still-valid confirmed requirement.
+  Preview and capture assemblies do not fetch or enforce remote configuration.
+- Scheduled requirements use `effectiveAt` and optional `endsAt`, with the
+  strictest active minimum taking effect. A higher revision with explicit
+  `requirement: null` and `scheduledRequirements: []` cancels all requirements.
+  Standard retained policy and publication evidence expire after 30 days and
+  24 hours respectively; successful validated requests renew them, local reads
+  do not. These are evidence lifetimes, not a deadline for publishing new config.
+  The legacy `.config.json` and 72-hour helper remain for older readers; the new
+  endpoint does not impose that legacy activation-window limit.
 - Root lifecycle tasks refresh remote configuration, notification schedules,
   and pending routes during launch and foreground re-entry. Subscription changes
   update local preferences as soon as the runtime publishes a resolved state.

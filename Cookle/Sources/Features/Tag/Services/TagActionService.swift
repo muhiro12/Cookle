@@ -5,9 +5,11 @@ import SwiftData
 @MainActor
 @Observable
 final class TagActionService {
+    private let updates: RemoteUpdateOperations
     private let effectAdapter: MHMutationAdapter<MutationEffect>
 
-    init(notificationService: NotificationService) {
+    init(notificationService: NotificationService, updates: RemoteUpdateOperations) {
+        self.updates = updates
         let synchronizeNotifications: CookleMutationEffectAdapter.NotificationSynchronizer = {
             await notificationService.synchronizeScheduledSuggestions()
         }
@@ -195,6 +197,7 @@ private extension TagActionService {
         try await CookleMutationWorkflow.run(
             name: name,
             context: context,
+            updates: updates,
             adapter: effectAdapter,
             operation: operation
         )
