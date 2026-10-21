@@ -24,13 +24,22 @@ each, so the first change to any of them had no defined upgrade path.
 
 The feature is **data export and import**. Settings offers "Export Data" and
 "Import Data" as its only entry points. The file type is
-`com.muhiro12.cookle.data` with the `.cookle` extension, displayed as
+`com.muhiro12.Cookle.data` with the `.cookle` extension, displayed as
 "Cookle Data". Its layout is specified in
 [the export format overview](../Overviews/cookle-data-export-format.md).
 
 The 3.9 `.cooklebackup` format and the never-exposed single-file JSON form are
 intentionally unsupported. The 3.9 feature was public for a short time, and a
 clean format was preferred over carrying that reader.
+
+The October 22, 2026 amendment aligns the product component with the existing
+`com.muhiro12.Cookle` namespace. The former `com.muhiro12.cookle.data`
+identifier from 4.0 and 4.1 is intentionally unsupported, with no reader alias
+or fallback. This spelling correction was chosen during the feature's early
+rollout rather than carrying a second identifier. Exports must be created and
+read by builds using the same identifier. The package layout and record schema
+are unchanged, so neither version number changes, and the on-device store is
+unaffected. The schema-reader policy below applies within the corrected format.
 
 ### Versions
 

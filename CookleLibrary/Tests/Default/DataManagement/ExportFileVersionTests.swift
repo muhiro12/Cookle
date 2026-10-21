@@ -24,7 +24,7 @@ struct ExportFileVersionTests {
     func a_package_declares_its_format_schema_and_complete_scope() throws {
         let manifest = try Support.manifest(from: Support.package())
 
-        #expect(manifest.format == "com.muhiro12.cookle.data")
+        #expect(manifest.format == "com.muhiro12.Cookle.data")
         #expect(manifest.formatVersion == Value.formatVersion)
         #expect(manifest.schemaVersion == "1.0.0")
         #expect(manifest.contents.scope == "all")

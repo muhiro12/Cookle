@@ -14,6 +14,7 @@ struct RejectedImportPreservationTests {
         case manifestNotJSON
         case truncatedManifest
         case otherFormat
+        case previousFormatIdentifier
         case newerSchema
         case duplicateIdentifier
         case duplicateDiaryDay
@@ -137,6 +138,13 @@ private extension RejectedImportPreservationTests {
             } else {
                 false
             }
+        case .previousFormatIdentifier:
+            if case .unsupportedFormat("com.muhiro12.cookle.data")
+                = error as? CookleDataArchivePackageError {
+                true
+            } else {
+                false
+            }
         case .newerSchema:
             error as? CookleDataArchiveVersionError
                 == .newerSchemaVersion(Value.newerSchemaVersion)
@@ -227,11 +235,13 @@ private extension RejectedImportPreservationTests {
             )
         case .oversizedManifest:
             return validPackage
-        case .otherFormat:
+        case .otherFormat, .previousFormatIdentifier:
             return try Support.package(
                 manifest: Support.replacingHeader(
                     Support.manifest(from: validPackage),
-                    format: "com.muhiro12.cookle.backup"
+                    format: input == .previousFormatIdentifier
+                        ? "com.muhiro12.cookle.data"
+                        : "com.muhiro12.cookle.backup"
                 ),
                 photoFiles: validPackage.photoFiles
             )

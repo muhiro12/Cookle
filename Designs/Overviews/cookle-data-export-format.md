@@ -1,6 +1,6 @@
 # Cookle Data Export Format
 
-Format version 1, schema version `1.0.0`. Source review September 29, 2026.
+Format version 1, schema version `1.0.0`. Source review October 22, 2026.
 
 This note specifies the file that Settings → Export Data writes and Import Data
 reads. [ADR 0012](../Decisions/0012-version-data-exports-with-the-swiftdata-schema.md)
@@ -9,7 +9,7 @@ records why the format is versioned this way.
 ## 1) Container
 
 A `.cookle` file is a package directory with the uniform type
-`com.muhiro12.cookle.data`, conforming to `com.apple.package`:
+`com.muhiro12.Cookle.data`, conforming to `com.apple.package`:
 
 ```text
 Cookle-Export-20260929-101500.cookle/
@@ -29,7 +29,7 @@ entries, and nested folders are rejected.
 <!-- markdownlint-disable MD013 -->
 | Field | Type | Meaning |
 | --- | --- | --- |
-| `format` | string | Always `com.muhiro12.cookle.data` |
+| `format` | string | Always `com.muhiro12.Cookle.data` |
 | `formatVersion` | integer | Package layout version, currently `1` |
 | `schemaVersion` | string | SwiftData schema that wrote the records, currently `1.0.0` |
 | `contents.scope` | string | What the file covers; `all` is the complete library |
@@ -72,6 +72,10 @@ do not recognize and treat them as partial.
 
 ## 5) Reading rules
 
+- The former `com.muhiro12.cookle.data` identifier used by 4.0 and 4.1 is
+  intentionally unsupported after the namespace correction. Older builds also
+  reject exports with the corrected identifier. The package layout, schema,
+  and on-device store are unchanged; there is no identifier alias or fallback.
 - `format` must match and `formatVersion` must be supported.
 - `schemaVersion` must be one this build reads. A newer version asks the person
   to update Cookle.

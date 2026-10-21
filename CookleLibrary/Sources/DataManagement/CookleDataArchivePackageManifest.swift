@@ -24,7 +24,7 @@ struct CookleDataArchivePackageManifest: Codable, Sendable {
     }
 
     /// Identifies a Cookle data export independently of its file extension.
-    static let formatIdentifier = "com.muhiro12.cookle.data"
+    static let formatIdentifier = "com.muhiro12.Cookle.data"
     /// Version of the package layout; record shapes follow `schemaVersion`.
     static let currentFormatVersion = 1
 

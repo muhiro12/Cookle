@@ -241,7 +241,7 @@
 			<key>UTTypeDescription</key>
 			<string>Cookle Data</string>
 			<key>UTTypeIdentifier</key>
-			<string>com.muhiro12.cookle.data</string>
+			<string>com.muhiro12.Cookle.data</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
