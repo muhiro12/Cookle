@@ -167,11 +167,8 @@ private extension CookingTimerDeliveryService {
     func reconcileNotification(
         requestsAuthorization: Bool
     ) async {
-        let isAuthorized = Self.isAuthorized(
-            await authorizationStatus(
-                requestsAuthorization: requestsAuthorization
-            )
-        )
+        let status = await authorizationStatus(requestsAuthorization: requestsAuthorization)
+        let isAuthorized = Self.isAuthorized(status)
         let pendingRequests = await notificationCenter.pendingNotificationRequests().filter(isTimerRequest)
         let deliveredNotifications = await notificationCenter.deliveredNotifications().filter { notification in
             isTimerRequest(notification.request)
