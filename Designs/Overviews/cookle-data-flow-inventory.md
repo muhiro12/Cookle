@@ -83,7 +83,7 @@ editable form without saving; Create or Update persists it only after review.
 and `Cookle/Sources/Features/Recipe/Views/InferRecipeFormView.swift`.
 
 Debug iOS Simulator builds on iOS 27+ can additionally select
-`PrivateCloudComputeLanguageModel` through Automatic processing. In that
+`PrivateCloudComputeLanguageModel` through PCC Preferred processing. In that
 configuration, the cooking request can leave the Simulator for Apple's PCC
 service. On-Device Only never makes a cloud request. Unavailable cloud service
 or a recoverable quota, network, or service failure permits one on-device
@@ -92,10 +92,10 @@ method and any fallback reason. `[source confirmed]` — the same app adapter an
 `CookleLibrary/Sources/Recipe/RecipeGenerationOperations.swift`.
 
 - **Recipient**: Apple's on-device model; Apple's PCC service only in the
-  described Debug Simulator configuration when Automatic uses cloud processing.
+  described Debug Simulator configuration when PCC Preferred uses cloud processing.
 - **Retention**: generated content remains an unsaved form draft until saved.
 - **Leaves device**: no request leaves through device/distribution generation;
-  Debug Simulator Automatic processing can send the cooking request to PCC.
+  Debug Simulator PCC Preferred processing can send the cooking request to PCC.
 
 ### Image Playground
 

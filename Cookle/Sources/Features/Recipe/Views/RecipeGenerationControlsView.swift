@@ -14,7 +14,7 @@ struct RecipeGenerationControlsView: View {
     var body: some View {
         if RecipeModelGenerationOperations.supportsCloudSelection {
             Picker("Processing Method", selection: $onDeviceOnly) {
-                Text("Automatic").tag(false)
+                Text("PCC Preferred").tag(false)
                 Text("On-Device Only").tag(true)
             }
             .pickerStyle(.menu)

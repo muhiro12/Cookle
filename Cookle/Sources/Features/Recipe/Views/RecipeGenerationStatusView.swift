@@ -9,6 +9,24 @@ struct RecipeGenerationStatusView: View {
     let status: RecipeGenerationStatus
     var isCompleted = false
 
+    private var cloudDescription: Text {
+        Text(
+            """
+            Prefers Apple's Private Cloud Compute for more detailed recipe ideas. \
+            Requires internet; uses the on-device model when unavailable.
+            """
+        )
+    }
+
+    private var onDeviceDescription: Text {
+        Text(
+            """
+            Creates recipe ideas on this device without internet. \
+            Steps and explanations may be brief.
+            """
+        )
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: Layout.spacing) {
             switch status {
@@ -23,7 +41,7 @@ struct RecipeGenerationStatusView: View {
                     Image(systemName: "cloud")
                 }
                 if !isCompleted {
-                    Text("Prefers Apple's Private Cloud Compute, with on-device fallback when unavailable.")
+                    cloudDescription
                 }
             case .onDevice(let reason):
                 Label {
@@ -38,7 +56,7 @@ struct RecipeGenerationStatusView: View {
                 if let reason {
                     reasonText(reason)
                 } else if !isCompleted {
-                    Text("Your recipe request is processed on this device.")
+                    onDeviceDescription
                 }
             }
         }

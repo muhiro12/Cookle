@@ -398,12 +398,6 @@
             "value" : "AI-Generated Draft"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "AIが作成したたたき台"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -414,6 +408,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Brouillon créé par l’IA"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AIが作成したたたき台"
           }
         },
         "zh-Hans" : {
@@ -1616,40 +1616,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "固定时间"
-          }
-        }
-      }
-    },
-    "Automatic" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Automatic"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "自動"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Automático"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Automatique"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "自动"
           }
         }
       }
@@ -4042,12 +4008,6 @@
             "value" : "Created on device"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "端末内モデルで作成"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4058,6 +4018,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Créé sur l’appareil"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "端末内モデルで作成"
           }
         },
         "zh-Hans" : {
@@ -4076,12 +4042,6 @@
             "value" : "Created with Private Cloud Compute"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Private Cloud Computeで作成"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4094,10 +4054,50 @@
             "value" : "Créé avec Private Cloud Compute"
           }
         },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Cloud Computeで作成"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "通过 Private Cloud Compute 创建"
+          }
+        }
+      }
+    },
+    "Creates recipe ideas on this device without internet. Steps and explanations may be brief." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creates recipe ideas on this device without internet. Steps and explanations may be brief."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crea propuestas de recetas en este dispositivo sin internet. Los pasos y las explicaciones pueden ser breves."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crée des idées de recettes sur cet appareil sans internet. Les étapes et les explications peuvent être succinctes."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通信せず、この端末内でレシピ案を作成します。手順や説明が簡略になる場合があります。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无需联网，直接在此设备上生成食谱建议。步骤和说明可能较为简略。"
           }
         }
       }
@@ -9078,12 +9078,6 @@
             "value" : "On-Device Model"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "端末内モデル"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9094,6 +9088,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Modèle sur l’appareil"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "端末内モデル"
           }
         },
         "zh-Hans" : {
@@ -9112,12 +9112,6 @@
             "value" : "On-Device Only"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "端末内のみ"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9128,6 +9122,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sur l’appareil uniquement"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "端末内のみ"
           }
         },
         "zh-Hans" : {
@@ -9852,6 +9852,40 @@
         }
       }
     },
+    "PCC Preferred" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PCC Preferred"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Priorizar PCC"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PCC en priorité"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PCC優先"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "优先使用 PCC"
+          }
+        }
+      }
+    },
     "Paste or import some recipe text first." : {
       "localizations" : {
         "en" : {
@@ -10192,36 +10226,36 @@
         }
       }
     },
-    "Prefers Apple's Private Cloud Compute, with on-device fallback when unavailable." : {
+    "Prefers Apple's Private Cloud Compute for more detailed recipe ideas. Requires internet; uses the on-device model when unavailable." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Prefers Apple's Private Cloud Compute, with on-device fallback when unavailable."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "AppleのPrivate Cloud Computeを優先し、利用できない場合は端末内モデルを使用します。"
+            "value" : "Prefers Apple's Private Cloud Compute for more detailed recipe ideas. Requires internet; uses the on-device model when unavailable."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Da prioridad a Private Cloud Compute de Apple y usa el modelo del dispositivo si no está disponible."
+            "value" : "Da prioridad a Private Cloud Compute de Apple para crear propuestas de recetas más detalladas. Requiere internet; si no está disponible, usa el modelo del dispositivo."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Privilégie Private Cloud Compute d’Apple et utilise le modèle sur l’appareil s’il est indisponible."
+            "value" : "Privilégie Private Cloud Compute d’Apple pour des idées de recettes plus détaillées. Nécessite internet ; utilise le modèle sur l’appareil en cas d’indisponibilité."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "詳しいレシピ案の作成にAppleのPrivate Cloud Computeを優先します。通信が必要です。利用できない場合は端末内モデルを使用します。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "优先使用 Apple 的 Private Cloud Compute，不可用时改用设备端模型。"
+            "value" : "优先使用 Apple 的 Private Cloud Compute，生成更详细的食谱建议。需要联网；不可用时使用设备端模型。"
           }
         }
       }
@@ -10336,12 +10370,6 @@
             "value" : "Private Cloud Compute"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Private Cloud Compute"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10349,6 +10377,12 @@
           }
         },
         "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Cloud Compute"
+          }
+        },
+        "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Private Cloud Compute"
@@ -10370,12 +10404,6 @@
             "value" : "Private Cloud Compute could not be reached."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Private Cloud Computeに接続できませんでした。"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10386,6 +10414,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Impossible de se connecter à Private Cloud Compute."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Cloud Computeに接続できませんでした。"
           }
         },
         "zh-Hans" : {
@@ -10404,12 +10438,6 @@
             "value" : "Private Cloud Compute is nearing its daily usage limit."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Private Cloud Computeの1日の利用上限に近づいています。"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10420,6 +10448,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Private Cloud Compute approche de sa limite d’utilisation quotidienne."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Cloud Computeの1日の利用上限に近づいています。"
           }
         },
         "zh-Hans" : {
@@ -10438,12 +10472,6 @@
             "value" : "Private Cloud Compute is not ready on this device."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "この端末ではPrivate Cloud Computeを利用できません。"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10454,6 +10482,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Private Cloud Compute n’est pas disponible sur cet appareil."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この端末ではPrivate Cloud Computeを利用できません。"
           }
         },
         "zh-Hans" : {
@@ -10472,12 +10506,6 @@
             "value" : "Private Cloud Compute is temporarily unavailable."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Private Cloud Computeのサービスを一時的に利用できません。"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10488,6 +10516,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Le service Private Cloud Compute est temporairement indisponible."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Cloud Computeのサービスを一時的に利用できません。"
           }
         },
         "zh-Hans" : {
@@ -10506,12 +10540,6 @@
             "value" : "Private Cloud Compute's daily usage limit has been reached."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Private Cloud Computeの1日の利用上限に達しています。"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10522,6 +10550,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "La limite d’utilisation quotidienne de Private Cloud Compute est atteinte."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Cloud Computeの1日の利用上限に達しています。"
           }
         },
         "zh-Hans" : {
@@ -10540,12 +10574,6 @@
             "value" : "Processing Method"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "処理方法"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10556,6 +10584,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mode de traitement"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "処理方法"
           }
         },
         "zh-Hans" : {
@@ -14385,12 +14419,6 @@
             "value" : "The selected model is unavailable. Change the processing method or try again later."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "選択したモデルを利用できません。処理方法を変更するか、後でもう一度お試しください。"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -14401,6 +14429,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Le modèle sélectionné est indisponible. Changez de mode de traitement ou réessayez plus tard."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選択したモデルを利用できません。処理方法を変更するか、後でもう一度お試しください。"
           }
         },
         "zh-Hans" : {
@@ -16795,40 +16829,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "你的数据已替换为文件内容。"
-          }
-        }
-      }
-    },
-    "Your recipe request is processed on this device." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your recipe request is processed on this device."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "レシピの依頼は、この端末内で処理します。"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tu solicitud de receta se procesa en este dispositivo."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Votre demande de recette est traitée sur cet appareil."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "你的食谱请求在此设备上处理。"
           }
         }
       }
