@@ -263,12 +263,13 @@ extension NotificationService {
         with requests: [UNNotificationRequest]
     ) async -> MHNotificationRequestSyncOutcome {
         let pendingRequests = await notificationCenter.pendingNotificationRequests()
-        let managedIdentifiers = Set(pendingRequests.filter { request in
+        let managedRequests = pendingRequests.filter { request in
             CookleNotificationIdentifiers.isManagedSuggestion(
                 identifier: request.identifier,
                 contentKind: request.content.userInfo[NotificationConstants.contentKindUserInfoKey] as? String
             )
-        }.map(\.identifier))
+        }
+        let managedIdentifiers = Set(managedRequests.map(\.identifier))
 
         return await MHNotificationOrchestrator.replaceManagedPendingRequests(
             center: notificationCenter,
