@@ -31,9 +31,6 @@ final class CookingTimerDeliveryService {
     }
 
     private static let logger = Logger(subsystem: "Cookle", category: "CookingTimerDelivery")
-    private static let notificationIdentifier = "cooking-timer"
-    private static let timerKeyUserInfoKey = "cookingTimerKey"
-    private static let contentKind = "cookingTimer"
 
     private(set) var notificationStatus: NotificationStatus = .idle
 
@@ -190,12 +187,12 @@ private extension CookingTimerDeliveryService {
         )
         if changes.removesPending {
             notificationCenter.removePendingNotificationRequests(
-                withIdentifiers: [Self.notificationIdentifier]
+                withIdentifiers: [NotificationConstants.cookingTimerIdentifier]
             )
         }
         if changes.removesDelivered {
             notificationCenter.removeDeliveredNotifications(
-                withIdentifiers: [Self.notificationIdentifier]
+                withIdentifiers: [NotificationConstants.cookingTimerIdentifier]
             )
         }
 
@@ -248,20 +245,20 @@ private extension CookingTimerDeliveryService {
     func pendingTimerKey() async -> String? {
         let requests = await notificationCenter.pendingNotificationRequests()
         return requests.first { request in
-            request.identifier == Self.notificationIdentifier
+            request.identifier == NotificationConstants.cookingTimerIdentifier
         }
         .flatMap { request in
-            request.content.userInfo[Self.timerKeyUserInfoKey] as? String ?? ""
+            request.content.userInfo[NotificationConstants.cookingTimerKeyUserInfoKey] as? String ?? ""
         }
     }
 
     func deliveredTimerKey() async -> String? {
         let notifications = await notificationCenter.deliveredNotifications()
         return notifications.first { notification in
-            notification.request.identifier == Self.notificationIdentifier
+            notification.request.identifier == NotificationConstants.cookingTimerIdentifier
         }
         .flatMap { notification in
-            notification.request.content.userInfo[Self.timerKeyUserInfoKey] as? String ?? ""
+            notification.request.content.userInfo[NotificationConstants.cookingTimerKeyUserInfoKey] as? String ?? ""
         }
     }
 
@@ -276,7 +273,7 @@ private extension CookingTimerDeliveryService {
         )
         content.sound = .default
         content.interruptionLevel = .active
-        content.threadIdentifier = Self.notificationIdentifier
+        content.threadIdentifier = NotificationConstants.cookingTimerIdentifier
         content.targetContentIdentifier = "recipe:\(alert.recipeID)"
         var userInfo = NotificationConstants.payloadCodec.encode(
             .init(
@@ -287,15 +284,15 @@ private extension CookingTimerDeliveryService {
                     actionRouteURLs: [:]
                 ),
                 metadata: [
-                    NotificationConstants.contentKindUserInfoKey: Self.contentKind,
+                    NotificationConstants.contentKindUserInfoKey: NotificationConstants.cookingTimerContentKind,
                     NotificationConstants.stableIdentifierUserInfoKey: alert.recipeID
                 ]
             )
         )
-        userInfo[Self.timerKeyUserInfoKey] = alert.timerKey
+        userInfo[NotificationConstants.cookingTimerKeyUserInfoKey] = alert.timerKey
         content.userInfo = userInfo
         return .init(
-            identifier: Self.notificationIdentifier,
+            identifier: NotificationConstants.cookingTimerIdentifier,
             content: content,
             trigger: UNTimeIntervalNotificationTrigger(
                 timeInterval: max(alert.endsAt.timeIntervalSinceNow, 1),

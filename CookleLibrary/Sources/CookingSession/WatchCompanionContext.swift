@@ -24,17 +24,17 @@ public enum WatchCompanionContext {
     }
 
     /// The key carrying the encoded cooking session state.
-    public static let sessionStateKey = "cookingSessionState"
+    public static let cookingSessionStateKey = "cookingSessionState"
     /// The key carrying the encoded recent recipe catalog.
     public static let recentRecipeCatalogKey = "recentRecipeCatalog"
     /// The key an earlier build used for its snapshot-only contract.
-    public static let legacySnapshotKey = "activeCookingSessionSnapshot"
+    public static let legacyActiveCookingSessionSnapshotKey = "activeCookingSessionSnapshot"
 
     /// Classifies the cooking session content of a received context.
     public static func sessionPayload(
         in context: [String: Any]
     ) -> SessionPayload {
-        if let encodedState = context[sessionStateKey] as? String {
+        if let encodedState = context[cookingSessionStateKey] as? String {
             switch CookingSessionSyncState.decoding(encodedState) {
             case .decoded(let state):
                 return .state(state)
@@ -44,7 +44,7 @@ public enum WatchCompanionContext {
                 return .malformed
             }
         }
-        if let legacySnapshot = context[legacySnapshotKey] as? String,
+        if let legacySnapshot = context[legacyActiveCookingSessionSnapshotKey] as? String,
            legacySnapshot.isEmpty == false {
             return .legacyOnly
         }
@@ -69,7 +69,7 @@ public enum WatchCompanionContext {
     ) -> [String: Any] {
         var context = [String: Any]()
         if let encodedState = sessionState.encodedString() {
-            context[sessionStateKey] = encodedState
+            context[cookingSessionStateKey] = encodedState
         }
         if let encodedCatalog = recentRecipeCatalog?.encodedString() {
             context[recentRecipeCatalogKey] = encodedCatalog

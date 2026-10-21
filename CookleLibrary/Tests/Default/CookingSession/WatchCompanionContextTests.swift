@@ -30,9 +30,9 @@ struct WatchCompanionContextTests {
         let original = Self.activeState()
         let contexts: [[String: Any]] = [
             [:],
-            [WatchCompanionContext.sessionStateKey: "not json"],
-            [WatchCompanionContext.sessionStateKey: #"{"formatVersion":99}"#],
-            [WatchCompanionContext.legacySnapshotKey: ""]
+            [WatchCompanionContext.cookingSessionStateKey: "not json"],
+            [WatchCompanionContext.cookingSessionStateKey: #"{"formatVersion":99}"#],
+            [WatchCompanionContext.legacyActiveCookingSessionSnapshotKey: ""]
         ]
         for context in contexts {
             var state = original
@@ -43,7 +43,7 @@ struct WatchCompanionContextTests {
 
         var state = original
         let unsupported = CookingSessionOperations.applyReceivedContext(
-            [WatchCompanionContext.sessionStateKey: #"{"formatVersion":99}"#],
+            [WatchCompanionContext.cookingSessionStateKey: #"{"formatVersion":99}"#],
             to: &state
         )
         #expect(unsupported.peerStatus == .thisDeviceRequiresUpdate)
@@ -55,7 +55,7 @@ struct WatchCompanionContextTests {
         let original = state
 
         let result = CookingSessionOperations.applyReceivedContext(
-            [WatchCompanionContext.legacySnapshotKey: Self.legacyPayload],
+            [WatchCompanionContext.legacyActiveCookingSessionSnapshotKey: Self.legacyPayload],
             to: &state
         )
 
@@ -84,7 +84,7 @@ struct WatchCompanionContextTests {
             recentRecipeCatalog: catalog
         )
 
-        #expect(context[WatchCompanionContext.legacySnapshotKey] == nil)
+        #expect(context[WatchCompanionContext.legacyActiveCookingSessionSnapshotKey] == nil)
         #expect(WatchCompanionContext.recentRecipeCatalog(in: context) == catalog)
         var watch = CookingSessionLocalState(originID: "watch")
         let result = CookingSessionOperations.applyReceivedContext(context, to: &watch)
