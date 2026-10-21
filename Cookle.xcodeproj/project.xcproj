@@ -198,7 +198,6 @@
         "CURRENT_PROJECT_VERSION": "1",
         "GENERATE_INFOPLIST_FILE": "YES",
         "INFOPLIST_FILE": "Widgets/Configurations/Info.plist",
-        "INFOPLIST_KEY_CFBundleDisplayName": "Widgets",
         "INFOPLIST_KEY_NSHumanReadableCopyright": "",
         "IPHONEOS_DEPLOYMENT_TARGET": "18.0",
         "LD_RUNPATH_SEARCH_PATHS": [
@@ -243,7 +242,6 @@
         "CURRENT_PROJECT_VERSION": "1",
         "ENABLE_PREVIEWS": "YES",
         "GENERATE_INFOPLIST_FILE": "YES",
-        "INFOPLIST_KEY_CFBundleDisplayName": "Cookle",
         "INFOPLIST_KEY_UISupportedInterfaceOrientations": "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown",
         "INFOPLIST_KEY_WKCompanionAppBundleIdentifier": "com.muhiro12.Cookle",
         "LD_RUNPATH_SEARCH_PATHS": [
