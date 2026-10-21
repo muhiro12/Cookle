@@ -273,9 +273,9 @@ extension NotificationService {
         return await MHNotificationOrchestrator.replaceManagedPendingRequests(
             center: notificationCenter,
             requests: requests
-        )            { identifier in
-                managedIdentifiers.contains(identifier)
-            }
+        ) { identifier in
+            managedIdentifiers.contains(identifier)
+        }
     }
 
     func handleNotificationResponse(_ response: UNNotificationResponse) async {
