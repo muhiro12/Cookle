@@ -2,12 +2,6 @@ import Foundation
 import MHPlatform
 
 enum NotificationConstants {
-    nonisolated static let suggestionIdentifierPrefix = "daily-recipe-suggestion-"
-    nonisolated static let testSuggestionIdentifier = "daily-recipe-suggestion-test"
-    nonisolated static let cookingTimerIdentifier = "cooking-timer"
-    nonisolated static let suggestionThreadIdentifier = "daily-recipe-suggestion"
-    nonisolated static let suggestionCategoryIdentifier = "daily_recipe_suggestion"
-    nonisolated static let browseRecipesActionIdentifier = "browse_recipes"
     nonisolated static let recipeSuggestionContentKind = "recipeSuggestion"
     nonisolated static let cookingTimerContentKind = "cookingTimer"
     nonisolated static let routeURLUserInfoKey = "routeURL"
@@ -34,13 +28,33 @@ enum NotificationConstants {
         )
     )
 
-    nonisolated static let suggestionCategoryDescriptor: MHNotificationCategoryDescriptor = .init(
-        identifier: suggestionCategoryIdentifier,
-        actions: [
-            .init(
-                identifier: browseRecipesActionIdentifier,
-                title: String(localized: "Browse Recipes")
+    // Delivered notifications may outlive an app update, so their category and
+    // action identifiers must stay registered and routable.
+    nonisolated static var suggestionCategoryDescriptors: [MHNotificationCategoryDescriptor] {
+        [
+            suggestionCategoryDescriptor(
+                identifier: CookleNotificationIdentifiers.suggestionCategoryIdentifier,
+                actionIdentifier: CookleNotificationIdentifiers.browseRecipesActionIdentifier
+            ),
+            suggestionCategoryDescriptor(
+                identifier: CookleNotificationIdentifiers.legacySuggestionCategoryIdentifier,
+                actionIdentifier: CookleNotificationIdentifiers.legacyBrowseRecipesActionIdentifier
             )
         ]
-    )
+    }
+
+    nonisolated private static func suggestionCategoryDescriptor(
+        identifier: String,
+        actionIdentifier: String
+    ) -> MHNotificationCategoryDescriptor {
+        .init(
+            identifier: identifier,
+            actions: [
+                .init(
+                    identifier: actionIdentifier,
+                    title: String(localized: "Browse Recipes")
+                )
+            ]
+        )
+    }
 }

@@ -187,12 +187,12 @@ private extension CookingTimerDeliveryService {
         )
         if changes.removesPending {
             notificationCenter.removePendingNotificationRequests(
-                withIdentifiers: [NotificationConstants.cookingTimerIdentifier]
+                withIdentifiers: CookleNotificationIdentifiers.cookingTimerIdentifiers
             )
         }
         if changes.removesDelivered {
             notificationCenter.removeDeliveredNotifications(
-                withIdentifiers: [NotificationConstants.cookingTimerIdentifier]
+                withIdentifiers: CookleNotificationIdentifiers.cookingTimerIdentifiers
             )
         }
 
@@ -244,18 +244,25 @@ private extension CookingTimerDeliveryService {
 
     func pendingTimerKey() async -> String? {
         let requests = await notificationCenter.pendingNotificationRequests()
-        return requests.first { request in
-            request.identifier == NotificationConstants.cookingTimerIdentifier
+        // Prefer an old request so the planner replaces both IDs if an update
+        // left a current and a legacy reservation together.
+        let request = requests.first { request in
+            request.identifier == CookleNotificationIdentifiers.legacyCookingTimerIdentifier
+        } ?? requests.first { request in
+            request.identifier == CookleNotificationIdentifiers.cookingTimerIdentifier
         }
-        .flatMap { request in
-            request.content.userInfo[NotificationConstants.cookingTimerKeyUserInfoKey] as? String ?? ""
+        return request.flatMap { request in
+            CookleNotificationIdentifiers.pendingCookingTimerKey(
+                identifier: request.identifier,
+                timerKey: request.content.userInfo[NotificationConstants.cookingTimerKeyUserInfoKey] as? String
+            )
         }
     }
 
     func deliveredTimerKey() async -> String? {
         let notifications = await notificationCenter.deliveredNotifications()
         return notifications.first { notification in
-            notification.request.identifier == NotificationConstants.cookingTimerIdentifier
+            CookleNotificationIdentifiers.isCookingTimerIdentifier(notification.request.identifier)
         }
         .flatMap { notification in
             notification.request.content.userInfo[NotificationConstants.cookingTimerKeyUserInfoKey] as? String ?? ""
@@ -273,7 +280,7 @@ private extension CookingTimerDeliveryService {
         )
         content.sound = .default
         content.interruptionLevel = .active
-        content.threadIdentifier = NotificationConstants.cookingTimerIdentifier
+        content.threadIdentifier = CookleNotificationIdentifiers.cookingTimerIdentifier
         content.targetContentIdentifier = "recipe:\(alert.recipeID)"
         var userInfo = NotificationConstants.payloadCodec.encode(
             .init(
@@ -292,7 +299,7 @@ private extension CookingTimerDeliveryService {
         userInfo[NotificationConstants.cookingTimerKeyUserInfoKey] = alert.timerKey
         content.userInfo = userInfo
         return .init(
-            identifier: NotificationConstants.cookingTimerIdentifier,
+            identifier: CookleNotificationIdentifiers.cookingTimerIdentifier,
             content: content,
             trigger: UNTimeIntervalNotificationTrigger(
                 timeInterval: max(alert.endsAt.timeIntervalSinceNow, 1),

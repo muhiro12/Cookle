@@ -131,7 +131,7 @@ final class NotificationService: NSObject {
             repeats: false
         )
         let request = UNNotificationRequest(
-            identifier: NotificationConstants.testSuggestionIdentifier,
+            identifier: CookleNotificationIdentifiers.testSuggestionIdentifier,
             content: content,
             trigger: trigger
         )
@@ -166,7 +166,7 @@ extension NotificationService {
         _: MHNotificationPayload?,
         response: MHNotificationResponseContext
     ) -> URL? {
-        if response.actionIdentifier == NotificationConstants.browseRecipesActionIdentifier {
+        if CookleNotificationIdentifiers.isBrowseRecipesAction(response.actionIdentifier) {
             return CookleDeepLinkURLBuilder.preferredRecipeURL()
         }
 
@@ -207,9 +207,7 @@ extension NotificationService {
 
     func registerNotificationCategories() {
         MHNotificationOrchestrator.registerCategories(
-            [
-                NotificationConstants.suggestionCategoryDescriptor
-            ],
+            NotificationConstants.suggestionCategoryDescriptors,
             center: notificationCenter
         )
     }
@@ -265,8 +263,7 @@ extension NotificationService {
         with requests: [UNNotificationRequest]
     ) async -> MHNotificationRequestSyncOutcome {
         let isManagedIdentifier: @Sendable (String) -> Bool = { identifier in
-            identifier.hasPrefix(NotificationConstants.suggestionIdentifierPrefix)
-                || identifier == NotificationConstants.testSuggestionIdentifier
+            CookleNotificationIdentifiers.isManagedSuggestionIdentifier(identifier)
         }
 
         return await MHNotificationOrchestrator.replaceManagedPendingRequests(

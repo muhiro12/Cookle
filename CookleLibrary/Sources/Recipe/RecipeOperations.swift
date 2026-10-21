@@ -100,7 +100,7 @@ public enum RecipeOperations {
         now: Date = .now,
         calendar: Calendar = .current,
         daysAhead: Int = 14,
-        identifierPrefix: String = "daily-recipe-suggestion-"
+        identifierPrefix: String = CookleNotificationIdentifiers.suggestionIdentifierPrefix
     ) -> [DailyRecipeSuggestion] {
         DailyRecipeSuggestionService.buildSuggestions(
             candidates: candidates,
@@ -147,7 +147,7 @@ public enum RecipeOperations {
         now: Date = .now,
         calendar: Calendar = .current,
         daysAhead: Int = 14,
-        identifierPrefix: String = "daily-recipe-suggestion-"
+        identifierPrefix: String = CookleNotificationIdentifiers.suggestionIdentifierPrefix
     ) -> [DailyRecipeSuggestion] {
         DailyRecipeSuggestionService.buildAdaptiveSuggestions(
             candidates: candidates,

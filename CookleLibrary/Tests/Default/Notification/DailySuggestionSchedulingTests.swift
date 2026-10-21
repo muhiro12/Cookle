@@ -22,8 +22,8 @@ struct DailySuggestionSchedulingTests {
         )
 
         #expect(suggestions.map(\.identifier) == [
-            "daily-recipe-suggestion-2026-10-15",
-            "daily-recipe-suggestion-2026-10-16"
+            "dailyRecipeSuggestion.2026-10-15",
+            "dailyRecipeSuggestion.2026-10-16"
         ])
         #expect(suggestions.allSatisfy { suggestion in
             suggestion.notifyDate > now
@@ -100,8 +100,8 @@ struct DailySuggestionSchedulingTests {
 
         let tokyoSuggestion = try #require(tokyoPlan.first)
         let losAngelesSuggestion = try #require(losAngelesPlan.first)
-        #expect(tokyoSuggestion.identifier == "daily-recipe-suggestion-2026-10-15")
-        #expect(losAngelesSuggestion.identifier == "daily-recipe-suggestion-2026-10-14")
+        #expect(tokyoSuggestion.identifier == "dailyRecipeSuggestion.2026-10-15")
+        #expect(losAngelesSuggestion.identifier == "dailyRecipeSuggestion.2026-10-14")
         #expect(tokyo.component(.hour, from: tokyoSuggestion.notifyDate) == 18)
         #expect(losAngeles.component(.hour, from: losAngelesSuggestion.notifyDate) == 18)
         #expect(tokyoSuggestion.notifyDate > now)

@@ -148,7 +148,7 @@ struct RecipeOperationsTests {
         #expect(suggestions.count == 2)
         #expect(
             suggestions.allSatisfy { suggestion in
-                suggestion.identifier.hasPrefix("daily-recipe-suggestion-")
+                suggestion.identifier.hasPrefix("dailyRecipeSuggestion.")
             }
         )
         #expect(

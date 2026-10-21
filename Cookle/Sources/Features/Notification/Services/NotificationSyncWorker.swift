@@ -54,7 +54,7 @@ actor NotificationSyncWorker {
                 now: now,
                 calendar: calendar,
                 daysAhead: daysAhead,
-                identifierPrefix: NotificationConstants.suggestionIdentifierPrefix
+                identifierPrefix: CookleNotificationIdentifiers.suggestionIdentifierPrefix
             )
         case .adaptive:
             suggestions = RecipeOperations.buildAdaptiveSuggestions(
@@ -63,7 +63,7 @@ actor NotificationSyncWorker {
                 now: now,
                 calendar: calendar,
                 daysAhead: daysAhead,
-                identifierPrefix: NotificationConstants.suggestionIdentifierPrefix
+                identifierPrefix: CookleNotificationIdentifiers.suggestionIdentifierPrefix
             )
         }
         let preparedRequests = prepareRequests(
@@ -97,7 +97,7 @@ actor NotificationSyncWorker {
     ) -> URL? {
         attachmentStore.prepareAttachmentFileURL(
             for: snapshot,
-            requestIdentifier: NotificationConstants.testSuggestionIdentifier
+            requestIdentifier: CookleNotificationIdentifiers.testSuggestionIdentifier
         )
     }
 

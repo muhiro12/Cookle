@@ -14,7 +14,7 @@ enum DailyRecipeSuggestionService {
         now: Date,
         calendar: Calendar,
         daysAhead: Int,
-        identifierPrefix: String = "daily-recipe-suggestion-"
+        identifierPrefix: String = CookleNotificationIdentifiers.suggestionIdentifierPrefix
     ) -> [DailyRecipeSuggestion] {
         let minutesPerHour = 60
         return DiaryObjectType.allCases.flatMap { meal -> [DailyRecipeSuggestion] in
@@ -65,7 +65,7 @@ enum DailyRecipeSuggestionService {
         now: Date = .now,
         calendar: Calendar = .current,
         daysAhead: Int = 14,
-        identifierPrefix: String = "daily-recipe-suggestion-"
+        identifierPrefix: String = CookleNotificationIdentifiers.suggestionIdentifierPrefix
     ) -> [DailyRecipeSuggestion] {
         guard let deliveryTime = MHNotificationTime(
             hour: hour,

@@ -176,6 +176,27 @@ Those adapters may coordinate widget reloads, notification refreshes, and
 review prompting after a shared mutation succeeds, but the mutation rules and
 effect hints belong in `CookleLibrary`.
 
+## Contract Identifier Naming
+
+Choose spelling by the boundary the value crosses:
+
+- App-owned UserDefaults keys are fixed, unique eight-character alphanumeric
+  values from `CookleUserDefaultsKeys`. Swift symbols retain semantic names.
+- Serialized field names, Watch context keys, notification user-info keys,
+  and content-kind values use lowerCamelCase. These are separate from the
+  opaque keys used to store those values in UserDefaults.
+- Notification request, thread, category, and action identifiers also use
+  lowerCamelCase. A request prefix may append a period before its occurrence ID.
+  `CookleNotificationIdentifiers` owns the names and recognition of older IDs.
+- Reverse-DNS type identifiers preserve the established product component
+  `com.muhiro12.Cookle`, followed by a lowercase type name such as `data`.
+
+Swift constants should identify their subject and role without shortening the
+subject used by the raw value. Before changing a raw value, identify its actual
+readers and lifetime. Account for pending OS objects and independently updated
+peers, and explicitly decide file-format compatibility. A Swift symbol rename
+alone does not require a stored-value or wire-format change.
+
 ## App Intent Mapping
 
 App Intents are adapters, not a second domain layer.

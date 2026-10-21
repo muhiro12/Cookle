@@ -11,8 +11,7 @@ extension NotificationService: UNUserNotificationCenterDelegate {
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
         let identifier = notification.request.identifier
-        let isSuggestion = identifier.hasPrefix(NotificationConstants.suggestionIdentifierPrefix)
-            && identifier != NotificationConstants.testSuggestionIdentifier
+        let isSuggestion = CookleNotificationIdentifiers.isScheduledSuggestionIdentifier(identifier)
         if isSuggestion {
             let hasUsedMeal = await hasUsedCurrentMealToday()
             if hasUsedMeal {
@@ -56,7 +55,7 @@ extension NotificationService: UNUserNotificationCenterDelegate {
 extension NotificationService {
     nonisolated static func opensApp(_ response: UNNotificationResponse) -> Bool {
         response.actionIdentifier == UNNotificationDefaultActionIdentifier
-            || response.actionIdentifier == NotificationConstants.browseRecipesActionIdentifier
+            || CookleNotificationIdentifiers.isBrowseRecipesAction(response.actionIdentifier)
     }
 
     private func hasUsedCurrentMealToday() -> Bool {

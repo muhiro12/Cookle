@@ -68,8 +68,8 @@ private extension RecipeSuggestionNotificationComposer {
         content.body = input.body
         content.sound = .default
         content.interruptionLevel = .active
-        content.threadIdentifier = NotificationConstants.suggestionThreadIdentifier
-        content.categoryIdentifier = NotificationConstants.suggestionCategoryIdentifier
+        content.threadIdentifier = CookleNotificationIdentifiers.suggestionThreadIdentifier
+        content.categoryIdentifier = CookleNotificationIdentifiers.suggestionCategoryIdentifier
         content.targetContentIdentifier = input.stableIdentifier.isEmpty
             ? "recipe"
             : "recipe:\(input.stableIdentifier)"
@@ -79,7 +79,7 @@ private extension RecipeSuggestionNotificationComposer {
                 routes: .init(
                     defaultRouteURL: input.routeURL,
                     actionRouteURLs: [
-                        NotificationConstants.browseRecipesActionIdentifier:
+                        CookleNotificationIdentifiers.browseRecipesActionIdentifier:
                             CookleDeepLinkURLBuilder.preferredRecipeURL()
                     ]
                 ),

@@ -163,8 +163,7 @@ extension NotificationService {
                 "notification route resolved",
                 metadata: metadata
             )
-        case .fallback where response.actionIdentifier
-                == NotificationConstants.browseRecipesActionIdentifier:
+        case .fallback where CookleNotificationIdentifiers.isBrowseRecipesAction(response.actionIdentifier):
             routeLogger.notice(
                 "notification route resolved via browse fallback",
                 metadata: metadata

@@ -78,7 +78,7 @@ struct DailyRecipeSuggestionServiceTests {
     }
 
     @Test
-    func buildSuggestions_preserves_existing_identifier_format_without_zero_padding() {
+    func buildSuggestions_uses_canonical_prefix_and_unpadded_dates() {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = TimeZone(secondsFromGMT: .zero) ?? .current
         guard let now = calendar.date(
@@ -105,9 +105,9 @@ struct DailyRecipeSuggestionServiceTests {
         )
 
         #expect(suggestions.count == 3)
-        #expect(suggestions[0].identifier == "daily-recipe-suggestion-2026-1-1")
-        #expect(suggestions[1].identifier == "daily-recipe-suggestion-2026-1-2")
-        #expect(suggestions[2].identifier == "daily-recipe-suggestion-2026-1-3")
+        #expect(suggestions[0].identifier == "dailyRecipeSuggestion.2026-1-1")
+        #expect(suggestions[1].identifier == "dailyRecipeSuggestion.2026-1-2")
+        #expect(suggestions[2].identifier == "dailyRecipeSuggestion.2026-1-3")
     }
 
     @Test
