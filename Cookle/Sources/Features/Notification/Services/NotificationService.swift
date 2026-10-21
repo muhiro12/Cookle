@@ -166,7 +166,7 @@ extension NotificationService {
         _: MHNotificationPayload?,
         response: MHNotificationResponseContext
     ) -> URL? {
-        if CookleNotificationIdentifiers.isBrowseRecipesAction(response.actionIdentifier) {
+        if response.actionIdentifier == CookleNotificationIdentifiers.browseRecipesActionIdentifier {
             return CookleDeepLinkURLBuilder.preferredRecipeURL()
         }
 
@@ -207,7 +207,7 @@ extension NotificationService {
 
     func registerNotificationCategories() {
         MHNotificationOrchestrator.registerCategories(
-            NotificationConstants.suggestionCategoryDescriptors,
+            [NotificationConstants.suggestionCategoryDescriptor],
             center: notificationCenter
         )
     }
@@ -262,15 +262,20 @@ extension NotificationService {
     func replaceManagedSuggestionRequests(
         with requests: [UNNotificationRequest]
     ) async -> MHNotificationRequestSyncOutcome {
-        let isManagedIdentifier: @Sendable (String) -> Bool = { identifier in
-            CookleNotificationIdentifiers.isManagedSuggestionIdentifier(identifier)
-        }
+        let pendingRequests = await notificationCenter.pendingNotificationRequests()
+        let managedIdentifiers = Set(pendingRequests.filter { request in
+            CookleNotificationIdentifiers.isManagedSuggestion(
+                identifier: request.identifier,
+                contentKind: request.content.userInfo[NotificationConstants.contentKindUserInfoKey] as? String
+            )
+        }.map(\.identifier))
 
         return await MHNotificationOrchestrator.replaceManagedPendingRequests(
             center: notificationCenter,
-            requests: requests,
-            isManagedIdentifier: isManagedIdentifier
-        )
+            requests: requests
+        )            { identifier in
+                managedIdentifiers.contains(identifier)
+            }
     }
 
     func handleNotificationResponse(_ response: UNNotificationResponse) async {

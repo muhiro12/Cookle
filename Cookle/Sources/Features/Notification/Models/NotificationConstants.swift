@@ -2,8 +2,8 @@ import Foundation
 import MHPlatform
 
 enum NotificationConstants {
-    nonisolated static let recipeSuggestionContentKind = "recipeSuggestion"
-    nonisolated static let cookingTimerContentKind = "cookingTimer"
+    nonisolated static let recipeSuggestionContentKind = CookleNotificationIdentifiers.recipeSuggestionContentKind
+    nonisolated static let cookingTimerContentKind = CookleNotificationIdentifiers.cookingTimerContentKind
     nonisolated static let routeURLUserInfoKey = "routeURL"
     nonisolated static let fallbackRouteURLUserInfoKey = "fallbackRouteURL"
     nonisolated static let actionRouteURLsUserInfoKey = "actionRouteURLs"
@@ -28,33 +28,13 @@ enum NotificationConstants {
         )
     )
 
-    // Delivered notifications may outlive an app update, so their category and
-    // action identifiers must stay registered and routable.
-    nonisolated static var suggestionCategoryDescriptors: [MHNotificationCategoryDescriptor] {
-        [
-            suggestionCategoryDescriptor(
-                identifier: CookleNotificationIdentifiers.suggestionCategoryIdentifier,
-                actionIdentifier: CookleNotificationIdentifiers.browseRecipesActionIdentifier
-            ),
-            suggestionCategoryDescriptor(
-                identifier: CookleNotificationIdentifiers.legacySuggestionCategoryIdentifier,
-                actionIdentifier: CookleNotificationIdentifiers.legacyBrowseRecipesActionIdentifier
+    nonisolated static let suggestionCategoryDescriptor: MHNotificationCategoryDescriptor = .init(
+        identifier: CookleNotificationIdentifiers.suggestionCategoryIdentifier,
+        actions: [
+            .init(
+                identifier: CookleNotificationIdentifiers.browseRecipesActionIdentifier,
+                title: String(localized: "Browse Recipes")
             )
         ]
-    }
-
-    nonisolated private static func suggestionCategoryDescriptor(
-        identifier: String,
-        actionIdentifier: String
-    ) -> MHNotificationCategoryDescriptor {
-        .init(
-            identifier: identifier,
-            actions: [
-                .init(
-                    identifier: actionIdentifier,
-                    title: String(localized: "Browse Recipes")
-                )
-            ]
-        )
-    }
+    )
 }

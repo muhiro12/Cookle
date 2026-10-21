@@ -55,7 +55,7 @@ extension NotificationService: UNUserNotificationCenterDelegate {
 extension NotificationService {
     nonisolated static func opensApp(_ response: UNNotificationResponse) -> Bool {
         response.actionIdentifier == UNNotificationDefaultActionIdentifier
-            || CookleNotificationIdentifiers.isBrowseRecipesAction(response.actionIdentifier)
+            || response.actionIdentifier == CookleNotificationIdentifiers.browseRecipesActionIdentifier
     }
 
     private func hasUsedCurrentMealToday() -> Bool {

@@ -187,7 +187,10 @@ Choose spelling by the boundary the value crosses:
   opaque keys used to store those values in UserDefaults.
 - Notification request, thread, category, and action identifiers also use
   lowerCamelCase. A request prefix may append a period before its occurrence ID.
-  `CookleNotificationIdentifiers` owns the names and recognition of older IDs.
+  `CookleNotificationIdentifiers` owns the names. Reconciliation identifies
+  owned requests by their payload content kind as well as canonical request IDs,
+  so cleanup does not need lists of former spellings or migration flags.
+  Only current category and action identifiers are registered.
 - Reverse-DNS type identifiers preserve the established product component
   `com.muhiro12.Cookle`, followed by a lowercase type name such as `data`.
 

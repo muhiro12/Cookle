@@ -172,8 +172,12 @@ private extension CookingTimerDeliveryService {
                 requestsAuthorization: requestsAuthorization
             )
         )
-        let pendingTimerKey = await pendingTimerKey()
-        let deliveredTimerKey = await deliveredTimerKey()
+        let pendingRequests = await notificationCenter.pendingNotificationRequests().filter(isTimerRequest)
+        let deliveredNotifications = await notificationCenter.deliveredNotifications().filter { notification in
+            isTimerRequest(notification.request)
+        }
+        let pendingTimerKey = pendingTimerKey(in: pendingRequests)
+        let deliveredTimerKey = deliveredTimerKey(in: deliveredNotifications)
 
         // Plan from the state as it is now, after every await above.
         let alert = currentAlert
@@ -187,12 +191,12 @@ private extension CookingTimerDeliveryService {
         )
         if changes.removesPending {
             notificationCenter.removePendingNotificationRequests(
-                withIdentifiers: CookleNotificationIdentifiers.cookingTimerIdentifiers
+                withIdentifiers: pendingRequests.map(\.identifier)
             )
         }
         if changes.removesDelivered {
             notificationCenter.removeDeliveredNotifications(
-                withIdentifiers: CookleNotificationIdentifiers.cookingTimerIdentifiers
+                withIdentifiers: deliveredNotifications.map(\.request.identifier)
             )
         }
 
@@ -242,29 +246,30 @@ private extension CookingTimerDeliveryService {
         return await notificationCenter.notificationSettings().authorizationStatus
     }
 
-    func pendingTimerKey() async -> String? {
-        let requests = await notificationCenter.pendingNotificationRequests()
-        // Prefer an old request so the planner replaces both IDs if an update
-        // left a current and a legacy reservation together.
+    func isTimerRequest(_ request: UNNotificationRequest) -> Bool {
+        CookleNotificationIdentifiers.isCookingTimer(
+            identifier: request.identifier,
+            contentKind: request.content.userInfo[NotificationConstants.contentKindUserInfoKey] as? String
+        )
+    }
+
+    func pendingTimerKey(in requests: [UNNotificationRequest]) -> String? {
+        // A noncanonical request must be removed even if the canonical one also
+        // exists, otherwise one timer can leave two pending alerts.
         let request = requests.first { request in
-            request.identifier == CookleNotificationIdentifiers.legacyCookingTimerIdentifier
-        } ?? requests.first { request in
-            request.identifier == CookleNotificationIdentifiers.cookingTimerIdentifier
-        }
+            request.identifier != CookleNotificationIdentifiers.cookingTimerIdentifier
+        } ?? requests.first
         return request.flatMap { request in
             CookleNotificationIdentifiers.pendingCookingTimerKey(
                 identifier: request.identifier,
+                contentKind: request.content.userInfo[NotificationConstants.contentKindUserInfoKey] as? String,
                 timerKey: request.content.userInfo[NotificationConstants.cookingTimerKeyUserInfoKey] as? String
             )
         }
     }
 
-    func deliveredTimerKey() async -> String? {
-        let notifications = await notificationCenter.deliveredNotifications()
-        return notifications.first { notification in
-            CookleNotificationIdentifiers.isCookingTimerIdentifier(notification.request.identifier)
-        }
-        .flatMap { notification in
+    func deliveredTimerKey(in notifications: [UNNotification]) -> String? {
+        notifications.first.flatMap { notification in
             notification.request.content.userInfo[NotificationConstants.cookingTimerKeyUserInfoKey] as? String ?? ""
         }
     }

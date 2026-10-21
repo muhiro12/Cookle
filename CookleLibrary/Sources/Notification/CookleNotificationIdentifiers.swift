@@ -14,45 +14,32 @@ public enum CookleNotificationIdentifiers {
     public static let suggestionCategoryIdentifier = "dailyRecipeSuggestion"
     /// Action that opens the recipe browser.
     public static let browseRecipesActionIdentifier = "browseRecipes"
-
-    /// Category retained for notifications delivered before normalization.
-    public static let legacySuggestionCategoryIdentifier = "daily_recipe_suggestion"
-    /// Action retained for notifications delivered before normalization.
-    public static let legacyBrowseRecipesActionIdentifier = "browse_recipes"
-    /// Timer identifier retained for cancellation and delivered alerts.
-    public static let legacyCookingTimerIdentifier = "cooking-timer"
-
-    private static let legacySuggestionIdentifierPrefix = "daily-recipe-suggestion-"
-    private static let legacyTestSuggestionIdentifier = "daily-recipe-suggestion-test"
-
-    /// Timer identifiers that cancellation must remove together.
-    public static var cookingTimerIdentifiers: [String] {
-        [cookingTimerIdentifier, legacyCookingTimerIdentifier]
-    }
+    /// Payload kind identifying recipe suggestions independently of request IDs.
+    public static let recipeSuggestionContentKind = "recipeSuggestion"
+    /// Payload kind identifying timers independently of request IDs.
+    public static let cookingTimerContentKind = "cookingTimer"
 
     /// Whether the request belongs to suggestion synchronization or cleanup.
-    public static func isManagedSuggestionIdentifier(_ identifier: String) -> Bool {
+    public static func isManagedSuggestion(
+        identifier: String,
+        contentKind: String?
+    ) -> Bool {
         identifier.hasPrefix(suggestionIdentifierPrefix)
-            || identifier.hasPrefix(legacySuggestionIdentifierPrefix)
             || identifier == testSuggestionIdentifier
+            || contentKind == recipeSuggestionContentKind
     }
 
-    /// Whether meal-usage suppression applies, excluding both preview versions.
+    /// Whether meal-usage suppression applies to a scheduled suggestion.
     public static func isScheduledSuggestionIdentifier(_ identifier: String) -> Bool {
-        isManagedSuggestionIdentifier(identifier)
-            && identifier != testSuggestionIdentifier
-            && identifier != legacyTestSuggestionIdentifier
+        identifier.hasPrefix(suggestionIdentifierPrefix)
     }
 
-    /// Whether a response opens the recipe browser, including delivered alerts.
-    public static func isBrowseRecipesAction(_ identifier: String) -> Bool {
-        identifier == browseRecipesActionIdentifier
-            || identifier == legacyBrowseRecipesActionIdentifier
-    }
-
-    /// Whether the request is a current or previously registered timer.
-    public static func isCookingTimerIdentifier(_ identifier: String) -> Bool {
-        cookingTimerIdentifiers.contains(identifier)
+    /// Whether the request belongs to timer reconciliation.
+    public static func isCookingTimer(
+        identifier: String,
+        contentKind: String?
+    ) -> Bool {
+        identifier == cookingTimerIdentifier || contentKind == cookingTimerContentKind
     }
 
     /// Classifies a pending timer for the delivery planner.
@@ -61,12 +48,13 @@ public enum CookleNotificationIdentifiers {
     /// makes the planner cancel the request before scheduling its replacement.
     public static func pendingCookingTimerKey(
         identifier: String,
+        contentKind: String?,
         timerKey: String?
     ) -> String? {
-        guard isCookingTimerIdentifier(identifier) else {
+        guard isCookingTimer(identifier: identifier, contentKind: contentKind) else {
             return nil
         }
-        if identifier == legacyCookingTimerIdentifier {
+        if identifier != cookingTimerIdentifier {
             return ""
         }
         return timerKey ?? ""
