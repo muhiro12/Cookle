@@ -41,8 +41,16 @@ repository contains the full iOS project together with its shared Swift package.
   through MHPlatform runtime defaults.
 - Remote configuration fetch that can require users to update before continuing,
   keeping deployed binaries aligned with server rules.
-- Developer utilities including a regular-width debug tab and preview helpers
-  that seed SwiftData models for SwiftUI previews.
+- Settings opens from the leading toolbar button in Diary, including existing
+  Settings deep links. AI-capable users have a recipe creation tab; other users
+  see Diary, Recipe, Photo, and Search.
+- Debug builds include a temporary tab-layout menu beside Settings in Diary.
+  It compares A/B (AI separated/integrated) and C/D (no AI, Search
+  separated/integrated). Overrides last only for the current scene and never
+  enable an unavailable AI model. General prominent tabs require iOS 27;
+  earlier systems keep AI integrated and use native Search-role behavior.
+- Developer utilities and preview helpers seed SwiftData models for SwiftUI
+  previews.
 
 Recipe suggestions adapt to the first independent app open in each meal window
 (before 11:00, 11:00-16:00, and from 16:00). The last 14 local dates are kept in one

@@ -55,6 +55,18 @@ struct DiaryListView: View {
         }
         .cookleTopLevelNavigationChrome("Diaries")
         .toolbar {
+            if !isPresented {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("Settings", systemImage: "gear") {
+                        navigationModel.isSettingsPresented = true
+                    }
+                }
+                #if DEBUG
+                ToolbarItem(placement: .topBarLeading) {
+                    MainTabLayoutPreviewMenu()
+                }
+                #endif
+            }
             if !diaries.isEmpty || !recipes.isEmpty {
                 ToolbarItem(placement: usesSidebarToolbar ? .secondaryAction : .primaryAction) {
                     AddRecipeButton(showsTitle: true)

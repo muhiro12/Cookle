@@ -31,4 +31,12 @@ final class RecipeFormPresenter {
             draftSource: draftSource
         )
     }
+
+    /// Transfers an AI draft to the ordinary editor without saving it.
+    func present(draft: RecipeFormModel) {
+        guard form == nil else {
+            return
+        }
+        form = draft
+    }
 }

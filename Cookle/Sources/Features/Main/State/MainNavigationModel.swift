@@ -16,4 +16,10 @@ final class MainNavigationModel {
     var selectedIngredientRecipe: Recipe?
     var incomingSearchQuery: String?
     var incomingSettingsSelection: SettingsContent?
+    var isSettingsPresented = false
+
+    #if DEBUG
+    /// A scene-local UI comparison override; it never changes model availability.
+    var tabLayoutPreview: MainTabLayout?
+    #endif
 }

@@ -61,6 +61,7 @@ private extension MainNavigationRouter {
     ) {
         if !outcome.isSettingsRoute {
             navigationModel.incomingSettingsSelection = nil
+            navigationModel.isSettingsPresented = false
         }
         if !outcome.isTagRoute {
             navigationModel.selectedTagBrowser = nil
@@ -140,8 +141,8 @@ private extension MainNavigationRouter {
     func applySettingsRoute(
         destination: SettingsContent?
     ) {
-        navigationModel.selectedTab = .settings
         navigationModel.incomingSettingsSelection = destination
+        navigationModel.isSettingsPresented = true
     }
 }
 

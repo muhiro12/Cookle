@@ -28,9 +28,14 @@ struct MainView: View {
             categoryRecipeSelection: $navigationModel.selectedCategoryRecipe,
             ingredientSelection: $navigationModel.selectedIngredient,
             ingredientRecipeSelection: $navigationModel.selectedIngredientRecipe,
-            incomingSearchQuery: $navigationModel.incomingSearchQuery,
-            incomingSettingsSelection: $navigationModel.incomingSettingsSelection
+            incomingSearchQuery: $navigationModel.incomingSearchQuery
         )
+        .sheet(isPresented: $navigationModel.isSettingsPresented) {
+            SettingsNavigationView(
+                incomingSelection: $navigationModel.incomingSettingsSelection
+            )
+            .recipeFormPresentationHost()
+        }
         // Hosted above the tab and split layouts, which rebuild when the
         // window crosses the compact/regular width boundary.
         .recipeFormPresentationHost()

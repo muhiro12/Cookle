@@ -65,7 +65,7 @@ enum CookleCaptureScreen: String {
                 cookingSessionStore.startSession(for: recipe)
             }
         case .dataImport:
-            navigationModel.selectedTab = .settings
+            navigationModel.isSettingsPresented = true
         case .photo:
             navigationModel.selectedTab = .photo
         }

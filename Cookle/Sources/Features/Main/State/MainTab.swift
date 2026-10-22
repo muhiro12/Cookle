@@ -2,8 +2,8 @@ enum MainTab: CaseIterable {
     case diary
     case recipe
     case photo
-    case settings
     case search
+    case aiRecipe
 }
 
 extension MainTab: Identifiable {
@@ -13,13 +13,12 @@ extension MainTab: Identifiable {
 }
 
 extension MainTab {
-    static func displayedTabs() -> [MainTab] {
+    static func displayedTabs(includesAI: Bool) -> [MainTab] {
         [
             .diary,
             .recipe,
             .photo,
-            .settings,
             .search
-        ]
+        ] + (includesAI ? [.aiRecipe] : [])
     }
 }

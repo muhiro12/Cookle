@@ -18,6 +18,7 @@ struct InferRecipeFormView: View {
     private let source: RecipeDraftSource
     private let initialPhotoData: Data?
     private let choosesAnotherPhoto: (() -> Void)?
+    private let onInferenceApplied: (() -> Void)?
 
     @Environment(\.dismiss)
     private var dismiss
@@ -40,8 +41,7 @@ struct InferRecipeFormView: View {
     @State private var generationStatus: RecipeGenerationStatus?
     @FocusState private var isTextFocused: Bool
 
-    // A literal, not `LocalizedStringKey.init(_:)`, so the string catalog
-    // extracts and translates the sample.
+    // Keep a literal so the string catalog extracts and translates the sample.
     private let placeholder: LocalizedStringKey = """
         Spaghetti Carbonara for 2 people.
         Ingredients: Spaghetti 200g, Eggs 2, Pancetta 100g.
@@ -136,12 +136,16 @@ struct InferRecipeFormView: View {
     }
 
     @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
-        ToolbarItem(placement: .cancellationAction) {
-            Button {
-                operationTask?.cancel()
-                dismiss()
-            } label: {
-                Text("Cancel")
+        if onInferenceApplied == nil || isLoading {
+            ToolbarItem(placement: .cancellationAction) {
+                Button {
+                    operationTask?.cancel()
+                    if onInferenceApplied == nil {
+                        dismiss()
+                    }
+                } label: {
+                    Text("Cancel")
+                }
             }
         }
         ToolbarItem(placement: .confirmationAction) {
@@ -166,10 +170,12 @@ struct InferRecipeFormView: View {
         initialWebsiteSource: RecipeWebsiteSource? = nil,
         initialSourceURL: URL? = nil,
         initialPhotoData: Data? = nil,
-        choosesAnotherPhoto: (() -> Void)? = nil
+        choosesAnotherPhoto: (() -> Void)? = nil,
+        onInferenceApplied: (() -> Void)? = nil
     ) {
         self.initialPhotoData = initialPhotoData
         self.choosesAnotherPhoto = choosesAnotherPhoto
+        self.onInferenceApplied = onInferenceApplied
         _text = State(initialValue: initialWebsiteSource?.text ?? "")
         _websiteSource = State(initialValue: initialWebsiteSource)
         _sourceURL = State(initialValue: initialSourceURL)
@@ -259,7 +265,7 @@ private extension InferRecipeFormView {
                     errorMessage = CookleLibraryErrorCopy.description(for: error)
                 }
             }
-        } else if source == .text || source == .generation {
+        } else if onInferenceApplied == nil, source == .text || source == .generation {
             isTextFocused = true
         }
     }
@@ -293,13 +299,14 @@ private extension InferRecipeFormView {
             sourceURL: pendingInference.sourceURL,
             generationStatus: pendingInference.generationStatus
         )
-        dismiss()
+        finishInference()
     }
 
     func startInference() {
         guard !isLoading else {
             return
         }
+        model.captureInitialChangeSnapshotIfNeeded()
         let reviewedInput = model.changeSnapshot
         let onDeviceOnly = isRecipeGenerationOnDeviceOnly
         generationStatus = nil
@@ -360,7 +367,7 @@ private extension InferRecipeFormView {
                 sourceURL: sourceURL,
                 generationStatus: generationStatus
             )
-            dismiss()
+            finishInference()
         } catch {
             guard !Task.isCancelled, !(error is CancellationError) else {
                 return
@@ -373,6 +380,14 @@ private extension InferRecipeFormView {
         let recognizedText = try await RecipeTextImporter.recognize(in: data)
         try Task.checkCancellation()
         text += (text.isEmpty ? "" : "\n") + recognizedText
+    }
+
+    func finishInference() {
+        if let onInferenceApplied {
+            onInferenceApplied()
+        } else {
+            dismiss()
+        }
     }
 }
 

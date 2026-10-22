@@ -8,6 +8,13 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @Environment(\.scenePhase)
+    private var scenePhase
+    @Environment(MainNavigationModel.self)
+    private var navigationModel
+
+    @State private var isAIAvailable = RecipeDraftSource.generation.isAvailable
+
     @Binding private var selection: MainTab
     @Binding private var diarySelection: Diary?
     @Binding private var diaryRecipeSelection: Recipe?
@@ -20,16 +27,46 @@ struct MainTabView: View {
     @Binding private var ingredientSelection: Ingredient?
     @Binding private var ingredientRecipeSelection: Recipe?
     @Binding private var incomingSearchQuery: String?
-    @Binding private var incomingSettingsSelection: SettingsContent?
+
+    private var layout: MainTabLayout {
+        #if DEBUG
+        if let preview = navigationModel.tabLayoutPreview {
+            return preview
+        }
+        #endif
+        return isAIAvailable ? .aiProminent : .searchProminent
+    }
 
     private var tabs: [MainTab] {
-        MainTab.displayedTabs()
+        layout.tabs
+    }
+
+    /// Availability can change while AI is selected. Never render a missing selection.
+    private var visibleSelection: Binding<MainTab> {
+        .init(
+            get: {
+                tabs.contains(selection) ? selection : .diary
+            },
+            set: { tab in
+                selection = tab
+            }
+        )
     }
 
     var body: some View {
         tabView
             .sheet(item: $tagBrowser) { browser in
                 tagBrowserView(for: browser)
+            }
+            .onChange(of: tabs) {
+                if !tabs.contains(selection) {
+                    selection = .diary
+                }
+            }
+            .onChange(of: scenePhase) {
+                if scenePhase == .active {
+                    isAIAvailable = RecipeDraftSource.generation.isAvailable
+                }
             }
     }
 
@@ -38,7 +75,7 @@ struct MainTabView: View {
             #if compiler(>=6.4)
             if #available(iOS 27, *) {
                 roleBasedTabView
-                    .tabViewSearchActivation(.searchTabSelection)
+                    .tabViewSearchActivation(layout == .searchProminent ? .searchTabSelection : .automatic)
             } else {
                 roleBasedTabView
             }
@@ -46,7 +83,7 @@ struct MainTabView: View {
             roleBasedTabView
             #endif
         } else {
-            TabView(selection: $selection) {
+            TabView(selection: visibleSelection) {
                 ForEach(tabs) { tab in
                     rootView(for: tab)
                         .tag(tab)
@@ -60,9 +97,9 @@ struct MainTabView: View {
 
     @available(iOS 18, *)
     var roleBasedTabView: some View {
-        TabView(selection: $selection) {
+        TabView(selection: visibleSelection) {
             ForEach(tabs) { tab in
-                Tab(value: tab, role: tab.role) {
+                Tab(value: tab, role: layout.role(for: tab)) {
                     rootView(for: tab)
                 } label: {
                     tab.label
@@ -83,8 +120,7 @@ struct MainTabView: View {
         categoryRecipeSelection: Binding<Recipe?> = .constant(nil),
         ingredientSelection: Binding<Ingredient?> = .constant(nil),
         ingredientRecipeSelection: Binding<Recipe?> = .constant(nil),
-        incomingSearchQuery: Binding<String?> = .constant(nil),
-        incomingSettingsSelection: Binding<SettingsContent?> = .constant(nil)
+        incomingSearchQuery: Binding<String?> = .constant(nil)
     ) {
         _selection = selection
         _diarySelection = diarySelection
@@ -98,17 +134,6 @@ struct MainTabView: View {
         _ingredientSelection = ingredientSelection
         _ingredientRecipeSelection = ingredientRecipeSelection
         _incomingSearchQuery = incomingSearchQuery
-        _incomingSettingsSelection = incomingSettingsSelection
-    }
-}
-
-private extension MainTab {
-    @available(iOS 18, *)
-    var role: TabRole? {
-        guard self == .search else {
-            return nil
-        }
-        return .search
     }
 }
 
@@ -128,10 +153,8 @@ private extension MainTabView {
                 selection: $searchSelection,
                 incomingSearchQuery: $incomingSearchQuery
             )
-        case .settings:
-            SettingsNavigationView(
-                incomingSelection: $incomingSettingsSelection
-            )
+        case .aiRecipe:
+            AIRecipeNavigationView()
         case .photo:
             PhotoNavigationView(selection: $photoSelection)
         }

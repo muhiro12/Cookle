@@ -9,10 +9,10 @@ extension MainTab {
             RecipeNavigationView()
         case .photo:
             PhotoNavigationView()
-        case .settings:
-            SettingsNavigationView()
         case .search:
             SearchNavigationView()
+        case .aiRecipe:
+            AIRecipeNavigationView()
         }
     }
 
@@ -36,11 +36,11 @@ extension MainTab {
             } icon: {
                 Image(systemName: "photo.stack")
             }
-        case .settings:
+        case .aiRecipe:
             Label {
-                Text("Settings")
+                Text("AI")
             } icon: {
-                Image(systemName: "gear")
+                Image(systemName: "sparkles")
             }
         case .search:
             Label {
