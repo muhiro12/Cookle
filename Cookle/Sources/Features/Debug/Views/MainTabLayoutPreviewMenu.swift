@@ -47,12 +47,14 @@ private extension MainTabLayout {
             "C: No AI, Separate Search"
         case .searchIntegrated:
             "D: No AI, Integrated Search"
-        case .aiBottomComposer:
-            "E: Separate AI, Bottom Input"
+        case .aiSearchTab:
+            "E: AI with Native Search Transition"
         case .aiRequestForm:
             "F: Separate AI, Request Form"
         case .recipeModal:
             "G: Recipe Modal, Separate Search"
+        case .aiSearchToolbar:
+            "H: Separate AI, Native Toolbar Input"
         }
     }
 }

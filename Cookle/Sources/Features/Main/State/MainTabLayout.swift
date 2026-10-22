@@ -6,13 +6,14 @@ enum MainTabLayout: CaseIterable {
     case aiIntegrated
     case searchProminent
     case searchIntegrated
-    case aiBottomComposer
+    case aiSearchTab
     case aiRequestForm
     case recipeModal
+    case aiSearchToolbar
 
     var includesAI: Bool {
         switch self {
-        case .aiProminent, .aiIntegrated, .aiBottomComposer, .aiRequestForm:
+        case .aiProminent, .aiIntegrated, .aiSearchTab, .aiRequestForm, .aiSearchToolbar:
             true
         case .searchProminent, .searchIntegrated, .recipeModal:
             false
@@ -25,18 +26,27 @@ enum MainTabLayout: CaseIterable {
 
     var generationInputStyle: RecipeGenerationInputStyle {
         switch self {
-        case .aiBottomComposer:
-            .bottomComposer
+        case .aiSearchTab:
+            .searchTab
         case .aiRequestForm:
             .form
+        case .aiSearchToolbar:
+            .searchToolbar
         case .aiProminent, .aiIntegrated, .searchProminent, .searchIntegrated, .recipeModal:
             .editor
         }
     }
 
+    var activatesSearchOnSelection: Bool {
+        self == .searchProminent || self == .recipeModal || self == .aiSearchTab
+    }
+
     @available(iOS 18, *)
     func role(for tab: MainTab) -> TabRole? {
         if self == .searchProminent || self == .recipeModal, tab == .search {
+            return .search
+        }
+        if self == .aiSearchTab, tab == .aiRecipe {
             return .search
         }
         #if compiler(>=6.4)

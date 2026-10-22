@@ -49,11 +49,13 @@ repository contains the full iOS project together with its shared Swift package.
   separated/integrated). Overrides last only for the current scene and never
   enable an unavailable AI model. General prominent tabs require iOS 27;
   earlier systems keep AI integrated and use native Search-role behavior.
-- The same menu also compares E (a growing bottom AI request field), F (a standard
-  AI request form), and G (an AI shortcut in Recipes opening the existing modal
-  flow, with Search separated). E/F retain the ordinary native Search placement;
-  placing toolbar Search at the bottom overlapped the tab bar in the iOS 27.2
-  comparison. Debug AI screens provide short/long examples without generation.
+- The same menu compares E (the native Search-tab transition used for AI input),
+  F (a standard AI request form), G (AI creation from Recipes in the existing
+  modal flow), and H (a prominent AI tab with native toolbar Search input).
+  E/H use the system Search field rather than a custom bottom composer; the
+  complete request is readable in the content area. Recipe Search retains its
+  ordinary placement when AI is separated. Debug AI screens provide short/long
+  examples without generation; submitting an AI request explicitly creates a draft.
 - Developer utilities and preview helpers seed SwiftData models for SwiftUI
   previews.
 

@@ -14,6 +14,7 @@ struct MainTabView: View {
     private var navigationModel
 
     @State private var isAIAvailable = RecipeDraftSource.generation.isAvailable
+    @State private var aiRecipeRequest = ""
 
     @Binding private var selection: MainTab
     @Binding private var diarySelection: Diary?
@@ -54,7 +55,7 @@ struct MainTabView: View {
     }
 
     var body: some View {
-        tabView
+        comparisonTabView
             .sheet(item: $tagBrowser) { browser in
                 tagBrowserView(for: browser)
             }
@@ -70,13 +71,22 @@ struct MainTabView: View {
             }
     }
 
+    @ViewBuilder private var comparisonTabView: some View {
+        #if DEBUG
+        // Recreate comparisons so a previous tab role cannot leak into another layout.
+        tabView.id(layout)
+        #else
+        tabView
+        #endif
+    }
+
     @ViewBuilder var tabView: some View {
         if #available(iOS 18, *) {
             #if compiler(>=6.4)
             if #available(iOS 27, *) {
                 roleBasedTabView
                     .tabViewSearchActivation(
-                        layout == .searchProminent || layout == .recipeModal ? .searchTabSelection : .automatic
+                        layout.activatesSearchOnSelection ? .searchTabSelection : .automatic
                     )
             } else {
                 roleBasedTabView
@@ -159,7 +169,10 @@ private extension MainTabView {
                 incomingSearchQuery: $incomingSearchQuery
             )
         case .aiRecipe:
-            AIRecipeNavigationView(inputStyle: layout.generationInputStyle)
+            AIRecipeNavigationView(
+                inputStyle: layout.generationInputStyle,
+                request: $aiRecipeRequest
+            )
         case .photo:
             PhotoNavigationView(selection: $photoSelection)
         }

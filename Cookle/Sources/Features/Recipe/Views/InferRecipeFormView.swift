@@ -17,6 +17,7 @@ struct InferRecipeFormView: View {
     private let model: RecipeFormModel
     private let source: RecipeDraftSource
     private let generationInputStyle: RecipeGenerationInputStyle
+    private let generationRequest: Binding<String>?
     private let initialPhotoData: Data?
     private let choosesAnotherPhoto: (() -> Void)?
     private let onInferenceApplied: (() -> Void)?
@@ -28,7 +29,7 @@ struct InferRecipeFormView: View {
     private var isRecipeGenerationOnDeviceOnly
 
     @State private var hasOpenedSource = false
-    @State private var text = ""
+    @State private var localText = ""
     @State private var sourceURL: URL?
     @State private var websiteSource: RecipeWebsiteSource?
     @State private var operationTask: Task<Void, Never>?
@@ -44,7 +45,7 @@ struct InferRecipeFormView: View {
             if source == .generation {
                 RecipeGenerationInputView(
                     style: generationInputStyle,
-                    text: $text,
+                    text: textBinding,
                     onDeviceOnly: $isRecipeGenerationOnDeviceOnly,
                     status: generationStatus,
                     isLoading: isLoading,
@@ -54,7 +55,7 @@ struct InferRecipeFormView: View {
                 )
             } else {
                 RecipeRequestEditorView(
-                    text: $text,
+                    text: textBinding,
                     source: source,
                     isLoading: isLoading,
                     requestsFocus: source == .text
@@ -116,6 +117,15 @@ struct InferRecipeFormView: View {
         }
     }
 
+    private var textBinding: Binding<String> {
+        generationRequest ?? $localText
+    }
+
+    private var text: String {
+        get { textBinding.wrappedValue }
+        nonmutating set { textBinding.wrappedValue = newValue }
+    }
+
     private var canSubmit: Bool {
         !isLoading
             && !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -137,16 +147,14 @@ struct InferRecipeFormView: View {
                 }
             }
         }
-        if source != .generation || !generationInputStyle.usesEmbeddedSubmit {
-            ToolbarItem(placement: .confirmationAction) {
-                Button("Create Draft", action: requestInference)
-                    .disabled(!canSubmit)
-            }
+        ToolbarItem(placement: .confirmationAction) {
+            Button("Create Draft", action: requestInference)
+                .disabled(!canSubmit)
         }
         #if DEBUG
         if source == .generation {
             ToolbarItem(placement: .topBarTrailing) {
-                RecipeGenerationExamplesMenu(text: $text)
+                RecipeGenerationExamplesMenu(text: textBinding)
                     .disabled(isLoading)
             }
         }
@@ -160,6 +168,7 @@ struct InferRecipeFormView: View {
         model: RecipeFormModel,
         source: RecipeDraftSource,
         generationInputStyle: RecipeGenerationInputStyle = .editor,
+        generationRequest: Binding<String>? = nil,
         initialWebsiteSource: RecipeWebsiteSource? = nil,
         initialSourceURL: URL? = nil,
         initialPhotoData: Data? = nil,
@@ -169,12 +178,13 @@ struct InferRecipeFormView: View {
         self.initialPhotoData = initialPhotoData
         self.choosesAnotherPhoto = choosesAnotherPhoto
         self.onInferenceApplied = onInferenceApplied
-        _text = State(initialValue: initialWebsiteSource?.text ?? "")
+        _localText = State(initialValue: initialWebsiteSource?.text ?? "")
         _websiteSource = State(initialValue: initialWebsiteSource)
         _sourceURL = State(initialValue: initialSourceURL)
         self.model = model
         self.source = source
         self.generationInputStyle = generationInputStyle
+        self.generationRequest = generationRequest
     }
 }
 

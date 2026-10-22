@@ -5911,37 +5911,37 @@
         }
       }
     },
-    "E: Separate AI, Bottom Input" : {
+    "E: AI with Native Search Transition" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "E: Separate AI, Bottom Input"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "E: AIを分離・下部入力"
+            "value" : "E: AI with Native Search Transition"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "E: IA separada, entrada inferior"
+            "value" : "E: IA con transición de búsqueda nativa"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "E : IA séparée, saisie en bas"
+            "value" : "E : IA avec transition de recherche native"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E: AIを標準検索の遷移で入力"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "E：独立 AI，底部输入"
+            "value" : "E：通过原生搜索过渡输入 AI 需求"
           }
         }
       }
@@ -6624,6 +6624,41 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "在你使用Cookle的用餐时段前后接收食谱推荐。"
+          }
+        }
+      }
+    },
+    "H: Separate AI, Native Toolbar Input" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "H: Separate AI, Native Toolbar Input"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "H: IA separada, entrada en barra nativa"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "H : IA séparée, saisie dans la barre native"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "H: AIを分離・標準ツールバー入力"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "H：独立 AI，原生工具栏输入"
           }
         }
       }

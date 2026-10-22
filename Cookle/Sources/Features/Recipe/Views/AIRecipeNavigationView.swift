@@ -2,6 +2,7 @@ import SwiftUI
 
 struct AIRecipeNavigationView: View {
     var inputStyle = RecipeGenerationInputStyle.editor
+    var request: Binding<String>?
 
     @Environment(RecipeFormPresenter.self)
     private var presenter
@@ -15,6 +16,7 @@ struct AIRecipeNavigationView: View {
                     model: model,
                     source: .generation,
                     generationInputStyle: inputStyle,
+                    generationRequest: request,
                     onInferenceApplied: presentDraft
                 )
             } else {

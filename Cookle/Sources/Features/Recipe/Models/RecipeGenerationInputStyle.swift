@@ -1,10 +1,11 @@
 /// Native input arrangements used by the temporary navigation comparison.
 enum RecipeGenerationInputStyle {
     case editor
-    case bottomComposer
+    case searchTab
     case form
+    case searchToolbar
 
-    var usesEmbeddedSubmit: Bool {
-        self == .bottomComposer
+    var usesSearchField: Bool {
+        self == .searchTab || self == .searchToolbar
     }
 }

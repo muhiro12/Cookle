@@ -4,9 +4,7 @@ import SwiftUI
 @available(iOS 26.0, *)
 struct RecipeGenerationInputView: View {
     private enum Layout {
-        static let composerLineCount = 1...3
         static let formLineCount = 3...8
-        static let minimumInputHeight = 44.0
     }
 
     let style: RecipeGenerationInputStyle
@@ -19,18 +17,27 @@ struct RecipeGenerationInputView: View {
     let createDraft: () -> Void
 
     @FocusState private var isRequestFocused: Bool
+    @State private var isSearchPresented = false
+    // Search clears its UI text when dismissed; the recipe request must survive closing.
+    @State private var searchText = ""
 
     var body: some View {
-        inputContent
-            .toolbar {
-                if style != .editor, isRequestFocused {
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button("Done") {
-                            isRequestFocused = false
-                        }
+        Group {
+            if style.usesSearchField {
+                searchInput
+            } else {
+                inputContent
+            }
+        }
+        .toolbar {
+            if style == .form, isRequestFocused {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("Done") {
+                        isRequestFocused = false
                     }
                 }
             }
+        }
     }
 
     @ViewBuilder private var inputContent: some View {
@@ -47,32 +54,8 @@ struct RecipeGenerationInputView: View {
                 )
             }
             .padding()
-        case .bottomComposer:
-            ScrollView {
-                VStack(alignment: .leading) {
-                    introduction
-                    processingControls
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding()
-            }
-            .scrollDismissesKeyboard(.interactively)
-            .safeAreaBar(edge: .bottom) {
-                HStack(alignment: .bottom) {
-                    requestField
-                        .lineLimit(Layout.composerLineCount)
-                        .textFieldStyle(.roundedBorder)
-                        .frame(minHeight: Layout.minimumInputHeight)
-                    Button(action: createDraft) {
-                        Label("Create Draft", systemImage: "arrow.up")
-                            .labelStyle(.iconOnly)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
-                    .disabled(!canSubmit)
-                }
-                .padding()
-            }
+        case .searchTab, .searchToolbar:
+            searchRequestOverview
         case .form:
             Form {
                 Section {
@@ -94,6 +77,58 @@ struct RecipeGenerationInputView: View {
 
 @available(iOS 26.0, *)
 private extension RecipeGenerationInputView {
+    var searchInput: some View {
+        inputContent
+            .searchable(
+                text: $searchText,
+                isPresented: $isSearchPresented,
+                placement: style == .searchToolbar ? .navigationBarDrawer(displayMode: .always) : .automatic,
+                prompt: Text("What would you like to cook?")
+            )
+            .searchPresentationToolbarBehavior(.avoidHidingContent)
+            .task {
+                searchText = text
+            }
+            .onChange(of: isSearchPresented) {
+                if isSearchPresented {
+                    searchText = text
+                }
+            }
+            .onChange(of: searchText) {
+                if isSearchPresented, !isLoading {
+                    text = searchText
+                }
+            }
+            .onChange(of: text) {
+                if isSearchPresented, searchText != text {
+                    searchText = text
+                }
+            }
+            .onSubmit(of: .search) {
+                if canSubmit {
+                    createDraft()
+                }
+            }
+            .disabled(isLoading)
+    }
+
+    var searchRequestOverview: some View {
+        Form {
+            if !text.isEmpty {
+                Section("Recipe Request") {
+                    Text(verbatim: text)
+                        .textSelection(.enabled)
+                }
+            }
+            Section {
+                processingControls
+            } footer: {
+                introduction
+            }
+        }
+        .scrollDismissesKeyboard(.interactively)
+    }
+
     var introduction: some View {
         Text(
             """
