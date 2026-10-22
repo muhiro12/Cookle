@@ -56,7 +56,7 @@ extension RecipeFormView {
     @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
             Button(action: cancelForm) {
-                Text("Cancel")
+                Label("Cancel", systemImage: "xmark")
             }
             .disabled(formModel.isSaving)
             .alert(
@@ -88,7 +88,7 @@ extension RecipeFormView {
                         currentEditMode = .inactive
                     }
                 } label: {
-                    Text("Done")
+                    Label("Done", systemImage: "checkmark")
                 }
             }
         default:
@@ -141,7 +141,7 @@ extension RecipeFormView {
     @ToolbarContentBuilder var restoreToolbarItem: some ToolbarContent {
         if formModel.restorePolicy.isRestoreAvailable {
             ToolbarItem(placement: .topBarTrailing) {
-                Button("Restore Draft") {
+                Button("Restore Draft", systemImage: "arrow.counterclockwise") {
                     restoreDraft()
                 }
                 .disabled(formModel.isSaving)
@@ -173,9 +173,9 @@ extension RecipeFormView {
                 switch type {
                 case .create,
                      .duplicate:
-                    Text("Create")
+                    Label("Create", systemImage: "plus")
                 case .edit:
-                    Text("Update")
+                    Label("Update", systemImage: "checkmark")
                 }
             }
             .disabled(formModel.isSaving || (try? formModel.makeDraft()) == nil)

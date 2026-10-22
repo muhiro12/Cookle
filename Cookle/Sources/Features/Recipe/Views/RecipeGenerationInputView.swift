@@ -21,7 +21,7 @@ struct RecipeGenerationInputView: View {
                         .navigationTitle("Recipe Request")
                         .toolbar {
                             ToolbarItem(placement: .confirmationAction) {
-                                Button("Done") {
+                                Button("Done", systemImage: "checkmark") {
                                     isEditingRequest = false
                                 }
                             }

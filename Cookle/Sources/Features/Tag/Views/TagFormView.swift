@@ -49,7 +49,7 @@ struct TagFormView<T: Tag>: View {
                 Button {
                     dismiss()
                 } label: {
-                    Text("Cancel")
+                    Label("Cancel", systemImage: "xmark")
                 }
             }
             ToolbarItem(placement: .confirmationAction) {
@@ -68,7 +68,7 @@ struct TagFormView<T: Tag>: View {
                         }
                     }
                 } label: {
-                    Text("Update")
+                    Label("Update", systemImage: "checkmark")
                 }
                 .disabled(value.isEmpty)
             }

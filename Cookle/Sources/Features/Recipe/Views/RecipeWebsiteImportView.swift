@@ -57,17 +57,17 @@ struct RecipeWebsiteImportView: View {
 
     @ToolbarContentBuilder private var toolbarItems: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
-            Button("Cancel") {
+            Button("Cancel", systemImage: "xmark") {
                 readTask?.cancel()
                 dismiss()
             }
         }
         ToolbarItem(placement: .confirmationAction) {
             if isCurrentPageReady {
-                Button("Review Text", action: readPage)
+                Button("Review Text", systemImage: "doc.text.magnifyingglass", action: readPage)
                     .disabled(isReading)
             } else {
-                Button("Load", action: openPage)
+                Button("Load", systemImage: "arrow.right", action: openPage)
                     .accessibilityLabel(Text("Load Page"))
                     .disabled(enteredURL == nil || reader?.isLoading == true || isReading)
             }

@@ -148,12 +148,12 @@ struct InferRecipeFormView: View {
                         dismiss()
                     }
                 } label: {
-                    Text("Cancel")
+                    Label("Cancel", systemImage: "xmark")
                 }
             }
         }
         ToolbarItem(placement: .confirmationAction) {
-            Button("Create Draft", action: requestInference)
+            Button("Create Draft", systemImage: "sparkles", action: requestInference)
                 .disabled(!canSubmit)
         }
     }

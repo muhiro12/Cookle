@@ -116,7 +116,7 @@ struct DiaryFormView: View {
     @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
             Button(action: cancelForm) {
-                Text("Cancel")
+                Label("Cancel", systemImage: "xmark")
             }
             .disabled(model.isSaving)
             .alert(
@@ -135,7 +135,7 @@ struct DiaryFormView: View {
         }
         if model.restorePolicy.isRestoreAvailable {
             ToolbarItem(placement: .topBarTrailing) {
-                Button("Restore Draft") {
+                Button("Restore Draft", systemImage: "arrow.counterclockwise") {
                     restoreDraft()
                 }
                 .disabled(model.isSaving)
@@ -154,7 +154,11 @@ struct DiaryFormView: View {
                     }
                 }
             } label: {
-                Text(diary != nil ? "Update" : "Add")
+                if diary != nil {
+                    Label("Update", systemImage: "checkmark")
+                } else {
+                    Label("Add", systemImage: "plus")
+                }
             }
             .disabled(model.isSaving || model.canSave == false)
         }

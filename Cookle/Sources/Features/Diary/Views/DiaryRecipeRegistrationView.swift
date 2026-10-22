@@ -46,13 +46,13 @@ struct DiaryRecipeRegistrationView: View {
 private extension DiaryRecipeRegistrationView {
     @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
-            Button("Cancel") {
+            Button("Cancel", systemImage: "xmark") {
                 dismiss()
             }
             .disabled(isSaving)
         }
         ToolbarItem(placement: .confirmationAction) {
-            Button("Register Recipe") {
+            Button("Register Recipe", systemImage: "plus") {
                 Task {
                     await registerRecipe()
                 }

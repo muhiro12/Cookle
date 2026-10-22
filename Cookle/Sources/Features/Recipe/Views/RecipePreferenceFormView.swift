@@ -41,12 +41,12 @@ struct RecipePreferenceFormView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button("Cancel", systemImage: "xmark") {
                         dismiss()
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Add Preference", action: addPreference)
+                    Button("Add Preference", systemImage: "plus", action: addPreference)
                         .disabled(!canAdd)
                 }
             }

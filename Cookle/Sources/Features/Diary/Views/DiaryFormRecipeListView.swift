@@ -45,7 +45,7 @@ struct DiaryFormRecipeListView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
-                    Button("Register New Recipe") {
+                    Button("Register New Recipe", systemImage: "plus") {
                         isRegistrationPresented = true
                     }
                 }
@@ -54,7 +54,7 @@ struct DiaryFormRecipeListView: View {
                         selection = temporarySelection
                         dismiss()
                     } label: {
-                        Text("Done")
+                        Label("Done", systemImage: "checkmark")
                     }
                 }
             }
