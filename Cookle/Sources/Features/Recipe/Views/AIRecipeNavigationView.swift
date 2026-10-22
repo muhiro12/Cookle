@@ -3,6 +3,8 @@ import SwiftUI
 struct AIRecipeNavigationView: View {
     var inputStyle = RecipeGenerationInputStyle.editor
     var request: Binding<String>?
+    var isLoading: Binding<Bool>?
+    var hasPendingRequest = false
 
     @Environment(RecipeFormPresenter.self)
     private var presenter
@@ -17,6 +19,8 @@ struct AIRecipeNavigationView: View {
                     source: .generation,
                     generationInputStyle: inputStyle,
                     generationRequest: request,
+                    generationLoading: isLoading,
+                    hasPendingGenerationRequest: hasPendingRequest,
                     onInferenceApplied: presentDraft
                 )
             } else {

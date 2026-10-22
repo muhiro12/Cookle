@@ -4,6 +4,7 @@ enum RecipeGenerationInputStyle {
     case searchTab
     case form
     case searchToolbar
+    case requestStack
 
     var usesSearchField: Bool {
         self == .searchTab || self == .searchToolbar

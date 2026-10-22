@@ -55,6 +55,8 @@ private extension MainTabLayout {
             "G: Recipe Modal, Separate Search"
         case .aiSearchToolbar:
             "H: Separate AI, Native Toolbar Input"
+        case .aiTabAccessory:
+            "I: AI with Native Tab Accessory"
         }
     }
 }

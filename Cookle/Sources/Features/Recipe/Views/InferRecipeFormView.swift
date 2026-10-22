@@ -18,6 +18,8 @@ struct InferRecipeFormView: View {
     private let source: RecipeDraftSource
     private let generationInputStyle: RecipeGenerationInputStyle
     private let generationRequest: Binding<String>?
+    private let generationLoading: Binding<Bool>?
+    private let hasPendingGenerationRequest: Bool
     private let initialPhotoData: Data?
     private let choosesAnotherPhoto: (() -> Void)?
     private let onInferenceApplied: (() -> Void)?
@@ -78,6 +80,10 @@ struct InferRecipeFormView: View {
         }
         .onDisappear {
             operationTask?.cancel()
+            generationLoading?.wrappedValue = false
+        }
+        .onChange(of: isLoading) {
+            generationLoading?.wrappedValue = isLoading
         }
         .onChange(of: isRecipeGenerationOnDeviceOnly) {
             guard !isLoading else {
@@ -128,6 +134,7 @@ struct InferRecipeFormView: View {
 
     private var canSubmit: Bool {
         !isLoading
+            && !hasPendingGenerationRequest
             && !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
             && (source != .generation || RecipeModelGenerationOperations.canGenerate(
                 onDeviceOnly: isRecipeGenerationOnDeviceOnly
@@ -169,6 +176,8 @@ struct InferRecipeFormView: View {
         source: RecipeDraftSource,
         generationInputStyle: RecipeGenerationInputStyle = .editor,
         generationRequest: Binding<String>? = nil,
+        generationLoading: Binding<Bool>? = nil,
+        hasPendingGenerationRequest: Bool = false,
         initialWebsiteSource: RecipeWebsiteSource? = nil,
         initialSourceURL: URL? = nil,
         initialPhotoData: Data? = nil,
@@ -185,6 +194,8 @@ struct InferRecipeFormView: View {
         self.source = source
         self.generationInputStyle = generationInputStyle
         self.generationRequest = generationRequest
+        self.generationLoading = generationLoading
+        self.hasPendingGenerationRequest = hasPendingGenerationRequest
     }
 }
 

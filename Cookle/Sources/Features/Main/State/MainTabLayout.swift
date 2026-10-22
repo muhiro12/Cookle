@@ -10,10 +10,11 @@ enum MainTabLayout: CaseIterable {
     case aiRequestForm
     case recipeModal
     case aiSearchToolbar
+    case aiTabAccessory
 
     var includesAI: Bool {
         switch self {
-        case .aiProminent, .aiIntegrated, .aiSearchTab, .aiRequestForm, .aiSearchToolbar:
+        case .aiProminent, .aiIntegrated, .aiSearchTab, .aiRequestForm, .aiSearchToolbar, .aiTabAccessory:
             true
         case .searchProminent, .searchIntegrated, .recipeModal:
             false
@@ -32,6 +33,12 @@ enum MainTabLayout: CaseIterable {
             .form
         case .aiSearchToolbar:
             .searchToolbar
+        case .aiTabAccessory:
+            if #available(iOS 26.1, *) {
+                .requestStack
+            } else {
+                .form
+            }
         case .aiProminent, .aiIntegrated, .searchProminent, .searchIntegrated, .recipeModal:
             .editor
         }

@@ -800,6 +800,40 @@
         }
       }
     },
+    "Add Preference" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Preference"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "希望を追加"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir preferencia"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter une préférence"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加偏好"
+          }
+        }
+      }
+    },
     "Add Recipe" : {
       "localizations" : {
         "en" : {
@@ -902,6 +936,40 @@
         }
       }
     },
+    "Add a preference" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add a preference"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "希望を入力"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añade una preferencia"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saisissez une préférence"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "输入偏好"
+          }
+        }
+      }
+    },
     "Add a recipe to start building your collection." : {
       "localizations" : {
         "en" : {
@@ -932,6 +1000,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "添加食谱，开始建立你的收藏。"
+          }
+        }
+      }
+    },
+    "Add ingredients or preferences below, then create a draft." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add ingredients or preferences below, then create a draft."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下の「希望を追加」から食材や希望を追加し、下書きを作成します。"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añade ingredientes o preferencias abajo y crea un borrador."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajoutez des ingrédients ou des préférences ci-dessous, puis créez un brouillon."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在下方添加食材或偏好，然后创建草稿。"
           }
         }
       }
@@ -1136,6 +1238,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已添加 0 张。%lld 张无法加载。请重新选择照片。"
+          }
+        }
+      }
+    },
+    "Adding a preference does not run AI. Create Draft uses the preferences listed here." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adding a preference does not run AI. Create Draft uses the preferences listed here."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "希望を追加するだけではAIは実行されません。「下書きを作成」で、この一覧の希望をまとめて送ります。"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir una preferencia no ejecuta la IA. Crear borrador usa las preferencias de esta lista."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter une préférence ne lance pas l’IA. Créer un brouillon utilise les préférences de cette liste."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加偏好不会运行 AI。“创建草稿”会使用此处列出的偏好。"
           }
         }
       }
@@ -6014,6 +6150,40 @@
         }
       }
     },
+    "Edit Request" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Request"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "希望を編集"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar solicitud"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modifier la demande"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "编辑要求"
+          }
+        }
+      }
+    },
     "Editing..." : {
       "localizations" : {
         "en" : {
@@ -6761,6 +6931,41 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "导入方式"
+          }
+        }
+      }
+    },
+    "I: AI with Native Tab Accessory" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I: AI with Native Tab Accessory"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I：AI・標準タブアクセサリ"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I: IA con accesorio de pestaña nativo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I : IA avec accessoire d’onglet natif"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I：AI 与原生标签栏附件"
           }
         }
       }

@@ -18,6 +18,7 @@ struct RecipeGenerationInputView: View {
 
     @FocusState private var isRequestFocused: Bool
     @State private var isSearchPresented = false
+    @State private var isEditingRequest = false
     // Search clears its UI text when dismissed; the recipe request must survive closing.
     @State private var searchText = ""
 
@@ -36,6 +37,20 @@ struct RecipeGenerationInputView: View {
                         isRequestFocused = false
                     }
                 }
+            }
+        }
+        .sheet(isPresented: $isEditingRequest) {
+            NavigationStack {
+                TextEditor(text: $text)
+                    .padding()
+                    .navigationTitle("Recipe Request")
+                    .toolbar {
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Done") {
+                                isEditingRequest = false
+                            }
+                        }
+                    }
             }
         }
     }
@@ -68,6 +83,18 @@ struct RecipeGenerationInputView: View {
                 }
                 Section {
                     processingControls
+                }
+            }
+            .scrollDismissesKeyboard(.interactively)
+        case .requestStack:
+            List {
+                RecipeRequestStackSection(text: $text, isLoading: isLoading) {
+                    isEditingRequest = true
+                }
+                Section {
+                    processingControls
+                } footer: {
+                    introduction
                 }
             }
             .scrollDismissesKeyboard(.interactively)

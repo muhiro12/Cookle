@@ -10,11 +10,15 @@ import SwiftUI
 struct MainTabView: View {
     @Environment(\.scenePhase)
     private var scenePhase
+    @Environment(\.horizontalSizeClass)
+    private var horizontalSizeClass
     @Environment(MainNavigationModel.self)
     private var navigationModel
 
     @State private var isAIAvailable = RecipeDraftSource.generation.isAvailable
     @State private var aiRecipeRequest = ""
+    @State private var aiRecipeRequestLine = ""
+    @State private var isAIRecipeLoading = false
 
     @Binding private var selection: MainTab
     @Binding private var diarySelection: Diary?
@@ -40,6 +44,13 @@ struct MainTabView: View {
 
     private var tabs: [MainTab] {
         layout.tabs
+    }
+
+    private var generationInputStyle: RecipeGenerationInputStyle {
+        if layout == .aiTabAccessory, horizontalSizeClass != .compact {
+            return .form
+        }
+        return layout.generationInputStyle
     }
 
     /// Availability can change while AI is selected. Never render a missing selection.
@@ -74,10 +85,26 @@ struct MainTabView: View {
     @ViewBuilder private var comparisonTabView: some View {
         #if DEBUG
         // Recreate comparisons so a previous tab role cannot leak into another layout.
-        tabView.id(layout)
+        accessoryTabView.id(layout)
         #else
-        tabView
+        accessoryTabView
         #endif
+    }
+
+    @ViewBuilder private var accessoryTabView: some View {
+        if #available(iOS 26.1, *), generationInputStyle == .requestStack {
+            tabView
+                .tabBarMinimizeBehavior(.onScrollDown)
+                .tabViewBottomAccessory(isEnabled: visibleSelection.wrappedValue == .aiRecipe) {
+                    RecipeRequestAccessoryView(
+                        text: $aiRecipeRequestLine,
+                        request: $aiRecipeRequest,
+                        isLoading: isAIRecipeLoading
+                    )
+                }
+        } else {
+            tabView
+        }
     }
 
     @ViewBuilder var tabView: some View {
@@ -170,8 +197,11 @@ private extension MainTabView {
             )
         case .aiRecipe:
             AIRecipeNavigationView(
-                inputStyle: layout.generationInputStyle,
-                request: $aiRecipeRequest
+                inputStyle: generationInputStyle,
+                request: $aiRecipeRequest,
+                isLoading: $isAIRecipeLoading,
+                hasPendingRequest: generationInputStyle == .requestStack
+                    && !aiRecipeRequestLine.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
             )
         case .photo:
             PhotoNavigationView(selection: $photoSelection)
