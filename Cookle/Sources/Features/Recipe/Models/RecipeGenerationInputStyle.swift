@@ -1,12 +1,5 @@
-/// Native input arrangements used by the temporary navigation comparison.
+/// Input surfaces for direct recipe import and preference-based AI creation.
 enum RecipeGenerationInputStyle {
     case editor
-    case searchTab
-    case form
-    case searchToolbar
-    case requestStack
-
-    var usesSearchField: Bool {
-        self == .searchTab || self == .searchToolbar
-    }
+    case preferences
 }

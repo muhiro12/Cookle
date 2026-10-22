@@ -390,41 +390,6 @@
         }
       }
     },
-    "A: AI Available, Separate AI" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A: AI Available, Separate AI"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A：AIあり・AIを分離"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A: Con IA, IA separada"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A : avec IA, IA séparée"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A：有AI，AI独立"
-          }
-        }
-      }
-    },
     "AI" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1826,41 +1791,6 @@
         }
       }
     },
-    "B: AI Available, Integrated AI" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "B: AI Available, Integrated AI"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "B：AIあり・一列に配置"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "B: Con IA, IA integrada"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "B : avec IA, IA intégrée"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "B：有AI，统一排列"
-          }
-        }
-      }
-    },
     "Back to Last Opened" : {
       "localizations" : {
         "en" : {
@@ -2129,41 +2059,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "浏览标签"
-          }
-        }
-      }
-    },
-    "C: No AI, Separate Search" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "C: No AI, Separate Search"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "C：AIなし・検索を分離"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "C: Sin IA, búsqueda separada"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "C : sans IA, recherche séparée"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "C：无AI，搜索独立"
           }
         }
       }
@@ -3392,41 +3287,6 @@
         }
       }
     },
-    "Clear Request" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clear Request"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "依頼を消去"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Borrar solicitud"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Effacer la demande"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "清空要求"
-          }
-        }
-      }
-    },
     "Close" : {
       "localizations" : {
         "en" : {
@@ -4583,41 +4443,6 @@
         }
       }
     },
-    "D: No AI, Integrated Search" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "D: No AI, Integrated Search"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "D：AIなし・一列に配置"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "D: Sin IA, búsqueda integrada"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "D : sans IA, recherche intégrée"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "D：无AI，统一排列"
-          }
-        }
-      }
-    },
     "Daily recipe suggestions are enabled and will arrive at your selected time." : {
       "localizations" : {
         "en" : {
@@ -5740,41 +5565,6 @@
         }
       }
     },
-    "Dinner for two, ready in 20 minutes, using tofu and shimeji mushrooms.\nUse one frying pan. Avoid eggs, dairy, and spicy seasoning.\nUse common pantry seasonings. Include preparation, heat levels, cooking times, and doneness cues.\nWrite the recipe in Japanese." : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dinner for two, ready in 20 minutes, using tofu and shimeji mushrooms.\nUse one frying pan. Avoid eggs, dairy, and spicy seasoning.\nUse common pantry seasonings. Include preparation, heat levels, cooking times, and doneness cues.\nWrite the recipe in Japanese."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "豆腐としめじを使い、20分以内で作れる2人分の夕食。\nフライパンは1つ。卵・乳製品・辛い味付けは避けてください。\n家庭にある調味料を使い、下ごしらえ・火加減・加熱時間・火の通りの目安も書いてください。\nレシピは日本語でお願いします。"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Una cena para dos, lista en 20 minutos, con tofu y setas shimeji.\nUsa una sola sartén. Evita los huevos, los lácteos y los condimentos picantes.\nUsa condimentos habituales. Incluye la preparación, la intensidad del fuego, los tiempos de cocción y cómo saber si está listo.\nEscribe la receta en japonés."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Un dîner pour deux, prêt en 20 minutes, avec du tofu et des champignons shimeji.\nUtilisez une seule poêle. Évitez les œufs, les produits laitiers et les assaisonnements épicés.\nUtilisez des condiments courants. Précisez la préparation, la puissance du feu, les temps de cuisson et les signes de cuisson à vérifier.\nRédigez la recette en japonais."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用豆腐和真姬菇，20分钟内做好的两人份晚餐。\n只用一个平底锅。不要使用鸡蛋、乳制品或辛辣调味料。\n使用常见调味料，并说明准备步骤、火力、烹饪时间及判断熟度的方法。\n请用日语写食谱。"
-          }
-        }
-      }
-    },
     "Dinners" : {
       "localizations" : {
         "en" : {
@@ -6043,41 +5833,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "发现重复日记"
-          }
-        }
-      }
-    },
-    "E: AI with Native Search Transition" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "E: AI with Native Search Transition"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "E: IA con transición de búsqueda nativa"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "E : IA avec transition de recherche native"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "E: AIを標準検索の遷移で入力"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "E：通过原生搜索过渡输入 AI 需求"
           }
         }
       }
@@ -6558,41 +6313,6 @@
         }
       }
     },
-    "F: Separate AI, Request Form" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "F: Separate AI, Request Form"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "F: AIを分離・希望フォーム"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "F: IA separada, formulario de solicitud"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "F : IA séparée, formulaire de demande"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "F：独立 AI，需求表单"
-          }
-        }
-      }
-    },
     "Failed to build the recipe result." : {
       "localizations" : {
         "en" : {
@@ -6695,41 +6415,6 @@
         }
       }
     },
-    "G: Recipe Modal, Separate Search" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "G: Recipe Modal, Separate Search"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "G：レシピからAI・検索を分離"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "G: IA desde recetas, búsqueda separada"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "G : IA depuis les recettes, recherche séparée"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "G：从食谱打开AI，搜索独立"
-          }
-        }
-      }
-    },
     "Generate a dish image" : {
       "localizations" : {
         "en" : {
@@ -6794,41 +6479,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "在你使用Cookle的用餐时段前后接收食谱推荐。"
-          }
-        }
-      }
-    },
-    "H: Separate AI, Native Toolbar Input" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "H: Separate AI, Native Toolbar Input"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "H: IA separada, entrada en barra nativa"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "H : IA séparée, saisie dans la barre native"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "H: AIを分離・標準ツールバー入力"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "H：独立 AI，原生工具栏输入"
           }
         }
       }
@@ -6931,41 +6581,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "导入方式"
-          }
-        }
-      }
-    },
-    "I: AI with Native Tab Accessory" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I: AI with Native Tab Accessory"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I：AI・標準タブアクセサリ"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I: IA con accesorio de pestaña nativo"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I : IA avec accessoire d’onglet natif"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I：AI 与原生标签栏附件"
           }
         }
       }
@@ -7483,41 +7098,6 @@
         }
       }
     },
-    "Input Examples" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Input Examples"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "入力例"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ejemplos de entrada"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exemples de saisie"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "输入示例"
-          }
-        }
-      }
-    },
     "Italian" : {
       "localizations" : {
         "en" : {
@@ -7582,41 +7162,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "当食谱名称或日记日期相同但内容不同时，该项目即为不同。"
-          }
-        }
-      }
-    },
-    "J: AI with Fixed Preference Entry" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "J: AI with Fixed Preference Entry"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "J：AI・固定の希望追加ボタン"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "J: IA con acceso fijo a preferencias"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "J : IA avec ajout de préférences fixe"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "J：AI 与固定偏好入口"
           }
         }
       }
@@ -8025,41 +7570,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在加载 Cookle"
-          }
-        }
-      }
-    },
-    "Long Example" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Long Example"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "長文の例"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ejemplo largo"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exemple long"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "长文本示例"
           }
         }
       }
@@ -13607,41 +13117,6 @@
         }
       }
     },
-    "Short Example" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Short Example"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "短文の例"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ejemplo corto"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exemple court"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "短文本示例"
-          }
-        }
-      }
-    },
     "Show All Tips For Testing" : {
       "localizations" : {
         "en" : {
@@ -14522,41 +13997,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "切换到 Apple Watch 会话"
-          }
-        }
-      }
-    },
-    "Tab Layout Preview" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tab Layout Preview"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "タブ配置の比較"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Comparar pestañas"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Comparer les onglets"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "标签栏布局预览"
           }
         }
       }
@@ -16918,41 +16358,6 @@
         }
       }
     },
-    "Use Device Availability" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Use Device Availability"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "実際のAI利用可否に戻す"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usar disponibilidad del dispositivo"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Utiliser la disponibilité de l’appareil"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "恢复设备实际可用状态"
-          }
-        }
-      }
-    },
     "Use Image Playground when you do not have a photo yet." : {
       "localizations" : {
         "en" : {
@@ -17459,41 +16864,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "今天想吃什么？"
-          }
-        }
-      }
-    },
-    "What would you like to cook?" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "What would you like to cook?"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "何を作りたいですか？"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¿Qué te gustaría cocinar?"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Que souhaitez-vous cuisiner ?"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "你想做什么菜？"
           }
         }
       }

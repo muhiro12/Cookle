@@ -13,15 +13,10 @@ struct RecipeListView: View {
         let id = UUID()
     }
 
-    private let showsAIShortcut: Bool
-
     @Environment(\.isPresented)
     private var isPresented
     @Environment(\.modelContext)
     private var context
-    @Environment(RecipeFormPresenter.self)
-    private var presenter
-
     @Query(.recipes(.all))
     private var allRecipes: [Recipe]
 
@@ -45,13 +40,6 @@ struct RecipeListView: View {
                 }
             }
             .toolbar {
-                if showsAIShortcut, RecipeDraftSource.generation.isAvailable {
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button("Create with AI", systemImage: "sparkles") {
-                            presenter.present(.create, draftSource: .generation)
-                        }
-                    }
-                }
                 if !allRecipes.isEmpty {
                     ToolbarItem(placement: .topBarTrailing) {
                         sortMenu
@@ -71,9 +59,8 @@ struct RecipeListView: View {
             }
     }
 
-    init(selection: Binding<Recipe?> = .constant(nil), showsAIShortcut: Bool = false) {
+    init(selection: Binding<Recipe?> = .constant(nil)) {
         _recipe = selection
-        self.showsAIShortcut = showsAIShortcut
     }
 }
 

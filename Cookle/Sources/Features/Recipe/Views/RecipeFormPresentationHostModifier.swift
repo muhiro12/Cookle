@@ -12,7 +12,7 @@ struct RecipeFormPresentationHostModifier: ViewModifier {
 
         content
             .environment(presenter)
-            .sheet(item: $presenter.form) { form in
+            .sheet(item: $presenter.form, onDismiss: presenter.presentPendingDraft) { form in
                 RecipeFormNavigationView(model: form)
             }
     }

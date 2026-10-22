@@ -51,9 +51,7 @@ struct InferRecipeFormView: View {
                     onDeviceOnly: $isRecipeGenerationOnDeviceOnly,
                     status: generationStatus,
                     isLoading: isLoading,
-                    requestsFocus: onInferenceApplied == nil,
-                    canSubmit: canSubmit,
-                    createDraft: requestInference
+                    requestsFocus: onInferenceApplied == nil
                 )
             } else {
                 RecipeRequestEditorView(
@@ -158,14 +156,6 @@ struct InferRecipeFormView: View {
             Button("Create Draft", action: requestInference)
                 .disabled(!canSubmit)
         }
-        #if DEBUG
-        if source == .generation {
-            ToolbarItem(placement: .topBarTrailing) {
-                RecipeGenerationExamplesMenu(text: textBinding)
-                    .disabled(isLoading)
-            }
-        }
-        #endif
     }
 
     /// - Parameter choosesAnotherPhoto: Returns to photo selection after the

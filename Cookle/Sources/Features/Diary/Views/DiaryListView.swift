@@ -61,11 +61,6 @@ struct DiaryListView: View {
                         navigationModel.isSettingsPresented = true
                     }
                 }
-                #if DEBUG
-                ToolbarItem(placement: .topBarLeading) {
-                    MainTabLayoutPreviewMenu()
-                }
-                #endif
             }
             if !diaries.isEmpty || !recipes.isEmpty {
                 ToolbarItem(placement: usesSidebarToolbar ? .secondaryAction : .primaryAction) {

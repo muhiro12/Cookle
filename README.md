@@ -42,34 +42,17 @@ repository contains the full iOS project together with its shared Swift package.
 - Remote configuration fetch that can require users to update before continuing,
   keeping deployed binaries aligned with server rules.
 - Settings opens from the leading toolbar button in Diary, including existing
-  Settings deep links. AI-capable users have a recipe creation tab; other users
-  see Diary, Recipe, Photo, and Search.
-- Debug builds include a temporary tab-layout menu beside Settings in Diary.
-  It compares A/B (AI separated/integrated) and C/D (no AI, Search
-  separated/integrated). Overrides last only for the current scene and never
-  enable an unavailable AI model. General prominent tabs require iOS 27;
-  earlier systems keep AI integrated and use native Search-role behavior.
-- The same menu compares E (the native Search-tab transition used for AI input),
-  F (a standard AI request form), G (AI creation from Recipes in the existing
-  modal flow), and H (a prominent AI tab with native toolbar Search input).
-  E/H use the system Search field rather than a custom bottom composer; the
-  complete request is readable in the content area. Recipe Search retains its
-  ordinary placement when AI is separated. Debug AI screens provide short/long
-  examples without generation; submitting an AI request explicitly creates a draft.
-- AI-capable users default to I, a system tab accessory with scroll-driven
-  tab-bar minimization. Search remains a regular tab beside Photos. Other users
-  retain a separate Search tab, with Settings available from Diary in both cases.
-  The accessory opens a standard sheet for adding short preferences to a local list;
-  generation runs only through Create Draft. Preferences can be deleted or edited
-  together. The original direct-input accessory overlapped the software keyboard
-  in the iOS 27.2 Simulator, so text entry uses the native sheet instead of manual
-  keyboard positioning. This comparison requires iOS 26.1 for dynamic accessory
-  visibility; iOS 26.0 and regular-width windows show the same preference entry
-  above the tab bar using a safe-area inset. Both open the same compact sheet,
-  with a one-third detent in portrait and a larger detent for compact height or
-  accessibility text sizes. Debug J forces this fixed-entry fallback for review.
-  Users without an available model continue to have no AI entry. F/G and C/D
-  remain selectable comparisons.
+  Settings deep links.
+- AI-capable users have Diary, Recipe, Photo, and Search alongside a prominent
+  AI tab on iOS 27+. Earlier supported systems retain the regular AI tab.
+  Users without available AI keep a dedicated Search tab with no AI entry.
+- AI creation collects preferences in a local list. The standard tab accessory
+  minimizes with scrolling on supported iPhones; iOS 26.0 and regular-width
+  windows use a fixed standard preference button. Both open the same compact
+  input sheet, with a one-third detent in portrait and a larger detent for
+  compact height or accessibility text sizes. Preferences can be deleted or
+  edited together; only Create Draft runs generation and opens the ordinary
+  unsaved recipe editor. Settings remains available from Diary in both layouts.
 - Developer utilities and preview helpers seed SwiftData models for SwiftUI
   previews.
 

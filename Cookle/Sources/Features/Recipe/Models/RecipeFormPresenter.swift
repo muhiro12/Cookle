@@ -11,6 +11,7 @@ import Observation
 final class RecipeFormPresenter {
     /// The form currently presented by this presenter's host.
     var form: RecipeFormModel?
+    private var pendingDraft: RecipeFormModel?
 
     /// Opens a fresh recipe form unless this host already shows one.
     ///
@@ -33,10 +34,21 @@ final class RecipeFormPresenter {
     }
 
     /// Transfers an AI draft to the ordinary editor without saving it.
+    /// A completed draft waits if an independent form opened during generation.
     func present(draft: RecipeFormModel) {
-        guard form == nil else {
+        if form == nil {
+            form = draft
+        } else {
+            pendingDraft = draft
+        }
+    }
+
+    /// Called after the previous sheet has finished dismissing.
+    func presentPendingDraft() {
+        guard form == nil, let pendingDraft else {
             return
         }
-        form = draft
+        self.pendingDraft = nil
+        form = pendingDraft
     }
 }

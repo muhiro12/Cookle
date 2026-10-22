@@ -12,9 +12,6 @@ struct MainTabView: View {
     private var scenePhase
     @Environment(\.horizontalSizeClass)
     private var horizontalSizeClass
-    @Environment(MainNavigationModel.self)
-    private var navigationModel
-
     @State private var isAIAvailable = RecipeDraftSource.generation.isAvailable
     @State private var aiRecipeRequest = ""
     @State private var aiRecipeRequestLine = ""
@@ -35,22 +32,13 @@ struct MainTabView: View {
     @Binding private var ingredientRecipeSelection: Recipe?
     @Binding private var incomingSearchQuery: String?
 
-    private var layout: MainTabLayout {
-        #if DEBUG
-        if let preview = navigationModel.tabLayoutPreview {
-            return preview
-        }
-        #endif
-        return isAIAvailable ? .aiTabAccessory : .searchProminent
-    }
-
     private var tabs: [MainTab] {
-        layout.tabs
+        MainTab.displayedTabs(includesAI: isAIAvailable)
     }
 
     private var usesTabAccessory: Bool {
         if #available(iOS 26.1, *) {
-            return layout == .aiTabAccessory && horizontalSizeClass == .compact
+            return isAIAvailable && horizontalSizeClass == .compact
         }
         return false
     }
@@ -68,7 +56,7 @@ struct MainTabView: View {
     }
 
     var body: some View {
-        comparisonTabView
+        accessoryTabView
             .sheet(item: $tagBrowser) { browser in
                 tagBrowserView(for: browser)
             }
@@ -101,17 +89,8 @@ struct MainTabView: View {
             }
     }
 
-    @ViewBuilder private var comparisonTabView: some View {
-        #if DEBUG
-        // Recreate comparisons so a previous tab role cannot leak into another layout.
-        accessoryTabView.id(layout)
-        #else
-        accessoryTabView
-        #endif
-    }
-
     @ViewBuilder private var accessoryTabView: some View {
-        if #available(iOS 26.1, *), layout.generationInputStyle == .requestStack {
+        if #available(iOS 26.1, *), isAIAvailable {
             tabView
                 .tabBarMinimizeBehavior(usesTabAccessory ? .onScrollDown : .automatic)
                 .tabViewBottomAccessory(isEnabled: usesTabAccessory && visibleSelection.wrappedValue == .aiRecipe) {
@@ -128,7 +107,7 @@ struct MainTabView: View {
             if #available(iOS 27, *) {
                 roleBasedTabView
                     .tabViewSearchActivation(
-                        layout.activatesSearchOnSelection ? .searchTabSelection : .automatic
+                        isAIAvailable ? .automatic : .searchTabSelection
                     )
             } else {
                 roleBasedTabView
@@ -153,7 +132,7 @@ struct MainTabView: View {
     var roleBasedTabView: some View {
         TabView(selection: visibleSelection) {
             ForEach(tabs) { tab in
-                Tab(value: tab, role: layout.role(for: tab)) {
+                Tab(value: tab, role: tabRole(for: tab)) {
                     rootView(for: tab)
                 } label: {
                     tab.label
@@ -194,18 +173,16 @@ struct MainTabView: View {
 private extension MainTabView {
     var aiRecipeNavigationView: AIRecipeNavigationView {
         .init(
-            inputStyle: layout.generationInputStyle,
             request: $aiRecipeRequest,
             isLoading: $isAIRecipeLoading,
-            hasPendingRequest: layout.generationInputStyle == .requestStack
-                && !aiRecipeRequestLine.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            hasPendingRequest: !aiRecipeRequestLine.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         )
     }
 
     var aiRecipeRootView: some View {
         aiRecipeNavigationView
             .safeAreaInset(edge: .bottom, spacing: .zero) {
-                if #available(iOS 26, *), layout.generationInputStyle == .requestStack, !usesTabAccessory {
+                if #available(iOS 26, *), !usesTabAccessory {
                     preferenceEntry
                         .buttonStyle(.glass)
                         .padding(.horizontal)
@@ -220,6 +197,19 @@ private extension MainTabView {
         }
     }
 
+    @available(iOS 18, *)
+    func tabRole(for tab: MainTab) -> TabRole? {
+        if !isAIAvailable, tab == .search {
+            return .search
+        }
+        #if compiler(>=6.4)
+        if #available(iOS 27, *), isAIAvailable, tab == .aiRecipe {
+            return .prominent
+        }
+        #endif
+        return nil
+    }
+
     @ViewBuilder
     func rootView(for tab: MainTab) -> some View {
         switch tab {
@@ -230,8 +220,7 @@ private extension MainTabView {
             )
         case .recipe:
             RecipeNavigationView(
-                selection: $recipeSelection,
-                showsAIShortcut: layout == .recipeModal
+                selection: $recipeSelection
             )
         case .search:
             SearchNavigationView(

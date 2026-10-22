@@ -1,10 +1,9 @@
 import SwiftUI
 
 struct AIRecipeNavigationView: View {
-    var inputStyle = RecipeGenerationInputStyle.editor
-    var request: Binding<String>?
-    var isLoading: Binding<Bool>?
-    var hasPendingRequest = false
+    @Binding var request: String
+    @Binding var isLoading: Bool
+    let hasPendingRequest: Bool
 
     @Environment(RecipeFormPresenter.self)
     private var presenter
@@ -17,9 +16,9 @@ struct AIRecipeNavigationView: View {
                 InferRecipeFormView(
                     model: model,
                     source: .generation,
-                    generationInputStyle: inputStyle,
-                    generationRequest: request,
-                    generationLoading: isLoading,
+                    generationInputStyle: .preferences,
+                    generationRequest: $request,
+                    generationLoading: $isLoading,
                     hasPendingGenerationRequest: hasPendingRequest,
                     onInferenceApplied: presentDraft
                 )

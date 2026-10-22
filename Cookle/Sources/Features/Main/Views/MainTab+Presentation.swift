@@ -1,21 +1,6 @@
 import SwiftUI
 
 extension MainTab {
-    @ViewBuilder var rootView: some View {
-        switch self {
-        case .diary:
-            DiaryNavigationView()
-        case .recipe:
-            RecipeNavigationView()
-        case .photo:
-            PhotoNavigationView()
-        case .search:
-            SearchNavigationView()
-        case .aiRecipe:
-            AIRecipeNavigationView()
-        }
-    }
-
     @ViewBuilder var label: some View {
         switch self {
         case .diary:
