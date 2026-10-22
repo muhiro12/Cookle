@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct RecipeNavigationView: View {
+    private let showsAIShortcut: Bool
+
     @Environment(\.horizontalSizeClass)
     private var horizontalSizeClass
 
@@ -21,7 +23,7 @@ struct RecipeNavigationView: View {
             columnVisibility: $columnVisibility,
             preferredCompactColumn: $preferredCompactColumn
         ) {
-            RecipeListView(selection: $recipe)
+            RecipeListView(selection: $recipe, showsAIShortcut: showsAIShortcut)
                 .cookleSplitSidebar(isExpanded: horizontalSizeClass == .regular)
         } detail: {
             if let recipe {
@@ -39,8 +41,9 @@ struct RecipeNavigationView: View {
         }
     }
 
-    init(selection: Binding<Recipe?> = .constant(nil)) {
+    init(selection: Binding<Recipe?> = .constant(nil), showsAIShortcut: Bool = false) {
         _recipe = selection
+        self.showsAIShortcut = showsAIShortcut
     }
 }
 

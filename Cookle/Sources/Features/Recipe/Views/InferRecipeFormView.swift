@@ -16,14 +16,13 @@ struct InferRecipeFormView: View {
 
     private let model: RecipeFormModel
     private let source: RecipeDraftSource
+    private let generationInputStyle: RecipeGenerationInputStyle
     private let initialPhotoData: Data?
     private let choosesAnotherPhoto: (() -> Void)?
     private let onInferenceApplied: (() -> Void)?
 
     @Environment(\.dismiss)
     private var dismiss
-    @Environment(\.mhDesignMetrics)
-    private var designMetrics
 
     @AppStorage(\.isRecipeGenerationOnDeviceOnly)
     private var isRecipeGenerationOnDeviceOnly
@@ -39,35 +38,30 @@ struct InferRecipeFormView: View {
     @State private var isReplacementReviewPresented = false
     @State private var pendingInference: PendingInference?
     @State private var generationStatus: RecipeGenerationStatus?
-    @FocusState private var isTextFocused: Bool
-
-    // Keep a literal so the string catalog extracts and translates the sample.
-    private let placeholder: LocalizedStringKey = """
-        Spaghetti Carbonara for 2 people.
-        Ingredients: Spaghetti 200g, Eggs 2, Pancetta 100g.
-        Cook spaghetti. Fry pancetta. Mix eggs and cheese. Combine all.
-        """
 
     var body: some View {
-        VStack(alignment: .leading) {
+        Group {
             if source == .generation {
-                Text(
-                    """
-                    Describe a dish, ingredients, or preferences. AI creates a starting point you can edit \
-                    and improve after cooking.
-                    """
-                )
-                .font(.callout)
-                .foregroundStyle(.secondary)
-                RecipeGenerationControlsView(
+                RecipeGenerationInputView(
+                    style: generationInputStyle,
+                    text: $text,
                     onDeviceOnly: $isRecipeGenerationOnDeviceOnly,
                     status: generationStatus,
-                    isLoading: isLoading
+                    isLoading: isLoading,
+                    requestsFocus: onInferenceApplied == nil,
+                    canSubmit: canSubmit,
+                    createDraft: requestInference
                 )
+            } else {
+                RecipeRequestEditorView(
+                    text: $text,
+                    source: source,
+                    isLoading: isLoading,
+                    requestsFocus: source == .text
+                )
+                .padding()
             }
-            requestEditor
         }
-        .padding()
         .navigationTitle(source == .generation ? Text("Create with AI") : Text("Review Recipe Text"))
         .toolbar {
             toolbarItems
@@ -122,17 +116,12 @@ struct InferRecipeFormView: View {
         }
     }
 
-    private var requestEditor: some View {
-        TextEditor(text: $text)
-            .focused($isTextFocused)
-            .disabled(isLoading)
-            .accessibilityLabel(source == .generation ? Text("Recipe Request") : Text("Recipe Text"))
-            .accessibilityValue(Text(verbatim: text))
-            .overlay(alignment: .topLeading) {
-                placeholderOverlay
-            }
-            .scrollDismissesKeyboard(.immediately)
-            .mhInputChrome(state: isTextFocused ? .focused : .normal)
+    private var canSubmit: Bool {
+        !isLoading
+            && !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            && (source != .generation || RecipeModelGenerationOperations.canGenerate(
+                onDeviceOnly: isRecipeGenerationOnDeviceOnly
+            ))
     }
 
     @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
@@ -148,17 +137,20 @@ struct InferRecipeFormView: View {
                 }
             }
         }
-        ToolbarItem(placement: .confirmationAction) {
-            Button {
-                requestInference()
-            } label: {
-                Text("Create Draft")
+        if source != .generation || !generationInputStyle.usesEmbeddedSubmit {
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Create Draft", action: requestInference)
+                    .disabled(!canSubmit)
             }
-            .disabled(isLoading || text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-            .disabled(source == .generation && !RecipeModelGenerationOperations.canGenerate(
-                onDeviceOnly: isRecipeGenerationOnDeviceOnly
-            ))
         }
+        #if DEBUG
+        if source == .generation {
+            ToolbarItem(placement: .topBarTrailing) {
+                RecipeGenerationExamplesMenu(text: $text)
+                    .disabled(isLoading)
+            }
+        }
+        #endif
     }
 
     /// - Parameter choosesAnotherPhoto: Returns to photo selection after the
@@ -167,6 +159,7 @@ struct InferRecipeFormView: View {
     init(
         model: RecipeFormModel,
         source: RecipeDraftSource,
+        generationInputStyle: RecipeGenerationInputStyle = .editor,
         initialWebsiteSource: RecipeWebsiteSource? = nil,
         initialSourceURL: URL? = nil,
         initialPhotoData: Data? = nil,
@@ -181,6 +174,7 @@ struct InferRecipeFormView: View {
         _sourceURL = State(initialValue: initialSourceURL)
         self.model = model
         self.source = source
+        self.generationInputStyle = generationInputStyle
     }
 }
 
@@ -188,32 +182,6 @@ struct InferRecipeFormView: View {
 private extension InferRecipeFormView {
     var errorTitle: Text {
         source == .generation ? Text("Cannot Create Recipe") : Text("Cannot Infer Recipe")
-    }
-
-    @ViewBuilder var placeholderOverlay: some View {
-        if text.isEmpty {
-            Group {
-                if source == .generation {
-                    Text("A simple tofu and mushroom dinner for two, using one frying pan.")
-                } else {
-                    Text(placeholder)
-                }
-            }
-            .font(.body)
-            .foregroundStyle(.placeholder)
-            .padding(
-                .vertical,
-                RecipeTextEditorLayout.placeholderVerticalPadding(
-                    metrics: designMetrics
-                )
-            )
-            .padding(
-                .horizontal,
-                RecipeTextEditorLayout.placeholderHorizontalPadding
-            )
-            .allowsHitTesting(false)
-            .accessibilityHidden(true)
-        }
     }
 
     var isInferenceErrorPresented: Binding<Bool> {
@@ -265,8 +233,6 @@ private extension InferRecipeFormView {
                     errorMessage = CookleLibraryErrorCopy.description(for: error)
                 }
             }
-        } else if onInferenceApplied == nil, source == .text || source == .generation {
-            isTextFocused = true
         }
     }
 

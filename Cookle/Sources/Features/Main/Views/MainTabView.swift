@@ -75,7 +75,9 @@ struct MainTabView: View {
             #if compiler(>=6.4)
             if #available(iOS 27, *) {
                 roleBasedTabView
-                    .tabViewSearchActivation(layout == .searchProminent ? .searchTabSelection : .automatic)
+                    .tabViewSearchActivation(
+                        layout == .searchProminent || layout == .recipeModal ? .searchTabSelection : .automatic
+                    )
             } else {
                 roleBasedTabView
             }
@@ -147,14 +149,17 @@ private extension MainTabView {
                 recipeSelection: $diaryRecipeSelection
             )
         case .recipe:
-            RecipeNavigationView(selection: $recipeSelection)
+            RecipeNavigationView(
+                selection: $recipeSelection,
+                showsAIShortcut: layout == .recipeModal
+            )
         case .search:
             SearchNavigationView(
                 selection: $searchSelection,
                 incomingSearchQuery: $incomingSearchQuery
             )
         case .aiRecipe:
-            AIRecipeNavigationView()
+            AIRecipeNavigationView(inputStyle: layout.generationInputStyle)
         case .photo:
             PhotoNavigationView(selection: $photoSelection)
         }
