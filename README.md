@@ -56,13 +56,18 @@ repository contains the full iOS project together with its shared Swift package.
   complete request is readable in the content area. Recipe Search retains its
   ordinary placement when AI is separated. Debug AI screens provide short/long
   examples without generation; submitting an AI request explicitly creates a draft.
-- I adds a system tab accessory and scroll-driven tab-bar minimization. The
-  accessory opens a standard sheet for adding short preferences to a local list;
+- AI-capable users default to I, a system tab accessory with scroll-driven
+  tab-bar minimization. Search remains a regular tab beside Photos. Other users
+  retain a separate Search tab, with Settings available from Diary in both cases.
+  The accessory opens a standard sheet for adding short preferences to a local list;
   generation runs only through Create Draft. Preferences can be deleted or edited
   together. The original direct-input accessory overlapped the software keyboard
   in the iOS 27.2 Simulator, so text entry uses the native sheet instead of manual
   keyboard positioning. This comparison requires iOS 26.1 for dynamic accessory
-  visibility; iOS 26.0 and regular-width windows fall back to F's ordinary form.
+  visibility; iOS 26.0 and regular-width windows show the same preference entry
+  above the tab bar using a safe-area inset. Both open the same compact sheet,
+  with a one-third detent in portrait and a larger detent for compact height or
+  accessibility text sizes. Debug J forces this fixed-entry fallback for review.
   Users without an available model continue to have no AI entry. F/G and C/D
   remain selectable comparisons.
 - Developer utilities and preview helpers seed SwiftData models for SwiftUI

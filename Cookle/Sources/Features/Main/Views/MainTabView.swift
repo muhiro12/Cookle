@@ -19,6 +19,8 @@ struct MainTabView: View {
     @State private var aiRecipeRequest = ""
     @State private var aiRecipeRequestLine = ""
     @State private var isAIRecipeLoading = false
+    @State private var isPreferenceInputPresented = false
+    @Namespace private var preferenceTransition
 
     @Binding private var selection: MainTab
     @Binding private var diarySelection: Diary?
@@ -39,18 +41,18 @@ struct MainTabView: View {
             return preview
         }
         #endif
-        return isAIAvailable ? .aiProminent : .searchProminent
+        return isAIAvailable ? .aiTabAccessory : .searchProminent
     }
 
     private var tabs: [MainTab] {
         layout.tabs
     }
 
-    private var generationInputStyle: RecipeGenerationInputStyle {
-        if layout == .aiTabAccessory, horizontalSizeClass != .compact {
-            return .form
+    private var usesTabAccessory: Bool {
+        if #available(iOS 26.1, *) {
+            return layout == .aiTabAccessory && horizontalSizeClass == .compact
         }
-        return layout.generationInputStyle
+        return false
     }
 
     /// Availability can change while AI is selected. Never render a missing selection.
@@ -70,9 +72,26 @@ struct MainTabView: View {
             .sheet(item: $tagBrowser) { browser in
                 tagBrowserView(for: browser)
             }
+            .sheet(
+                isPresented: $isPreferenceInputPresented,
+                onDismiss: {
+                    aiRecipeRequestLine = ""
+                },
+                content: {
+                    if #available(iOS 26, *) {
+                        RecipePreferenceFormView(text: $aiRecipeRequestLine, request: $aiRecipeRequest)
+                            .navigationTransition(
+                                .zoom(sourceID: RecipeRequestAccessoryView.transitionID, in: preferenceTransition)
+                            )
+                    }
+                }
+            )
             .onChange(of: tabs) {
                 if !tabs.contains(selection) {
                     selection = .diary
+                }
+                if !tabs.contains(.aiRecipe) {
+                    isPreferenceInputPresented = false
                 }
             }
             .onChange(of: scenePhase) {
@@ -92,15 +111,11 @@ struct MainTabView: View {
     }
 
     @ViewBuilder private var accessoryTabView: some View {
-        if #available(iOS 26.1, *), generationInputStyle == .requestStack {
+        if #available(iOS 26.1, *), layout.generationInputStyle == .requestStack {
             tabView
-                .tabBarMinimizeBehavior(.onScrollDown)
-                .tabViewBottomAccessory(isEnabled: visibleSelection.wrappedValue == .aiRecipe) {
-                    RecipeRequestAccessoryView(
-                        text: $aiRecipeRequestLine,
-                        request: $aiRecipeRequest,
-                        isLoading: isAIRecipeLoading
-                    )
+                .tabBarMinimizeBehavior(usesTabAccessory ? .onScrollDown : .automatic)
+                .tabViewBottomAccessory(isEnabled: usesTabAccessory && visibleSelection.wrappedValue == .aiRecipe) {
+                    preferenceEntry
                 }
         } else {
             tabView
@@ -177,6 +192,34 @@ struct MainTabView: View {
 }
 
 private extension MainTabView {
+    var aiRecipeNavigationView: AIRecipeNavigationView {
+        .init(
+            inputStyle: layout.generationInputStyle,
+            request: $aiRecipeRequest,
+            isLoading: $isAIRecipeLoading,
+            hasPendingRequest: layout.generationInputStyle == .requestStack
+                && !aiRecipeRequestLine.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        )
+    }
+
+    var aiRecipeRootView: some View {
+        aiRecipeNavigationView
+            .safeAreaInset(edge: .bottom, spacing: .zero) {
+                if #available(iOS 26, *), layout.generationInputStyle == .requestStack, !usesTabAccessory {
+                    preferenceEntry
+                        .buttonStyle(.glass)
+                        .padding(.horizontal)
+                }
+            }
+    }
+
+    @available(iOS 26, *)
+    var preferenceEntry: some View {
+        RecipeRequestAccessoryView(isLoading: isAIRecipeLoading, transition: preferenceTransition) {
+            isPreferenceInputPresented = true
+        }
+    }
+
     @ViewBuilder
     func rootView(for tab: MainTab) -> some View {
         switch tab {
@@ -196,13 +239,7 @@ private extension MainTabView {
                 incomingSearchQuery: $incomingSearchQuery
             )
         case .aiRecipe:
-            AIRecipeNavigationView(
-                inputStyle: generationInputStyle,
-                request: $aiRecipeRequest,
-                isLoading: $isAIRecipeLoading,
-                hasPendingRequest: generationInputStyle == .requestStack
-                    && !aiRecipeRequestLine.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-            )
+            aiRecipeRootView
         case .photo:
             PhotoNavigationView(selection: $photoSelection)
         }

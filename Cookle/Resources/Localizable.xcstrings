@@ -7586,6 +7586,41 @@
         }
       }
     },
+    "J: AI with Fixed Preference Entry" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "J: AI with Fixed Preference Entry"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "J：AI・固定の希望追加ボタン"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "J: IA con acceso fijo a preferencias"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "J : IA avec ajout de préférences fixe"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "J：AI 与固定偏好入口"
+          }
+        }
+      }
+    },
     "Keep Both" : {
       "localizations" : {
         "en" : {

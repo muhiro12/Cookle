@@ -57,6 +57,8 @@ private extension MainTabLayout {
             "H: Separate AI, Native Toolbar Input"
         case .aiTabAccessory:
             "I: AI with Native Tab Accessory"
+        case .aiFixedPreferenceEntry:
+            "J: AI with Fixed Preference Entry"
         }
     }
 }
