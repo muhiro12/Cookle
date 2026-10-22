@@ -12,36 +12,6 @@ struct TagNavigationView<T: Tag & Identifiable>: View {
     @State private var hasAppliedInitialCompactColumn = false
 
     var body: some View {
-        Group {
-            if horizontalSizeClass == .compact {
-                compactNavigationStack
-            } else {
-                splitNavigationView
-            }
-        }
-        // Hosted outside the size-class switch so an open recipe form
-        // survives it.
-        .recipeFormPresentationHost()
-    }
-
-    var compactNavigationStack: some View {
-        NavigationStack {
-            TagListView<T>(selection: $tag)
-                .navigationDestination(item: $tag) { selectedTag in
-                    TagView<T>(
-                        tagSelection: $tag,
-                        recipeSelection: $recipe
-                    )
-                    .environment(selectedTag)
-                }
-                .navigationDestination(item: $recipe) { selectedRecipe in
-                    RecipeView()
-                        .environment(selectedRecipe)
-                }
-        }
-    }
-
-    var splitNavigationView: some View {
         NavigationSplitView(
             columnVisibility: $columnVisibility,
             preferredCompactColumn: $preferredCompactColumn
@@ -76,6 +46,7 @@ struct TagNavigationView<T: Tag & Identifiable>: View {
         .onChange(of: recipe?.persistentModelID) {
             syncPreferredCompactColumn()
         }
+        .recipeFormPresentationHost()
     }
 
     init(

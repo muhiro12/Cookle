@@ -36,8 +36,8 @@ struct MainView: View {
             )
             .recipeFormPresentationHost()
         }
-        // Hosted above the tab and split layouts, which rebuild when the
-        // window crosses the compact/regular width boundary.
+        // Keep unsaved recipe drafts above navigation containers so resizing
+        // and destination changes preserve the active editor.
         .recipeFormPresentationHost()
         .alert(Text("Update Required"), isPresented: isUpdateRequiredBinding) {
             Button {
