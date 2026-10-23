@@ -6,40 +6,31 @@ import NaturalLanguage
 enum RecipeModelGenerationOperations {
     private static let minimumLanguageConfidence = 0.8
 
-    #if DEBUG && targetEnvironment(simulator)
-    // Device and distribution activation waits for its separate signing validation.
     @available(iOS 27.0, *)
     private static let cloudModel = PrivateCloudComputeLanguageModel()
-    #endif
 
     static var unavailableReason: RecipeGenerationError? {
-        #if DEBUG && targetEnvironment(simulator)
         if #available(iOS 27.0, *) {
             if !cloudModel.isAvailable {
                 return .unavailable
             }
             return cloudModel.quotaUsage.isLimitReached ? .quotaLimitReached : nil
         }
-        #endif
         return .unavailable
     }
 
     /// Quota exhaustion must not remove the tab or discard an entered request.
     static var isAvailable: Bool {
-        #if DEBUG && targetEnvironment(simulator)
         if #available(iOS 27.0, *) {
             return cloudModel.isAvailable
         }
-        #endif
         return false
     }
 
     static var isApproachingCloudLimit: Bool {
-        #if DEBUG && targetEnvironment(simulator)
         if #available(iOS 27.0, *), case .belowLimit(let usage) = cloudModel.quotaUsage.status {
             return usage.isApproachingLimit
         }
-        #endif
         return false
     }
 
@@ -60,7 +51,6 @@ enum RecipeModelGenerationOperations {
         }
 
         do {
-            #if DEBUG && targetEnvironment(simulator)
             if #available(iOS 27.0, *) {
                 let instructions = generationInstructions(request: normalizedRequest, locale: locale)
                 return try await RecipeGenerationOperations.generate(
@@ -71,7 +61,6 @@ enum RecipeModelGenerationOperations {
                     onStatus: onStatus
                 )
             }
-            #endif
             throw RecipeGenerationError.unavailable
         } catch is CancellationError {
             throw CancellationError()
@@ -83,7 +72,6 @@ enum RecipeModelGenerationOperations {
         }
     }
 
-    #if DEBUG && targetEnvironment(simulator)
     @available(iOS 27.0, *)
     private static func generateWithCloud(request: String, instructions: String) async throws -> RecipeInferenceResult {
         do {
@@ -102,7 +90,6 @@ enum RecipeModelGenerationOperations {
             }
         }
     }
-    #endif
 
     private static func generate(
         request: String,

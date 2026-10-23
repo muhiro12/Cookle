@@ -35,9 +35,10 @@ repository contains the full iOS project together with its shared Swift package.
   data. Drafts are saved only through the form's Create or Update action.
   Manual entry and text/photo/website import remain available; their existing
   on-device text extraction is unchanged.
-  PCC is currently enabled only in Debug iOS Simulator builds. Device and
-  distribution activation remains gated pending separate signing validation;
-  other builds hide AI creation instead of offering on-device generation.
+  Debug and Release builds use the main app's PCC entitlement. Device builds
+  require a matching PCC-authorized provisioning profile and signing identity.
+  Unsupported systems and devices hide AI creation instead of offering
+  on-device generation.
 - Google Mobile Ads monetization and StoreKit-based subscriptions configured
   through MHPlatform runtime defaults.
 - Remote configuration fetch that can require users to update before continuing,
