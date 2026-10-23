@@ -2,13 +2,17 @@ import SwiftUI
 
 struct AIRecipeNavigationView: View {
     @Binding var request: String
-    @Binding var isLoading: Bool
-    let hasPendingRequest: Bool
+    @Binding var preference: String
 
     @Environment(RecipeFormPresenter.self)
     private var presenter
 
     @State private var model = RecipeFormModel(type: .create)
+    @State private var isLoading = false
+
+    private var hasPendingRequest: Bool {
+        !preference.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
 
     var body: some View {
         NavigationStack {
@@ -22,6 +26,13 @@ struct AIRecipeNavigationView: View {
                     hasPendingGenerationRequest: hasPendingRequest,
                     onInferenceApplied: presentDraft
                 )
+                .safeAreaBar(edge: .bottom) {
+                    RecipePreferenceInputView(
+                        text: $preference,
+                        request: $request,
+                        isLoading: isLoading
+                    )
+                }
             } else {
                 ContentUnavailableView {
                     Label("Create with AI", systemImage: "sparkles")

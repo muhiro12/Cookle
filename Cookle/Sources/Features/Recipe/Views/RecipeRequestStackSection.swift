@@ -13,7 +13,7 @@ struct RecipeRequestStackSection: View {
     var body: some View {
         Section {
             if preferences.isEmpty {
-                Text("Add ingredients or preferences below, then create a draft.")
+                Text("Enter ingredients or preferences below, add them with +, then create a draft.")
                     .foregroundStyle(.secondary)
             }
             ForEach(Array(preferences.enumerated()), id: \.offset) { _, preference in

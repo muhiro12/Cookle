@@ -10,14 +10,9 @@ import SwiftUI
 struct MainTabView: View {
     @Environment(\.scenePhase)
     private var scenePhase
-    @Environment(\.horizontalSizeClass)
-    private var horizontalSizeClass
     @State private var isAIAvailable = RecipeDraftSource.generation.isAvailable
     @State private var aiRecipeRequest = ""
     @State private var aiRecipeRequestLine = ""
-    @State private var isAIRecipeLoading = false
-    @State private var isPreferenceInputPresented = false
-    @Namespace private var preferenceTransition
 
     @Binding private var selection: MainTab
     @Binding private var diarySelection: Diary?
@@ -36,13 +31,6 @@ struct MainTabView: View {
         MainTab.displayedTabs(includesAI: isAIAvailable)
     }
 
-    private var usesTabAccessory: Bool {
-        if #available(iOS 26.1, *) {
-            return isAIAvailable && horizontalSizeClass == .compact
-        }
-        return false
-    }
-
     /// Availability can change while AI is selected. Never render a missing selection.
     private var visibleSelection: Binding<MainTab> {
         .init(
@@ -56,30 +44,13 @@ struct MainTabView: View {
     }
 
     var body: some View {
-        accessoryTabView
+        tabView
             .sheet(item: $tagBrowser) { browser in
                 tagBrowserView(for: browser)
             }
-            .sheet(
-                isPresented: $isPreferenceInputPresented,
-                onDismiss: {
-                    aiRecipeRequestLine = ""
-                },
-                content: {
-                    if #available(iOS 26, *) {
-                        RecipePreferenceFormView(text: $aiRecipeRequestLine, request: $aiRecipeRequest)
-                            .navigationTransition(
-                                .zoom(sourceID: RecipeRequestAccessoryView.transitionID, in: preferenceTransition)
-                            )
-                    }
-                }
-            )
             .onChange(of: tabs) {
                 if !tabs.contains(selection) {
                     selection = .diary
-                }
-                if !tabs.contains(.aiRecipe) {
-                    isPreferenceInputPresented = false
                 }
             }
             .onChange(of: scenePhase) {
@@ -87,18 +58,6 @@ struct MainTabView: View {
                     isAIAvailable = RecipeDraftSource.generation.isAvailable
                 }
             }
-    }
-
-    @ViewBuilder private var accessoryTabView: some View {
-        if #available(iOS 26.1, *), isAIAvailable {
-            tabView
-                .tabBarMinimizeBehavior(usesTabAccessory ? .onScrollDown : .automatic)
-                .tabViewBottomAccessory(isEnabled: usesTabAccessory && visibleSelection.wrappedValue == .aiRecipe) {
-                    preferenceEntry
-                }
-        } else {
-            tabView
-        }
     }
 
     @ViewBuilder var tabView: some View {
@@ -171,32 +130,6 @@ struct MainTabView: View {
 }
 
 private extension MainTabView {
-    var aiRecipeNavigationView: AIRecipeNavigationView {
-        .init(
-            request: $aiRecipeRequest,
-            isLoading: $isAIRecipeLoading,
-            hasPendingRequest: !aiRecipeRequestLine.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        )
-    }
-
-    var aiRecipeRootView: some View {
-        aiRecipeNavigationView
-            .safeAreaInset(edge: .bottom, spacing: .zero) {
-                if #available(iOS 26, *), !usesTabAccessory {
-                    preferenceEntry
-                        .buttonStyle(.glass)
-                        .padding(.horizontal)
-                }
-            }
-    }
-
-    @available(iOS 26, *)
-    var preferenceEntry: some View {
-        RecipeRequestAccessoryView(isLoading: isAIRecipeLoading, transition: preferenceTransition) {
-            isPreferenceInputPresented = true
-        }
-    }
-
     @available(iOS 18, *)
     func tabRole(for tab: MainTab) -> TabRole? {
         if !isAIAvailable, tab == .search {
@@ -228,7 +161,7 @@ private extension MainTabView {
                 incomingSearchQuery: $incomingSearchQuery
             )
         case .aiRecipe:
-            aiRecipeRootView
+            AIRecipeNavigationView(request: $aiRecipeRequest, preference: $aiRecipeRequestLine)
         case .photo:
             PhotoNavigationView(selection: $photoSelection)
         }

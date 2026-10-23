@@ -46,13 +46,13 @@ repository contains the full iOS project together with its shared Swift package.
 - AI-capable users have Diary, Recipe, Photo, and Search alongside a prominent
   AI tab on iOS 27+. Earlier supported systems retain the regular AI tab.
   Users without available AI keep a dedicated Search tab with no AI entry.
-- AI creation collects preferences in a local list. The standard tab accessory
-  minimizes with scrolling on supported iPhones; iOS 26.0 and regular-width
-  windows use a fixed standard preference button. Both open the same compact
-  input sheet, with a one-third detent in portrait and a larger detent for
-  compact height or accessibility text sizes. Preferences can be deleted or
-  edited together; only Create Draft runs generation and opens the ordinary
-  unsaved recipe editor. Settings remains available from Diary in both layouts.
+- AI creation collects preferences in a local list. A standard multiline text
+  field in a bottom safe-area bar accepts preferences directly, with a separate
+  circular Add button. The input follows the software keyboard and retains
+  pending text across tab changes. Preferences can be deleted or edited
+  together; only Create Draft runs generation and opens the ordinary unsaved
+  recipe editor. Pending text must be added before creating a draft. Settings
+  remains available from Diary.
 - Developer utilities and preview helpers seed SwiftData models for SwiftUI
   previews.
 

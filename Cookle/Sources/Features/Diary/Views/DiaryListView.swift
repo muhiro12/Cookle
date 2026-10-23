@@ -26,11 +26,6 @@ struct DiaryListView: View {
     @Binding private var diary: Diary?
     @State private var currentDate = Date.now
 
-    #if DEBUG
-    @State private var isAIInputComparisonPresented = false
-
-    #endif
-
     var body: some View {
         Group {
             if diaries.isEmpty, recipes.isEmpty {
@@ -66,9 +61,6 @@ struct DiaryListView: View {
                         navigationModel.isSettingsPresented = true
                     }
                 }
-                #if DEBUG
-                comparisonToolbar
-                #endif
             }
             if !diaries.isEmpty || !recipes.isEmpty {
                 ToolbarItem(placement: usesSidebarToolbar ? .secondaryAction : .primaryAction) {
@@ -87,14 +79,6 @@ struct DiaryListView: View {
                 }
             }
         }
-        #if DEBUG
-        .fullScreenCover(isPresented: $isAIInputComparisonPresented) {
-            if #available(iOS 26, *) {
-                AIInputComparisonView()
-                    .recipeFormPresentationHost()
-            }
-        }
-        #endif
     }
 
     init(selection: Binding<Diary?> = .constant(nil), usesSidebarToolbar: Bool = false) {
@@ -104,19 +88,6 @@ struct DiaryListView: View {
 }
 
 private extension DiaryListView {
-    #if DEBUG
-    @ToolbarContentBuilder var comparisonToolbar: some ToolbarContent {
-        if #available(iOS 26, *) {
-            ToolbarItem(placement: .topBarLeading) {
-                Button("Compare AI Input", systemImage: "rectangle.split.2x1") {
-                    isAIInputComparisonPresented = true
-                }
-                .accessibilityIdentifier("aiInputComparison")
-            }
-        }
-    }
-    #endif
-
     var diaryContent: some View {
         VStack(spacing: theme.spacing.section) {
             DuplicateDiaryRepairSection()
