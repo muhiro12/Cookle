@@ -6,10 +6,15 @@ enum AdaptiveSuggestionPolicy {
     private static let halfDivisor = 2
     private static let minutesPerHour = 60
     private static let halfHourMinutes = 30
+    private static let notificationLeadMinutes = 30
     private static let minutesPerDay = 1_440
 
     static func isValidMinute(_ minute: Int) -> Bool {
         (.zero..<minutesPerDay).contains(minute)
+    }
+
+    static func notificationMinute(for learnedMinute: Int) -> Int {
+        (learnedMinute - notificationLeadMinutes + minutesPerDay) % minutesPerDay
     }
 
     static func recordingUsage(

@@ -21,16 +21,6 @@ struct AdaptiveRecipeSuggestionTests {
     }
 
     @Test
-    func median_uses_first_independent_opens_and_rounds_down() throws {
-        let calendar = try calendar()
-        let even = try state([.init(1, 18, 12), .init(1, 19, 59), .init(2, 18, 41)], calendar: calendar)
-        #expect(even.learnedMinutes[.dinner] == 18 * 60)
-        let odd = try state([.init(1, 18, 12), .init(2, 18, 41), .init(3, 19, 2)], calendar: calendar)
-        #expect(odd.learnedMinutes[.dinner] == 18 * 60 + 30)
-        #expect(odd.learnedMinutes.count == 1)
-    }
-
-    @Test
     func an_occasional_lunch_does_not_become_a_new_notification_window() throws {
         let calendar = try calendar()
         let state = try state([
@@ -67,7 +57,9 @@ struct AdaptiveRecipeSuggestionTests {
         #expect(state.learnedMinutes[.dinner] == 18 * 60)
         #expect(state.lastUsedAt[.dinner] == (try date(day: 17, hour: 20, minute: 59, calendar: calendar)))
         let now = try date(day: 17, hour: 21, minute: 0, calendar: calendar)
-        #expect(!plan(state, now: now, calendar: calendar).isEmpty)
+        let first = try #require(plan(state, now: now, calendar: calendar).first)
+        #expect(calendar.component(.hour, from: first.notifyDate) == 17)
+        #expect(calendar.component(.minute, from: first.notifyDate) == 30)
     }
 
     @Test
@@ -220,7 +212,8 @@ struct AdaptiveRecipeSuggestionTests {
         let suggestions = plan(state, now: second, calendar: calendar)
         #expect(!suggestions.isEmpty)
         #expect(Set(suggestions.map { calendar.startOfDay(for: $0.notifyDate) }).count == suggestions.count)
-        #expect(suggestions.allSatisfy { calendar.component(.hour, from: $0.notifyDate) == 8 })
+        #expect(suggestions.allSatisfy { calendar.component(.hour, from: $0.notifyDate) == 7 })
+        #expect(suggestions.allSatisfy { calendar.component(.minute, from: $0.notifyDate) == 30 })
     }
 
     @Test
@@ -255,7 +248,7 @@ struct AdaptiveRecipeSuggestionTests {
         #expect(requests.count == 1)
         let request = try #require(requests.first)
         #expect(calendar.component(.hour, from: request.notifyDate) == 1)
-        #expect(calendar.component(.minute, from: request.notifyDate) == 30)
+        #expect(calendar.component(.minute, from: request.notifyDate) == 0)
         #expect(calendar.timeZone.secondsFromGMT(for: request.notifyDate) == -14_400)
     }
 
@@ -267,16 +260,34 @@ struct AdaptiveRecipeSuggestionTests {
         let destination = try calendar("America/Los_Angeles")
         let suggestions = plan(state, now: now, calendar: destination)
         #expect(!suggestions.isEmpty)
-        #expect(suggestions.allSatisfy { destination.component(.hour, from: $0.notifyDate) == 18 })
-        #expect(suggestions.allSatisfy { destination.component(.minute, from: $0.notifyDate) == 0 })
+        #expect(suggestions.allSatisfy { destination.component(.hour, from: $0.notifyDate) == 17 })
+        #expect(suggestions.allSatisfy { destination.component(.minute, from: $0.notifyDate) == 30 })
     }
 }
 
 extension AdaptiveRecipeSuggestionTests {
-    @Test(arguments: [(18, 12, 0), (18, 29, 0), (18, 30, 30), (18, 41, 30), (0, 0, 0), (23, 59, 30)])
-    func learned_times_round_down_to_the_previous_half_hour(
+    @Test
+    func suggestions_arrive_before_the_median_first_independent_open() throws {
+        let calendar = try calendar()
+        let even = try state([.init(1, 18, 12), .init(1, 19, 59), .init(2, 18, 41)], calendar: calendar)
+        #expect(even.learnedMinutes[.dinner] == 18 * 60)
+        let odd = try state([.init(1, 18, 12), .init(2, 18, 41), .init(3, 19, 2)], calendar: calendar)
+        #expect(odd.learnedMinutes[.dinner] == 18 * 60 + 30)
+        #expect(odd.learnedMinutes.count == 1)
+        let now = try date(day: 4, hour: 12, minute: 0, calendar: calendar)
+        let first = try #require(plan(odd, now: now, calendar: calendar).first)
+        #expect(first.notifyDate == (try date(day: 4, hour: 18, minute: 0, calendar: calendar)))
+    }
+
+    @Test(arguments: [
+        (18, 12, 17, 30), (18, 29, 17, 30), (18, 30, 18, 0), (18, 41, 18, 0),
+        (0, 0, 23, 30), (0, 29, 23, 30), (0, 30, 0, 0), (0, 59, 0, 0),
+        (11, 0, 10, 30), (16, 0, 15, 30), (23, 59, 23, 0)
+    ])
+    func suggestions_arrive_at_least_thirty_minutes_before_independent_use(
         hour: Int,
         minute: Int,
+        expectedHour: Int,
         expectedMinute: Int
     ) throws {
         let calendar = try calendar()
@@ -284,7 +295,22 @@ extension AdaptiveRecipeSuggestionTests {
         let observedDate = try date(day: 2, hour: hour, minute: minute, calendar: calendar)
         let meal = DiaryOperations.mealType(for: observedDate, calendar: calendar)
 
-        #expect(state.learnedMinutes == [meal: hour * 60 + expectedMinute])
+        let first = try #require(plan(state, now: observedDate, calendar: calendar).first)
+
+        #expect(first.identifier.hasSuffix("-" + meal.id))
+        #expect(calendar.component(.hour, from: first.notifyDate) == expectedHour)
+        #expect(calendar.component(.minute, from: first.notifyDate) == expectedMinute)
+    }
+
+    @Test
+    func midnight_use_keeps_the_suggestion_for_the_next_days_meal() throws {
+        let calendar = try calendar()
+        let state = try state([.init(1, 0, 12), .init(2, 0, 12)], calendar: calendar)
+        let now = try date(day: 2, hour: 12, minute: 0, calendar: calendar)
+        let first = try #require(plan(state, now: now, calendar: calendar).first)
+
+        #expect(first.identifier.hasSuffix("-breakfast"))
+        #expect(first.notifyDate == (try date(day: 2, hour: 23, minute: 30, calendar: calendar)))
     }
 }
 

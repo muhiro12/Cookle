@@ -61,9 +61,11 @@ repository contains the full iOS project together with its shared Swift package.
 Recipe suggestions adapt to the first independent app open in each meal window
 (before 11:00, 11:00-16:00, and from 16:00). The last 14 local dates are kept in one
 device-local preference value. A meal needs at least two observed days and at
-least half of the independent-use days; its median time is rounded down to
-:00 or :30. Notification opens do not train the time, but renew that meal's
-14-day activity limit. Suggestions are capped at one per meal and three per day.
+least half of the independent-use days. The notification time is the median
+minus 30 minutes, rounded down to :00 or :30; a median before 00:30 produces
+a notification at 23:30 the preceding day. Notification opens do not train the
+time, but renew that meal's 14-day activity limit. Suggestions are capped at
+one per meal and three per day.
 
 Choose Off, At a set time (one suggestion per day), or Adaptive. New installations
 prefer Adaptive; upgrades preserve Off or the existing fixed hour and minute.

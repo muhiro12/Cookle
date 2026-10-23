@@ -4,7 +4,7 @@ import Foundation
 public struct AdaptiveRecipeSuggestionState: Codable, Equatable, Sendable {
     /// First independent opens, in local minutes, keyed by local calendar day and meal.
     public internal(set) var firstOpenMinutesByDay: [String: [DiaryObjectType: Int]]
-    /// Accepted local notification times, retained while the corresponding meal is used.
+    /// Learned local usage times rounded down to half hours, retained while the meal is used.
     public internal(set) var learnedMinutes: [DiaryObjectType: Int]
     /// Actual use, including notification opens, independently renews each meal's expiry.
     public internal(set) var lastUsedAt: [DiaryObjectType: Date]

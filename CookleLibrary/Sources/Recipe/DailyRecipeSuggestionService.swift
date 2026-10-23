@@ -17,28 +17,29 @@ enum DailyRecipeSuggestionService {
         identifierPrefix: String = CookleNotificationIdentifiers.suggestionIdentifierPrefix
     ) -> [DailyRecipeSuggestion] {
         let minutesPerHour = 60
+        let historyDays = AdaptiveSuggestionPolicy.historyDays
         return DiaryObjectType.allCases.flatMap { meal -> [DailyRecipeSuggestion] in
-            guard let minute = state.learnedMinutes[meal],
-                  let lastUsed = state.lastUsedAt[meal],
-                  let expiry = calendar.date(
-                    byAdding: .day,
-                    value: AdaptiveSuggestionPolicy.historyDays,
-                    to: lastUsed
-                  ) else {
+            guard let learnedMinute = state.learnedMinutes[meal],
+                  let usedAt = state.lastUsedAt[meal],
+                  let expiry = calendar.date(byAdding: .day, value: historyDays, to: usedAt) else {
                 return []
             }
+            let minute = AdaptiveSuggestionPolicy.notificationMinute(for: learnedMinute)
+            let lastUsedDayOffset = minute > learnedMinute ? -1 : .zero
+            let lastUsedNotificationDay = calendar.date(byAdding: .day, value: lastUsedDayOffset, to: usedAt)
+                ?? usedAt
             return buildSuggestions(
                 candidates: candidates,
                 hour: minute / minutesPerHour,
                 minute: minute % minutesPerHour,
                 now: now,
                 calendar: calendar,
-                daysAhead: min(daysAhead, AdaptiveSuggestionPolicy.historyDays),
+                daysAhead: min(daysAhead, historyDays),
                 identifierPrefix: identifierPrefix
             )
             .filter { suggestion in
                 suggestion.notifyDate < expiry
-                    && !calendar.isDate(suggestion.notifyDate, inSameDayAs: lastUsed)
+                    && !calendar.isDate(suggestion.notifyDate, inSameDayAs: lastUsedNotificationDay)
             }
             .map { suggestion in
                 .init(
