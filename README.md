@@ -25,18 +25,19 @@ repository contains the full iOS project together with its shared Swift package.
   the last or a random recipe, and creating diary entries.
 - Image Playground integration (iOS 18.1+) to generate dish photos from recipe
   content.
-- Creative recipe starting points with on-device Apple Intelligence (iOS 26+ on
-  supported devices). Describe ingredients, a dish, or preferences, then edit the
-  generated recipe in the ordinary form and improve it after cooking. Drafts
-  are saved only through the form's Create or Update action. Manual entry and
-  text/photo/website import remain available when generation is unavailable.
-  Debug iOS Simulator builds additionally evaluate Private Cloud Compute on
-  iOS 27+, with on-device fallback for unavailable or failed cloud services.
-  The request screen offers PCC Preferred and On-Device Only, remembers the
-  choice, explains the network and output-detail tradeoffs, shows the
-  processing method and fallback reason, and carries that information into the
-  unsaved recipe form. It is not stored as recipe data.
-  PCC activation for devices and distribution is a separate future step.
+- Creative recipe starting points use Apple's Private Cloud Compute (iOS 27+
+  on supported devices). Describe ingredients, a dish, or preferences, then edit
+  the generated recipe in the ordinary form and improve it after cooking.
+  Generation requires internet and available PCC quota. Network, quota, and
+  service errors keep the request for an explicit retry; there is no on-device
+  generation or automatic model substitution. The screen explains PCC processing,
+  and the unsaved editor identifies the method used without storing it as recipe
+  data. Drafts are saved only through the form's Create or Update action.
+  Manual entry and text/photo/website import remain available; their existing
+  on-device text extraction is unchanged.
+  PCC is currently enabled only in Debug iOS Simulator builds. Device and
+  distribution activation remains gated pending separate signing validation;
+  other builds hide AI creation instead of offering on-device generation.
 - Google Mobile Ads monetization and StoreKit-based subscriptions configured
   through MHPlatform runtime defaults.
 - Remote configuration fetch that can require users to update before continuing,
@@ -44,7 +45,7 @@ repository contains the full iOS project together with its shared Swift package.
 - Settings opens from the leading toolbar button in Diary, including existing
   Settings deep links.
 - AI-capable users have Diary, Recipe, Photo, and Search alongside a prominent
-  AI tab on iOS 27+. Earlier supported systems retain the regular AI tab.
+  AI tab on iOS 27+.
   Users without available AI keep a dedicated Search tab with no AI entry.
 - AI creation collects preferences in a local list. A standard multiline text
   field in a bottom safe-area bar accepts preferences directly, with a separate

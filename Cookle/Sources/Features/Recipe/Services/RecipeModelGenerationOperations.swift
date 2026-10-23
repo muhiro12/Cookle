@@ -7,33 +7,28 @@ enum RecipeModelGenerationOperations {
     private static let minimumLanguageConfidence = 0.8
 
     #if DEBUG && targetEnvironment(simulator)
-    // Device and distribution activation is separate from the PCC Simulator experiment.
+    // Device and distribution activation waits for its separate signing validation.
     @available(iOS 27.0, *)
     private static let cloudModel = PrivateCloudComputeLanguageModel()
-
-    @available(iOS 27.0, *)
-    private static var cloudUnavailableReason: RecipeGenerationStatus.FallbackReason? {
-        if !cloudModel.isAvailable {
-            return .unavailable
-        }
-        return cloudModel.quotaUsage.isLimitReached ? .quotaLimitReached : nil
-    }
-
     #endif
 
-    static var isAvailable: Bool {
-        #if DEBUG && targetEnvironment(simulator)
-        if #available(iOS 27.0, *), cloudModel.isAvailable, !cloudModel.quotaUsage.isLimitReached {
-            return true
-        }
-        #endif
-        return SystemLanguageModel.default.isAvailable
-    }
-
-    static var supportsCloudSelection: Bool {
+    static var unavailableReason: RecipeGenerationError? {
         #if DEBUG && targetEnvironment(simulator)
         if #available(iOS 27.0, *) {
-            return true
+            if !cloudModel.isAvailable {
+                return .unavailable
+            }
+            return cloudModel.quotaUsage.isLimitReached ? .quotaLimitReached : nil
+        }
+        #endif
+        return .unavailable
+    }
+
+    /// Quota exhaustion must not remove the tab or discard an entered request.
+    static var isAvailable: Bool {
+        #if DEBUG && targetEnvironment(simulator)
+        if #available(iOS 27.0, *) {
+            return cloudModel.isAvailable
         }
         #endif
         return false
@@ -48,26 +43,13 @@ enum RecipeModelGenerationOperations {
         return false
     }
 
-    static func canGenerate(onDeviceOnly: Bool) -> Bool {
-        onDeviceOnly ? SystemLanguageModel.default.isAvailable : isAvailable
-    }
-
-    static func plannedStatus(onDeviceOnly: Bool) -> RecipeGenerationStatus {
-        #if DEBUG && targetEnvironment(simulator)
-        if #available(iOS 27.0, *), !onDeviceOnly {
-            if let reason = cloudUnavailableReason {
-                return .onDevice(fallbackReason: reason)
-            }
-            return .privateCloudCompute
-        }
-        #endif
-        return .onDevice()
+    static var canGenerate: Bool {
+        unavailableReason == nil
     }
 
     /// Creates an unsaved recipe idea without consulting the saved recipe collection.
     static func generate(
         request: String,
-        onDeviceOnly: Bool = false,
         locale: Locale = .current,
         onStatus: (RecipeGenerationStatus) -> Void
     ) async throws -> RecipeInferenceResult {
@@ -78,24 +60,19 @@ enum RecipeModelGenerationOperations {
         }
 
         do {
-            let instructions = generationInstructions(request: normalizedRequest, locale: locale)
             #if DEBUG && targetEnvironment(simulator)
             if #available(iOS 27.0, *) {
+                let instructions = generationInstructions(request: normalizedRequest, locale: locale)
                 return try await RecipeGenerationOperations.generate(
-                    onDeviceOnly: onDeviceOnly,
-                    cloudUnavailableReason: cloudUnavailableReason,
+                    unavailableReason: unavailableReason,
                     generateWithCloud: {
                         try await generateWithCloud(request: normalizedRequest, instructions: instructions)
-                    },
-                    generateOnDevice: {
-                        try await generateOnDevice(request: normalizedRequest, instructions: instructions)
                     },
                     onStatus: onStatus
                 )
             }
             #endif
-            onStatus(.onDevice())
-            return try await generateOnDevice(request: normalizedRequest, instructions: instructions)
+            throw RecipeGenerationError.unavailable
         } catch is CancellationError {
             throw CancellationError()
         } catch let error as RecipeModelInferenceError {
@@ -115,27 +92,17 @@ enum RecipeModelGenerationOperations {
             try Task.checkCancellation()
             switch error {
             case .networkFailure:
-                throw RecipeGenerationStatus.FallbackReason.networkFailure
+                throw RecipeGenerationError.networkFailure
             case .quotaLimitReached:
-                throw RecipeGenerationStatus.FallbackReason.quotaLimitReached
+                throw RecipeGenerationError.quotaLimitReached
             case .serviceUnavailable:
-                throw RecipeGenerationStatus.FallbackReason.serviceUnavailable
+                throw RecipeGenerationError.serviceUnavailable
             @unknown default:
                 throw error
             }
         }
     }
     #endif
-
-    private static func generateOnDevice(request: String, instructions: String) async throws -> RecipeInferenceResult {
-        let model = SystemLanguageModel.default
-        guard model.isAvailable else {
-            // Parsing a wish is not a substitute for generating a recipe.
-            throw RecipeModelInferenceError.unavailable
-        }
-        try Task.checkCancellation()
-        return try await generate(request: request, session: .init(model: model, instructions: instructions))
-    }
 
     private static func generate(
         request: String,

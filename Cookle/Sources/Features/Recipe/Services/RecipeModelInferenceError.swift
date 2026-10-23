@@ -8,6 +8,10 @@ enum RecipeModelInferenceError: LocalizedError {
     case rejectedInput
     case unavailable
     case retry
+    case cloudUnavailable
+    case cloudQuotaLimitReached
+    case cloudNetworkFailure
+    case cloudServiceUnavailable
 
     var errorDescription: String? {
         switch self {
@@ -40,10 +44,42 @@ enum RecipeModelInferenceError: LocalizedError {
                 localized: "The recipe could not be generated. Try again or enter the recipe manually.",
                 comment: "Recipe inference failed without producing a usable response."
             )
+        case .cloudUnavailable:
+            String(
+                localized: """
+                Recipe creation requires Private Cloud Compute, which is currently unavailable. Try again later.
+                """,
+                comment: "PCC-only recipe generation is not available; input is retained."
+            )
+        case .cloudQuotaLimitReached:
+            String(
+                localized: """
+                Private Cloud Compute's usage limit has been reached. Your request is kept. \
+                Try again after the limit resets.
+                """,
+                comment: "PCC-only recipe generation stopped because of its usage quota."
+            )
+        case .cloudNetworkFailure:
+            String(
+                localized: """
+                Could not connect to Private Cloud Compute. Your request is kept. \
+                Check your internet connection and try again.
+                """,
+                comment: "PCC-only recipe generation failed without switching to an on-device model."
+            )
+        case .cloudServiceUnavailable:
+            String(
+                localized: "Private Cloud Compute is temporarily unavailable. Your request is kept. Try again later.",
+                comment: "PCC-only recipe generation stopped because the service is unavailable."
+            )
         }
     }
 
     init(error: any Error) {
+        if let generationError = error as? RecipeGenerationError {
+            self.init(generationError: generationError)
+            return
+        }
         if #available(iOS 27.0, *) {
             if error is SystemLanguageModel.Error {
                 self = .unavailable
@@ -63,6 +99,19 @@ enum RecipeModelInferenceError: LocalizedError {
             }
         } else {
             self.init(legacyError: error)
+        }
+    }
+
+    private init(generationError: RecipeGenerationError) {
+        switch generationError {
+        case .unavailable:
+            self = .cloudUnavailable
+        case .quotaLimitReached:
+            self = .cloudQuotaLimitReached
+        case .networkFailure:
+            self = .cloudNetworkFailure
+        case .serviceUnavailable:
+            self = .cloudServiceUnavailable
         }
     }
 

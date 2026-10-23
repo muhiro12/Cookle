@@ -5,8 +5,6 @@ import SwiftUI
 struct RecipeGenerationInputView: View {
     let style: RecipeGenerationInputStyle
     @Binding var text: String
-    @Binding var onDeviceOnly: Bool
-    let status: RecipeGenerationStatus?
     let isLoading: Bool
     let requestsFocus: Bool
 
@@ -75,8 +73,6 @@ private extension RecipeGenerationInputView {
 
     var processingControls: some View {
         RecipeGenerationControlsView(
-            onDeviceOnly: $onDeviceOnly,
-            status: status,
             isLoading: isLoading
         )
     }

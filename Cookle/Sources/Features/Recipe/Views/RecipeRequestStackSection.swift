@@ -13,7 +13,7 @@ struct RecipeRequestStackSection: View {
     var body: some View {
         Section {
             if preferences.isEmpty {
-                Text("Enter ingredients or preferences below, add them with +, then create a draft.")
+                Text("Enter ingredients or preferences below, add them with +, then choose Create with PCC.")
                     .foregroundStyle(.secondary)
             }
             ForEach(Array(preferences.enumerated()), id: \.offset) { _, preference in
@@ -34,7 +34,7 @@ struct RecipeRequestStackSection: View {
         } header: {
             Text("Recipe Request")
         } footer: {
-            Text("Adding a preference does not run AI. Create Draft uses the preferences listed here.")
+            Text("Adding a preference does not run AI. Create with PCC sends the preferences listed here.")
         }
     }
 }

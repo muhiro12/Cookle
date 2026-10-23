@@ -399,12 +399,6 @@
             "value" : "AI"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "AI"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -415,6 +409,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "IA"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI"
           }
         },
         "zh-Hans" : {
@@ -773,12 +773,6 @@
             "value" : "Add Preference"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "希望を追加"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -789,6 +783,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ajouter une préférence"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "希望を追加"
           }
         },
         "zh-Hans" : {
@@ -909,12 +909,6 @@
             "value" : "Add a preference"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "希望を入力"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -925,6 +919,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Saisissez une préférence"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "希望を入力"
           }
         },
         "zh-Hans" : {
@@ -965,40 +965,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "添加食谱，开始建立你的收藏。"
-          }
-        }
-      }
-    },
-    "Enter ingredients or preferences below, add them with +, then create a draft." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enter ingredients or preferences below, add them with +, then create a draft."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "下に食材や希望を入力し、＋で追加してから下書きを作成します。"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Escribe ingredientes o preferencias abajo, añádelos con + y crea un borrador."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Saisissez des ingrédients ou des préférences ci-dessous, ajoutez-les avec +, puis créez un brouillon."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在下方输入食材或偏好，点按＋添加后，再创建草稿。"
           }
         }
       }
@@ -1207,36 +1173,36 @@
         }
       }
     },
-    "Adding a preference does not run AI. Create Draft uses the preferences listed here." : {
+    "Adding a preference does not run AI. Create with PCC sends the preferences listed here." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Adding a preference does not run AI. Create Draft uses the preferences listed here."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "希望を追加するだけではAIは実行されません。「下書きを作成」で、この一覧の希望をまとめて送ります。"
+            "value" : "Adding a preference does not run AI. Create with PCC sends the preferences listed here."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Añadir una preferencia no ejecuta la IA. Crear borrador usa las preferencias de esta lista."
+            "value" : "Añadir una preferencia no ejecuta la IA. Crear con PCC envía las preferencias de esta lista."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ajouter une préférence ne lance pas l’IA. Créer un brouillon utilise les préférences de cette liste."
+            "value" : "Ajouter une préférence ne lance pas l’IA. Créer avec PCC envoie les préférences de cette liste."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "希望を追加するだけではAIは実行されません。「PCCで作成」で、この一覧の希望をまとめて送ります。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "添加偏好不会运行 AI。“创建草稿”会使用此处列出的偏好。"
+            "value" : "添加偏好不会运行 AI。“使用 PCC 创建”会发送此处列出的偏好。"
           }
         }
       }
@@ -3899,6 +3865,41 @@
         }
       }
     },
+    "Could not connect to Private Cloud Compute. Your request is kept. Check your internet connection and try again." : {
+      "comment" : "PCC-only recipe generation failed without switching to an on-device model.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not connect to Private Cloud Compute. Your request is kept. Check your internet connection and try again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo conectar con Private Cloud Compute. Tu solicitud se conserva. Comprueba tu conexión a internet e inténtalo de nuevo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connexion à Private Cloud Compute impossible. Votre demande est conservée. Vérifiez votre connexion internet et réessayez."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Cloud Computeに接続できませんでした。希望は保持されています。インターネット接続を確認して再試行してください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法连接到 Private Cloud Compute。你的需求已保留。请检查网络连接后重试。"
+          }
+        }
+      }
+    },
     "Couldn't extract enough recipe details from the text.\nTry including the title, ingredients, or steps." : {
       "localizations" : {
         "en" : {
@@ -4137,6 +4138,40 @@
         }
       }
     },
+    "Create with PCC" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create with PCC"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crear con PCC"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Créer avec PCC"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PCCで作成"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用 PCC 创建"
+          }
+        }
+      }
+    },
     "Created At" : {
       "localizations" : {
         "en" : {
@@ -4167,40 +4202,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "创建于"
-          }
-        }
-      }
-    },
-    "Created on device" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Created on device"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Creado en el dispositivo"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Créé sur l’appareil"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "端末内モデルで作成"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在设备端创建"
           }
         }
       }
@@ -4239,36 +4240,36 @@
         }
       }
     },
-    "Creates recipe ideas on this device without internet. Steps and explanations may be brief." : {
+    "Creates recipe ideas with Apple's Private Cloud Compute. Requires internet. If PCC is unavailable, your request stays here so you can try again later." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Creates recipe ideas on this device without internet. Steps and explanations may be brief."
+            "value" : "Creates recipe ideas with Apple's Private Cloud Compute. Requires internet. If PCC is unavailable, your request stays here so you can try again later."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Crea propuestas de recetas en este dispositivo sin internet. Los pasos y las explicaciones pueden ser breves."
+            "value" : "Crea propuestas de recetas con Private Cloud Compute de Apple. Requiere internet. Si PCC no está disponible, tu solicitud se conserva aquí para que puedas volver a intentarlo más tarde."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Crée des idées de recettes sur cet appareil sans internet. Les étapes et les explications peuvent être succinctes."
+            "value" : "Crée des idées de recettes avec Private Cloud Compute d’Apple. Une connexion internet est nécessaire. Si PCC est indisponible, votre demande reste ici pour réessayer plus tard."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "通信せず、この端末内でレシピ案を作成します。手順や説明が簡略になる場合があります。"
+            "value" : "AppleのPrivate Cloud Computeでレシピ案を作成します。インターネット接続が必要です。PCCが利用できない場合も希望はこの画面に残り、後で再試行できます。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "无需联网，直接在此设备上生成食谱建议。步骤和说明可能较为简略。"
+            "value" : "使用 Apple 的 Private Cloud Compute 创建食谱建议。需要联网。如果 PCC 不可用，你的需求会保留在此处，以便稍后重试。"
           }
         }
       }
@@ -5913,12 +5914,6 @@
             "value" : "Edit Request"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "希望を編集"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5929,6 +5924,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Modifier la demande"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "希望を編集"
           }
         },
         "zh-Hans" : {
@@ -6139,6 +6140,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "手动输入"
+          }
+        }
+      }
+    },
+    "Enter ingredients or preferences below, add them with +, then choose Create with PCC." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter ingredients or preferences below, add them with +, then choose Create with PCC."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escribe ingredientes o preferencias abajo, añádelos con + y elige Crear con PCC."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saisissez des ingrédients ou des préférences ci-dessous, ajoutez-les avec +, puis choisissez Créer avec PCC."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下に食材や希望を入力し、＋で追加してから「PCCで作成」を押します。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在下方输入食材或偏好，点按＋添加后，再选择“使用 PCC 创建”。"
           }
         }
       }
@@ -6525,12 +6560,6 @@
             "value" : "Hide Keyboard"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "キーボードを閉じる"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6541,6 +6570,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Masquer le clavier"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "キーボードを閉じる"
           }
         },
         "zh-Hans" : {
@@ -9309,74 +9344,6 @@
         }
       }
     },
-    "On-Device Model" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "On-Device Model"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Modelo del dispositivo"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Modèle sur l’appareil"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "端末内モデル"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "设备端模型"
-          }
-        }
-      }
-    },
-    "On-Device Only" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "On-Device Only"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Solo en el dispositivo"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sur l’appareil uniquement"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "端末内のみ"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "仅限设备端"
-          }
-        }
-      }
-    },
     "Open App Store" : {
       "localizations" : {
         "en" : {
@@ -10091,40 +10058,6 @@
         }
       }
     },
-    "PCC Preferred" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "PCC Preferred"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Priorizar PCC"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "PCC en priorité"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "PCC優先"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "优先使用 PCC"
-          }
-        }
-      }
-    },
     "Paste or import some recipe text first." : {
       "localizations" : {
         "en" : {
@@ -10465,40 +10398,6 @@
         }
       }
     },
-    "Prefers Apple's Private Cloud Compute for more detailed recipe ideas. Requires internet; uses the on-device model when unavailable." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prefers Apple's Private Cloud Compute for more detailed recipe ideas. Requires internet; uses the on-device model when unavailable."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Da prioridad a Private Cloud Compute de Apple para crear propuestas de recetas más detalladas. Requiere internet; si no está disponible, usa el modelo del dispositivo."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Privilégie Private Cloud Compute d’Apple pour des idées de recettes plus détaillées. Nécessite internet ; utilise le modèle sur l’appareil en cas d’indisponibilité."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "詳しいレシピ案の作成にAppleのPrivate Cloud Computeを優先します。通信が必要です。利用できない場合は端末内モデルを使用します。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "优先使用 Apple 的 Private Cloud Compute，生成更详细的食谱建议。需要联网；不可用时使用设备端模型。"
-          }
-        }
-      }
-    },
     "Preview" : {
       "localizations" : {
         "en" : {
@@ -10635,40 +10534,6 @@
         }
       }
     },
-    "Private Cloud Compute could not be reached." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Private Cloud Compute could not be reached."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No se ha podido conectar con Private Cloud Compute."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Impossible de se connecter à Private Cloud Compute."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Private Cloud Computeに接続できませんでした。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无法连接到 Private Cloud Compute。"
-          }
-        }
-      }
-    },
     "Private Cloud Compute is nearing its daily usage limit." : {
       "localizations" : {
         "en" : {
@@ -10703,138 +10568,72 @@
         }
       }
     },
-    "Private Cloud Compute is not ready on this device." : {
+    "Private Cloud Compute is temporarily unavailable. Your request is kept. Try again later." : {
+      "comment" : "PCC-only recipe generation stopped because the service is unavailable.",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Private Cloud Compute is not ready on this device."
+            "value" : "Private Cloud Compute is temporarily unavailable. Your request is kept. Try again later."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Private Cloud Compute no está disponible en este dispositivo."
+            "value" : "Private Cloud Compute no está disponible temporalmente. Tu solicitud se conserva. Inténtalo más tarde."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Private Cloud Compute n’est pas disponible sur cet appareil."
+            "value" : "Private Cloud Compute est temporairement indisponible. Votre demande est conservée. Réessayez plus tard."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "この端末ではPrivate Cloud Computeを利用できません。"
+            "value" : "Private Cloud Computeが一時的に利用できません。希望は保持されています。時間をおいて再試行してください。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "此设备上的 Private Cloud Compute 尚不可用。"
+            "value" : "Private Cloud Compute 暂时不可用。你的需求已保留。请稍后重试。"
           }
         }
       }
     },
-    "Private Cloud Compute is temporarily unavailable." : {
+    "Private Cloud Compute's usage limit has been reached. Your request is kept. Try again after the limit resets." : {
+      "comment" : "PCC-only recipe generation stopped because of its usage quota.",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Private Cloud Compute is temporarily unavailable."
+            "value" : "Private Cloud Compute's usage limit has been reached. Your request is kept. Try again after the limit resets."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El servicio Private Cloud Compute no está disponible temporalmente."
+            "value" : "Se ha alcanzado el límite de uso de Private Cloud Compute. Tu solicitud se conserva. Vuelve a intentarlo cuando se restablezca el límite."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Le service Private Cloud Compute est temporairement indisponible."
+            "value" : "La limite d’utilisation de Private Cloud Compute est atteinte. Votre demande est conservée. Réessayez après la réinitialisation de la limite."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Private Cloud Computeのサービスを一時的に利用できません。"
+            "value" : "Private Cloud Computeの利用上限に達しました。希望は保持されています。上限がリセットされてから再試行してください。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Private Cloud Compute 服务暂时不可用。"
-          }
-        }
-      }
-    },
-    "Private Cloud Compute's daily usage limit has been reached." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Private Cloud Compute's daily usage limit has been reached."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se ha alcanzado el límite de uso diario de Private Cloud Compute."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La limite d’utilisation quotidienne de Private Cloud Compute est atteinte."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Private Cloud Computeの1日の利用上限に達しています。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "已达到 Private Cloud Compute 的每日使用上限。"
-          }
-        }
-      }
-    },
-    "Processing Method" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Processing Method"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Método de procesamiento"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mode de traitement"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "処理方法"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "处理方式"
+            "value" : "已达到 Private Cloud Compute 的使用上限。你的需求已保留。请在上限重置后重试。"
           }
         }
       }
@@ -11243,6 +11042,41 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "食谱网址"
+          }
+        }
+      }
+    },
+    "Recipe creation requires Private Cloud Compute, which is currently unavailable. Try again later." : {
+      "comment" : "PCC-only recipe generation is not available; input is retained.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recipe creation requires Private Cloud Compute, which is currently unavailable. Try again later."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para crear recetas se necesita Private Cloud Compute, que no está disponible en este momento. Inténtalo más tarde."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La création de recettes nécessite Private Cloud Compute, qui est actuellement indisponible. Réessayez plus tard."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピ案の作成にはPrivate Cloud Computeが必要ですが、現在は利用できません。時間をおいて再試行してください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "创建食谱需要 Private Cloud Compute，但目前不可用。请稍后重试。"
           }
         }
       }
@@ -14646,40 +14480,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "所选文件由更新版本的 Cookle 导出。请更新 Cookle 后重试。"
-          }
-        }
-      }
-    },
-    "The selected model is unavailable. Change the processing method or try again later." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The selected model is unavailable. Change the processing method or try again later."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "El modelo seleccionado no está disponible. Cambia el método de procesamiento o inténtalo más tarde."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Le modèle sélectionné est indisponible. Changez de mode de traitement ou réessayez plus tard."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "選択したモデルを利用できません。処理方法を変更するか、後でもう一度お試しください。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "所选模型不可用。请更改处理方式或稍后重试。"
           }
         }
       }

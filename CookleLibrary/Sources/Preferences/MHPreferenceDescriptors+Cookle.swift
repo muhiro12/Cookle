@@ -147,7 +147,7 @@ public extension MHPreferenceDescriptors {
         )
     }
 
-    /// Keeps creative recipe requests on this device when enabled.
+    /// Retired recipe-generation preference retained for storage-key compatibility.
     var isRecipeGenerationOnDeviceOnly: MHBoolPreferenceDescriptor {
         .init(
             storageKey: CookleUserDefaultsKeys.Standard.isRecipeGenerationOnDeviceOnly.rawValue,

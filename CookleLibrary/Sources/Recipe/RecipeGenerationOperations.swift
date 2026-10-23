@@ -4,41 +4,30 @@ import Foundation
 @preconcurrency
 @MainActor
 public enum RecipeGenerationOperations {
-    /// Generates with the selected policy and reports each actual processing method.
+    /// Generates a recipe with Private Cloud Compute without substituting another model.
     ///
-    /// Only a typed recoverable cloud failure permits one local attempt. A local-only
-    /// choice, cancellation, or other error never starts a cloud request or retry loop.
+    /// Unavailability and failed requests leave the input available for an explicit retry.
+    /// Cancellation takes precedence over a late response or service error.
     public static func generate(
-        onDeviceOnly: Bool,
-        cloudUnavailableReason: RecipeGenerationStatus.FallbackReason?,
+        unavailableReason: RecipeGenerationError?,
         generateWithCloud: () async throws -> RecipeInferenceResult,
-        generateOnDevice: () async throws -> RecipeInferenceResult,
         onStatus: (RecipeGenerationStatus) -> Void
     ) async throws -> RecipeInferenceResult {
         try Task.checkCancellation()
-        var fallbackReason = cloudUnavailableReason
-        if !onDeviceOnly, fallbackReason == nil {
-            onStatus(.privateCloudCompute)
-            try Task.checkCancellation()
-            do {
-                let recipe = try await generateWithCloud()
-                try Task.checkCancellation()
-                return recipe
-            } catch {
-                try Task.checkCancellation()
-                guard let reason = error as? RecipeGenerationStatus.FallbackReason else {
-                    throw error
-                }
-                fallbackReason = reason
-            }
+        if let unavailableReason {
+            throw unavailableReason
         }
 
+        onStatus(.privateCloudCompute)
         try Task.checkCancellation()
-        onStatus(.onDevice(fallbackReason: onDeviceOnly ? nil : fallbackReason))
-        try Task.checkCancellation()
-        let recipe = try await generateOnDevice()
-        try Task.checkCancellation()
-        return recipe
+        do {
+            let recipe = try await generateWithCloud()
+            try Task.checkCancellation()
+            return recipe
+        } catch {
+            try Task.checkCancellation()
+            throw error
+        }
     }
 
     /// Normalizes creative output and requires a name, ingredients, and steps.

@@ -27,9 +27,6 @@ struct InferRecipeFormView: View {
     @Environment(\.dismiss)
     private var dismiss
 
-    @AppStorage(\.isRecipeGenerationOnDeviceOnly)
-    private var isRecipeGenerationOnDeviceOnly
-
     @State private var hasOpenedSource = false
     @State private var localText = ""
     @State private var sourceURL: URL?
@@ -48,8 +45,6 @@ struct InferRecipeFormView: View {
                 RecipeGenerationInputView(
                     style: generationInputStyle,
                     text: textBinding,
-                    onDeviceOnly: $isRecipeGenerationOnDeviceOnly,
-                    status: generationStatus,
                     isLoading: isLoading,
                     requestsFocus: onInferenceApplied == nil
                 )
@@ -82,12 +77,6 @@ struct InferRecipeFormView: View {
         }
         .onChange(of: isLoading) {
             generationLoading?.wrappedValue = isLoading
-        }
-        .onChange(of: isRecipeGenerationOnDeviceOnly) {
-            guard !isLoading else {
-                return
-            }
-            generationStatus = nil
         }
         .alert(
             isPhotoRecognitionFailure ? Text("Cannot Read Photo") : errorTitle,
@@ -134,9 +123,7 @@ struct InferRecipeFormView: View {
         !isLoading
             && !hasPendingGenerationRequest
             && !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-            && (source != .generation || RecipeModelGenerationOperations.canGenerate(
-                onDeviceOnly: isRecipeGenerationOnDeviceOnly
-            ))
+            && (source != .generation || RecipeModelGenerationOperations.canGenerate)
     }
 
     @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
@@ -153,8 +140,18 @@ struct InferRecipeFormView: View {
             }
         }
         ToolbarItem(placement: .confirmationAction) {
-            Button("Create Draft", systemImage: "sparkles", action: requestInference)
-                .disabled(!canSubmit)
+            Button(action: requestInference) {
+                Label {
+                    if source == .generation {
+                        Text("Create with PCC")
+                    } else {
+                        Text("Create Draft")
+                    }
+                } icon: {
+                    Image(systemName: "sparkles")
+                }
+            }
+            .disabled(!canSubmit)
         }
     }
 
@@ -285,14 +282,10 @@ private extension InferRecipeFormView {
         }
         model.captureInitialChangeSnapshotIfNeeded()
         let reviewedInput = model.changeSnapshot
-        let onDeviceOnly = isRecipeGenerationOnDeviceOnly
         generationStatus = nil
         isLoading = true
         operationTask = Task { @MainActor in
-            await applyInference(
-                reviewedInput: reviewedInput,
-                onDeviceOnly: onDeviceOnly
-            )
+            await applyInference(reviewedInput: reviewedInput)
         }
     }
 
@@ -302,8 +295,7 @@ private extension InferRecipeFormView {
     /// longer covers it; the result waits for a new review instead.
     @MainActor
     func applyInference(
-        reviewedInput: RecipeFormChangeSnapshot,
-        onDeviceOnly: Bool
+        reviewedInput: RecipeFormChangeSnapshot
     ) async {
         defer {
             isLoading = false
@@ -313,8 +305,7 @@ private extension InferRecipeFormView {
             var inference: RecipeInferenceResult
             if source == .generation {
                 inference = try await RecipeModelGenerationOperations.generate(
-                    request: text,
-                    onDeviceOnly: onDeviceOnly
+                    request: text
                 ) { status in
                     guard !Task.isCancelled else {
                         return
