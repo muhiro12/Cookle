@@ -98,8 +98,7 @@ enum RecipeModelGenerationOperations {
     ) async throws -> RecipeInferenceResult {
         let generated = try await session.respond(
             to: "Create an editable recipe idea for this request:\n\(request)",
-            generating: GeneratedRecipe.self,
-            contextOptions: .init(reasoningLevel: .moderate)
+            generating: GeneratedRecipe.self
         ).content
         try Task.checkCancellation()
         guard let draft = RecipeGenerationOperations.preparedDraft(
