@@ -35,7 +35,8 @@ struct DiaryListView: View {
                     Text("A dish name or a few words is enough to start.")
                 } actions: {
                     AddDiaryButton()
-                    AddRecipeButton(showsTitle: true)
+                    AddRecipeButton()
+                        .labelStyle(.titleOnly)
                 }
                 .cookleEmptyState()
             } else {
@@ -64,7 +65,7 @@ struct DiaryListView: View {
             }
             if !diaries.isEmpty || !recipes.isEmpty {
                 ToolbarItem(placement: usesSidebarToolbar ? .secondaryAction : .primaryAction) {
-                    AddRecipeButton(showsTitle: true)
+                    AddRecipeButton()
                 }
                 if #available(iOS 26.0, *), !usesSidebarToolbar {
                     ToolbarSpacer(.fixed, placement: .primaryAction)

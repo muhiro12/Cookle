@@ -12,7 +12,8 @@ struct DiaryRecipeInspirationSection: View {
     var body: some View {
         MHGroupedRows {
             if recipes.isEmpty {
-                AddRecipeButton(showsTitle: true)
+                AddRecipeButton()
+                    .labelStyle(.titleOnly)
             } else {
                 ForEach(candidates) { recipe in
                     Button {

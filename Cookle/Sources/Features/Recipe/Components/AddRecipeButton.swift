@@ -13,7 +13,6 @@ struct AddRecipeButton: View {
     @Environment(RecipeFormPresenter.self)
     private var recipeFormPresenter
 
-    private let showsTitle: Bool
     private let action: (() -> Void)?
 
     var body: some View {
@@ -43,16 +42,11 @@ struct AddRecipeButton: View {
         }
     }
 
-    @ViewBuilder private var buttonLabel: some View {
-        if showsTitle {
-            Text("Add Recipe")
-        } else {
-            Label("Add Recipe", systemImage: "plus")
-        }
+    private var buttonLabel: some View {
+        Label("Add Recipe", systemImage: "book.badge.plus")
     }
 
-    init(showsTitle: Bool = false, action: (() -> Void)? = nil) {
-        self.showsTitle = showsTitle
+    init(action: (() -> Void)? = nil) {
         self.action = action
     }
 }
