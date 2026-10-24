@@ -11,7 +11,13 @@ struct GeneratedRecipe {
         .minimum(1)
     )
     var servingSize: Int
-    @Guide(description: "Estimated cooking time in minutes. Use zero when no cooking is needed.", .minimum(0))
+    @Guide(
+        description: """
+        Estimated total preparation, waiting and cooking time in minutes, \
+        including preparation for uncooked dishes.
+        """,
+        .minimum(0)
+    )
     var cookingTime: Int
     @Guide(
         description: """
