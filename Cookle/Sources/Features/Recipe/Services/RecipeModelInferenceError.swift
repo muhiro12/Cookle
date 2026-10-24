@@ -10,8 +10,10 @@ enum RecipeModelInferenceError: LocalizedError {
     case retry
     case cloudUnavailable
     case cloudQuotaLimitReached
+    case cloudRateLimited
     case cloudNetworkFailure
     case cloudServiceUnavailable
+    case cloudRequestFailed
 
     var errorDescription: String? {
         switch self {
@@ -67,10 +69,24 @@ enum RecipeModelInferenceError: LocalizedError {
                 """,
                 comment: "PCC-only recipe generation failed without switching to an on-device model."
             )
+        case .cloudRateLimited:
+            String(
+                localized: """
+                Private Cloud Compute is limiting requests. Your request is kept. Wait before trying again.
+                """,
+                comment: "PCC rate limiting is separate from the daily quota reported by the framework."
+            )
         case .cloudServiceUnavailable:
             String(
                 localized: "Private Cloud Compute is temporarily unavailable. Your request is kept. Try again later.",
                 comment: "PCC-only recipe generation stopped because the service is unavailable."
+            )
+        case .cloudRequestFailed:
+            String(
+                localized: """
+                Private Cloud Compute could not complete the request. Your request is kept. Try again later.
+                """,
+                comment: "PCC returned an opaque error; do not assert a quota, network, or recipe-quality cause."
             )
         }
     }
@@ -108,10 +124,14 @@ enum RecipeModelInferenceError: LocalizedError {
             self = .cloudUnavailable
         case .quotaLimitReached:
             self = .cloudQuotaLimitReached
+        case .rateLimited:
+            self = .cloudRateLimited
         case .networkFailure:
             self = .cloudNetworkFailure
         case .serviceUnavailable:
             self = .cloudServiceUnavailable
+        case .requestFailed:
+            self = .cloudRequestFailed
         }
     }
 

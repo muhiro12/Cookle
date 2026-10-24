@@ -1,10 +1,13 @@
 import Foundation
 import FoundationModels
 import NaturalLanguage
+import OSLog
 
 @available(iOS 26.0, *)
 enum RecipeModelGenerationOperations {
     private static let minimumLanguageConfidence = 0.8
+    private static let maximumDiagnosticCauseCount = 8
+    private static let logger = Logger(subsystem: "Cookle", category: "RecipeGeneration")
 
     @available(iOS 27.0, *)
     private static let cloudModel = PrivateCloudComputeLanguageModel()
@@ -76,18 +79,71 @@ enum RecipeModelGenerationOperations {
     private static func generateWithCloud(request: String, instructions: String) async throws -> RecipeInferenceResult {
         do {
             return try await generate(request: request, session: .init(model: cloudModel, instructions: instructions))
-        } catch let error as PrivateCloudComputeLanguageModel.Error {
+        } catch {
             try Task.checkCancellation()
-            switch error {
+            throw classifiedCloudError(error)
+        }
+    }
+
+    @available(iOS 27.0, *)
+    static func classifiedCloudError(_ error: any Error) -> any Error {
+        if error is CancellationError || error is RecipeGenerationError || error is RecipeModelInferenceError {
+            return error
+        }
+        if let cloudError = error as? PrivateCloudComputeLanguageModel.Error {
+            switch cloudError {
             case .networkFailure:
-                throw RecipeGenerationError.networkFailure
+                return RecipeGenerationError.networkFailure
             case .quotaLimitReached:
-                throw RecipeGenerationError.quotaLimitReached
+                return RecipeGenerationError.quotaLimitReached
             case .serviceUnavailable:
-                throw RecipeGenerationError.serviceUnavailable
+                return RecipeGenerationError.serviceUnavailable
             @unknown default:
-                throw error
+                return RecipeGenerationError.requestFailed
             }
+        }
+        if let modelError = error as? LanguageModelError {
+            if case .rateLimited = modelError {
+                return RecipeGenerationError.rateLimited
+            }
+            return modelError
+        }
+        // Opaque framework errors can hide a rate limit, but private numeric
+        // codes are not a stable contract for classifying the cause.
+        return RecipeGenerationError.requestFailed
+    }
+
+    @available(iOS 27.0, *)
+    private static func respond(
+        session: LanguageModelSession,
+        prompt: String,
+        stage: String
+    ) async throws -> GeneratedRecipe {
+        do {
+            return try await session.respond(to: prompt, generating: GeneratedRecipe.self).content
+        } catch {
+            try Task.checkCancellation()
+            if !(error is CancellationError) {
+                var pending = [error as NSError]
+                var summaries = [String]()
+                while !pending.isEmpty, summaries.count < maximumDiagnosticCauseCount {
+                    let cause = pending.removeFirst()
+                    summaries.append("\(cause.domain):\(cause.code)")
+                    if let underlying = cause.userInfo[NSUnderlyingErrorKey] as? NSError {
+                        pending.append(underlying)
+                    }
+                    pending.append(contentsOf: cause.userInfo[NSMultipleUnderlyingErrorsKey] as? [NSError] ?? [])
+                }
+                let chain = summaries.joined(separator: " -> ")
+                let errorType = String(reflecting: type(of: error))
+                logger.error(
+                    """
+                    PCC \(stage, privacy: .public) failed: \
+                    \(errorType, privacy: .public); \(chain, privacy: .public)
+                    """
+                )
+            }
+            throw error
         }
     }
 
@@ -96,24 +152,26 @@ enum RecipeModelGenerationOperations {
         request: String,
         session: LanguageModelSession
     ) async throws -> RecipeInferenceResult {
-        let generated = try await session.respond(
-            to: "Create an editable recipe idea for this request:\n\(request)",
-            generating: GeneratedRecipe.self
-        ).content
+        let generated = try await respond(
+            session: session,
+            prompt: "Create an editable recipe idea for this request:\n\(request)",
+            stage: "generation"
+        )
         try Task.checkCancellation()
         guard let draft = try await RecipeGenerationOperations.validatedDraft(
             from: generated.recipeInferenceResult,
             repair: { _, issues in
                 let findings = issues.map(\.repairInstruction).joined(separator: "\n")
-                let corrected = try await session.respond(
-                    to: """
+                let corrected = try await respond(
+                    session: session,
+                    prompt: """
                     Application checks found these concrete omissions in the preceding recipe:
                     \(findings)
                     Correct these findings and return the complete recipe. Preserve all original request \
                     constraints and the sound parts of the recipe. Do not add unrelated foods or merely reword it.
                     """,
-                    generating: GeneratedRecipe.self
-                ).content
+                    stage: "repair"
+                )
                 return corrected.recipeInferenceResult
             }
         ) else {

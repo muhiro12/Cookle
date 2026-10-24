@@ -10534,6 +10534,76 @@
         }
       }
     },
+    "Private Cloud Compute could not complete the request. Your request is kept. Try again later." : {
+      "comment" : "PCC returned an opaque error; do not assert a quota, network, or recipe-quality cause.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Cloud Compute could not complete the request. Your request is kept. Try again later."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Cloud Computeで処理を完了できませんでした。希望は保持されています。時間をおいて再試行してください。"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Cloud Compute no ha podido completar la solicitud. Tu solicitud se conserva. Inténtalo más tarde."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Cloud Compute n’a pas pu traiter la demande. Votre demande est conservée. Réessayez plus tard."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Cloud Compute 未能完成请求。你的需求已保留。请稍后重试。"
+          }
+        }
+      }
+    },
+    "Private Cloud Compute is limiting requests. Your request is kept. Wait before trying again." : {
+      "comment" : "PCC rate limiting is separate from the daily quota reported by the framework.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Cloud Compute is limiting requests. Your request is kept. Wait before trying again."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Cloud Computeでリクエストが制限されています。希望は保持されています。時間をおいて再試行してください。"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Cloud Compute está limitando las solicitudes. Tu solicitud se conserva. Espera antes de volver a intentarlo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Cloud Compute limite les demandes. Votre demande est conservée. Patientez avant de réessayer."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Cloud Compute 正在限制请求。你的需求已保留。请等待一段时间后再重试。"
+          }
+        }
+      }
+    },
     "Private Cloud Compute is nearing its daily usage limit." : {
       "localizations" : {
         "en" : {
