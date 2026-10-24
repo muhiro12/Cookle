@@ -36,7 +36,6 @@ struct DiaryListView: View {
                 } actions: {
                     AddDiaryButton()
                     AddRecipeButton()
-                        .labelStyle(.titleOnly)
                 }
                 .cookleEmptyState()
             } else {

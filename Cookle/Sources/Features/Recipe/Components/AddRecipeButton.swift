@@ -43,7 +43,7 @@ struct AddRecipeButton: View {
     }
 
     private var buttonLabel: some View {
-        Label("Add Recipe", systemImage: "book.badge.plus")
+        Label("Add Recipe", systemImage: "book.pages")
     }
 
     init(action: (() -> Void)? = nil) {

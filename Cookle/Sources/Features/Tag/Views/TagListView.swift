@@ -83,7 +83,6 @@ private extension TagListView {
                 Text("Tags appear after recipes create them.")
             } actions: {
                 AddRecipeButton()
-                    .labelStyle(.titleOnly)
             }
         }
     }

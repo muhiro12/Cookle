@@ -95,7 +95,6 @@ private extension RecipeListView {
             Text("Add a recipe to start building your collection.")
         } actions: {
             AddRecipeButton()
-                .labelStyle(.titleOnly)
                 .cooklePopoverTip(
                     addRecipeTip,
                     arrowEdge: .top

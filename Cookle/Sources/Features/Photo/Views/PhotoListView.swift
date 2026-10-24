@@ -63,7 +63,6 @@ private extension PhotoListView {
             Text("Start a recipe with just a name, then add photos when you are ready.")
         } actions: {
             AddRecipeButton()
-                .labelStyle(.titleOnly)
         }
         .cookleEmptyState()
     }
