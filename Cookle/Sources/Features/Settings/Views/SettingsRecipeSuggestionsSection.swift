@@ -13,6 +13,8 @@ struct SettingsRecipeSuggestionsSection: View {
     private var settingsActionService
     @Environment(\.openURL)
     private var openURL
+    @Environment(\.locale)
+    private var locale
 
     @AppStorage(\.recipeSuggestionNotificationMode, default: "adaptive")
     private var storedMode
@@ -56,11 +58,26 @@ struct SettingsRecipeSuggestionsSection: View {
         } header: {
             Text("Recipe Suggestion Notifications")
         } footer: {
-            Text(statusDescription)
+            VStack(alignment: .leading) {
+                Text(statusDescription)
+                if mode != .off, notificationService.isAuthorizationGranted {
+                    nextSuggestionDescription
+                }
+            }
         }
         .onChange(of: storedMode, applySettings)
         .onChange(of: hour, applySettings)
         .onChange(of: minute, applySettings)
+    }
+
+    private var nextSuggestionDescription: some View {
+        TimelineView(.explicit(notificationService.scheduledSuggestionDates)) { timeline in
+            if let date = notificationService.scheduledSuggestionDates.first(where: { $0 > timeline.date }) {
+                Text("Next notification: \(date.formatted(.dateTime.month().day().hour().minute().locale(locale)))")
+            } else {
+                Text("No upcoming recipe suggestions.")
+            }
+        }
     }
 
     @ViewBuilder private var fixedTimingControls: some View {

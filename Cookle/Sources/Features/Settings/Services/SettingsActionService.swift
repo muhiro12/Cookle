@@ -15,6 +15,7 @@ final class SettingsActionService {
 
     func prepareNotificationSettings() async {
         await notificationService.refreshAuthorizationStatus()
+        await notificationService.refreshScheduledSuggestionDates()
     }
 
     func applyNotificationSettings() async {

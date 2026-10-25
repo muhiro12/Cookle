@@ -30,6 +30,7 @@ final class NotificationService: NSObject {
     var suggestionState: AdaptiveRecipeSuggestionState
 
     var authorizationStatus: UNAuthorizationStatus = .notDetermined
+    private(set) var scheduledSuggestionDates: [Date] = []
 
     init(
         modelContainer: ModelContainer,
@@ -96,6 +97,23 @@ final class NotificationService: NSObject {
         await MainActor.run {
             authorizationStatus = settings.authorizationStatus
         }
+    }
+
+    func refreshScheduledSuggestionDates() async {
+        let requests = await notificationCenter.pendingNotificationRequests()
+        guard isAuthorizationGranted, CooklePreferences.suggestionNotificationMode != .off else {
+            scheduledSuggestionDates = []
+            return
+        }
+        scheduledSuggestionDates = requests
+            .compactMap { request in
+                guard CookleNotificationIdentifiers.isScheduledSuggestionIdentifier(request.identifier),
+                      let trigger = request.trigger as? UNCalendarNotificationTrigger else {
+                    return nil
+                }
+                return trigger.nextTriggerDate()
+            }
+            .sorted()
     }
 
     func sendTestSuggestionNotification() async throws {
@@ -337,6 +355,7 @@ extension NotificationService {
             while isLifecycleSynchronizationPending {
                 isLifecycleSynchronizationPending = false
                 await syncSuggestions()
+                await refreshScheduledSuggestionDates()
             }
             lifecycleSynchronizationTask = nil
         }
