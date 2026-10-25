@@ -8,12 +8,6 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @Environment(\.scenePhase)
-    private var scenePhase
-    @State private var isAIAvailable = RecipeDraftSource.generation.isAvailable
-    @State private var aiRecipeRequest = ""
-    @State private var aiRecipeRequestLine = ""
-
     @Binding private var selection: MainTab
     @Binding private var diarySelection: Diary?
     @Binding private var diaryRecipeSelection: Recipe?
@@ -27,36 +21,10 @@ struct MainTabView: View {
     @Binding private var ingredientRecipeSelection: Recipe?
     @Binding private var incomingSearchQuery: String?
 
-    private var tabs: [MainTab] {
-        MainTab.displayedTabs(includesAI: isAIAvailable)
-    }
-
-    /// Availability can change while AI is selected. Never render a missing selection.
-    private var visibleSelection: Binding<MainTab> {
-        .init(
-            get: {
-                tabs.contains(selection) ? selection : .diary
-            },
-            set: { tab in
-                selection = tab
-            }
-        )
-    }
-
     var body: some View {
         tabView
             .sheet(item: $tagBrowser) { browser in
                 tagBrowserView(for: browser)
-            }
-            .onChange(of: tabs) {
-                if !tabs.contains(selection) {
-                    selection = .diary
-                }
-            }
-            .onChange(of: scenePhase) {
-                if scenePhase == .active {
-                    isAIAvailable = RecipeDraftSource.generation.isAvailable
-                }
             }
     }
 
@@ -65,9 +33,7 @@ struct MainTabView: View {
             #if compiler(>=6.4)
             if #available(iOS 27, *) {
                 roleBasedTabView
-                    .tabViewSearchActivation(
-                        isAIAvailable ? .automatic : .searchTabSelection
-                    )
+                    .tabViewSearchActivation(.searchTabSelection)
             } else {
                 roleBasedTabView
             }
@@ -75,8 +41,8 @@ struct MainTabView: View {
             roleBasedTabView
             #endif
         } else {
-            TabView(selection: visibleSelection) {
-                ForEach(tabs) { tab in
+            TabView(selection: $selection) {
+                ForEach(MainTab.allCases) { tab in
                     rootView(for: tab)
                         .tag(tab)
                         .tabItem {
@@ -89,8 +55,8 @@ struct MainTabView: View {
 
     @available(iOS 18, *)
     var roleBasedTabView: some View {
-        TabView(selection: visibleSelection) {
-            ForEach(tabs) { tab in
+        TabView(selection: $selection) {
+            ForEach(MainTab.allCases) { tab in
                 Tab(value: tab, role: tabRole(for: tab)) {
                     rootView(for: tab)
                 } label: {
@@ -132,15 +98,7 @@ struct MainTabView: View {
 private extension MainTabView {
     @available(iOS 18, *)
     func tabRole(for tab: MainTab) -> TabRole? {
-        if !isAIAvailable, tab == .search {
-            return .search
-        }
-        #if compiler(>=6.4)
-        if #available(iOS 27, *), isAIAvailable, tab == .aiRecipe {
-            return .prominent
-        }
-        #endif
-        return nil
+        tab == .search ? .search : nil
     }
 
     @ViewBuilder
@@ -160,8 +118,6 @@ private extension MainTabView {
                 selection: $searchSelection,
                 incomingSearchQuery: $incomingSearchQuery
             )
-        case .aiRecipe:
-            AIRecipeNavigationView(request: $aiRecipeRequest, preference: $aiRecipeRequestLine)
         case .photo:
             PhotoNavigationView(selection: $photoSelection)
         }

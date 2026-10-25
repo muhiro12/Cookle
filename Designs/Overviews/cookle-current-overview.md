@@ -68,7 +68,10 @@ failed a readability comparison. See
 
 Cookle uses adaptive tab navigation.
 
-- Core tabs are `Diary`, `Recipe`, `Photo`, `Settings`, and `Search`.
+- Core tabs are `Diary`, `Recipe`, `Photo`, and a dedicated `Search` tab.
+- Settings opens from Diary's leading toolbar and existing settings routes.
+  Experimental AI recipe creation is available from recipe creation tools,
+  rather than a tab.
 - Ingredient and category tag browsing is opened from the search discovery
   sheet, which leads into the dedicated tag detail flow on both compact and
   regular-width layouts.
@@ -92,6 +95,12 @@ Cookle uses adaptive tab navigation.
   - free-form note
 - Edit existing recipes with the same form model.
 - Duplicate an existing recipe into a new draft.
+- On supported systems and devices, Add Recipe and Recipe Tools offer
+  experimental PCC recipe creation. A visible notice explains request failures
+  and potentially incomplete or inaccurate recipes before generation.
+  Preferences are collected in a modal, and the generated draft is applied to
+  the ordinary editor for explicit review and saving. Text import remains a
+  separate on-device extraction flow.
 - Delete recipes from the detail screen, list context menus, or App Intents.
 - Show recipe detail with:
   - photo gallery

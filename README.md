@@ -25,9 +25,10 @@ repository contains the full iOS project together with its shared Swift package.
   the last or a random recipe, and creating diary entries.
 - Image Playground integration (iOS 18.1+) to generate dish photos from recipe
   content.
-- Creative recipe starting points use Apple's Private Cloud Compute (iOS 27+
-  on supported devices). Describe ingredients, a dish, or preferences, then edit
-  the generated recipe in the ordinary form and improve it after cooking.
+- Experimental creative recipe starting points use Apple's Private Cloud
+  Compute (iOS 27+ on supported devices). Describe ingredients, a dish, or
+  preferences, then edit the generated recipe in the ordinary form and improve
+  it after cooking.
   Generation requires internet and available PCC quota. Network, quota, and
   service errors keep the request for an explicit retry; there is no on-device
   generation or automatic model substitution. The screen explains PCC processing,
@@ -39,22 +40,26 @@ repository contains the full iOS project together with its shared Swift package.
   require a matching PCC-authorized provisioning profile and signing identity.
   Unsupported systems and devices hide AI creation instead of offering
   on-device generation.
+  AI creation is a secondary option in Add Recipe and Recipe Tools, with an
+  experimental label and a persistent notice before generation. Requests may
+  fail despite available status, and generated ingredients, amounts and steps
+  require review. The feature does not occupy a tab in the next minor update.
 - Google Mobile Ads monetization and StoreKit-based subscriptions configured
   through MHPlatform runtime defaults.
 - Remote configuration fetch that can require users to update before continuing,
   keeping deployed binaries aligned with server rules.
 - Settings opens from the leading toolbar button in Diary, including existing
   Settings deep links.
-- AI-capable users have Diary, Recipe, Photo, and Search alongside a prominent
-  AI tab on iOS 27+.
-  Users without available AI keep a dedicated Search tab with no AI entry.
-- AI creation collects preferences in a local list. A standard multiline text
-  field in a bottom safe-area bar accepts preferences directly, with a separate
-  circular Add button. The input follows the software keyboard and retains
-  pending text across tab changes. Preferences can be deleted or edited
-  together; only Create Draft runs generation and opens the ordinary unsaved
-  recipe editor. Pending text must be added before creating a draft. Settings
-  remains available from Diary.
+- The tabs are Diary, Recipe, Photo, and a dedicated Search tab, independently
+  of AI availability. Settings remains in Diary's leading toolbar.
+- The AI creation modal collects preferences in a local list. A standard
+  multiline text field in a bottom safe-area bar accepts preferences directly,
+  with a separate circular Add button. The input follows the software keyboard and retains
+  pending text while the modal is open. Preferences can be deleted or edited
+  together; only Create with PCC runs generation and applies the draft to the
+  ordinary unsaved recipe editor. Pending text must be added before creating
+  a draft. Cancelling generation discards a late result; failed requests keep
+  the entered preferences available in the modal for an explicit retry.
 - Developer utilities and preview helpers seed SwiftData models for SwiftUI
   previews.
 

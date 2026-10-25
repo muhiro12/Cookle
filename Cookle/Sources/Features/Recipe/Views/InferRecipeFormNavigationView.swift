@@ -10,7 +10,9 @@ struct InferRecipeFormNavigationView: View {
     private let model: RecipeFormModel
 
     var body: some View {
-        if source == .website, websiteSource == nil {
+        if source == .generation {
+            RecipeGenerationNavigationView(model: model)
+        } else if source == .website, websiteSource == nil {
             RecipeWebsiteImportView(dismissAfterImport: false) { importedSource, url in
                 websiteSource = importedSource
                 sourceURL = url

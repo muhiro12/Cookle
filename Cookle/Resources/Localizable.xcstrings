@@ -425,6 +425,40 @@
         }
       }
     },
+    "AI recipe creation is still in development. It may fail even when shown as available, and recipes may be incomplete or inaccurate. Review the ingredients, quantities, and steps before cooking." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI recipe creation is still in development. It may fail even when shown as available, and recipes may be incomplete or inaccurate. Review the ingredients, quantities, and steps before cooking."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La creación de recetas con IA sigue en desarrollo. Puede fallar aunque aparezca como disponible, y las recetas pueden estar incompletas o contener errores. Revisa los ingredientes, las cantidades y los pasos antes de cocinar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La création de recettes par IA est encore en développement. Elle peut échouer même si elle est indiquée comme disponible, et les recettes peuvent être incomplètes ou inexactes. Vérifiez les ingrédients, les quantités et les étapes avant de cuisiner."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AIによるレシピ作成は開発中の機能です。利用可能と表示されていても生成に失敗する場合があり、レシピの内容に不足や誤りが含まれることもあります。調理前に材料・分量・手順を確認してください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI 食谱创建功能仍在开发中。即使显示为可用，也可能生成失败，且食谱可能存在遗漏或错误。烹饪前请检查食材、用量和步骤。"
+          }
+        }
+      }
+    },
     "AI-Generated Draft" : {
       "localizations" : {
         "en" : {
@@ -4070,36 +4104,36 @@
         }
       }
     },
-    "Create with AI" : {
+    "Create with AI (Experimental)" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Create with AI"
+            "value" : "Create with AI (Experimental)"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Crear con IA"
+            "value" : "Crear con IA (experimental)"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Créer avec l’IA"
+            "value" : "Créer avec l’IA (expérimental)"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "AIでレシピを作る"
+            "value" : "AIでレシピを作る（試験提供）"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "用 AI 创建"
+            "value" : "用 AI 创建（实验性功能）"
           }
         }
       }
@@ -6208,6 +6242,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "在下方输入食材或偏好，点按＋添加后，再选择“使用 PCC 创建”。"
+          }
+        }
+      }
+    },
+    "Experimental AI Feature" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Experimental AI Feature"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Función de IA experimental"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fonctionnalité d’IA expérimentale"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "試験提供中のAI機能"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "实验性 AI 功能"
           }
         }
       }

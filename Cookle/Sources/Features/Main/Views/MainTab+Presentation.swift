@@ -21,12 +21,6 @@ extension MainTab {
             } icon: {
                 Image(systemName: "photo.stack")
             }
-        case .aiRecipe:
-            Label {
-                Text("AI")
-            } icon: {
-                Image(systemName: "sparkles")
-            }
         case .search:
             Label {
                 Text("Search")

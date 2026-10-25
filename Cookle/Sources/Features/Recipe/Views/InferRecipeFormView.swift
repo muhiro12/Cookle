@@ -58,7 +58,7 @@ struct InferRecipeFormView: View {
                 .padding()
             }
         }
-        .navigationTitle(source == .generation ? Text("Create with AI") : Text("Review Recipe Text"))
+        .navigationTitle(source == .generation ? Text(source.title) : Text("Review Recipe Text"))
         .toolbar {
             toolbarItems
         }
@@ -357,7 +357,7 @@ private extension InferRecipeFormView {
     }
 }
 
-#Preview("Create with AI") {
+#Preview("Experimental AI Recipe") {
     if #available(iOS 26.0, *) {
         NavigationStack {
             InferRecipeFormView(model: .init(type: .create), source: .generation)

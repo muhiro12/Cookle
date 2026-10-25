@@ -1,10 +1,10 @@
 import SwiftUI
 
 enum RecipeDraftSource: CaseIterable, Identifiable {
-    case generation
     case text
     case photo
     case website
+    case generation
 
     var id: Self {
         self
@@ -28,7 +28,7 @@ enum RecipeDraftSource: CaseIterable, Identifiable {
     var title: LocalizedStringKey {
         switch self {
         case .generation:
-            "Create with AI"
+            "Create with AI (Experimental)"
         case .text:
             "Import from Text"
         case .photo:
