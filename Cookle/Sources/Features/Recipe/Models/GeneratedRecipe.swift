@@ -23,6 +23,11 @@ struct GeneratedRecipe {
         description: """
         Complete ordered steps in the requested language. Start with necessary preparation, \
         such as cutting sizes and draining, then cooking with heat, timing, and doneness cues. \
+        Prepare the requested portions as supplied: for half an onion, slice that half rather than \
+        instructing the cook to halve an onion again. When poultry is used, explicitly check its \
+        thickest center with a food thermometer at 75 degrees Celsius or above for at least 1 minute; \
+        cutting the meat or observing its color does not replace temperature measurement. \
+        Write only actions the cook should perform, without commentary about discarded alternatives. \
         Include everything needed to make the dish here. No step numbers or bullets.
         """,
         .count(1...Self.maximumStepCount)

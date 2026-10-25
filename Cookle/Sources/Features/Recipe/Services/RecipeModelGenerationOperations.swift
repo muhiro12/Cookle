@@ -22,7 +22,7 @@ enum RecipeModelGenerationOperations {
         return .unavailable
     }
 
-    /// Quota exhaustion must not remove the tab or discard an entered request.
+    /// Quota exhaustion must not hide the feature or discard an entered request.
     static var isAvailable: Bool {
         if #available(iOS 27.0, *) {
             return cloudModel.isAvailable
@@ -207,6 +207,9 @@ enum RecipeModelGenerationOperations {
         foods. Identify any extra serving suggestions as optional, and never suggest excluded foods even in notes.
         List every ingredient used in the main steps, including water, oil and seasonings, once. Amount fields \
         contain only quantities and units; preparation belongs in the steps, not ingredient names or amounts.
+        Choose quantities that can be measured in a home kitchen. Prefer familiar spoon fractions such as \
+        1/2 or 1/4, or a pinch for tiny amounts, over unnecessarily precise decimal spoon quantities. Preserve \
+        exact quantities supplied by the person.
         Use standard preparation methods suitable for each ingredient, including peeling, cutting sizes, grating, \
         draining or trimming where needed. Do not invent unnecessary soaking, rinsing or resting steps.
         State how every main ingredient becomes ready to combine or cook; do not skip cutting, crumbling or \
