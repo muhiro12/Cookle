@@ -2,7 +2,8 @@
 
 Implementation snapshot based on the repository state on July 14, 2026.
 The presentation adoption note below was updated on September 14, 2026.
-Notification behavior and its preferences were updated on October 15, 2026;
+Notification behavior and its preferences were updated on October 15, 2026,
+and AI recipe drafts on October 25, 2026;
 other sections retain their original snapshot scope.
 
 ## Purpose
@@ -70,7 +71,7 @@ Cookle uses adaptive tab navigation.
 
 - Core tabs are `Diary`, `Recipe`, `Photo`, and a dedicated `Search` tab.
 - Settings opens from Diary's leading toolbar and existing settings routes.
-  Experimental AI recipe creation is available from recipe creation tools,
+  AI recipe draft creation is available from recipe creation tools,
   rather than a tab.
 - Ingredient and category tag browsing is opened from the search discovery
   sheet, which leads into the dedicated tag detail flow on both compact and
@@ -96,8 +97,9 @@ Cookle uses adaptive tab navigation.
 - Edit existing recipes with the same form model.
 - Duplicate an existing recipe into a new draft.
 - On supported systems and devices, Add Recipe and Recipe Tools offer
-  experimental PCC recipe creation. A visible notice explains request failures
-  and potentially incomplete or inaccurate recipes before generation.
+  PCC recipe draft creation. A visible notice explains request failures and
+  potentially incomplete or inaccurate drafts before generation, including
+  reviewing quantities, heating, and storage instructions before cooking.
   Preferences are collected in a modal, and the generated draft is applied to
   the ordinary editor for explicit review and saving. Text import remains a
   separate on-device extraction flow.

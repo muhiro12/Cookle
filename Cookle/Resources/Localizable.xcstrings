@@ -425,36 +425,36 @@
         }
       }
     },
-    "AI recipe creation is still in development. It may fail even when shown as available, and recipes may be incomplete or inaccurate. Review the ingredients, quantities, and steps before cooking." : {
+    "AI-generated drafts may contain errors or omissions. Before cooking, review the ingredients, quantities, steps, heating, and storage instructions. Generation may fail even when PCC is shown as available." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "AI recipe creation is still in development. It may fail even when shown as available, and recipes may be incomplete or inaccurate. Review the ingredients, quantities, and steps before cooking."
+            "value" : "AI-generated drafts may contain errors or omissions. Before cooking, review the ingredients, quantities, steps, heating, and storage instructions. Generation may fail even when PCC is shown as available."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La creación de recetas con IA sigue en desarrollo. Puede fallar aunque aparezca como disponible, y las recetas pueden estar incompletas o contener errores. Revisa los ingredientes, las cantidades y los pasos antes de cocinar."
+            "value" : "Los borradores generados por IA pueden contener errores u omisiones. Antes de cocinar, revisa los ingredientes, las cantidades, los pasos y las instrucciones de cocción y conservación. La generación puede fallar aunque PCC aparezca como disponible."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La création de recettes par IA est encore en développement. Elle peut échouer même si elle est indiquée comme disponible, et les recettes peuvent être incomplètes ou inexactes. Vérifiez les ingrédients, les quantités et les étapes avant de cuisiner."
+            "value" : "Les brouillons générés par l’IA peuvent contenir des erreurs ou des omissions. Avant de cuisiner, vérifiez les ingrédients, les quantités, les étapes et les consignes de cuisson et de conservation. La génération peut échouer même si PCC est indiqué comme disponible."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "AIによるレシピ作成は開発中の機能です。利用可能と表示されていても生成に失敗する場合があり、レシピの内容に不足や誤りが含まれることもあります。調理前に材料・分量・手順を確認してください。"
+            "value" : "AIが作成する下書きには、誤りや不足が含まれる場合があります。調理前に材料・分量・手順、加熱や保存の方法を確認してください。PCCが利用可能と表示されていても、生成に失敗する場合があります。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "AI 食谱创建功能仍在开发中。即使显示为可用，也可能生成失败，且食谱可能存在遗漏或错误。烹饪前请检查食材、用量和步骤。"
+            "value" : "AI 生成的草稿可能存在错误或遗漏。烹饪前，请检查食材、用量、步骤以及加热和保存方法。即使 PCC 显示为可用，也可能生成失败。"
           }
         }
       }
@@ -4104,36 +4104,36 @@
         }
       }
     },
-    "Create with AI (Experimental)" : {
+    "Create Recipe Draft with AI" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Create with AI (Experimental)"
+            "value" : "Create Recipe Draft with AI"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Crear con IA (experimental)"
+            "value" : "Crear borrador de receta con IA"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Créer avec l’IA (expérimental)"
+            "value" : "Créer un brouillon de recette avec l’IA"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "AIでレシピを作る（試験提供）"
+            "value" : "AIでレシピの下書きを作成"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "用 AI 创建（实验性功能）"
+            "value" : "用 AI 创建食谱草稿"
           }
         }
       }
@@ -6246,36 +6246,36 @@
         }
       }
     },
-    "Experimental AI Feature" : {
+    "AI Recipe Draft" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Experimental AI Feature"
+            "value" : "AI Recipe Draft"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Función de IA experimental"
+            "value" : "Borrador con IA"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fonctionnalité d’IA expérimentale"
+            "value" : "Brouillon avec l’IA"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "試験提供中のAI機能"
+            "value" : "AIレシピの下書き"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "实验性 AI 功能"
+            "value" : "AI 食谱草稿"
           }
         }
       }

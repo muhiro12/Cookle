@@ -28,7 +28,7 @@ enum RecipeDraftSource: CaseIterable, Identifiable {
     var title: LocalizedStringKey {
         switch self {
         case .generation:
-            "Create with AI (Experimental)"
+            "Create Recipe Draft with AI"
         case .text:
             "Import from Text"
         case .photo:

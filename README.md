@@ -25,7 +25,7 @@ repository contains the full iOS project together with its shared Swift package.
   the last or a random recipe, and creating diary entries.
 - Image Playground integration (iOS 18.1+) to generate dish photos from recipe
   content.
-- Experimental creative recipe starting points use Apple's Private Cloud
+- Editable AI recipe drafts use Apple's Private Cloud
   Compute (iOS 27+ on supported devices). Describe ingredients, a dish, or
   preferences, then edit the generated recipe in the ordinary form and improve
   it after cooking.
@@ -40,10 +40,11 @@ repository contains the full iOS project together with its shared Swift package.
   require a matching PCC-authorized provisioning profile and signing identity.
   Unsupported systems and devices hide AI creation instead of offering
   on-device generation.
-  AI creation is a secondary option in Add Recipe and Recipe Tools, with an
-  experimental label and a persistent notice before generation. Requests may
-  fail despite available status, and generated ingredients, amounts and steps
-  require review. The feature does not occupy a tab in the next minor update.
+  AI creation is a secondary option in Add Recipe and Recipe Tools, with a
+  persistent notice before generation. Requests may fail despite available
+  status, and generated ingredients, amounts, steps, heating and storage
+  instructions require review. Generation instructions prioritize food safety
+  over unsafe timing or storage requests. The feature does not occupy a tab.
 - Google Mobile Ads monetization and StoreKit-based subscriptions configured
   through MHPlatform runtime defaults.
 - Remote configuration fetch that can require users to update before continuing,

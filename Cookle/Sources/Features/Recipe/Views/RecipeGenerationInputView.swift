@@ -32,7 +32,7 @@ struct RecipeGenerationInputView: View {
         switch style {
         case .editor:
             VStack(alignment: .leading) {
-                experimentalNotice
+                draftNotice
                 introduction
                 processingControls
                 RecipeRequestEditorView(
@@ -46,7 +46,7 @@ struct RecipeGenerationInputView: View {
         case .preferences:
             List {
                 Section {
-                    experimentalNotice
+                    draftNotice
                 }
                 RecipeRequestStackSection(text: $text, isLoading: isLoading) {
                     isEditingRequest = true
@@ -64,15 +64,15 @@ struct RecipeGenerationInputView: View {
 
 @available(iOS 26.0, *)
 private extension RecipeGenerationInputView {
-    var experimentalNotice: some View {
+    var draftNotice: some View {
         VStack(alignment: .leading) {
-            Label("Experimental AI Feature", systemImage: "exclamationmark.bubble")
+            Label("AI Recipe Draft", systemImage: "exclamationmark.bubble")
                 .font(.headline)
             Text(
                 """
-                AI recipe creation is still in development. It may fail even when shown as available, \
-                and recipes may be incomplete or inaccurate. Review the ingredients, quantities, \
-                and steps before cooking.
+                AI-generated drafts may contain errors or omissions. Before cooking, review the \
+                ingredients, quantities, steps, heating, and storage instructions. Generation may \
+                fail even when PCC is shown as available.
                 """
             )
             .font(.callout)
