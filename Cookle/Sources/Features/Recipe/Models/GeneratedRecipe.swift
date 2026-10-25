@@ -14,7 +14,8 @@ struct GeneratedRecipe {
     @Guide(
         description: """
         Estimated total preparation, waiting and cooking time in minutes, \
-        including preparation for uncooked dishes.
+        including preparation for uncooked dishes. If the requested deadline is too short for \
+        safe preparation and cooking, give a realistic longer time instead of copying that deadline.
         """,
         .minimum(0)
     )
@@ -41,7 +42,8 @@ struct GeneratedRecipe {
     var ingredients: [GeneratedRecipeIngredient]
     @Guide(
         description: """
-        Optional tips or substitutions in the requested language. Empty when unnecessary. \
+        Explain rejected unsafe or infeasible request conditions and the safer alternative in the \
+        requested language. Otherwise optional tips or substitutions; empty when unnecessary. \
         Essential preparation and cooking belong in the steps, never only here. \
         No claims of verified safety or nutrition.
         """
