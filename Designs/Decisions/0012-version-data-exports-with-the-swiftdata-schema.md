@@ -2,6 +2,8 @@
 
 - Date: 2026-09-29
 - Status: Accepted
+- Amendment: October 25, 2026, separates shared evolution semantics from file
+  import execution; see [#162](https://github.com/muhiro12/Cookle/issues/162).
 
 ## Context
 
@@ -45,16 +47,25 @@ unaffected. The schema-reader policy below applies within the corrected format.
 
 An export file carries two numbers with separate jobs:
 
-- `formatVersion` versions the package layout and manifest envelope. It changes
-  only when the container itself changes.
+- `formatVersion` versions the package layout, manifest envelope, and encoding
+  conventions. Representation-only changes use this number without inventing a
+  SwiftData schema revision.
 - `schemaVersion` versions the records. It is the
   `versionIdentifier` of the `CookleMigrationPlan` schema that wrote the file,
   written as `major.minor.patch`.
 
-The exporter always writes the current schema. The importer reads every schema
-in `CookleMigrationPlan.schemas`; a test fails if a schema is added without a
-reader. A file from a newer schema is reported as needing a newer Cookle rather
-than as damaged. An unknown `format` or `formatVersion` is rejected as invalid.
+The exporter always writes the current schema, using the actual
+`versionIdentifier` rather than a second manually maintained number. Read
+support belongs to explicitly supported `(formatVersion, schemaVersion)` pairs
+used by exports, not every possible combination or every store-only schema.
+Keep readers for supported published pairs, including skipped-version paths.
+The existing identifier exceptions above remain unchanged.
+
+A file from a newer schema is reported as needing a newer Cookle rather than as
+damaged. Unsupported identifiers, format versions, and schema versions are
+rejected before mutation. Do not partially import known fields from an unknown
+version. The [format overview](../Overviews/cookle-data-export-format.md)
+records the current support matrix.
 
 A storage-only schema change, such as an attribute option, also produces a new
 `schemaVersion` even when the exported records look the same. That cost is
@@ -99,16 +110,68 @@ export check then applies only to exports that include diaries.
 
 ### Introducing the next schema
 
+Store upgrades and historical-file imports share preservation rules, not a
+required execution mechanism. For each concrete transition, define the meaning
+of identities, missing fields, units, precision, ownership, ordered
+relationships, recipe/Diary references, and photo bytes/source once. Implement
+those rules in each path using the appropriate mechanism.
+
+The default file path is a frozen historical value decoder followed by an
+explicit adapter into the current import candidate, then the existing
+validation, review, and approved apply path. Native lightweight or custom
+SwiftData migration handles the store. Share pure value-conversion functions
+where there is real common logic; neither common model types nor identical
+source code are required. Do not add a generic migration framework solely to
+avoid a small adapter.
+
+This replaces the earlier mandatory temporary-store sequence. Creating and
+reopening a temporary database solely to reuse migration stages adds file
+lifecycle, migration side effects, and failure paths to a value conversion. A
+temporary store remains an option only when a concrete transition demonstrates
+that it is simpler and reliable, with ordering, image preservation, cleanup,
+and failure behavior verified. It must not replace the live store or rewrite
+the source file.
+
+An old file cannot express fields introduced later. For an existing record,
+retain those current fields even when the person chooses the file's supplied
+content. For a new record, use a documented compatibility default or an
+explicit unknown state. Historical absence and explicit `null` in a format that
+defines the field are distinct; applying the latter may be a reviewed change.
+Carry field availability in the transient candidate or adapter, without adding
+provenance columns to the live models. Do not turn current initializer defaults
+into apparent old facts or infer deletion from a missing record kind. Block a
+conversion that cannot preserve meaning instead of silently losing information.
+
 When `CookleSchemaV2` ships:
 
-1. Keep the V1 record decoder and add the V2 one; register both.
-2. Read a V1 file by inserting its records into a temporary store opened with
-   `CookleSchemaV1`, reopening that store with `CookleMigrationPlan`, and
-   passing `makeArchive(context:)` of the migrated store to the import review.
-   Migration stages then remain the only place that reshapes data.
-3. Decide whether the first launch that runs a migration stage keeps a copy of
+1. Freeze the supported V1 representation and retain its reader and fixtures.
+   Register each actually exported format/schema pair. Reuse a decoder when
+   a storage-only schema revision leaves the wire representation unchanged.
+2. Implement the concrete V1-to-current semantic adapter, preserving field
+   availability through review and application into an already-edited store.
+3. Verify store migration/reopen separately from old-file decoding and import.
+   Identical version numbers or a passing migration test prove neither path's
+   behavior on the other path.
+4. Decide whether the first launch that runs a migration stage keeps a copy of
    the pre-migration store files. That launch is the schema-linked moment when a
    recovery copy matters most.
+
+### Compatibility verification
+
+- Retain synthetic exports captured from each supported public writer, with
+  writer revision and version-pair provenance. Never regenerate old fixtures
+  with the newest encoder. Hand-authored contract fixtures supplement those
+  captures; a current writer/reader round trip does not establish historical
+  compatibility.
+- Exercise every supported published pair against the new reader. Freeze old
+  field meanings, date units, requiredness, and defaults; fix reader bugs with
+  regression evidence rather than reinterpreting past files.
+- Cover decoding and reviewed import into both empty and edited current stores:
+  field absence versus explicit emptiness, unrelated/newer values, repeated
+  import, relationship ordering/references, photos, and failed-save recovery.
+- Keep rejected-version tests that reopen an existing store and prove it is
+  unchanged. Keep actual old-store migration/reopen tests independent of these
+  file tests. No concrete V2 transition is implemented by this amendment.
 
 ## Consequences
 
@@ -116,7 +179,7 @@ When `CookleSchemaV2` ships:
   work cannot silently skip the export format.
 - Import handles both recovery and moving devices, while merge and per-item
   choices keep other data safe.
-- Old export readers must be retained as long as the matching schemas are, which
-  ADR 0011 already requires for stored declarations.
+- Historical file readers and fixtures remain explicit compatibility contracts;
+  ADR 0011 independently preserves the stored schema declarations.
 - Not decided here: sharing, AI hand-off formats, reminders, opening files from
   Files or AirDrop, and new entry points.

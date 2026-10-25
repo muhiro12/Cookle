@@ -3,9 +3,10 @@ import SwiftData
 /// SwiftData schema versions an export file can declare.
 ///
 /// An export's records follow the schema that wrote them, so the file's
-/// `schemaVersion` is the persistent schema's version identifier. Every schema
-/// in `CookleMigrationPlan.schemas` must stay readable; a later schema adds a
-/// reader that upgrades its files through the migration plan.
+/// `schemaVersion` is the persistent schema's version identifier. Supported
+/// exported versions retain historical value readers and semantic adapters;
+/// file decoding does not need to execute the store migration plan. Readability
+/// also requires a supported format version, as recorded in the format overview.
 enum CookleDataArchiveSchemaVersions {
     private enum Component {
         static let separator: Character = "."
@@ -20,7 +21,8 @@ enum CookleDataArchiveSchemaVersions {
         CookleMigrationPlan.currentSchema.versionIdentifier
     }
 
-    /// Versions whose records this build reads, oldest first.
+    /// Exported schema versions this build reads, oldest first.
+    /// Store-only schema history does not itself register a file reader.
     static var readable: [Schema.Version] {
         [
             CookleSchemaV1.versionIdentifier

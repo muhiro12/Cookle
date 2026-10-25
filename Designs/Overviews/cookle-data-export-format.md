@@ -1,6 +1,6 @@
 # Cookle Data Export Format
 
-Format version 1, schema version `1.0.0`. Source review October 22, 2026.
+Format version 1, schema version `1.0.0`. Source review October 25, 2026.
 
 This note specifies the file that Settings → Export Data writes and Import Data
 reads. [ADR 0012](../Decisions/0012-version-data-exports-with-the-swiftdata-schema.md)
@@ -30,7 +30,7 @@ entries, and nested folders are rejected.
 | Field | Type | Meaning |
 | --- | --- | --- |
 | `format` | string | Always `com.muhiro12.Cookle.data` |
-| `formatVersion` | integer | Package layout version, currently `1` |
+| `formatVersion` | integer | Container and encoding version, currently `1` |
 | `schemaVersion` | string | SwiftData schema that wrote the records, currently `1.0.0` |
 | `contents.scope` | string | What the file covers; `all` is the complete library |
 | `exportedAt` | date | When the file was written |
@@ -51,7 +51,8 @@ Every record has `createdTimestamp` and `modifiedTimestamp`.
   (`ingredientID`, `amount`, `order`), and `photos` rows (`photoID`, `order`).
 - A **diary** has `id`, `date`, `note`, and `objects` rows (`recipeID`, `type`
   of `breakfast`, `lunch`, or `dinner`, and `order`). Each calendar day has at
-  most one diary.
+  most one diary. V1 encodes the meal enum as an object such as
+  `"type": {"breakfast": {}}`, rather than a plain string.
 
 Identifiers such as `recipe-1` are local to one file. They connect records
 inside the file and never identify records across files or devices.
@@ -72,6 +73,18 @@ do not recognize and treat them as partial.
 
 ## 5) Reading rules
 
+The supported pair for `com.muhiro12.Cookle.data` is currently:
+
+| `formatVersion` | `schemaVersion` | Reader |
+| --- | --- | --- |
+| `1` | `1.0.0` | V1 manifest and photo package |
+
+Other combinations are unsupported. A future reader retains supported published
+pairs explicitly; it does not infer support from the store migration plan or
+accept every combination of individually known version numbers. Representation
+changes use `formatVersion`; actual model-version changes also change the
+exported `schemaVersion`, even if the file's values are unchanged.
+
 - The former `com.muhiro12.cookle.data` identifier used by 4.0 and 4.1 is
   intentionally unsupported after the namespace correction. Older builds also
   reject exports with the corrected identifier. The package layout, schema,
@@ -85,9 +98,33 @@ do not recognize and treat them as partial.
 - Duplicate identifiers, missing references, and two diaries on one calendar day
   are rejected. Nothing changes when a file is rejected.
 
+Historical readers decode values and adapt them into the current reviewed
+import. They need not execute SwiftData migrations. When an old file lacks a
+later field, its absence cannot clear an existing value; explicit emptiness in
+a format that defines the field remains a separate reviewed choice. See
+[ADR 0012's compatibility verification](../Decisions/0012-version-data-exports-with-the-swiftdata-schema.md#compatibility-verification)
+for fixture retention and the separate store-migration and file-import checks.
+
 ## 6) Importing
 
 Importing into an empty library adds everything. Otherwise the person merges,
 chooses for each differing item, or — for scope `all` only — replaces all data.
 [The mutation semantics note](cookle-mutation-semantics.md) section 9 describes
 matching and each method.
+
+## 7) Verification coverage
+
+`ExportFileVersionTests` pins the current writer header and reader registration,
+decodes a frozen hand-authored V1 contract fixture without today's encoder, and
+checks unsupported headers. The fixture is synthetic contract evidence, not an
+export captured from a released app.
+
+`ArchivePersistentStoreTests`, `CookleDataImportRecipeTests`,
+`CookleDataImportDiaryTests`, and `CookleDataImportSafetyTests` cover existing
+graph preservation, edited destinations, repeated import, stale review, and
+failure handling. `RejectedImportPreservationTests` proves rejected files leave
+an existing store readable after reopening. The persistence tests, including
+`LegacySchemaMigrationTests` and `LegacyStoreUpgradeFidelityTests`, independently
+cover store paths. These existing tests do not prove a future V1-to-V2 file
+adapter or the preservation of fields that V1 cannot express; add those cases
+with the concrete transition and retain actual public-writer captures.

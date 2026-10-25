@@ -133,7 +133,8 @@ The practical boundary is that downgrade safety is **not guaranteed**. Before
 shipping a schema change, verify the actual old/new binaries and stores and
 preserve an independently readable recovery copy. A data export file carries
 the schema version that wrote it: an older app refuses a file from a newer
-schema, and a newer app reads older files through the migration plan, as
+schema, and a newer app reads supported older files through historical value
+decoders and semantic adapters, independently of store migration execution, as
 [ADR 0012](../Decisions/0012-version-data-exports-with-the-swiftdata-schema.md)
 describes.
 
