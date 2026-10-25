@@ -24,7 +24,7 @@ struct EditRecipeButton: View {
             Label {
                 Text("Edit \(recipe.name)")
             } icon: {
-                Image(systemName: "pencil")
+                Image(systemName: "pencil.line")
                     .accessibilityHidden(true)
             }
         }

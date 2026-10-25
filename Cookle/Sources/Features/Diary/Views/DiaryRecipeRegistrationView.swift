@@ -52,7 +52,7 @@ private extension DiaryRecipeRegistrationView {
             .disabled(isSaving)
         }
         ToolbarItem(placement: .confirmationAction) {
-            Button("Register Recipe", systemImage: "plus") {
+            Button("Register Recipe", systemImage: "checkmark") {
                 Task {
                     await registerRecipe()
                 }

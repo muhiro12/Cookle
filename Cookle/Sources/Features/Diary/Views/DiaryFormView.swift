@@ -155,7 +155,7 @@ struct DiaryFormView: View {
                 if diary != nil {
                     Label("Update", systemImage: "checkmark")
                 } else {
-                    Label("Add", systemImage: "plus")
+                    Label("Add", systemImage: "checkmark")
                 }
             }
             .disabled(model.isSaving || model.canSave == false)

@@ -8,7 +8,7 @@ struct EditTagButton<T: Tag>: View {
     @State private var isPresented = false
 
     var body: some View {
-        Button("Edit \(tag.value)", systemImage: "pencil") {
+        Button("Edit \(tag.value)", systemImage: "pencil.line") {
             isPresented = true
         }
         .sheet(isPresented: $isPresented) {

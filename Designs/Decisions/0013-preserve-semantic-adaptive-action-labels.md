@@ -38,6 +38,10 @@ communicates the intended operation.
   the first workaround for an ambiguous shared symbol.
 - Review all call sites and adjacent actions before changing a shared symbol.
   Test the combination of actions, not only each symbol in isolation.
+- Prefer concise titles across placements and languages. Clarify meaning at
+  comparable length when possible; add words when needed to prevent a misleading
+  interpretation. Choose wording independently of symbols, and preserve
+  accessibility names and object identity.
 - Adopt creation option C: recipe creation uses `book.pages`; Diary creation
   uses `square.and.pencil`. Keep `book.badge.plus` for adding an existing recipe
   to today's Diary. The Diary navigation tab retains its separate `book` symbol.
@@ -59,9 +63,10 @@ does not maintain manual OS-specific text/icon rendering branches.
 
 Object symbols alone can resemble navigation. The selected Diary compose symbol
 strengthens the creation meaning while retaining the established recipe symbol.
-Further symbol and wording choices remain proposals in the
-[action-label options](../Plans/action-label-symbol-options.md); they are not
-permission for an automatic app-wide replacement.
+The [action-label options](../Plans/action-label-symbol-options.md) record the
+selected icon refinements B1, B3, B7, F3, F6, and N1-N4, plus the shorter
+bulk-input titles and explicit advertising-privacy title. Other alternatives remain
+proposals. This inventory is not permission for automatic app-wide replacement.
 
 This decision preserves current import, AI draft, save, cancellation,
 persistence, and navigation behavior. It does not restore obsolete saving

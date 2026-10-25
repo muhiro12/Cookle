@@ -12,7 +12,7 @@ struct AdsPrivacyOptionsButton: View {
 
     var body: some View {
         if appRuntime.adsPrivacyOptionsRequirement == .required {
-            Button("Privacy Options", systemImage: "hand.raised") {
+            Button("Ad Privacy Options", systemImage: "hand.raised") {
                 presentPrivacyOptions()
             }
             .disabled(isPresentingPrivacyOptions)

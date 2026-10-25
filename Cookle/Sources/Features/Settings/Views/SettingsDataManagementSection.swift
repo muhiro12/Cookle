@@ -14,7 +14,7 @@ struct SettingsDataManagementSection: View {
                 exportRequestID = UUID()
             }
             .disabled(isManageActionUnavailable)
-            Button("Import Data", systemImage: "square.and.arrow.down") {
+            Button("Import Data", systemImage: "tray.and.arrow.down") {
                 model.isDataImporterPresented = true
             }
             .disabled(isManageActionUnavailable)

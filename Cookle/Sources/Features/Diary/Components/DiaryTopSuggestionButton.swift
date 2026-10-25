@@ -21,7 +21,7 @@ struct DiaryTopSuggestionButton: View {
                         .lineLimit(Constants.detailLineLimit)
                 }
             } icon: {
-                Image(systemName: "sparkles")
+                Image(systemName: "lightbulb")
                     .accessibilityHidden(true)
             }
             .cookleButtonRowContent()

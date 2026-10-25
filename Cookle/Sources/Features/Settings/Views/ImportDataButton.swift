@@ -5,7 +5,7 @@ struct ImportDataButton: View {
 
     var body: some View {
         Button(action: action) {
-            Label("Import", systemImage: "square.and.arrow.down")
+            Label("Import", systemImage: "tray.and.arrow.down")
         }
     }
 }

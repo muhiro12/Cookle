@@ -123,6 +123,10 @@ belong to a local layout or information need; they should not compensate for
 an ambiguous shared symbol. Review every placement and adjacent action before
 changing a shared control's default symbol. Shared cancellation controls keep
 the caller's draft, confirmation, and task-cancellation behavior.
+Prefer concise titles across languages; clarify at comparable length where
+possible and add words when needed to prevent misunderstanding. Select wording
+independently of icons, without forcing label styles to compensate for long
+copy.
 The accepted creation pair is `book.pages` for recipes and `square.and.pencil`
 for Diaries; `book.badge.plus` adds an existing recipe to today's Diary.
 See [ADR 0013](../Decisions/0013-preserve-semantic-adaptive-action-labels.md)

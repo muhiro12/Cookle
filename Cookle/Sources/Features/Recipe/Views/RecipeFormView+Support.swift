@@ -169,7 +169,7 @@ extension RecipeFormView {
                 switch type {
                 case .create,
                      .duplicate:
-                    Label("Create", systemImage: "plus")
+                    Label("Create", systemImage: "checkmark")
                 case .edit:
                     Label("Update", systemImage: "checkmark")
                 }

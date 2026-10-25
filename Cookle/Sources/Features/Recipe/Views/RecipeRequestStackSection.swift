@@ -28,7 +28,7 @@ struct RecipeRequestStackSection: View {
             }
             .deleteDisabled(isLoading)
             if !preferences.isEmpty {
-                Button("Edit Request", systemImage: "pencil", action: editRequest)
+                Button("Edit Request", systemImage: "pencil.line", action: editRequest)
                     .disabled(isLoading)
             }
         } header: {

@@ -13,9 +13,9 @@ extension RecipeTopReturnTarget {
     var iconSystemName: String {
         switch kind {
         case .activeCookingSession:
-            "fork.knife.circle"
+            "play"
         case .lastOpenedRecipe:
-            "arrow.uturn.backward.circle"
+            "clock.arrow.circlepath"
         }
     }
 }

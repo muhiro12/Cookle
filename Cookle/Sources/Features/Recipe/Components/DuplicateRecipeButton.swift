@@ -30,7 +30,7 @@ struct DuplicateRecipeButton: View {
                     Text("Duplicate")
                 }
             } icon: {
-                Image(systemName: "document.on.document")
+                Image(systemName: "plus.square.on.square")
                     .accessibilityHidden(true)
             }
         }

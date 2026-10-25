@@ -17,7 +17,7 @@ struct EditDiaryButton: View {
             Label {
                 Text("Edit")
             } icon: {
-                Image(systemName: "pencil")
+                Image(systemName: "pencil.line")
                     .accessibilityHidden(true)
             }
         }
