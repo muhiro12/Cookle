@@ -35,7 +35,7 @@ struct RecipePreferenceInputView: View {
                     .disabled(isLoading)
                     .accessibilityIdentifier("recipePreferenceInput")
 
-                Button("Add Preference", systemImage: "plus", action: addPreference)
+                Button("Add Preference", systemImage: "text.badge.plus", action: addPreference)
                     .labelStyle(.iconOnly)
                     .buttonStyle(.glassProminent)
                     .buttonBorderShape(.circle)

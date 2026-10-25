@@ -1,28 +1,86 @@
 # Action Label and Symbol Options
 
 - Date: 2026-10-25
-- Status: Accepted creation pair C, selected refinements, and concise wording;
-  unused alternatives retained for reference
+- Status: Accepted native-only object/action refinements and concise wording;
+  earlier choices retained as history
 - Tracking: [#163](https://github.com/muhiro12/Cookle/issues/163)
 - Decision: [ADR 0013][decision]
 
 ## Accepted Baseline
 
-Recipe creation uses `book.pages`; Diary creation uses `square.and.pencil`.
-Adding an existing recipe to today's Diary retains `book.badge.plus`. These are
-distinct operations, even when creation and Diary actions appear together.
+Recipe creation uses `book.pages`. Diary addition uses `book.badge.plus` on
+iOS 26 or later and `book` on iOS 18. `DiaryAdditionLabel` shares that symbol
+availability policy between new-Diary creation and adding an existing recipe to
+today's Diary. Their localized titles and action callbacks remain distinct.
+
+The native-only choice supersedes creation pair C's Diary compose symbol.
+Recipe and Diary creation remain visually distinct when placed together.
 
 The shared-control audit covered 23 button types. Reusable cancellation appears
 in nine placements, completion in four, and import confirmation in two. Existing
 edit/delete/duplicate behavior and destructive confirmations remain intact.
+
+## Native-Only Object and Action Refinement
+
+Use existing SF Symbols only. Do not overlay symbols, draw badges, or create
+composite object/action images. Prefer a recognizable object plus an operation
+where a suitable native symbol exists; do not reinterpret a slash as deletion.
+
+The selected follow-up changes are:
+
+- Diary creation: `square.and.pencil` becomes `book.badge.plus` on iOS 26 or
+  later, with `book` on iOS 18. The existing-recipe-to-Diary action shares the
+  same label component's availability handling.
+- Adding one generation preference: `plus` becomes `text.badge.plus`.
+- Editing the generation preference list: `pencil.line` becomes
+  `pencil.and.list.clipboard`.
+- Data export: `square.and.arrow.up` becomes `tray.and.arrow.up` in Settings
+  and the export-before-import action, pairing with import's tray/down arrow.
+
+These changes preserve wording, input and generation behavior, import/export
+callbacks, cancellation, and the recipe/Diary save contracts. Native object
+variants do not cover editing or deleting the existing book, photo, and Tag
+bases, so those actions retain their current symbols. Bulk step input keeps its
+numbered-list identity rather than adopting an unnumbered clipboard.
+
+### Why Diary Addition Needs an Availability Check
+
+Cookle first used `book.badge.plus` in `0d900322` on 2026-04-10 for the
+recipe-detail shortcut to today's Diary. Both Apple's SF Symbols app metadata
+and the system symbol catalog record its introduction as 2025 / iOS 26. The
+base `book` predates this decorated variant.
+
+An existing source reference is not evidence of older-OS availability:
+`Image(systemName:)` accepts a string, so compilation against an iOS 18
+deployment target does not validate the symbol's presence there. The shared
+label now selects the older native `book` before iOS 26, avoiding the previous
+unguarded reference. This is a symbol fallback, not a manual text/icon style
+override or a change to the app's deployment target.
+
+### Native-Only Follow-Up Verification
+
+- The current Cookle build succeeded with zero raw warnings or errors.
+  Formatting and retained repository checks, including 28 script checks, passed.
+- Live iPhone 18 Pro / iOS 27.2 checks used isolated in-memory sample data.
+  Recipe/Diary creation remained distinguishable in the toolbar, both Diary-add
+  labels used book-plus, and new-Diary entry/Cancel navigation succeeded.
+- Generation preference addition and list editing displayed the selected
+  native symbols. A sample preference was added, its editor opened, and Done
+  returned without changing its text. No model request was made.
+- Settings export and the export-before-import action both displayed tray/up.
+  Neither export nor import was executed. The existing developer run and Xcode
+  selection were preserved; only the isolated verification runs were stopped.
+- No iOS 18 runtime was installed. The fallback is verified by source and the
+  iOS 18 deployment-target build, not by an older-OS live run. This follow-up
+  makes no new iPad or spoken VoiceOver qualification claim.
 
 ## Selected Refinements
 
 The owner selected the alternative **icons only** for B1, B3, B7, F3, F6, N1,
 N2, N3, and N4. The implementation uses:
 
-- B1: `pencil.line` for Recipe, Diary, and Tag editing, and Edit Request.
-  Manual recipe entry retains `pencil` because it is a creation action.
+- B1: `pencil.line` for Recipe, Diary, and Tag editing. Edit Request later
+  adopts the native clipboard/pencil above. Manual entry retains `pencil`.
 - B3: `plus.square.on.square` for recipe duplication.
 - B7: `tray.and.arrow.down` for import confirmation and the Settings import
   entry. The review stage and actual import remain separate actions.
@@ -96,7 +154,7 @@ applying form input, adding a relationship, and saving persisted data.
 
 | ID | Family and baseline symbol | Candidate | Decision |
 | --- | --- | --- | --- |
-| B1 | Edit Recipe, Diary, and Tag: `pencil` | `pencil.line`; wording such as "Edit Content" where appropriate | Selected `pencil.line` for editing; retain concise Edit titles. Keep `square.and.pencil` distinct as the Diary creation entry. |
+| B1 | Edit Recipe, Diary, and Tag: `pencil` | `pencil.line`; wording such as "Edit Content" where appropriate | Selected `pencil.line` for editing; retain concise Edit titles. Diary addition later adopts the native book-plus/fallback policy above. |
 | B2 | Delete Recipe, Diary, Photo, Ingredient, and Category: `trash` | `trash.fill` | Retain `trash` for consistency. Fill is a weight/emphasis choice, not a different operation. Do not use an unlink or minus symbol for destructive deletion. |
 | B3 | Duplicate Recipe: `document.on.document` | `plus.square.on.square`; "Duplicate and Edit" | Selected `plus.square.on.square`; retain Duplicate. The symbol emphasizes creating a copy; the editable draft and explicit Create confirmation remain. |
 | B4 | Close: `xmark` | `xmark.circle` | Retain `xmark`. The circle can create a double border in native toolbars; it is not an improvement merely because the old implementation used a circled symbol. |

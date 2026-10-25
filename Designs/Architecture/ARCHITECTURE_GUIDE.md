@@ -127,8 +127,13 @@ Prefer concise titles across languages; clarify at comparable length where
 possible and add words when needed to prevent misunderstanding. Select wording
 independently of icons, without forcing label styles to compensate for long
 copy.
-The accepted creation pair is `book.pages` for recipes and `square.and.pencil`
-for Diaries; `book.badge.plus` adds an existing recipe to today's Diary.
+For reusable action icons, use existing SF Symbols and their native
+object/action variants where available. Do not composite icons or draw badges.
+Recipe creation uses
+`book.pages`; `DiaryAdditionLabel` uses `book.badge.plus` on iOS 26 or later
+and `book` on iOS 18 for both Diary-add entry points, preserving their distinct
+titles and callbacks. Verify symbol availability separately from the deployment
+target, since image names are strings.
 See [ADR 0013](../Decisions/0013-preserve-semantic-adaptive-action-labels.md)
 for the decision and the boundary between accepted symbols and review options.
 

@@ -42,9 +42,16 @@ communicates the intended operation.
   comparable length when possible; add words when needed to prevent a misleading
   interpretation. Choose wording independently of symbols, and preserve
   accessibility names and object identity.
-- Adopt creation option C: recipe creation uses `book.pages`; Diary creation
-  uses `square.and.pencil`. Keep `book.badge.plus` for adding an existing recipe
-  to today's Diary. The Diary navigation tab retains its separate `book` symbol.
+- Prefer an object plus its operation where an existing SF Symbol supports
+  that meaning. Use native symbols only; do not composite glyphs or draw badges.
+  Keep a generic operation symbol when a matching native variant is unavailable.
+- Recipe creation uses `book.pages`. Diary addition uses `book.badge.plus` on
+  iOS 26 or later, with native `book` on iOS 18. This supersedes option C's
+  Diary compose symbol. New-Diary creation and adding a recipe to today's Diary
+  share this symbol policy while retaining distinct titles and callbacks.
+  The Diary navigation tab retains its separate `book` symbol.
+- Check each selected symbol's availability independently of the deployment
+  target: string-based image names do not provide compiler availability checks.
 - Share `CancelButton`, `DoneButton`, and `ImportDataButton` labels where their
   meanings match. Keep action callbacks, disabled state, draft confirmation,
   and task cancellation with their owning screens.
@@ -61,12 +68,17 @@ Creation remains distinguishable when the two entries appear together. Titles
 remain available to accessibility and expanded/menu presentations, and the app
 does not maintain manual OS-specific text/icon rendering branches.
 
-Object symbols alone can resemble navigation. The selected Diary compose symbol
-strengthens the creation meaning while retaining the established recipe symbol.
+Object symbols alone can resemble navigation. The native book-plus strengthens
+the Diary addition meaning on systems that provide it. Older systems retain
+the book base and semantic title through the shared label.
 The [action-label options](../Plans/action-label-symbol-options.md) record the
 selected icon refinements B1, B3, B7, F3, F6, and N1-N4, plus the shorter
-bulk-input titles and explicit advertising-privacy title. Other alternatives remain
-proposals. This inventory is not permission for automatic app-wide replacement.
+bulk-input titles and explicit advertising-privacy title. Other alternatives
+remain proposals. This inventory is not permission for automatic replacement.
+
+The native-only follow-up also uses text-plus to add a generation preference,
+clipboard/pencil to edit the preference list, and tray/up-arrow for export.
+No corresponding composite book, photo, or Tag edit/delete symbols are added.
 
 This decision preserves current import, AI draft, save, cancellation,
 persistence, and navigation behavior. It does not restore obsolete saving
@@ -86,3 +98,4 @@ capture or proof of older-OS, iPad, or spoken VoiceOver behavior.
 - [SwiftUI Label](https://developer.apple.com/documentation/swiftui/label)
 - [Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons)
 - [Toolbars](https://developer.apple.com/design/human-interface-guidelines/toolbars)
+- [SF Symbols](https://developer.apple.com/design/human-interface-guidelines/sf-symbols)

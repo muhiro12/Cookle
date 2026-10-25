@@ -10,7 +10,7 @@ struct SettingsDataManagementSection: View {
 
     var body: some View {
         Section {
-            Button("Export Data", systemImage: "square.and.arrow.up") {
+            Button("Export Data", systemImage: "tray.and.arrow.up") {
                 exportRequestID = UUID()
             }
             .disabled(isManageActionUnavailable)

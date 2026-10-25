@@ -115,7 +115,7 @@ private extension DataImportView {
 
     var exportFirstSection: some View {
         Section {
-            Button("Export Current Data First", systemImage: "square.and.arrow.up") {
+            Button("Export Current Data First", systemImage: "tray.and.arrow.up") {
                 Task {
                     await exportCurrentData()
                 }

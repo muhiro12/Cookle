@@ -18,12 +18,7 @@ struct AddDiaryButton: View {
                 isPresented = true
             }
         } label: {
-            Label {
-                Text("Add Diary")
-            } icon: {
-                Image(systemName: "square.and.pencil")
-                    .accessibilityHidden(true)
-            }
+            DiaryAdditionLabel(title: "Add Diary")
         }
         .sheet(isPresented: $isPresented) {
             DiaryFormNavigationView()
