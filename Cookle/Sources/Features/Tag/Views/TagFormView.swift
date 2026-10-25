@@ -46,10 +46,8 @@ struct TagFormView<T: Tag>: View {
         .navigationTitle(Text("Edit \(tag.value)"))
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                Button {
+                CancelButton {
                     dismiss()
-                } label: {
-                    Label("Cancel", systemImage: "xmark")
                 }
             }
             ToolbarItem(placement: .confirmationAction) {

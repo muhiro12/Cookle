@@ -93,14 +93,14 @@ private extension DataImportView {
 
     @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
-            Button("Cancel") {
+            CancelButton {
                 model.cancelPendingImport()
             }
             .disabled(isBusy)
         }
         if model.pendingImport?.needsMethodChoice == false {
             ToolbarItem(placement: .confirmationAction) {
-                Button("Import") {
+                ImportDataButton {
                     Task {
                         await model.mergePendingImport(
                             modelContainer: modelContainer,

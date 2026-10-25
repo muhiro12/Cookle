@@ -45,22 +45,18 @@ struct AddMultipleTextsView: View {
             .navigationTitle(title)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button {
+                    CancelButton {
                         text = ""
                         dismiss()
-                    } label: {
-                        Text("Cancel")
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button {
+                    DoneButton {
                         texts = text.split(separator: "\n", omittingEmptySubsequences: false).map { line in
                             String(line)
                         }
                         text = ""
                         dismiss()
-                    } label: {
-                        Text("Done")
                     }
                 }
             }

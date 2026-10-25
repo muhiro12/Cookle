@@ -29,7 +29,7 @@ struct AddMultipleStepsButton: View {
         Button {
             isPresented = true
         } label: {
-            Text("Add Multiple Steps at Once")
+            Label("Add Multiple Steps at Once", systemImage: "list.number")
                 .frame(
                     minHeight: CookleAccessibilityLayout.minimumHitTargetSize
                 )

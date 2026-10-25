@@ -24,12 +24,7 @@ struct AddRecipeToTodayDiaryMenu: View {
                 }
             }
         } label: {
-            Label {
-                Text("Add to Today's Diary")
-            } icon: {
-                Image(systemName: "book.badge.plus")
-                    .accessibilityHidden(true)
-            }
+            AddRecipeToTodayDiaryLabel()
         }
     }
 

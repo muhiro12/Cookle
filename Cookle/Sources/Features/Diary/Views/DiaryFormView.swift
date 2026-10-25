@@ -115,23 +115,21 @@ struct DiaryFormView: View {
 
     @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
-            Button(action: cancelForm) {
-                Label("Cancel", systemImage: "xmark")
-            }
-            .disabled(model.isSaving)
-            .alert(
-                Text("Discard Changes?"),
-                isPresented: $isDiscardChangesConfirmationPresented
-            ) {
-                Button("Discard", role: .destructive) {
-                    dismiss()
+            CancelButton(action: cancelForm)
+                .disabled(model.isSaving)
+                .alert(
+                    Text("Discard Changes?"),
+                    isPresented: $isDiscardChangesConfirmationPresented
+                ) {
+                    Button("Discard", role: .destructive) {
+                        dismiss()
+                    }
+                    Button("Keep Editing", role: .cancel) {
+                        // Dismisses the alert.
+                    }
+                } message: {
+                    Text("You will lose any unsaved changes.")
                 }
-                Button("Keep Editing", role: .cancel) {
-                    // Dismisses the alert.
-                }
-            } message: {
-                Text("You will lose any unsaved changes.")
-            }
         }
         if model.restorePolicy.isRestoreAvailable {
             ToolbarItem(placement: .topBarTrailing) {

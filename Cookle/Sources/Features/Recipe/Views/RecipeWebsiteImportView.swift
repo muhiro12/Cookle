@@ -57,7 +57,7 @@ struct RecipeWebsiteImportView: View {
 
     @ToolbarContentBuilder private var toolbarItems: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
-            Button("Cancel", systemImage: "xmark") {
+            CancelButton {
                 readTask?.cancel()
                 dismiss()
             }

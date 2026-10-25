@@ -40,7 +40,7 @@ struct RecipePhotoTextImportView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel", systemImage: "xmark") {
+                CancelButton {
                     dismiss()
                 }
             }

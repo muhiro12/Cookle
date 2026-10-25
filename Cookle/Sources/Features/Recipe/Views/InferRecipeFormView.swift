@@ -129,13 +129,11 @@ struct InferRecipeFormView: View {
     @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
         if onInferenceApplied == nil || isLoading {
             ToolbarItem(placement: .cancellationAction) {
-                Button {
+                CancelButton {
                     operationTask?.cancel()
                     if onInferenceApplied == nil {
                         dismiss()
                     }
-                } label: {
-                    Label("Cancel", systemImage: "xmark")
                 }
             }
         }

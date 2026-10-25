@@ -14,7 +14,7 @@ struct AddMultipleIngredientsButton: View {
         Button {
             isPresented = true
         } label: {
-            Text("Add Multiple Ingredients at Once")
+            Label("Add Multiple Ingredients at Once", systemImage: "list.bullet")
                 .frame(
                     minHeight: CookleAccessibilityLayout.minimumHitTargetSize
                 )

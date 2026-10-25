@@ -46,7 +46,7 @@ struct DiaryRecipeRegistrationView: View {
 private extension DiaryRecipeRegistrationView {
     @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
-            Button("Cancel", systemImage: "xmark") {
+            CancelButton {
                 dismiss()
             }
             .disabled(isSaving)

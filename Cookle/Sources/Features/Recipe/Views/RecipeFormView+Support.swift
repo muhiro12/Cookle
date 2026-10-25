@@ -55,40 +55,36 @@ extension RecipeFormView {
 
     @ToolbarContentBuilder var toolbarItems: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
-            Button(action: cancelForm) {
-                Label("Cancel", systemImage: "xmark")
-            }
-            .disabled(formModel.isSaving)
-            .alert(
-                Text("Discard Changes?"),
-                isPresented: Binding(
-                    get: {
-                        isDiscardChangesDialogPresented
-                    },
-                    set: { isPresented in
-                        isDiscardChangesDialogPresented = isPresented
+            CancelButton(action: cancelForm)
+                .disabled(formModel.isSaving)
+                .alert(
+                    Text("Discard Changes?"),
+                    isPresented: Binding(
+                        get: {
+                            isDiscardChangesDialogPresented
+                        },
+                        set: { isPresented in
+                            isDiscardChangesDialogPresented = isPresented
+                        }
+                    )
+                ) {
+                    Button("Discard", role: .destructive) {
+                        dismiss()
                     }
-                )
-            ) {
-                Button("Discard", role: .destructive) {
-                    dismiss()
+                    Button("Keep Editing", role: .cancel) {
+                        // Dismisses the alert.
+                    }
+                } message: {
+                    Text("You will lose any unsaved changes.")
                 }
-                Button("Keep Editing", role: .cancel) {
-                    // Dismisses the alert.
-                }
-            } message: {
-                Text("You will lose any unsaved changes.")
-            }
         }
         switch currentEditMode {
         case .active:
             ToolbarItem {
-                Button {
+                DoneButton {
                     withAnimation {
                         currentEditMode = .inactive
                     }
-                } label: {
-                    Label("Done", systemImage: "checkmark")
                 }
             }
         default:

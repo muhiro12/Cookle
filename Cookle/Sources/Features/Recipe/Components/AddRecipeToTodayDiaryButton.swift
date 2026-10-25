@@ -17,12 +17,7 @@ struct AddRecipeToTodayDiaryButton: View {
         Button {
             isPresented = true
         } label: {
-            Label {
-                Text("Add to Today's Diary")
-            } icon: {
-                Image(systemName: "book.badge.plus")
-                    .accessibilityHidden(true)
-            }
+            AddRecipeToTodayDiaryLabel()
         }
         .confirmationDialog(
             Text("Add to Today's Diary"),

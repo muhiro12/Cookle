@@ -36,7 +36,7 @@ struct DataImportConflictsView: View {
         .navigationTitle(Text("Choose for Each Item"))
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
-                Button("Import") {
+                ImportDataButton {
                     Task {
                         await model.importPendingSelections(
                             modelContainer: modelContainer,

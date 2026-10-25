@@ -50,11 +50,9 @@ struct DiaryFormRecipeListView: View {
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button {
+                    DoneButton {
                         selection = temporarySelection
                         dismiss()
-                    } label: {
-                        Label("Done", systemImage: "checkmark")
                     }
                 }
             }

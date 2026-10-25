@@ -116,6 +116,14 @@ choices and their verification limits. App-owned composition and behavior
 remain local; MHUI is a presentation dependency, not a home for business logic
 or generic utilities.
 
+Reusable action controls retain a localized title and a meaningful SF Symbol
+through `Label`, including equivalent controls presented as a button or menu.
+Let native containers choose their label presentation. Explicit label styles
+belong to a local layout or information need; they should not compensate for
+an ambiguous shared symbol. Review every placement and adjacent action before
+changing a shared control's default symbol. Shared cancellation controls keep
+the caller's draft, confirmation, and task-cancellation behavior.
+
 ## Testing Boundary
 
 - Keep repository-owned unit tests in `CookleLibrary/Tests/Default`.

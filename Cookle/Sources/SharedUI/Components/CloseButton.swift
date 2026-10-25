@@ -8,26 +8,13 @@ struct CloseButton: View {
         Button {
             dismiss()
         } label: {
-            if #available(iOS 26.0, *) {
-                Image(systemName: "xmark")
-                    .foregroundStyle(Color.secondary)
-                    .accessibilityHidden(true)
-            } else {
-                Image(systemName: "xmark.circle.fill")
-                    .foregroundStyle(
-                        Color.secondary,
-                        FillShapeStyle.fill
-                    )
-                    .font(.title2)
-                    .accessibilityHidden(true)
-            }
+            Label("Close", systemImage: "xmark")
         }
-        .accessibilityLabel(Text("Close"))
     }
 }
 
 #Preview {
-    NavigationView {
+    NavigationStack {
         List {
             CloseButton()
         }
