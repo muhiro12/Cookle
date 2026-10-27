@@ -1,8 +1,8 @@
 # Cookle release tools
 
-This isolated macOS SwiftPM package pins Apogee **1.4.0** for Cookle release
+This isolated macOS SwiftPM package pins Apogee **1.5.0** for Cookle release
 preparation. The published tag resolves to
-`805ea2c7c274bc7d4147efc560b72b9484e893c7`. Commit `Package.resolved` with any
+`5492b06b750833fc945ae0fd041e011351d131d2`. Commit `Package.resolved` with any
 intentional dependency update. No app, library, Widget, or Watch target links
 Apogee.
 
@@ -148,17 +148,28 @@ the exact candidate commit, Cloud toolchain/build, tests, signed archive,
 TestFlight checks, metadata, and remaining product gates before submission.
 Treat screenshot updates and version-setting writes as separate release
 decisions. Follow Apogee's dry-run, private recovery, and read-back requirements
-before applying them. With Apogee 1.4, add `--progress` to `update-screenshots`
-when observing a long upload: stage progress goes to stderr and final JSON
-remains on stdout. Progress alone does not establish successful completion or
-remote verification. `--allow-unrecoverable-replacement` gives up the previous
-screenshot composition, so decide it separately and keep the replaced images
-elsewhere. `build-feedback --export-path` downloads tester crash logs and
-screenshots, which can contain personal data; write them to a private
-owner-only directory outside the repository and delete them after review.
-Apogee 1.4 preserves earlier exports if a later export fails and refuses to
-overwrite existing files; select a fresh private destination for each export.
-Apogee does not manage Xcode Cloud workflows.
+before applying them. Apogee 1.5 uses Apple's App Asset Library for production
+screenshots, including `IPHONE_DUO`. Use Asset Library display classes instead
+of legacy `APP_*` directory names; Apple's current specifications determine
+accepted dimensions and placement groups.
+
+Start with a fresh private recovery directory. Its `asset-library-state.json`
+retains asset and placement identities and order; it neither resumes legacy
+`state.json` recovery nor exports original image bytes. Keep the exact source
+images separately. New images must finish processing before obsolete placements
+are removed. Verification checks image specifications, byte counts, readiness,
+identities, and order; local SHA-256 reference names are not server-verified
+content checksums.
+
+Add `--progress` to `update-screenshots` when observing a long upload: stage
+progress goes to stderr and final JSON remains on stdout. Progress alone does
+not establish successful completion or remote verification.
+`build-feedback --export-path` downloads tester crash logs and screenshots,
+which can contain personal data; write them to a private owner-only directory
+outside the repository and delete them after review. Earlier exports survive
+a later export failure, and existing files are never overwritten; select a
+fresh private destination for each export. Apogee does not manage Xcode Cloud
+workflows.
 
 After release, review availability, crash/sync reports, and user feedback for
 the selected version. Pause a phased release where appropriate and prepare a
