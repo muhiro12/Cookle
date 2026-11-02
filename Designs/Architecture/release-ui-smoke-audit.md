@@ -55,6 +55,11 @@ The repository expectation is:
 8. Treat skipped targets and state-dependent coverage as explicit coverage
    gaps.
 
+Use recipe form tests for inference replacement, undo, and photo persistence.
+Use live editing when verifying the photo action hit area, sheet dismissal or
+return to the selected recipe. A model-service qualification or an App Store
+capture has its own purpose and does not require repeating the form test cases.
+
 ## Safety Rules
 
 Release UI smoke auditing is non-destructive by default.

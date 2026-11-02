@@ -49,7 +49,7 @@ public struct RecipeInferenceApplication: Sendable {
         )
         previousInput = input
         appliedInput = replacement
-        appliedSnapshot = .init(input: replacement)
+        appliedSnapshot = .init(input: replacement, preservingPartialIngredients: true)
     }
 
     /// Indicates whether applying an inference to `input` would replace
@@ -85,7 +85,7 @@ public struct RecipeInferenceApplication: Sendable {
     public func hasEdits(
         in currentInput: RecipeFormInput
     ) -> Bool {
-        RecipeFormChangeSnapshot(input: currentInput) != appliedSnapshot
+        RecipeFormChangeSnapshot(input: currentInput, preservingPartialIngredients: true) != appliedSnapshot
     }
 }
 

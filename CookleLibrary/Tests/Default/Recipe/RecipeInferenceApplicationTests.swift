@@ -42,6 +42,28 @@ struct RecipeInferenceApplicationTests {
     }
 
     @Test
+    func result_waits_for_review_of_edits_made_while_inference_was_running() {
+        let reviewed = input(note: "Keep")
+        var edited = reviewed
+        edited.ingredients = [.init(ingredient: "", amount: "1 pinch")]
+        #expect(RecipeFormOperations.inferenceRequiresNewReview(reviewedInput: reviewed, currentInput: edited))
+        #expect(!RecipeFormOperations.inferenceRequiresNewReview(reviewedInput: edited, currentInput: edited))
+
+        var photoEdit = reviewed
+        photoEdit.photos = [samplePhoto]
+        #expect(!RecipeFormOperations.inferenceRequiresNewReview(reviewedInput: reviewed, currentInput: photoEdit))
+        #expect(!RecipeFormOperations.inferenceRequiresNewReview(reviewedInput: edited, currentInput: input()))
+    }
+
+    @Test
+    func undo_requires_review_for_an_amount_entered_before_its_ingredient_name() {
+        let application = RecipeFormOperations.applyInference(inference(), sourceURL: nil, to: input())
+        var edited = application.appliedInput
+        edited.ingredients.append(.init(ingredient: "", amount: "1 pinch"))
+        #expect(application.hasEdits(in: edited))
+    }
+
+    @Test
     func applying_keeps_photos_and_does_not_invent_unknown_values() {
         let application = RecipeFormOperations.applyInference(
             inference(

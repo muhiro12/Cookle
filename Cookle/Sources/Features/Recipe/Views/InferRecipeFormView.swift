@@ -279,7 +279,7 @@ private extension InferRecipeFormView {
             return
         }
         model.captureInitialChangeSnapshotIfNeeded()
-        let reviewedInput = model.changeSnapshot
+        let reviewedInput = model.formInput
         generationStatus = nil
         isLoading = true
         operationTask = Task { @MainActor in
@@ -293,7 +293,7 @@ private extension InferRecipeFormView {
     /// longer covers it; the result waits for a new review instead.
     @MainActor
     func applyInference(
-        reviewedInput: RecipeFormChangeSnapshot
+        reviewedInput: RecipeFormInput
     ) async {
         defer {
             isLoading = false
@@ -317,8 +317,10 @@ private extension InferRecipeFormView {
                 inference = websiteSource.grounding(inference)
             }
             try Task.checkCancellation()
-            guard model.changeSnapshot == reviewedInput
-                    || model.inferenceReplacesEnteredValues == false else {
+            if RecipeFormOperations.inferenceRequiresNewReview(
+                reviewedInput: reviewedInput,
+                currentInput: model.formInput
+            ) {
                 pendingInference = .init(
                     inference: inference,
                     sourceURL: sourceURL,

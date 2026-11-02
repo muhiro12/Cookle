@@ -28,12 +28,16 @@ public struct RecipeFormChangeSnapshot: Equatable, Sendable {
 
     /// Creates a snapshot using the same placeholder and number semantics as recipe saving.
     public init(input: RecipeFormInput) {
+        self.init(input: input, preservingPartialIngredients: false)
+    }
+
+    init(input: RecipeFormInput, preservingPartialIngredients: Bool) {
         name = input.name
         photos = input.photos.map(Photo.init)
         servingSize = Self.number(from: input.servingSize)
         cookingTime = Self.number(from: input.cookingTime)
         ingredients = input.ingredients.filter { ingredient in
-            ingredient.ingredient.isEmpty == false
+            !ingredient.ingredient.isEmpty || (preservingPartialIngredients && !ingredient.amount.isEmpty)
         }
         steps = input.steps.filter { step in
             step.isEmpty == false

@@ -24,6 +24,23 @@ public enum RecipeFormOperations {
         )
     }
 
+    /// A result that would overwrite input edited after review needs fresh confirmation.
+    /// Photos stay in the form when an inference is applied.
+    nonisolated public static func inferenceRequiresNewReview(
+        reviewedInput: RecipeFormInput,
+        currentInput: RecipeFormInput
+    ) -> Bool {
+        guard inferenceReplacesEnteredValues(in: currentInput) else {
+            return false
+        }
+        var reviewed = reviewedInput
+        var current = currentInput
+        reviewed.photos = []
+        current.photos = []
+        return RecipeFormChangeSnapshot(input: reviewed, preservingPartialIngredients: true)
+            != RecipeFormChangeSnapshot(input: current, preservingPartialIngredients: true)
+    }
+
     /// Applies an inferred recipe to form input, keeping photos and the input
     /// it replaced so the application can be undone once.
     nonisolated public static func applyInference(
