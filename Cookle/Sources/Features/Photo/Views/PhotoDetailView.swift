@@ -28,6 +28,7 @@ struct PhotoDetailView: View {
             .scrollTargetBehavior(.paging)
             .scrollPosition(id: $currentID)
         }
+        .clipped()
         .background {
             Color.black.ignoresSafeArea()
         }
