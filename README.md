@@ -170,6 +170,7 @@ Primary records:
 - [ADR 0008](Designs/Decisions/0008-adopt-package-consumer-boundaries.md)
 - [ADR 0009](Designs/Decisions/0009-adopt-full-mhui-in-main-app.md)
 - [ADR 0010](Designs/Decisions/0010-evaluate-mhui-for-companion-surfaces.md)
+- [iPhone Duo adaptation](Designs/Architecture/iphone-duo-adaptation.md)
 
 - `CookleLibrary` owns shared SwiftData models, public `*Operations` facades,
   predicates, queries, validation, mutations, migrations, and route helpers.
