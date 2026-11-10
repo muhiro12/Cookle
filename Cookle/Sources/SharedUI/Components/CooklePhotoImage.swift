@@ -7,6 +7,7 @@ struct CooklePhotoImage: View {
     private var designMetrics
 
     private let data: Data
+    private let roundsCorners: Bool
     private let request: CooklePhotoImageRequest
     private let pipeline: CooklePhotoImagePipeline
 
@@ -36,7 +37,7 @@ struct CooklePhotoImage: View {
                 .accessibilityLabel(Text("Photo"))
             }
         }
-        .clipShape(.rect(cornerRadius: designMetrics.cornerRadius.control))
+        .clipShape(.rect(cornerRadius: roundsCorners ? designMetrics.cornerRadius.control : 0))
         .task(id: taskID) {
             image = nil
             let loadedImage = await pipeline.image(
@@ -54,9 +55,11 @@ struct CooklePhotoImage: View {
         data: Data,
         identity: CooklePhotoImageRequest.Identity,
         size: CooklePhotoImageRequest.Size,
+        roundsCorners: Bool = true,
         pipeline: CooklePhotoImagePipeline = .shared
     ) {
         self.data = data
+        self.roundsCorners = roundsCorners
         self.request = .init(
             identity: identity,
             size: size

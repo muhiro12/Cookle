@@ -12,7 +12,8 @@ struct PhotoDetailView: View {
                 CooklePhotoImage(
                     data: photo.data,
                     identity: .stored(photo.persistentModelID),
-                    size: .detail
+                    size: .detail,
+                    roundsCorners: false
                 )
                 .accessibilityLabel(Text("Photo"))
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
