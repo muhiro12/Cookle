@@ -6,6 +6,15 @@ repository contains the full iOS project together with its shared Swift package.
 
 [Available on the App Store](https://apps.apple.com/app/id6483363226)
 
+## Branches and release review
+
+Use `develop` for daily development. Keep agent review and the documented
+verification checks in the daily workflow. `main` tracks the released baseline.
+Before shipping, review `main...develop` and record the exact candidate commit.
+After publication, merge that released commit into `main`; do not include later
+work added to `develop`. Preserve commit ancestry so the next release comparison
+starts from the previous released candidate.
+
 ## Features
 
 - Personal recipe database backed by SwiftData models for names, photos,
