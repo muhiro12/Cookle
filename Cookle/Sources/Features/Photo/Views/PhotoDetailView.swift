@@ -7,27 +7,19 @@ struct PhotoDetailView: View {
     private let photos: [Photo]
 
     var body: some View {
-        GeometryReader { geometry in
-            ScrollView(.horizontal) {
-                LazyHStack(spacing: .zero) {
-                    ForEach(photos) { photo in
-                        CooklePhotoImage(
-                            data: photo.data,
-                            identity: .stored(photo.persistentModelID),
-                            size: .detail
-                        )
-                        .accessibilityLabel(Text("Photo"))
-                        .frame(
-                            width: geometry.size.width,
-                            height: geometry.size.height
-                        )
-                    }
-                }
-                .scrollTargetLayout()
+        TabView(selection: $currentID) {
+            ForEach(photos) { photo in
+                CooklePhotoImage(
+                    data: photo.data,
+                    identity: .stored(photo.persistentModelID),
+                    size: .detail
+                )
+                .accessibilityLabel(Text("Photo"))
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .tag(photo.id)
             }
-            .scrollTargetBehavior(.paging)
-            .scrollPosition(id: $currentID)
         }
+        .tabViewStyle(.page(indexDisplayMode: .never))
         .clipped()
         .background {
             Color.black.ignoresSafeArea()
@@ -42,7 +34,7 @@ struct PhotoDetailView: View {
 
     init(photos: [Photo], initialValue: Photo? = nil) {
         self.photos = photos
-        self._currentID = .init(initialValue: initialValue?.id)
+        self._currentID = .init(initialValue: initialValue?.id ?? photos.first?.id)
     }
 }
 
