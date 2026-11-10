@@ -28,10 +28,11 @@ struct PhotoDetailView: View {
             .scrollTargetBehavior(.paging)
             .scrollPosition(id: $currentID)
         }
-        .background(.black)
-        .ignoresSafeArea(edges: .top)
+        .background {
+            Color.black.ignoresSafeArea()
+        }
         .toolbar {
-            ToolbarItem {
+            ToolbarItem(placement: .cancellationAction) {
                 CloseButton()
             }
         }
