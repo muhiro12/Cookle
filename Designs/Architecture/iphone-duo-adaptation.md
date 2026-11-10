@@ -38,6 +38,10 @@ fold-transition validation.
   symbols so the system can choose their presentation.
 - The photo viewer's close action uses `.cancellationAction` so navigation
   dismissal has its semantic placement in either toolbar axis.
+- Recipe titles use their native navigation title when `toolbarVerticalEdge`
+  indicates vertical bars. Custom wrapping large titles remain limited to
+  horizontal bars, where they do not overlap the sidebar control. Only the
+  toolbar item changes during a resize; the screen content keeps its identity.
 - Keep keyboard input attached to its safe-area bar. Do not move the recipe
   preference composer into the vertical toolbar.
 - Keep standard sheet placement and native dialogs unless a specific screen
@@ -102,11 +106,11 @@ selection retention. The final implementation passed direct opening of the secon
 photo, backward/forward paging, display opening and closing, and inner-display
 portrait rotation while keeping the second photo selected.
 
-The sample store used its fallback symbol images. These observations establish
-viewport boundaries and identity retention, not real-photo quality. Laptop/tent
-poses, both Split View positions, large Dynamic Type, Reduce Transparency,
-physical camera capture, and older-OS runtime behavior remain outside this pass.
-Ordinary iPhone and iPad runtime regression checks were also not repeated.
+The initial pass used the sample store's fallback symbol images. These
+observations establish viewport boundaries and identity retention, not real-photo
+quality. Laptop/tent poses, both Split View positions, large Dynamic Type, Reduce
+Transparency, physical camera capture, older-OS behavior, and ordinary iPhone/iPad
+regression checks were not included in that initial pass.
 
 Simulator logs contained UIKit orientation-deprecation, unavailable-service,
 CoreVideo pixel-buffer, and keyboard-coordinate diagnostics. No corresponding
@@ -119,9 +123,92 @@ decisions, safe-area calculations, and scene lifecycle across the app and its
 shared/companion sources. It found no additional required migrations. Static
 review and a successful build do not establish fold-transition behavior.
 
+### Expanded Simulator Verification
+
+The follow-up pass on 2026-11-10 used the repository's actual sample PNGs through
+`COOKLE_CAPTURE_PHOTO_DIRECTORY`. Capture data remained isolated from live stores.
+
+At the maximum accessibility text size (`accessibility-extra-extra-extra-large`)
+with Reduce Transparency enabled, recipe and cooking content remained scrollable.
+Ingredients and amounts stacked vertically, cooking steps wrapped, and timer
+controls remained reachable. An unsaved ingredient amount survived a display
+transition with the software keyboard visible; update and cancellation controls
+remained available.
+
+The real-photo viewer retained the second photo through paging, opening and
+closing, and both inner-display landscape orientations. The complete source image
+remained fitted within the safe viewport without adjacent-page drawing under
+the system bars.
+
+With Cookle on either side of a two-app Split View, the photo viewer respected
+the controls on the corresponding outer edge and returned to the selected recipe
+through Close. The right-side editor also kept its keyboard and cancellation
+action usable. The documented Home-indicator drag provided the Split View entry
+point; resizing the simulated device window alone was not counted as Split View
+coverage.
+
+In right-side Split View, the Search tab's category route and Diary both supported
+opening an item, going Back, and selecting the same item again. The selected Diary
+entry also survived an open-to-closed-to-open transition in the same app process.
+The native Simulator keyboard successfully entered a text query and displayed
+matching recipes. The desktop text-insertion path had not delivered the same
+input; no app-side input failure was reproduced with the native keyboard.
+After an open-to-closed-to-open round trip, reopening the sidebar restored the
+same query and matching results without retyping, while the selected recipe
+remained selected. In detail-only presentation, the system search field had
+shown a placeholder; that appearance did not mean the query state was lost.
+
+Opening Duo with a recipe selected from text-search results exposed an overlap
+between the sidebar control and the custom large title. The title modifier now
+uses the system-provided vertical-bar edge to defer to the native navigation
+title in that context. Horizontal bars retain the existing wrapping title.
+The rebuilt app showed clear separation between the sidebar control and title
+in full-width detail with a right-side vertical bar. Text-search selection and
+the query also survived opening the device in the same app process.
+An ordinary iPhone check of the rebuilt app retained the two-line wrapping title
+with clear Back and Edit controls under a horizontal bar.
+The updated app build compiled both title modifiers successfully with no reported
+warnings or errors. Formatting, SwiftLint, retained repository rules, and all
+28 tooling tests passed.
+
+The native overflow menu was also reachable in the closed landscape state;
+Diary's Add Recipe and Add Diary actions remained readable and available.
+
+On the ordinary iPhone 18 Pro and 11-inch iPad Pro Simulators, the second photo
+opened directly, remained selected after rotation, paged in both directions,
+and closed back to the recipe. The image remained fitted within the available
+safe viewport. On iPad, dragging the native window resize handle to reduce the
+window and then restoring full screen also retained the second photo in the same
+app process.
+
+Native run-tool sessions terminated during some Duo checks, and the iPad run
+tool reported a Simulator connection failure. Those interrupted transitions were
+not counted as successful checks. Verification continued with the same built app
+launched through official `simctl` commands and observed through the Simulator UI.
+Owned app runs were stopped after verification. Text size, Reduce Transparency,
+keyboard capture, and the original scheme and run destination were restored;
+the workspace opened for this pass was closed.
+
+### Remaining Verification Limits
+
+- Arbitrary hinge angles and specifically named laptop/tent poses remain
+  unverified. Device Hub exposed closed, partially open, and open controls, but
+  the UI automation interface could not hold Option while dragging its angle
+  slider.
+- Device Hub's resizable mode produced a black simulated display in this run;
+  it supplied no usable visual evidence. Actual two-app Split View coverage is
+  recorded separately above.
+- Older-OS runtime regression remains unverified because this host only had
+  iOS 27.2 runtimes available for these devices.
+- Physical camera capture, iPhone Mirroring, simultaneous physical displays, and
+  distribution readiness require separate device or release verification.
+
 ## References
 
 - [Preparing your app for iPhone Duo](https://developer.apple.com/iphone-duo/prepare/)
 - [NavigationSplitView](https://developer.apple.com/documentation/swiftui/navigationsplitview)
 - [AnyLayout](https://developer.apple.com/documentation/swiftui/anylayout)
 - [PageTabViewStyle](https://developer.apple.com/documentation/swiftui/pagetabviewstyle)
+- [Vertical toolbar edge](https://developer.apple.com/documentation/swiftui/environmentvalues/toolbarverticaledge)
+- [Device Hub interactions](https://developer.apple.com/documentation/xcode/interacting-with-your-app-in-device-hub)
+- [iPhone Duo multitasking](https://developer.apple.com/videos/play/tech-talks/111461/)
