@@ -74,6 +74,57 @@ override or a change to the app's deployment target.
   iOS 18 deployment-target build, not by an older-OS live run. This follow-up
   makes no new iPad or spoken VoiceOver qualification claim.
 
+## iOS 27.2 Catalog Recheck
+
+The recheck used `name_availability.plist` and `name_aliases.strings` from
+Apple's SF Symbols 27 app (build 140) and the iOS 27.1 and 27.2 Simulator system
+catalogs. [#170](https://github.com/muhiro12/Cookle/issues/170)
+
+| Action | Current symbol | Introduced in iOS |
+| --- | --- | --- |
+| Add Recipe | `book.pages` | 17.0 |
+| Add Diary or add a recipe to today's Diary | `book.badge.plus` | 26.0 |
+| Diary addition on older systems | `book` | 13.0 |
+| Edit Recipe or Diary | `pencil.line` | 16.0 |
+| Register New Recipe in the Diary recipe picker | `plus` | 13.0 |
+| Add an individual photo to a recipe | `photo.badge.plus` | 17.0 |
+
+- Recipe creation uses the shared `AddRecipeButton` in the Recipe and Diary
+  toolbars and empty states, the Diary inspiration section, and the Photos and
+  Tags empty states. Keep `book.pages`. The checked catalogs contain no
+  addition variant of that base, including under `book.pages.badge.plus` or
+  `book.pages.plus`. `book.badge.plus` and its fill variant (iOS 26.0) share
+  the Diary book shape. The catalog dates the document and note plus glyphs
+  (`document.badge.plus` and `text.pad.header.badge.plus`) to iOS 18.0 and
+  26.0 respectively. The new `bookmark.text.page` (iOS 27.2) depicts a
+  bookmarked page without an addition badge.
+- Diary creation uses `AddDiaryButton` in the toolbar, empty state, and Today
+  section. The recipe detail and recipe row context menu use the same
+  `DiaryAdditionLabel` when adding an existing recipe to today's Diary.
+  The iOS 18 fallback `book` and Recipe's `book.pages` have distinct shapes.
+- Recipe and Diary editing use `pencil.line` in detail views and row menus.
+  The catalogs contain no corresponding edit variant of either tab's book.
+  `book.and.wrench` (iOS 17.0) suggests tools or repair.
+- `photo.stack` (iOS 16.0) represents the Photos collection. Its empty-state
+  action creates a recipe. Individual photo addition in recipe details and the
+  recipe form uses `photo.badge.plus`; the catalogs contain no add or edit
+  variant of `photo.stack`. The Photos tab has no standalone Add Photo or
+  Edit Photo action.
+
+On the iOS 27.2 iPhone 18 Pro Simulator, the two creation symbols rendered
+side by side in the Diary toolbar and exposed separate Add Recipe and Add
+Diary accessibility names. Add Recipe opened the native menu and its manual
+entry opened the new recipe form. The form showed the photo-plus control
+with its Add Photo accessibility name, and Cancel returned to the Diary
+without saving. The Photos empty state showed the shared Add Recipe action.
+On the iPadOS 27.2 iPad Pro 11-inch Simulator in landscape, Add Diary stayed
+in the sidebar toolbar and Add Recipe retained its pages icon and title in
+the native overflow menu. Manual entry and Cancel also worked there. Both
+checks used in-memory fixtures.
+
+The introduction versions establish symbol availability for the iOS 18
+deployment target. Live checks on iOS 18 and spoken VoiceOver remain unverified.
+
 ## Selected Refinements
 
 The owner selected the alternative **icons only** for B1, B3, B7, F3, F6, N1,
