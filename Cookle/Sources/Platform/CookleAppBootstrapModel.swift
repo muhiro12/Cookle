@@ -13,11 +13,10 @@ final class CookleAppBootstrapModel {
 
     private(set) var appAssembly: CookleAppAssembly?
     private(set) var failureMessage: String?
+    private(set) var hasLoadedAssembly = false
 
     private let logging: CookleAppLogging
-    /// The iCloud setting the current `appAssembly` was built for, so the
-    /// scene's `.task(id:)` can tell a real toggle from its first run. Only
-    /// meaningful while `appAssembly` is non-nil.
+    private let liveStoreLoader = LiveStoreLoader()
     private var assembledICloudSetting = false
 
     init(
@@ -70,17 +69,12 @@ final class CookleAppBootstrapModel {
                 cloudKitDatabase: isICloudOn ? .automatic : .none,
                 logger: makeLogger(category: "StoreMigration")
             )
-            let assembly = makeAssembly(
+            installLiveAssembly(
                 modelContainer: modelContainer,
+                isICloudOn: isICloudOn,
                 startupStartedAt: startupStartedAt,
                 startupLogger: startupLogger
             )
-            finalizeStartup(
-                assembly: assembly,
-                startupStartedAt: startupStartedAt,
-                startupLogger: startupLogger
-            )
-            assembledICloudSetting = isICloudOn
         } catch {
             handleStartupFailure(
                 error,
@@ -98,6 +92,10 @@ final class CookleAppBootstrapModel {
     func loadAssembly(
         isICloudOn: Bool
     ) async {
+        guard !Task.isCancelled else {
+            return
+        }
+
         appAssembly = nil
         failureMessage = nil
 
@@ -135,20 +133,17 @@ final class CookleAppBootstrapModel {
                 startupLogger: startupLogger
             )
             try Task.checkCancellation()
-            let assembly = makeAssembly(
+            installLiveAssembly(
                 modelContainer: modelContainer,
+                isICloudOn: isICloudOn,
                 startupStartedAt: startupStartedAt,
                 startupLogger: startupLogger
             )
-            finalizeStartup(
-                assembly: assembly,
-                startupStartedAt: startupStartedAt,
-                startupLogger: startupLogger
-            )
-            assembledICloudSetting = isICloudOn
-        } catch is CancellationError {
-            return
         } catch {
+            guard !Task.isCancelled else {
+                return
+            }
+
             handleStartupFailure(
                 error,
                 startupLogger: startupLogger
@@ -158,6 +153,20 @@ final class CookleAppBootstrapModel {
 }
 
 private extension CookleAppBootstrapModel {
+    // Serialize opens of the same SQLite store even if a request is cancelled mid-open.
+    actor LiveStoreLoader {
+        func open(
+            cloudKitDatabase: ModelConfiguration.CloudKitDatabase,
+            logger: MHLogger
+        ) throws -> ModelContainer {
+            try Task.checkCancellation()
+            return try CookleAppAssemblyFactory.prepareLiveModelContainer(
+                cloudKitDatabase: cloudKitDatabase,
+                logger: logger
+            )
+        }
+    }
+
     static func durationMilliseconds(
         since startedAt: TimeInterval
     ) -> Int {
@@ -183,6 +192,7 @@ private extension CookleAppBootstrapModel {
             startupStartedAt: startupStartedAt,
             startupLogger: startupLogger
         )
+        assembledICloudSetting = CooklePreferences.bool(for: \.isICloudOn)
         return true
     }
     #endif
@@ -195,14 +205,10 @@ private extension CookleAppBootstrapModel {
         let storeMigrationLogger = makeLogger(
             category: "StoreMigration"
         )
-        let modelContainer = try await Task.detached(
-            priority: .userInitiated
-        ) {
-            try CookleAppAssemblyFactory.prepareLiveModelContainer(
-                cloudKitDatabase: cloudKitDatabase,
-                logger: storeMigrationLogger
-            )
-        }.value
+        let modelContainer = try await liveStoreLoader.open(
+            cloudKitDatabase: cloudKitDatabase,
+            logger: storeMigrationLogger
+        )
         startupLogger.notice(
             "store prep finished in \(Self.durationMilliseconds(since: storePreparationStartedAt)) ms"
         )
@@ -260,6 +266,29 @@ private extension CookleAppBootstrapModel {
         )
     }
 
+    func installLiveAssembly(
+        modelContainer: ModelContainer,
+        isICloudOn: Bool,
+        startupStartedAt: TimeInterval,
+        startupLogger: MHLogger
+    ) {
+        let assembly = makeAssembly(
+            modelContainer: modelContainer,
+            startupStartedAt: startupStartedAt,
+            startupLogger: startupLogger
+        )
+        assembledICloudSetting = isICloudOn
+        finalizeStartup(
+            assembly: assembly,
+            startupStartedAt: startupStartedAt,
+            startupLogger: startupLogger
+        )
+        startupLogger.notice(
+            "iCloud store configuration applied",
+            metadata: ["icloud_enabled": isICloudOn.description]
+        )
+    }
+
     func makeAssembly(
         modelContainer: ModelContainer,
         startupStartedAt: TimeInterval,
@@ -286,6 +315,7 @@ private extension CookleAppBootstrapModel {
         CookleShortcuts.updateAppShortcutParameters()
 
         appAssembly = assembly
+        hasLoadedAssembly = true
         startupLogger.notice(
             "startup wiring finished in \(Self.durationMilliseconds(since: startupStartedAt)) ms"
         )

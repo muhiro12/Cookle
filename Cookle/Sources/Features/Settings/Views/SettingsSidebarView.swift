@@ -16,6 +16,8 @@ struct SettingsSidebarView: View {
     @Environment(\.cookleSplitSidebarBackground)
     private var sidebarBackground
 
+    @Environment(MHAppRuntime.self)
+    private var appRuntime
     @Environment(\.modelContext)
     private var context
     @Environment(\.isPresented)
@@ -165,11 +167,10 @@ struct SettingsSidebarView: View {
 
     @ViewBuilder var iCloudSection: some View {
         if isSubscribeOn {
-            Section {
-                Toggle("iCloud On", isOn: $isICloudOn)
-            } header: {
-                Text("Settings")
-            }
+            SettingsICloudSection(
+                isICloudOn: $isICloudOn,
+                isSubscriptionActive: appRuntime.premiumStatus == .active
+            )
         }
     }
 

@@ -1621,6 +1621,40 @@
         }
       }
     },
+    "Applying iCloud Setting" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Applying iCloud Setting"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplicando el ajuste de iCloud"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Application du réglage iCloud"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud設定を適用中"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在应用 iCloud 设置"
+          }
+        }
+      }
+    },
     "Are you really going to create Preview Diary?" : {
       "localizations" : {
         "en" : {
@@ -3011,6 +3045,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "顺序的更改 或 行的删除"
+          }
+        }
+      }
+    },
+    "Changes may take time to appear on other devices." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changes may take time to appear on other devices."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los cambios pueden tardar en aparecer en otros dispositivos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les modifications peuvent mettre du temps à apparaître sur les autres appareils."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "変更がほかのデバイスに反映されるまで時間がかかることがあります。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更改可能需要一段时间才会显示在其他设备上。"
           }
         }
       }
@@ -9922,6 +9990,40 @@
         }
       }
     },
+    "Open Without iCloud" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Without iCloud"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir sin iCloud"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir sans iCloud"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloudを使わずに開く"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不使用 iCloud 打开"
+          }
+        }
+      }
+    },
     "Open a page for a single recipe, or paste the recipe text." : {
       "localizations" : {
         "en" : {
@@ -13463,6 +13565,40 @@
         }
       }
     },
+    "Sign in to iCloud in the Settings app to sync across devices." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to iCloud in the Settings app to sync across devices."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicia sesión en iCloud en Ajustes para sincronizar tus dispositivos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connectez-vous à iCloud dans Réglages pour synchroniser vos appareils."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "デバイス間で同期するには、「設定」アプリでiCloudにサインインしてください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请在“设置”中登录 iCloud，以便在设备之间同步。"
+          }
+        }
+      }
+    },
     "Some Photos Could Not Be Added" : {
       "localizations" : {
         "en" : {
@@ -13935,6 +14071,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "订阅"
+          }
+        }
+      }
+    },
+    "Subscription Active" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subscription Active"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suscripción activa"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abonnement actif"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "サブスクリプション有効"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "订阅已生效"
           }
         }
       }
@@ -15817,6 +15987,40 @@
         }
       }
     },
+    "Turning off iCloud sync keeps the data already on this device." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turning off iCloud sync keeps the data already on this device."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al desactivar la sincronización con iCloud, se conservan los datos que ya están en este dispositivo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La désactivation de la synchronisation iCloud conserve les données déjà présentes sur cet appareil."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud同期をオフにしても、このデバイスにあるデータは残ります。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭 iCloud 同步后，此设备上已有的数据会保留。"
+          }
+        }
+      }
+    },
     "Type" : {
       "localizations" : {
         "en" : {
@@ -15853,6 +16057,40 @@
     },
     "URL" : {
       "shouldTranslate" : false
+    },
+    "Unable to Change iCloud Sync" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to Change iCloud Sync"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo cambiar la sincronización con iCloud"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de modifier la synchronisation iCloud"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud同期の設定を変更できませんでした"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法更改 iCloud 同步设置"
+          }
+        }
+      }
     },
     "Unable to Start Cookle" : {
       "localizations" : {
@@ -16942,6 +17180,40 @@
         }
       }
     },
+    "You can manage iCloud sync in Settings." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can manage iCloud sync in Settings."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puedes gestionar la sincronización con iCloud en Ajustes."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vous pouvez gérer la synchronisation iCloud dans les réglages."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定からiCloud同期を切り替えられます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你可以在设置中管理 iCloud 同步。"
+          }
+        }
+      }
+    },
     "You have no data on this device yet, so everything in this file will be added." : {
       "localizations" : {
         "en" : {
@@ -17108,6 +17380,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "iCloud 开启"
+          }
+        }
+      }
+    },
+    "iCloud account status is unavailable. Your data is still on this device." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud account status is unavailable. Your data is still on this device."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo comprobar el estado de la cuenta de iCloud. Tus datos siguen en este dispositivo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de vérifier l’état du compte iCloud. Vos données sont toujours sur cet appareil."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloudアカウントの状態を確認できません。データはこのデバイスに残っています。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法获取 iCloud 帐户状态。数据仍保留在此设备上。"
           }
         }
       }

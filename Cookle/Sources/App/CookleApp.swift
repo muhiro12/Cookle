@@ -11,6 +11,11 @@ import SwiftUI
 
 @main
 struct CookleApp: App {
+    private struct StoreLoadRequest: Equatable {
+        let isICloudOn: Bool
+        let retryCount: Int
+    }
+
     @UIApplicationDelegateAdaptor(CookleNotificationAppDelegate.self)
     private var notificationAppDelegate
 
@@ -22,32 +27,32 @@ struct CookleApp: App {
     private var lastLaunchedAppVersion
 
     @State private var bootstrapModel: CookleAppBootstrapModel
+    @State private var retryCount = 0
 
     var body: some Scene {
         WindowGroup {
+            let request = StoreLoadRequest(isICloudOn: isICloudOn, retryCount: retryCount)
+
             Group {
                 if let appAssembly = bootstrapModel.appAssembly {
                     rootView(appAssembly: appAssembly)
                 } else {
                     CookleStartupView(
-                        failureMessage: bootstrapModel.failureMessage
+                        failureMessage: bootstrapModel.failureMessage,
+                        isSwitchingICloud: bootstrapModel.hasLoadedAssembly,
+                        openWithoutICloud: request.isICloudOn ? { isICloudOn = false } : nil
                     ) {
-                        Task {
-                            await bootstrapModel.loadAssembly(
-                                isICloudOn: isICloudOn
-                            )
-                        }
+                        retryCount += 1
                     }
                 }
             }
             .mhTheme(.standard)
-            .task(id: isICloudOn) {
+            .task(id: request) {
                 // `init()` already assembled for the stored setting; only a
                 // real toggle needs the store reopened.
-                if !bootstrapModel.isAssembled(forICloudSetting: isICloudOn) {
-                    await bootstrapModel.loadAssembly(isICloudOn: isICloudOn)
+                if !bootstrapModel.isAssembled(forICloudSetting: request.isICloudOn) {
+                    await bootstrapModel.loadAssembly(isICloudOn: request.isICloudOn)
                 }
-                notificationAppDelegate.notificationService = bootstrapModel.appAssembly?.services.notificationService
             }
             .onChange(of: bootstrapModel.appAssembly?.services.notificationService) {
                 notificationAppDelegate.notificationService = bootstrapModel.appAssembly?.services.notificationService
@@ -96,7 +101,7 @@ struct CookleApp: App {
 
     func liveRootView(appAssembly: CookleAppAssembly) -> some View {
         ContentView()
-            .id(isICloudOn)
+            .id(ObjectIdentifier(appAssembly))
             .cookleAppAssembly(appAssembly)
     }
 

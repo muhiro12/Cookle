@@ -6,6 +6,8 @@ struct SettingsNavigationView: View {
     @Environment(\.horizontalSizeClass)
     private var horizontalSizeClass
 
+    @Environment(MHAppRuntime.self)
+    private var appRuntime
     @Environment(\.modelContext)
     private var context
     @Environment(SettingsActionService.self)
@@ -53,7 +55,12 @@ struct SettingsNavigationView: View {
             applyIncomingSelectionIfNeeded()
         }
         .onChange(of: selection) {
-            syncPreferredCompactColumn()
+            if !completeSubscriptionIfNeeded() {
+                syncPreferredCompactColumn()
+            }
+        }
+        .onChange(of: appRuntime.premiumStatus) {
+            completeSubscriptionIfNeeded()
         }
         .dataImport(
             model: model,
@@ -88,7 +95,15 @@ private extension SettingsNavigationView {
         case .license:
             LicenseView()
         case .none:
-            SplitContentPlaceholder("Nothing Selected")
+            if appRuntime.premiumStatus == .active {
+                ContentUnavailableView {
+                    Label("Subscription Active", systemImage: "checkmark.circle")
+                } description: {
+                    Text("You can manage iCloud sync in Settings.")
+                }
+            } else {
+                SplitContentPlaceholder("Nothing Selected")
+            }
         }
     }
 
@@ -97,9 +112,25 @@ private extension SettingsNavigationView {
             return
         }
 
-        selection = incomingSelection
         self.incomingSelection = nil
+        if incomingSelection == .subscription, appRuntime.premiumStatus == .active {
+            return
+        }
+
+        selection = incomingSelection
         syncPreferredCompactColumn()
+    }
+
+    @discardableResult
+    func completeSubscriptionIfNeeded() -> Bool {
+        guard selection == .subscription, appRuntime.premiumStatus == .active else {
+            return false
+        }
+
+        selection = nil
+        columnVisibility = .all
+        syncPreferredCompactColumn()
+        return true
     }
 
     func syncPreferredCompactColumn() {

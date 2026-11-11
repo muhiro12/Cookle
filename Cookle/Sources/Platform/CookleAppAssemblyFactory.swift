@@ -1,4 +1,7 @@
 import Foundation
+import MHAppRuntimeAds
+import MHAppRuntimeDefaults
+import MHAppRuntimeLicenses
 import MHPlatform
 import MHUI
 import SwiftData
@@ -94,11 +97,9 @@ private extension CookleAppAssemblyFactory {
             recordsNotificationUsage: recordsNotificationUsage,
             isolatesRemoteUpdates: isolatesCookingSession
         )
-        let bootstrap = makeBootstrap(
+        let runtimeAssembly = makeRuntimeAssembly(
             configuration: makeRuntimeConfiguration(nativeAdUnitID: nativeAdUnitID, adsConsent: adsConsent),
-            remoteConfigurationService: services.remoteConfigurationService,
-            notificationService: services.notificationService,
-            routePipeline: services.routePipeline
+            services: services
         )
         let notificationService = services.notificationService
         let updates = services.remoteConfigurationService.updates
@@ -128,26 +129,43 @@ private extension CookleAppAssemblyFactory {
             diaryActionService: DiaryActionService(notificationService: notificationService, updates: updates),
             tagActionService: TagActionService(notificationService: notificationService, updates: updates),
             settingsActionService: SettingsActionService(notificationService: notificationService, updates: updates),
-            bootstrap: bootstrap
+            bootstrap: runtimeAssembly.bootstrap,
+            subscriptionEntitlementRefresh: runtimeAssembly.entitlementRefresh
         )
     }
 
-    static func makeBootstrap<Route: Sendable>(
+    static func makeRuntimeAssembly(
         configuration: MHAppConfiguration,
-        remoteConfigurationService: RemoteConfigurationService,
-        notificationService: NotificationService,
-        routePipeline: MHAppRoutePipeline<Route>
-    ) -> MHAppRuntimeBootstrap {
+        services: CookleAppServices
+    ) -> (bootstrap: MHAppRuntimeBootstrap, entitlementRefresh: CookleSubscriptionEntitlementRefresh) {
         let lifecyclePlan = makeLifecyclePlan(
-            remoteConfigurationService: remoteConfigurationService,
-            notificationService: notificationService,
-            routePipeline: routePipeline
+            remoteConfigurationService: services.remoteConfigurationService,
+            notificationService: services.notificationService,
+            routePipeline: services.routePipeline
         )
-        return .init(
+        let subscriptionEntitlementRefresh = CookleSubscriptionEntitlementRefresh()
+        let defaults = MHAppRuntimeDefaultsBundle(configuration: configuration)
+        let ads = MHAppRuntimeAdsBundle(configuration: configuration)
+        let licenses = MHAppRuntimeLicensesBundle(configuration: configuration)
+        let runtime = MHAppRuntime(
             configuration: configuration,
-            routePipeline: routePipeline,
+            preferenceStore: defaults.preferenceStore,
+            startStore: { report in
+                subscriptionEntitlementRefresh.report = report
+                defaults.startStore(report)
+            },
+            subscriptionSectionFactory: defaults.subscriptionSectionFactory,
+            startAds: ads.startAds,
+            nativeAdFactory: ads.nativeAdFactory,
+            licensesFactory: licenses.licensesFactory,
+            adsConsent: ads.adsConsent
+        )
+        let bootstrap = MHAppRuntimeBootstrap(
+            runtime: runtime,
+            routePipeline: services.routePipeline,
             lifecyclePlan: lifecyclePlan
         )
+        return (bootstrap, subscriptionEntitlementRefresh)
     }
 
     static func makeRecipeActionService(

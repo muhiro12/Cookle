@@ -182,8 +182,10 @@ Primary records:
   composition. Watch adoption is deferred after a failed MHUI 1.18 readability
   comparison. Companion targets and App Intent implementations currently stay
   off MHUI/MHDesign dependencies; future adoption is evaluated per surface.
-- `MHAppRuntime` remains available as an advanced app-root surface, but this
-  repo does not use it as the default adoption path.
+- The app assembles `MHAppRuntime` with MHPlatform's default StoreKit, ads, and
+  license adapters. A StoreKit subscription-group change also refreshes verified
+  entitlements in the same runtime, so purchases from the native paywall can
+  unlock premium features while the app is running.
 - Ordinary package regression tests stay in `CookleLibrary/Tests/Default`;
   synthetic future-schema observations stay in `CookleLibrary/Tests/SchemaResearch`.
 - The repository does not maintain a separate `CookleTests` unit test target;
@@ -292,8 +294,16 @@ Universal Links require Apple App Site Association (AASA) deployment for
   app observes the runtime's verified entitlement state independently of product
   catalog metadata. Unknown state preserves existing preferences; active state
   preserves the user's iCloud choice, and inactive state disables iCloud sync.
-- Settings surfaces the subscription paywall, iCloud toggle, and bulk delete
-  controls while guarding destructive actions behind confirmation dialogs.
+- After a verified subscription becomes active, Settings returns from the
+  paywall and shows the subscription status and iCloud control. Pending and
+  cancelled purchases leave the paywall available.
+- Changing iCloud sync reopens the same on-device store in the running app.
+  Turning sync off keeps the data already on this device. The setting controls
+  whether SwiftData can sync changes; it does not indicate that other devices
+  have caught up. Settings explains when an iCloud sign-in is needed. If the
+  store cannot open, try again or open without iCloud.
+- Settings guards bulk deletion and other destructive actions behind
+  confirmation dialogs.
 - Cookle reads its shared configuration from
   [MHAppConfig](https://raw.githubusercontent.com/muhiro12/MHAppConfig/main/cookle/app.json).
   The initial revision has no minimum version or scheduled requirement.
