@@ -18,8 +18,6 @@ struct CookleApp: App {
     private var isICloudOn
     @AppStorage(\.isSubscribeOn)
     private var isSubscribeOn
-    @AppStorage(\.isDebugOn)
-    private var isDebugOn
     @AppStorage(\.lastLaunchedAppVersion, default: "")
     private var lastLaunchedAppVersion
 
@@ -54,7 +52,11 @@ struct CookleApp: App {
     }
 
     private var isICloudSyncRequested: Bool {
+        #if DEBUG
+        false
+        #else
         isSubscribeOn && isICloudOn
+        #endif
     }
 
     private var recoveryAction: (() -> Void)? {
@@ -82,10 +84,6 @@ struct CookleApp: App {
         let model = CookleAppBootstrapModel()
         _bootstrapModel = State(wrappedValue: model)
         model.start(notificationAppDelegate: notificationAppDelegate)
-
-        #if DEBUG
-        isDebugOn = !CookleCaptureConfiguration.isEnabled
-        #endif
 
         updateLastLaunchedVersion()
     }

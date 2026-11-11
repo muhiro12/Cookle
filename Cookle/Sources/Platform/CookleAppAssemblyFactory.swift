@@ -48,6 +48,18 @@ enum CookleAppAssemblyFactory {
     }
 
     #if DEBUG
+    static func development(logging: CookleAppLogging) throws -> CookleAppAssembly {
+        if CookleCaptureConfiguration.isEnabled {
+            return CookleSampleDataContext.makeCaptureContext()
+        }
+        return try makeAssembly(
+            modelContainer: CookleDevelopmentStore.open(),
+            nativeAdUnitID: CookleMonetizationConfiguration.nativeAdUnitIDDev,
+            logging: logging,
+            isolatesCookingSession: true
+        )
+    }
+
     /// Builds a capture assembly without an ad unit so screenshots never contain test ads.
     static func capture(
         modelContainer: ModelContainer

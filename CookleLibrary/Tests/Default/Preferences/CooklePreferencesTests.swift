@@ -26,7 +26,7 @@ struct CooklePreferencesTests {
 
     @Test("Stores and retrieves boolean preferences")
     func boolRoundTrip() {
-        let descriptor = MHPreferenceDescriptors().isDebugOn
+        let descriptor = MHPreferenceDescriptors().isRecipeGenerationOnDeviceOnly
         let defaults = UserDefaults.standard
         let originalValue = defaults.object(forKey: descriptor.storageKey)
         defer {
@@ -37,11 +37,11 @@ struct CooklePreferencesTests {
             }
         }
 
-        CooklePreferences.set(true, for: \.isDebugOn)
-        #expect(CooklePreferences.bool(for: \.isDebugOn))
+        CooklePreferences.set(true, for: \.isRecipeGenerationOnDeviceOnly)
+        #expect(CooklePreferences.bool(for: \.isRecipeGenerationOnDeviceOnly))
 
-        CooklePreferences.set(false, for: \.isDebugOn)
-        #expect(!CooklePreferences.bool(for: \.isDebugOn))
+        CooklePreferences.set(false, for: \.isRecipeGenerationOnDeviceOnly)
+        #expect(!CooklePreferences.bool(for: \.isRecipeGenerationOnDeviceOnly))
     }
 
     @Test("Stores and retrieves string preferences")

@@ -76,7 +76,7 @@ Cookle uses adaptive tab navigation.
 - Ingredient and category tag browsing is opened from the search discovery
   sheet, which leads into the dedicated tag detail flow on both compact and
   regular-width layouts.
-- `Debug` is available from `Settings` when debug mode is enabled.
+- `Debug` is available from `Settings > Advanced` in every build.
 - Deep links, widgets, notifications, and App Intents all feed the same route
   system through `MHAppRoutePipeline`, so navigation behavior is shared across
   entry points.
@@ -361,15 +361,17 @@ Cookle uses adaptive tab navigation.
 
 ### Debug and Preview Support
 
-- Debug mode can be enabled through AppStorage.
-- When debug mode is enabled, the debug screen is opened from `Settings`.
-- The debug screen provides:
-  - a debug mode toggle
-  - TipKit reset and testing helpers
-  - preview screens for subscriptions, ads, and shortcuts link
-  - raw model browsing for diaries, recipes, photos, ingredients, categories,
-    and sub-objects
-  - direct deletion of model records from the debug content browser
+- Settings > Advanced > Debug is discoverable without a saved unlock or command.
+- Every build exposes read-only version/build, iCloud configuration, subscription
+  status, and saved model counts. Record contents and raw logs are not exposed
+  by the distributed Debug screen.
+- DEBUG adds logs, model inspectors, guarded direct deletion, sample insertion,
+  TipKit test helpers, and subscription/ad previews.
+- Ordinary DEBUG startup uses a separate unsynced development database. Initial
+  samples are optional and run only on first creation; manual insertion requires
+  an empty development store with no pending edits.
+- See [Debug capabilities](../Architecture/debug-capabilities.md) for boundaries
+  and the retained Preview/capture workflow.
 - Preview helpers seed an in-memory SwiftData store and reuse the same
   `CookleAppAssembly` factory path used by the live app, injecting shared
   dependencies and runtime state without running the full lifecycle bootstrap.

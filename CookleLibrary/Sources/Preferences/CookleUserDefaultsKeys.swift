@@ -6,7 +6,6 @@ public enum CookleUserDefaultsKeys {
     public enum Standard: String, CaseIterable, Sendable {
         case isSubscribeOn = "qWeRty12"
         case isICloudOn = "AO9Yo1cC"
-        case isDebugOn = "hd3fAy3G"
         case isDailyRecipeSuggestionNotificationOn = "m9Pq2Ls4"
         case recipeSuggestionNotificationMode = "d4Hw9Cs6"
         case adaptiveRecipeSuggestionState = "b8Nm4Qp2"

@@ -45,7 +45,7 @@ final class CookleAppBootstrapModel {
         let startupStartedAt = Date.timeIntervalSinceReferenceDate
 
         #if DEBUG
-        if loadCaptureAssemblyIfNeeded(
+        if loadDevelopmentAssembly(
             startupStartedAt: startupStartedAt,
             startupLogger: startupLogger
         ) {
@@ -126,10 +126,14 @@ private extension CookleAppBootstrapModel {
     }
 
     var iCloudSettingToApply: Bool {
+        #if DEBUG
+        false
+        #else
         ICloudSyncOperations.settingToApply(
             isSyncAlreadyRequested: requestedICloudSetting,
             isEditing: activeEditors.isEditing
         )
+        #endif
     }
 
     static func durationMilliseconds(
@@ -156,7 +160,7 @@ private extension CookleAppBootstrapModel {
         let startupStartedAt = Date.timeIntervalSinceReferenceDate
 
         #if DEBUG
-        if loadCaptureAssemblyIfNeeded(
+        if loadDevelopmentAssembly(
             startupStartedAt: startupStartedAt,
             startupLogger: startupLogger
         ) {
@@ -197,20 +201,21 @@ private extension CookleAppBootstrapModel {
         }
     }
     #if DEBUG
-    /// Loads the isolated capture assembly and reports whether capture mode handled startup.
-    func loadCaptureAssemblyIfNeeded(
+    /// DEBUG never falls back to the user store, including after a development-store failure.
+    func loadDevelopmentAssembly(
         startupStartedAt: TimeInterval,
         startupLogger: MHLogger
     ) -> Bool {
-        guard CookleCaptureConfiguration.isEnabled else {
-            return false
+        requestedICloudSetting = false
+        do {
+            finalizeStartup(
+                assembly: try CookleAppAssemblyFactory.development(logging: logging),
+                startupStartedAt: startupStartedAt,
+                startupLogger: startupLogger
+            )
+        } catch {
+            handleStartupFailure(error, startupLogger: startupLogger)
         }
-        requestedICloudSetting = iCloudSettingToApply
-        finalizeStartup(
-            assembly: CookleSampleDataContext.makeCaptureContext(),
-            startupStartedAt: startupStartedAt,
-            startupLogger: startupLogger
-        )
         return true
     }
     #endif

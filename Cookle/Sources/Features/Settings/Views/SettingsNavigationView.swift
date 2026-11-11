@@ -32,7 +32,7 @@ struct SettingsNavigationView: View {
         ) {
             SettingsSidebarView(
                 model: model,
-                selection: $selection
+                selection: sidebarSelection
             )
             .cookleSplitSidebar(isExpanded: horizontalSizeClass == .regular)
         } detail: {
@@ -75,6 +75,19 @@ struct SettingsNavigationView: View {
 }
 
 private extension SettingsNavigationView {
+    var sidebarSelection: Binding<SettingsContent?> {
+        .init(
+            get: {
+                selection
+            },
+            set: { content in
+                selection = content
+                // Re-selecting Advanced after Back must navigate even if its value is unchanged.
+                syncPreferredCompactColumn()
+            }
+        )
+    }
+
     func applyInitialCompactColumnIfNeeded() {
         guard !hasAppliedInitialCompactColumn else {
             return
@@ -89,6 +102,8 @@ private extension SettingsNavigationView {
         switch selection {
         case .subscription:
             StoreListView()
+        case .advanced:
+            SettingsAdvancedView()
         case .license:
             LicenseView()
         case .none:

@@ -11,7 +11,6 @@ struct SettingsSidebarView: View {
     }
 
     private let model: SettingsScreenModel
-    @State private var isDebugPresented = false
 
     @Environment(\.cookleSplitSidebarBackground)
     private var sidebarBackground
@@ -35,8 +34,6 @@ struct SettingsSidebarView: View {
     private var isSubscribeOn
     @AppStorage(\.isICloudOn)
     private var isICloudOn
-    @AppStorage(\.isDebugOn)
-    private var isDebugOn
     @AppStorage(\.recipeSuggestionNotificationMode, default: "adaptive")
     private var suggestionMode
 
@@ -104,9 +101,6 @@ struct SettingsSidebarView: View {
             .onAppear {
                 refreshTipEligibility()
             }
-            .fullScreenCover(isPresented: $isDebugPresented) {
-                DebugNavigationView()
-            }
     }
 
     var settingsList: some View {
@@ -166,12 +160,18 @@ struct SettingsSidebarView: View {
     }
 
     @ViewBuilder var iCloudSection: some View {
+        #if DEBUG
+        Section {
+            Text("Development data stays on this device.")
+        }
+        #else
         if isSubscribeOn {
             SettingsICloudSection(
                 isICloudOn: $isICloudOn,
                 isSubscriptionActive: appRuntime.premiumStatus == .active
             )
         }
+        #endif
     }
 
     var notificationSection: some View {
@@ -186,15 +186,13 @@ struct SettingsSidebarView: View {
 
     var generalSection: some View {
         Section {
-            if isDebugOn {
-                Button {
-                    isDebugPresented = true
-                } label: {
-                    Text("Debug")
-                        .cookleButtonRowContent()
-                }
-                .buttonStyle(.plain)
+            Button {
+                content = .advanced
+            } label: {
+                Text("Advanced")
+                    .cookleButtonRowContent()
             }
+            .buttonStyle(.plain)
             Button {
                 content = .license
             } label: {

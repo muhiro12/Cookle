@@ -7,5 +7,6 @@
 
 enum SettingsContent: Equatable {
     case subscription
+    case advanced
     case license
 }

@@ -9,7 +9,6 @@ public enum CooklePreferenceCatalog {
         return [
             descriptors.isSubscribeOn,
             descriptors.isICloudOn,
-            descriptors.isDebugOn,
             descriptors.isDailyRecipeSuggestionNotificationOn,
             descriptors.recipeSuggestionNotificationMode,
             descriptors.adaptiveRecipeSuggestionState,

@@ -1,3 +1,4 @@
+#if DEBUG
 //
 //  DebugPreviewsView.swift
 //  Cookle Playgrounds
@@ -30,3 +31,5 @@ struct DebugPreviewsView: View {
         DebugPreviewsView()
     }
 }
+
+#endif

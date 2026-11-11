@@ -28,7 +28,6 @@ struct CooklePreferenceCatalogTests {
         let expectedKeys = [
             descriptors.isSubscribeOn.storageKey,
             descriptors.isICloudOn.storageKey,
-            descriptors.isDebugOn.storageKey,
             descriptors.isDailyRecipeSuggestionNotificationOn.storageKey,
             descriptors.recipeSuggestionNotificationMode.storageKey,
             descriptors.adaptiveRecipeSuggestionState.storageKey,
@@ -57,7 +56,6 @@ struct CooklePreferenceCatalogTests {
 
         #expect(descriptors.isSubscribeOn.defaultSelection == .standard)
         #expect(descriptors.isICloudOn.defaultSelection == .standard)
-        #expect(descriptors.isDebugOn.defaultSelection == .standard)
         #expect(descriptors.isDailyRecipeSuggestionNotificationOn.defaultSelection == .standard)
         #expect(descriptors.recipeSuggestionNotificationMode.defaultSelection == .standard)
         #expect(descriptors.adaptiveRecipeSuggestionState.defaultSelection == .standard)

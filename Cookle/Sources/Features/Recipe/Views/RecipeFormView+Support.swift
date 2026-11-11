@@ -290,11 +290,6 @@ extension RecipeFormView {
         guard formModel.isSaving == false else {
             return
         }
-        if formModel.name == "Enable Debug" {
-            formModel.name = ""
-            isDebugConfirmationPresented = true
-            return
-        }
         guard formModel.hasUnsavedChanges else {
             dismiss()
             return

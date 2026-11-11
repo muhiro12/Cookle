@@ -368,10 +368,12 @@ consumer on a supported OS. It does not replace ordinary screen `@Query` reads.
 
 ### Diagnostic Mutation Boundary
 
-The inspector remains reachable through the app's hidden debug preference,
-including Release builds. Diagnostic access is not a reason to retain an
-operation known to violate the current graph's invariants. Conversely, a valid
-maintenance operation need not become an ordinary product action.
+Settings > Advanced > Debug is available in every build. Distributed builds
+expose read-only state and saved counts; the editable inspector and its deletion
+adapter compile only in DEBUG. Inspector deletion additionally requires the
+separate unsynced development store at the operation boundary. See
+[Debug capabilities](debug-capabilities.md) for the full capability split.
+Diagnostic access is not a reason to violate the current graph's invariants.
 
 `DebugActionService` sends explicit inspector deletions through
 `DiagnosticOperations` and `CookleMutationWorkflow`. Recipe, Diary, Photo,

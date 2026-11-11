@@ -21,15 +21,6 @@ public extension MHPreferenceDescriptors {
         )
     }
 
-    /// Debug feature toggle stored in the standard app domain.
-    var isDebugOn: MHBoolPreferenceDescriptor {
-        .init(
-            storageKey: CookleUserDefaultsKeys.Standard.isDebugOn.rawValue,
-            defaultSelection: .standard,
-            default: false
-        )
-    }
-
     /// Daily recipe suggestion notification enablement.
     var isDailyRecipeSuggestionNotificationOn: MHBoolPreferenceDescriptor {
         .init(

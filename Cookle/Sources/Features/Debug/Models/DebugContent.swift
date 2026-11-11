@@ -1,6 +1,8 @@
+#if DEBUG
 import SwiftUI
 
 enum DebugContent: Equatable {
+    case status
     case logs
     case diary
     case diaryObject
@@ -12,3 +14,5 @@ enum DebugContent: Equatable {
     case category
     case preview
 }
+
+#endif

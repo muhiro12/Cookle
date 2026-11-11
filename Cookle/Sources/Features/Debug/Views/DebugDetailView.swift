@@ -1,3 +1,4 @@
+#if DEBUG
 import SwiftData
 import SwiftUI
 
@@ -64,3 +65,5 @@ private extension DebugDetailView {
             .environment(recipes[0])
     }
 }
+
+#endif

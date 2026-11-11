@@ -1,3 +1,4 @@
+#if DEBUG
 import SwiftData
 
 @MainActor
@@ -9,6 +10,7 @@ enum DebugActionService {
         notificationService: NotificationService,
         updates: RemoteUpdateOperations
     ) async throws {
+        try CookleDevelopmentStore.requireMutationAccess(context.container)
         let adapter = CookleMutationEffectAdapter.make(
             synchronizeNotifications: {
                 await notificationService.synchronizeScheduledSuggestions()
@@ -33,3 +35,5 @@ enum DebugActionService {
         }
     }
 }
+
+#endif

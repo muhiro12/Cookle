@@ -70,8 +70,9 @@ starts from the previous released candidate.
   ordinary unsaved recipe editor. Pending text must be added before creating
   a draft. Cancelling generation discards a late result; failed requests keep
   the entered preferences available in the modal for an explicit retry.
-- Developer utilities and preview helpers seed SwiftData models for SwiftUI
-  previews.
+- Settings > Advanced > Debug exposes read-only state in every build. DEBUG adds
+  guarded developer tools and a separate, unsynced local store with initial
+  samples. See [Debug capabilities](Designs/Architecture/debug-capabilities.md).
 
 Recipe suggestions adapt to the first independent app open in each meal window
 (before 11:00, 11:00-16:00, and from 16:00). The last 14 local dates are kept in one
