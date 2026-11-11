@@ -126,10 +126,10 @@ private extension CookleAppBootstrapModel {
     }
 
     var iCloudSettingToApply: Bool {
-        // An open editor can postpone enabling sync, but cannot extend a subscription.
-        CooklePreferences.bool(for: \.isSubscribeOn)
-            && CooklePreferences.bool(for: \.isICloudOn)
-            && (requestedICloudSetting || !activeEditors.isEditing)
+        ICloudSyncOperations.settingToApply(
+            isSyncAlreadyRequested: requestedICloudSetting,
+            isEditing: activeEditors.isEditing
+        )
     }
 
     static func durationMilliseconds(
