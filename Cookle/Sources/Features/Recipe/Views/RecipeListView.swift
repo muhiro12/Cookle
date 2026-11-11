@@ -90,7 +90,7 @@ private extension RecipeListView {
 
     var emptyStateView: some View {
         ContentUnavailableView {
-            Label("No Recipes Yet", systemImage: "book.pages")
+            Label("No Recipes Yet", systemImage: "note.text")
         } description: {
             Text("Add a recipe to start building your collection.")
         } actions: {

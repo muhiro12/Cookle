@@ -13,7 +13,7 @@ extension MainTab {
             Label {
                 Text("Recipe")
             } icon: {
-                Image(systemName: "book.pages")
+                Image(systemName: "note.text")
             }
         case .photo:
             Label {

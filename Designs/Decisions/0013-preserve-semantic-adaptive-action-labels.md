@@ -2,7 +2,8 @@
 
 - Status: Accepted
 - Date: 2026-10-25
-- Tracking: [#163](https://github.com/muhiro12/Cookle/issues/163)
+- Tracking: [#163](https://github.com/muhiro12/Cookle/issues/163),
+  [#170](https://github.com/muhiro12/Cookle/issues/170)
 
 ## Context
 
@@ -45,11 +46,14 @@ communicates the intended operation.
 - Prefer an object plus its operation where an existing SF Symbol supports
   that meaning. Use native symbols only; do not composite glyphs or draw badges.
   Keep a generic operation symbol when a matching native variant is unavailable.
-- Recipe creation uses `book.pages`. Diary addition uses `book.badge.plus` on
-  iOS 26 or later, with native `book` on iOS 18. This supersedes option C's
-  Diary compose symbol. New-Diary creation and adding a recipe to today's Diary
-  share this symbol policy while retaining distinct titles and callbacks.
-  The Diary navigation tab retains its separate `book` symbol.
+- The Recipe tab and recipe-list empty states use `note.text` as a recipe card.
+  Recipe creation uses `note.text.badge.plus` in the shared Add Recipe control
+  and the Diary recipe picker's Register New Recipe action. Both symbols were
+  introduced in iOS 14.
+- Diary addition uses `book.badge.plus` on iOS 26 or later and `book` on iOS 18.
+  This supersedes option C's Diary compose symbol. New-Diary creation and
+  adding a recipe to today's Diary share this symbol policy while retaining
+  distinct titles and callbacks. The Diary navigation tab uses `book`.
 - Check each selected symbol's availability independently of the deployment
   target: string-based image names do not provide compiler availability checks.
 - Share `CancelButton`, `DoneButton`, and `ImportDataButton` labels where their
@@ -68,9 +72,9 @@ Creation remains distinguishable when the two entries appear together. Titles
 remain available to accessibility and expanded/menu presentations, and the app
 does not maintain manual OS-specific text/icon rendering branches.
 
-Object symbols alone can resemble navigation. The native book-plus strengthens
-the Diary addition meaning on systems that provide it. Older systems retain
-the book base and semantic title through the shared label.
+The recipe card and its plus badge distinguish the tab from recipe creation.
+The native book-plus conveys Diary addition on systems that provide it. Older
+systems retain the book base and semantic title through the shared label.
 The [action-label options](../Plans/action-label-symbol-options.md) record the
 selected icon refinements B1, B3, B7, F3, F6, and N1-N4, plus the shorter
 bulk-input titles and explicit advertising-privacy title. Other alternatives
