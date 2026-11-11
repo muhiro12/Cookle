@@ -21,6 +21,7 @@ struct DataImportModifier: ViewModifier {
                     )
                 }
                 .id(model.pendingImport?.presentationID)
+                .deferICloudSyncWhileEditing()
                 .interactiveDismissDisabled()
                 .alert(
                     Text("Cannot Import Data"),

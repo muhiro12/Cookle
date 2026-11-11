@@ -15,5 +15,6 @@ struct RecipeFormPresentationHostModifier: ViewModifier {
             .sheet(item: $presenter.form, onDismiss: presenter.presentPendingDraft) { form in
                 RecipeFormNavigationView(model: form)
             }
+            .deferICloudSyncWhileEditing(presenter.hasDraft)
     }
 }

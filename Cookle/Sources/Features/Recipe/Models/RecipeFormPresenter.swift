@@ -13,6 +13,10 @@ final class RecipeFormPresenter {
     var form: RecipeFormModel?
     private var pendingDraft: RecipeFormModel?
 
+    var hasDraft: Bool {
+        form != nil || pendingDraft != nil
+    }
+
     /// Opens a fresh recipe form unless this host already shows one.
     ///
     /// An open form is never replaced, so a repeated request cannot discard

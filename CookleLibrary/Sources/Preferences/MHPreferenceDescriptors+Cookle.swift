@@ -12,7 +12,7 @@ public extension MHPreferenceDescriptors {
         )
     }
 
-    /// Current iCloud sync toggle stored in the standard app domain.
+    /// User's iCloud sync choice, retained independently of subscription access.
     var isICloudOn: MHBoolPreferenceDescriptor {
         .init(
             storageKey: CookleUserDefaultsKeys.Standard.isICloudOn.rawValue,

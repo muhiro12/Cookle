@@ -293,7 +293,9 @@ Universal Links require Apple App Site Association (AASA) deployment for
 - A StoreKit subscription unlocks premium features such as iCloud sync, and the
   app observes the runtime's verified entitlement state independently of product
   catalog metadata. Unknown state preserves existing preferences; active state
-  preserves the user's iCloud choice, and inactive state disables iCloud sync.
+  honors the user's iCloud choice, and inactive state pauses sync without
+  changing that choice. A renewed subscription resumes sync if it was on.
+  Resuming waits for open recipe, diary, tag, and data import forms to close.
 - After a verified subscription becomes active, Settings returns from the
   paywall and shows the subscription status and iCloud control. Pending and
   cancelled purchases leave the paywall available.

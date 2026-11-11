@@ -31,10 +31,6 @@ private extension CookleSubscriptionStateModifier {
                 false,
                 for: \.isSubscribeOn
             )
-            runtime.preferenceStore.set(
-                false,
-                for: \.isICloudOn
-            )
         case .active:
             runtime.preferenceStore.set(
                 true,

@@ -10,9 +10,6 @@ struct DuplicateDiaryRepairSection: View {
     @Environment(DiaryActionService.self)
     private var diaryActionService
 
-    @AppStorage(\.isICloudOn)
-    private var isICloudOn
-
     @Query(.diaries(.all))
     private var diaries: [Diary]
 
@@ -98,7 +95,7 @@ private extension DuplicateDiaryRepairSection {
     }
 
     var confirmationMessage: String {
-        if isICloudOn {
+        if context.container.isICloudSyncEnabled {
             return String(
                 localized: """
                 Cookle will keep the newest entry for each day, combine its meals and different notes, \

@@ -62,7 +62,7 @@ struct SettingsSidebarView: View {
                 model: model,
                 modelContainer: context.container,
                 settingsActionService: settingsActionService,
-                isICloudEnabled: isICloudOn
+                isICloudEnabled: context.container.isICloudSyncEnabled
             )
             .alert(
                 Text("Cannot Complete Settings Action"),
@@ -119,7 +119,7 @@ struct SettingsSidebarView: View {
                     model: model,
                     modelContainer: context.container,
                     settingsActionService: settingsActionService,
-                    isICloudEnabled: isICloudOn
+                    isICloudEnabled: context.container.isICloudSyncEnabled
                 )
                 generalSection
                 ShortcutsLinkSection(

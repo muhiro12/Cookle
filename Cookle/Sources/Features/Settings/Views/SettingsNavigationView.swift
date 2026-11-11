@@ -13,9 +13,6 @@ struct SettingsNavigationView: View {
     @Environment(SettingsActionService.self)
     private var settingsActionService
 
-    @AppStorage(\.isICloudOn)
-    private var isICloudOn
-
     @Binding private var incomingSelection: SettingsContent?
 
     /// Owned above the split layout so a pending import review survives size-class changes.
@@ -66,7 +63,7 @@ struct SettingsNavigationView: View {
             model: model,
             modelContainer: context.container,
             settingsActionService: settingsActionService,
-            isICloudEnabled: isICloudOn
+            isICloudEnabled: context.container.isICloudSyncEnabled
         )
     }
 

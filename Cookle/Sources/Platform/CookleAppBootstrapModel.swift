@@ -18,6 +18,7 @@ final class CookleAppBootstrapModel {
     }
     private(set) var failureMessage: String?
     private(set) var hasLoadedAssembly = false
+    let activeEditors = CookleActiveEditors()
 
     private let logging: CookleAppLogging
     private let liveStoreLoader = LiveStoreLoader()
@@ -53,7 +54,7 @@ final class CookleAppBootstrapModel {
         #endif
 
         // Runs on this thread without a task, so cleanup finishes before
-        // `isICloudOn` is read below to decide how to open the store.
+        // the sync preferences are read below to decide how to open the store.
         let preferenceLifecycleStartedAt = Date.timeIntervalSinceReferenceDate
         let lifecycleOutcome = CookleKnownStorageDescriptors.preferenceRegistry.runSynchronously()
         logPreferenceLifecycleOutcome(
@@ -62,9 +63,7 @@ final class CookleAppBootstrapModel {
             startupLogger: startupLogger
         )
 
-        // Read from the preference store rather than `@AppStorage`: the view
-        // layer this would normally come from does not exist yet.
-        let isICloudOn = CooklePreferences.bool(for: \.isICloudOn)
+        let isICloudOn = iCloudSettingToApply
         requestedICloudSetting = isICloudOn
 
         do {
@@ -87,7 +86,7 @@ final class CookleAppBootstrapModel {
     }
 
     func reloadAssemblyIfNeeded() {
-        guard requestedICloudSetting != CooklePreferences.bool(for: \.isICloudOn) else {
+        guard requestedICloudSetting != iCloudSettingToApply else {
             return
         }
 
@@ -95,7 +94,7 @@ final class CookleAppBootstrapModel {
     }
 
     func reloadAssembly() {
-        let isICloudOn = CooklePreferences.bool(for: \.isICloudOn)
+        let isICloudOn = iCloudSettingToApply
         loadTask?.cancel()
         requestedICloudSetting = isICloudOn
         if let appAssembly {
@@ -124,6 +123,13 @@ private extension CookleAppBootstrapModel {
                 logger: logger
             )
         }
+    }
+
+    var iCloudSettingToApply: Bool {
+        // An open editor can postpone enabling sync, but cannot extend a subscription.
+        CooklePreferences.bool(for: \.isSubscribeOn)
+            && CooklePreferences.bool(for: \.isICloudOn)
+            && (requestedICloudSetting || !activeEditors.isEditing)
     }
 
     static func durationMilliseconds(
@@ -168,7 +174,7 @@ private extension CookleAppBootstrapModel {
                 startupLogger: startupLogger
             )
             try Task.checkCancellation()
-            guard isICloudOn == CooklePreferences.bool(for: \.isICloudOn) else {
+            guard isICloudOn == iCloudSettingToApply else {
                 reloadAssemblyIfNeeded()
                 return
             }
@@ -199,7 +205,7 @@ private extension CookleAppBootstrapModel {
         guard CookleCaptureConfiguration.isEnabled else {
             return false
         }
-        requestedICloudSetting = CooklePreferences.bool(for: \.isICloudOn)
+        requestedICloudSetting = iCloudSettingToApply
         finalizeStartup(
             assembly: CookleSampleDataContext.makeCaptureContext(),
             startupStartedAt: startupStartedAt,
@@ -380,7 +386,7 @@ private extension CookleAppBootstrapModel {
         // alive even while the scene no longer uses it.
         AppDependencyManager.shared.add { @MainActor [weak self] () async throws -> Value in
             guard let self, let appAssembly,
-                  requestedICloudSetting == CooklePreferences.bool(for: \.isICloudOn) else {
+                  requestedICloudSetting == iCloudSettingToApply else {
                 throw CookleMutationWorkflow.MutationError.storeUnavailable
             }
             return value(appAssembly)

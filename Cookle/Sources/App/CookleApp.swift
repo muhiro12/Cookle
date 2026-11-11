@@ -16,6 +16,8 @@ struct CookleApp: App {
 
     @AppStorage(\.isICloudOn)
     private var isICloudOn
+    @AppStorage(\.isSubscribeOn)
+    private var isSubscribeOn
     @AppStorage(\.isDebugOn)
     private var isDebugOn
     @AppStorage(\.lastLaunchedAppVersion, default: "")
@@ -27,7 +29,11 @@ struct CookleApp: App {
         WindowGroup {
             sceneContent
                 .mhTheme(.standard)
-                .onChange(of: isICloudOn, initial: true) {
+                .environment(bootstrapModel.activeEditors)
+                .onChange(of: isICloudSyncRequested, initial: true) {
+                    bootstrapModel.reloadAssemblyIfNeeded()
+                }
+                .onChange(of: bootstrapModel.activeEditors.isEditing) {
                     bootstrapModel.reloadAssemblyIfNeeded()
                 }
         }
@@ -47,8 +53,12 @@ struct CookleApp: App {
         }
     }
 
+    private var isICloudSyncRequested: Bool {
+        isSubscribeOn && isICloudOn
+    }
+
     private var recoveryAction: (() -> Void)? {
-        guard isICloudOn else {
+        guard isICloudSyncRequested else {
             return nil
         }
         return {
