@@ -2,15 +2,26 @@ import MHPlatformCore
 
 /// Applies subscription access without changing the person's saved sync choice.
 public enum ICloudSyncOperations {
+    /// Verification state reported by the subscription provider.
+    public enum SubscriptionAccess: Sendable {
+        case unknown
+        case inactive
+        case active
+    }
+
     /// Retains the last known access when entitlement verification is unresolved.
     public static func updateSubscriptionAccess(
-        isActive: Bool?,
+        _ access: SubscriptionAccess,
         store: MHPreferenceStore = .init()
     ) {
-        guard let isActive else {
+        switch access {
+        case .unknown:
             return
+        case .inactive:
+            store.set(false, for: \.isSubscribeOn)
+        case .active:
+            store.set(true, for: \.isSubscribeOn)
         }
-        store.set(isActive, for: \.isSubscribeOn)
     }
 
     /// Defers enabling sync during an edit while applying loss of access immediately.

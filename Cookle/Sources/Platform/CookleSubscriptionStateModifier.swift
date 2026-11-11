@@ -23,17 +23,17 @@ struct CookleSubscriptionStateModifier: ViewModifier {
 
 private extension CookleSubscriptionStateModifier {
     func synchronizeSubscriptionState() {
-        let isActive: Bool?
+        let access: ICloudSyncOperations.SubscriptionAccess
         switch runtime.premiumStatus {
         case .unknown:
-            isActive = nil
+            access = .unknown
         case .inactive:
-            isActive = false
+            access = .inactive
         case .active:
-            isActive = true
+            access = .active
         }
         ICloudSyncOperations.updateSubscriptionAccess(
-            isActive: isActive,
+            access,
             store: runtime.preferenceStore
         )
     }

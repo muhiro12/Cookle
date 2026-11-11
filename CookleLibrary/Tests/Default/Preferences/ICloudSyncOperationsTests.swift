@@ -8,14 +8,14 @@ struct ICloudSyncOperationsTests {
     func subscriptionLapseAndRenewalPreserveTheSavedChoice(isICloudOn: Bool) throws {
         try withStore { store in
             store.set(isICloudOn, for: \.isICloudOn)
-            ICloudSyncOperations.updateSubscriptionAccess(isActive: true, store: store)
+            ICloudSyncOperations.updateSubscriptionAccess(.active, store: store)
             #expect(setting(store: store) == isICloudOn)
 
-            ICloudSyncOperations.updateSubscriptionAccess(isActive: false, store: store)
-            #expect(!setting(isSyncAlreadyRequested: true, isEditing: true, store: store))
+            ICloudSyncOperations.updateSubscriptionAccess(.inactive, store: store)
+            #expect(!setting(store: store, isSyncAlreadyRequested: true, isEditing: true))
             #expect(store.bool(for: \.isICloudOn) == isICloudOn)
 
-            ICloudSyncOperations.updateSubscriptionAccess(isActive: true, store: store)
+            ICloudSyncOperations.updateSubscriptionAccess(.active, store: store)
             #expect(setting(store: store) == isICloudOn)
             #expect(store.bool(for: \.isICloudOn) == isICloudOn)
         }
@@ -27,7 +27,7 @@ struct ICloudSyncOperationsTests {
             store.set(isActive, for: \.isSubscribeOn)
             store.set(isICloudOn, for: \.isICloudOn)
 
-            ICloudSyncOperations.updateSubscriptionAccess(isActive: nil, store: store)
+            ICloudSyncOperations.updateSubscriptionAccess(.unknown, store: store)
 
             #expect(store.bool(for: \.isSubscribeOn) == isActive)
             #expect(store.bool(for: \.isICloudOn) == isICloudOn)
@@ -38,25 +38,25 @@ struct ICloudSyncOperationsTests {
     func renewalWaitsUntilEditingFinishes() throws {
         try withStore { store in
             store.set(true, for: \.isICloudOn)
-            ICloudSyncOperations.updateSubscriptionAccess(isActive: true, store: store)
+            ICloudSyncOperations.updateSubscriptionAccess(.active, store: store)
 
-            #expect(!setting(isEditing: true, store: store))
+            #expect(!setting(store: store, isEditing: true))
             #expect(store.bool(for: \.isICloudOn))
             #expect(setting(store: store))
-            #expect(setting(isSyncAlreadyRequested: true, isEditing: true, store: store))
+            #expect(setting(store: store, isSyncAlreadyRequested: true, isEditing: true))
         }
     }
 
     @Test
     func turningSyncOffTakesEffectDuringAnEdit() throws {
         try withStore { store in
-            ICloudSyncOperations.updateSubscriptionAccess(isActive: true, store: store)
+            ICloudSyncOperations.updateSubscriptionAccess(.active, store: store)
             store.set(true, for: \.isICloudOn)
             #expect(setting(store: store))
 
             store.set(false, for: \.isICloudOn)
 
-            #expect(!setting(isSyncAlreadyRequested: true, isEditing: true, store: store))
+            #expect(!setting(store: store, isSyncAlreadyRequested: true, isEditing: true))
             #expect(!setting(store: store))
         }
     }
@@ -64,9 +64,9 @@ struct ICloudSyncOperationsTests {
 
 private extension ICloudSyncOperationsTests {
     func setting(
+        store: MHPreferenceStore,
         isSyncAlreadyRequested: Bool = false,
-        isEditing: Bool = false,
-        store: MHPreferenceStore
+        isEditing: Bool = false
     ) -> Bool {
         ICloudSyncOperations.settingToApply(
             isSyncAlreadyRequested: isSyncAlreadyRequested,
