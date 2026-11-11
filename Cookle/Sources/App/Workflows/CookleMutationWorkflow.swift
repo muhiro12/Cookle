@@ -4,16 +4,23 @@ import SwiftData
 
 @MainActor
 enum CookleMutationWorkflow {
-    enum MutationError: LocalizedError {
+    enum MutationError: LocalizedError, CustomLocalizedStringResourceConvertible {
         case pendingChanges
         case updateRequired
+        case storeUnavailable
 
         var errorDescription: String? {
+            String(localized: localizedStringResource)
+        }
+
+        var localizedStringResource: LocalizedStringResource {
             switch self {
             case .pendingChanges:
-                String(localized: "Other changes are still waiting to be saved. Finish that edit and try again.")
+                "Other changes are still waiting to be saved. Finish that edit and try again."
             case .updateRequired:
-                String(localized: "Update Cookle to continue making changes. You can still view and export your data.")
+                "Update Cookle to continue making changes. You can still view and export your data."
+            case .storeUnavailable:
+                "Open Cookle and try again."
             }
         }
     }
@@ -39,8 +46,21 @@ enum CookleMutationWorkflow {
         }
     }
 
+    private static let retiredContainers = NSHashTable<ModelContainer>(
+        options: [.weakMemory, .objectPointerPersonality]
+    )
+
+    static func retire(_ container: ModelContainer) {
+        retiredContainers.add(container)
+    }
+
     /// A workflow owns only changes it starts; never save or roll back another edit.
     static func requireCleanContext(_ context: ModelContext?) throws {
+        // An action may have suspended for the update check before the iCloud
+        // toggle retired its container. It must not write through the old one.
+        if let context, retiredContainers.contains(context.container) {
+            throw MutationError.storeUnavailable
+        }
         guard context?.hasChanges != true else {
             throw MutationError.pendingChanges
         }
