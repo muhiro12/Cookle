@@ -129,8 +129,8 @@ independently of icons, without forcing label styles to compensate for long
 copy.
 For reusable action icons, use existing SF Symbols and their native
 object/action variants where available. Do not composite icons or draw badges.
-Recipe creation uses `note.text.badge.plus`, paired with the Recipe tab's
-`note.text`. `DiaryAdditionLabel` uses `book.badge.plus` on iOS 26 or later
+Recipe creation uses `document.badge.plus`, paired with the Recipe tab's
+`document`. `DiaryAdditionLabel` uses `book.badge.plus` on iOS 26 or later
 and `book` on iOS 18 for both Diary-add entry points, preserving their distinct
 titles and callbacks. Verify symbol availability separately from the deployment
 target, since image names are strings.

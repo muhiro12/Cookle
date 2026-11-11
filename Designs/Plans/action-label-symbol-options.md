@@ -8,8 +8,8 @@
 
 ## Accepted Baseline
 
-Recipe uses `note.text` in the tab and recipe-list empty states and
-`note.text.badge.plus` in the shared Add Recipe control and the Diary recipe
+Recipe uses `document` in the tab and recipe-list empty states and
+`document.badge.plus` in the shared Add Recipe control and the Diary recipe
 picker's Register New Recipe action. Diary addition uses `book.badge.plus` on
 iOS 26 or later and `book` on iOS 18. `DiaryAdditionLabel` shares that symbol
 availability policy between new-Diary creation and adding an existing recipe to
@@ -76,7 +76,7 @@ override or a change to the app's deployment target.
   iOS 18 deployment-target build, not by an older-OS live run. This follow-up
   makes no new iPad or spoken VoiceOver qualification claim.
 
-## iOS 27.2 Catalog Recheck and Recipe Card Selection
+## iOS 27.2 Catalog Recheck and Recipe Symbol Selection
 
 The recheck used `name_availability.plist` and `name_aliases.strings` from
 Apple's SF Symbols 27 app (build 140) and the iOS 27.1 and 27.2 Simulator system
@@ -101,9 +101,9 @@ catalogs. [#170](https://github.com/muhiro12/Cookle/issues/170)
 - Diary creation uses `AddDiaryButton` in the toolbar, empty state, and Today
   section. The recipe detail and recipe row context menu use the same
   `DiaryAdditionLabel` when adding an existing recipe to today's Diary.
-  The iOS 18 fallback `book` has a distinct shape from the recipe card.
+  The iOS 18 fallback `book` has a distinct shape from the recipe document.
 - Recipe and Diary editing use `pencil.line` in detail views and row menus.
-  The catalogs contain no edit variant of the recipe card or Diary book.
+  The catalogs contain no pencil variant of the recipe document or Diary book.
   `book.and.wrench` (iOS 17.0) suggests tools or repair.
 - `photo.stack` (iOS 16.0) represents the Photos collection. Its empty-state
   action creates a recipe. Individual photo addition in recipe details and the
@@ -123,27 +123,23 @@ in the sidebar toolbar and Add Recipe retained its pages icon and title in
 the native overflow menu. Manual entry and Cancel also worked there. Both
 checks used in-memory fixtures.
 
-The selected pair uses `note.text` for the recipe card and
-`note.text.badge.plus` for recipe creation. Both names date to iOS 14.0
-and resolve to the `text.pad.header` pair on iOS 27.2. The names
-`text.pad.header` and `text.pad.header.badge.plus` date to iOS 26.0, so the
-app uses the earlier spellings for its iOS 18 deployment target. The card
-and the open Diary book remain distinct where the creation actions appear
-together.
+The selected pair uses `document` for the recipe and `document.badge.plus`
+for recipe creation. Apple lists both names from iOS 18.0, which is the app's
+deployment target. The folded page and open Diary book have distinct shapes
+where the creation actions appear together.
 
-### Recipe Card Verification
+### Document Symbol Verification
 
 - Cookle built and ran through Xcode with in-memory fixtures. SwiftLint and
   the retained repository checks, including 28 script checks, passed.
 - On iPhone 18 Pro with iOS 27.2, the Recipe tab and empty state showed the
-  card. The Diary toolbar showed the card-plus and book-plus with distinct
-  accessibility names. The Diary recipe picker displayed the card-plus for
-  Register New Recipe, and the registration form opened and cancelled.
-- On iPad Pro 11-inch with iPadOS 27.2 in landscape, the Diary sidebar showed
-  Add Diary in the toolbar and Add Recipe with its card-plus in the native
-  overflow menu. Add Recipe's manual entry opened and cancelled on both
-  simulators.
-- Live checks on iOS 18 and spoken VoiceOver remain unverified.
+  document. The Diary toolbar showed document-plus and book-plus with distinct
+  accessibility names. The Add Recipe menu opened the manual entry form, and
+  Cancel returned to the Diary.
+- On iPad Pro 11-inch with iPadOS 27.2 in landscape, the Diary sidebar's
+  native overflow menu showed Add Recipe with its document-plus symbol.
+- The Diary recipe picker's Register New Recipe symbol is verified by source
+  and build. Live checks on iOS 18 and spoken VoiceOver remain unverified.
 
 ## Selected Refinements
 

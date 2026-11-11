@@ -46,10 +46,10 @@ communicates the intended operation.
 - Prefer an object plus its operation where an existing SF Symbol supports
   that meaning. Use native symbols only; do not composite glyphs or draw badges.
   Keep a generic operation symbol when a matching native variant is unavailable.
-- The Recipe tab and recipe-list empty states use `note.text` as a recipe card.
-  Recipe creation uses `note.text.badge.plus` in the shared Add Recipe control
-  and the Diary recipe picker's Register New Recipe action. Both symbols were
-  introduced in iOS 14.
+- The Recipe tab and recipe-list empty states use `document` for the recipe.
+  Recipe creation uses `document.badge.plus` in the shared Add Recipe control
+  and the Diary recipe picker's Register New Recipe action. Both names are
+  available from iOS 18.
 - Diary addition uses `book.badge.plus` on iOS 26 or later and `book` on iOS 18.
   This supersedes option C's Diary compose symbol. New-Diary creation and
   adding a recipe to today's Diary share this symbol policy while retaining
@@ -72,7 +72,7 @@ Creation remains distinguishable when the two entries appear together. Titles
 remain available to accessibility and expanded/menu presentations, and the app
 does not maintain manual OS-specific text/icon rendering branches.
 
-The recipe card and its plus badge distinguish the tab from recipe creation.
+The document and its plus badge distinguish the tab from recipe creation.
 The native book-plus conveys Diary addition on systems that provide it. Older
 systems retain the book base and semantic title through the shared label.
 The [action-label options](../Plans/action-label-symbol-options.md) record the

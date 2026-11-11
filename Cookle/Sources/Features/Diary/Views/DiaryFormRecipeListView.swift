@@ -45,7 +45,7 @@ struct DiaryFormRecipeListView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
-                    Button("Register New Recipe", systemImage: "note.text.badge.plus") {
+                    Button("Register New Recipe", systemImage: "document.badge.plus") {
                         isRegistrationPresented = true
                     }
                 }
@@ -69,7 +69,7 @@ private extension DiaryFormRecipeListView {
     @ViewBuilder var contentView: some View {
         if recipes.isEmpty {
             ContentUnavailableView {
-                Label("No Recipes Yet", systemImage: "note.text")
+                Label("No Recipes Yet", systemImage: "document")
             } description: {
                 Text("Add a recipe to start building your collection.")
             }
