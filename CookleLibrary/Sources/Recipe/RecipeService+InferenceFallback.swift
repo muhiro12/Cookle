@@ -51,7 +51,9 @@ extension RecipeService {
     static let ambiguousCookingTimePattern = #"""
         (?ix)
         \d+ \s* (?: (?: minutes? \b | mins? \b | 分 ) \s* )?
-        (?: [-–—~〜～] | to | or | hours? | hrs? | 時間 | / | [.,] ) \s*
+        (?: [-–—~〜～] | to | or | / | [.,]
+        | (?: hours? | hrs? | heures? | horas? | h | 時間 | 小时 | 小時 )
+        \s* (?: and | et | y | と | 和 | [,、] )? ) \s*
         \d+ \s* (?: minutes? \b | mins? \b | 分 )
         | \d+ \s* 分 \s* の \s* \d+
         """#

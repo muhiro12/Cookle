@@ -147,8 +147,17 @@ struct RecipeInferenceOperationsTests {
         #expect(result.cookingTime == 12)
     }
 
-    @Test(arguments: ["Cook time: 1.5 minutes", "調理時間: 1時間30分"])
+    @Test(arguments: [
+        "Cook time: 1.5 minutes",
+        "調理時間: 1時間30分",
+        "Cook time: 1 hour and 30 minutes",
+        "Cook time: 1h30min",
+        "Temps de cuisson: 1 heure et 30 minutes",
+        "烹饪时间: １小时３０分钟"
+    ])
     func unsupported_explicit_times_stay_available_as_notes(statement: String) {
+        let fallback = RecipeInferenceOperations.fallbackInference(from: "Soup\n\(statement)")
+        #expect(fallback.cookingTime == .zero)
         let result = RecipeInferenceOperations.groundedInference(
             inference(cookingTime: 30),
             sourceText: "Soup\n\(statement)"
