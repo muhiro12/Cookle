@@ -2,16 +2,8 @@
 import Foundation
 import Testing
 
-// Where the deterministic extraction path stops understanding its input.
-//
-// `RecipeInferenceCorpusTests` covers the shape of an extraction. These cover
-// the two boundaries that shape hides: which languages the section headings are
-// recognised in, and how far a unit is interpreted.
-//
-// The short version, measured rather than assumed. Heading recognition is
-// English and Japanese, and the two can be mixed in one document. Anything else
-// yields a name and nothing more, reported as not meaningful. Units are never
-// interpreted, normalised, or disambiguated.
+// Deterministic extraction keeps unsupported languages, ambiguous units, and
+// unlabeled durations distinct from facts it can place in the form.
 @MainActor
 struct RecipeInferenceLanguageCorpusTests {
     @Test
@@ -108,13 +100,13 @@ struct RecipeInferenceLanguageCorpusTests {
         // This is the realistic shape when someone pastes a foreign recipe into
         // a Japanese-language device.
         #expect(result.name == "Chicken Curry")
-        #expect(result.ingredients.map(\.ingredient) == ["Chicken 300g", "玉ねぎ 1個"])
+        #expect(result.ingredients.map(\.ingredient) == ["Chicken", "玉ねぎ"])
         #expect(result.steps == ["Cook the chicken."])
         #expect(RecipeInferenceOperations.isMeaningfulInference(result))
     }
 
     @Test
-    func serves_and_ready_in_are_read_as_a_count_and_a_duration() {
+    func ready_in_is_not_assumed_to_be_cooking_time() {
         let result = RecipeInferenceOperations.fallbackInference(
             from: """
             Stew
@@ -127,9 +119,9 @@ struct RecipeInferenceLanguageCorpusTests {
             """
         )
 
-        // A second English phrasing beyond the one already covered above.
+        // Ready-in time may include preparation; it is not stated cooking time.
         #expect(result.servingSize == 4)
-        #expect(result.cookingTime == 45)
+        #expect(result.cookingTime == .zero)
     }
 
     @Test(
@@ -188,7 +180,7 @@ struct RecipeInferenceLanguageCorpusTests {
 
     @Test(
         arguments: [
-            ("約３０分煮込む。", 30),
+            ("約３０分煮込む。", 0),
             ("玉ねぎ 2分の1個を加える。", 0),
             ("1時間30分煮込む。", 0),
             ("1時間 30分煮込む。", 0),
@@ -202,7 +194,7 @@ struct RecipeInferenceLanguageCorpusTests {
             ("1.5分待つ。", 0)
         ]
     )
-    func literal_minutes_are_read_but_ambiguous_units_stay_unknown(
+    func step_durations_never_populate_recipe_cooking_time(
         step: String,
         cookingTime: Int
     ) {

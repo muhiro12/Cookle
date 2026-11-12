@@ -7,6 +7,19 @@ struct RecipeSecondaryActions: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: theme.spacing.section) {
+            MHActionGroup(layout: .vertical) {
+                RecipeContentActions()
+                    .buttonStyle(.mhQuiet)
+            }
+            .mhSectionWithFooter("Recipe Content") {
+                MHSectionFooter(Text(
+                    """
+                    Copy or share recipe text, including notes and source links. \
+                    Photos and cooking history are not included.
+                    """
+                ))
+            }
+
             ShareRecipeLinkButton()
                 .buttonStyle(.mhQuiet)
                 .mhSectionWithFooter("Sharing") {

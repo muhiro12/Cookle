@@ -1,3 +1,4 @@
+import Foundation
 import MHPlatform
 import Observation
 import SwiftData
@@ -54,6 +55,12 @@ final class RecipeFormModel: Identifiable {
     /// Import flow presented over the form, owned here so it is not reopened
     /// or lost when the form's views are rebuilt.
     var draftSource: RecipeDraftSource?
+    /// Source text stays available through assistance cancellation and draft review.
+    /// It belongs to this open form, not the saved recipe or recovery snapshot.
+    var importSourceText = ""
+    /// Keep attribution and structured grounding when retained website text is reopened.
+    var importWebsiteSource: RecipeWebsiteSource?
+    var importSourceURL: URL?
     /// The latest inferred recipe applied to this form, kept for one undo.
     var inferenceApplication: RecipeInferenceApplication?
     /// Processing information belongs to this editing session, not the saved recipe.

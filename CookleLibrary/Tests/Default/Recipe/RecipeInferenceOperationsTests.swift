@@ -9,7 +9,9 @@ struct RecipeInferenceOperationsTests {
             "２～３人前",
             "2-3 servings",
             "Serves 2–3",
-            "Serves: 2—3 people"
+            "Serves: 2—3 people",
+            "Servings: 2–3",
+            "人数: 2〜3"
         ]
     )
     func grounding_preserves_ambiguous_serving_ranges(
@@ -117,6 +119,53 @@ struct RecipeInferenceOperationsTests {
 
         #expect(result.cookingTime == 45)
         #expect(result.note.isEmpty)
+    }
+
+    @Test
+    func grounding_removes_promoted_step_time_and_recovers_omitted_attribution() {
+        let result = RecipeInferenceOperations.groundedInference(
+            inference(cookingTime: 8),
+            sourceText: "Soup\nSteps:\nSimmer for 8 minutes.\n出典: https://example.com/soup"
+        )
+
+        #expect(result.cookingTime == .zero)
+        #expect(result.note == "https://example.com/soup")
+    }
+
+    @Test(arguments: [
+        "**Cooking Time:** 12 minutes",
+        "Cooking Time (minutes): 12",
+        "調理時間（分）: １２",
+        "Temps de cuisson: 12 minutes"
+    ])
+    func explicit_cooking_minutes_are_grounded_in_the_source(statement: String) {
+        let result = RecipeInferenceOperations.groundedInference(
+            inference(cookingTime: 99),
+            sourceText: "Soup\n\(statement)\nSteps:\nSimmer for 3 minutes."
+        )
+
+        #expect(result.cookingTime == 12)
+    }
+
+    @Test(arguments: ["Cook time: 1.5 minutes", "調理時間: 1時間30分"])
+    func unsupported_explicit_times_stay_available_as_notes(statement: String) {
+        let result = RecipeInferenceOperations.groundedInference(
+            inference(cookingTime: 30),
+            sourceText: "Soup\n\(statement)"
+        )
+
+        #expect(result.cookingTime == .zero)
+        #expect(result.note.contains(statement))
+    }
+
+    @Test
+    func bold_headings_do_not_create_phantom_ingredients_or_steps() {
+        let source = "Soup\n**Ingredients:**\n- Water: 200 ml\n**Steps:**\n1. Stir.\n**Notes:**\nServe warm."
+        let result = RecipeInferenceOperations.fallbackInference(from: source)
+
+        #expect(result.ingredients == [.init(ingredient: "Water", amount: "200 ml")])
+        #expect(result.steps == ["Stir."])
+        #expect(result.note == "Serve warm.")
     }
 
     @Test

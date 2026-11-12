@@ -1,6 +1,278 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Paste recipe text from a website, notes, or an AI tool. You can review and edit the draft before saving." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paste recipe text from a website, notes, or an AI tool. You can review and edit the draft before saving."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pega el texto de una receta de un sitio web, de tus notas o de una herramienta de IA. Puedes revisar y editar el borrador antes de guardarlo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Collez le texte d’une recette depuis un site web, des notes ou un outil d’IA. Vous pouvez vérifier et modifier le brouillon avant de l’enregistrer."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web サイト、メモ、AI ツールなどのレシピを貼り付けてください。保存する前に下書きを確認・編集できます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "粘贴来自网站、笔记或 AI 工具的食谱文字。保存前可以检查和编辑草稿。"
+          }
+        }
+      }
+    },
+    "Review extracted ingredients, amounts, steps, and source details before saving. Source text remains available while this form is open." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review extracted ingredients, amounts, steps, and source details before saving. Source text remains available while this form is open."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revisa los ingredientes, las cantidades, los pasos y la información de origen extraídos antes de guardar. El texto original estará disponible mientras este formulario permanezca abierto."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérifiez les ingrédients, les quantités, les étapes et les sources extraits avant d’enregistrer. Le texte source reste disponible tant que ce formulaire est ouvert."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存する前に、抽出された材料・分量・手順・出典を確認してください。このフォームを開いている間は、取り込み元のテキストを確認できます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存前请检查提取的食材、用量、步骤和来源信息。此表单打开期间可随时查看原文。"
+          }
+        }
+      }
+    },
+    "Copy or share recipe text, including notes and source links. Photos and cooking history are not included." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy or share recipe text, including notes and source links. Photos and cooking history are not included."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copia o comparte el texto de la receta, incluidas las notas y los enlaces de origen. No se incluyen las fotos ni el historial de cocina."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copiez ou partagez le texte de la recette, y compris les notes et les liens sources. Les photos et l’historique de cuisine ne sont pas inclus."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "メモや出典リンクを含むレシピのテキストをコピー・共有できます。写真と調理履歴は含まれません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复制或分享食谱文字，包括备注和来源链接。不包含照片和烹饪历史。"
+          }
+        }
+      }
+    },
+    "Source Recipe Text" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Source Recipe Text"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Texto original de la receta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Texte source de la recette"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取り込み元のテキスト"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "食谱原文"
+          }
+        }
+      }
+    },
+    "Cooking Time (minutes)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cooking Time (minutes)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiempo de cocción (minutos)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temps de cuisson (minutes)"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "調理時間（分）"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "烹饪时间（分钟）"
+          }
+        }
+      }
+    },
+    "Recipe Content" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recipe Content"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contenido de la receta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contenu de la recette"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピの内容"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "食谱内容"
+          }
+        }
+      }
+    },
+    "Share Recipe Content" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share Recipe Content"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compartir contenido de la receta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partager le contenu de la recette"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピの内容を共有"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享食谱内容"
+          }
+        }
+      }
+    },
+    "Copy Recipe Content" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy Recipe Content"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copiar contenido de la receta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copier le contenu de la recette"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピの内容をコピー"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复制食谱内容"
+          }
+        }
+      }
+    },
     "" : {
       "shouldTranslate" : false
     },

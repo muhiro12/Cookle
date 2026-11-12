@@ -28,6 +28,16 @@ starts from the previous released candidate.
   collections tidy.
 - Full-text search across recipe names, ingredients, and categories with smart
   handling of short and long queries.
+- Copy or share readable Recipe content from Recipe actions or a list context
+  menu. Text includes ordered ingredients and steps, servings, cooking time,
+  categories, and notes with any source links; photos and cooking history are
+  omitted. Recipe-link sharing remains a separate action.
+- Paste ordinary text, including output from an external AI, into Import from
+  Text. Text, photo, and website extraction use the ordinary unsaved form, with
+  replacement review and undo. The source text remains selectable in that form
+  until it closes, including after cancelling assistance. See
+  [Recipe text workflows](Designs/Architecture/recipe-text-workflows.md) for
+  availability, review, and data boundaries.
 - Optional iCloud sync and data deletion controls that stay behind a
   subscription paywall managed in Settings.
 - App Shortcuts and App Intents for opening the app, running searches, showing
