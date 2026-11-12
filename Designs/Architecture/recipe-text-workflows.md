@@ -9,8 +9,9 @@ heading grammar, or format/schema version in this workflow.
 
 This implements the direction checkpoint in [#164][input-issue], informed by
 [Incomes #426][reference-issue], and the content-copy/share slice of
-[#151][sharing-issue]. Broader drag/drop and transferable interactions remain
-separate work. There was no implemented recipe template reader to retire.
+[#151][sharing-issue]. Photo sharing and drag scope are described in
+[content sharing](content-sharing.md). There was no implemented recipe template
+reader to retire.
 
 ## Input and review
 

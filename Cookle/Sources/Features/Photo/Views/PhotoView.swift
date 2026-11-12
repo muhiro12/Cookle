@@ -55,6 +55,7 @@ struct PhotoView: View {
                 .cookleButtonRowContent(alignment: .center)
             }
             .buttonStyle(.plain)
+            .photoTransfer(photo)
             .listRowBackground(EmptyView())
         }
     }
@@ -93,6 +94,7 @@ struct PhotoView: View {
 
     var actionSection: some View {
         Section {
+            SharePhotoButton(data: photo.data)
             DeletePhotoButton {
                 photoSelection = nil
             }

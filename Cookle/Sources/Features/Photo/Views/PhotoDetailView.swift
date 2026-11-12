@@ -17,6 +17,7 @@ struct PhotoDetailView: View {
                 )
                 .accessibilityLabel(Text("Photo"))
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .photoTransfer(photo)
                 .tag(photo.id)
             }
         }
@@ -28,6 +29,11 @@ struct PhotoDetailView: View {
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 CloseButton()
+            }
+            ToolbarItem(placement: .primaryAction) {
+                if let photo = photos.first(where: { $0.id == currentID }) {
+                    SharePhotoButton(data: photo.data)
+                }
             }
         }
         .environment(\.colorScheme, .dark)

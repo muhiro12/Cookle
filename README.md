@@ -24,6 +24,10 @@ starts from the previous released candidate.
 - Dedicated photo gallery that separates imported images from Image Playground
   creations while preserving stored photo assets even after they are unlinked
   from recipes.
+- Share individual photos or drag them from the photo collection, recipe photo
+  strip, and photo detail surfaces. The outgoing PNG preserves orientation and
+  transparency while omitting source metadata. See
+  [content sharing](Designs/Architecture/content-sharing.md) for transfer boundaries.
 - Ingredient and category tag management with search and filtering to keep large
   collections tidy.
 - Full-text search across recipe names, ingredients, and categories with smart
