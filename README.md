@@ -199,10 +199,12 @@ Primary records:
   composition. Watch adoption is deferred after a failed MHUI 1.18 readability
   comparison. Companion targets and App Intent implementations currently stay
   off MHUI/MHDesign dependencies; future adoption is evaluated per surface.
-- The app assembles `MHAppRuntime` with MHPlatform's default StoreKit, ads, and
-  license adapters. A StoreKit subscription-group change also refreshes verified
-  entitlements in the same runtime, so purchases from the native paywall can
-  unlock premium features while the app is running.
+- The app uses `MHAppRuntimeBootstrap(configuration:routePipeline:lifecyclePlan:)`
+  with MHPlatform's default StoreKit, ads, and license adapters. The standard
+  subscription section and transaction observer share one StoreKitWrapper store,
+  which reports verified entitlements to the runtime during the session.
+  Cookle observes `premiumStatus` for iCloud policy and purchase-screen navigation;
+  it does not read StoreKit entitlements independently.
 - Ordinary package regression tests stay in `CookleLibrary/Tests/Default`;
   synthetic future-schema observations stay in `CookleLibrary/Tests/SchemaResearch`.
 - The repository does not maintain a separate `CookleTests` unit test target;
@@ -433,6 +435,34 @@ rediscover and restore its destination. Report any restoration failure.
   ```bash
   bash ci_scripts/tasks/check_repository_rules.sh
   ```
+
+### Local subscription integration checks
+
+Use the shared `Cookle StoreKit` scheme on a Cookle Simulator to exercise the
+standard runtime with `CookleLibrary/Tests/StoreKit/Cookle.storekit`. The catalog
+uses Cookle's configured product and group identifiers with a synthetic test
+price. The ordinary `Cookle` scheme continues to use the App Store environment.
+
+- With no active local transaction, open Settings > Subscription, cancel a
+  purchase, and confirm the paywall remains available.
+- Complete a local purchase and confirm Settings returns from the paywall
+  without restarting the app. Settings > Advanced > Debug > Status should show
+  an active subscription. DEBUG uses local development data and hides the iCloud
+  control; verify that control separately in a Release build.
+- Exercise Restore Purchases and distinguish an already-active no-op from a
+  restore that actually recovers missing access. Use Xcode's transaction manager
+  for pending approval, failed purchases, expiration, and revocation when available.
+- Confirm unknown or failed verification does not overwrite verified access,
+  and subscription lapses preserve the saved iCloud choice. Shared policy tests
+  cover that choice and deferred resumption while editing; they do not prove
+  StoreKit transaction delivery or cloud convergence.
+
+Keep native UI results separate from source and unit-test evidence. Local
+StoreKit testing does not replace Sandbox purchase/restore or physical-device
+iCloud qualification. Active entitlement is state, not a new-purchase event;
+Cookle owns navigation and sync policy. See
+[MHPlatform #23](https://github.com/muhiro12/MHPlatform/issues/23) for the standard
+integration investigation.
 
 ## Continuous integration
 

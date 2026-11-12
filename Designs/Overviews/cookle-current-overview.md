@@ -336,12 +336,14 @@ Cookle uses adaptive tab navigation.
 ### Monetization, Sync, and Configuration
 
 - Subscription state follows verified purchased product identifiers through the
-  shared runtime, independently of product catalog metadata. Runtime state
-  changes update local preferences without waiting for another foreground event.
+  standard MHPlatform runtime and StoreKitWrapper transaction observer,
+  independently of product catalog metadata. Cookle does not add an entitlement
+  reader. Runtime state changes update local preferences without waiting for
+  another foreground event.
 - Unknown subscription state preserves cached subscription and iCloud settings.
 - An active subscription preserves the user's existing iCloud sync choice.
-- When the subscription is inactive, Cookle automatically turns off the local
-  iCloud sync preference.
+- Confirmed inactivity pauses iCloud sync without changing its saved preference.
+  Renewal resumes the saved choice after open editing forms close.
 - Native ads are shown in diary and recipe flows for non-subscribers.
 - Premium users do not see those ad sections. Placements also omit the section
   when the shared runtime reports that ads are unavailable.

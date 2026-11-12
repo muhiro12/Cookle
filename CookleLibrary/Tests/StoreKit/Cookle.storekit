@@ -1,0 +1,39 @@
+{
+  "identifier": "C001E001",
+  "nonRenewingSubscriptions": [],
+  "products": [],
+  "settings": {},
+  "subscriptionGroups": [
+    {
+      "id": "21496211",
+      "localizations": [],
+      "name": "Cookle Premium Test",
+      "subscriptions": [
+        {
+          "adHocOffers": [],
+          "displayPrice": "1.99",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "C001E002",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "Local test subscription for premium access and iCloud settings.",
+              "displayName": "Cookle Monthly Test",
+              "locale": "en_US"
+            }
+          ],
+          "productID": "com.muhiro12.Cookle.subscriptions.monthly",
+          "recurringSubscriptionPeriod": "P1M",
+          "referenceName": "Cookle Monthly Test",
+          "subscriptionGroupID": "21496211",
+          "type": "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version": {
+    "major": 3,
+    "minor": 0
+  }
+}

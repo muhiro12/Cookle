@@ -21,7 +21,6 @@ final class CookleAppAssembly {
     let tagActionService: TagActionService
     let settingsActionService: SettingsActionService
     let bootstrap: MHAppRuntimeBootstrap
-    let subscriptionEntitlementRefresh: CookleSubscriptionEntitlementRefresh
 
     init(
         modelContainer: ModelContainer,
@@ -37,8 +36,7 @@ final class CookleAppAssembly {
         diaryActionService: DiaryActionService,
         tagActionService: TagActionService,
         settingsActionService: SettingsActionService,
-        bootstrap: MHAppRuntimeBootstrap,
-        subscriptionEntitlementRefresh: CookleSubscriptionEntitlementRefresh
+        bootstrap: MHAppRuntimeBootstrap
     ) {
         self.modelContainer = modelContainer
         self.navigationModel = navigationModel
@@ -54,7 +52,6 @@ final class CookleAppAssembly {
         self.tagActionService = tagActionService
         self.settingsActionService = settingsActionService
         self.bootstrap = bootstrap
-        self.subscriptionEntitlementRefresh = subscriptionEntitlementRefresh
     }
 }
 
@@ -68,8 +65,7 @@ extension View {
         .mhAppRuntimeBootstrap(assembly.bootstrap)
         .modifier(
             CookleSubscriptionStateModifier(
-                runtime: assembly.bootstrap.runtime,
-                entitlementRefresh: assembly.subscriptionEntitlementRefresh
+                runtime: assembly.bootstrap.runtime
             )
         )
     }
