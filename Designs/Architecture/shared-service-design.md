@@ -120,11 +120,16 @@ Delivery-surface call sites should consume Operations APIs and keep
 platform-only side effects in the app target. Existing `*Service` types remain
 as implementation collaborators rather than public delivery-surface APIs.
 
-`RemoteUpdateOperations` shares MHPlatform's controller between update
-presentation and all app/shortcut mutation adapters. It checks retained evidence
-immediately before synchronous writes, permitting unavailable evidence for
-Cookle's offline workflow. Endpoint, storefront, logging, and presentation
-remain app-owned. Reading and archive export do not require mutation permission.
+`RemoteUpdateOperations` delegates preparation, observable evaluation, cancellation,
+and guarded synchronous writes to `MHRemoteUpdateAdapter` (MHPlatform 1.21.0).
+The adapter uses the environment's single controller and retained evidence store;
+it neither fetches per edit nor copies evidence into another cache. Cookle passes
+`.allowWhenUnavailable` for its offline workflow, while confirmed required updates
+still block writes. The presentation snapshot is diagnostic only; each write
+checks retained evidence immediately before its synchronous mutation. Isolated
+environments use the package's preview adapter without networking or storage.
+Endpoint, storefront, logging, and presentation remain app-owned. Reading and
+archive export do not require mutation permission.
 
 ## Placement Rules
 

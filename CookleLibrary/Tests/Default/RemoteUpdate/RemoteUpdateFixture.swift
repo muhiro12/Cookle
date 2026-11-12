@@ -32,7 +32,10 @@ final class RemoteUpdateFixture: Sendable {
         )
     }
 
-    func controller(store: MHRemoteUpdateStore? = nil) throws -> MHRemoteUpdateController {
+    func controller(
+        store: MHRemoteUpdateStore? = nil,
+        beforeFetch: (@Sendable () async throws -> Void)? = nil
+    ) throws -> MHRemoteUpdateController {
         try .init(
             bundleIdentifier: "com.muhiro12.Cookle",
             storefront: "jp",
@@ -43,6 +46,7 @@ final class RemoteUpdateFixture: Sendable {
             now: { self.clock.withLock { $0 } },
             fetchSchedule: {
                 self.fetchCount.withLock { $0 += 1 }
+                try await beforeFetch?()
                 if self.failsRefresh.withLock({ $0 }) {
                     throw URLError(.notConnectedToInternet)
                 }

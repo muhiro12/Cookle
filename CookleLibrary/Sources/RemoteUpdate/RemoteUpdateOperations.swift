@@ -8,55 +8,38 @@ import Observation
 @Observable
 public final class RemoteUpdateOperations {
     /// The latest diagnostic snapshot; reading it does not renew retained evidence.
-    public private(set) var evaluation: MHRemoteUpdateEvaluation?
+    public var evaluation: MHRemoteUpdateEvaluation? {
+        adapter.evaluation
+    }
 
     /// The decision from the latest observed instant, rather than permission for a later write.
     public var decision: MHRemoteUpdateDecision {
         evaluation?.decision ?? .unavailable
     }
 
-    private let controller: MHRemoteUpdateController?
+    private let adapter: MHRemoteUpdateAdapter
 
     /// Disables networking and enforcement for previews and isolated environments.
     public init() {
-        controller = nil
+        adapter = .preview()
     }
 
     /// Uses one package-owned controller for this app environment.
     public init(controller: MHRemoteUpdateController) {
-        self.controller = controller
+        adapter = .init(controller: controller)
     }
 
     /// Restores and refreshes evidence at startup and foreground transitions.
     @discardableResult
     public func prepare() async throws -> MHRemoteUpdateController.Preparation? {
-        try Task.checkCancellation()
-        guard let controller else {
-            return nil
-        }
-        let preparation = try await controller.prepare()
-        try Task.checkCancellation()
-        evaluation = preparation.evaluation
-        return preparation
+        try await adapter.prepare()
     }
 
     /// Keeps offline editing available while always rejecting a confirmed required update.
+    /// This check does not reserve permission; use `performMutation` for the actual write.
     public func checkMutationAllowed() async throws {
-        try Task.checkCancellation()
-        guard let controller else {
-            return
-        }
-        do {
-            try await controller.checkOperationAllowed(for: .allowWhenUnavailable)
-            evaluation = await controller.evaluation()
-            try Task.checkCancellation()
-            try decision.checkOperationAllowed(whenUnavailable: .allow)
-        } catch {
-            evaluation = await controller.evaluation()
-            if error is CancellationError || Task.isCancelled {
-                throw CancellationError()
-            }
-            throw error
+        try await adapter.perform(policy: .allowWhenUnavailable) {
+            ()
         }
     }
 
@@ -64,8 +47,6 @@ public final class RemoteUpdateOperations {
     public func performMutation<Value>(
         _ operation: () throws -> Value
     ) async throws -> Value {
-        try await checkMutationAllowed()
-        try Task.checkCancellation()
-        return try operation()
+        try await adapter.perform(policy: .allowWhenUnavailable, operation)
     }
 }
