@@ -141,7 +141,8 @@ mode and time changes replace managed requests within the existing 14-day horizo
   collections and editors use MHUI content List/Form presentation,
   recipe/cooking/diary/photo screens use stack composition, and settings and
   diagnostics keep native grouping and row geometry with MHUI's themed canvas
-  and row surfaces.
+  and row surfaces. The Settings sidebar keeps native row backgrounds so
+  selected navigation links retain the system's text/background contrast.
   Content lists retain native backgrounds and selection. Expanded split
   sidebars preserve system materials; forms and standalone screens retain
   their themed defaults.
@@ -172,6 +173,7 @@ Primary records:
 - [ADR 0009](Designs/Decisions/0009-adopt-full-mhui-in-main-app.md)
 - [ADR 0010](Designs/Decisions/0010-evaluate-mhui-for-companion-surfaces.md)
 - [iPhone Duo adaptation](Designs/Architecture/iphone-duo-adaptation.md)
+- [Platform defaults and navigation review](Designs/Architecture/platform-defaults-and-navigation-review.md)
 
 - `CookleLibrary` owns shared SwiftData models, public `*Operations` facades,
   predicates, queries, validation, mutations, migrations, and route helpers.

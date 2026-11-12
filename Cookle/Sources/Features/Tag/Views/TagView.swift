@@ -17,7 +17,7 @@ struct TagView<T: Tag>: View {
     @Binding private var recipe: Recipe?
 
     var body: some View {
-        List {
+        List(selection: $recipe) {
             MHContainerContent {
                 recipeSection
                 datesSection
@@ -50,17 +50,11 @@ private extension TagView {
                     .foregroundStyle(.secondary)
             } else {
                 ForEach((tag.recipes ?? [])) { rowRecipe in
-                    Button {
-                        $recipe.cookleSelectForNavigation(
-                            rowRecipe
-                        )
-                    } label: {
+                    NavigationLink(value: rowRecipe) {
                         RecipeLabel()
                             .labelStyle(.titleAndLargeIcon)
                             .environment(rowRecipe)
-                            .cookleButtonRowContent()
                     }
-                    .buttonStyle(.plain)
                 }
             }
         } header: {

@@ -28,18 +28,14 @@ struct SearchResultsView: View {
     }
 
     private var resultList: some View {
-        List {
+        List(selection: $selection) {
             MHContainerContent {
                 ForEach(sortedRecipes) { recipe in
-                    Button {
-                        $selection.cookleSelectForNavigation(recipe)
-                    } label: {
+                    NavigationLink(value: recipe) {
                         RecipeLabel()
                             .labelStyle(.titleAndLargeIcon)
                             .environment(recipe)
-                            .cookleButtonRowContent()
                     }
-                    .buttonStyle(.plain)
                 }
             }
         }

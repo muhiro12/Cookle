@@ -6,10 +6,6 @@ import TipKit
 import UIKit
 
 struct SettingsSidebarView: View {
-    private enum Layout {
-        static let bottomContentMargin: CGFloat = 96
-    }
-
     private let model: SettingsScreenModel
 
     @Environment(\.cookleSplitSidebarBackground)
@@ -98,62 +94,51 @@ struct SettingsSidebarView: View {
             .onChange(of: isSubscribeOn) {
                 refreshTipEligibility()
             }
+            .onChange(of: content) {
+                if content == .subscription {
+                    tipController.donateDidOpenSubscription()
+                }
+            }
             .onAppear {
                 refreshTipEligibility()
             }
     }
 
     var settingsList: some View {
-        List {
-            MHContainerContent {
-                subscriptionSection
-                iCloudSection
-                notificationSection
-                SettingsDataManagementSection(
-                    model: model,
-                    modelContainer: context.container,
-                    settingsActionService: settingsActionService,
-                    isICloudEnabled: context.container.isICloudSyncEnabled
+        List(selection: $content) {
+            subscriptionSection
+            iCloudSection
+            notificationSection
+            SettingsDataManagementSection(
+                model: model,
+                modelContainer: context.container,
+                settingsActionService: settingsActionService,
+                isICloudEnabled: context.container.isICloudSyncEnabled
+            )
+            generalSection
+            ShortcutsLinkSection(
+                tip: currentSettingsTip(
+                    for: shortcutsTip,
+                    isEligible: shouldShowShortcutsTip
                 )
-                generalSection
-                ShortcutsLinkSection(
-                    tip: currentSettingsTip(
-                        for: shortcutsTip,
-                        isEligible: shouldShowShortcutsTip
-                    )
-                )
-            }
+            )
         }
-        .contentMargins(
-            .bottom,
-            Layout.bottomContentMargin,
-            for: .scrollContent
-        )
+        // A custom row background obscures the system's selected-row fill.
         .mhListChrome(.native, background: sidebarBackground)
     }
 
     @ViewBuilder var subscriptionSection: some View {
         if !isSubscribeOn {
             Section {
-                Button {
-                    content = .subscription
-                } label: {
+                NavigationLink(value: SettingsContent.subscription) {
                     Text("Subscription")
-                        .cookleButtonRowContent()
                 }
-                .buttonStyle(.plain)
                 .cooklePopoverTip(
                     currentSettingsTip(
                         for: subscriptionTip,
                         isEligible: shouldShowSubscriptionTip
                     ),
                     arrowEdge: .top
-                )
-                .accessibilityAddTraits(.isButton)
-                .simultaneousGesture(
-                    TapGesture().onEnded {
-                        tipController.donateDidOpenSubscription()
-                    }
                 )
             }
         }
@@ -186,20 +171,12 @@ struct SettingsSidebarView: View {
 
     var generalSection: some View {
         Section {
-            Button {
-                content = .advanced
-            } label: {
+            NavigationLink(value: SettingsContent.advanced) {
                 Text("Advanced")
-                    .cookleButtonRowContent()
             }
-            .buttonStyle(.plain)
-            Button {
-                content = .license
-            } label: {
+            NavigationLink(value: SettingsContent.license) {
                 Text("Licenses")
-                    .cookleButtonRowContent()
             }
-            .buttonStyle(.plain)
             AdsPrivacyOptionsButton { message in
                 model.errorMessage = message
             }
