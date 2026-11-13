@@ -11,8 +11,6 @@ struct SettingsSidebarView: View {
     @Environment(\.cookleSplitSidebarBackground)
     private var sidebarBackground
 
-    @Environment(MHAppRuntime.self)
-    private var appRuntime
     @Environment(\.modelContext)
     private var context
     @Environment(\.isPresented)
@@ -150,12 +148,11 @@ struct SettingsSidebarView: View {
             Text("Development data stays on this device.")
         }
         #else
-        if isSubscribeOn {
-            SettingsICloudSection(
-                isICloudOn: $isICloudOn,
-                isSubscriptionActive: appRuntime.premiumStatus == .active
-            )
-        }
+        SettingsICloudSection(
+            isICloudOn: $isICloudOn,
+            isSubscriptionActive: isSubscribeOn,
+            isICloudConfigured: context.container.isICloudSyncEnabled
+        )
         #endif
     }
 

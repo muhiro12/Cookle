@@ -56,8 +56,8 @@ enum CookleMutationWorkflow {
 
     /// A workflow owns only changes it starts; never save or roll back another edit.
     static func requireCleanContext(_ context: ModelContext?) throws {
-        // An action may have suspended for the update check before the iCloud
-        // toggle retired its container. It must not write through the old one.
+        // Keep rejecting retired containers even when an action suspended
+        // before its update check completed.
         if let context, retiredContainers.contains(context.container) {
             throw MutationError.storeUnavailable
         }

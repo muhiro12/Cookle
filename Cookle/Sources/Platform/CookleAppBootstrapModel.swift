@@ -17,15 +17,11 @@ final class CookleAppBootstrapModel {
         }
     }
     private(set) var failureMessage: String?
-    private(set) var hasLoadedAssembly = false
-    let activeEditors = CookleActiveEditors()
 
     private let logging: CookleAppLogging
     private let liveStoreLoader = LiveStoreLoader()
     @ObservationIgnored private weak var notificationAppDelegate: CookleNotificationAppDelegate?
     @ObservationIgnored private var loadTask: Task<Void, Never>?
-    private var requestedICloudSetting = false
-    private var shouldRestoreSettings = false
 
     init(
         logging: CookleAppLogging = .live()
@@ -35,6 +31,9 @@ final class CookleAppBootstrapModel {
 
     /// Starts synchronously because an App Intent can launch without a scene.
     func start(notificationAppDelegate: CookleNotificationAppDelegate) {
+        guard appAssembly == nil, loadTask == nil else {
+            return
+        }
         self.notificationAppDelegate = notificationAppDelegate
         registerAppIntentDependencies()
         let startupLogger = makeLogger(
@@ -63,8 +62,7 @@ final class CookleAppBootstrapModel {
             startupLogger: startupLogger
         )
 
-        let isICloudOn = iCloudSettingToApply
-        requestedICloudSetting = isICloudOn
+        let isICloudOn = iCloudSettingForLaunch
 
         do {
             let modelContainer = try CookleAppAssemblyFactory.prepareLiveModelContainer(
@@ -85,25 +83,15 @@ final class CookleAppBootstrapModel {
         }
     }
 
-    func reloadAssemblyIfNeeded() {
-        guard requestedICloudSetting != iCloudSettingToApply else {
+    /// Recovery is available only before a store has opened successfully.
+    func retryStartup() {
+        guard appAssembly == nil, loadTask == nil, failureMessage != nil else {
             return
         }
 
-        reloadAssembly()
-    }
-
-    func reloadAssembly() {
-        let isICloudOn = iCloudSettingToApply
-        loadTask?.cancel()
-        requestedICloudSetting = isICloudOn
-        if let appAssembly {
-            shouldRestoreSettings = appAssembly.navigationModel.isSettingsPresented
-            CookleMutationWorkflow.retire(appAssembly.modelContainer)
-        }
-        appAssembly = nil
+        let isICloudOn = iCloudSettingForLaunch
         failureMessage = nil
-        // A scene may disappear during a store reopen. The app owns the request.
+        // The app owns recovery even if its scene disappears while opening.
         loadTask = Task { [weak self] in
             await self?.loadAssembly(isICloudOn: isICloudOn)
         }
@@ -125,14 +113,11 @@ private extension CookleAppBootstrapModel {
         }
     }
 
-    var iCloudSettingToApply: Bool {
+    var iCloudSettingForLaunch: Bool {
         #if DEBUG
         false
         #else
-        ICloudSyncOperations.settingToApply(
-            isSyncAlreadyRequested: requestedICloudSetting,
-            isEditing: activeEditors.isEditing
-        )
+        ICloudSyncOperations.isEnabledAtNextLaunch()
         #endif
     }
 
@@ -148,6 +133,9 @@ private extension CookleAppBootstrapModel {
     }
 
     func loadAssembly(isICloudOn: Bool) async {
+        defer {
+            loadTask = nil
+        }
         guard !Task.isCancelled else {
             return
         }
@@ -178,11 +166,6 @@ private extension CookleAppBootstrapModel {
                 startupLogger: startupLogger
             )
             try Task.checkCancellation()
-            guard isICloudOn == iCloudSettingToApply else {
-                reloadAssemblyIfNeeded()
-                return
-            }
-
             installLiveAssembly(
                 modelContainer: modelContainer,
                 isICloudOn: isICloudOn,
@@ -206,7 +189,6 @@ private extension CookleAppBootstrapModel {
         startupStartedAt: TimeInterval,
         startupLogger: MHLogger
     ) -> Bool {
-        requestedICloudSetting = false
         do {
             finalizeStartup(
                 assembly: try CookleAppAssemblyFactory.development(logging: logging),
@@ -331,10 +313,7 @@ private extension CookleAppBootstrapModel {
         startupStartedAt: TimeInterval,
         startupLogger: MHLogger
     ) {
-        assembly.navigationModel.isSettingsPresented = shouldRestoreSettings
-        shouldRestoreSettings = false
         appAssembly = assembly
-        hasLoadedAssembly = true
         CookleShortcuts.updateAppShortcutParameters()
         startupLogger.notice(
             "startup wiring finished in \(Self.durationMilliseconds(since: startupStartedAt)) ms"
@@ -390,8 +369,7 @@ private extension CookleAppBootstrapModel {
         // A registration that captures the container keeps its CloudKit stack
         // alive even while the scene no longer uses it.
         AppDependencyManager.shared.add { @MainActor [weak self] () async throws -> Value in
-            guard let self, let appAssembly,
-                  requestedICloudSetting == iCloudSettingToApply else {
+            guard let self, let appAssembly else {
                 throw CookleMutationWorkflow.MutationError.storeUnavailable
             }
             return value(appAssembly)

@@ -12,7 +12,6 @@ struct DiaryFormNavigationView: View {
             )
         }
         .recipeFormPresentationHost()
-        .deferICloudSyncWhileEditing()
     }
 
     init(

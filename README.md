@@ -42,8 +42,9 @@ starts from the previous released candidate.
   until it closes, including after cancelling assistance. See
   [Recipe text workflows](Designs/Architecture/recipe-text-workflows.md) for
   availability, review, and data boundaries.
-- Optional iCloud sync and data deletion controls that stay behind a
-  subscription paywall managed in Settings.
+- Optional subscription-gated iCloud sync with a saved choice in Settings.
+  Configuration changes apply at the next process launch; the current session
+  keeps its existing configuration.
 - App Shortcuts and App Intents for opening the app, running searches, showing
   the last or a random recipe, and creating diary entries.
 - Image Playground integration (iOS 18.1+) to generate dish photos from recipe
@@ -312,17 +313,21 @@ Universal Links require Apple App Site Association (AASA) deployment for
 - A StoreKit subscription unlocks premium features such as iCloud sync, and the
   app observes the runtime's verified entitlement state independently of product
   catalog metadata. Unknown state preserves existing preferences; active state
-  honors the user's iCloud choice, and inactive state pauses sync without
-  changing that choice. A renewed subscription resumes sync if it was on.
-  Resuming waits for open recipe, diary, tag, and data import forms to close.
+  updates access without changing the saved iCloud choice. Purchase, restore,
+  and renewal never opt into sync or override an explicit Off choice.
 - After a verified subscription becomes active, Settings returns from the
-  paywall and shows the subscription status and iCloud control. Pending and
-  cancelled purchases leave the paywall available.
-- Changing iCloud sync reopens the same on-device store in the running app.
-  Turning sync off keeps the data already on this device. The setting controls
-  whether SwiftData can sync changes; it does not indicate that other devices
-  have caught up. Settings explains when an iCloud sign-in is needed. If the
-  store cannot open, try again or open without iCloud.
+  paywall. Pending and cancelled purchases leave the paywall available.
+- Startup configures the same production store using the saved iCloud choice
+  AND last resolved subscription access. The ready container remains fixed for
+  the process, including across foreground resumes, preference changes, and
+  subscription lapses. A later entitlement result affects the next launch.
+- Settings separates the saved choice from the current session configuration
+  and explains pending On/Off changes. During a lapse, a saved On can be turned
+  Off; enabling requires access. Off and expiry do not immediately stop a
+  session already configured for sync. These paths do not delete or copy records.
+  Account guidance does not imply that remote devices have caught up. Startup
+  failure still offers retry or opening without iCloud before a store is ready.
+  See [subscription and iCloud](Designs/Architecture/subscription-and-icloud.md).
 - Settings guards bulk deletion and other destructive actions behind
   confirmation dialogs.
 - Cookle reads its shared configuration from
@@ -454,7 +459,7 @@ price. The ordinary `Cookle` scheme continues to use the App Store environment.
   for pending approval, failed purchases, expiration, and revocation when available.
 - Confirm unknown or failed verification does not overwrite verified access,
   and subscription lapses preserve the saved iCloud choice. Shared policy tests
-  cover that choice and deferred resumption while editing; they do not prove
+  cover choice retention and next-launch selection; they do not prove
   StoreKit transaction delivery or cloud convergence.
 
 Keep native UI results separate from source and unit-test evidence. Local

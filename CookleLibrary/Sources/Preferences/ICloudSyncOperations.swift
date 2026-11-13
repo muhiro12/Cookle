@@ -24,14 +24,11 @@ public enum ICloudSyncOperations {
         }
     }
 
-    /// Defers enabling sync during an edit while applying loss of access immediately.
-    public static func settingToApply(
-        isSyncAlreadyRequested: Bool,
-        isEditing: Bool,
+    /// Selects the next process launch configuration without changing an open store.
+    public static func isEnabledAtNextLaunch(
         store: MHPreferenceStore = .init()
     ) -> Bool {
         store.bool(for: \.isSubscribeOn)
             && store.bool(for: \.isICloudOn)
-            && (isSyncAlreadyRequested || !isEditing)
     }
 }

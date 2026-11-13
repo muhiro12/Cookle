@@ -6,7 +6,6 @@ struct TagFormNavigationView<T: Tag>: View {
         NavigationStack {
             TagFormView<T>()
         }
-        .deferICloudSyncWhileEditing()
     }
 }
 

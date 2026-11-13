@@ -1,6 +1,278 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Restart Cookle to turn off iCloud sync. It remains enabled for this session until then." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart Cookle to turn off iCloud sync. It remains enabled for this session until then."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reinicia Cookle para desactivar la sincronización con iCloud. Hasta entonces, seguirá activada en esta sesión."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redémarrez Cookle pour désactiver la synchronisation iCloud. Elle reste activée pour cette session jusque-là."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud同期を無効にするにはCookleを再起動してください。それまでは、今回の起動時の有効な設定が続きます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请重新启动 Cookle 以停用 iCloud 同步。在此之前，本次启动中的同步设置仍保持启用。"
+          }
+        }
+      }
+    },
+    "Restart Cookle to turn on iCloud sync. It remains disabled for this session until then." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart Cookle to turn on iCloud sync. It remains disabled for this session until then."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reinicia Cookle para activar la sincronización con iCloud. Hasta entonces, seguirá desactivada en esta sesión."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redémarrez Cookle pour activer la synchronisation iCloud. Elle reste désactivée pour cette session jusque-là."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud同期を有効にするにはCookleを再起動してください。それまでは、今回の起動時の無効な設定が続きます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请重新启动 Cookle 以启用 iCloud 同步。在此之前，本次启动中的同步设置仍保持停用。"
+          }
+        }
+      }
+    },
+    "Resuming Cookle from the background does not apply this change." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resuming Cookle from the background does not apply this change."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volver a Cookle desde segundo plano no aplica este cambio."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revenir à Cookle depuis l’arrière-plan n’applique pas cette modification."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バックグラウンドから戻るだけでは、この変更は適用されません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仅从后台返回 Cookle 不会应用此更改。"
+          }
+        }
+      }
+    },
+    "Your choice is on, but a subscription is required to enable iCloud sync at the next launch." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your choice is on, but a subscription is required to enable iCloud sync at the next launch."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu elección está activada, pero se necesita una suscripción para activar la sincronización con iCloud en el próximo inicio."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Votre choix reste activé, mais un abonnement est nécessaire pour activer la synchronisation iCloud au prochain lancement."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ONの選択は保存されていますが、次回起動時にiCloud同期を有効にするにはサブスクリプションが必要です。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "您已选择开启，但需要订阅才能在下次启动时启用 iCloud 同步。"
+          }
+        }
+      }
+    },
+    "iCloud account status is unavailable. Check your iCloud account in the Settings app." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud account status is unavailable. Check your iCloud account in the Settings app."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede consultar el estado de la cuenta de iCloud. Revisa tu cuenta de iCloud en la app Ajustes."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’état du compte iCloud est indisponible. Vérifiez votre compte iCloud dans l’app Réglages."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloudアカウントの状態を確認できません。設定アプリでiCloudアカウントを確認してください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法获取 iCloud 账户状态。请在“设置”App 中检查你的 iCloud 账户。"
+          }
+        }
+      }
+    },
+    "iCloud sync is disabled for this session." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud sync is disabled for this session."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La sincronización con iCloud está desactivada en esta sesión."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La synchronisation iCloud est désactivée pour cette session."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今回の起動ではiCloud同期が無効です。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "本次启动中，iCloud 同步已停用。"
+          }
+        }
+      }
+    },
+    "iCloud sync is enabled for this session." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud sync is enabled for this session."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La sincronización con iCloud está activada en esta sesión."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La synchronisation iCloud est activée pour cette session."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今回の起動ではiCloud同期が有効です。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "本次启动中，iCloud 同步已启用。"
+          }
+        }
+      }
+    },
+    "iCloud sync requires a subscription. Your choice is saved even when your subscription ends. Changes apply after you quit and reopen Cookle." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud sync requires a subscription. Your choice is saved even when your subscription ends. Changes apply after you quit and reopen Cookle."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La sincronización con iCloud requiere una suscripción. Tu elección se guarda incluso cuando finaliza la suscripción. Los cambios se aplican después de cerrar y volver a abrir Cookle."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La synchronisation iCloud nécessite un abonnement. Votre choix est conservé même à la fin de votre abonnement. Les modifications s’appliquent après avoir quitté puis rouvert Cookle."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud同期にはサブスクリプションが必要です。購読が終了しても選択は保存されます。変更はCookleを終了して開き直すと適用されます。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 同步需要订阅。订阅结束后，您的选择仍会保存。退出并重新打开 Cookle 后，更改才会生效。"
+          }
+        }
+      }
+    },
     "Paste recipe text from a website, notes, or an AI tool. You can review and edit the draft before saving." : {
       "localizations" : {
         "en" : {
@@ -1886,40 +2158,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Apple Watch 开始烹饪“%@”。"
-          }
-        }
-      }
-    },
-    "Applying iCloud Setting" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Applying iCloud Setting"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aplicando el ajuste de iCloud"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Application du réglage iCloud"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "iCloud設定を適用中"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "正在应用 iCloud 设置"
           }
         }
       }
@@ -16197,40 +16435,6 @@
         }
       }
     },
-    "Turning off iCloud sync keeps the data already on this device." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Turning off iCloud sync keeps the data already on this device."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Al desactivar la sincronización con iCloud, se conservan los datos que ya están en este dispositivo."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La désactivation de la synchronisation iCloud conserve les données déjà présentes sur cet appareil."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "iCloud同期をオフにしても、このデバイスにあるデータは残ります。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "关闭 iCloud 同步后，此设备上已有的数据会保留。"
-          }
-        }
-      }
-    },
     "Type" : {
       "localizations" : {
         "en" : {
@@ -16267,40 +16471,6 @@
     },
     "URL" : {
       "shouldTranslate" : false
-    },
-    "Unable to Change iCloud Sync" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unable to Change iCloud Sync"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No se pudo cambiar la sincronización con iCloud"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Impossible de modifier la synchronisation iCloud"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "iCloud同期の設定を変更できませんでした"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无法更改 iCloud 同步设置"
-          }
-        }
-      }
     },
     "Unable to Start Cookle" : {
       "localizations" : {
@@ -17590,40 +17760,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "iCloud 开启"
-          }
-        }
-      }
-    },
-    "iCloud account status is unavailable. Your data is still on this device." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "iCloud account status is unavailable. Your data is still on this device."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No se pudo comprobar el estado de la cuenta de iCloud. Tus datos siguen en este dispositivo."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Impossible de vérifier l’état du compte iCloud. Vos données sont toujours sur cet appareil."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "iCloudアカウントの状態を確認できません。データはこのデバイスに残っています。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无法获取 iCloud 帐户状态。数据仍保留在此设备上。"
           }
         }
       }

@@ -27,13 +27,6 @@ struct CookleApp: App {
         WindowGroup {
             sceneContent
                 .mhTheme(.standard)
-                .environment(bootstrapModel.activeEditors)
-                .onChange(of: isICloudSyncRequested, initial: true) {
-                    bootstrapModel.reloadAssemblyIfNeeded()
-                }
-                .onChange(of: bootstrapModel.activeEditors.isEditing) {
-                    bootstrapModel.reloadAssemblyIfNeeded()
-                }
         }
     }
 
@@ -43,10 +36,9 @@ struct CookleApp: App {
         } else {
             CookleStartupView(
                 failureMessage: bootstrapModel.failureMessage,
-                isSwitchingICloud: bootstrapModel.hasLoadedAssembly,
                 openWithoutICloud: recoveryAction
             ) {
-                bootstrapModel.reloadAssembly()
+                bootstrapModel.retryStartup()
             }
         }
     }
@@ -65,6 +57,7 @@ struct CookleApp: App {
         }
         return {
             isICloudOn = false
+            bootstrapModel.retryStartup()
         }
     }
 
