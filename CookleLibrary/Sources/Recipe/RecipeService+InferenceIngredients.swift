@@ -49,7 +49,9 @@ extension RecipeService {
                 | a \s+ pinch | 少々 | 適量
                 )$
                 /#
-        if let match = row.wholeMatch(of: pattern), !match.1.isEmpty {
+        // An earlier number may belong to a mixed fraction or range, not the ingredient name.
+        if let match = row.wholeMatch(of: pattern), !match.1.isEmpty,
+           !match.1.contains(where: \.isNumber) {
             return .init(ingredient: String(match.1), amount: String(match.2))
         }
         return .init(ingredient: row, amount: "")

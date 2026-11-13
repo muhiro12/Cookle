@@ -7,7 +7,7 @@ extension RecipeService {
             (?ix)
             ^(?: cook(?:ing)? \s* time | 調理時間 | temps \s+ de \s+ cuisson
             | tiempo \s+ de \s+ cocción | 烹饪时间 )
-            (?= \s | [:：0-9０-９(（] | $ )
+            (?= \s* (?: [:：0-9０-９(（] | about \b | 約 | $ ) )
             """#
         return text.components(separatedBy: .newlines)
             .map { line in
