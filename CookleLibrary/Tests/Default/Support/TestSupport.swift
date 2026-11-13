@@ -1,8 +1,5 @@
-import AppIntents
 @testable import CookleLibrary
 import SwiftData
-
-private let kAppIntentsDependencyAnchor: (any AppIntent.Type)? = nil
 
 // Lightweight in-memory ModelContext for library tests
 func makeTestContext() -> ModelContext {

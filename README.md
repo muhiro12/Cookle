@@ -425,6 +425,17 @@ rediscover and restore its destination. Report any restoration failure.
 - For shared-library tests, use its test capability with the `CookleLibrary`
   scheme, explicitly selecting the required test plan, and a compatible discovered
   destination.
+- If native package-test execution emits an incompatible SDK sysroot warning,
+  use the official CLI fallback with `env -u SDKROOT xcrun xcodebuild`, the same
+  project/scheme, explicit test plan, and discovered Simulator destination.
+  Let the destination select its SDK; do not override every embedded target's SDK.
+  For the `CookleLibrary` and `CookleSchemaResearch` plans only, pass
+  `LM_SKIP_METADATA_EXTRACTION=YES`: these library/test targets implement no App
+  Intents and require no metadata extraction. This omits an irrelevant task using
+  [Apple's build setting](https://github.com/swiftlang/swift-build/blob/main/Sources/SWBApplePlatform/AppIntentsMetadataTaskProducer.swift),
+  without filtering warnings or adding a dummy framework dependency. Reassess
+  this scope if those targets adopt App Intents. Keep extraction enabled for
+  normal `Cookle` builds and its real App Intents.
 - For public `CookleLibrary` APIs, `*Operations`, shared wire contracts,
   SwiftData schema, or adapter-facing changes, also build the `Cookle` consumer.
 - For widget changes, build the `Widgets` scheme with a discovered iOS

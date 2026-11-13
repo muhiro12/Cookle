@@ -93,11 +93,17 @@ messages were removed after checking references.
 The native test builds emitted an SDK sysroot warning. A CLI rerun of the full
 ordinary plan reported 640 passing Swift Testing tests without that warning,
 but emitted one App Intents metadata extraction warning for the schema-research
-test product built alongside the plan. The zero-raw-warning gate remains
-unqualified. The initial Release build also emitted two missing-debug-symbol
+test product built alongside the plan. Those initial runs did not qualify the
+zero-raw-warning gate. The initial Release build also emitted two missing-debug-symbol
 warnings from the LicenseList build tool; the final incremental Release build
 reported zero warnings and errors. No warning suppression or project-setting
 workaround was added. Retained lint and repository checks passed.
+
+The follow-up review removes the ordinary tests' artificial App Intents dependency
+anchor. The documented package-test fallback clears ambient SDK selection and
+omits metadata extraction only for library/test targets without App Intents.
+The app's real metadata extraction remains enabled. Follow-up publication and
+warning qualification are recorded in #169.
 
 Real purchase/restore and transient verification, Release settings interaction,
 account/offline behavior, startup-failure recovery on actual stores, and isolated
