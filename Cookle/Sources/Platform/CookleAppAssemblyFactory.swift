@@ -45,6 +45,18 @@ enum CookleAppAssemblyFactory {
     }
 
     #if DEBUG
+    static func development(logging: CookleAppLogging) throws -> CookleAppAssembly {
+        if CookleCaptureConfiguration.isEnabled {
+            return CookleSampleDataContext.makeCaptureContext()
+        }
+        return try makeAssembly(
+            modelContainer: CookleDevelopmentStore.open(),
+            nativeAdUnitID: CookleMonetizationConfiguration.nativeAdUnitIDDev,
+            logging: logging,
+            isolatesCookingSession: true
+        )
+    }
+
     /// Builds a capture assembly without an ad unit so screenshots never contain test ads.
     static func capture(
         modelContainer: ModelContainer
@@ -94,11 +106,9 @@ private extension CookleAppAssemblyFactory {
             recordsNotificationUsage: recordsNotificationUsage,
             isolatesRemoteUpdates: isolatesCookingSession
         )
-        let bootstrap = makeBootstrap(
+        let bootstrap = makeRuntimeBootstrap(
             configuration: makeRuntimeConfiguration(nativeAdUnitID: nativeAdUnitID, adsConsent: adsConsent),
-            remoteConfigurationService: services.remoteConfigurationService,
-            notificationService: services.notificationService,
-            routePipeline: services.routePipeline
+            services: services
         )
         let notificationService = services.notificationService
         let updates = services.remoteConfigurationService.updates
@@ -132,20 +142,18 @@ private extension CookleAppAssemblyFactory {
         )
     }
 
-    static func makeBootstrap<Route: Sendable>(
+    static func makeRuntimeBootstrap(
         configuration: MHAppConfiguration,
-        remoteConfigurationService: RemoteConfigurationService,
-        notificationService: NotificationService,
-        routePipeline: MHAppRoutePipeline<Route>
+        services: CookleAppServices
     ) -> MHAppRuntimeBootstrap {
         let lifecyclePlan = makeLifecyclePlan(
-            remoteConfigurationService: remoteConfigurationService,
-            notificationService: notificationService,
-            routePipeline: routePipeline
+            remoteConfigurationService: services.remoteConfigurationService,
+            notificationService: services.notificationService,
+            routePipeline: services.routePipeline
         )
         return .init(
             configuration: configuration,
-            routePipeline: routePipeline,
+            routePipeline: services.routePipeline,
             lifecyclePlan: lifecyclePlan
         )
     }

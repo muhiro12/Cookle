@@ -51,6 +51,7 @@ struct RecipeLabel: View {
                         diaryErrorMessage = message
                     }
                     ShareRecipeLinkButton()
+                    RecipeContentActions()
                 }
             }
             Section {

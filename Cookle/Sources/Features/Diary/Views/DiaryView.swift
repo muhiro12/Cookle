@@ -16,7 +16,7 @@ struct DiaryView: View {
     @Binding private var recipe: Recipe?
 
     var body: some View {
-        List {
+        List(selection: $recipe) {
             MHContainerContent {
                 mealSections
                 noteSection
@@ -39,17 +39,11 @@ struct DiaryView: View {
             if !recipes.isEmpty {
                 Section {
                     ForEach(recipes) { rowRecipe in
-                        Button {
-                            $recipe.cookleSelectForNavigation(
-                                rowRecipe
-                            )
-                        } label: {
+                        NavigationLink(value: rowRecipe) {
                             RecipeLabel()
                                 .labelStyle(.titleAndLargeIcon)
                                 .environment(rowRecipe)
-                                .cookleButtonRowContent()
                         }
-                        .buttonStyle(.plain)
                     }
                 } header: {
                     MHSectionHeader(title: Text(type.title))

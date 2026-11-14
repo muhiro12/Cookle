@@ -2,25 +2,9 @@
 import Foundation
 import Testing
 
-// A sanitized corpus for the deterministic extraction path, covering the input
-// shapes this issue names: missing quantities, ambiguous units, long input,
-// instructions embedded in recipe text, and non-recipe content.
-//
-// Every fixture is synthetic. These exercise `fallbackInference` and
-// `isMeaningfulInference` only — the layer that runs when the model is
-// unavailable. They are not a model-quality benchmark and set no accuracy
-// thresholds; both need the on-device model and a decision about what
-// "good enough" means.
-//
-// Expectations here were recorded from the implementation's actual output
-// rather than assumed. The most important thing they document is what this
-// layer deliberately does **not** do: it never splits an amount out of an
-// ingredient line, it never interprets or normalises a unit, and it only reads
-// a serving count or a time from the explicit English and Japanese phrasings
-// pinned in `RecipeInferenceLanguageCorpusTests`.
-//
-// `RecipeInferenceLanguageCorpusTests` carries the language and unit
-// boundaries; this file covers the shape of an extraction.
+// Synthetic shape and safety cases for deterministic extraction. Explicit delimiters
+// and recognized trailing amounts are split without converting units; ambiguous
+// lines remain literal. These checks do not establish real-model accuracy.
 @MainActor
 struct RecipeInferenceCorpusTests {
     @Test
@@ -38,11 +22,8 @@ struct RecipeInferenceCorpusTests {
         )
 
         #expect(result.name == "Tomato Pasta")
-        // The whole line is the ingredient; `amount` stays empty. Splitting
-        // quantities is the model's job, not this layer's.
-        #expect(result.ingredients.map(\.ingredient) == ["Pasta 200g", "Tomato 2"])
-        let everyAmountIsEmpty = result.ingredients.allSatisfy(\.amount.isEmpty)
-        #expect(everyAmountIsEmpty)
+        #expect(result.ingredients.map(\.ingredient) == ["Pasta", "Tomato 2"])
+        #expect(result.ingredients.map(\.amount) == ["200g", ""])
         #expect(result.steps == ["Boil the pasta.", "Add the tomato."])
         #expect(RecipeInferenceOperations.isMeaningfulInference(result))
     }
@@ -64,7 +45,7 @@ struct RecipeInferenceCorpusTests {
         // Japanese section headings are recognised and nothing is translated
         // or romanised.
         #expect(result.name == "肉じゃが")
-        #expect(result.ingredients.map(\.ingredient) == ["じゃがいも 3個", "牛肉 200g"])
+        #expect(result.ingredients.map(\.ingredient) == ["じゃがいも", "牛肉"])
         #expect(result.steps == ["じゃがいもを切る。", "牛肉と一緒に煮る。"])
         #expect(RecipeInferenceOperations.isMeaningfulInference(result))
     }
@@ -82,11 +63,8 @@ struct RecipeInferenceCorpusTests {
             """
         )
 
-        // "Lettuce" with no quantity and "Salt a pinch" with a vague one both
-        // survive verbatim. Nothing is invented for the missing number.
-        #expect(result.ingredients.map(\.ingredient) == ["Lettuce", "Salt a pinch"])
-        let everyAmountIsEmpty = result.ingredients.allSatisfy(\.amount.isEmpty)
-        #expect(everyAmountIsEmpty)
+        #expect(result.ingredients.map(\.ingredient) == ["Lettuce", "Salt"])
+        #expect(result.ingredients.map(\.amount) == ["", "a pinch"])
     }
 
     @Test
@@ -112,6 +90,7 @@ struct RecipeInferenceCorpusTests {
             from: """
             Stew
             Serves 4
+            Cook time: 45 minutes
             Ingredients:
             Beef 300g
             Steps:
@@ -126,6 +105,7 @@ struct RecipeInferenceCorpusTests {
             from: """
             シチュー
             4人分
+            調理時間: 45分
             材料
             牛肉 300g
             手順
@@ -133,10 +113,7 @@ struct RecipeInferenceCorpusTests {
             """
         )
 
-        // Devices without Apple Intelligence always take this path, so the
-        // Japanese forms 「4人分」 and 「45分」 are read like their English
-        // counterparts. Like `Simmer for 45 minutes`, a step's duration is
-        // what this layer can find, not a verified total.
+        // Recipe-level metadata is distinct from the duration of one step.
         #expect(japanese.servingSize == Value.statedServingCount)
         #expect(japanese.cookingTime == Value.statedCookingMinutes)
     }

@@ -1,3 +1,4 @@
+#if DEBUG
 import MHUI
 import SwiftData
 import SwiftUI
@@ -132,3 +133,5 @@ private extension DebugContentView {
 #Preview(traits: .modifier(CookleSampleData())) {
     DebugContentView<Recipe>()
 }
+
+#endif

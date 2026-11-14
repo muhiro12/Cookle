@@ -28,11 +28,7 @@ struct RecipeFormView: View {
     @Environment(MainNavigationModel.self)
     var navigationModel
 
-    @AppStorage(\.isDebugOn)
-    private var isDebugOn
-
     @State private var editMode = EditMode.inactive
-    @State private var isDebugAlertPresented = false
     @State private var isRestoreDraftConfirmationPresented = false
     @State private var isDiscardChangesConfirmationPresented = false
     @State private var isUndoImportConfirmationPresented = false
@@ -72,25 +68,6 @@ struct RecipeFormView: View {
             }
         }
         .interactiveDismissDisabled()
-        .confirmationDialog(
-            Text("Debug"),
-            isPresented: $isDebugAlertPresented
-        ) {
-            Button {
-                model.name = ""
-                isDebugOn = true
-                dismiss()
-            } label: {
-                Text("OK")
-            }
-            Button(role: .cancel) {
-                // Dismisses the confirmation dialog.
-            } label: {
-                Text("Cancel")
-            }
-        } message: {
-            Text("Are you really going to use DebugMode?")
-        }
         .confirmationDialog(
             Text("Restore Draft"),
             isPresented: $isRestoreDraftConfirmationPresented
@@ -162,15 +139,6 @@ extension RecipeFormView {
         }
         nonmutating set {
             editMode = newValue
-        }
-    }
-
-    var isDebugConfirmationPresented: Bool {
-        get {
-            isDebugAlertPresented
-        }
-        nonmutating set {
-            isDebugAlertPresented = newValue
         }
     }
 

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct CookleStartupView: View {
     let failureMessage: String?
+    let openWithoutICloud: (() -> Void)?
     let retry: () -> Void
 
     var body: some View {
@@ -16,6 +17,9 @@ struct CookleStartupView: View {
                     Text(failureMessage)
                 } actions: {
                     Button("Try Again", action: retry)
+                    if let openWithoutICloud {
+                        Button("Open Without iCloud", action: openWithoutICloud)
+                    }
                 }
             } else {
                 ProgressView("Loading Cookle")
@@ -30,11 +34,13 @@ struct CookleStartupView: View {
 
     init(
         failureMessage: String?,
+        openWithoutICloud: (() -> Void)? = nil,
         retry: @escaping () -> Void = {
             // Intentionally empty for previews and isolated presentation.
         }
     ) {
         self.failureMessage = failureMessage
+        self.openWithoutICloud = openWithoutICloud
         self.retry = retry
     }
 }

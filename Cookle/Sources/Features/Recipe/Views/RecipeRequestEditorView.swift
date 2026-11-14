@@ -21,6 +21,22 @@ struct RecipeRequestEditorView: View {
         """
 
     var body: some View {
+        VStack(alignment: .leading) {
+            if source != .generation {
+                Text(
+                    """
+                    Paste recipe text from a website, notes, or an AI tool. \
+                    You can review and edit the draft before saving.
+                    """
+                )
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+            editor
+        }
+    }
+
+    private var editor: some View {
         TextEditor(text: $text)
             .focused($isTextFocused)
             .disabled(isLoading)

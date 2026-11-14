@@ -15,6 +15,22 @@ extension RecipeFormView {
             }
         }
 
+        if !bindableModel.importSourceText.isEmpty {
+            Section {
+                DisclosureGroup("Source Recipe Text") {
+                    Text(verbatim: bindableModel.importSourceText)
+                        .textSelection(.enabled)
+                }
+            } footer: {
+                Text(
+                    """
+                    Review extracted ingredients, amounts, steps, and source details before saving. \
+                    Source text remains available while this form is open.
+                    """
+                )
+            }
+        }
+
         if currentEditMode != .active {
             RecipeFormNameSection(
                 $bindableModel.name,
@@ -288,11 +304,6 @@ extension RecipeFormView {
 
     func cancelForm() {
         guard formModel.isSaving == false else {
-            return
-        }
-        if formModel.name == "Enable Debug" {
-            formModel.name = ""
-            isDebugConfirmationPresented = true
             return
         }
         guard formModel.hasUnsavedChanges else {

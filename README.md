@@ -24,12 +24,27 @@ starts from the previous released candidate.
 - Dedicated photo gallery that separates imported images from Image Playground
   creations while preserving stored photo assets even after they are unlinked
   from recipes.
+- Share individual photos or drag them from the photo collection, recipe photo
+  strip, and photo detail surfaces. The outgoing PNG preserves orientation and
+  transparency while omitting source metadata. See
+  [content sharing](Designs/Architecture/content-sharing.md) for transfer boundaries.
 - Ingredient and category tag management with search and filtering to keep large
   collections tidy.
 - Full-text search across recipe names, ingredients, and categories with smart
   handling of short and long queries.
-- Optional iCloud sync and data deletion controls that stay behind a
-  subscription paywall managed in Settings.
+- Copy or share readable Recipe content from Recipe actions or a list context
+  menu. Text includes ordered ingredients and steps, servings, cooking time,
+  categories, and notes with any source links; photos and cooking history are
+  omitted. Recipe-link sharing remains a separate action.
+- Paste ordinary text, including output from an external AI, into Import from
+  Text. Text, photo, and website extraction use the ordinary unsaved form, with
+  replacement review and undo. The source text remains selectable in that form
+  until it closes, including after cancelling assistance. See
+  [Recipe text workflows](Designs/Architecture/recipe-text-workflows.md) for
+  availability, review, and data boundaries.
+- Optional subscription-gated iCloud sync with a saved choice in Settings.
+  Configuration changes apply at the next process launch; the current session
+  keeps its existing configuration.
 - App Shortcuts and App Intents for opening the app, running searches, showing
   the last or a random recipe, and creating diary entries.
 - Image Playground integration (iOS 18.1+) to generate dish photos from recipe
@@ -70,8 +85,9 @@ starts from the previous released candidate.
   ordinary unsaved recipe editor. Pending text must be added before creating
   a draft. Cancelling generation discards a late result; failed requests keep
   the entered preferences available in the modal for an explicit retry.
-- Developer utilities and preview helpers seed SwiftData models for SwiftUI
-  previews.
+- Settings > Advanced > Debug exposes read-only state in every build. DEBUG adds
+  guarded developer tools and a separate, unsynced local store with initial
+  samples. See [Debug capabilities](Designs/Architecture/debug-capabilities.md).
 
 Recipe suggestions adapt to the first independent app open in each meal window
 (before 11:00, 11:00-16:00, and from 16:00). The last 14 local dates are kept in one
@@ -132,7 +148,7 @@ mode and time changes replace managed requests within the existing 14-day horizo
 - MHPlatform 1.x using the current consumer boundaries: the `Cookle` app target
   stays on the default `MHPlatform` umbrella, `CookleLibrary` stays on
   `MHPlatformCore`, and the repository keeps MHPlatform on the
-  `1.20.0..<2.0.0` range for consent-managed ads, native ad layouts, the
+  `1.21.0..<2.0.0` range for consent-managed ads, native ad layouts, the
   synchronous preference registry, and shared remote-update evaluation.
 - MHUI `2.4.0..<3.0.0` through the full `MHUI` product. The main app applies
   the neutral standard root theme and its native appearance once, keeping
@@ -140,7 +156,8 @@ mode and time changes replace managed requests within the existing 14-day horizo
   collections and editors use MHUI content List/Form presentation,
   recipe/cooking/diary/photo screens use stack composition, and settings and
   diagnostics keep native grouping and row geometry with MHUI's themed canvas
-  and row surfaces.
+  and row surfaces. The Settings sidebar keeps native row backgrounds so
+  selected navigation links retain the system's text/background contrast.
   Content lists retain native backgrounds and selection. Expanded split
   sidebars preserve system materials; forms and standalone screens retain
   their themed defaults.
@@ -171,6 +188,7 @@ Primary records:
 - [ADR 0009](Designs/Decisions/0009-adopt-full-mhui-in-main-app.md)
 - [ADR 0010](Designs/Decisions/0010-evaluate-mhui-for-companion-surfaces.md)
 - [iPhone Duo adaptation](Designs/Architecture/iphone-duo-adaptation.md)
+- [Platform defaults and navigation review](Designs/Architecture/platform-defaults-and-navigation-review.md)
 
 - `CookleLibrary` owns shared SwiftData models, public `*Operations` facades,
   predicates, queries, validation, mutations, migrations, and route helpers.
@@ -182,8 +200,12 @@ Primary records:
   composition. Watch adoption is deferred after a failed MHUI 1.18 readability
   comparison. Companion targets and App Intent implementations currently stay
   off MHUI/MHDesign dependencies; future adoption is evaluated per surface.
-- `MHAppRuntime` remains available as an advanced app-root surface, but this
-  repo does not use it as the default adoption path.
+- The app uses `MHAppRuntimeBootstrap(configuration:routePipeline:lifecyclePlan:)`
+  with MHPlatform's default StoreKit, ads, and license adapters. The standard
+  subscription section and transaction observer share one StoreKitWrapper store,
+  which reports verified entitlements to the runtime during the session.
+  Cookle observes `premiumStatus` for iCloud policy and purchase-screen navigation;
+  it does not read StoreKit entitlements independently.
 - Ordinary package regression tests stay in `CookleLibrary/Tests/Default`;
   synthetic future-schema observations stay in `CookleLibrary/Tests/SchemaResearch`.
 - The repository does not maintain a separate `CookleTests` unit test target;
@@ -291,9 +313,23 @@ Universal Links require Apple App Site Association (AASA) deployment for
 - A StoreKit subscription unlocks premium features such as iCloud sync, and the
   app observes the runtime's verified entitlement state independently of product
   catalog metadata. Unknown state preserves existing preferences; active state
-  preserves the user's iCloud choice, and inactive state disables iCloud sync.
-- Settings surfaces the subscription paywall, iCloud toggle, and bulk delete
-  controls while guarding destructive actions behind confirmation dialogs.
+  updates access without changing the saved iCloud choice. Purchase, restore,
+  and renewal never opt into sync or override an explicit Off choice.
+- After a verified subscription becomes active, Settings returns from the
+  paywall. Pending and cancelled purchases leave the paywall available.
+- Startup configures the same production store using the saved iCloud choice
+  AND last resolved subscription access. The ready container remains fixed for
+  the process, including across foreground resumes, preference changes, and
+  subscription lapses. A later entitlement result affects the next launch.
+- Settings separates the saved choice from the current session configuration
+  and explains pending On/Off changes. During a lapse, a saved On can be turned
+  Off; enabling requires access. Off and expiry do not immediately stop a
+  session already configured for sync. These paths do not delete or copy records.
+  Account guidance does not imply that remote devices have caught up. Startup
+  failure still offers retry or opening without iCloud before a store is ready.
+  See [subscription and iCloud](Designs/Architecture/subscription-and-icloud.md).
+- Settings guards bulk deletion and other destructive actions behind
+  confirmation dialogs.
 - Cookle reads its shared configuration from
   [MHAppConfig](https://raw.githubusercontent.com/muhiro12/MHAppConfig/main/cookle/app.json).
   The initial revision has no minimum version or scheduled requirement.
@@ -389,6 +425,17 @@ rediscover and restore its destination. Report any restoration failure.
 - For shared-library tests, use its test capability with the `CookleLibrary`
   scheme, explicitly selecting the required test plan, and a compatible discovered
   destination.
+- If native package-test execution emits an incompatible SDK sysroot warning,
+  use the official CLI fallback with `env -u SDKROOT xcrun xcodebuild`, the same
+  project/scheme, explicit test plan, and discovered Simulator destination.
+  Let the destination select its SDK; do not override every embedded target's SDK.
+  For the `CookleLibrary` and `CookleSchemaResearch` plans only, pass
+  `LM_SKIP_METADATA_EXTRACTION=YES`: these library/test targets implement no App
+  Intents and require no metadata extraction. This omits an irrelevant task using
+  [Apple's build setting](https://github.com/swiftlang/swift-build/blob/main/Sources/SWBApplePlatform/AppIntentsMetadataTaskProducer.swift),
+  without filtering warnings or adding a dummy framework dependency. Reassess
+  this scope if those targets adopt App Intents. Keep extraction enabled for
+  normal `Cookle` builds and its real App Intents.
 - For public `CookleLibrary` APIs, `*Operations`, shared wire contracts,
   SwiftData schema, or adapter-facing changes, also build the `Cookle` consumer.
 - For widget changes, build the `Widgets` scheme with a discovered iOS
@@ -404,6 +451,34 @@ rediscover and restore its destination. Report any restoration failure.
   ```bash
   bash ci_scripts/tasks/check_repository_rules.sh
   ```
+
+### Local subscription integration checks
+
+Use the shared `Cookle StoreKit` scheme on a Cookle Simulator to exercise the
+standard runtime with `CookleLibrary/Tests/StoreKit/Cookle.storekit`. The catalog
+uses Cookle's configured product and group identifiers with a synthetic test
+price. The ordinary `Cookle` scheme continues to use the App Store environment.
+
+- With no active local transaction, open Settings > Subscription, cancel a
+  purchase, and confirm the paywall remains available.
+- Complete a local purchase and confirm Settings returns from the paywall
+  without restarting the app. Settings > Advanced > Debug > Status should show
+  an active subscription. DEBUG uses local development data and hides the iCloud
+  control; verify that control separately in a Release build.
+- Exercise Restore Purchases and distinguish an already-active no-op from a
+  restore that actually recovers missing access. Use Xcode's transaction manager
+  for pending approval, failed purchases, expiration, and revocation when available.
+- Confirm unknown or failed verification does not overwrite verified access,
+  and subscription lapses preserve the saved iCloud choice. Shared policy tests
+  cover choice retention and next-launch selection; they do not prove
+  StoreKit transaction delivery or cloud convergence.
+
+Keep native UI results separate from source and unit-test evidence. Local
+StoreKit testing does not replace Sandbox purchase/restore or physical-device
+iCloud qualification. Active entitlement is state, not a new-purchase event;
+Cookle owns navigation and sync policy. See
+[MHPlatform #23](https://github.com/muhiro12/MHPlatform/issues/23) for the standard
+integration investigation.
 
 ## Continuous integration
 

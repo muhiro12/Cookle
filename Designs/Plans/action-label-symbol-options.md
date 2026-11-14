@@ -8,7 +8,9 @@
 
 ## Accepted Baseline
 
-Recipe creation uses `book.pages`. Diary addition uses `book.badge.plus` on
+Recipe uses `document` in the tab and recipe-list empty states and
+`document.badge.plus` in the shared Add Recipe control and the Diary recipe
+picker's Register New Recipe action. Diary addition uses `book.badge.plus` on
 iOS 26 or later and `book` on iOS 18. `DiaryAdditionLabel` shares that symbol
 availability policy between new-Diary creation and adding an existing recipe to
 today's Diary. Their localized titles and action callbacks remain distinct.
@@ -73,6 +75,71 @@ override or a change to the app's deployment target.
 - No iOS 18 runtime was installed. The fallback is verified by source and the
   iOS 18 deployment-target build, not by an older-OS live run. This follow-up
   makes no new iPad or spoken VoiceOver qualification claim.
+
+## iOS 27.2 Catalog Recheck and Recipe Symbol Selection
+
+The recheck used `name_availability.plist` and `name_aliases.strings` from
+Apple's SF Symbols 27 app (build 140) and the iOS 27.1 and 27.2 Simulator system
+catalogs. [#170](https://github.com/muhiro12/Cookle/issues/170)
+
+| Action | Symbol at the initial recheck | Introduced in iOS |
+| --- | --- | --- |
+| Add Recipe | `book.pages` | 17.0 |
+| Add Diary or add a recipe to today's Diary | `book.badge.plus` | 26.0 |
+| Diary addition on older systems | `book` | 13.0 |
+| Edit Recipe or Diary | `pencil.line` | 16.0 |
+| Register New Recipe in the Diary recipe picker | `plus` | 13.0 |
+| Add an individual photo to a recipe | `photo.badge.plus` | 17.0 |
+
+- Recipe creation uses the shared `AddRecipeButton` in the Recipe and Diary
+  toolbars and empty states, the Diary inspiration section, and the Photos and
+  Tags empty states. At the initial recheck this control used `book.pages`.
+  The checked catalogs contain no addition variant of that base.
+  `book.badge.plus` and its fill variant (iOS 26.0) share the Diary book
+  shape. `document.badge.plus` (iOS 18.0) depicts a document.
+  `bookmark.text.page` (iOS 27.2) depicts a bookmarked page.
+- Diary creation uses `AddDiaryButton` in the toolbar, empty state, and Today
+  section. The recipe detail and recipe row context menu use the same
+  `DiaryAdditionLabel` when adding an existing recipe to today's Diary.
+  The iOS 18 fallback `book` has a distinct shape from the recipe document.
+- Recipe and Diary editing use `pencil.line` in detail views and row menus.
+  The catalogs contain no pencil variant of the recipe document or Diary book.
+  `book.and.wrench` (iOS 17.0) suggests tools or repair.
+- `photo.stack` (iOS 16.0) represents the Photos collection. Its empty-state
+  action creates a recipe. Individual photo addition in recipe details and the
+  recipe form uses `photo.badge.plus`; the catalogs contain no add or edit
+  variant of `photo.stack`. The Photos tab has no standalone Add Photo or
+  Edit Photo action.
+
+At the initial recheck, the iOS 27.2 iPhone 18 Pro Simulator rendered both
+creation symbols side by side in the Diary toolbar with separate Add Recipe
+and Add Diary accessibility names. Add Recipe opened the native menu, and
+its manual entry opened the new recipe form. The form showed the photo-plus
+control with its Add Photo accessibility name, and Cancel returned to the
+Diary without saving. The Photos empty state showed the shared Add Recipe
+action.
+On the iPadOS 27.2 iPad Pro 11-inch Simulator in landscape, Add Diary stayed
+in the sidebar toolbar and Add Recipe retained its pages icon and title in
+the native overflow menu. Manual entry and Cancel also worked there. Both
+checks used in-memory fixtures.
+
+The selected pair uses `document` for the recipe and `document.badge.plus`
+for recipe creation. Apple lists both names from iOS 18.0, which is the app's
+deployment target. The folded page and open Diary book have distinct shapes
+where the creation actions appear together.
+
+### Document Symbol Verification
+
+- Cookle built and ran through Xcode with in-memory fixtures. SwiftLint and
+  the retained repository checks, including 28 script checks, passed.
+- On iPhone 18 Pro with iOS 27.2, the Recipe tab and empty state showed the
+  document. The Diary toolbar showed document-plus and book-plus with distinct
+  accessibility names. The Add Recipe menu opened the manual entry form, and
+  Cancel returned to the Diary.
+- On iPad Pro 11-inch with iPadOS 27.2 in landscape, the Diary sidebar's
+  native overflow menu showed Add Recipe with its document-plus symbol.
+- The Diary recipe picker's Register New Recipe symbol is verified by source
+  and build. Live checks on iOS 18 and spoken VoiceOver remain unverified.
 
 ## Selected Refinements
 

@@ -66,7 +66,7 @@ struct RecipeListView: View {
 
 private extension RecipeListView {
     var recipeListView: some View {
-        List {
+        List(selection: $recipe) {
             MHContainerContent {
                 if let topReturnTarget {
                     Section {
@@ -90,7 +90,7 @@ private extension RecipeListView {
 
     var emptyStateView: some View {
         ContentUnavailableView {
-            Label("No Recipes Yet", systemImage: "book.pages")
+            Label("No Recipes Yet", systemImage: "document")
         } description: {
             Text("Add a recipe to start building your collection.")
         } actions: {
@@ -200,17 +200,11 @@ private extension RecipeListView {
     }
 
     func recipeRow(for rowRecipe: Recipe) -> some View {
-        Button {
-            $recipe.cookleSelectForNavigation(
-                rowRecipe
-            )
-        } label: {
+        NavigationLink(value: rowRecipe) {
             RecipeLabel()
                 .labelStyle(.titleAndLargeIcon)
                 .environment(rowRecipe)
-                .cookleButtonRowContent()
         }
-        .buttonStyle(.plain)
     }
 
     func handleTopReturnTap() {

@@ -16,8 +16,8 @@ struct CookleApp: App {
 
     @AppStorage(\.isICloudOn)
     private var isICloudOn
-    @AppStorage(\.isDebugOn)
-    private var isDebugOn
+    @AppStorage(\.isSubscribeOn)
+    private var isSubscribeOn
     @AppStorage(\.lastLaunchedAppVersion, default: "")
     private var lastLaunchedAppVersion
 
@@ -25,33 +25,39 @@ struct CookleApp: App {
 
     var body: some Scene {
         WindowGroup {
-            Group {
-                if let appAssembly = bootstrapModel.appAssembly {
-                    rootView(appAssembly: appAssembly)
-                } else {
-                    CookleStartupView(
-                        failureMessage: bootstrapModel.failureMessage
-                    ) {
-                        Task {
-                            await bootstrapModel.loadAssembly(
-                                isICloudOn: isICloudOn
-                            )
-                        }
-                    }
-                }
+            sceneContent
+                .mhTheme(.standard)
+        }
+    }
+
+    @ViewBuilder private var sceneContent: some View {
+        if let appAssembly = bootstrapModel.appAssembly {
+            rootView(appAssembly: appAssembly)
+        } else {
+            CookleStartupView(
+                failureMessage: bootstrapModel.failureMessage,
+                openWithoutICloud: recoveryAction
+            ) {
+                bootstrapModel.retryStartup()
             }
-            .mhTheme(.standard)
-            .task(id: isICloudOn) {
-                // `init()` already assembled for the stored setting; only a
-                // real toggle needs the store reopened.
-                if !bootstrapModel.isAssembled(forICloudSetting: isICloudOn) {
-                    await bootstrapModel.loadAssembly(isICloudOn: isICloudOn)
-                }
-                notificationAppDelegate.notificationService = bootstrapModel.appAssembly?.services.notificationService
-            }
-            .onChange(of: bootstrapModel.appAssembly?.services.notificationService) {
-                notificationAppDelegate.notificationService = bootstrapModel.appAssembly?.services.notificationService
-            }
+        }
+    }
+
+    private var isICloudSyncRequested: Bool {
+        #if DEBUG
+        false
+        #else
+        isSubscribeOn && isICloudOn
+        #endif
+    }
+
+    private var recoveryAction: (() -> Void)? {
+        guard isICloudSyncRequested else {
+            return nil
+        }
+        return {
+            isICloudOn = false
+            bootstrapModel.retryStartup()
         }
     }
 
@@ -69,13 +75,8 @@ struct CookleApp: App {
             CooklePreferences.migrateSuggestionNotificationMode(domainName: domainName)
         }
         let model = CookleAppBootstrapModel()
-        model.loadAssemblySynchronously()
         _bootstrapModel = State(wrappedValue: model)
-        notificationAppDelegate.notificationService = model.appAssembly?.services.notificationService
-
-        #if DEBUG
-        isDebugOn = !CookleCaptureConfiguration.isEnabled
-        #endif
+        model.start(notificationAppDelegate: notificationAppDelegate)
 
         updateLastLaunchedVersion()
     }
@@ -96,7 +97,7 @@ struct CookleApp: App {
 
     func liveRootView(appAssembly: CookleAppAssembly) -> some View {
         ContentView()
-            .id(isICloudOn)
+            .id(ObjectIdentifier(appAssembly))
             .cookleAppAssembly(appAssembly)
     }
 

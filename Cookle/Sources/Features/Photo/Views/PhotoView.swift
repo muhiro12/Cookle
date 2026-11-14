@@ -23,7 +23,7 @@ struct PhotoView: View {
     @State private var isPhotoDetailPresented = false
 
     var body: some View {
-        List {
+        List(selection: $recipe) {
             MHContainerContent {
                 previewSection
                 recipeSection
@@ -55,6 +55,7 @@ struct PhotoView: View {
                 .cookleButtonRowContent(alignment: .center)
             }
             .buttonStyle(.plain)
+            .photoTransfer(photo)
             .listRowBackground(EmptyView())
         }
     }
@@ -66,17 +67,11 @@ struct PhotoView: View {
                     .foregroundStyle(.secondary)
             } else {
                 ForEach((photo.recipes ?? [])) { rowRecipe in
-                    Button {
-                        $recipe.cookleSelectForNavigation(
-                            rowRecipe
-                        )
-                    } label: {
+                    NavigationLink(value: rowRecipe) {
                         RecipeLabel()
                             .labelStyle(.titleOnly)
                             .environment(rowRecipe)
-                            .cookleButtonRowContent()
                     }
-                    .buttonStyle(.plain)
                 }
             }
         } header: {
@@ -99,6 +94,7 @@ struct PhotoView: View {
 
     var actionSection: some View {
         Section {
+            SharePhotoButton(data: photo.data)
             DeletePhotoButton {
                 photoSelection = nil
             }

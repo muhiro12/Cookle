@@ -10,7 +10,7 @@ extension RecipeService {
         "ingredients",
         "material",
         "materials",
-        "材料"
+        "材料", "ingrédients", "ingredientes", "食材"
     ]
 
     static let stepSectionHeadings = [
@@ -24,17 +24,21 @@ extension RecipeService {
         "steps",
         "作り方",
         "手順",
-        "方法"
+        "方法", "étapes", "préparation", "pasos", "preparación", "步骤", "做法"
     ]
 
+    static let noteSectionHeadings = ["note", "notes", "メモ", "備考", "notas", "备注"]
+    static let sourceSectionHeadings = ["source", "出典", "fuente", "来源"]
+    static let categorySectionHeadings = ["category", "categories", "カテゴリ", "catégories", "categorías", "分类"]
     static let allSectionHeadings = ingredientSectionHeadings + stepSectionHeadings
+        + noteSectionHeadings + sourceSectionHeadings + categorySectionHeadings
 
     /// Serving counts the fallback reads: `Serves 4`, `4 servings`, `4人分`,
     /// `4人前`, and `for 4`, except where `for` starts a duration or a
     /// temperature such as `for 8 minutes` or `for 10-15 minutes`.
     static let fallbackServingSizePattern = #"""
         (?ix)
-        serves \s* [:：]? \s* \d+
+        (?: serves | servings | serving \s+ size | 人数 ) \s* [:：]? \s* \d+
         | for \s* \d+ (?!\d)
         (?! \s* (?: (?: [-–—~〜～] | to | or ) \s* \d+ \s* )?
         (?: min | hour | hr | sec | ° | degree ) )
@@ -47,7 +51,9 @@ extension RecipeService {
     static let ambiguousCookingTimePattern = #"""
         (?ix)
         \d+ \s* (?: (?: minutes? \b | mins? \b | 分 ) \s* )?
-        (?: [-–—~〜～] | to | or | hours? | hrs? | 時間 | / | [.,] ) \s*
+        (?: [-–—~〜～] | to | or | / | [.,]
+        | (?: hours? | hrs? | heures? | horas? | h | 時間 | 小时 | 小時 )
+        \s* (?: and | et | y | と | 和 | [,、] )? ) \s*
         \d+ \s* (?: minutes? \b | mins? \b | 分 )
         | \d+ \s* 分 \s* の \s* \d+
         """#
@@ -104,6 +110,18 @@ extension RecipeService {
         if let cookingTimeRange = explicitCookingTimeRange(in: sourceText) {
             result.cookingTime = .zero
             result.note = noteRetaining(cookingTimeRange, in: result.note)
+        } else {
+            // A step duration is not the recipe's cooking time, even if the model promotes it.
+            result.cookingTime = fallbackCookingTime(from: sourceText)
+            if result.cookingTime == .zero, let statement = cookingTimeStatement(in: sourceText) {
+                result.note = noteRetaining(statement, in: result.note)
+            }
+        }
+        for source in fallbackSectionItems(
+            from: sourceText.components(separatedBy: .newlines),
+            headings: sourceSectionHeadings
+        ) {
+            result.note = noteRetaining(source, in: result.note)
         }
         return result
     }
@@ -155,7 +173,7 @@ extension RecipeService {
         let pattern = #/
                 (?ix)
                 (?:
-                serves \s* [:：]? \s*
+                (?: serves | servings | serving \s+ size | 人数 ) \s* [:：]? \s*
                 [0-9０-９]+ \s* [-–—〜～~] \s* [0-9０-９]+
                 (?: \s* (?: people | persons? ) )?
                 |
@@ -191,18 +209,14 @@ extension RecipeService {
     /// Extracts basic recipe fields with deterministic local parsing.
     static func fallbackInference(from text: String) -> RecipeInferenceResult {
         let lines = text.components(separatedBy: .newlines)
-        let ingredients = fallbackSectionItems(
+        let ingredients = fallbackIngredients(from: fallbackSectionItems(
             from: lines,
             headings: ingredientSectionHeadings
-        ).map { ingredient in
-            RecipeInferenceIngredient(
-                ingredient: ingredient,
-                amount: ""
-            )
-        }
+        ))
         let steps = fallbackSectionItems(
             from: lines,
-            headings: stepSectionHeadings
+            headings: stepSectionHeadings,
+            joinsIndentedContinuations: true
         )
         let sourceText = halfwidthDigits(
             in: lines.joined(separator: " ")
@@ -214,153 +228,13 @@ extension RecipeService {
                 in: sourceText,
                 pattern: fallbackServingSizePattern
             ),
-            cookingTime: extractedNumber(
-                in: sourceText.replacingOccurrences(
-                    of: ambiguousCookingTimePattern,
-                    with: " ",
-                    options: .regularExpression
-                ),
-                pattern: fallbackCookingTimePattern
-            ),
+            cookingTime: fallbackCookingTime(from: text),
             ingredients: ingredients,
             steps: steps,
-            categories: [],
-            note: ""
+            categories: fallbackSectionItems(from: lines, headings: categorySectionHeadings),
+            note: fallbackSectionItems(from: lines, headings: noteSectionHeadings)
+                .joined(separator: "\n")
         )
-    }
-
-    static func fallbackName(from lines: [String]) -> String {
-        for line in lines {
-            let normalizedLine = sanitizedInferenceLine(
-                RecipeBlurbService.strippingListPrefix(
-                    from: line
-                )
-            )
-            guard !normalizedLine.isEmpty else {
-                continue
-            }
-            guard matchesSectionHeading(
-                normalizedLine,
-                headings: allSectionHeadings
-            ) == false else {
-                continue
-            }
-            return normalizedLine
-        }
-        return ""
-    }
-
-    static func fallbackSectionItems(
-        from lines: [String],
-        headings: [String]
-    ) -> [String] {
-        var collectedItems = [String]()
-        var isCollecting = false
-
-        for line in lines {
-            let trimmedLine = line.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard !trimmedLine.isEmpty else {
-                continue
-            }
-
-            if let inlineItem = inlineSectionItem(
-                from: trimmedLine,
-                headings: headings
-            ) {
-                isCollecting = true
-                let normalizedItem = sanitizedInferenceLine(
-                    RecipeBlurbService.strippingListPrefix(
-                        from: inlineItem
-                    )
-                )
-                if !normalizedItem.isEmpty {
-                    collectedItems.append(normalizedItem)
-                }
-                continue
-            }
-
-            if matchesSectionHeading(
-                trimmedLine,
-                headings: allSectionHeadings
-            ) {
-                if isCollecting {
-                    break
-                }
-                continue
-            }
-
-            guard isCollecting else {
-                continue
-            }
-
-            let normalizedItem = sanitizedInferenceLine(
-                RecipeBlurbService.strippingListPrefix(
-                    from: trimmedLine
-                )
-            )
-            if !normalizedItem.isEmpty {
-                collectedItems.append(normalizedItem)
-            }
-        }
-
-        return collectedItems
-    }
-
-    static func inlineSectionItem(
-        from line: String,
-        headings: [String]
-    ) -> String? {
-        let separators = [":", "："]
-
-        for separator in separators {
-            guard let separatorRange = line.range(of: separator) else {
-                continue
-            }
-
-            let heading = String(line[..<separatorRange.lowerBound])
-            guard matchesSectionHeading(
-                heading,
-                headings: headings
-            ) else {
-                continue
-            }
-
-            return String(line[separatorRange.upperBound...])
-        }
-
-        guard matchesSectionHeading(
-            line,
-            headings: headings
-        ) else {
-            return nil
-        }
-        return ""
-    }
-
-    static func matchesSectionHeading(
-        _ value: String,
-        headings: [String]
-    ) -> Bool {
-        let normalizedValue = normalizedHeading(value)
-        return headings.contains(normalizedValue)
-    }
-
-    static func normalizedHeading(
-        _ value: String
-    ) -> String {
-        let trimmedValue = RecipeBlurbService.strippingListPrefix(
-            from: value
-        )
-        let trimmedPunctuation = trimmedValue.trimmingCharacters(
-            in: CharacterSet.punctuationCharacters.union(
-                .whitespacesAndNewlines
-            )
-        )
-        return RecipeBlurbService.collapsedWhitespace(
-            trimmedPunctuation
-        )
-        .replacingOccurrences(of: " ", with: "")
-        .lowercased()
     }
 
     /// Replaces full-width digits, common in Japanese text, with ASCII digits.

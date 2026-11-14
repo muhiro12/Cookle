@@ -111,7 +111,22 @@ struct InferRecipeFormView: View {
     }
 
     private var textBinding: Binding<String> {
-        generationRequest ?? $localText
+        if source == .generation {
+            return generationRequest ?? $localText
+        }
+        return .init(
+            get: { model.importSourceText },
+            set: { updatedText in
+                if source == .text, updatedText != model.importSourceText {
+                    // A new paste must not inherit attribution from an earlier website.
+                    model.importWebsiteSource = nil
+                    model.importSourceURL = nil
+                    websiteSource = nil
+                    sourceURL = nil
+                }
+                model.importSourceText = updatedText
+            }
+        )
     }
 
     private var text: String {
@@ -172,9 +187,10 @@ struct InferRecipeFormView: View {
         self.initialPhotoData = initialPhotoData
         self.choosesAnotherPhoto = choosesAnotherPhoto
         self.onInferenceApplied = onInferenceApplied
-        _localText = State(initialValue: initialWebsiteSource?.text ?? "")
-        _websiteSource = State(initialValue: initialWebsiteSource)
-        _sourceURL = State(initialValue: initialSourceURL)
+        _websiteSource = State(
+            initialValue: initialWebsiteSource ?? (source == .text ? model.importWebsiteSource : nil)
+        )
+        _sourceURL = State(initialValue: initialSourceURL ?? (source == .text ? model.importSourceURL : nil))
         self.model = model
         self.source = source
         self.generationInputStyle = generationInputStyle
@@ -226,13 +242,18 @@ private extension InferRecipeFormView {
             return
         }
         hasOpenedSource = true
+        if source == .website, let websiteSource {
+            text = websiteSource.text
+            model.importWebsiteSource = websiteSource
+            model.importSourceURL = sourceURL
+        }
         if let initialPhotoData {
             isLoading = true
             defer {
                 isLoading = false
             }
             do {
-                try await appendRecognizedText(from: initialPhotoData)
+                try await readPhotoText(from: initialPhotoData)
             } catch {
                 if !Task.isCancelled {
                     isPhotoRecognitionFailure = true
@@ -344,10 +365,12 @@ private extension InferRecipeFormView {
         }
     }
 
-    func appendRecognizedText(from data: Data) async throws {
+    func readPhotoText(from data: Data) async throws {
         let recognizedText = try await RecipeTextImporter.recognize(in: data)
         try Task.checkCancellation()
-        text += (text.isEmpty ? "" : "\n") + recognizedText
+        text = recognizedText
+        model.importWebsiteSource = nil
+        model.importSourceURL = nil
     }
 
     func finishInference() {

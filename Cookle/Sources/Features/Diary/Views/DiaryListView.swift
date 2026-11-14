@@ -4,6 +4,9 @@ import SwiftData
 import SwiftUI
 
 struct DiaryListView: View {
+    @Environment(\.horizontalSizeClass)
+    private var horizontalSizeClass
+
     @Environment(\.cookleSplitSidebarBackground)
     private var sidebarBackground
 
@@ -128,9 +131,18 @@ private extension DiaryListView {
             Button {
                 $diary.cookleSelectForNavigation(row)
             } label: {
-                DiaryLabel()
-                    .environment(row)
-                    .cookleButtonRowContent()
+                HStack {
+                    DiaryLabel()
+                        .environment(row)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    if horizontalSizeClass != .regular {
+                        Image(systemName: "chevron.forward")
+                            .font(.footnote.weight(.semibold))
+                            .foregroundStyle(.tertiary)
+                            .accessibilityHidden(true)
+                    }
+                }
+                .cookleButtonRowContent()
             }
             .buttonStyle(.plain)
         }

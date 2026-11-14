@@ -6,13 +6,12 @@ struct SettingsNavigationView: View {
     @Environment(\.horizontalSizeClass)
     private var horizontalSizeClass
 
+    @Environment(MHAppRuntime.self)
+    private var appRuntime
     @Environment(\.modelContext)
     private var context
     @Environment(SettingsActionService.self)
     private var settingsActionService
-
-    @AppStorage(\.isICloudOn)
-    private var isICloudOn
 
     @Binding private var incomingSelection: SettingsContent?
 
@@ -33,7 +32,7 @@ struct SettingsNavigationView: View {
         ) {
             SettingsSidebarView(
                 model: model,
-                selection: $selection
+                selection: sidebarSelection
             )
             .cookleSplitSidebar(isExpanded: horizontalSizeClass == .regular)
         } detail: {
@@ -53,13 +52,18 @@ struct SettingsNavigationView: View {
             applyIncomingSelectionIfNeeded()
         }
         .onChange(of: selection) {
-            syncPreferredCompactColumn()
+            if !completeSubscriptionIfNeeded() {
+                syncPreferredCompactColumn()
+            }
+        }
+        .onChange(of: appRuntime.premiumStatus) {
+            completeSubscriptionIfNeeded()
         }
         .dataImport(
             model: model,
             modelContainer: context.container,
             settingsActionService: settingsActionService,
-            isICloudEnabled: isICloudOn
+            isICloudEnabled: context.container.isICloudSyncEnabled
         )
     }
 
@@ -71,6 +75,19 @@ struct SettingsNavigationView: View {
 }
 
 private extension SettingsNavigationView {
+    var sidebarSelection: Binding<SettingsContent?> {
+        .init(
+            get: {
+                selection
+            },
+            set: { content in
+                selection = content
+                // Re-selecting Advanced after Back must navigate even if its value is unchanged.
+                syncPreferredCompactColumn()
+            }
+        )
+    }
+
     func applyInitialCompactColumnIfNeeded() {
         guard !hasAppliedInitialCompactColumn else {
             return
@@ -85,10 +102,20 @@ private extension SettingsNavigationView {
         switch selection {
         case .subscription:
             StoreListView()
+        case .advanced:
+            SettingsAdvancedView()
         case .license:
             LicenseView()
         case .none:
-            SplitContentPlaceholder("Nothing Selected")
+            if appRuntime.premiumStatus == .active {
+                ContentUnavailableView {
+                    Label("Subscription Active", systemImage: "checkmark.circle")
+                } description: {
+                    Text("You can manage iCloud sync in Settings.")
+                }
+            } else {
+                SplitContentPlaceholder("Nothing Selected")
+            }
         }
     }
 
@@ -97,9 +124,25 @@ private extension SettingsNavigationView {
             return
         }
 
-        selection = incomingSelection
         self.incomingSelection = nil
+        if incomingSelection == .subscription, appRuntime.premiumStatus == .active {
+            return
+        }
+
+        selection = incomingSelection
         syncPreferredCompactColumn()
+    }
+
+    @discardableResult
+    func completeSubscriptionIfNeeded() -> Bool {
+        guard selection == .subscription, appRuntime.premiumStatus == .active else {
+            return false
+        }
+
+        selection = nil
+        columnVisibility = .all
+        syncPreferredCompactColumn()
+        return true
     }
 
     func syncPreferredCompactColumn() {

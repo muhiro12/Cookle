@@ -6,12 +6,7 @@ import TipKit
 import UIKit
 
 struct SettingsSidebarView: View {
-    private enum Layout {
-        static let bottomContentMargin: CGFloat = 96
-    }
-
     private let model: SettingsScreenModel
-    @State private var isDebugPresented = false
 
     @Environment(\.cookleSplitSidebarBackground)
     private var sidebarBackground
@@ -33,8 +28,6 @@ struct SettingsSidebarView: View {
     private var isSubscribeOn
     @AppStorage(\.isICloudOn)
     private var isICloudOn
-    @AppStorage(\.isDebugOn)
-    private var isDebugOn
     @AppStorage(\.recipeSuggestionNotificationMode, default: "adaptive")
     private var suggestionMode
 
@@ -60,7 +53,7 @@ struct SettingsSidebarView: View {
                 model: model,
                 modelContainer: context.container,
                 settingsActionService: settingsActionService,
-                isICloudEnabled: isICloudOn
+                isICloudEnabled: context.container.isICloudSyncEnabled
             )
             .alert(
                 Text("Cannot Complete Settings Action"),
@@ -99,53 +92,45 @@ struct SettingsSidebarView: View {
             .onChange(of: isSubscribeOn) {
                 refreshTipEligibility()
             }
+            .onChange(of: content) {
+                if content == .subscription {
+                    tipController.donateDidOpenSubscription()
+                }
+            }
             .onAppear {
                 refreshTipEligibility()
-            }
-            .fullScreenCover(isPresented: $isDebugPresented) {
-                DebugNavigationView()
             }
     }
 
     var settingsList: some View {
-        List {
-            MHContainerContent {
-                subscriptionSection
-                iCloudSection
-                notificationSection
-                SettingsDataManagementSection(
-                    model: model,
-                    modelContainer: context.container,
-                    settingsActionService: settingsActionService,
-                    isICloudEnabled: isICloudOn
+        List(selection: $content) {
+            subscriptionSection
+            iCloudSection
+            notificationSection
+            SettingsDataManagementSection(
+                model: model,
+                modelContainer: context.container,
+                settingsActionService: settingsActionService,
+                isICloudEnabled: context.container.isICloudSyncEnabled
+            )
+            generalSection
+            ShortcutsLinkSection(
+                tip: currentSettingsTip(
+                    for: shortcutsTip,
+                    isEligible: shouldShowShortcutsTip
                 )
-                generalSection
-                ShortcutsLinkSection(
-                    tip: currentSettingsTip(
-                        for: shortcutsTip,
-                        isEligible: shouldShowShortcutsTip
-                    )
-                )
-            }
+            )
         }
-        .contentMargins(
-            .bottom,
-            Layout.bottomContentMargin,
-            for: .scrollContent
-        )
+        // A custom row background obscures the system's selected-row fill.
         .mhListChrome(.native, background: sidebarBackground)
     }
 
     @ViewBuilder var subscriptionSection: some View {
         if !isSubscribeOn {
             Section {
-                Button {
-                    content = .subscription
-                } label: {
+                NavigationLink(value: SettingsContent.subscription) {
                     Text("Subscription")
-                        .cookleButtonRowContent()
                 }
-                .buttonStyle(.plain)
                 .cooklePopoverTip(
                     currentSettingsTip(
                         for: subscriptionTip,
@@ -153,24 +138,22 @@ struct SettingsSidebarView: View {
                     ),
                     arrowEdge: .top
                 )
-                .accessibilityAddTraits(.isButton)
-                .simultaneousGesture(
-                    TapGesture().onEnded {
-                        tipController.donateDidOpenSubscription()
-                    }
-                )
             }
         }
     }
 
     @ViewBuilder var iCloudSection: some View {
-        if isSubscribeOn {
-            Section {
-                Toggle("iCloud On", isOn: $isICloudOn)
-            } header: {
-                Text("Settings")
-            }
+        #if DEBUG
+        Section {
+            Text("Development data stays on this device.")
         }
+        #else
+        SettingsICloudSection(
+            isICloudOn: $isICloudOn,
+            isSubscriptionActive: isSubscribeOn,
+            isICloudConfigured: context.container.isICloudSyncEnabled
+        )
+        #endif
     }
 
     var notificationSection: some View {
@@ -185,22 +168,12 @@ struct SettingsSidebarView: View {
 
     var generalSection: some View {
         Section {
-            if isDebugOn {
-                Button {
-                    isDebugPresented = true
-                } label: {
-                    Text("Debug")
-                        .cookleButtonRowContent()
-                }
-                .buttonStyle(.plain)
+            NavigationLink(value: SettingsContent.advanced) {
+                Text("Advanced")
             }
-            Button {
-                content = .license
-            } label: {
+            NavigationLink(value: SettingsContent.license) {
                 Text("Licenses")
-                    .cookleButtonRowContent()
             }
-            .buttonStyle(.plain)
             AdsPrivacyOptionsButton { message in
                 model.errorMessage = message
             }

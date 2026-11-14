@@ -30,35 +30,44 @@ struct RemoteUpdateOperationsTests {
         #expect(updates.evaluation?.revision == 1)
     }
 
-    @Test
-    func missingEvidenceAllowsOfflineEditingWithoutNetworking() async throws {
+    @Test(arguments: [false, true])
+    func missingEvidenceAllowsOfflineEditingWithoutNetworking(preparesFirst: Bool) async throws {
         let fixture = try RemoteUpdateFixture()
         fixture.failsRefresh.withLock { $0 = true }
         let updates = RemoteUpdateOperations(controller: try fixture.controller())
+        if preparesFirst {
+            try await updates.prepare()
+        }
+        let fetchCount = fixture.fetchCount.withLock { $0 }
 
         #expect(try await updates.performMutation { "saved" } == "saved")
         #expect(updates.decision == .unavailable)
-        #expect(fixture.fetchCount.withLock { $0 } == 0)
+        #expect(fixture.fetchCount.withLock { $0 } == fetchCount)
         let preparation = try await updates.prepare()
         #expect(preparation?.refreshError != nil)
         #expect(try await updates.performMutation { "saved offline" } == "saved offline")
     }
 
-    @Test
-    func confirmedUpdateBlocksBothEntryPointsBeforeWriting() async throws {
+    @Test(arguments: [false, true])
+    func confirmedUpdateBlocksBothEntryPointsBeforeWriting(preparesFirst: Bool) async throws {
         let fixture = try RemoteUpdateFixture()
-        let updates = RemoteUpdateOperations(controller: try fixture.controller())
-        try await updates.prepare()
-        var writes = [String]()
-
-        for entryPoint in ["app", "shortcut"] {
-            await #expect(throws: MHRemoteUpdateOperationError.updateRequired) {
-                try await updates.performMutation {
-                    writes.append(entryPoint)
-                }
-            }
+        let controller = try fixture.controller()
+        try await controller.prepare()
+        let updates = RemoteUpdateOperations(controller: controller)
+        if preparesFirst {
+            try await updates.prepare()
         }
-        #expect(writes.isEmpty)
+        var didWrite = false
+        var didRunSuccessEffect = false
+
+        await #expect(throws: MHRemoteUpdateOperationError.updateRequired) {
+            try await updates.performMutation {
+                didWrite = true
+            }
+            didRunSuccessEffect = true
+        }
+        #expect(didWrite == false)
+        #expect(didRunSuccessEffect == false)
         #expect(updates.decision == .updateRequired)
     }
 
@@ -126,19 +135,26 @@ struct RemoteUpdateOperationsTests {
         #expect(fixture.fetchCount.withLock { $0 } == 1)
     }
 
-    @Test
-    func cancellationNeverRunsTheWriteEvenWhenEvidenceIsUnavailable() async throws {
+    @Test(arguments: [false, true])
+    func cancellationNeverRunsTheWriteEvenWhenEvidenceIsUnavailable(isIsolated: Bool) async throws {
         let fixture = try RemoteUpdateFixture()
-        let updates = RemoteUpdateOperations(controller: try fixture.controller())
+        let updates = if isIsolated {
+            RemoteUpdateOperations()
+        } else {
+            RemoteUpdateOperations(controller: try fixture.controller())
+        }
         var didWrite = false
+        var didRunSuccessEffect = false
         let task = Task { @MainActor in
             withUnsafeCurrentTask { $0?.cancel() }
             try await updates.performMutation { didWrite = true }
+            didRunSuccessEffect = true
         }
         await #expect(throws: CancellationError.self) {
             try await task.value
         }
         #expect(didWrite == false)
+        #expect(didRunSuccessEffect == false)
         #expect(fixture.fetchCount.withLock { $0 } == 0)
     }
 

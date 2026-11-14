@@ -1,3 +1,4 @@
+#if DEBUG
 import MHPlatform
 import MHUI
 import SwiftData
@@ -12,12 +13,9 @@ struct DebugSidebarView: View {
     @Environment(CookleTipController.self)
     private var tipController
 
-    @AppStorage(\.isDebugOn)
-    private var isDebugOn
-
     @Binding private var content: DebugContent?
 
-    @State private var previewStore = CooklePreviewStore()
+    @State private var errorMessage: String?
     @State private var isCreatingPreviewDiaries = false
     @State private var isAlertPresented = false
 
@@ -39,9 +37,7 @@ struct DebugSidebarView: View {
                     guard !isCreatingPreviewDiaries else {
                         return
                     }
-                    Task {
-                        await createPreviewDiaries()
-                    }
+                    createPreviewDiaries()
                 } label: {
                     Text("Create")
                 }
@@ -52,14 +48,29 @@ struct DebugSidebarView: View {
                     Text("Cancel")
                 }
             } message: {
-                Text("Are you really going to create Preview Diary?")
+                Text("Samples can only be added to an empty development store.")
+            }
+            .alert(Text("Cannot Add Samples"), isPresented: .init(
+                get: {
+                    errorMessage != nil
+                },
+                set: { isPresented in
+                    if !isPresented {
+                        errorMessage = nil
+                    }
+                }
+            )) {
+                Button("OK", role: .cancel) {
+                    errorMessage = nil
+                }
+            } message: {
+                Text(errorMessage ?? "")
             }
     }
 
     var sidebarList: some View {
         List {
             MHContainerContent {
-                appStorageSection
                 diagnosticsSection
                 manageSection
                 tipKitSection
@@ -70,20 +81,12 @@ struct DebugSidebarView: View {
         .mhListChrome(.native)
     }
 
-    var appStorageSection: some View {
-        Section {
-            Toggle("Debug On", isOn: $isDebugOn)
-        } header: {
-            Text("AppStorage")
-        }
-    }
-
     var manageSection: some View {
         Section {
             Button("Create Preview Diaries", systemImage: "flask") {
                 isAlertPresented = true
             }
-            .disabled(isCreatingPreviewDiaries)
+            .disabled(isCreatingPreviewDiaries || !CookleDevelopmentStore.allowsMutations(context.container))
         } header: {
             Text("Manage")
         }
@@ -162,6 +165,7 @@ struct DebugSidebarView: View {
 
     var diagnosticDestinations: [(title: String, content: DebugContent)] {
         [
+            ("Status", .status),
             ("Logs", .logs)
         ]
     }
@@ -171,17 +175,18 @@ struct DebugSidebarView: View {
     }
 
     @MainActor
-    private func createPreviewDiaries() async {
+    private func createPreviewDiaries() {
         isCreatingPreviewDiaries = true
         defer {
             isCreatingPreviewDiaries = false
         }
 
         do {
-            _ = try await previewStore.createPreviewDiariesWithRemoteImages(context)
+            try CookleDevelopmentStore.insertSamples(context: context)
+        } catch DevelopmentSampleOperations.SampleError.nonemptyStore {
+            errorMessage = String(localized: "Samples can only be added to an empty development store.")
         } catch {
-            context.rollback()
-            assertionFailure(error.localizedDescription)
+            errorMessage = error.localizedDescription
         }
     }
 
@@ -192,7 +197,7 @@ struct DebugSidebarView: View {
         Button {
             self.content = content
         } label: {
-            Text(title)
+            Text(LocalizedStringKey(title))
                 .cookleButtonRowContent()
         }
         .buttonStyle(.plain)
@@ -204,3 +209,5 @@ struct DebugSidebarView: View {
         DebugSidebarView()
     }
 }
+
+#endif

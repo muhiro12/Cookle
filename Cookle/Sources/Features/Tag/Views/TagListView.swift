@@ -58,7 +58,7 @@ private extension TagListView {
     }
 
     var tagList: some View {
-        List {
+        List(selection: $tag) {
             MHContainerContent {
                 ForEach(filteredTags) { rowTag in
                     tagRow(for: rowTag)
@@ -122,20 +122,14 @@ private extension TagListView {
     }
 
     func tagRow(for rowTag: T) -> some View {
-        Button {
-            $tag.cookleSelectForNavigation(
-                rowTag
-            )
-        } label: {
+        NavigationLink(value: rowTag) {
             VStack(alignment: .leading) {
                 Text(rowTag.value)
                     .mhRowTitle()
                 Text(usageText(for: rowTag))
                     .mhRowSupporting()
             }
-            .cookleButtonRowContent()
         }
-        .buttonStyle(.plain)
     }
 
     func duplicateUsageText(

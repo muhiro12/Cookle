@@ -20,6 +20,16 @@ and diary-list information architecture are separate work.
 CookleLibrary, Watch, Widgets, App Intent implementations, and the MHUI
 package remain outside this change.
 
+## Settings selection follow-up
+
+The 2026-11-12 [navigation review](../Architecture/platform-defaults-and-navigation-review.md)
+replaces Settings destination buttons with native selection links. Settings
+keeps `mhListChrome(.native)` for its canvas, but omits `MHContainerContent`
+so native row backgrounds can show selection correctly. The themed row
+background masked the selected fill on iPad while native selected text became
+white. This exception supersedes the Settings row-wrapping description in the
+historical MHUI 2.1 adoption section below; other native containers are unchanged.
+
 ## MHUI 2.3 Adoption
 
 The remote requirement advances to `2.3.0..<3.0.0`, resolved to MHUI 2.3.0 at
